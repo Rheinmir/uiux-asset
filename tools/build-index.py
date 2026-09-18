@@ -3,6 +3,8 @@ import html, json, sys
 from pathlib import Path
 
 cat = Path(sys.argv[1])
+# Trang lẻ host ở GitHub Pages; gallery (có thể host riêng, vd Vercel) chỉ tham chiếu tới bằng link tuyệt đối.
+RUN_BASE = f"https://rheinmir.github.io/uiux-asset/{cat.name}/"
 items = json.loads((cat / "manifest.json").read_text())
 BADGE = {"ok": "", "partial": "thiếu ảnh", "upstream-drift": "lib đổi API", "upstream-broken": "hỏng tại nguồn", "missing": "pen đã xoá"}
 
@@ -11,12 +13,12 @@ def card(i):
     e = lambda s: html.escape(str(s or ""))
     f = i.get("file")
     thumb = f"thumbs/{f[:-5]}.jpg" if f else ""
-    run = f'<a class="btn" href="{e(f)}" target="_blank">Chạy bản gốc</a>' if f else ""
+    run = f'<a class="btn" href="{RUN_BASE}{e(f)}" target="_blank">Chạy bản gốc</a>' if f else ""
     badge = f'<span class="badge" title="{e(i.get("note"))}">{BADGE[i["status"]]}</span>' if i["status"] != "ok" else ""
-    img = f'<a href="{e(f)}" target="_blank"><img loading="lazy" src="{thumb}" alt=""></a>' if f else '<div class="noimg">—</div>'
+    img = f'<a href="{RUN_BASE}{e(f)}" target="_blank"><img loading="lazy" src="{thumb}" alt=""></a>' if f else '<div class="noimg">—</div>'
     return f"""<article data-q="{e((i['title'] + ' ' + i['desc'] + ' ' + i['user']).lower())}">{img}
 <div class="body"><h3>{e(i['title'])} {badge}</h3><p>{e(i['desc'])}</p>
-<div class="row">{run}<a href="{e(i['url'])}" target="_blank">CodePen · {e(i['user'])}</a><code>{e(f or '')}</code></div></div></article>"""
+<div class="row">{run}<a href="{e(i['url'])}" target="_blank">CodePen · {e(i['user'])}</a><a href="https://github.com/Rheinmir/uiux-asset/blob/main/{cat.name}/{e(f or '')}" target="_blank"><code>{e(f or '')}</code></a></div></div></article>"""
 
 
 page = f"""<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
