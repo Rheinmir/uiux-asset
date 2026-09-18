@@ -1,0 +1,262 @@
+<!-- VENDORED NGUYÊN VĂN — "Scroll-Based Reveal Animations with ScrollTrigger" by GreenSock · https://codepen.io/GreenSock/pen/pojzxwZ
+     License: MIT (CodePen public pen = MIT). Giữ dòng này khi copy. -->
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  
+  <meta charset="UTF-8">
+  
+
+    <link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
+
+    <meta name="apple-mobile-web-app-title" content="CodePen">
+
+    <link rel="icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
+
+    <link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-b4b4269c16397ad2f0f7a01bcdf513a1994f4c94b8af2f191c09eb0d601762b1.svg" color="#111" />
+
+
+
+  
+    <script>/* stub loop-protect CodePen — chạy ngoài CodePen */window.CP={shouldStopExecution:()=>false,exitedLoop:()=>{}};</script>
+
+
+  <title>Reveal animations based on scroll direction - ScrollTrigger</title>
+
+    <link rel="canonical" href="https://codepen.io/GreenSock/pen/pojzxwZ">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel='stylesheet' href='_assets/pens/GreenSock/pen/xxmzBrw.css'>
+  
+<style>
+body {
+  font-weight: 300;
+}
+
+.content {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.content__hero {
+  height: 40vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.content__heading {
+  text-align: center;
+  hi
+}
+
+.features {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.features__item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2rem;
+  height: 100vh;
+  border-top: dashed 2px grey;
+}
+
+.features__item--left {
+  flex-direction: row;
+  text-align: right;
+}
+
+.features__item--right {
+  flex-direction: row-reverse;
+}
+
+.features__image {
+  flex: 1 1 40%;
+  position: relative;
+}
+
+.features__card {
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  aspect-ratio: 1 / 1;
+}
+
+.features__img {
+  max-width: 100%;
+  position: absolute;
+  object-fit: cover;
+  display: block;
+}
+
+.features__content {
+  flex: 1 1 55%;
+}
+
+.features__title {
+  font-size: 1.8em;
+  margin-block-end: 1rem;
+}
+
+.features__description {
+  line-height: 1.6;
+}
+
+/* GSAP animation reveal styles */
+.gs_reveal {
+  opacity: 0;
+  visibility: hidden;
+  will-change: transform, opacity;
+}
+
+.spacer {
+  height: 100vh;
+}
+</style>
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+  
+  
+</head>
+
+<body translate="no">
+  <div class="content">
+  <div class="content__hero">
+    <h1 class="content__heading gs_reveal">Reveal animations based on scroll direction</h1>
+  </div>
+  
+
+  <div class="features">
+
+    <div class="features__item features__item--left gs_reveal gs_reveal_fromLeft">
+      <div class="features__image">
+        <div class="features__card">
+          <img class="features__img" src="_assets/16327/portrait-image-14.jpg" alt="">
+        </div>
+      </div>
+      <div class="features__content">
+        <h2 class="features__title gs_reveal">Highway Vinyl Nights</h2>
+        <p class="features__description gs_reveal">
+          The headlights hum along the painted lines<br>
+          We twist the dial till static turns to choir<br>
+          Your hand keeps time on the wheel and the night leans in<br>
+          Every mile is a chorus we have not written yet
+        </p>
+      </div>
+    </div>
+
+    <div class="features__item features__item--right gs_reveal gs_reveal_fromRight">
+      <div class="features__image">
+        <div class="features__card">
+          <img class="features__img" src="_assets/16327/portrait-image-4.jpg" alt="">
+        </div>
+      </div>
+      <div class="features__content">
+        <h2 class="features__title gs_reveal">Last Diner on Route 9</h2>
+        <p class="features__description gs_reveal">
+          The coffee tastes like rainwater and luck<br>
+          Neon flickers slow while the jukebox spins a waltz<br>
+          We carve our names in steam on the window glass<br>
+          Stay till sunrise and the road will wait its turn
+        </p>
+      </div>
+    </div>
+
+    <div class="features__item features__item--left gs_reveal gs_reveal_fromLeft">
+      <div class="features__image">
+        <div class="features__card">
+          <img class="features__img" src="_assets/16327/portrait-image-3.jpg" alt="">
+        </div>
+      </div>
+      <div class="features__content">
+        <h2 class="features__title gs_reveal">Stardust Ballroom</h2>
+        <p class="features__description gs_reveal">
+          Mirror tiles catch every hopeful face<br>
+          Records spin thin silver threads through the dark<br>
+          We move like planets pulled by quiet drums<br>
+          Hold the beat and the night will never close
+        </p>
+      </div>
+    </div>
+
+    <div class="features__item features__item--right gs_reveal gs_reveal_fromRight">
+      <div class="features__image">
+        <div class="features__card">
+          <img class="features__img" src="_assets/16327/portrait-image-1.jpg" alt="">
+        </div>
+      </div>
+      <div class="features__content">
+        <h2 class="features__title gs_reveal">Sky Without Borders</h2>
+        <p class="features__description gs_reveal">
+          Lay your worries down beneath the porchlight glow<br>
+          The crickets stitch soft rhythm in the grass<br>
+          We trade small dreams and make them loud together<br>
+          A sky without borders is waiting past the trees
+        </p>
+      </div>
+    </div>
+
+  </div>
+</div>
+<div class="spacer"></div>
+  <script src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/16327/gsap-latest-beta.min.js?r=5426'></script>
+<script src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/16327/ScrollTrigger.min.js'></script>
+    <script id="rendered-js" >
+function animateFrom(elem, direction) {
+  direction = direction || 1;
+  var x = 0,
+  y = direction * 100;
+  if (elem.classList.contains("gs_reveal_fromLeft")) {
+    x = -100;
+    y = 0;
+  } else if (elem.classList.contains("gs_reveal_fromRight")) {
+    x = 100;
+    y = 0;
+  }
+  elem.style.transform = "translate(" + x + "px, " + y + "px)";
+  elem.style.opacity = "0";
+  gsap.fromTo(elem, { x: x, y: y, autoAlpha: 0 }, {
+    duration: 1.25,
+    x: 0,
+    y: 0,
+    autoAlpha: 1,
+    ease: "expo",
+    overwrite: "auto" });
+
+}
+
+function hide(elem) {
+  gsap.set(elem, { autoAlpha: 0 });
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.utils.toArray(".gs_reveal").forEach(function (elem) {
+    hide(elem); // assure that the element is hidden when scrolled into view
+
+    ScrollTrigger.create({
+      trigger: elem,
+      // markers: true,
+      onEnter: function () {animateFrom(elem);},
+      onEnterBack: function () {animateFrom(elem, -1);},
+      onLeave: function () {hide(elem);} // assure that the element is hidden when scrolled into view
+    });
+  });
+});
+//# sourceURL=pen.js
+  </script>
+
+  
+</body>
+
+</html>

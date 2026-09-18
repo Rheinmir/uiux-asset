@@ -1,0 +1,189 @@
+<!-- VENDORED NGUYÊN VĂN — "Efficient Image Scroll Zoom Effect" by CAWeissen · https://codepen.io/CAWeissen/pen/rNNobpJ
+     License: MIT (CodePen public pen = MIT). Giữ dòng này khi copy. -->
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  
+  <meta charset="UTF-8">
+  
+
+    <link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
+
+    <meta name="apple-mobile-web-app-title" content="CodePen">
+
+    <link rel="icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
+
+    <link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-b4b4269c16397ad2f0f7a01bcdf513a1994f4c94b8af2f191c09eb0d601762b1.svg" color="#111" />
+
+
+
+  
+    <script>/* stub loop-protect CodePen — chạy ngoài CodePen */window.CP={shouldStopExecution:()=>false,exitedLoop:()=>{}};</script>
+
+
+  <title>Efficient Scroll Zoom</title>
+
+    <link rel="canonical" href="https://codepen.io/CAWeissen/pen/rNNobpJ">
+  
+  
+  <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Merriweather&amp;display=swap'>
+  
+<style>
+body {
+  margin: 0;
+}
+
+.background {
+  align-items: center;
+  background: #04FEBA;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  width: 100vw;
+}
+
+.container {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: 600vh;
+  justify-content: space-around;
+  text-align: center;
+  text-transform: uppercase;
+  width: 100vmin;
+}
+.container p {
+  font-family: Merriweather, sans-serif;
+  font-size: 20px;
+  line-height: 1.5;
+  max-width: 70vmin;
+  text-align: justify;
+  text-transform: none;
+}
+
+.image {
+  background: white;
+  box-shadow: 3px 10px 10px rgba(0, 0, 0, 0.25);
+  border: 15px solid white;
+  border-width: 1vmin 1vmin 10vmin 1vmin;
+  height: 70vmin;
+  overflow: hidden;
+  width: 70vmin;
+}
+.image img {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+</style>
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+  
+  
+</head>
+
+<body translate="no">
+  <div class="background">
+    <div class="container">
+        <div class="image">
+            <img src="https://picsum.photos/1080/1080?1" data-scroll-zoom />
+        </div>
+        <div class="image">
+            <img src="https://picsum.photos/1080/1080?2" data-scroll-zoom />
+        </div>
+        <div class="image">
+            <img src="https://picsum.photos/1080/1080?3" data-scroll-zoom />
+        </div>
+        <div class="image">
+            <img src="https://picsum.photos/1080/1080?4" data-scroll-zoom />
+        </div>
+        <div class="image">
+            <img src="https://picsum.photos/1080/1080?5" data-scroll-zoom />
+        </div>
+        <div class="image">
+            <img src="https://picsum.photos/1080/1080?6" data-scroll-zoom />
+        </div>
+        <div>
+          <p>This method utilizes the Intersection Observer to zoom the image <em>only when it is in view,</em> which cuts down on the processing power required for this effect.</p>
+        </div>
+    </div>
+</div>
+  
+    <script id="rendered-js" >
+// Higher number = more zoom
+let scaleAmount = 0.5;
+
+function scrollZoom() {
+  const images = document.querySelectorAll("[data-scroll-zoom]");
+  let scrollPosY = 0;
+  scaleAmount = scaleAmount / 100;
+
+  const observerConfig = {
+    rootMargin: "0% 0% 0% 0%",
+    threshold: 0 };
+
+
+  // Create separate IntersectionObservers and scroll event listeners for each image so that we can individually apply the scale only if the image is visible
+  images.forEach(image => {
+    let isVisible = false;
+    const observer = new IntersectionObserver((elements, self) => {
+      elements.forEach(element => {
+        isVisible = element.isIntersecting;
+      });
+    }, observerConfig);
+
+    observer.observe(image);
+
+    // Set initial image scale on page load
+    image.style.transform = `scale(${1 + scaleAmount * percentageSeen(image)})`;
+
+    // Only fires if IntersectionObserver is intersecting
+    window.addEventListener("scroll", () => {
+      if (isVisible) {
+        scrollPosY = window.pageYOffset;
+        image.style.transform = `scale(${1 +
+        scaleAmount * percentageSeen(image)})`;
+      }
+    });
+  });
+
+  // Calculates the "percentage seen" based on when the image first enters the screen until the moment it leaves
+  // Here, we get the parent node position/height instead of the image since it's in a container that has a border, but
+  // if your container has no extra height, you can simply get the image position/height
+  function percentageSeen(element) {
+    const parent = element.parentNode;
+    const viewportHeight = window.innerHeight;
+    const scrollY = window.scrollY;
+    const elPosY = parent.getBoundingClientRect().top + scrollY;
+    const borderHeight = parseFloat(getComputedStyle(parent).getPropertyValue('border-bottom-width')) + parseFloat(getComputedStyle(element).getPropertyValue('border-top-width'));
+    const elHeight = parent.offsetHeight + borderHeight;
+
+    if (elPosY > scrollY + viewportHeight) {
+      // If we haven't reached the image yet
+      return 0;
+    } else if (elPosY + elHeight < scrollY) {
+      // If we've completely scrolled past the image
+      return 100;
+    } else {
+      // When the image is in the viewport
+      const distance = scrollY + viewportHeight - elPosY;
+      let percentage = distance / ((viewportHeight + elHeight) / 100);
+      percentage = Math.round(percentage);
+
+      return percentage;
+    }
+  }
+}
+
+scrollZoom();
+//# sourceURL=pen.js
+  </script>
+
+  
+</body>
+
+</html>

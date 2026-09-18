@@ -1,0 +1,416 @@
+<!-- VENDORED NGUYÊN VĂN — "GSAP ScrollTrigger Parallax Effect" by celli · https://codepen.io/celli/pen/mdVMOjr
+     License: MIT (CodePen public pen = MIT). Giữ dòng này khi copy. -->
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  
+  <meta charset="UTF-8">
+  
+
+    <link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
+
+    <meta name="apple-mobile-web-app-title" content="CodePen">
+
+    <link rel="icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
+
+    <link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-b4b4269c16397ad2f0f7a01bcdf513a1994f4c94b8af2f191c09eb0d601762b1.svg" color="#111" />
+
+
+
+  
+    <script>/* stub loop-protect CodePen — chạy ngoài CodePen */window.CP={shouldStopExecution:()=>false,exitedLoop:()=>{}};</script>
+
+
+  <title>GSAP scrollTrigger Paralax</title>
+
+    <link rel="canonical" href="https://codepen.io/celli/pen/mdVMOjr">
+  
+  
+  
+  
+<style>
+*{margin:0px; padding:0px; box-sizing:border-box;}
+body{background-color:#0a1075; padding:40px;}
+
+.title{color:#fc659e; font-size:70px; line-height:98px; font-family: 'Libre Baskerville', serif; padding-top:60px; padding-bottom:40px; width:90%; background-color:transparent; margin:40px auto; overflow:hidden; box-sizing: border-box; font-kerning: none;}
+.title span{color:#ffffff; overflow:hidden;}
+
+img{width:100%;}
+
+section{width:100%; max-width:960px; margin:0 auto;}
+
+.cluster{position:relative; width:100%; max-width:874px; height:792px; margin:100px auto; background-color:transparent; padding-bottom:100px;}
+
+.clusterPieces{position:absolute;}
+
+.circle{width:100%; max-width:360px; height:360px; border-radius:50%; background-color:#fc659e; left:214px; bottom:0; z-index:1;}
+
+.dotsBlue{width:100%; height:auto; max-width:494px; max-height:434px; z-index:3; left:0; top:80px;}
+
+.owlHorned{width:100%; height:auto; max-width:450px; max-height:700px; top:0; right:0; z-index:2;}
+
+.caption{font-family: 'Open Sans', sans-serif; font-size:14px; line-height:16px; color:#fc659e; text-align:right;}
+.caption span{color:#ffffff;}
+
+#wrappie{width:960px; height:792px; margin:0 auto;}
+
+
+.dotsWhite{width:100%; height:auto; max-width:310px; max-height:588px; z-index:2; left:0; top:400px;}
+
+.owlBurrowing{width:100%; height:auto; max-width:674px; max-height:700px; top:162px; right:0; z-index:1;}
+
+.triangle{width:100%; max-width:448px; height:446px; left:-28px; top:0; z-index:3;}
+
+.clusterBurrowing{max-width:874px; height:996px;}
+.captionBurrowing{}
+
+.spcr300{padding-bottom:300px;}
+
+
+@media screen and (max-width: 1025px) {
+   .title{font-size:60px; line-height:74px; padding-left:40px;}
+  
+  .cluster{max-width:600px; height:550px; margin:20px auto;}
+  .dotsBlue{max-width:340px;left:0; top:56px;}
+  .owlHorned{max-width:310px;}
+  .circle{max-width:246px; height:246px; left:146px; top:300px;}
+  .caption{bottom:38px; right:0;}
+  
+    .clusterBurrowing{max-width:600px; height:678px;}
+    .dotsWhite{max-width:216px;left:0; top:275px;}
+    .owlBurrowing{max-width:460px; top:112px;}
+    .triangle{max-width:307px; height:304px; left:-14px;}
+    .captionBurrowing{top:605px;}
+}
+
+@media screen and (max-width: 640px) {
+     .title{font-size:44px; line-height:61px;}
+  
+  .cluster{max-width:480px; height:436px;}
+  .dotsBlue{max-width:274px;left:0; top:45px;}
+  .owlHorned, .owlBurrowing{max-width:248px;}
+  .circle{max-width:196px; height:196px; left:115px; top:240px;}
+  .caption{bottom:25px; right:0;}
+  
+  .clusterBurrowing{max-width:480px; height:542px;}
+    .dotsWhite{max-width:174px;left:0; top:220px;}
+    .owlBurrowing{max-width:369px; top:88px;}
+    .triangle{max-width:240px; height:240px; left:-10px;}
+    .captionBurrowing{top:482px;}
+}
+
+@media screen and (max-width: 540px) {
+    .title{font-size:34px; line-height:51px; padding-left:0px;}
+    .clusterPieces{position:relative;}
+  
+  .cluster{max-width:320px; height:530px;}
+  .dotsBlue{display:none}
+  .owlHorned{max-width:320px; top:0;}
+  .circle{display:none;}
+  .caption{float:right; bottom:0;}
+  
+    .clusterBurrowing{max-width:320px; height:268px;}
+    .dotsWhite{display:none}
+    .owlBurrowing{max-width:320px; top:0;}
+    .triangle{display:none}
+    .captionBurrowing{float:right; top:0; }
+}
+</style>
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+  
+  
+</head>
+
+<body translate="no">
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+
+<section>
+  <div class="title titleGreathorned"><span>The great horned owl</span> also known as the tiger owl or the hoot owl, is a large owl native to the Americas.</div>
+</section>
+
+
+<section class="cluster clusterGreat">
+  <div class="circle clusterPieces"></div>
+
+  <div class="owlHorned clusterPieces"><img src="https://www.micelistudios.com/sandbox/scrolltrigger/imgs/great_horned_owl.jpg" />
+   <div class="caption"><span>/01</span> GREAT HORNED OWL</div>
+   </div>
+  
+  <img class="dotsBlue clusterPieces" src="https://www.micelistudios.com/sandbox/scrolltrigger/imgs/dots_blue_494x434.svg" />
+  </section>
+
+<section>
+  <div class="title titleBurrowing"><span>The burrowing owl</span> is a small, long-legged owl found throughout open landscapes of North and South America.</div>
+</section>
+
+
+<section class="cluster clusterBurrowing">
+  <img class="clusterPieces triangle" src="https://www.micelistudios.com/sandbox/scrolltrigger/imgs/triangle_448x446.svg">
+   
+  <div class="clusterPieces owlBurrowing"><img src="https://www.micelistudios.com/sandbox/scrolltrigger/imgs/burrrowing_owl_674x700.jpg">
+    <div class="caption captionBurrowing"><span>/02</span> BURROWING OWL</div>
+  </div>
+  
+  <img class="clusterPieces dotsWhite" src="https://www.micelistudios.com/sandbox/scrolltrigger/imgs/dots_white_310x588.svg">
+  
+  </section>
+
+<section class="spcr300"></section>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/3.3.4/gsap.min.js'></script>
+<script src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/16327/ScrollTrigger.min.js'></script>
+<script src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/16327/SplitText3.min.js'></script>
+    <script id="rendered-js" >
+/* ------Great Horned Owl Sequence------  */
+gsap.set(".circle", { yPercent: -5 });
+gsap.set(".dotsBlue", { yPercent: 10 });
+gsap.set(".owlHorned", { yPercent: -20 });
+gsap.set(".clusterGreat", { yPercent: 5 });
+
+gsap.to(".circle", {
+  yPercent: 5,
+  ease: "none",
+  scrollTrigger: {
+    trigger: ".clusterGreat",
+    scrub: 1 } });
+
+
+
+gsap.to(".dotsBlue", {
+  yPercent: -10,
+  ease: "none",
+  scrollTrigger: {
+    trigger: ".clusterGreat",
+    scrub: 1 } });
+
+
+
+
+gsap.to(".owlHorned", {
+  yPercent: 20,
+  ease: "none",
+  scrollTrigger: {
+    trigger: ".clusterGreat",
+    scrub: 1 } });
+
+
+
+gsap.to(".caption", {
+  yPercent: 100,
+  ease: "none",
+  scrollTrigger: {
+    trigger: ".clusterGreat",
+    // markers:true,
+    end: "bottom center",
+    scrub: 1 } });
+
+
+
+gsap.to(".clusterGreat", {
+  yPercent: -5,
+  ease: "none",
+  scrollTrigger: {
+    trigger: ".clusterGreat",
+    end: "bottom center",
+    scrub: 1 } });
+
+
+
+
+
+/* ------Burrowing Owl Sequence------  */
+gsap.set(".triangle", { yPercent: 25, rotation: -90 });
+gsap.set(".dotsWhite", { yPercent: 10 });
+gsap.set(".owlBurrowing", { yPercent: -20 });
+gsap.set(".clusterBurrowing", { yPercent: 5 });
+
+gsap.to(".triangle", {
+  yPercent: -5,
+  rotation: 40,
+  ease: "none",
+  scrollTrigger: {
+    trigger: ".clusterBurrowing",
+    scrub: 1 } });
+
+
+
+gsap.to(".dotsWhite", {
+  yPercent: -10,
+  ease: "none",
+  scrollTrigger: {
+    trigger: ".clusterBurrowing",
+    scrub: 1 } });
+
+
+
+
+gsap.to(".owlBurrowing", {
+  yPercent: 20,
+  ease: "none",
+  scrollTrigger: {
+    trigger: ".clusterBurrowing",
+    scrub: 1 } });
+
+
+
+gsap.to(".captionBurrowing", {
+  yPercent: 200,
+  ease: "none",
+  scrollTrigger: {
+    trigger: ".clusterBurrowing",
+    // markers:true,
+    end: "bottom center",
+    scrub: 1 } });
+
+
+
+gsap.to(".clusterBurrowing", {
+  yPercent: -5,
+  ease: "none",
+  scrollTrigger: {
+    trigger: ".clusterBurrowing",
+    // markers:true,
+    end: "bottom center",
+    scrub: 1 } });
+
+
+
+
+/*
+gsap.set("#wrappie", {transformOrigin:"top left"});
+
+function sizeAll() {
+	var w = document.body.clientWidth;
+  	console.log(w);
+	if ( w < 960) {
+     gsap.set("#wrappie",  {scale:w/100*.125}); 
+		} 
+}
+
+window.onresize = sizeAll;
+
+sizeAll();
+*/
+
+/*
+const quotes = document.querySelectorAll(".title");
+
+function setupSplits() {
+  quotes.forEach(quote => {
+    // Reset if needed
+    if(quote.anim) {
+      quote.anim.progress(1).kill();
+      quote.childSplit.revert();
+      quote.parentSplit.revert();
+    }
+    
+    // Set up the splits
+    quote.parentSplit = new SplitText(quote, {
+      type: "lines",
+      linesClass: "split-parent"
+    });
+
+    quote.childSplit = new SplitText(quote, { type: "lines" });
+
+    // Set up the anim
+    quote.anim = gsap.from(quote.childSplit.chars, {
+      scrollTrigger: {
+        trigger: quote,
+        toggleActions: "restart pause resume reverse",
+        start: "top 50%",
+      },
+      duration: 0.6, 
+      ease: "circ.out", 
+      y: 10,
+      opacity:0,
+      stagger: 0.02,
+    });
+  });
+}
+
+ScrollTrigger.addEventListener("refresh", setupSplits);
+setupSplits();
+*/
+
+
+/* --- Split the text, Great Horned Owl --- */
+var tlSplitGreat = gsap.timeline({ onComplete: () => {SplitGreat.revert();} }),
+SplitGreat = new SplitText(".titleGreathorned", { type: "words,chars" }),
+chars = SplitGreat.chars;
+
+
+tlSplitGreat.from(chars, {
+  duration: 0.8,
+  opacity: 0,
+  y: 10,
+  ease: "circ.out",
+  stagger: 0.02 },
+"+=0");
+
+
+
+/* --- Split the text, Burrowing Owl --- */
+function setupSplits() {
+
+  var tlSplitBurrowing = gsap.timeline(),
+  SplitBurrowing = new SplitText(".titleBurrowing", { type: "words,chars" }),
+  chars = SplitBurrowing.chars; //an array of all the divs that wrap each character
+
+
+  tlSplitBurrowing.from(chars, {
+    duration: 0.8,
+    opacity: 0,
+    y: 10,
+    ease: "circ.out",
+    stagger: 0.02,
+    scrollTrigger: {
+      trigger: ".titleBurrowing",
+      //markers:true,
+      start: "top 75%",
+      end: "bottom center",
+      scrub: 1 }
+
+    //,   onComplete: () => {SplitBurrowing.revert()}
+  }, "+=0");
+
+  // window.addEventListener('resize', function() {
+  // SplitBurrowing.revert();
+  // });
+
+};
+
+/*
+ScrollTrigger.addEventListener("scrollEnd", function() {
+    SplitBurrowing.revert();
+});
+*/
+
+ScrollTrigger.addEventListener("refresh", setupSplits);
+//ScrollTrigger.addEventListener("scrollEnd", () => SplitBurrowing.revert());
+setupSplits();
+
+
+/*
+// Alternate way of resizing the cluster elements since they are absolutely positioned
+$(window).resize(function (){
+if(window.matchMedia("(max-width: 500px)").matches){
+    gsap.set(".clusterGreat", {scale: 0.2, transformOrigin: "center center"});
+} else {
+  gsap.set(".clusterGreat", {scale: 1, transformOrigin: "center center"});
+          }
+});
+*/
+//# sourceURL=pen.js
+  </script>
+
+  
+</body>
+
+</html>

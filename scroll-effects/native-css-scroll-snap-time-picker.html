@@ -1,0 +1,323 @@
+<!-- VENDORED NGUYÊN VĂN — "Native CSS Scroll Snap Time Picker" by argyleink · https://codepen.io/argyleink/pen/WNageoZ
+     License: MIT (CodePen public pen = MIT). Giữ dòng này khi copy. -->
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  
+  <meta charset="UTF-8">
+  
+
+    <link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
+
+    <meta name="apple-mobile-web-app-title" content="CodePen">
+
+    <link rel="icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
+
+    <link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-b4b4269c16397ad2f0f7a01bcdf513a1994f4c94b8af2f191c09eb0d601762b1.svg" color="#111" />
+
+
+
+  
+    <script>/* stub loop-protect CodePen — chạy ngoài CodePen */window.CP={shouldStopExecution:()=>false,exitedLoop:()=>{}};</script>
+
+
+  <title>scroll-start : Date Time Picker (experimental)</title>
+
+    <link rel="canonical" href="https://codepen.io/argyleink/pen/WNageoZ">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  
+  
+<style>
+[data-scroll-start-target] {
+  scroll-start-target-block: auto;
+}
+
+.picker {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 2ch;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.picker::before,
+.picker::after {
+  content: " ";
+  position: absolute;
+  top: 0;
+  background: linear-gradient(
+    hsl(200 20% 10%), 
+    65%,
+    hsl(200 20% 10% / 0%)
+  );
+  /*   backdrop-filter: blur(1px); */
+  width: 100%;
+  height: calc(50% - 3.5ex);
+  pointer-events: none;
+}
+
+.picker::after {
+  top: auto;
+  bottom: 0;
+  background: linear-gradient(
+    hsl(200 20% 10% / 0%), 
+    35%, 
+    hsl(200 20% 10%)
+  ); 
+}
+
+.picker > * {
+  display: grid;
+  grid-auto-rows: 9vmin;
+  align-items: center;
+  max-block-size: calc(9vmin * 5);
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -ms-scroll-snap-type: y mandatory;
+      scroll-snap-type: y mandatory;
+  -webkit-padding-end: 1ch;
+          padding-inline-end: 1ch;
+  font-size: 7vmin;
+  font-weight: lighter;
+  color: hsl(0 0% 20%);
+  scroll-behavior: smooth;
+}
+
+.picker > [title]::before {
+  content: attr(title);
+  position: sticky;
+  top: 0;
+  align-self: start;
+  color: hsl(0 0% 65%);
+  z-index: 1;
+  font-size: min(.5em, 40%);
+  font-weight: bold;
+  text-align: center;
+  text-shadow: 0 1px 1px hsl(0 0% 0% / 50%);
+  text-transform: uppercase;
+}
+
+.picker > [title]:first-child::before {
+  text-align: end;
+}
+
+.picker > * > * {
+  scroll-snap-align: center;
+}
+
+date {
+  text-align: end;
+}
+
+time {
+  text-align: center;
+}
+
+date, time {
+  color: hsl(200 20% 80%);
+}
+
+html {
+  block-size: 100%;
+  inline-size: 100%;
+  background: hsl(200 20% 10%);
+}
+
+body {
+  min-block-size: 100%;
+  min-inline-size: 100%;
+  margin: 0;
+  box-sizing: border-box;
+  display: grid;
+  gap: 5vmin;
+  place-content: center;
+  font-family: system-ui, sans-serif;
+}
+
+output {
+  font-size: 5vmax;
+  background: hsl(200 20% 5%);
+  color: hsl(200 50% 90%);
+  padding: 1rem;
+  border-radius: 1rem;
+  max-inline-size: -webkit-fit-content;
+  max-inline-size: -moz-fit-content;
+  max-inline-size: fit-content;
+  margin-inline: auto;
+}
+</style>
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+  
+  
+</head>
+
+<body translate="no">
+  <div class="picker">
+  <span class="dates" title="day">
+    <date>Fri 24 Jul</date>
+    <date>Sat 25 Jul</date>
+    <date>Sun 26 Jul</date>
+    <date>Mon 27 Jul</date>
+    <date>Tue 28 Jul</date>
+    <date>Wed 29 Jul</date>
+    <date>Thu 30 Jul</date>
+    <date data-scroll-start-target>Fri 1 Aug</date>
+    <date>Sat 2 Aug</date>
+    <date>Sun 3 Aug</date> 
+    <date>Mon 4 Aug</date>
+    <date>Tue 5 Aug</date>
+    <date>Wed 6 Aug</date>
+    <date>Thu 7 Aug</date>
+    <date>Fri 8 Aug</date>
+    <date>Sat 9 Aug</date> 
+    <date>Sun 10 Aug</date>
+    <date>Mon 11 Aug</date>
+    <date>Tue 12 Aug</date>
+    <date>Wed 13 Aug</date>
+    <date>Thu 14 Aug</date>
+  </span>
+  <span class="hours" title="hour">
+    <time>1</time>
+    <time>2</time>
+    <time>3</time>
+    <time>4</time>
+    <time>5</time>
+    <time data-scroll-start-target>6</time> 
+    <time>7</time>
+    <time>8</time>
+    <time>9</time>
+    <time>10</time>
+    <time>11</time>
+    <time>12</time>
+    <time>13</time>
+    <time>14</time>
+    <time>15</time>
+    <time>16</time>
+    <time>17</time>
+    <time>18</time>
+    <time>19</time>
+    <time>20</time>
+    <time>21</time>
+    <time>22</time>
+    <time>23</time>
+    <time>24</time>
+  </span>
+  <span class="minutes" title="min">
+    <time>00</time>
+    <time>01</time>
+    <time>02</time>
+    <time>03</time> 
+    <time>04</time>
+    <time>05</time>
+    <time>06</time>
+    <time>07</time>
+    <time>08</time>
+    <time>09</time>
+    <time>10</time>
+    <time>11</time>
+    <time>12</time>
+    <time>13</time>
+    <time>14</time>
+    <time>15</time>
+    <time>16</time>
+    <time>17</time>
+    <time>18</time>
+    <time>19</time>
+    <time>20</time>
+    <time>21</time>
+    <time>22</time>
+    <time>23</time>
+    <time>24</time>
+    <time>25</time>
+    <time>26</time>
+    <time>27</time>
+    <time>28</time>
+    <time>29</time>
+    <time data-scroll-start-target>30</time>
+    <time>31</time>
+    <time>32</time>
+    <time>33</time>
+    <time>34</time>
+    <time>35</time>
+    <time>36</time>
+    <time>37</time>
+    <time>38</time>
+    <time>39</time>
+    <time>40</time>
+    <time>41</time>
+    <time>42</time>
+    <time>43</time>
+    <time>44</time>
+    <time>45</time>
+    <time>46</time>
+    <time>47</time>
+    <time>48</time>
+    <time>49</time>
+    <time>50</time>
+    <time>51</time>
+    <time>52</time>
+    <time>53</time>
+    <time>54</time>
+    <time>55</time>
+    <time>56</time>
+    <time>57</time>
+    <time>58</time>
+    <time>59</time>
+  </span>
+</div>
+
+<output id="output">
+  <span id="day">Fri 1 Aug</span> @ 
+  <span id="hour">6</span>:<span id="min">30</span> 
+</output>
+  
+    <script id="rendered-js" >
+if (!CSS.supports('scroll-start: auto')) {
+  window.onload = () => {
+    document.querySelectorAll('[data-scroll-start-target]').forEach((item, idx) => {
+      setTimeout(function () {
+        item.scrollIntoView({ block: 'center', inline: 'start', behavior: 'instant' });
+      }, 1 * idx);
+    });
+  };
+}
+
+document.querySelectorAll('.picker > span').forEach(scroller => {
+  scroller.addEventListener('scrollsnapchange', e => {
+    console.info('Snap Changed', e === null || e === void 0 ? void 0 : e.snapTargetBlock);
+
+    output.animate([{
+      boxShadow: '0 0 0 0px hsl(200 100% 50% / 50%)' },
+    {
+      boxShadow: '0 0 0 20px hsl(200 100% 50% / 0%)' }],
+    {
+      duration: 900,
+      iterations: 1,
+      easing: 'ease-out' });
+
+  });
+
+  scroller.addEventListener('scrollsnapchanging', e => {
+    console.info('Snap Changing', e === null || e === void 0 ? void 0 : e.snapTargetBlock);
+    const snapTarget = e === null || e === void 0 ? void 0 : e.snapTargetBlock;
+
+    // the title matches the <output> ID
+    let col = snapTarget.parentElement.getAttribute('title');
+
+    // put the text of the snapTarget into the relevant <output> span
+    window[col].textContent = snapTarget.innerText;
+  });
+});
+//# sourceURL=pen.js
+  </script>
+
+  
+</body>
+
+</html>

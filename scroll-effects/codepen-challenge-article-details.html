@@ -1,0 +1,446 @@
+<!-- VENDORED NGUYÊN VĂN — "Codepen Challenge: Article Details" by Sicontis · https://codepen.io/Sicontis/pen/vYpoMXO
+     License: MIT (CodePen public pen = MIT). Giữ dòng này khi copy. -->
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  
+  <meta charset="UTF-8">
+  
+
+    <link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
+
+    <meta name="apple-mobile-web-app-title" content="CodePen">
+
+    <link rel="icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
+
+    <link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-b4b4269c16397ad2f0f7a01bcdf513a1994f4c94b8af2f191c09eb0d601762b1.svg" color="#111" />
+
+
+
+  
+    <script>/* stub loop-protect CodePen — chạy ngoài CodePen */window.CP={shouldStopExecution:()=>false,exitedLoop:()=>{}};</script>
+
+
+  <title>Codepen Challenge: Article Details</title>
+
+    <link rel="canonical" href="https://codepen.io/Sicontis/pen/vYpoMXO">
+  
+  
+  
+  
+<style>
+@import url("https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Poppins&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+
+  --black: #1a1a1a;
+  --white: #f3fdfd;
+  --dark-blue: #025c85;
+
+  --size-h1: 5rem;
+  --size-h2: 1.2rem;
+  --size-p: 1rem;
+  --size-quote: 1.4rem;
+
+  --serif-font: "DM Serif Display", serif;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 2em;
+}
+
+body {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background-color: var(--white);
+  background-image: url("https://www.transparenttextures.com/patterns/noisy.png");
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  color: var(--black);
+  counter-reset: num;
+}
+
+img {
+  width: 100%;
+  height: auto;
+}
+
+h1 {
+  font-family: var(--serif-font);
+  font-size: var(--size-h1);
+  color: var(--dark-blue);
+}
+h2 {
+  height: min-content;
+  font-size: var(--size-h2);
+  font-weight: normal;
+}
+p {
+  font-size: var(--size-p);
+  line-height: 1.5rem;
+  opacity: 0.8;
+}
+ul {
+  list-style: none;
+}
+a {
+  text-decoration: none;
+}
+
+article {
+  margin: 4em 0;
+  width: 100%;
+  max-width: 1080px;
+  padding: 1em;
+  position: relative;
+}
+
+blockquote {
+  padding: 1em 0 1em 1em;
+  font-size: var(--size-quote);
+  font-family: var(--serif-font);
+  position: relative;
+}
+blockquote span {
+  display: block;
+  font-family: "Poppins", sans-serif !important;
+  font-size: 1rem;
+  font-family: inherit;
+  text-transform: uppercase;
+  margin-top: 0.5em;
+}
+blockquote::before {
+  position: absolute;
+  top: -50px;
+  left: 0;
+  content: "\201C";
+  font-size: 8em;
+  color: var(--dark-blue);
+  opacity: 0.2;
+}
+
+.nav {
+  position: sticky;
+  width: min-content;
+  top: 0;
+  left: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 40px);
+  padding: 3px;
+  justify-items: center;
+  align-items: center;
+  z-index: 10;
+  background-color: var(--dark-blue);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.nav.show {
+  opacity: 1;
+}
+
+.item a {
+  display: block;
+  font-weight: bold;
+  color: var(--white);
+  opacity: 0.3;
+}
+
+.active a {
+  opacity: 1;
+}
+
+.intro,
+.middle,
+.epilogue,
+.final {
+  margin-top: 6em;
+}
+
+.section {
+  display: grid;
+  grid-template-columns: 40% 1fr;
+  column-gap: 1em;
+  position: relative;
+  counter-increment: num;
+}
+.section h2 {
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--dark-blue);
+}
+.section:not(div.blank)::before {
+  position: absolute;
+  content: "0" counter(num);
+  left: 0;
+  top: 2%;
+  font-size: 4rem;
+  color: var(--dark-blue);
+  opacity: 0.2;
+}
+
+.blank {
+  counter-reset: num;
+}
+.blank img {
+  grid-column: 2/3;
+  margin: 1em 0;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 40% 1fr;
+  column-gap: 1em;
+  align-items: center;
+  position: relative;
+}
+.hero div {
+  height: min-content;
+  padding: 1em 2em 1em 0;
+}
+.hero h1 {
+  font-size: var(--size-h1);
+  line-height: calc(var(--size-h1) + 0.5rem);
+}
+.hero h2 {
+  margin: 2em 0 0.3em 0;
+  font-size: calc(var(--size-p) + 0.2rem);
+}
+
+.intro p {
+  margin: 2em 0;
+  column-count: 2;
+  column-gap: 2em;
+}
+.middle p,
+.epilogue p,
+.final p {
+  margin-bottom: 2em;
+}
+
+.middle img {
+  width: 50%;
+  float: left;
+  padding-right: 2em;
+}
+
+.final p:last-of-type {
+  column-count: 2;
+  column-gap: 2em;
+}
+
+@media (max-width: 700px) {
+  article {
+    margin: 1em 0;
+  }
+  .hero {
+    grid-template-columns: 1fr;
+  }
+  .hero div {
+    margin-bottom: 2em;
+  }
+  .hero h1 {
+    font-size: calc(var(--size-h1) - 1rem);
+  }
+
+  .section:not(div.blank)::before {
+    top: 3%;
+    font-size: 4rem;
+  }
+
+  .intro p {
+    margin: 1em 0;
+    column-count: 1;
+  }
+  .final p:last-of-type {
+    column-count: 1;
+    column-gap: 1em;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero h1 {
+    font-size: calc(var(--size-h1) - 2rem);
+  }
+  .section {
+    grid-template-columns: 1fr;
+  }
+  blockquote::before {
+    top: -30px;
+    font-size: 6em;
+  }
+  .section h2 {
+    margin-bottom: 1em;
+  }
+  .section:not(div.blank)::before {
+    top: -1.5em;
+    font-size: 2rem;
+  }
+
+  html {
+    scroll-padding-top: 5em;
+  }
+}
+</style>
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+  
+  
+</head>
+
+<body translate="no">
+  <article>
+
+  <ul class="nav">
+    <li class="item" data-nav="section-1"><a href="#section-1">01</a></li>
+    <li class="item" data-nav="section-2"><a href="#section-2">02</a></li>
+    <li class="item" data-nav="section-3"><a href="#section-3">03</a></li>
+    <li class="item" data-nav="section-4"><a href="#section-4">04</a></li>
+  </ul>
+
+  <div class="hero">
+    <div>
+      <h1>Birds, Birds, Birds!</h1>
+      <h2><strong>By Finch Sparrow</h2>
+      <p>A photo essay on the beauty and colors of the smallest birds around the world.</p>
+    </div>
+    <img src='https://images.unsplash.com/photo-1615146101981-cf25d1a1e6a1?crop=entropy&cs=srgb&fm=jpg&ixid=MnwxNDU4OXwwfDF8cmFuZG9tfHx8fHx8fHx8MTY1MTA1MDg4Nw&ixlib=rb-1.2.1&q=85' alt='a red cardinal perched on a bare tree branch.'>
+  </div>
+
+  <div class="section intro" id="section-1">
+    <h2>You Gotta Love Birds</h2>
+    <div>
+      <blockquote>
+        Not humans, but birds often witness the most beautiful mornings in this world!
+        <span>&mdash; Mehmet Murat İldan</span>
+      </blockquote>
+
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus imperdiet ut quam sit amet vehicula. Donec sit amet facilisis quam. Integer mollis, urna accumsan tempor hendrerit, risus neque tincidunt neque, in aliquam elit eros quis tortor. Sed id venenatis massa, ut malesuada sem. Nam lacinia sodales tellus nec efficitur. Vestibulum fringilla nisl ac iaculis ultricies. Sed commodo imperdiet metus vitae molestie. In laoreet rutrum pretium. Aenean a enim ac lacus tincidunt pellentesque ac a tellus. Donec imperdiet efficitur risus in venenatis. Aenean ornare iaculis orci a condimentum. Praesent tincidunt, purus ac placerat posuere, lacus risus suscipit lacus, et sollicitudin turpis metus in enim. Vestibulum at imperdiet magna, ac vehicula magna. Sed commodo imperdiet metus vitae molestie.
+      </p>
+    </div>
+  </div>
+
+  <div class="section blank">
+    <img src='https://images.unsplash.com/photo-1581828060617-76d979afbf5e?crop=entropy&cs=srgb&fm=jpg&ixid=MnwxNDU4OXwwfDF8cmFuZG9tfHx8fHx8fHx8MTY1MDk1NzQ0MQ&ixlib=rb-1.2.1&q=85' alt=''>
+  </div>
+
+  <div class="section middle" id="section-2">
+    <h2>Flapping Around, Flying All Over</h2>
+    <div>
+      <p>Donec imperdiet efficitur risus in venenatis. Aenean ornare iaculis orci a condimentum. Praesent tincidunt, purus ac placerat posuere, lacus risus suscipit lacus, et sollicitudin turpis metus in enim. Vestibulum at imperdiet magna, ac vehicula magna. Praesent placerat sapien bibendum, faucibus lectus at, euismod elit. Nunc velit est, faucibus et faucibus eu, tempus non nisi.</p>
+
+      <p>Donec eu eros augue. Fusce blandit sed lacus ut pretium. Vivamus lacus ligula, fringilla sit amet nibh non, bibendum auctor nisi. In quis mollis mauris. Aliquam eget arcu ut arcu rhoncus posuere nec sit amet mauris. Integer consequat felis vitae quam ultricies, eu ultrices mi finibus. Cras eget nunc at nisl venenatis lacinia. Duis non tempus purus. Donec ut tristique turpis. Nunc non lacinia lectus, in ullamcorper erat.</p>
+
+      <img src="https://images.unsplash.com/photo-1574068468668-a05a11f871da?crop=entropy&cs=srgb&fm=jpg&ixid=MnwxNDU4OXwwfDF8cmFuZG9tfHx8fHx8fHx8MTY0ODkzOTc5OA&ixlib=rb-1.2.1&q=85" alt="A hummingbird flying among yellow flowers. " title="Photo by Deepak Nautiyal for Unsplash" class="editorial-image-left">
+
+      <p>Donec eu eros augue. Fusce blandit sed lacus ut pretium. Vivamus lacus ligula, fringilla sit amet nibh non, bibendum auctor nisi. In quis mollis mauris. Aliquam eget arcu ut arcu rhoncus posuere nec sit amet mauris. Integer consequat felis vitae quam ultricies, eu ultrices mi finibus. Cras eget nunc at nisl venenatis lacinia. Duis non tempus purus. Donec ut tristique turpis. Nunc non lacinia lectus, in ullamcorper erat.</p>
+
+      <p>In hac habitasse platea dictumst. Aenean sit amet libero lorem. Quisque in sagittis nisl, placerat auctor tellus. Suspendisse scelerisque eget tortor eu porta. Nulla sollicitudin justo et ipsum placerat efficitur vel vel dui. Vestibulum placerat lorem ac leo mollis, et finibus nisl finibus. Pellentesque tempus ut ante non ullamcorper. Vivamus neque tellus, varius quis mi eu, fermentum laoreet orci. Quisque nisi elit, fringilla in ligula ut, molestie ultricies massa. Curabitur nec suscipit metus.</p>
+    </div>
+  </div>
+
+  <div class="section epilogue" id="section-3">
+    <h2>Building Nests, Eating Bugs</h2>
+    <div>
+      <p>In hac habitasse platea dictumst. Aenean sit amet libero lorem. Quisque in sagittis nisl, placerat auctor tellus. Suspendisse scelerisque eget tortor eu porta. Nulla sollicitudin justo et ipsum placerat efficitur vel vel dui. Vestibulum placerat lorem ac leo mollis, et finibus nisl finibus. Pellentesque tempus ut ante non ullamcorper. Vivamus neque tellus, varius quis mi eu, fermentum laoreet orci. Quisque nisi elit, fringilla in ligula ut, molestie ultricies massa. Curabitur nec suscipit metus.</p>
+
+      <blockquote>
+        Be like the bird who, pausing in her flight awhile on boughs too slight, feels them give way beneath her, and yet sings, knowing she hath wings.
+        <span>&mdash; Victor Hugo</span>
+      </blockquote>
+
+      <p>Donec eu eros augue. Fusce blandit sed lacus ut pretium. Vivamus lacus ligula, fringilla sit amet nibh non, bibendum auctor nisi. In quis mollis mauris. Aliquam eget arcu ut arcu rhoncus posuere nec sit amet mauris. Integer consequat felis vitae quam ultricies, eu ultrices mi finibus. Cras eget nunc at nisl venenatis lacinia. Duis non tempus purus. Donec ut tristique turpis. Nunc non lacinia lectus, in ullamcorper erat.</p>
+
+      <p>Nunc nisi justo, lobortis venenatis consectetur vel, porttitor in felis. Praesent tincidunt, mi non tincidunt egestas, libero risus finibus ex, volutpat facilisis nulla libero ut arcu. Proin consequat ligula non libero viverra, ut semper sem rhoncus. Morbi at viverra nisl, in convallis lorem. Proin ut dapibus ex, eu hendrerit mi. Donec tempus arcu quis purus consequat, sed congue nulla consequat. Donec tempor posuere lacus eget placerat. Maecenas euismod congue ornare. Vestibulum tincidunt eros ut faucibus blandit.</p>
+    </div>
+  </div>
+
+  <div class="section blank">
+    <img src='https://images.unsplash.com/photo-1517518147372-abb920d1e23a?crop=entropy&cs=srgb&fm=jpg&ixid=MnwxNDU4OXwwfDF8cmFuZG9tfHx8fHx8fHx8MTY1MDk1NzUxMQ&ixlib=rb-1.2.1&q=85' alt=''>
+  </div>
+
+  <div class="section final" id="section-4">
+    <h2>Singing Little Songs, Looking Fancy</h2>
+    <div>
+      <p>Donec eu eros augue. Fusce blandit sed lacus ut pretium. Vivamus lacus ligula, fringilla sit amet nibh non, bibendum auctor nisi. In quis mollis mauris. Aliquam eget arcu ut arcu rhoncus posuere nec sit amet mauris. Integer consequat felis vitae quam ultricies, eu ultrices mi finibus. Cras eget nunc at nisl venenatis lacinia. Duis non tempus purus. Donec ut tristique turpis. Nunc non lacinia lectus, in ullamcorper erat.</p>
+
+      <p>Nam tincidunt vel risus et dictum. Quisque efficitur quam vel libero pellentesque interdum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed iaculis ligula ut aliquam aliquet. Vivamus vel elementum lectus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Quisque vel erat leo. Donec rhoncus nec orci eget rutrum.</p>
+
+      <blockquote>
+        I'd rather learn from one bird how to sing than teach ten thousand stars how not to dance
+        <span>&mdash; E.E. Cummings</span>
+      </blockquote>
+
+      <p>Nullam mollis, enim sed pretium pellentesque, urna dolor faucibus nisi, interdum luctus neque eros blandit justo. Morbi non urna scelerisque, condimentum ex nec, bibendum sem. Pellentesque ullamcorper quis dui non condimentum. Ut aliquam neque metus, in suscipit lorem volutpat eget. Mauris ac dictum nulla, eu suscipit justo.In hac habitasse platea dictumst. Aenean sit amet libero lorem. Quisque in sagittis nisl, placerat auctor tellus. Suspendisse scelerisque eget tortor eu porta. Nulla sollicitudin justo et ipsum placerat efficitur vel vel dui. Vestibulum placerat lorem ac leo mollis, et finibus nisl finibus. Pellentesque tempus ut ante non ullamcorper. Vivamus neque tellus, varius quis mi eu, fermentum laoreet orci. Quisque nisi elit, fringilla in ligula ut, molestie ultricies massa. Curabitur nec suscipit metus orbi non urna scelerisque, condimentum.</p>
+
+      <img src='https://images.unsplash.com/photo-1619366865729-a81509fc68e5?crop=entropy&cs=srgb&fm=jpg&ixid=MnwxNDU4OXwwfDF8cmFuZG9tfHx8fHx8fHx8MTY1MDk1NzU2Mw&ixlib=rb-1.2.1&q=85' alt=''>
+    </div>
+  </div>
+
+</article>
+  
+    <script id="rendered-js" >
+const hero = document.querySelector(".hero");
+const nav = document.querySelector(".nav");
+const items = [...document.querySelectorAll(".item")];
+const sections = document.querySelectorAll(".section");
+const firstSection = document.querySelector(".intro a");
+
+const scrollOptions = {
+  rootMargin: "50% 0px 0px 0px" };
+
+
+const listOptions = {
+  rootMargin: "0px 0px -90% 0px" };
+
+
+const sectionObserver = new IntersectionObserver(function (
+entries,
+sectionObserver)
+{
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) {
+      nav.classList.add("show");
+    } else {
+      nav.classList.remove("show");
+    }
+  });
+},
+scrollOptions);
+
+const listObserver = new IntersectionObserver(function (entries, listObserver) {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      if (e.target.id === "") return;
+
+      items.forEach(link => {
+        if (e.target.id === link.dataset.nav) {
+          link.classList.add("active");
+        } else {
+          link.classList.remove("active");
+        }
+      });
+    }
+  });
+}, listOptions);
+
+sectionObserver.observe(hero);
+
+sections.forEach(item => {
+  listObserver.observe(item);
+});
+//# sourceURL=pen.js
+  </script>
+
+  
+</body>
+
+</html>

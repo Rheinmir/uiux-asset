@@ -1,0 +1,159 @@
+<!-- VENDORED NGUYÊN VĂN — "Sticky Observer Navigation" by ClaireLarsen · https://codepen.io/ClaireLarsen/pen/MWqLjwv
+     License: MIT (CodePen public pen = MIT). Giữ dòng này khi copy. -->
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  
+  <meta charset="UTF-8">
+  
+
+    <link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
+
+    <meta name="apple-mobile-web-app-title" content="CodePen">
+
+    <link rel="icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
+
+    <link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-b4b4269c16397ad2f0f7a01bcdf513a1994f4c94b8af2f191c09eb0d601762b1.svg" color="#111" />
+
+
+
+  
+    <script>/* stub loop-protect CodePen — chạy ngoài CodePen */window.CP={shouldStopExecution:()=>false,exitedLoop:()=>{}};</script>
+
+
+  <title>Curtain Scroll</title>
+
+    <link rel="canonical" href="https://codepen.io/ClaireLarsen/pen/MWqLjwv">
+  
+  
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.min.css'>
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css'>
+  
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Inter&display=swap");
+body {
+  background: radial-gradient(circle, #002337 0%, #001521 100%);
+  color: #00a3ff;
+  font-family: "Inter", sans-serif;
+  letter-spacing: 0.03em;
+}
+
+h1 {
+  font-family: "Abril Fatface", cursive;
+  font-size: 4rem;
+}
+@media (min-width: 850px) {
+  h1 {
+    font-size: 7rem;
+  }
+}
+
+.container {
+  max-width: 60vw;
+}
+
+main {
+  padding-top: 150px;
+}
+main .container {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+nav {
+  height: 100px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  padding: 1rem 0;
+}
+nav h2 {
+  transition: font-size 0.05s ease-in-out;
+  font-family: "Inter", sans-serif;
+  letter-spacing: 0.15em;
+  font-size: 1.25rem;
+  margin: 0;
+}
+.observe-top nav h2 {
+  font-size: 0;
+}
+nav .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: max-width 0.5s ease-in-out, border 0.05s ease-in-out;
+  border-bottom: 1px solid currentColor;
+  padding: 2rem;
+}
+.observe-top nav .container {
+  max-width: 90%;
+  border-bottom: 1px solid transparent;
+}
+</style>
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+  
+  
+</head>
+
+<body translate="no">
+  <!-- Used for detecting scroll position -->
+<div id="observe-top"></div>
+
+<!-- Fixed nav -->
+<nav>
+  <div class="container">
+    <span class="icon">
+      <i class="fas fa-home"></i>
+    </span>
+    <h2>THE TITLE</h2>
+
+    <span class="icon">
+      <i class="fa-solid fa-bars"></i>
+    </span>
+  </div>
+</nav>
+
+<!-- Main content -->
+<main>
+  <div class="container">
+    <h1>Scroll Me</h1>
+
+    <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus, neque id cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus</p>
+    <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus, neque id cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus</p>
+    <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus, neque id cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus</p>
+    <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus, neque id cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus</p>
+  
+  </div>
+</main>
+  
+    <script id="rendered-js" >
+document.addEventListener(
+"DOMContentLoaded",
+function () {
+  const body = document.querySelector("body");
+
+  const observer = new IntersectionObserver(entries => {
+    // console.log(entries)
+    if (entries[0].boundingClientRect.y < 0) {
+      body.classList.add("observe-top");
+    } else {
+      body.classList.remove("observe-top");
+    }
+  });
+  if (document.getElementById("observe-top")) {
+    observer.observe(document.querySelector("#observe-top"));
+  }
+},
+false);
+//# sourceURL=pen.js
+  </script>
+
+  
+</body>
+
+</html>

@@ -1,0 +1,187 @@
+<!-- VENDORED NGUYÊN VĂN — "Smooth Scroll Stacking Accordion" by supah · https://codepen.io/supah/pen/jOZezwa
+     License: MIT (CodePen public pen = MIT). Giữ dòng này khi copy. -->
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  
+  <meta charset="UTF-8">
+  
+
+    <link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
+
+    <meta name="apple-mobile-web-app-title" content="CodePen">
+
+    <link rel="icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
+
+    <link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-b4b4269c16397ad2f0f7a01bcdf513a1994f4c94b8af2f191c09eb0d601762b1.svg" color="#111" />
+
+
+
+  
+    <script>/* stub loop-protect CodePen — chạy ngoài CodePen */window.CP={shouldStopExecution:()=>false,exitedLoop:()=>{}};</script>
+
+
+  <title>Scrolltrigger accordion</title>
+
+    <link rel="canonical" href="https://codepen.io/supah/pen/jOZezwa">
+  
+  <link rel="stylesheet" href="https://public.codepenassets.com/css/reset-2.0.min.css">
+
+  
+  
+<style>
+body {
+  margin: 0;
+  background: #fff;
+  font-family: sans-serif;
+  background: linear-gradient(120deg, #5c2fa6 13.57%, #5a36c0 98.38%);
+  scroll-behavior: none;
+}
+
+.title {
+  font-size: max(2vw, 24px);
+  line-height: 1.1;
+  padding-bottom: 0.4em;
+  color: white;
+  text-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+}
+
+.text {
+  font-size: max(1vw, 15px);
+  line-height: 1.4;
+  overflow: hidden;
+  padding-bottom: 20px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.accordions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 20vh;
+}
+
+.accordion {
+  background: linear-gradient(200deg, #1d91fc 13.57%, #5a36c0 98.38%);
+  width: max(50vw, 280px);
+  padding: 25px 30px 10px;
+  border-radius: 15px;
+  margin-bottom: 40px;
+  box-shadow: 0 30px 30px -10px rgba(0, 0, 0, 0.3);
+}
+.accordion:nth-child(2) {
+  background: linear-gradient(200deg, #f28885 13.57%, #e94f66 98.38%);
+}
+.accordion:nth-child(3) {
+  background: linear-gradient(200deg, #65bb76 13.57%, #466fab 98.38%);
+}
+.accordion:nth-child(4) {
+  background: linear-gradient(200deg, #c215d1 13.57%, #9813a1 98.38%);
+}
+
+.spacer {
+  height: 70vh;
+}
+
+@media (max-width: 480px) {
+  .accordion {
+    padding: 15px 20px 8px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+}
+</style>
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+  
+  
+</head>
+
+<body translate="no">
+  <div id="wrapper">
+  <div id="content">
+    <div class="spacer"></div>
+    <div class="accordions">
+      <div class="accordion">
+        <div class="title">
+          All-screen design.
+        </div>
+        <div class="text">
+          Lets you immerse yourself in whatever you’re reading, watching, or creating. The 10.9-inch Liquid Retina display features advanced technologies like True Tone, P3 wide color, and an antireflective coating.1
+        </div>
+      </div>
+      <div class="accordion">
+        <div class="title"> Beauty all around.</div>
+        <div class="text">
+          The breakthrough M1 chip is now in Air. An 8-core CPU delivers up to 60 percent faster performance than the previous generation, making Air a creative and mobile gaming powerhouse. Multitask smoothly between powerful apps and play graphics-intensive games. And with M1, you can go even further with your creativity with apps like SketchUp.
+        </div>
+      </div>
+      <div class="accordion">
+        <div class="title">Take Center Stage.</div>
+        <div class="text">
+          The 12MP Ultra Wide front camera enables Center Stage, making video calls more natural and content creation more fun. As you move around, the camera automatically pans to keep you centered in the shot. When others join or leave the frame, the view expands or zooms in.
+        </div>
+      </div>
+      <div class="accordion">
+        <div class="title">Pretty everywhere.</div>
+        <div class="text">Join superfast 5G wireless networks when you’re on the go. Download files, play multiplayer games, stream movies, check in with friends, and more.</div>
+      </div>
+    </div>
+    <div class="spacer"></div>
+  </div>
+</div>
+  <script src='https://unpkg.co/gsap@3/dist/gsap.min.js'></script>
+<script src='_assets/16327/ScrollSmoother.min.js'></script>
+<script src='https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js'></script>
+    <script id="rendered-js" >
+/*------------------------------
+Register plugins
+------------------------------*/
+gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
+
+
+/*------------------------------
+Init ScrollSmoother
+------------------------------*/
+const scrollerSmoother = ScrollSmoother.create({
+  content: '#content',
+  wrapper: '#wrapper',
+  smooth: true,
+  effects: false,
+  normalizeScroll: true });
+
+
+const tl = gsap.timeline({
+  scrollTrigger: {
+    trigger: '.accordions',
+    pin: true,
+    start: 'top top',
+    end: 'bottom top',
+    scrub: 1,
+    ease: 'linear' } });
+
+
+
+tl.to('.accordion .text', {
+  height: 0,
+  paddingBottom: 0,
+  opacity: 0,
+  stagger: .5 });
+
+tl.to('.accordion', {
+  marginBottom: -15,
+  stagger: .5 },
+'<');
+//# sourceURL=pen.js
+  </script>
+
+  
+</body>
+
+</html>

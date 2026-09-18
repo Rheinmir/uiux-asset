@@ -1,0 +1,256 @@
+<!-- VENDORED NGUYÊN VĂN — "Vanilla JS Skew Images on Scroll" by vstefanova · https://codepen.io/vstefanova/pen/VwPdVwm
+     License: MIT (CodePen public pen = MIT). Giữ dòng này khi copy. -->
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  
+  <meta charset="UTF-8">
+  
+
+    <link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
+
+    <meta name="apple-mobile-web-app-title" content="CodePen">
+
+    <link rel="icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
+
+    <link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-b4b4269c16397ad2f0f7a01bcdf513a1994f4c94b8af2f191c09eb0d601762b1.svg" color="#111" />
+
+
+
+  
+    <script>/* stub loop-protect CodePen — chạy ngoài CodePen */window.CP={shouldStopExecution:()=>false,exitedLoop:()=>{}};</script>
+
+
+  <title>Vanilla JS skew images on scroll</title>
+
+    <link rel="canonical" href="https://codepen.io/vstefanova/pen/VwPdVwm">
+  
+  
+  
+  
+<style>
+* {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 100%;
+      height: 4211px;
+      background-color: #1a1a1a;
+    }
+
+    .container {
+      width: 33.33%;
+      height: 100vh;
+      float: left;
+      position: relative;
+      display: inline-block;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    .image-container {
+      width: 30.6%;
+      position: fixed;
+      height: 200vh;
+      transform: translate(0px, 0px);
+      transition-duration: 0.6s;
+      transition-timing-function: cubic-bezier(0.04, 0.72, 0.09, 0.99) !important;
+    }
+
+    #image-container1 {
+      transform: translate(0px, -1475px);
+    }
+
+    .image {
+      position: relative;
+      width: 100%;
+      height: 33.3%;
+      transition: 1s cubic-bezier(0.04, 0.72, 0.09, 0.99);
+      background-image: url('https://images.unsplash.com/photo-1506471895742-d523008d053d?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=641&q=80');
+      background-position: center;
+      background-size: cover;
+      margin-top: 20px;
+    }
+
+    .image1 {
+      position: relative;
+      width: 100%;
+      height: 33.3%;
+      transition: 1s cubic-bezier(0.04, 0.72, 0.09, 0.99);
+      background-image: url('https://images.unsplash.com/photo-1517436919841-345c048c421d?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80');
+      background-position: center;
+      background-size: cover;
+      margin-top: 20px;
+    }
+
+    .image2 {
+      position: relative;
+      width: 100%;
+      height: 33.3%;
+      transition: 1s cubic-bezier(0.04, 0.72, 0.09, 0.99);
+      background-image: url('https://images.unsplash.com/photo-1511966344804-3847f3b298c9?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80');
+      background-position: center;
+      background-size: cover;
+      margin-top: 20px;
+    }
+
+    .text {
+      font-family: 'Montserrat', sans-serif;
+      text-align: center;
+      position: fixed;
+      z-index: 3;
+      left: 0;
+      right: 0;
+      margin-left: auto;
+      margin-right: auto;
+      font-size: 92px;
+      margin-top: 8vh;
+      color: #fff;
+      font-weight: 900;
+    }
+</style>
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+  
+  
+</head>
+
+<body translate="no">
+  <div class="text">SKEW SCROLL</div>
+<div class="container">
+ <div id="image-container" class="image-container">
+  <div id="image1" class="image"></div>
+  <div id="image2" class="image1"></div>
+  <div id="image3" class="image2"></div>
+  <div id="image4" class="image"></div>
+  <div id="image5" class="image1"></div>
+  <div id="image6" class="image2"></div>
+  <div id="image7" class="image"></div>
+  <div id="image8" class="image1"></div>
+  <div id="image9" class="image2"></div>
+  <div id="image10" class="image"></div>
+  <div id="image11" class="image1"></div>
+  <div id="image12" class="image2"></div>
+ </div>
+</div>
+<div class="container">
+ <div id="image-container1" class="image-container">
+  <div id="image-1" class="image1"></div>
+  <div id="image-2" class="image2"></div>
+  <div id="image-3" class="image"></div>
+  <div id="image-4" class="image1"></div>
+  <div id="image-5" class="image2"></div>
+  <div id="image-6" class="image"></div>
+  <div id="image-7" class="image1"></div>
+  <div id="image-8" class="image2"></div>
+  <div id="image-9" class="image"></div>
+  <div id="image-10" class="image1"></div>
+  <div id="image-11" class="image2"></div>
+  <div id="image-12" class="image"></div>
+ </div>
+</div>
+
+<div class="container">
+ <div id="image-container2" class="image-container">
+  <div id="image_1" class="image2"></div>
+  <div id="image_2" class="image"></div>
+  <div id="image_3" class="image1"></div>
+  <div id="image_4" class="image2"></div>
+  <div id="image_5" class="image"></div>
+  <div id="image_6" class="image1"></div>
+  <div id="image_7" class="image2"></div>
+  <div id="image_8" class="image"></div>
+  <div id="image_9" class="image1"></div>
+  <div id="image_10" class="image2"></div>
+  <div id="image_11" class="image"></div>
+  <div id="image_12" class="image1"></div>
+ </div>
+</div>
+  
+    <script id="rendered-js" >
+var el = document.getElementById("body");
+var imgCon = document.getElementById("image-container");
+var imgCon1 = document.getElementById("image-container1");
+var imgCon2 = document.getElementById("image-container2");
+var isScrolling = true;
+var pos = 1;
+var checkScrollSpeed = function (settings) {
+  settings = settings || {};
+
+  var lastPos,
+  newPos,
+  timer,
+  delta,
+  delay = settings.delay || 50;
+
+  function clear() {
+    lastPos = null;
+    delta = 0;
+  }
+
+  clear();
+
+  return function () {
+    newPos = window.scrollY;
+    if (lastPos != null) {
+      delta = newPos - lastPos;
+    }
+    lastPos = newPos;
+    clearTimeout(timer);
+    timer = setTimeout(clear, delay);
+    return delta;
+  };
+}();
+imgCon1.style.transform = "translate(0px, -3100px)";
+setInterval(() => {
+  if (isScrolling || pos === 0 || checkScrollSpeed() === 0) {
+    for (var i = 1; i <= 12; i++) {
+      document.getElementById("image" + i).style.transform = "skewY(0deg)";
+      document.getElementById("image-" + i).style.transform = "skewY(0deg)";
+      document.getElementById("image_" + i).style.transform = "skewY(0deg)";
+    }
+  }
+}, 600);
+
+window.onscroll = function () {
+  isScrolling = false;
+  pos = checkScrollSpeed();
+  wpos = window.scrollY;
+  wpos1 = window.scrollY - 3211;
+  console.log(window.scrollY);
+  imgCon.style.transform = "translate(0px, -" + wpos + "px)";
+  imgCon1.style.transform = "translate(0px, " + wpos1 + "px)";
+  imgCon2.style.transform = "translate(0px, -" + wpos + "px)";
+  if (pos > 45) {
+    pos = 45;
+  } else if (pos < -45) {
+    pos = -45;
+  }
+  for (var i = 1; i <= 12; i++) {
+    document.getElementById("image" + i).style.transform =
+    "skewY(" + pos + "deg)";
+    document.getElementById("image-" + i).style.transform =
+    "skewY(" + -pos + "deg)";
+    document.getElementById("image_" + i).style.transform =
+    "skewY(" + pos + "deg)";
+    if (pos === 1 || pos === -1 || wpos === 0 || wpos === 1475) {
+      document.getElementById("image" + i).style.transform = "skewY(0deg)";
+      document.getElementById("image-" + i).style.transform = "skewY(0deg)";
+      document.getElementById("image_" + i).style.transform = "skewY(0deg)";
+    }
+  }
+};
+//# sourceURL=pen.js
+  </script>
+
+  
+</body>
+
+</html>

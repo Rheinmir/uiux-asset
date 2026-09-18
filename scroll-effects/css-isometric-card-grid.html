@@ -1,0 +1,898 @@
+<!-- VENDORED NGUYÊN VĂN — "CSS Isometric Card Grid" by jkantner · https://codepen.io/jkantner/pen/KQPdXK
+     License: MIT (CodePen public pen = MIT). Giữ dòng này khi copy. -->
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  
+  <meta charset="UTF-8">
+  
+
+    <link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
+
+    <meta name="apple-mobile-web-app-title" content="CodePen">
+
+    <link rel="icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
+
+    <link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-b4b4269c16397ad2f0f7a01bcdf513a1994f4c94b8af2f191c09eb0d601762b1.svg" color="#111" />
+
+
+
+  
+    <script>/* stub loop-protect CodePen — chạy ngoài CodePen */window.CP={shouldStopExecution:()=>false,exitedLoop:()=>{}};</script>
+
+
+  <title>Isometric Card Grid</title>
+
+    <link rel="canonical" href="https://codepen.io/jkantner/pen/KQPdXK">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  
+  <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans:400,700'>
+  
+<style>
+*,
+*:before,
+*:after {
+	border: 0;
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+:root {
+	font-size: 18px;
+	--cardW: 14em;
+	--cardH: 8em;
+	--cardZInc: 2em;
+}
+body {
+	background: hsl(0,0%,100%);
+	font: 1em "Open Sans", sans-serif;
+	height: 100vh;
+	overflow-x: hidden;
+}
+main {
+	display: block;
+	margin: auto;
+	position: relative;
+	height: calc(var(--cardH) * 36 - 1.5em);
+}
+/* Grid */
+.cards,
+.stack {
+	transform-style: preserve-3d;
+}
+.cards {
+	--scroll: 0;
+	display: grid;
+	grid-template: repeat(36, var(--cardH)) / var(--cardW);
+	grid-gap: 1.5em;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translateX(-50%) rotateX(45deg) rotateZ(45deg) translateY(var(--scroll));
+	transform-origin: 50% 0;
+}
+.stack {
+	display: block;
+	position: relative;
+}
+.contents {
+	color: #000;
+	font-size: 0.5em;
+	line-height: 1.25;
+	-webkit-font-smoothing: antialiased;
+}
+.stack:nth-of-type(even) .contents {
+	color: #fff;
+}
+.contents h2 {
+	color: #aff;
+	font-size: 2em;
+	font-weight: 400;
+	margin-bottom: 0.25em;
+}
+.contents span {
+	margin-right: 0.75em;
+}
+.city {
+	margin-top: 11.75em;
+}
+/* Card backgrounds */
+.stack:nth-of-type(4n + 2) .card {
+	background-position: 0 100%;
+}
+.stack:nth-of-type(4n + 3) .card {
+	background-position: 100% 0;
+}
+.stack:nth-of-type(4n + 4) .card {
+	background-position: 100% 100%;
+}
+.stack:nth-child(8n + 5) .card,
+.stack:nth-child(8n + 6) .card,
+.stack:nth-child(8n + 7) .card,
+.stack:nth-child(8n + 8) .card {
+	filter: hue-rotate(90deg);
+	-webkit-filter: hue-rotate(90deg);
+}
+.stack:nth-child(12n + 9) .card,
+.stack:nth-child(12n + 10) .card,
+.stack:nth-child(12n + 11) .card,
+.stack:nth-child(12n + 12) .card {
+	filter: hue-rotate(180deg);
+	-webkit-filter: hue-rotate(180deg);
+}
+/* Card hover */
+.stack:hover .top,
+.stack:focus .top {
+	transform: translateZ(calc(var(--cardZInc) * 3));
+}
+.stack:hover .mid,
+.stack:focus .mid {
+	transform: translateZ(calc(var(--cardZInc) * 2));
+}
+.stack:hover .bottom,
+.stack:focus .bottom {
+	transform: translateZ(var(--cardZInc));
+}
+.stack:hover .shadow,
+.stack:focus .shadow {
+	filter: blur(6px);
+	-webkit-filter: blur(6px);
+	opacity: 0.4;
+}
+/* Other card styles */
+.card {
+	background-image: url("_assets/416221/business-card-backgrounds.png");
+	background-size: 200% 200%;
+	box-shadow: -1px -1px 0 hsla(0,0%,0%,0.2) inset;
+	color: #000;
+	padding: 0.75em;
+	position: absolute;
+	transition: all 0.3s;
+	width: 100%;
+	height: 100%;
+}
+.top {
+	transform: translateZ(3px);
+	z-index: 3;
+}
+.mid {
+	transform: translateZ(2px);
+	z-index: 2;
+}
+.bottom {
+	transform: translateZ(1px);
+	z-index: 1;
+}
+.shadow {
+	background: hsl(0,0%,0%);
+	filter: blur(0);
+	-webkit-filter: blur(0);
+	opacity: 0.7;
+}
+
+/* Alter grid at breakpoints */
+@media screen and (min-width: 361px) {
+	main {
+		height: calc(var(--cardH) * 18 - 1.5em);
+	}
+	.cards {
+		grid-template: repeat(18, var(--cardH)) / repeat(2, var(--cardW));
+	}
+}
+@media screen and (min-width: 641px) {
+	main {
+		height: calc(var(--cardH) * 12 - 1.5em);
+	}
+	.cards {
+		grid-template: repeat(12, var(--cardH)) / repeat(3, var(--cardW));
+	}
+}
+@media screen and (min-width: 961px) {
+	main {
+		height: calc(var(--cardH) * 9 - 1.5em);
+	}
+	.cards {
+		grid-template: repeat(9, var(--cardH)) / repeat(4, var(--cardW));
+	}
+}
+@media screen and (min-width: 1281px) {
+	main {
+		height: calc(var(--cardH) * 8 - 1.5em);
+	}
+	.cards {
+		grid-template: repeat(8, var(--cardH)) / repeat(5, var(--cardW));
+	}
+}
+
+/* Dark mode optimization */
+@media screen and (prefers-color-scheme: dark) {
+	body {
+		background: hsl(0,0%,20%);
+	}
+}
+</style>
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+  
+  
+</head>
+
+<body translate="no">
+  <!-- Note: No real addresses and phone numbers were used here. They all came from fakenamegenerator.com.-->
+<main>
+  <div class="cards"><a class="stack" href="#">
+      <div class="card top">
+        <div class="contents">
+          <h2><strong>ABC</strong>Design
+          </h2>
+          <h3>Ann Thrax</h3>Project Manager<br/><br/><span>✉️</span>annthrax@example.com<br/><span>📞</span>808-293-4613<br/><br/>3801 Stratford Drive<br/>Laie, HI 96762
+        </div>
+      </div>
+      <div class="card mid">
+        <div class="contents">
+          <div class="city">Laie, HI 96762</div>
+        </div>
+      </div>
+      <div class="card bottom">
+        <div class="contents">
+          <div class="city">Laie, HI 96762</div>
+        </div>
+      </div>
+      <div class="card shadow"></div></a><a class="stack" href="#">
+      <div class="card top">
+        <div class="contents">
+          <h2><strong>ABC</strong>Design
+          </h2>
+          <h3>Clint Westwood</h3>Customer Support<br/><br/><span>✉️</span>clintwestwood@example.com<br/><span>📞</span>865-217-3165<br/><br/>2212 Brown Avenue<br/>Hartford, TN 37753
+        </div>
+      </div>
+      <div class="card mid">
+        <div class="contents">
+          <div class="city">Hartford, TN 37753</div>
+        </div>
+      </div>
+      <div class="card bottom">
+        <div class="contents">
+          <div class="city">Hartford, TN 37753</div>
+        </div>
+      </div>
+      <div class="card shadow"></div></a><a class="stack" href="#">
+      <div class="card top">
+        <div class="contents">
+          <h2><strong>ABC</strong>Design
+          </h2>
+          <h3>Joe Schmoe</h3>Graphic Designer<br/><br/><span>✉️</span>joeschmoe@example.com<br/><span>📞</span>407-712-8549<br/><br/>469 Grand Avenue<br/>Winter Park, FL 32789
+        </div>
+      </div>
+      <div class="card mid">
+        <div class="contents">
+          <div class="city">Winter Park, FL 32789</div>
+        </div>
+      </div>
+      <div class="card bottom">
+        <div class="contents">
+          <div class="city">Winter Park, FL 32789</div>
+        </div>
+      </div>
+      <div class="card shadow"></div></a><a class="stack" href="#">
+      <div class="card top">
+        <div class="contents">
+          <h2><strong>ABC</strong>Design
+          </h2>
+          <h3>Don Joel</h3>Web Developer<br/><br/><span>✉️</span>donjoel@example.com<br/><span>📞</span>216-362-0665<br/><br/>2699 Glenwood Avenue<br/>Brook Park, OH 44142
+        </div>
+      </div>
+      <div class="card mid">
+        <div class="contents">
+          <div class="city">Brook Park, OH 44142</div>
+        </div>
+      </div>
+      <div class="card bottom">
+        <div class="contents">
+          <div class="city">Brook Park, OH 44142</div>
+        </div>
+      </div>
+      <div class="card shadow"></div></a><a class="stack" href="#">
+      <div class="card top">
+        <div class="contents">
+          <h2><strong>ABC</strong>Design
+          </h2>
+          <h3>Ann Thrax</h3>Project Manager<br/><br/><span>✉️</span>annthrax@example.com<br/><span>📞</span>808-293-4613<br/><br/>3801 Stratford Drive<br/>Laie, HI 96762
+        </div>
+      </div>
+      <div class="card mid">
+        <div class="contents">
+          <div class="city">Laie, HI 96762</div>
+        </div>
+      </div>
+      <div class="card bottom">
+        <div class="contents">
+          <div class="city">Laie, HI 96762</div>
+        </div>
+      </div>
+      <div class="card shadow"></div></a><a class="stack" href="#">
+      <div class="card top">
+        <div class="contents">
+          <h2><strong>ABC</strong>Design
+          </h2>
+          <h3>Clint Westwood</h3>Customer Support<br/><br/><span>✉️</span>clintwestwood@example.com<br/><span>📞</span>865-217-3165<br/><br/>2212 Brown Avenue<br/>Hartford, TN 37753
+        </div>
+      </div>
+      <div class="card mid">
+        <div class="contents">
+          <div class="city">Hartford, TN 37753</div>
+        </div>
+      </div>
+      <div class="card bottom">
+        <div class="contents">
+          <div class="city">Hartford, TN 37753</div>
+        </div>
+      </div>
+      <div class="card shadow"></div></a><a class="stack" href="#">
+      <div class="card top">
+        <div class="contents">
+          <h2><strong>ABC</strong>Design
+          </h2>
+          <h3>Joe Schmoe</h3>Graphic Designer<br/><br/><span>✉️</span>joeschmoe@example.com<br/><span>📞</span>407-712-8549<br/><br/>469 Grand Avenue<br/>Winter Park, FL 32789
+        </div>
+      </div>
+      <div class="card mid">
+        <div class="contents">
+          <div class="city">Winter Park, FL 32789</div>
+        </div>
+      </div>
+      <div class="card bottom">
+        <div class="contents">
+          <div class="city">Winter Park, FL 32789</div>
+        </div>
+      </div>
+      <div class="card shadow"></div></a><a class="stack" href="#">
+      <div class="card top">
+        <div class="contents">
+          <h2><strong>ABC</strong>Design
+          </h2>
+          <h3>Don Joel</h3>Web Developer<br/><br/><span>✉️</span>donjoel@example.com<br/><span>📞</span>216-362-0665<br/><br/>2699 Glenwood Avenue<br/>Brook Park, OH 44142
+        </div>
+      </div>
+      <div class="card mid">
+        <div class="contents">
+          <div class="city">Brook Park, OH 44142</div>
+        </div>
+      </div>
+      <div class="card bottom">
+        <div class="contents">
+          <div class="city">Brook Park, OH 44142</div>
+        </div>
+      </div>
+      <div class="card shadow"></div></a><a class="stack" href="#">
+      <div class="card top">
+        <div class="contents">
+          <h2><strong>ABC</strong>Design
+          </h2>
+          <h3>Ann Thrax</h3>Project Manager<br/><br/><span>✉️</span>annthrax@example.com<br/><span>📞</span>808-293-4613<br/><br/>3801 Stratford Drive<br/>Laie, HI 96762
+        </div>
+      </div>
+      <div class="card mid">
+        <div class="contents">
+          <div class="city">Laie, HI 96762</div>
+        </div>
+      </div>
+      <div class="card bottom">
+        <div class="contents">
+          <div class="city">Laie, HI 96762</div>
+        </div>
+      </div>
+      <div class="card shadow"></div></a><a class="stack" href="#">
+      <div class="card top">
+        <div class="contents">
+          <h2><strong>ABC</strong>Design
+          </h2>
+          <h3>Clint Westwood</h3>Customer Support<br/><br/><span>✉️</span>clintwestwood@example.com<br/><span>📞</span>865-217-3165<br/><br/>2212 Brown Avenue<br/>Hartford, TN 37753
+        </div>
+      </div>
+      <div class="card mid">
+        <div class="contents">
+          <div class="city">Hartford, TN 37753</div>
+        </div>
+      </div>
+      <div class="card bottom">
+        <div class="contents">
+          <div class="city">Hartford, TN 37753</div>
+        </div>
+      </div>
+      <div class="card shadow"></div></a><a class="stack" href="#">
+      <div class="card top">
+        <div class="contents">
+          <h2><strong>ABC</strong>Design
+          </h2>
+          <h3>Joe Schmoe</h3>Graphic Designer<br/><br/><span>✉️</span>joeschmoe@example.com<br/><span>📞</span>407-712-8549<br/><br/>469 Grand Avenue<br/>Winter Park, FL 32789
+        </div>
+      </div>
+      <div class="card mid">
+        <div class="contents">
+          <div class="city">Winter Park, FL 32789</div>
+        </div>
+      </div>
+      <div class="card bottom">
+        <div class="contents">
+          <div class="city">Winter Park, FL 32789</div>
+        </div>
+      </div>
+      <div class="card shadow"></div></a><a class="stack" href="#">
+      <div class="card top">
+        <div class="contents">
+          <h2><strong>ABC</strong>Design
+          </h2>
+          <h3>Don Joel</h3>Web Developer<br/><br/><span>✉️</span>donjoel@example.com<br/><span>📞</span>216-362-0665<br/><br/>2699 Glenwood Avenue<br/>Brook Park, OH 44142
+        </div>
+      </div>
+      <div class="card mid">
+        <div class="contents">
+          <div class="city">Brook Park, OH 44142</div>
+        </div>
+      </div>
+      <div class="card bottom">
+        <div class="contents">
+          <div class="city">Brook Park, OH 44142</div>
+        </div>
+      </div>
+      <div class="card shadow"></div></a><a class="stack" href="#">
+      <div class="card top">
+        <div class="contents">
+          <h2><strong>ABC</strong>Design
+          </h2>
+          <h3>Ann Thrax</h3>Project Manager<br/><br/><span>✉️</span>annthrax@example.com<br/><span>📞</span>808-293-4613<br/><br/>3801 Stratford Drive<br/>Laie, HI 96762
+        </div>
+      </div>
+      <div class="card mid">
+        <div class="contents">
+          <div class="city">Laie, HI 96762</div>
+        </div>
+      </div>
+      <div class="card bottom">
+        <div class="contents">
+          <div class="city">Laie, HI 96762</div>
+        </div>
+      </div>
+      <div class="card shadow"></div></a><a class="stack" href="#">
+      <div class="card top">
+        <div class="contents">
+          <h2><strong>ABC</strong>Design
+          </h2>
+          <h3>Clint Westwood</h3>Customer Support<br/><br/><span>✉️</span>clintwestwood@example.com<br/><span>📞</span>865-217-3165<br/><br/>2212 Brown Avenue<br/>Hartford, TN 37753
+        </div>
+      </div>
+      <div class="card mid">
+        <div class="contents">
+          <div class="city">Hartford, TN 37753</div>
+        </div>
+      </div>
+      <div class="card bottom">
+        <div class="contents">
+          <div class="city">Hartford, TN 37753</div>
+        </div>
+      </div>
+      <div class="card shadow"></div></a><a class="stack" href="#">
+      <div class="card top">
+        <div class="contents">
+          <h2><strong>ABC</strong>Design
+          </h2>
+          <h3>Joe Schmoe</h3>Graphic Designer<br/><br/><span>✉️</span>joeschmoe@example.com<br/><span>📞</span>407-712-8549<br/><br/>469 Grand Avenue<br/>Winter Park, FL 32789
+        </div>
+      </div>
+      <div class="card mid">
+        <div class="contents">
+          <div class="city">Winter Park, FL 32789</div>
+        </div>
+      </div>
+      <div class="card bottom">
+        <div class="contents">
+          <div class="city">Winter Park, FL 32789</div>
+        </div>
+      </div>
+      <div class="card shadow"></div></a><a class="stack" href="#">
+      <div class="card top">
+        <div class="contents">
+          <h2><strong>ABC</strong>Design
+          </h2>
+          <h3>Don Joel</h3>Web Developer<br/><br/><span>✉️</span>donjoel@example.com<br/><span>📞</span>216-362-0665<br/><br/>2699 Glenwood Avenue<br/>Brook Park, OH 44142
+        </div>
+      </div>
+      <div class="card mid">
+        <div class="contents">
+          <div class="city">Brook Park, OH 44142</div>
+        </div>
+      </div>
+      <div class="card bottom">
+        <div class="contents">
+          <div class="city">Brook Park, OH 44142</div>
+        </div>
+      </div>
+      <div class="card shadow"></div></a><a class="stack" href="#">
+      <div class="card top">
+        <div class="contents">
+          <h2><strong>ABC</strong>Design
+          </h2>
+          <h3>Ann Thrax</h3>Project Manager<br/><br/><span>✉️</span>annthrax@example.com<br/><span>📞</span>808-293-4613<br/><br/>3801 Stratford Drive<br/>Laie, HI 96762
+        </div>
+      </div>
+      <div class="card mid">
+        <div class="contents">
+          <div class="city">Laie, HI 96762</div>
+        </div>
+      </div>
+      <div class="card bottom">
+        <div class="contents">
+          <div class="city">Laie, HI 96762</div>
+        </div>
+      </div>
+      <div class="card shadow"></div></a><a class="stack" href="#">
+      <div class="card top">
+        <div class="contents">
+          <h2><strong>ABC</strong>Design
+          </h2>
+          <h3>Clint Westwood</h3>Customer Support<br/><br/><span>✉️</span>clintwestwood@example.com<br/><span>📞</span>865-217-3165<br/><br/>2212 Brown Avenue<br/>Hartford, TN 37753
+        </div>
+      </div>
+      <div class="card mid">
+        <div class="contents">
+          <div class="city">Hartford, TN 37753</div>
+        </div>
+      </div>
+      <div class="card bottom">
+        <div class="contents">
+          <div class="city">Hartford, TN 37753</div>
+        </div>
+      </div>
+      <div class="card shadow"></div></a><a class="stack" href="#">
+      <div class="card top">
+        <div class="contents">
+          <h2><strong>ABC</strong>Design
+          </h2>
+          <h3>Joe Schmoe</h3>Graphic Designer<br/><br/><span>✉️</span>joeschmoe@example.com<br/><span>📞</span>407-712-8549<br/><br/>469 Grand Avenue<br/>Winter Park, FL 32789
+        </div>
+      </div>
+      <div class="card mid">
+        <div class="contents">
+          <div class="city">Winter Park, FL 32789</div>
+        </div>
+      </div>
+      <div class="card bottom">
+        <div class="contents">
+          <div class="city">Winter Park, FL 32789</div>
+        </div>
+      </div>
+      <div class="card shadow"></div></a><a class="stack" href="#">
+      <div class="card top">
+        <div class="contents">
+          <h2><strong>ABC</strong>Design
+          </h2>
+          <h3>Don Joel</h3>Web Developer<br/><br/><span>✉️</span>donjoel@example.com<br/><span>📞</span>216-362-0665<br/><br/>2699 Glenwood Avenue<br/>Brook Park, OH 44142
+        </div>
+      </div>
+      <div class="card mid">
+        <div class="contents">
+          <div class="city">Brook Park, OH 44142</div>
+        </div>
+      </div>
+      <div class="card bottom">
+        <div class="contents">
+          <div class="city">Brook Park, OH 44142</div>
+        </div>
+      </div>
+      <div class="card shadow"></div></a><a class="stack" href="#">
+      <div class="card top">
+        <div class="contents">
+          <h2><strong>ABC</strong>Design
+          </h2>
+          <h3>Ann Thrax</h3>Project Manager<br/><br/><span>✉️</span>annthrax@example.com<br/><span>📞</span>808-293-4613<br/><br/>3801 Stratford Drive<br/>Laie, HI 96762
+        </div>
+      </div>
+      <div class="card mid">
+        <div class="contents">
+          <div class="city">Laie, HI 96762</div>
+        </div>
+      </div>
+      <div class="card bottom">
+        <div class="contents">
+          <div class="city">Laie, HI 96762</div>
+        </div>
+      </div>
+      <div class="card shadow"></div></a><a class="stack" href="#">
+      <div class="card top">
+        <div class="contents">
+          <h2><strong>ABC</strong>Design
+          </h2>
+          <h3>Clint Westwood</h3>Customer Support<br/><br/><span>✉️</span>clintwestwood@example.com<br/><span>📞</span>865-217-3165<br/><br/>2212 Brown Avenue<br/>Hartford, TN 37753
+        </div>
+      </div>
+      <div class="card mid">
+        <div class="contents">
+          <div class="city">Hartford, TN 37753</div>
+        </div>
+      </div>
+      <div class="card bottom">
+        <div class="contents">
+          <div class="city">Hartford, TN 37753</div>
+        </div>
+      </div>
+      <div class="card shadow"></div></a><a class="stack" href="#">
+      <div class="card top">
+        <div class="contents">
+          <h2><strong>ABC</strong>Design
+          </h2>
+          <h3>Joe Schmoe</h3>Graphic Designer<br/><br/><span>✉️</span>joeschmoe@example.com<br/><span>📞</span>407-712-8549<br/><br/>469 Grand Avenue<br/>Winter Park, FL 32789
+        </div>
+      </div>
+      <div class="card mid">
+        <div class="contents">
+          <div class="city">Winter Park, FL 32789</div>
+        </div>
+      </div>
+      <div class="card bottom">
+        <div class="contents">
+          <div class="city">Winter Park, FL 32789</div>
+        </div>
+      </div>
+      <div class="card shadow"></div></a><a class="stack" href="#">
+      <div class="card top">
+        <div class="contents">
+          <h2><strong>ABC</strong>Design
+          </h2>
+          <h3>Don Joel</h3>Web Developer<br/><br/><span>✉️</span>donjoel@example.com<br/><span>📞</span>216-362-0665<br/><br/>2699 Glenwood Avenue<br/>Brook Park, OH 44142
+        </div>
+      </div>
+      <div class="card mid">
+        <div class="contents">
+          <div class="city">Brook Park, OH 44142</div>
+        </div>
+      </div>
+      <div class="card bottom">
+        <div class="contents">
+          <div class="city">Brook Park, OH 44142</div>
+        </div>
+      </div>
+      <div class="card shadow"></div></a><a class="stack" href="#">
+      <div class="card top">
+        <div class="contents">
+          <h2><strong>ABC</strong>Design
+          </h2>
+          <h3>Ann Thrax</h3>Project Manager<br/><br/><span>✉️</span>annthrax@example.com<br/><span>📞</span>808-293-4613<br/><br/>3801 Stratford Drive<br/>Laie, HI 96762
+        </div>
+      </div>
+      <div class="card mid">
+        <div class="contents">
+          <div class="city">Laie, HI 96762</div>
+        </div>
+      </div>
+      <div class="card bottom">
+        <div class="contents">
+          <div class="city">Laie, HI 96762</div>
+        </div>
+      </div>
+      <div class="card shadow"></div></a><a class="stack" href="#">
+      <div class="card top">
+        <div class="contents">
+          <h2><strong>ABC</strong>Design
+          </h2>
+          <h3>Clint Westwood</h3>Customer Support<br/><br/><span>✉️</span>clintwestwood@example.com<br/><span>📞</span>865-217-3165<br/><br/>2212 Brown Avenue<br/>Hartford, TN 37753
+        </div>
+      </div>
+      <div class="card mid">
+        <div class="contents">
+          <div class="city">Hartford, TN 37753</div>
+        </div>
+      </div>
+      <div class="card bottom">
+        <div class="contents">
+          <div class="city">Hartford, TN 37753</div>
+        </div>
+      </div>
+      <div class="card shadow"></div></a><a class="stack" href="#">
+      <div class="card top">
+        <div class="contents">
+          <h2><strong>ABC</strong>Design
+          </h2>
+          <h3>Joe Schmoe</h3>Graphic Designer<br/><br/><span>✉️</span>joeschmoe@example.com<br/><span>📞</span>407-712-8549<br/><br/>469 Grand Avenue<br/>Winter Park, FL 32789
+        </div>
+      </div>
+      <div class="card mid">
+        <div class="contents">
+          <div class="city">Winter Park, FL 32789</div>
+        </div>
+      </div>
+      <div class="card bottom">
+        <div class="contents">
+          <div class="city">Winter Park, FL 32789</div>
+        </div>
+      </div>
+      <div class="card shadow"></div></a><a class="stack" href="#">
+      <div class="card top">
+        <div class="contents">
+          <h2><strong>ABC</strong>Design
+          </h2>
+          <h3>Don Joel</h3>Web Developer<br/><br/><span>✉️</span>donjoel@example.com<br/><span>📞</span>216-362-0665<br/><br/>2699 Glenwood Avenue<br/>Brook Park, OH 44142
+        </div>
+      </div>
+      <div class="card mid">
+        <div class="contents">
+          <div class="city">Brook Park, OH 44142</div>
+        </div>
+      </div>
+      <div class="card bottom">
+        <div class="contents">
+          <div class="city">Brook Park, OH 44142</div>
+        </div>
+      </div>
+      <div class="card shadow"></div></a><a class="stack" href="#">
+      <div class="card top">
+        <div class="contents">
+          <h2><strong>ABC</strong>Design
+          </h2>
+          <h3>Ann Thrax</h3>Project Manager<br/><br/><span>✉️</span>annthrax@example.com<br/><span>📞</span>808-293-4613<br/><br/>3801 Stratford Drive<br/>Laie, HI 96762
+        </div>
+      </div>
+      <div class="card mid">
+        <div class="contents">
+          <div class="city">Laie, HI 96762</div>
+        </div>
+      </div>
+      <div class="card bottom">
+        <div class="contents">
+          <div class="city">Laie, HI 96762</div>
+        </div>
+      </div>
+      <div class="card shadow"></div></a><a class="stack" href="#">
+      <div class="card top">
+        <div class="contents">
+          <h2><strong>ABC</strong>Design
+          </h2>
+          <h3>Clint Westwood</h3>Customer Support<br/><br/><span>✉️</span>clintwestwood@example.com<br/><span>📞</span>865-217-3165<br/><br/>2212 Brown Avenue<br/>Hartford, TN 37753
+        </div>
+      </div>
+      <div class="card mid">
+        <div class="contents">
+          <div class="city">Hartford, TN 37753</div>
+        </div>
+      </div>
+      <div class="card bottom">
+        <div class="contents">
+          <div class="city">Hartford, TN 37753</div>
+        </div>
+      </div>
+      <div class="card shadow"></div></a><a class="stack" href="#">
+      <div class="card top">
+        <div class="contents">
+          <h2><strong>ABC</strong>Design
+          </h2>
+          <h3>Joe Schmoe</h3>Graphic Designer<br/><br/><span>✉️</span>joeschmoe@example.com<br/><span>📞</span>407-712-8549<br/><br/>469 Grand Avenue<br/>Winter Park, FL 32789
+        </div>
+      </div>
+      <div class="card mid">
+        <div class="contents">
+          <div class="city">Winter Park, FL 32789</div>
+        </div>
+      </div>
+      <div class="card bottom">
+        <div class="contents">
+          <div class="city">Winter Park, FL 32789</div>
+        </div>
+      </div>
+      <div class="card shadow"></div></a><a class="stack" href="#">
+      <div class="card top">
+        <div class="contents">
+          <h2><strong>ABC</strong>Design
+          </h2>
+          <h3>Don Joel</h3>Web Developer<br/><br/><span>✉️</span>donjoel@example.com<br/><span>📞</span>216-362-0665<br/><br/>2699 Glenwood Avenue<br/>Brook Park, OH 44142
+        </div>
+      </div>
+      <div class="card mid">
+        <div class="contents">
+          <div class="city">Brook Park, OH 44142</div>
+        </div>
+      </div>
+      <div class="card bottom">
+        <div class="contents">
+          <div class="city">Brook Park, OH 44142</div>
+        </div>
+      </div>
+      <div class="card shadow"></div></a><a class="stack" href="#">
+      <div class="card top">
+        <div class="contents">
+          <h2><strong>ABC</strong>Design
+          </h2>
+          <h3>Ann Thrax</h3>Project Manager<br/><br/><span>✉️</span>annthrax@example.com<br/><span>📞</span>808-293-4613<br/><br/>3801 Stratford Drive<br/>Laie, HI 96762
+        </div>
+      </div>
+      <div class="card mid">
+        <div class="contents">
+          <div class="city">Laie, HI 96762</div>
+        </div>
+      </div>
+      <div class="card bottom">
+        <div class="contents">
+          <div class="city">Laie, HI 96762</div>
+        </div>
+      </div>
+      <div class="card shadow"></div></a><a class="stack" href="#">
+      <div class="card top">
+        <div class="contents">
+          <h2><strong>ABC</strong>Design
+          </h2>
+          <h3>Clint Westwood</h3>Customer Support<br/><br/><span>✉️</span>clintwestwood@example.com<br/><span>📞</span>865-217-3165<br/><br/>2212 Brown Avenue<br/>Hartford, TN 37753
+        </div>
+      </div>
+      <div class="card mid">
+        <div class="contents">
+          <div class="city">Hartford, TN 37753</div>
+        </div>
+      </div>
+      <div class="card bottom">
+        <div class="contents">
+          <div class="city">Hartford, TN 37753</div>
+        </div>
+      </div>
+      <div class="card shadow"></div></a><a class="stack" href="#">
+      <div class="card top">
+        <div class="contents">
+          <h2><strong>ABC</strong>Design
+          </h2>
+          <h3>Joe Schmoe</h3>Graphic Designer<br/><br/><span>✉️</span>joeschmoe@example.com<br/><span>📞</span>407-712-8549<br/><br/>469 Grand Avenue<br/>Winter Park, FL 32789
+        </div>
+      </div>
+      <div class="card mid">
+        <div class="contents">
+          <div class="city">Winter Park, FL 32789</div>
+        </div>
+      </div>
+      <div class="card bottom">
+        <div class="contents">
+          <div class="city">Winter Park, FL 32789</div>
+        </div>
+      </div>
+      <div class="card shadow"></div></a><a class="stack" href="#">
+      <div class="card top">
+        <div class="contents">
+          <h2><strong>ABC</strong>Design
+          </h2>
+          <h3>Don Joel</h3>Web Developer<br/><br/><span>✉️</span>donjoel@example.com<br/><span>📞</span>216-362-0665<br/><br/>2699 Glenwood Avenue<br/>Brook Park, OH 44142
+        </div>
+      </div>
+      <div class="card mid">
+        <div class="contents">
+          <div class="city">Brook Park, OH 44142</div>
+        </div>
+      </div>
+      <div class="card bottom">
+        <div class="contents">
+          <div class="city">Brook Park, OH 44142</div>
+        </div>
+      </div>
+      <div class="card shadow"></div></a>
+  </div>
+</main>
+  
+    <script id="rendered-js" >
+window.addEventListener("resize", scrollGrid);
+window.addEventListener("scroll", scrollGrid);
+
+function scrollGrid() {
+  const bodyHeight = document.body.offsetHeight;
+  const mainHeight = document.querySelector("main").offsetHeight;
+  const cards = document.querySelector(".cards");
+  const transY = window.pageYOffset / (mainHeight - bodyHeight) * -100;
+
+  cards.style.setProperty("--scroll", transY + "%");
+}
+scrollGrid();
+//# sourceURL=pen.js
+  </script>
+
+  
+</body>
+
+</html>

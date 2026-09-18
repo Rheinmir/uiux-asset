@@ -1,0 +1,186 @@
+<!-- VENDORED NGUYÊN VĂN — "Staggered Text Scroll Reveal" by gusevdigital · https://codepen.io/gusevdigital/pen/gOqdKVo
+     License: MIT (CodePen public pen = MIT). Giữ dòng này khi copy. -->
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  
+  <meta charset="UTF-8">
+  
+
+    <link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
+
+    <meta name="apple-mobile-web-app-title" content="CodePen">
+
+    <link rel="icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
+
+    <link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-b4b4269c16397ad2f0f7a01bcdf513a1994f4c94b8af2f191c09eb0d601762b1.svg" color="#111" />
+
+
+
+  
+    <script>/* stub loop-protect CodePen — chạy ngoài CodePen */window.CP={shouldStopExecution:()=>false,exitedLoop:()=>{}};</script>
+
+
+  <title>Revealing text [GSAP + Lenis]</title>
+
+    <link rel="canonical" href="https://codepen.io/gusevdigital/pen/gOqdKVo">
+  
+  
+  
+  
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap");
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  display: block;
+  height: auto;
+  min-height: 100%;
+  width: 100%;
+  font-size: max(24px, 3vw);
+  line-height: 1.4;
+  overflow-x: hidden;
+  font-family: "Poppins", sans-serif;
+  color: black;
+  background: white;
+}
+
+body {
+  display: block;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.container {
+  position: relative;
+  max-width: 60%;
+  margin: 0 auto;
+}
+
+.text-reveal {
+  font-kerning: none;
+}
+.text-reveal .line-wrapper {
+  overflow: hidden;
+}
+.text-reveal .line {
+  transform: translate3d(0, 100%, 0);
+}
+</style>
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+  
+  
+</head>
+
+<body translate="no">
+  <div class="app"><section>
+  <div class="container">
+    <p class="text-reveal">In the cosmic ballet, stars twirl, painting the night sky with celestial wonders and mysteries.</p>
+  </div>
+  </section>
+  <section>
+    <div class="container">
+      <p class="text-reveal">The vast expanse of space whispers tales of undiscovered realms, beckoning humanity's relentless exploration.</p>
+    </div>
+  </section>
+</div>
+  <script src='https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.23/bundled/lenis.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js'></script>
+<script src='https://unpkg.com/split-type'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/ScrollTrigger.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js'></script>
+    <script id="rendered-js" >
+const debounce = (func, timeout = 300) => {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {func.apply(this, args);}, timeout);
+  };
+};
+
+gsap.registerPlugin(ScrollTrigger);
+
+// Scroll
+const lenis = new Lenis({
+  lerp: 0.07 });
+
+
+lenis.on('scroll', ScrollTrigger.update);
+gsap.ticker.add(time => {
+  lenis.raf(time * 1000);
+});
+
+// Reveal animation
+const setTextRevealAnimations = () => {
+  document.querySelectorAll('.text-reveal').forEach(text => {
+    // Split text
+    let splitText = new SplitType(text);
+
+    splitText.lines.forEach(line => {
+      const lineWrapper = document.createElement('div');
+      lineWrapper.classList.add('line-wrapper');
+      text.insertAdjacentElement('beforeEnd', lineWrapper);
+      lineWrapper.appendChild(line);
+    });
+
+    // Animation
+    const section = text.closest('section');
+    gsap.to(splitText.lines, {
+      y: 0,
+      ease: "power1.inOut",
+      stagger: .15,
+      scrollTrigger: {
+        trigger: text,
+        start: 'top bottom',
+        // markers: true,
+        toggleActions: 'play reset play reset' } });
+
+
+  });
+};
+
+setTextRevealAnimations();
+
+// Handle resize
+const resizeObserver = new ResizeObserver(
+debounce(([entry]) => {
+  setTextRevealAnimations();
+}, 500));
+
+resizeObserver.observe(document.body);
+//# sourceURL=pen.js
+  </script>
+
+  
+</body>
+
+</html>

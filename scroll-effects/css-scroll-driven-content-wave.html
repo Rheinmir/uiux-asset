@@ -1,0 +1,587 @@
+<!-- VENDORED NGUYÊN VĂN — "CSS Scroll-Driven Content Wave" by jh3y · https://codepen.io/jh3y/pen/XJrOGNw
+     License: MIT (CodePen public pen = MIT). Giữ dòng này khi copy. -->
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  
+  <meta charset="UTF-8">
+  
+
+    <link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
+
+    <meta name="apple-mobile-web-app-title" content="CodePen">
+
+    <link rel="icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
+
+    <link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-b4b4269c16397ad2f0f7a01bcdf513a1994f4c94b8af2f191c09eb0d601762b1.svg" color="#111" />
+
+
+
+  
+    <script>/* stub loop-protect CodePen — chạy ngoài CodePen */window.CP={shouldStopExecution:()=>false,exitedLoop:()=>{}};</script>
+
+
+  <title>CSS Scroll Driven Content Wave</title>
+
+    <link rel="canonical" href="https://codepen.io/jh3y/pen/XJrOGNw">
+  
+  
+  
+  
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+@import url('https://unpkg.com/normalize.css') layer(normalize);
+
+@layer normalize, base, demo, animation, responsive;
+
+@layer responsive {
+  @media (min-width: 768px) and (max-height: 800px) {
+    body {
+      flex-direction: row;
+    }
+  }
+}
+
+@layer animation {
+  :root {
+    --card-width: clamp(150px, 30vw, 300px);
+  }
+  li {
+    -webkit-animation: change both
+      linear(
+        0 0%,
+        0.0027 3.64%,
+        0.0106 7.29%,
+        0.0425 14.58%,
+        0.0957 21.87%,
+        0.1701 29.16%,
+        0.2477 35.19%,
+        0.3401 41.23%,
+        0.5982 55.18%,
+        0.7044 61.56%,
+        0.7987 68.28%,
+        0.875 75%,
+        0.9297 81.25%,
+        0.9687 87.5%,
+        0.9922 93.75%,
+        1 100%
+      );
+            animation: change both
+      linear(
+        0 0%,
+        0.0027 3.64%,
+        0.0106 7.29%,
+        0.0425 14.58%,
+        0.0957 21.87%,
+        0.1701 29.16%,
+        0.2477 35.19%,
+        0.3401 41.23%,
+        0.5982 55.18%,
+        0.7044 61.56%,
+        0.7987 68.28%,
+        0.875 75%,
+        0.9297 81.25%,
+        0.9687 87.5%,
+        0.9922 93.75%,
+        1 100%
+      );
+    animation-timeline: view(inline);
+  }
+  @-webkit-keyframes change {
+    50% {
+      width: var(--card-width);
+    }
+  }
+  @keyframes change {
+    50% {
+      width: var(--card-width);
+    }
+  }
+}
+
+@layer demo {
+  article {
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: relative;
+    max-height: 100%;
+    aspect-ratio: 2 / 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+
+    div {
+      position: relative;
+      flex: 1;
+
+      img {
+        position: absolute;
+        inset: 0;
+      }
+    }
+  }
+
+  ul {
+    container-type: size;
+    list-style-type: none;
+    display: flex;
+    gap: 0.5rem;
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+    padding: 0;
+    margin: 0;
+    padding-inline: calc(50% - (var(--card-width)) * 0.5);
+    padding-block: 0.75rem;
+    scrollbar-color: red #0000;
+    scrollbar-width: thin;
+    /* scroll-snap-type: x mandatory; */
+  }
+
+  [data-dragging='true'] a {
+    cursor: -webkit-grabbing;
+    cursor: grabbing;
+  }
+
+  li a {
+    cursor: -webkit-grab;
+    cursor: grab;
+    text-transform: uppercase;
+    font-weight: 300;
+    font-size: 0.625rem;
+    color: inherit;
+    text-decoration: none;
+    margin-bottom: 0.25rem;
+    display: inline-block;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+    }
+  }
+
+  li img {
+    width: 100%;
+    aspect-ratio: 2/3;
+    filter: grayscale(0.85) contrast(1.6);
+  }
+
+  li {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    flex-direction: column;
+    scroll-snap-align: center;
+    aspect-ratio: 2 / 3;
+    width: clamp(80px, 10vw, 160px);
+    max-height: 100%;
+  }
+
+  main {
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+    padding-block: 0.25rem;
+  }
+  header {
+    font-size: 0.875rem;
+    font-weight: 300;
+    padding: 1rem;
+  }
+
+  header p {
+    width: 40ch;
+    max-width: 100%;
+    text-wrap: balanced;
+    opacity: 0.8;
+  }
+
+  form {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  header div {
+    max-width: 100%;
+    display: inline-flex;
+    flex-direction: column;
+  }
+
+  header button {
+    background: color-mix(in hsl, canvas, canvasText 75%);
+    color: color-mix(in hsl, canvas, canvasText 10%);
+    border-radius: 4px;
+    border: 0;
+    padding-inline: 1rem;
+    cursor: pointer;
+  }
+
+  header input {
+    padding: 0.5rem;
+    border-radius: 4px;
+    border-style: solid;
+    border-width: 1px;
+    flex: 1;
+    outline-color: red;
+  }
+
+  h1 {
+    margin: 0;
+    font-weight: 300;
+  }
+  html {
+    background: light-dark(#000, #fff);
+  }
+  body {
+    background: light-dark(#fff, #000);
+    min-height: unset;
+    position: fixed;
+    inset: 0.5rem;
+    border-radius: 0.5rem;
+    display: flex;
+    flex-direction: column;
+  }
+  body::before {
+    --size: 45px;
+    --line: color-mix(in hsl, canvasText, transparent 80%);
+    content: '';
+    inset: 0;
+    position: absolute;
+    background: linear-gradient(
+          90deg,
+          var(--line) 1px,
+          transparent 1px var(--size)
+        )
+        50% 50% / var(--size) var(--size),
+      linear-gradient(var(--line) 1px, transparent 1px var(--size)) 50% 50% /
+        var(--size) var(--size);
+    -webkit-mask: linear-gradient(150deg, transparent 50%, white);
+            mask: linear-gradient(150deg, transparent 50%, white);
+    top: 0;
+    left: 0;
+    transform-style: flat;
+    pointer-events: none;
+    z-index: -1;
+  }
+  body > div:first-of-type::after {
+    content: '';
+    position: absolute;
+    z-index: -2;
+    inset: 0;
+    background: light-dark(#fff, #000);
+  }
+}
+
+@layer base {
+  :root {
+    --font-size-min: 16;
+    --font-size-max: 20;
+    --font-ratio-min: 1.2;
+    --font-ratio-max: 1.33;
+    --font-width-min: 375;
+    --font-width-max: 1500;
+  }
+
+  html {
+    color-scheme: light dark;
+  }
+
+  [data-theme='light'] {
+    color-scheme: light only;
+  }
+
+  [data-theme='dark'] {
+    color-scheme: dark only;
+  }
+
+  :where(.fluid) {
+    --fluid-min: calc(
+      var(--font-size-min) * pow(var(--font-ratio-min), var(--font-level, 0))
+    );
+    --fluid-max: calc(
+      var(--font-size-max) * pow(var(--font-ratio-max), var(--font-level, 0))
+    );
+    --fluid-preferred: calc(
+      (var(--fluid-max) - var(--fluid-min)) /
+        (var(--font-width-max) - var(--font-width-min))
+    );
+    --fluid-type: clamp(
+      (var(--fluid-min) / 16) * 1rem,
+      ((var(--fluid-min) / 16) * 1rem) -
+        (((var(--fluid-preferred) * var(--font-width-min)) / 16) * 1rem) +
+        (var(--fluid-preferred) * var(--variable-unit, 100vi)),
+      (var(--fluid-max) / 16) * 1rem
+    );
+    font-size: var(--fluid-type);
+  }
+
+  *,
+  *:after,
+  *:before {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'DM Sans', serif, 'SF Pro Text', 'SF Pro Icons', 'AOS Icons',
+      'Helvetica Neue', Helvetica, Arial, sans-serif, system-ui;
+  }
+
+  .bear-link {
+    color: canvasText;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 48px;
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    opacity: 0.8;
+  }
+
+  :where(.x-link, .bear-link):is(:hover, :focus-visible) {
+    opacity: 1;
+  }
+
+  .bear-link svg {
+    width: 75%;
+  }
+
+  /* Utilities */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+}
+
+div.tp-dfwv {
+  top: unset;
+  bottom: 8px;
+  position: fixed;
+  z-index: 99999;
+}
+</style>
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+  
+  
+</head>
+
+<body translate="no">
+  <header>
+      <h1>the craft of ui</h1>
+      <div>
+        <p>
+          Unlock the art and science of interface development. This isn’t just
+          about pushing pixels or following documentation — it’s about mastering
+          the tools, understanding the nuances, and shaping experiences with
+          intention.
+        </p>
+        <p>
+          Gain the confidence to build anything you envision, transforming
+          motion, interaction, and design principles into second nature. This is
+          where UI becomes more than a skill—it becomes your craft.
+        </p>
+        <p>Join thousands of others honing their craft.</p>
+        <form action="https://craftofui.substack.com/subscribe">
+          <input type="email" name="email" required />
+          <button type="submit">Enlist</button>
+        </form>
+      </div>
+    </header>
+    <main>
+      <ul></ul>
+    </main>
+    <a
+      class="bear-link"
+      href="https://twitter.com/intent/follow?screen_name=jh3yy"
+      target="_blank"
+      rel="noreferrer noopener"
+    >
+      <svg
+        class="w-9"
+        viewBox="0 0 969 955"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <circle
+          cx="161.191"
+          cy="320.191"
+          r="133.191"
+          stroke="currentColor"
+          stroke-width="20"
+        ></circle>
+        <circle
+          cx="806.809"
+          cy="320.191"
+          r="133.191"
+          stroke="currentColor"
+          stroke-width="20"
+        ></circle>
+        <circle
+          cx="695.019"
+          cy="587.733"
+          r="31.4016"
+          fill="currentColor"
+        ></circle>
+        <circle
+          cx="272.981"
+          cy="587.733"
+          r="31.4016"
+          fill="currentColor"
+        ></circle>
+        <path
+          d="M564.388 712.083C564.388 743.994 526.035 779.911 483.372 779.911C440.709 779.911 402.356 743.994 402.356 712.083C402.356 680.173 440.709 664.353 483.372 664.353C526.035 664.353 564.388 680.173 564.388 712.083Z"
+          fill="currentColor"
+        ></path>
+        <rect
+          x="310.42"
+          y="448.31"
+          width="343.468"
+          height="51.4986"
+          fill="#FF1E1E"
+        ></rect>
+        <path
+          fill-rule="evenodd"
+          clip-rule="evenodd"
+          d="M745.643 288.24C815.368 344.185 854.539 432.623 854.539 511.741H614.938V454.652C614.938 433.113 597.477 415.652 575.938 415.652H388.37C366.831 415.652 349.37 433.113 349.37 454.652V511.741L110.949 511.741C110.949 432.623 150.12 344.185 219.845 288.24C289.57 232.295 384.138 200.865 482.744 200.865C581.35 200.865 675.918 232.295 745.643 288.24Z"
+          fill="currentColor"
+        ></path>
+      </svg>
+    </a>
+  <script src='_assets/16327/InertiaPlugin.min.js'></script>
+    <script id="rendered-js" type="module">
+import { Pane } from 'https://esm.sh/tweakpane@4.0.4';
+import gsap from 'https://esm.sh/gsap@3.12.0';
+import Draggable from 'https://esm.sh/gsap@3.12.0/Draggable';
+
+gsap.registerPlugin(Draggable, InertiaPlugin);
+
+const list = document.querySelector('ul');
+
+const config = {
+  theme: 'system',
+  items: 20 };
+
+
+const items = [
+'planning',
+'properties',
+'counters',
+'masking',
+'3D',
+'blending',
+'siblings',
+'speech',
+'typography',
+'magnetism',
+'keyframes',
+'easing',
+'staggers',
+'composition',
+'popovers',
+'transitions',
+'clipping',
+'morphing',
+'timing',
+'paths',
+'svg',
+'scrolling'];
+
+
+const generateItems = () => {
+  list.innerHTML = `
+    ${items.
+  map(
+  (item, index) => `<li>
+        <article>
+          <a href="#"><span aria-hidden="true">${(index + 1).
+  toString().
+  padStart(2, '0')}.&nbsp;</span>${item}</a>
+          <div>
+            <img src="https://picsum.photos/1000/1500?random=${index}" alt="" />
+          </div>
+        </article>
+        </li>`).
+
+  join('')}
+  `;
+};
+generateItems();
+
+const ctrl = new Pane({
+  title: 'Config',
+  expanded: false });
+
+
+const update = () => {
+  document.documentElement.dataset.theme = config.theme;
+};
+
+const sync = event => {
+  if (
+  !document.startViewTransition ||
+  event.target.controller.view.labelElement.innerText !== 'Theme')
+
+  return update();
+  document.startViewTransition(() => update());
+};
+
+ctrl.addBinding(config, 'theme', {
+  label: 'Theme',
+  options: {
+    System: 'system',
+    Light: 'light',
+    Dark: 'dark' } });
+
+
+
+ctrl.on('change', sync);
+update();
+
+const proxy = document.createElement('div');
+const updateScroll = function () {
+  const x = this.x;
+  list.scroll({
+    left: this.scrollLeft + -this.x,
+    behavior: 'instant' });
+
+};
+const dragger = Draggable.create(proxy, {
+  type: 'x',
+  trigger: list,
+  inertia: true,
+  allowContextMenu: true,
+  onPressInit: function () {
+    document.documentElement.dataset.snap = false;
+    this.scrollLeft = list.scrollLeft;
+    gsap.set(proxy, { clearProps: 'all' });
+  },
+  onDragStart: () => {
+    document.documentElement.dataset.dragging = true;
+  },
+  onDragEnd: () => {
+    document.documentElement.dataset.dragging = false;
+  },
+  onDrag: updateScroll,
+  onThrowUpdate: updateScroll });
+//# sourceURL=pen.js
+  </script>
+
+  
+</body>
+
+</html>

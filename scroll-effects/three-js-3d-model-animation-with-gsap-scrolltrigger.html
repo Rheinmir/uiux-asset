@@ -1,0 +1,750 @@
+<!-- VENDORED NGUYÊN VĂN — "Three.js 3D Model Animation with GSAP ScrollTrigger" by yudizsolutions · https://codepen.io/yudizsolutions/pen/vENNWxx
+     License: MIT (CodePen public pen = MIT). Giữ dòng này khi copy. -->
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  
+  <meta charset="UTF-8">
+  
+
+    <link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
+
+    <meta name="apple-mobile-web-app-title" content="CodePen">
+
+    <link rel="icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
+
+    <link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-b4b4269c16397ad2f0f7a01bcdf513a1994f4c94b8af2f191c09eb0d601762b1.svg" color="#111" />
+
+
+
+  
+    <script>/* stub loop-protect CodePen — chạy ngoài CodePen */window.CP={shouldStopExecution:()=>false,exitedLoop:()=>{}};</script>
+
+
+  <title>Three.js 3D Model Animation with GSAP ScrollTriggerUntitled</title>
+
+    <link rel="canonical" href="https://codepen.io/yudizsolutions/pen/vENNWxx">
+  
+  
+  
+  
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Golos+Text:wght@400..900&display=swap');
+ 
+*                                       {margin: 0;padding: 0;box-sizing: border-box;}
+img                                     {width: 100%;height: auto;}
+button,a                                {border: 1px solid transparent;background: transparent;display: flex;align-items: center;justify-content: center;text-decoration: none;color: #EBEBEB;}
+body                                    {font-family: "Golos Text";}
+/*  */
+.webgl                                  {position: fixed;left: 0;top: 0;width: 100vw;height: 100dvh;z-index: -1;}
+.header                                 {display: flex;align-items: center;justify-content: space-between;padding: 34px 40px;}
+.logo                                   {max-width: 270px;display: flex;align-self: center;justify-content: center;}
+.nav-link-container                     {display: flex;align-items: center;gap: 40px;}
+.nav-link-container                     {background: #0F0F0F;padding-left: 30px;}
+.nav-link-container button img          {width: 20px;aspect-ratio: 1;}
+.nav-link-container a                   {font-size: 14px;text-transform: uppercase;transition: all ease-in-out 0.15s;}
+.nav-link-container a:hover             {color: #D6F844;}
+.toggle-btn                             {background: #515151;padding: 16px;}
+.banner-section                         {max-width: 1122px;margin: 0 auto;text-align: center;}
+h1                                      {font-size: 100px;line-height: 140px;color: white;font-weight: 900;text-transform: uppercase;}
+p                                       {color: #949494;}
+/*  */
+.banner-section a                       {display: flex;align-items: center;gap: 4px;color: #D6F844;position: relative;max-width: fit-content;margin: 30px auto 0;font-weight: 500;text-transform: uppercase;}
+.banner-section a img                   {width: 18px;aspect-ratio: 1;transition: all ease-in-out 0.15s;transform-origin: center;}
+.banner-section a::after                {content: '';position: absolute;right: 0;top: calc(100% + 2px);width: 0%;height: 1px;background: #D6F844;transition: all ease-in-out 0.15s;}
+.banner-section a:hover:after           {width: 100%;left: 0;right: unset;}
+.banner-section a:hover img             {transform: rotate(45deg);}
+/*  */
+.images-container                       {display: flex;justify-content: space-between;flex-wrap: wrap;padding: 100px 40px;}
+.images-container .img                  {width: 100%;display: flex;}
+.images-container .img:nth-child(even)  {justify-content: end;}
+.images-container img                   {aspect-ratio: 16 / 9;object-fit: cover;transition: all ease 1s;}
+.img-main                               {max-width: 30vw;width: 100%;border: 1px solid transparent;overflow: hidden;position: relative;line-height: 0;opacity: 0;transition: all ease-in-out 0.15s;}
+.img-main:hover:after                   {content: '';position: absolute;top: -100%;left: -100%;height: 200%;width: 200%;background: linear-gradient(to bottom right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);animation: slide 1s forwards;filter: blur(33px);}
+/*  */
+@keyframes slide                        {
+    from                                { top: -100%; left: -100%; }
+    to                                  { top: 100%; left: 100%; }
+}
+.img-main:hover img                     {transform: scale(1.2);}
+.img-main:hover                         {border-color: #5599FF;}
+.zoom-img img                           {aspect-ratio: 16 / 9;object-fit: cover;transition: all ease 0.2s;object-position: top;}
+.images-container img:hover             {transform: scale(1.1) ;opacity: 1;}
+section{min-height: 100vh;}
+/*  */
+html.lenis, html.lenis body             {height: auto;}
+.lenis.lenis-smooth                     {scroll-behavior: auto !important;}
+.lenis.lenis-smooth [data-lenis-prevent]{overscroll-behavior: contain;}
+.lenis.lenis-stopped                    {overflow: hidden;}
+.lenis.lenis-scrolling iframe           {pointer-events: none;}
+ 
+ 
+@keyframes spin                         {
+  to                                    { transform: rotate(360deg); }
+}
+#preloader                              {position: fixed; top: 0;left: 0;width: 100%;height: 100%;z-index: 1001;}
+.loder-parent                           {position: absolute;left: 50%;top: 50%;transform: translate(-50%, -50%);}
+#loader                                 {display: block;position: relative;width: 300px;height: 300px;border-radius: 50%;border: 5px solid transparent;border-top-color: #D6F844;-webkit-animation: spin 2s linear infinite;animation: spin 2s linear infinite;}
+#loader:before                          {content: "";position: absolute;top: 5px;left: 5px;right: 5px;bottom: 5px;border-radius: 50%;border: 4px solid transparent;border-top-color: #D6F844;-webkit-animation: spin 3s linear infinite;animation: spin 3s linear infinite;}
+#loader:after                           {content: "";position: absolute;top: 15px;left: 15px;right: 15px;bottom: 15px;border-radius: 50%;border: 3px solid transparent;border-top-color: #D6F844;-webkit-animation: spin 1.5s linear infinite;animation: spin 1.5s linear infinite;}
+@-webkit-keyframes spin                 {
+    0%                                  {-webkit-transform: rotate(0deg);-ms-transform: rotate(0deg);transform: rotate(0deg);}
+    100%                                {-webkit-transform: rotate(360deg);-ms-transform: rotate(360deg);transform: rotate(360deg);}
+}
+/* Movie poster with glare effect */
+.loader-text                            {position: absolute;left: 50%;transform: translate(-50%, -50%);top: 50%;font-size: 2rem;line-height: 1;font-weight: 700;color: #D6F844;}
+.loader-info-text{
+    position: absolute;left: 50%;transform: translate(-50%,-50%);top: 70%;font-size: 1rem;line-height: 1;font-weight: 400;color: #D6F844;   }
+.dg.ac                                  {background-color: rgba(0, 0, 0, 0.8)}
+ 
+/* ===== MOBILE RESPONSIVE ===== */
+ 
+/* Tablet and smaller screens */
+@media screen and (max-width: 1024px)   {
+    .header                             {padding: 20px 30px;}
+    .nav-link-container                 {gap: 25px;padding-left: 20px;}
+    h1                                  {font-size: 80px;line-height: 120px;}
+}
+ 
+/* Mobile landscape and smaller tablets */
+@media screen and (max-width: 768px)    {
+    .header                             {padding: 15px 20px;flex-direction: column;gap: 20px;}
+    .logo                               {max-width: 200px;}
+    .nav-link-container                 {gap: 20px;padding-left: 15px;flex-wrap: wrap;justify-content: center;}
+    
+    .nav-link-container a               {font-size: 12px;}
+    h1                                  {font-size: 60px;line-height: 80px;}
+    .banner-section                     {padding: 0 20px;}
+    .images-container                   {padding: 40px 20px;flex-direction: column;align-items: center;gap: 30px;}
+    .img-main                           {max-width: 35vw;}
+}
+@media screen and (max-width: 575px)    {
+    .img-main                           {max-width: 50vw;width: 100%;}
+}
+/* Mobile portrait */
+@media screen and (max-width: 480px)    {
+    .header                             {padding: 15px;}
+    .logo                               {max-width: 150px;}
+    .nav-link-container                 {gap: 10px;padding-left: 10px;padding-right: 0px;}    
+    .nav-link-container a               {font-size: 11px;}    
+    .toggle-btn                         {padding: 12px;}
+    h1                                  {font-size: 40px;line-height: 50px;}
+    .banner-section                     {padding: 0 15px;}
+    .banner-section a                   {margin: 20px auto 0;font-size: 14px;}
+    .images-container                   {padding: 40px 15px;gap: 20px;}    
+    /* Loader adjustments for mobile */
+    #loader                             {width: 200px;height: 200px;}    
+    .loader-text                        {font-size: 1.5rem;}
+}
+ 
+/* Very small screens */
+@media screen and (max-width: 360px)    {
+    .header                             {padding: 10px;}
+    .nav-link-container                 {gap: 10px;padding-left: 8px;padding-right: 8px;}
+    .nav-link-container a               {font-size: 10px;}
+    h1                                  {font-size: 32px;line-height: 40px;}    
+    .banner-section                     {padding: 0 10px;}
+    .images-container                   {padding: 30px 10px;}    
+    #loader                             {width: 150px;height: 150px;}
+    .loader-text                        {font-size: 1.2rem;}
+}
+ 
+/* Landscape orientation specific */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+    .header                             {padding: 10px 20px;}
+    h1                                  {font-size: 50px;line-height: 60px;}
+    .banner-section                     {margin-top: 20px;}
+}
+</style>
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+  
+  
+</head>
+
+<body translate="no">
+  <script type="importmap">
+{
+    "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js",
+        "three/examples/jsm/controls/OrbitControls": "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/controls/OrbitControls.js",
+        "three/examples/jsm/loaders/GLTFLoader": "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/loaders/GLTFLoader.js",
+        "three/examples/jsm/postprocessing/EffectComposer": "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/postprocessing/EffectComposer.js",
+        "three/examples/jsm/postprocessing/RenderPass": "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/postprocessing/RenderPass.js",
+        "three/examples/jsm/postprocessing/UnrealBloomPass": "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/postprocessing/UnrealBloomPass.js"
+    }
+}
+</script>
+ 
+<canvas class="webgl"></canvas>
+    <div id="preloader" style="display: block;">
+        <!-- <div class="loder-parent">
+            <div id="loader"></div>
+        </div> -->
+        <!-- <p class="loader-text" id="loading-text">Loading</p> -->
+        <p class="loader-info-text">Please wait while the model is loading...</p>
+    </div>
+ 
+    <main>
+        <header class="header">
+            <a href="#" class="logo">
+                <img src="https://webprojects.cloud/r&d/roman-structure/images/Logo.svg" alt="Logo">
+            </a>
+            <div class="nav-link-container">
+                <button>
+                    <img src="https://webprojects.cloud/r&d/roman-structure/images/search-icon.svg" alt="search">
+                </button>
+                <a href="">visit</a>
+                <a href="">exhibitions & events</a>
+                <a href="">collection</a>
+                <button class="toggle-btn">
+                    <img src="https://webprojects.cloud/r&d/roman-structure/images/menu_icon.svg" alt="menu_icon">
+                </button>
+            </div>
+        </header>
+        <section>
+            <div class="banner-section">
+                <h1>delve into relics</h1>
+                <p>Welcome to the relics museum, where history and art come to life. Explore our diverse collection of
+                    artifacts, paintings, and sculptures, each with its own unique story to tell, Plan your visit and
+                    book tickets online.</p>
+                <a href="#">
+                    plan your visit
+                    <img src="https://webprojects.cloud/r&d/roman-structure/images/arrow-green.svg" alt="arrow">
+                </a>
+            </div>
+        </section>
+        <section class="images-container">
+            <div class="img">
+                <div class="img-main">
+                    <img src="https://webprojects.cloud/r&d/roman-structure/images/man-one.jpg" alt="man">
+                </div>
+            </div>
+            <div class="img">
+                <div class="img-main">
+                    <img src="https://webprojects.cloud/r&d/roman-structure/images/women-one.jpg" alt="women">
+                </div>
+            </div>
+            <div class="img">
+                <div class="img-main">
+                    <img src="https://webprojects.cloud/r&d/roman-structure/images/women-two.jpg" alt="women">
+                </div>
+            </div>
+            <div class="img">
+                <div class="img-main">
+                    <img src="https://webprojects.cloud/r&d/roman-structure/images/man-two.jpg" alt="man">
+                </div>
+            </div>
+            <div class="img">
+                <div class="img-main">
+                    <img src="https://webprojects.cloud/r&d/roman-structure/images/women-four.jpg" alt="women">
+                </div>
+            </div>
+            <div class="img">
+                <div class="img-main">
+                    <img src="https://webprojects.cloud/r&d/roman-structure/images/man-four.jpg" alt="man">
+                </div>
+            </div>
+            <div class="img">
+                <div class="img-main">
+                    <img src="https://webprojects.cloud/r&d/roman-structure/images/man-five.jpg" alt="man">
+                </div>
+            </div>
+ 
+            <div class="img">
+                <div class="img-main">
+                    <img src="https://webprojects.cloud/r&d/roman-structure/images/man-six.jpg" alt="man">
+                </div>
+            </div>
+            <div class="img">
+                <div class="img-main">
+                    <img src="https://webprojects.cloud/r&d/roman-structure/images/women-six.jpg" alt="women">
+                </div>
+            </div>
+ 
+            <div class="img">
+                <div class="img-main">
+                    <img src="https://webprojects.cloud/r&d/roman-structure/images/man-seven.jpg" alt="man">
+                </div>
+            </div>
+            <div class="img">
+                <div class="img-main">
+                    <img src="https://webprojects.cloud/r&d/roman-structure/images/men-eight.jpg" alt="man">
+                </div>
+            </div>
+            <div class="img">
+                <div class="img-main">
+                    <img src="https://webprojects.cloud/r&d/roman-structure/images/women-eight.jpg" alt="women">
+                </div>
+            </div>
+            <div class="img">
+                <div class="img-main">
+                    <img src="https://webprojects.cloud/r&d/roman-structure/images/women-nine.jpg" alt="women">
+                </div>
+            </div>
+            <div class="img">
+                <div class="img-main">
+                    <img src="https://webprojects.cloud/r&d/roman-structure/images/men-nine.jpg" alt="man">
+                </div>
+            </div>
+        </section>
+    </main>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrambleTextPlugin.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/SplitText.min.js'></script>
+<script src='https://unpkg.com/lenis@1.1.20/dist/lenis.min.js'></script>
+    <script id="rendered-js" type="module">
+import * as THREE from "https://unpkg.com/three@0.161.0/build/three.module.js";
+import { OrbitControls } from "https://unpkg.com/three@0.161.0/examples/jsm/controls/OrbitControls.js";
+import { GLTFLoader } from "https://unpkg.com/three@0.161.0/examples/jsm/loaders/GLTFLoader.js";
+import { GUI } from 'https://unpkg.com/dat.gui@0.7.9/build/dat.gui.module.js';
+import { EffectComposer } from "https://unpkg.com/three@0.161.0/examples/jsm/postprocessing/EffectComposer.js";
+import { RenderPass } from "https://unpkg.com/three@0.161.0/examples/jsm/postprocessing/RenderPass.js";
+import { UnrealBloomPass } from "https://unpkg.com/three@0.161.0/examples/jsm/postprocessing/UnrealBloomPass.js";
+
+// Create a scene
+const scene = new THREE.Scene();
+const canvas = document.querySelector('canvas.webgl');
+
+// Group for torus and model
+const group = new THREE.Group();
+scene.add(group);
+
+// Floor
+const floor = new THREE.Mesh(
+new THREE.PlaneGeometry(10, 10),
+new THREE.MeshStandardMaterial({ color: 0xffffff }));
+
+floor.rotation.x = -Math.PI * 0.5;
+// scene.add(floor);
+
+// Torus with emissive material
+const geometry = new THREE.TorusGeometry(0.2, 0.04, 4, 20);
+const material = new THREE.MeshStandardMaterial({
+  color: 0x2555FD,
+  emissive: 0x2555FD, // ✅ Torus now emits light
+  emissiveIntensity: 5, // ✅ Increased glow
+  wireframe: true });
+
+const torus = new THREE.Mesh(geometry, material);
+torus.position.set(0, 1.8, 0);
+group.add(torus);
+
+const BLOOM_LAYER = 1;
+torus.layers.enable(BLOOM_LAYER); // Only torus glows
+
+
+
+// ✅ Move the PointLight inside the Torus
+const torusLight = new THREE.PointLight(0xffffff, 0.01, 0.25, 0.0004); // (color, intensity, distance, decay)
+torusLight.position.set(0, 1.8, -2); // ✅ Inside the torus
+scene.add(torusLight);
+
+// ✅ Light Helper
+const torusLightHelper = new THREE.PointLightHelper(torusLight);
+// scene.add(torusLightHelper);
+
+const spotLight = new THREE.SpotLight(0xffffff, 17, 100, 10, 10);
+spotLight.position.set(0, 3, 0.5);
+spotLight.castShadow = true;
+scene.add(spotLight);
+
+
+const spotLightHelper = new THREE.SpotLightHelper(spotLight);
+// scene.add(spotLightHelper);
+
+
+// Soft fill light from the left
+const fillLight = new THREE.PointLight(0x5599FF, 30, 5, 2);
+fillLight.position.set(-2, 2, 2);
+// scene.add(fillLight);
+
+// Rim light from the back for depth
+const rimLight = new THREE.PointLight(0xffffff, 20, 1, 1.5);
+rimLight.position.set(1, 1, 1);
+scene.add(rimLight);
+
+const fillLightHelper = new THREE.PointLightHelper(fillLight);
+const rimLightHelper = new THREE.PointLightHelper(rimLight);
+// scene.add( fillLightHelper);
+// scene.add( rimLightHelper);
+
+// GLTF Loader
+const gltfLoader = new GLTFLoader();
+const loadModel = (path, position, rotation = { x: 0, y: 0, z: 0 }) => {
+  gltfLoader.load(path, gltf => {
+    const mesh = gltf.scene;
+    mesh.traverse(child => {
+      if (child.isMesh) {
+        child.castShadow = true;
+        child.receiveShadow = true;
+      }
+    });
+    mesh.position.set(position.x, position.y, position.z);
+    mesh.rotation.set(rotation.x, rotation.y, rotation.z);
+    group.add(mesh); // ✅ Add model to the group
+    console.log(gltf.scene);
+    // ✅ Hide loader when model is ready
+    const loaderEl = document.getElementById('preloader');
+    if (loaderEl) {
+      gsap.to(loaderEl, {
+        scale: 1.5,
+        opacity: 0,
+        // y:"-100%",
+        duration: 0.5,
+        ease: "linear",
+        onComplete: () => loaderEl.remove() });
+
+    }
+  });
+  xhr => {
+    // Optional: Progress feedback (in case you want percentage)
+    const percent = xhr.loaded / xhr.total * 100;
+    console.log(`Loading model: ${percent.toFixed(0)}%`);
+  },
+  error => {
+    console.error('Error loading model', error);
+  };
+};
+
+// Load multiple models
+loadModel('https://raw.githubusercontent.com/Sabur-Ahemad/roman-godess-3d/main/flora/scene.gltf', { x: 0, y: 10.8, z: -15 });
+
+// Sizes
+const sizes = { width: window.innerWidth, height: window.innerHeight };
+
+// Camera
+const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height);
+camera.position.set(0, 2, 2);
+scene.add(camera);
+
+// Renderer
+const renderer = new THREE.WebGLRenderer({ canvas: canvas });
+renderer.shadowMap.enabled = true;
+renderer.setSize(sizes.width, sizes.height);
+
+// Scroll-based rotation for the group
+if (typeof gsap !== "undefined" && typeof ScrollTrigger !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.to(group.rotation, {
+    y: "+=6.28", // ✅ Rotate in the same direction as the wheel event
+    scrollTrigger: {
+      trigger: "body",
+      start: "top top",
+      end: "bottom bottom",
+      scrub: 1 // Smooth scrolling effect
+    } });
+
+
+  gsap.to(camera.position, {
+    y: 1, // ✅ Moves downward instead of upward
+    z: 1.7, // ✅ Moves backward instead of forward
+    scrollTrigger: {
+      trigger: "body",
+      start: "top top",
+      end: "bottom bottom",
+      scrub: 1 } });
+
+
+}
+
+const composer = new EffectComposer(renderer);
+composer.setSize(sizes.width, sizes.height);
+composer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+const renderPass = new RenderPass(scene, camera);
+composer.addPass(renderPass);
+
+const bloomPass = new UnrealBloomPass(
+new THREE.Vector2(sizes.width, sizes.height),
+1, // strength — glow intensity
+1.0, // radius — spread
+0 // threshold — how bright a pixel must be to glow
+);
+composer.addPass(bloomPass);
+
+// dat.GUI Setup
+const gui = new GUI({ width: 350 });
+
+// Torus Controls
+const torusFolder = gui.addFolder('Torus');
+torusFolder.add(torus.position, 'x', -5, 5, 0.1).name('Position X');
+torusFolder.add(torus.position, 'y', -5, 5, 0.1).name('Position Y');
+torusFolder.add(torus.position, 'z', -5, 5, 0.1).name('Position Z');
+torusFolder.add(torus.rotation, 'x', 0, Math.PI * 2, 0.1).name('Rotation X');
+torusFolder.add(torus.rotation, 'y', 0, Math.PI * 2, 0.1).name('Rotation Y');
+torusFolder.add(torus.rotation, 'z', 0, Math.PI * 2, 0.1).name('Rotation Z');
+torusFolder.add(material, 'emissiveIntensity', 0, 10, 0.1).name('Emissive Intensity');
+torusFolder.addColor({ color: '#2555FD' }, 'color').onChange(value => {
+  material.color.set(value);
+  material.emissive.set(value);
+}).name('Color');
+// Camera Controls
+const cameraFolder = gui.addFolder('Camera');
+cameraFolder.add(camera.position, 'x', -10, 10, 0.1).name('Position X');
+cameraFolder.add(camera.position, 'y', -10, 10, 0.1).name('Position Y');
+cameraFolder.add(camera.position, 'z', -10, 10, 0.1).name('Position Z');
+cameraFolder.add(camera, 'fov', 10, 150, 1).onChange(() => {
+  camera.updateProjectionMatrix();
+}).name('Field of View');
+
+// Torus Light Controls
+const torusLightFolder = gui.addFolder('Torus Light');
+torusLightFolder.add(torusLight.position, 'x', -5, 5, 0.1).name('Position X');
+torusLightFolder.add(torusLight.position, 'y', -5, 5, 0.1).name('Position Y');
+torusLightFolder.add(torusLight.position, 'z', -5, 5, 0.1).name('Position Z');
+torusLightFolder.add(torusLight, 'intensity', 0, 200, 1).name('Base Intensity');
+torusLightFolder.add(torusLight, 'distance', 0, 10, 0.1).name('Distance');
+torusLightFolder.add(torusLight, 'decay', 0, 5, 0.1).name('Decay');
+torusLightFolder.addColor({ color: '#ffffff' }, 'color').onChange(value => {
+  torusLight.color.set(value);
+}).name('Color');
+
+// Spot Light Controls
+const spotLightFolder = gui.addFolder('Spot Light');
+spotLightFolder.add(spotLight.position, 'x', -10, 10, 0.1).name('Position X');
+spotLightFolder.add(spotLight.position, 'y', -10, 10, 0.1).name('Position Y');
+spotLightFolder.add(spotLight.position, 'z', -10, 10, 0.1).name('Position Z');
+spotLightFolder.add(spotLight, 'intensity', 0, 50, 1).name('Intensity');
+spotLightFolder.add(spotLight, 'distance', 0, 200, 1).name('Distance');
+spotLightFolder.add(spotLight, 'angle', 0, Math.PI / 2, 0.01).name('Angle');
+spotLightFolder.add(spotLight, 'penumbra', 0, 1, 0.01).name('Penumbra');
+spotLightFolder.addColor({ color: '#ffffff' }, 'color').onChange(value => {
+  spotLight.color.set(value);
+}).name('Color');
+
+// Rim Light Controls
+const rimLightFolder = gui.addFolder('Rim Light');
+rimLightFolder.add(rimLight.position, 'x', -10, 10, 0.1).name('Position X');
+rimLightFolder.add(rimLight.position, 'y', -10, 10, 0.1).name('Position Y');
+rimLightFolder.add(rimLight.position, 'z', -10, 10, 0.1).name('Position Z');
+rimLightFolder.add(rimLight, 'intensity', 0, 50, 1).name('Intensity');
+rimLightFolder.add(rimLight, 'distance', 0, 10, 0.1).name('Distance');
+rimLightFolder.add(rimLight, 'decay', 0, 5, 0.1).name('Decay');
+rimLightFolder.addColor({ color: '#ffffff' }, 'color').onChange(value => {
+  rimLight.color.set(value);
+}).name('Color');
+
+// Bloom Effect Controls
+const bloomFolder = gui.addFolder('Bloom Effect');
+bloomFolder.add(bloomPass, 'strength', 0, 3, 0.01).name('Strength');
+bloomFolder.add(bloomPass, 'radius', 0, 2, 0.01).name('Radius');
+bloomFolder.add(bloomPass, 'threshold', 0, 1, 0.01).name('Threshold');
+
+// Animation Controls
+const animationParams = {
+  flickerSpeed: 0.02,
+  flickerIntensity: 10,
+  autoRotation: true,
+  rotationSpeed: 1 };
+
+
+const animationFolder = gui.addFolder('Animation');
+animationFolder.add(animationParams, 'flickerSpeed', 0, 0.1, 0.001).name('Flicker Speed');
+animationFolder.add(animationParams, 'flickerIntensity', 0, 50, 1).name('Flicker Intensity');
+animationFolder.add(animationParams, 'autoRotation').name('Auto Rotation');
+animationFolder.add(animationParams, 'rotationSpeed', 0, 5, 0.1).name('Rotation Speed');
+
+// Group Controls
+const groupFolder = gui.addFolder('Group Transform');
+groupFolder.add(group.position, 'x', -10, 10, 0.1).name('Position X');
+groupFolder.add(group.position, 'y', -10, 10, 0.1).name('Position Y');
+groupFolder.add(group.position, 'z', -10, 10, 0.1).name('Position Z');
+groupFolder.add(group.rotation, 'x', 0, Math.PI * 2, 0.1).name('Rotation X');
+groupFolder.add(group.rotation, 'y', 0, Math.PI * 2, 0.1).name('Rotation Y');
+groupFolder.add(group.rotation, 'z', 0, Math.PI * 2, 0.1).name('Rotation Z');
+
+gui.close();
+// Scene Controls
+const sceneFolder = gui.addFolder('Scene');
+sceneFolder.addColor({ backgroundColor: '#000000' }, 'backgroundColor').onChange(value => {
+  scene.background = new THREE.Color(value);
+}).name('Background Color');
+
+// Renderer Controls
+const rendererFolder = gui.addFolder('Renderer');
+rendererFolder.add(renderer, 'toneMappingExposure', 0, 3, 0.01).name('Exposure');
+
+// Helper toggles
+const helpersFolder = gui.addFolder('Helpers');
+
+
+const helperControls = {
+  showTorusLightHelper: false,
+  showSpotLightHelper: false,
+  showRimLightHelper: false,
+  showFillLightHelper: false };
+
+
+
+helpersFolder.add(helperControls, 'showTorusLightHelper').onChange(value => {
+  if (value) {
+    scene.add(torusLightHelper);
+  } else {
+    scene.remove(torusLightHelper);
+  }
+}).name('Torus Light Helper');
+
+helpersFolder.add(helperControls, 'showSpotLightHelper').onChange(value => {
+  if (value) {
+    scene.add(spotLightHelper);
+  } else {
+    scene.remove(spotLightHelper);
+  }
+}).name('Spot Light Helper');
+
+helpersFolder.add(helperControls, 'showRimLightHelper').onChange(value => {
+  if (value) {
+    scene.add(rimLightHelper);
+  } else {
+    scene.remove(rimLightHelper);
+  }
+}).name('Rim Light Helper');
+
+helpersFolder.add(helperControls, 'showFillLightHelper').onChange(value => {
+  if (value) {
+    scene.add(fillLightHelper);
+  } else {
+    scene.remove(fillLightHelper);
+  }
+}).name('Fill Light Helper');
+
+
+
+window.addEventListener('resize', () => {
+  // ✅ Update sizes
+  sizes.width = window.innerWidth;
+  sizes.height = window.innerHeight;
+
+  // ✅ Update camera
+  camera.aspect = sizes.width / sizes.height;
+  camera.updateProjectionMatrix();
+
+  // ✅ Update renderer
+  renderer.setSize(sizes.width, sizes.height);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  // ✅ Update composer
+  composer.setSize(sizes.width, sizes.height);
+  composer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+});
+let time = 0;
+const tick = () => {
+  time += animationParams.flickerSpeed;
+
+  // Flickering light effect using GUI parameters
+  torusLight.intensity = torusLight.intensity + Math.sin(time) * animationParams.flickerIntensity;
+
+  // Auto rotation using GUI parameters
+  if (animationParams.autoRotation) {
+    torus.rotation.z += 0.01 * animationParams.rotationSpeed;
+    // torus.rotation.y += 0.01 * animationParams.rotationSpeed;
+  }
+
+  renderer.render(scene, camera);
+  composer.render();
+  window.requestAnimationFrame(tick);
+};
+tick();
+
+// gsap.to("img", {
+//     y: -50, // Move up by 50px
+//     duration: 1,
+//     ease: "power2.out",
+//     scrollTrigger: {
+//         trigger: '.banner-section h1',
+//         start: "top 10%", // Animation starts when top of element reaches 80% viewport height
+//         end: "bottom 10%", // Animation ends when top reaches 50% viewport height
+//         scrub: 1, // Smooth animation linked to scroll
+//         markers: true,
+//     }
+// });
+
+
+const images = document.querySelectorAll('.images-container .img-main ');
+
+images.forEach((img, index) => {
+  // Apply fade-in and slide-up effect
+  // gsap.from(img, {
+  //     opacity: 0,
+  //     y: 100, // Moves up while fading in
+  //     duration: 1.2,
+  //     ease: "power2.out",
+  //     scrollTrigger: {
+  //         trigger: img,
+  //         start: "top 85%", // Starts when the image reaches 85% of viewport
+  //         end: "top 50%",
+  //         scrub: 1, // Smooth scrolling effect
+  //         // markers: true
+  //     }
+  // });
+
+  // Apply Parallax Effect
+  gsap.to(img, {
+    // y: index % 2 === 0 ? "-=50" : "+=50", // Moves alternately up/down
+    y: 0,
+    opacity: 1,
+    ease: "none",
+    opacity: 1,
+    scrollTrigger: {
+      trigger: img,
+      start: "top bottom", // Starts when the image enters the viewport
+      end: "bottom bottom", // Ends when it leaves viewport
+      scrub: 1 // Smooth parallax effect
+      // markers:true
+    } });
+
+});
+
+
+window.onload = function () {
+  gsap.from(".banner-section", {
+    opacity: 0,
+    y: 50, // Move up while appearing
+    duration: 1.5,
+    ease: "power2.out" });
+
+
+  gsap.from(".images-container .img", {
+    opacity: 0,
+    scale: 0.8, // Slight zoom-in effect
+    stagger: 0.2, // Delays between each image animation
+    duration: 1.2,
+    ease: "power2.out" });
+
+};
+
+// gsap.to("#loading-text", {
+//   duration: 2,
+//   scrambleText: {
+//     text: "loading",
+//     chars: "upperCase",
+//     revealDelay: 0.5,
+//     speed: 0.1
+//   },
+//   ease: "power1.inOut",
+//   repeat: -1,
+//   yoyo: true
+// });
+const split = new SplitText("#loading-text", { type: "chars" });
+gsap.to(split.chars, {
+  y: -10,
+  opacity: 0,
+  duration: 0.6,
+  yoyo: true,
+  repeat: -1,
+  stagger: 0.05,
+  ease: "sine.inOut" });
+//# sourceURL=pen.js
+  </script>
+
+  
+</body>
+
+</html>

@@ -1,0 +1,413 @@
+<!-- VENDORED NGUYÊN VĂN — "Wave and RGB Image Distortion with Shaders" by iamryanyu · https://codepen.io/iamryanyu/pen/NPGrdgp
+     License: MIT (CodePen public pen = MIT). Giữ dòng này khi copy. -->
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  
+  <meta charset="UTF-8">
+  
+
+    <link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
+
+    <meta name="apple-mobile-web-app-title" content="CodePen">
+
+    <link rel="icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
+
+    <link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-b4b4269c16397ad2f0f7a01bcdf513a1994f4c94b8af2f191c09eb0d601762b1.svg" color="#111" />
+
+
+
+  
+    <script>/* stub loop-protect CodePen — chạy ngoài CodePen */window.CP={shouldStopExecution:()=>false,exitedLoop:()=>{}};</script>
+
+
+  <title>Wave &amp; RGB Image Distortion with Shader</title>
+
+    <link rel="canonical" href="https://codepen.io/iamryanyu/pen/NPGrdgp">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+<script>
+  !function(a){var b=/iPhone/i,c=/iPod/i,d=/iPad/i,e=/(?=.*\bAndroid\b)(?=.*\bMobile\b)/i,f=/Android/i,g=/(?=.*\bAndroid\b)(?=.*\bSD4930UR\b)/i,h=/(?=.*\bAndroid\b)(?=.*\b(?:KFOT|KFTT|KFJWI|KFJWA|KFSOWI|KFTHWI|KFTHWA|KFAPWI|KFAPWA|KFARWI|KFASWI|KFSAWI|KFSAWA)\b)/i,i=/Windows Phone/i,j=/(?=.*\bWindows\b)(?=.*\bARM\b)/i,k=/BlackBerry/i,l=/BB10/i,m=/Opera Mini/i,n=/(CriOS|Chrome)(?=.*\bMobile\b)/i,o=/(?=.*\bFirefox\b)(?=.*\bMobile\b)/i,p=new RegExp("(?:Nexus 7|BNTV250|Kindle Fire|Silk|GT-P1000)","i"),q=function(a,b){return a.test(b)},r=function(a){var r=a||navigator.userAgent,s=r.split("[FBAN");if("undefined"!=typeof s[1]&&(r=s[0]),s=r.split("Twitter"),"undefined"!=typeof s[1]&&(r=s[0]),this.apple={phone:q(b,r),ipod:q(c,r),tablet:!q(b,r)&&q(d,r),device:q(b,r)||q(c,r)||q(d,r)},this.amazon={phone:q(g,r),tablet:!q(g,r)&&q(h,r),device:q(g,r)||q(h,r)},this.android={phone:q(g,r)||q(e,r),tablet:!q(g,r)&&!q(e,r)&&(q(h,r)||q(f,r)),device:q(g,r)||q(h,r)||q(e,r)||q(f,r)},this.windows={phone:q(i,r),tablet:q(j,r),device:q(i,r)||q(j,r)},this.other={blackberry:q(k,r),blackberry10:q(l,r),opera:q(m,r),firefox:q(o,r),chrome:q(n,r),device:q(k,r)||q(l,r)||q(m,r)||q(o,r)||q(n,r)},this.seven_inch=q(p,r),this.any=this.apple.device||this.android.device||this.windows.device||this.other.device||this.seven_inch,this.phone=this.apple.phone||this.android.phone||this.windows.phone,this.tablet=this.apple.tablet||this.android.tablet||this.windows.tablet,"undefined"==typeof window)return this},s=function(){var a=new r;return a.Class=r,a};"undefined"!=typeof module&&module.exports&&"undefined"==typeof window?module.exports=r:"undefined"!=typeof module&&module.exports&&"undefined"!=typeof window?module.exports=s():"function"==typeof define&&define.amd?define("isMobile",[],a.isMobile=s()):a.isMobile=s()}(this);
+    isMobile.any||document.querySelector('html').classList.add('is-desktop');
+</script>
+  
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/3.0.1/modern-normalize.min.css'>
+  
+<style>
+html,
+body {
+  height: 100vh;
+  -ms-scroll-chaining: none;
+      overscroll-behavior: none;
+  width: 100%;
+}
+
+body {
+  background-color: #1f1f1f;
+  color: #fff;
+  font-family: "Roboto", sans-serif;
+  font-optical-sizing: auto;
+}
+
+.heading {
+  font-size: 10rem;
+  left: 50%;
+  opacity: 0.5;
+  position: absolute;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.scrollable {
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  will-change: transform;
+  z-index: 1;
+}
+
+.image-container {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  top: 30vh;
+  width: 100%;
+}
+.image-container:last-child {
+  margin-bottom: 30vh;
+}
+
+.image-container h1 {
+  color: #ffffff;
+  font-size: 6.25rem;
+  left: 0;
+  mix-blend-mode: difference;
+  position: absolute;
+  top: 60%;
+  z-index: 10;
+}
+
+img {
+  height: 60%;
+  position: absolute;
+  visibility: hidden;
+}
+
+canvas {
+  left: 0;
+  position: fixed;
+  top: 0;
+}
+</style>
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+  
+  
+</head>
+
+<body translate="no">
+  <main>
+  <h1 class="heading"> Night in Korea</h1>
+  <section class="scrollable">
+    <div class="container">
+
+      <div class="image-container">
+        <h1>STREET</h1>
+        <img src="_assets/204808/night-in-korea-1.jpg" alt="">
+      </div>
+      <div class="image-container">
+        <h1>Road</h1>
+        <img src="_assets/204808/night-in-korea-2.jpg" alt="">
+      </div>
+      <div class="image-container">
+        <h1>Design</h1>
+        <img src="_assets/204808/night-in-korea-3.jpg" alt="">
+      </div>
+      <div class="image-container">
+        <h1>Food</h1>
+        <img src="_assets/204808/night-in-korea-4.jpg" alt="">
+      </div>
+      <div class="image-container">
+        <h1>Castle</h1>
+        <img src="_assets/204808/night-in-korea-5.jpg" alt="">
+      </div>
+      <div class="image-container">
+        <h1>City</h1>
+        <img src="_assets/204808/night-in-korea-6.jpg" alt="">
+      </div>
+
+    </div>
+  </section>
+</main>
+  <script src='https://unpkg.com/three@0.158.0/build/three.min.js'></script>
+<script src='https://unpkg.com/gsap@3/dist/gsap.min.js'></script>
+<script src='https://unpkg.com/gsap@3/dist/ScrollSmoother.min.js'></script>
+<script src='https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js'></script>
+    <script id="rendered-js" >
+const vertexShader = `
+  uniform vec2 uOffset;
+  varying vec2 vUv;
+
+  #define M_PI 3.1415926535897932384626433832795
+
+  vec3 deformationCurve(vec3 position, vec2 uv, vec2 offset) {
+     position.x += sin(uv.y * M_PI) * offset.x;
+     position.y += sin(uv.x * M_PI) * offset.y;
+
+     return position;
+  }
+
+  void main() {
+     vUv = uv;
+     vec3 newPosition = deformationCurve(position, uv, uOffset);
+     gl_Position = projectionMatrix * modelViewMatrix * vec4( newPosition, 1.0 );
+  }
+`;
+
+const fragmentShader = `
+  uniform sampler2D uTexture;
+  uniform float uAlpha;
+  uniform vec2 uOffset;
+  varying vec2 vUv;
+  uniform vec2 uRGBShift;
+
+  vec3 rgbShift(sampler2D textureImage, vec2 uv, vec2 shift) {
+     vec2 verticalShift = vec2(0.0, shift.y);
+    float r = texture2D(textureImage, uv + verticalShift).r;
+    vec2 gb = texture2D(textureImage, uv).gb;
+     return vec3(r, gb);
+  }
+
+  void main() {
+     vec3 color = rgbShift(uTexture, vUv, uRGBShift);
+     gl_FragColor = vec4(color, uAlpha);
+  }
+`;
+
+gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
+const smoother = ScrollSmoother.create({
+  wrapper: "main",
+  content: ".scrollable",
+  smooth: 1.2,
+  effects: true });
+
+
+gsap.utils.toArray(".image-container").forEach(section => {
+  const heading = section.querySelector("h1");
+
+  gsap.fromTo(
+  heading,
+  { x: "5%" },
+  {
+    x: () => {
+      const rect = heading.getBoundingClientRect();
+      const leftInViewport = rect.left;
+      const headingWidth = rect.width;
+      const rightOffset = window.innerWidth - leftInViewport;
+      return rightOffset + headingWidth; // push it entirely out to the right
+      // return headingWidth;
+    },
+    ease: "none",
+    scrollTrigger: {
+      trigger: section,
+      start: "center bottom",
+      end: "bottom center",
+      scrub: true
+      // markers: true // for debugging
+    } });
+
+
+});
+
+class EffectCanvas {
+  constructor() {
+    this.container = document.querySelector("main");
+    this.images = [...document.querySelectorAll("img")];
+    this.meshItems = [];
+
+    this.setupCamera();
+    this.createMeshItems();
+    this.render();
+  }
+
+  get viewport() {
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    let aspectRatio = width / height;
+    return { width, height, aspectRatio };
+  }
+
+  setupCamera() {
+    this.scene = new THREE.Scene();
+
+    const perspective = 1000;
+    const fov =
+    180 * (2 * Math.atan(window.innerHeight / 2 / perspective)) / Math.PI;
+
+    this.camera = new THREE.PerspectiveCamera(
+    fov,
+    this.viewport.aspectRatio,
+    1,
+    2000);
+
+
+    this.camera.position.set(0, 0, 1600);
+    this.renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    this.renderer.setSize(this.viewport.width, this.viewport.height);
+    this.renderer.setPixelRatio(window.devicePixelRatio);
+    this.container.appendChild(this.renderer.domElement);
+
+    window.addEventListener("resize", this.onWindowResize.bind(this), false);
+  }
+
+  onWindowResize() {
+    this.camera.aspect = this.viewport.aspectRatio;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(this.viewport.width, this.viewport.height);
+  }
+
+  createMeshItems() {
+    const group = new THREE.Group();
+    this.scene.add(group);
+
+    group.scale.set(1.5, 1.5, 1.5);
+    group.position.x = 200;
+
+    const skewAngleDeg = -5;
+    const skewAngle = THREE.MathUtils.degToRad(skewAngleDeg);
+
+    // const offsetStepY = 1.2;
+    // const offsetStepX = 0.2;
+    const offsetStepY = 0;
+    const offsetStepX = 0;
+
+    this.images.forEach((image, index) => {
+      const meshItem = new MeshItem(image, this.scene, index);
+      this.meshItems.push(meshItem);
+
+      // Apply diagonal stacking and skew
+      meshItem.mesh.position.y = index * offsetStepY;
+      meshItem.mesh.position.x = index * offsetStepX;
+      meshItem.mesh.rotation.z = skewAngle;
+
+      group.add(meshItem.mesh);
+    });
+
+    group.rotation.y = -0.5;
+    group.rotation.x = -0.3;
+    group.rotation.z = -0.3;
+  }
+
+  render() {
+    for (let i = 0; i < this.meshItems.length; i++) {
+      this.meshItems[i].render();
+    }
+
+    this.renderer.render(this.scene, this.camera);
+    requestAnimationFrame(this.render.bind(this));
+  }}
+
+
+class MeshItem {
+  constructor(element, scene, index = 0) {
+    this.element = element;
+    this.scene = scene;
+
+    this.sizes = new THREE.Vector2(0, 0);
+    this.offset = new THREE.Vector2(0, 0);
+    this.targetOffset = new THREE.Vector2(0, 0);
+    this.currentOffset = new THREE.Vector2(0, 0);
+    this.targetRGB = new THREE.Vector2(0, 0);
+    this.currentRGB = new THREE.Vector2(0, 0);
+
+    this.createMesh();
+  }
+
+  getDimensions() {
+    const { width, height, top, left } = this.element.getBoundingClientRect();
+
+    this.sizes.set(width, height);
+    this.offset.set(
+    left - window.innerWidth / 2 + width / 2,
+    -top + window.innerHeight / 2 - height / 2);
+
+  }
+
+  createMesh() {
+    this.geometry = new THREE.PlaneGeometry(1, 1, 100, 100);
+    this.imageTexture = new THREE.TextureLoader().load(this.element.src);
+
+    this.uniforms = {
+      uTexture: { value: this.imageTexture },
+      uOffset: { value: new THREE.Vector2(0.0, 0.0) },
+      uAlpha: { value: 1.0 },
+      uRGBShift: { value: new THREE.Vector2(0.0, 0.0) } // NEW
+    };
+
+    this.material = new THREE.ShaderMaterial({
+      uniforms: this.uniforms,
+      vertexShader,
+      fragmentShader,
+      transparent: true,
+      side: THREE.DoubleSide });
+
+
+    this.mesh = new THREE.Mesh(this.geometry, this.material);
+
+    const offsetStepY = 200;
+    const offsetStepX = 100;
+    const diagX = this.index * offsetStepX;
+    const diagY = -this.index * offsetStepY;
+
+    this.mesh.position.set(this.offset.x + diagX, this.offset.y + diagY, 0);
+    this.mesh.scale.set(this.sizes.x, this.sizes.y, 1);
+    this.scene.add(this.mesh);
+  }
+
+  render() {
+    this.getDimensions(); // updates this.offset based on getBoundingClientRect()
+
+    const { top, left, width, height } = this.element.getBoundingClientRect();
+
+    const relativeY = top + height / 2 - window.innerHeight / 2;
+    const diagX = relativeY * -0.3;
+    const diagY = relativeY * -0.3;
+
+    const baseX = left - window.innerWidth / 2 + width / 2;
+    const baseY = -top + window.innerHeight / 2 - height / 2;
+
+    this.mesh.position.set(baseX + diagX, baseY + diagY, 0);
+    this.mesh.rotation.z = THREE.MathUtils.degToRad(-5);
+    this.mesh.scale.set(this.sizes.x, this.sizes.y, 1);
+
+    // Shader distortions remain
+    const velocityY = smoother.getVelocity();
+    this.targetOffset.set(0, velocityY * 0.00005);
+    this.currentOffset.lerp(this.targetOffset, 0.075);
+    this.uniforms.uOffset.value.copy(this.currentOffset);
+
+    this.targetRGB.set(0, velocityY * 0.00003);
+    this.currentRGB.lerp(this.targetRGB, 0.1);
+    if (Math.abs(this.currentRGB.y) < 0.00001) this.currentRGB.y = 0;
+    this.uniforms.uRGBShift.value.copy(this.currentRGB);
+  }}
+
+
+new EffectCanvas();
+//# sourceURL=pen.js
+  </script>
+
+  
+</body>
+
+</html>

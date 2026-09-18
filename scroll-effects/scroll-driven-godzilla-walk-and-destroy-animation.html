@@ -1,0 +1,377 @@
+<!-- VENDORED NGUYÊN VĂN — "Scroll-Driven Godzilla Walk-and-Destroy Animation" by creativeocean · https://codepen.io/creativeocean/pen/poPexje
+     License: MIT (CodePen public pen = MIT). Giữ dòng này khi copy. -->
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  
+  <meta charset="UTF-8">
+  
+
+    <link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
+
+    <meta name="apple-mobile-web-app-title" content="CodePen">
+
+    <link rel="icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
+
+    <link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-b4b4269c16397ad2f0f7a01bcdf513a1994f4c94b8af2f191c09eb0d601762b1.svg" color="#111" />
+
+
+
+  
+    <script>/* stub loop-protect CodePen — chạy ngoài CodePen */window.CP={shouldStopExecution:()=>false,exitedLoop:()=>{}};</script>
+
+
+  <title>Scroll-Kaiju</title>
+
+    <link rel="canonical" href="https://codepen.io/creativeocean/pen/poPexje">
+  
+  
+  
+  
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Otomanopee+One&display=swap");
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow-y: hidden;
+  background: #fff;
+  font-family: "Otomanopee One", sans-serif;
+  font-size: 20px;
+  color: #555;
+}
+
+div, svg, img {
+  position: absolute;
+}
+
+svg, .dust {
+  pointer-events: none;
+}
+
+.dust, .intro {
+  position:fixed;
+  width:100%;
+  height:100%;
+}
+
+.dust {
+  background:radial-gradient(rgba(0,0,0,0.15),rgba(0,0,0,0.45));
+}
+
+.preTitle {
+  left: 80px;
+  top: 20px;
+  font-size: 28px;
+  color: #f84356;
+}
+@supports (-webkit-text-stroke: 2px black) {
+  .preTitle {
+    -webkit-text-stroke: 2px black;
+  }
+}
+
+#godzillaTitle {
+  left: 50px;
+  top: 65px;
+}
+
+.blurb {
+  width: 80%;
+  left: 50px;
+  bottom: 50px;
+}
+
+.blurb a {
+  color:#222;
+  font-size:15px;
+}
+</style>
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+  
+  
+</head>
+
+<body translate="no">
+  <div id="scrollDist"></div>
+
+<div id="container" style="opacity:0">
+  
+  <div id="bg">
+    <img src="_assets/721952/hillside.png" alt="hillside"/>
+    <!-- generated clouds will go here  -->
+  </div>
+  
+  <img class="breakable" id="homes" src="_assets/721952/homes.png" alt="homes"/>
+  <img class="breakable" id="hut" src="_assets/721952/hut.png" alt="huts"/>
+  <img class="breakable" id="pagoda" src="_assets/721952/pagoda.png" alt="pagoda"/>
+  <img class="breakable" id="gates" src="_assets/721952/gates.png" alt="palace gates"/>
+  
+  <div class="homesTxt">Single-family Homes</div>
+  <div class="hutTxt">Fishing Huts</div>
+  <div class="pagodaTxt">Temples & Pagodas</div>
+  <div class="towerTxt">Radio Towers</div>
+  <div class="gatesTxt">Palace Gates</div>
+  <div class="endTxt">And so much more...</div>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+    
+    <clipPath id="seqBox">
+      <rect width="550" height="270" />
+    </clipPath>
+    
+    <path class="walkPath" fill="none" stroke="none" d="M251.5,2231.5c262,0,373.7-41.5,498.5-41.8c124.5-0.2,215.8-52,247.5-76.2s164.2-113.8,225-135s141-36,262-125 c46.5-34.2,137-93,236-114s347.2-31.8,435-32s287.2-73.8,354-83s238.2-17.8,277.2-23.8s177-12,219-33s232.3-150.3,293.8-187.2" />
+    
+    <g class="kaiju">
+      <g class="seq" clip-path="url(#seqBox)">
+        <image class="walk" width="550" height="2160" href="_assets/721952/walk.png" alt="walking sequence"/>
+      </g>
+      <image id="mouth" opacity="0" href="_assets/721952/mouth.png" alt="godzilla's open mouth"/>
+    </g>
+    
+  </svg>
+
+  <img class="breakable" id="tower" src="_assets/721952/tower.png" alt="radio tower"/>
+  
+  <!-- generated debris will go here  -->
+</div>
+
+<div class="dust">
+    <!-- generated dust and scratches will go here  -->  
+</div>
+
+<div class="intro">
+  <div class="preTitle">A tour of our specialties with</div>
+  <div id="godzillaTitle" aria-label="godzilla"></div>
+  <div class="blurb">Scroll horizontally to see the O. G. Kaiju demonstrate a few of the things we can destroy for you.<br><br><a href="https://www.deviantart.com/roflo-felorez/art/Goji-Walk-Cycle-519716606" target="_blank">Godzilla walk sequence by RoFlo-Felorez</a></div>
+</div>
+  <script src='https://unpkg.co/gsap@3/dist/gsap.min.js'></script>
+<script src='https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js'></script>
+<script src='https://unpkg.com/gsap@3/dist/MotionPathPlugin.min.js'></script>
+    <script id="rendered-js" >
+window.onload = () => {
+
+  let povMoving, // is true when the point-of-view is currently moving
+  walkDir = 1; // 1 for walking right, -1 for walking left
+
+  // set initial states
+  gsap.timeline().
+  set('#scrollDist', { width: '750%', height: '100%' }) // width defines how far we'll scroll
+  .set('#container', { position: 'fixed', width: 4100, height: 3000, transformOrigin: '0 0', left: window.innerWidth / 2, top: window.innerHeight / 2 + 100 }).
+  set('.seq', { xPercent: -75, yPercent: -11 }).
+  set('#mouth', { x: 35, y: -240 })
+
+  // position items + txt in the scene
+  .set('#bg', { left: 100, top: 1000 }) // pushed off the edges of the container, so nothing gets cropped
+  .
+  set('.breakable', { xPercent: -50, yPercent: -100, draggable: false, cursor: 'pointer' }).
+  set('#tower', { x: 2400, y: 1750 }).
+  set('.towerTxt', { x: 2320, y: 1380 }).
+
+  set('#pagoda', { x: 2000, y: 1702 }).
+  set('.pagodaTxt', { x: 1900, y: 1533 }).
+
+  set('#hut', { x: 1496, y: 1860 }).
+  set('.hutTxt', { x: 1440, y: 1665 }).
+
+  set('#homes', { x: 1308, y: 1923 }).
+  set('.homesTxt', { x: 1210, y: 1806 }).
+
+  set('#gates', { x: 2730, y: 1584 }).
+  set('.gatesTxt', { x: 2660, y: 1404 }).
+
+  set('.endTxt', { x: 3300, y: 1500 }).
+
+  to('#container', { opacity: 1, ease: 'power1.inOut', duration: 1 }, 0.3); // fade in the scene
+
+
+  // re-center the container if window changes size
+  window.onresize = () => gsap.set('#container', { left: window.innerWidth / 2, top: window.innerHeight / 2 + 100 });
+
+
+
+  // make clouds
+  const cloudPos = [[180, 960], [420, 990], [970, 860], [999, 655], [1280, 508], [1555, 555], [1722, 479], [1860, 240], [2000, 400], [2350, 310], [2680, 380], [2800, 290], [3100, 280], [3300, 210], [3600, 310]];
+
+  for (let i = 0; i < cloudPos.length; i++) {if (window.CP.shouldStopExecution(0)) break;
+    const cloud = document.createElement("div");
+
+    gsap.set(cloud, {
+      attr: { class: 'cloud' },
+      width: 440,
+      height: 120,
+      scale: 0.3 + 0.5 * Math.random(),
+      left: cloudPos[i][0],
+      top: cloudPos[i][1],
+      xPercent: -50,
+      yPercent: -100,
+      backgroundImage: 'url(_assets/721952/clouds.png)',
+      backgroundPosition: '0 -' + i % 15 * 120 + 'px' });
+
+
+    document.getElementById('bg').append(cloud);
+  }
+
+
+  // make debris
+  window.CP.exitedLoop(0);for (let i = 0; i < 15; i++) {if (window.CP.shouldStopExecution(1)) break;
+    const bit = document.createElement("div");
+
+    gsap.set(bit, {
+      attr: { class: 'debris' },
+      width: 70,
+      height: 70,
+      scale: 0,
+      backgroundImage: 'url(_assets/721952/debris.png)',
+      backgroundPosition: '-' + i % 15 * 70 + 'px 0' });
+
+
+    document.getElementById('container').append(bit);
+  }
+
+
+  // make godzilla title characters
+  window.CP.exitedLoop(1);for (let i = 0; i <= 7; i++) {if (window.CP.shouldStopExecution(2)) break;
+    const char = document.createElement("div");
+
+    gsap.set(char, {
+      attr: { class: 'titleChar' },
+      width: 564,
+      height: 345,
+      backgroundImage: 'url(_assets/721952/godzillaChars.png)',
+      backgroundPosition: '0 -' + i * 345 + 'px',
+      zIndex: () => i > 5 ? 7 - i : 0 // last 2 characters sit behind the rest
+    });
+
+    document.getElementById('godzillaTitle').append(char);
+  }
+
+
+
+  // timeline w/ scrollTrigger for playing and reversing the intro text
+  window.CP.exitedLoop(2);gsap.timeline({
+    scrollTrigger: {
+      trigger: '#scrollDist',
+      horizontal: true,
+      start: 300,
+      end: 301, // define 'end' so the reverse toggle action knows where to trigger
+      toggleActions: "play none reverse none" // onEnter, onLeave, onEnterBack, onLeaveBack – in that order
+    } }).
+
+  to('.titleChar', { duration: 0.6, scale: 0, stagger: 0.1, ease: 'expo.in' }, 0).
+  to('.preTitle, .blurb', { duration: 0.4, opacity: 0, ease: 'power1.inOut', stagger: 0.3 }, 0).
+  to('.intro', { duration: 0.1, autoAlpha: 0 }, '-=0.1'); // at the very end, set autoAlpha:0 so #intro doesn't block interactivity in #container
+
+
+
+  // timeline w/ scrollTrigger for moving kaiju along path + displaying breakable objects' labels
+  gsap.timeline({
+    defaults: { ease: 'none', duration: 0.1 },
+    scrollTrigger: {
+      trigger: '#scrollDist',
+      horizontal: true,
+      start: 'top top',
+      end: 'bottom bottom',
+      scrub: 0.5,
+      onUpdate: s => walkDir = s.direction } }).
+
+
+  to('.kaiju', { duration: 10, motionPath: { path: '.walkPath', alignOrigin: [0.5, 0.5], autoRotate: true }, immediateRender: true }, 0).
+  from('.kaiju', { duration: 2, scale: 0.7 }, 0).
+  to('.kaiju', { duration: 2, scale: 0.5 }, 8).
+
+  from('.homesTxt', { opacity: 0, yPercent: 75, yoyo: true, repeat: 1, repeatDelay: 1 }, 2).
+  from('.hutTxt', { opacity: 0, yPercent: 75, yoyo: true, repeat: 1, repeatDelay: 1 }, 3).
+  from('.pagodaTxt', { opacity: 0, yPercent: 75, yoyo: true, repeat: 1, repeatDelay: 1 }, 4.3).
+  from('.towerTxt', { opacity: 0, yPercent: 75, yoyo: true, repeat: 1, repeatDelay: 1.1 }, 5.7).
+  from('.gatesTxt', { opacity: 0, yPercent: 75, yoyo: true, repeat: 1, repeatDelay: 1 }, 6.8).
+  from('.endTxt', { opacity: 0, yPercent: 75, ease: 'power1' }, 9.3);
+
+
+  // move container to follow kaiju
+  let walkSeq = gsap.fromTo('.walk', { y: 0 }, { y: -1890, ease: 'steps(7)', duration: 0.7 });
+
+  gsap.ticker.add(() => {
+    // tween container position
+    gsap.to('#container', { duration: 0.5, ease: 'sine', x: -gsap.getProperty('.kaiju', 'x'), y: -gsap.getProperty('.kaiju', 'y') });
+
+    // update flag for walking loop
+    povMoving = Math.abs(gsap.getProperty('#container', 'x') + gsap.getProperty('.kaiju', 'x')) > 5; // true when x difference is more than 5
+
+    // trigger walking sequence
+    if (povMoving && !gsap.isTweening('.walk')) walkSeq.play(0);
+
+    // flip godzilla when scrolling upward
+    gsap.set('#mouth', { transformOrigin: '-35px 0', scaleX: walkDir });
+    gsap.set('.walk', { transformOrigin: '275px 0', scaleX: walkDir });
+    gsap.set('.seq', { xPercent: walkDir == 1 ? -75 : -25 });
+  });
+
+
+
+  // Dust and scratches
+  for (let i = 0; i < 8; i++) {if (window.CP.shouldStopExecution(3)) break;
+    let d = document.createElement('div');
+    document.getElementsByClassName('dust')[0].appendChild(d);
+    gsap.set(d, {
+      attr: { class: 'd' },
+      width: 30,
+      height: 30,
+      backgroundImage: 'url(_assets/721952/filmDust.png)',
+      backgroundPosition: '0 -' + 8 % i * 30 + 'px' });
+
+  }window.CP.exitedLoop(3);
+
+  function dustLoop() {
+    gsap.timeline({ onComplete: dustLoop }).
+    set('.d', {
+      x: () => window.innerWidth * Math.random(),
+      y: () => window.innerHeight * Math.random(),
+      rotation: () => 360 * Math.random(),
+      scale: () => Math.random(),
+      opacity: () => Math.random() },
+    0.07);
+  }
+  dustLoop();
+
+
+
+  // Easter eggs
+  window.onclick = e => {
+
+    // open mouth if stopped + mouth isn't already open
+    if (!gsap.isTweening('.walk') && !gsap.isTweening('#mouth')) {
+      gsap.to('#mouth', { opacity: 1, duration: 0.1, ease: 'expo', yoyo: true, repeat: 1, repeatDelay: 0.3 });
+    }
+
+    // breakable stuff
+    if (e.target.classList.contains('breakable')) {
+
+      const t = e.target;
+
+      gsap.timeline().
+      set('.debris', { scale: 0.5, x: -40, y: -35, left: gsap.getProperty(e.target, 'x'), top: gsap.getProperty(e.target, 'y') }, 0).
+
+      to('.debris', { x: () => -150 + Math.random() * 300, duration: 1 }, 0).
+      to('.debris', { y: () => -200 * Math.random() - 150, duration: 0.5, yoyo: true, repeat: 1 }, 0).
+      to('.debris', { scale: 0, duration: 0.5, ease: 'power3.in', delay: () => 0.2 * Math.random() }, 0.3).
+
+      to([t, '.' + t.id + 'Txt'], { autoAlpha: 0, ease: 'expo.in', duration: 0.1 }, 0); //hide original object
+    }
+  };
+
+};
+//# sourceURL=pen.js
+  </script>
+
+  
+</body>
+
+</html>

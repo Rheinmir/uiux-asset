@@ -1,0 +1,277 @@
+<!-- VENDORED NGUYÊN VĂN — "Smooth Scrolling with GSAP ScrollSmoother" by GreenSock · https://codepen.io/GreenSock/pen/NWXmPdJ
+     License: MIT (CodePen public pen = MIT). Giữ dòng này khi copy. -->
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  
+  <meta charset="UTF-8">
+  
+
+    <link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
+
+    <meta name="apple-mobile-web-app-title" content="CodePen">
+
+    <link rel="icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
+
+    <link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-b4b4269c16397ad2f0f7a01bcdf513a1994f4c94b8af2f191c09eb0d601762b1.svg" color="#111" />
+
+
+
+  
+    <script>/* stub loop-protect CodePen — chạy ngoài CodePen */window.CP={shouldStopExecution:()=>false,exitedLoop:()=>{}};</script>
+
+
+  <title>CodePen - A Pen by GSAP</title>
+
+    <link rel="canonical" href="https://codepen.io/GreenSock/pen/NWXmPdJ">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto&display=swap" rel="stylesheet">
+  
+  
+  
+<style>
+html,body{
+  background-color: #0C141D;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+  text-transform: uppercase;
+}
+
+svg{
+  width:104px;
+  height:104px;
+  z-index: 3;
+}
+
+h2{
+  font-family: 'Bebas Neue', cursive;
+  font-size: clamp(2em, 5vw, 6em);
+  letter-spacing: .5rem;
+  margin: 0;
+  line-height: 1;
+}
+
+.wrapper{
+  max-width: 1024px;
+  margin: 0 auto;
+  padding: 8em 2em;
+}
+
+.video-bg{
+  position:relative;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.video-bg svg{
+  position: absolute;
+}
+
+.image-parent{
+  height:100%;
+  overflow:hidden;
+}
+
+.image-child{
+  height:120%;
+}
+
+img{
+  display:block;
+  max-width: 100%;
+  opacity: .6;
+}
+
+article{
+  display: grid;
+}
+
+.reverse-overlapping{
+    z-index: 2
+  }
+
+@media (min-width:50em){
+  
+  article{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+  }
+  
+  .overlapping, 
+  .overlapping-video-bg, 
+  .reverse-overlapping,
+  .reverse-overlapping-video-bg{
+    grid-row: 1 / 2;
+  }
+
+  .overlapping{
+   z-index: 2;
+   grid-column: 1 / 4;
+   align-self: end;
+  }
+
+  .overlapping-video-bg{
+   grid-column: 2 / -1;
+  }
+
+  .reverse-overlapping{
+    grid-column: 4 / -1;
+    align-self: center;
+  }
+
+  .reverse-overlapping-video-bg{
+   grid-column: 1 / 5;
+  }
+}
+
+.unsplash{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8em 0;
+}
+
+a,a:hover{
+  color: #fff;
+  text-decoration: none;
+  padding-bottom: 3px;
+  border-bottom: 1px solid #fff;
+}
+
+@media (prefers-reduced-motion) {
+  .animation {
+    animation-name: dissolve;
+  }
+}
+</style>
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+  
+  
+</head>
+
+<body translate="no">
+  <div class="smooth-wrapper">
+  <div class="smooth-content">
+    
+    <section class="wrapper">
+      <article>
+        <header class="overlapping" data-speed="1.25">
+          <h2>Våg å lytte, <br> våg å skifte mening</h2>
+          <p>Jerky pastrami strip steak pork chuck. Biltong boudin burgdoggen shankle, short ribs short loin drumstick corned beef rump ribeye filet mignon pork chop. </p>
+        </header>
+      <div class="video-bg overlapping-video-bg">
+        <div class="image-parent">
+         <div class="image-child">
+           <img data-speed="auto" src="https://ensigndev.no/playground/ensign/wp-content/uploads/2022/04/pic1-1.jpg" alt="">
+         </div>
+      </div>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 104.761 104.76">
+          <g data-name="Group 2">
+            <path data-name="Rectangle 7" fill="#fff" d="M17.38 20.88h63v62h-63z"/>
+            <path data-name="Path 1" d="M52.38-.002a52.38 52.38 0 1 0 52.38 52.38A52.38 52.38 0 0 0 52.38-.002ZM38.11 26.819a6.284 6.284 0 0 1 3.148.8l33.577 19.432a6.1 6.1 0 0 1 0 10.577l-33.577 19.47a6.054 6.054 0 0 1-9.024-5.372v-38.78a6.079 6.079 0 0 1 5.876-6.128Z" fill="#6bb0e4"/>
+          </g>
+        </svg>
+      </div>
+  </article>
+</section>
+
+<section class="wrapper">
+  <article>
+    <header class="reverse-overlapping" data-speed="1.25">
+      <h2>Førsteinntrykket er viktig, andreinntrykket er riktig!</h2>
+    </header>
+    <div class="video-bg reverse-overlapping-video-bg">
+      <div class="image-parent">
+         <div class="image-child">
+           <img data-speed="auto" src="https://ensigndev.no/playground/ensign/wp-content/uploads/2022/04/pic2-1.jpg" alt="">
+         </div>
+      </div>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 104.761 104.76">
+        <g data-name="Group 2">
+          <path data-name="Rectangle 7" fill="#fff" d="M17.38 20.88h63v62h-63z"/>
+          <path data-name="Path 1" d="M52.38-.002a52.38 52.38 0 1 0 52.38 52.38A52.38 52.38 0 0 0 52.38-.002ZM38.11 26.819a6.284 6.284 0 0 1 3.148.8l33.577 19.432a6.1 6.1 0 0 1 0 10.577l-33.577 19.47a6.054 6.054 0 0 1-9.024-5.372v-38.78a6.079 6.079 0 0 1 5.876-6.128Z" fill="#6bb0e4"/>
+        </g>
+      </svg>
+    </div>
+  </article>
+</section>
+
+
+<section class="wrapper">
+      <article>
+        <header class="overlapping" data-speed="1.25">
+          <h2>Mennesker med diagnoser møter motstand</h2>
+          <p>Picanha fatback venison capicola shoulder prosciutto tri-tip flank doner jerky bacon. Short ribs pastrami sausage swine, spare ribs ham sirloin prosciutto.</p>
+        </header>
+      <div class="video-bg overlapping-video-bg">
+        <div class="image-parent">
+         <div class="image-child">
+           <img data-speed="auto" src="https://ensigndev.no/playground/ensign/wp-content/uploads/2022/04/pic4.jpg" alt="">
+         </div>
+      </div>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 104.761 104.76">
+          <g data-name="Group 2">
+            <path data-name="Rectangle 7" fill="#fff" d="M17.38 20.88h63v62h-63z"/>
+            <path data-name="Path 1" d="M52.38-.002a52.38 52.38 0 1 0 52.38 52.38A52.38 52.38 0 0 0 52.38-.002ZM38.11 26.819a6.284 6.284 0 0 1 3.148.8l33.577 19.432a6.1 6.1 0 0 1 0 10.577l-33.577 19.47a6.054 6.054 0 0 1-9.024-5.372v-38.78a6.079 6.079 0 0 1 5.876-6.128Z" fill="#6bb0e4"/>
+          </g>
+        </svg>
+      </div>
+  </article>
+</section>
+    
+    
+     <section class="wrapper">
+      <article>
+        <header class="reverse-overlapping" data-speed="1.25">
+          <h2>EN SANN HISTORIE</h2>
+          <p>Bacon ipsum dolor amet short ribs flank tongue beef porchetta t-bone. Burgdoggen porchetta shoulder, beef ribs kielbasa pork belly drumstick.</p>
+        </header>
+      <div class="video-bg reverse-overlapping-video-bg">
+        <div class="image-parent">
+         <div class="image-child">
+           <img data-speed="auto" src="https://ensigndev.no/playground/ensign/wp-content/uploads/2022/04/pic3-1.jpg" alt="">
+         </div>
+      </div>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 104.761 104.76">
+          <g data-name="Group 2">
+            <path data-name="Rectangle 7" fill="#fff" d="M17.38 20.88h63v62h-63z"/>
+            <path data-name="Path 1" d="M52.38-.002a52.38 52.38 0 1 0 52.38 52.38A52.38 52.38 0 0 0 52.38-.002ZM38.11 26.819a6.284 6.284 0 0 1 3.148.8l33.577 19.432a6.1 6.1 0 0 1 0 10.577l-33.577 19.47a6.054 6.054 0 0 1-9.024-5.372v-38.78a6.079 6.079 0 0 1 5.876-6.128Z" fill="#6bb0e4"/>
+          </g>
+        </svg>
+      </div>
+  </article>
+</section>
+    
+    <div class="unsplash">
+     <small>Images from Unsplash by <a href="https://unsplash.com/@johnarano" target="_Blank">John Arano</a> </small>  
+    </div>
+    
+  </div>
+</div>
+  <script src='https://unpkg.co/gsap@3/dist/gsap.min.js'></script>
+<script src='_assets/16327/ScrollSmoother.min.js?v=991'></script>
+<script src='_assets/16327/ScrollTrigger.min.js?v=991'></script>
+    <script id="rendered-js" >
+console.clear();
+gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
+gsap.config({ trialWarn: false });
+
+let smoother = ScrollSmoother.create({
+  smooth: 3,
+  effects: true });
+//# sourceURL=pen.js
+  </script>
+
+  
+</body>
+
+</html>
