@@ -7,6 +7,7 @@ Xem chạy trực tiếp: **https://rheinmir.github.io/uiux-asset/**
 | Thư mục | Nguồn | Số mục |
 |---|---|---|
 | [`scroll-effects/`](scroll-effects/) | freefrontend.com/javascript-scroll-effects (CodePen) | 65 (64 vendor được) |
+| [`components/`](components/) | bài viết UI/UX tái tạo bằng code (chip: setproduct.com/blog/chip-ui-design) — dựng lại bằng `tools/build-chips.py` | chip: 29 mẫu |
 
 ## Cách dùng
 1. Mở gallery `<thư-mục>/index.html` → tìm hiệu ứng → **Chạy bản gốc** để xem thật.
