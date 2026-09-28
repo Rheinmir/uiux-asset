@@ -321,7 +321,7 @@ def build():
 <p class="lead">Tái tạo bằng code toàn bộ 29 hình trong <a href="https://www.setproduct.com/blog/chip-ui-design">setproduct — Chip UI design</a>. Bài gốc là ảnh Figma, không có code; mỗi hình ở đây là bản chạy thật, bấm thử được, kèm HTML để copy. CSS và JS dùng chung nằm trong trang (xem nguồn).</p>
 <div class="ovs-line toc">{"".join(toc)}</div>
 {"".join(body)}
-<script>{JS}</script></body></html>"""
+<script>{JS}</script><script src="/stats.js" defer></script></body></html>"""
     out = ROOT / "components" / "chip.html"
     # fix=False: tắt tự-vá màu — chip pastel cần chữ tối CỐ ĐỊNH, không theo token đổi chế độ
     out.write_text(hb.apply(page, fix=False), encoding="utf-8")
