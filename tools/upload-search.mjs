@@ -1,8 +1,11 @@
 // Nạp search-index.json lên Upstash Search (index "uiux") và/hoặc đo chất lượng tìm.
-//   node tools/upload-search.mjs            # nạp (upsert, xoá mục không còn trong file)
-//   node tools/upload-search.mjs --eval     # nạp rồi đo 12 truy vấn Việt/Anh: đáp án đúng có nằm trong top-3?
+//   node tools/upload-search.mjs              # nạp (upsert + xoá mục không còn trong file)
+//   node tools/upload-search.mjs --if-changed # chỉ nạp khi search-index.json đổi so với lần nạp trước (hash ở .search-uploaded)
+//   node tools/upload-search.mjs --eval       # nạp rồi đo 12 truy vấn Việt/Anh: đáp án đúng có nằm trong top-3?
+// `npm run deploy` = build chỉ mục → nạp nếu đổi → vercel deploy --prod.
 // Env: UPSTASH_SEARCH_REST_URL + UPSTASH_SEARCH_REST_TOKEN (đọc .env.local nếu có — `vercel env pull .env.local`).
-import { readFileSync, existsSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync } from 'fs';
+import { createHash } from 'crypto';
 import { Search } from '@upstash/search';
 
 const root = new URL('..', import.meta.url).pathname;
@@ -13,10 +16,24 @@ if (existsSync(root + '.env.local'))
 const index = new Search({ url: process.env.UPSTASH_SEARCH_REST_URL, token: process.env.UPSTASH_SEARCH_REST_TOKEN }).index('uiux');
 const items = JSON.parse(readFileSync(root + 'search-index.json', 'utf8'));
 
+const raw = readFileSync(root + 'search-index.json', 'utf8'), hash = createHash('sha256').update(raw).digest('hex');
+const mark = root + '.search-uploaded';
+if (process.argv.includes('--if-changed') && existsSync(mark) && readFileSync(mark, 'utf8').trim() === hash) {
+  console.log('search-index không đổi — bỏ qua nạp'); process.exit(0);
+}
+// xoá mục đã gỡ khỏi site (có trên Upstash mà không còn trong file)
+const keep = new Set(items.map((x) => x.id)), stale = [];
+for (let cursor = '0'; ;) {
+  const r = await index.range({ cursor, limit: 100 });
+  for (const d of r.documents) if (!keep.has(d.id)) stale.push(d.id);
+  if (!r.nextCursor || r.nextCursor === '0' || !r.documents.length) break; cursor = r.nextCursor;
+}
+if (stale.length) { await index.delete({ ids: stale }); console.log(`xoá ${stale.length} mục cũ: ${stale.join(', ')}`); }
 for (let i = 0; i < items.length; i += 50)
   await index.upsert(items.slice(i, i + 50).map((x) => ({ id: x.id, content: { title: x.title, text: x.text },
     metadata: { kind: x.kind, url: x.url, status: x.status } })));
 console.log(`nạp ${items.length} mục vào index "uiux"`);
+writeFileSync(mark, hash + '\n');
 
 if (process.argv.includes('--eval')) {
   const CASES = [
