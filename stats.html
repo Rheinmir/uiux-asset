@@ -1,6 +1,6 @@
 <!doctype html><html lang="vi"><head><script id="ovs-theme-boot">(function(){try{var d=document.documentElement,s=localStorage.getItem('ovs-theme');d.setAttribute('data-theme',s==='dark'?'dark':'light')}catch(e){document.documentElement.setAttribute('data-theme','light')}})()</script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Thống kê truy cập — uiux-asset</title><style>
-html,body{height:100%}body{margin:0;display:grid;grid-template-rows:auto auto 1fr auto;gap:16px;padding:16px 20px;box-sizing:border-box;min-height:100vh}
+html,body{height:100%}body{margin:0;display:grid;grid-template-rows:auto auto 1fr auto;gap:28px;padding:16px 20px;box-sizing:border-box;min-height:100vh}
 .top{display:flex;align-items:center;gap:16px;min-width:0}.top h1{font-size:22px;margin:0;white-space:nowrap}
 .top a{color:var(--ovs-accent)}.top .sp{flex:1}.upd{font-size:13px;color:var(--ovs-ink2);white-space:nowrap}
 @media (max-width:480px){.upd{display:none}.top h1{font-size:18px}body{padding:16px}}
@@ -11,7 +11,7 @@ html,body{height:100%}body{margin:0;display:grid;grid-template-rows:auto auto 1f
 .grid{display:grid;grid-template-columns:minmax(0,1.4fr) repeat(3,minmax(0,1fr));gap:16px;min-height:0}
 @media (max-width:1280px){.grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
 @media (max-width:720px){.grid{grid-template-columns:minmax(0,1fr)}}
-.col{display:grid;gap:16px;align-content:start;min-width:0}
+.col{display:grid;gap:28px;align-content:start;min-width:0}
 .panel{padding:16px;border-radius:12px;border:1px solid var(--ovs-border);background:var(--ovs-surface2);min-width:0}
 .panel h2{font-size:15px;margin:0 0 12px}
 .chart{position:relative}.chart svg{display:block;width:100%;height:150px;overflow:visible}
@@ -36,7 +36,7 @@ details.tbl td,details.tbl th{padding:4px 6px;text-align:right;border-bottom:1px
 <div class="kpis"><div class="kpi"><div class="v" data-k="views">–</div><div class="l">Tổng lượt xem</div></div><div class="kpi"><div class="v" data-k="today">–</div><div class="l">Lượt xem hôm nay</div></div><div class="kpi"><div class="v" data-k="unique">–</div><div class="l">Khách duy nhất</div></div><div class="kpi"><div class="v" data-k="uniqueToday">–</div><div class="l">Khách hôm nay</div></div><div class="kpi"><div class="v" data-k="newToday">–</div><div class="l">Khách mới hôm nay</div></div><div class="kpi"><div class="v" data-k="returning">–</div><div class="l">Khách quay lại hôm nay</div></div><div class="kpi"><div class="v" data-k="online">–</div><div class="l">Đang xem (5 phút)</div></div><div class="kpi"><div class="v" data-k="botsToday">–</div><div class="l">Bot đã lọc hôm nay</div></div></div>
 <div class="grid">
  <div class="col"><section class="panel"><h2>Lượt xem 14 ngày</h2><div id="c-views"><p class="empty">Đang tải…</p></div></section><section class="panel"><h2>Khách duy nhất 14 ngày</h2><div id="c-uniq"><p class="empty">Đang tải…</p></div></section></div>
- <div class="col"><section class="panel"><h2>Trang xem nhiều</h2><div id="l-pages"><p class="empty">Đang tải…</p></div></section><section class="panel"><h2>Nguồn giới thiệu</h2><div id="l-refs"><p class="empty">Đang tải…</p></div></section></div>
+ <div class="col"><section class="panel"><h2>Trang xem nhiều</h2><div id="l-pages"><p class="empty">Đang tải…</p></div></section><section class="panel"><h2>Nguồn giới thiệu</h2><div id="l-refs"><p class="empty">Đang tải…</p></div></section><section class="panel"><h2>Từ khoá hay tìm</h2><div id="l-queries"><p class="empty">Đang tải…</p></div></section></div>
  <div class="col"><section class="panel"><h2>Quốc gia</h2><div id="l-countries"><p class="empty">Đang tải…</p></div></section><section class="panel"><h2>Thiết bị</h2><div id="l-devices"><p class="empty">Đang tải…</p></div></section></div>
  <div class="col"><section class="panel"><h2>Trình duyệt</h2><div id="l-browsers"><p class="empty">Đang tải…</p></div></section><section class="panel"><h2>Hệ điều hành</h2><div id="l-os"><p class="empty">Đang tải…</p></div></section></div>
 </div>
@@ -68,10 +68,10 @@ async function load(){try{const r=await fetch('/api/stats',{cache:'no-store'});c
  document.querySelectorAll('[data-k]').forEach(el=>el.textContent=fmt(s[el.dataset.k]));
  chart('#c-views',s.daily,'views','Lượt xem');chart('#c-uniq',s.daily,'unique','Khách');
  list('#l-pages',s.pages);list('#l-refs',s.refs);list('#l-countries',s.countries,k=>flag(k)+esc(cn(k)));
- list('#l-devices',s.devices);list('#l-browsers',s.browsers);list('#l-os',s.os);
+ list('#l-devices',s.devices);list('#l-browsers',s.browsers);list('#l-os',s.os);list('#l-queries',s.queries);
  $('#f-since').textContent=s.since?'Đếm từ '+new Date(s.since).toLocaleString('vi-VN'):'Chưa có lượt nào';
  $('#f-last').textContent=s.last?`Lượt gần nhất: ${ago(s.last.t)} · ${s.last.p} · ${flag(s.last.c)}${cn(s.last.c)} · ${s.last.d}${s.last.n?' · khách mới':''}`:'';
- $('#f-bots').textContent=`Bot đã lọc (tổng): ${fmt(s.bots)} · Khách đã ghi nhận: ${fmt(s.visitorsAll)}`;
+ $('#f-bots').textContent=`Bot đã lọc (tổng): ${fmt(s.bots)} · Khách đã ghi nhận: ${fmt(s.visitorsAll)} · Tìm theo nghĩa tháng này: ${fmt(s.searchUsed)}/${fmt(s.searchCap)} truy vấn`;
  $('#upd').textContent='Cập nhật '+new Date(s.at).toLocaleTimeString('vi-VN');$('#err').hidden=true}
  catch(e){$('#err').hidden=false;$('#err').textContent='Chưa đọc được số liệu ('+e.message+'). Thử lại sau 30 giây.'}}
 load();setInterval(()=>{if(!document.hidden)load()},30000);

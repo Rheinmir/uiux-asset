@@ -18,7 +18,7 @@ KPI = [("views", "Tổng lượt xem"), ("today", "Lượt xem hôm nay"), ("uni
        ("newToday", "Khách mới hôm nay"), ("returning", "Khách quay lại hôm nay"), ("online", "Đang xem (5 phút)"), ("botsToday", "Bot đã lọc hôm nay")]
 
 CSS = r"""
-html,body{height:100%}body{margin:0;display:grid;grid-template-rows:auto auto 1fr auto;gap:16px;padding:16px 20px;box-sizing:border-box;min-height:100vh}
+html,body{height:100%}body{margin:0;display:grid;grid-template-rows:auto auto 1fr auto;gap:28px;padding:16px 20px;box-sizing:border-box;min-height:100vh}
 .top{display:flex;align-items:center;gap:16px;min-width:0}.top h1{font-size:22px;margin:0;white-space:nowrap}
 .top a{color:var(--ovs-accent)}.top .sp{flex:1}.upd{font-size:13px;color:var(--ovs-ink2);white-space:nowrap}
 @media (max-width:480px){.upd{display:none}.top h1{font-size:18px}body{padding:16px}}
@@ -29,7 +29,7 @@ html,body{height:100%}body{margin:0;display:grid;grid-template-rows:auto auto 1f
 .grid{display:grid;grid-template-columns:minmax(0,1.4fr) repeat(3,minmax(0,1fr));gap:16px;min-height:0}
 @media (max-width:1280px){.grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
 @media (max-width:720px){.grid{grid-template-columns:minmax(0,1fr)}}
-.col{display:grid;gap:16px;align-content:start;min-width:0}
+.col{display:grid;gap:28px;align-content:start;min-width:0}
 .panel{padding:16px;border-radius:12px;border:1px solid var(--ovs-border);background:var(--ovs-surface2);min-width:0}
 .panel h2{font-size:15px;margin:0 0 12px}
 .chart{position:relative}.chart svg{display:block;width:100%;height:150px;overflow:visible}
@@ -77,10 +77,10 @@ async function load(){try{const r=await fetch('/api/stats',{cache:'no-store'});c
  document.querySelectorAll('[data-k]').forEach(el=>el.textContent=fmt(s[el.dataset.k]));
  chart('#c-views',s.daily,'views','Lượt xem');chart('#c-uniq',s.daily,'unique','Khách');
  list('#l-pages',s.pages);list('#l-refs',s.refs);list('#l-countries',s.countries,k=>flag(k)+esc(cn(k)));
- list('#l-devices',s.devices);list('#l-browsers',s.browsers);list('#l-os',s.os);
+ list('#l-devices',s.devices);list('#l-browsers',s.browsers);list('#l-os',s.os);list('#l-queries',s.queries);
  $('#f-since').textContent=s.since?'Đếm từ '+new Date(s.since).toLocaleString('vi-VN'):'Chưa có lượt nào';
  $('#f-last').textContent=s.last?`Lượt gần nhất: ${ago(s.last.t)} · ${s.last.p} · ${flag(s.last.c)}${cn(s.last.c)} · ${s.last.d}${s.last.n?' · khách mới':''}`:'';
- $('#f-bots').textContent=`Bot đã lọc (tổng): ${fmt(s.bots)} · Khách đã ghi nhận: ${fmt(s.visitorsAll)}`;
+ $('#f-bots').textContent=`Bot đã lọc (tổng): ${fmt(s.bots)} · Khách đã ghi nhận: ${fmt(s.visitorsAll)} · Tìm theo nghĩa tháng này: ${fmt(s.searchUsed)}/${fmt(s.searchCap)} truy vấn`;
  $('#upd').textContent='Cập nhật '+new Date(s.at).toLocaleTimeString('vi-VN');$('#err').hidden=true}
  catch(e){$('#err').hidden=false;$('#err').textContent='Chưa đọc được số liệu ('+e.message+'). Thử lại sau 30 giây.'}}
 load();setInterval(()=>{if(!document.hidden)load()},30000);
@@ -99,7 +99,7 @@ def build():
 <div class="kpis">{kpis}</div>
 <div class="grid">
  <div class="col">{panel("c-views", "Lượt xem 14 ngày")}{panel("c-uniq", "Khách duy nhất 14 ngày")}</div>
- <div class="col">{panel("l-pages", "Trang xem nhiều")}{panel("l-refs", "Nguồn giới thiệu")}</div>
+ <div class="col">{panel("l-pages", "Trang xem nhiều")}{panel("l-refs", "Nguồn giới thiệu")}{panel("l-queries", "Từ khoá hay tìm")}</div>
  <div class="col">{panel("l-countries", "Quốc gia")}{panel("l-devices", "Thiết bị")}</div>
  <div class="col">{panel("l-browsers", "Trình duyệt")}{panel("l-os", "Hệ điều hành")}</div>
 </div>

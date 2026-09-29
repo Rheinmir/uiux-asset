@@ -9,6 +9,11 @@ Xem chạy trực tiếp: **https://rheinmir.github.io/uiux-asset/**
 | [`scroll-effects/`](scroll-effects/) | freefrontend.com/javascript-scroll-effects (CodePen) | 65 (64 vendor được) |
 | [`components/`](components/) | bài viết UI/UX tái tạo bằng code (chip: setproduct.com/blog/chip-ui-design) — dựng lại bằng `tools/build-chips.py` | chip: 29 mẫu |
 
+## Tìm kiếm và thống kê
+- **Tìm theo nghĩa** ở trang chủ (phím `/`): gõ tiếng Việt hay tiếng Anh, có dấu hay không dấu đều được — kết quả chia 2 nhóm (hiệu ứng cuộn · mẫu chip). Chạy trên Upstash Search gói free (20K truy vấn/tháng); cache 1 ngày, trần 18K/tháng, lỗi hoặc quá 2,5 giây thì tự rơi về tìm từ khoá. Đo 12 truy vấn mẫu: tìm theo nhóm đạt 12/12, tìm gộp chỉ 8–9/12 — `node tools/upload-search.mjs --eval`.
+- **Thống kê truy cập** ở [`/stats.html`](stats.html): lượt xem, khách duy nhất/mới/quay lại, đang xem, trang, quốc gia, nguồn, thiết bị, từ khoá hay tìm, bot đã lọc. Không lưu IP thô (chỉ hash).
+- Thêm/sửa mục → `python3 tools/build-search-index.py && node tools/upload-search.mjs`. Test: `node tools/test-stats.js && node tools/test-search.js`.
+
 ## Cách dùng
 1. Mở gallery `<thư-mục>/index.html` → tìm hiệu ứng → **Chạy bản gốc** để xem thật.
 2. Copy nguyên file `<thư-mục>/<slug>.html` (+ `_assets/` nếu file trỏ tới) vào dự án, giữ comment ghi công ở dòng đầu.

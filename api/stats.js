@@ -23,6 +23,7 @@ module.exports = async (req, res) => {
       ['PFCOUNT', `s:uv:${d}`], ['GET', 's:bots'], ['GET', `s:bots:${d}`], ['SCARD', 's:visitors'], ['GET', 's:first'], ['GET', 's:last'],
       ['ZREVRANGE', 's:pages', 0, 9, 'WITHSCORES'], ['ZREVRANGE', 's:countries', 0, 9, 'WITHSCORES'], ['ZREVRANGE', 's:refs', 0, 9, 'WITHSCORES'],
       ['ZREVRANGE', 's:devices', 0, 4, 'WITHSCORES'], ['ZREVRANGE', 's:browsers', 0, 5, 'WITHSCORES'], ['ZREVRANGE', 's:os', 0, 5, 'WITHSCORES'],
+      ['ZREVRANGE', 's:queries', 0, 9, 'WITHSCORES'], ['GET', `s:sq:${new Date(now).toISOString().slice(0, 7)}`],
     ]);
     const n = 14, k = 3 * n;
     Object.assign(out, {
@@ -30,6 +31,7 @@ module.exports = async (req, res) => {
       uniqueToday: Number(r[k] || 0), bots: Number(r[k + 1] || 0), botsToday: Number(r[k + 2] || 0),
       visitorsAll: Number(r[k + 3] || 0), since: r[k + 4] ? Number(r[k + 4]) : null, last: r[k + 5] ? JSON.parse(r[k + 5]) : null,
       pages: top(r[k + 6]), countries: top(r[k + 7]), refs: top(r[k + 8]), devices: top(r[k + 9]), browsers: top(r[k + 10]), os: top(r[k + 11]),
+      queries: top(r[k + 12]), searchUsed: Number(r[k + 13] || 0), searchCap: 18000,
       at: now,
     });
     res.setHeader('Cache-Control', 's-maxage=30, stale-while-revalidate=120');
