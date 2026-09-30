@@ -1,0 +1,961 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta name="ui-kit-id" content="tidal-com">
+<!-- UI kit rút từ tidal.com (web player, chưa đăng nhập) ngày 29/09/2026, theo skill ui-kit-from-code, nhánh B05.
+     robots.txt của tidal.com chặn đích danh ClaudeBot/anthropic-ai và bảo lưu quyền TDM, nên site KHÔNG bị quét: user tự lưu trang
+     ("Webpage, Complete"), agent phục vụ bản lưu qua 127.0.0.1, chạy discover.mjs --offline --no-js (chặn 97 request ra ngoài).
+     Màu, chữ, số đo đọc bằng Playwright từ CSS đã lưu (biến :root, [data-market-theme*=light-mode|dark-mode]) và getComputedStyle của phần tử thật.
+     Không nhúng ảnh, logo, wordmark hay nội dung của TIDAL (RULE-09): ảnh bìa là khối giữ chỗ, tên bài/nghệ sĩ là chữ mẫu. -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TIDAL Web UI Kit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..24,400..600,0..1,0&display=block">
+<style>
+/* Kit mặc token thật của web player TIDAL. Hai lớp:
+   1) Market (hệ của Square, TIDAL bật bằng data-market-theme="tidal dark-mode"): --td-<vai trò Market>, đổi theo chế độ sáng/tối.
+      Giá trị sáng là bộ [data-market-theme*=light-mode] có sẵn trong CSS của site nhưng TIDAL không bật.
+   2) Wave (hệ gốc của TIDAL, chỉ có bản tối): --td-wave-* hằng số, không đổi theo chế độ.
+   Font Square Sans (độc quyền, tải từ squarecdn) thay bằng Inter; icon SVG của site thay bằng Material Symbols Rounded. */
+:root {
+  --td-text-10:#fffffff2; --td-text-20:#ffffff8c; --td-text-30:#ffffff4d; --td-fill-10:#fffffff2; --td-fill-20:#ffffff59; --td-fill-30:#ffffff26; --td-fill-40:#ffffff14; --td-fill-50:#ffffff0d; --td-surface-5:#080808; --td-surface-10:#141414; --td-surface-20:#1c1c1c; --td-surface-30:#2d2d2d; --td-divider-10:#ffffff4d; --td-divider-20:#ffffff14; --td-emphasis-fill:#006aff; --td-emphasis-text:#4a95ff; --td-critical-fill:#cc0023; --td-critical-text:#ff5a76; --td-success-fill:#00b33b; --td-success-text:#16d956; --td-warning-fill:#ff9f40; --td-warning-text:#ff9f40; --td-bg:#000; --td-accent:#33ffee; --td-on-fill-10:#101010; --td-primary-pressed:#cccccc; --td-floating:#282828bf; --td-floating-hover:rgba(62,62,62,.77); --td-floating-pressed:rgba(84,84,84,.78); --td-img:#242429; --td-footer:#18181b; --td-tabbar-on:#ffffff1a; --td-nav-surface:#0000008c; --td-card:#0e0e10; --td-checker:#ffffff14; --td-fav-hover:rgba(255,255,255,.8); --td-more-hover:#f0f0f0; --td-create:rgba(255,255,255,.3); --td-cookie-bg:#1a1a1a; --td-ot-ink:#26282d; --td-ot-ghost:#3c3c3c; --td-white:#fff; --td-black:#000;
+  --td-wave-color-material-dark:#25252580; --td-wave-color-material-light:#ededed33; --td-wave-color-opacity-accent-dark-ultra-thick:#3d8f88cc; --td-wave-color-opacity-accent-darkest-ultra-thick:#141f1e; --td-wave-color-opacity-accent-fill-regular:#21feec66; --td-wave-color-opacity-accent-fill-thin:#21feec33; --td-wave-color-opacity-accent-fill-ultra-thick:#21feeccc; --td-wave-color-opacity-accent-fill-ultra-thin:#21feec1a; --td-wave-color-opacity-base-bright-thick:#18181b99; --td-wave-color-opacity-base-bright-thin:#18181b33; --td-wave-color-opacity-base-bright-transparent:#18181b; --td-wave-color-opacity-base-bright-ultra-thick:#18181bcc; --td-wave-color-opacity-base-brighter-ultra-thick:#242429cc; --td-wave-color-opacity-base-brightest-regular:#30303666; --td-wave-color-opacity-base-brightest-thin:#30303633; --td-wave-color-opacity-base-brightest-ultra-thin:#3030361a; --td-wave-color-opacity-base-fill-regular:#0006; --td-wave-color-opacity-base-fill-thick:#0009; --td-wave-color-opacity-base-fill-thin:#0003; --td-wave-color-opacity-base-fill-transparent:#000; --td-wave-color-opacity-base-fill-ultra-thick:#000c; --td-wave-color-opacity-base-fill-ultra-thin:#0000001a; --td-wave-color-opacity-contrast-fill-regular:#fff6; --td-wave-color-opacity-contrast-fill-thick:#fff9; --td-wave-color-opacity-contrast-fill-thin:#fff3; --td-wave-color-opacity-contrast-fill-transparent:#fff; --td-wave-color-opacity-contrast-fill-ultra-thick:#fffc; --td-wave-color-opacity-contrast-fill-ultra-thin:#ffffff1a; --td-wave-color-opacity-rainbow-blue-thin:#33a7ff33; --td-wave-color-opacity-rainbow-yellow-fill-regular:#ffd43266; --td-wave-color-opacity-rainbow-yellow-fill-thin:#ffd43233; --td-wave-color-opacity-rainbow-yellow-fill-ultra-thick:#ffd432cc; --td-wave-color-opacity-rainbow-yellow-fill-ultra-thin:#ffd4321a; --td-wave-color-opacity-special-fill-regular:#ffbe7d66; --td-wave-color-opacity-special-fill-thin:#ffbe7d33; --td-wave-color-opacity-special-fill-ultra-thick:#ffbe7dcc; --td-wave-color-opacity-special-fill-ultra-thin:#ffbe7d1a; --td-wave-color-services-facebook:#1877f2; --td-wave-color-services-instagram-red:#e1306c; --td-wave-color-services-mtn:#f8c000; --td-wave-color-services-musix-orange:#f63; --td-wave-color-services-musix-pink:#ff0e83; --td-wave-color-services-play:#47237b; --td-wave-color-services-plus:#088655; --td-wave-color-services-snapchat:#fffc00; --td-wave-color-services-sprint:#ffdd05; --td-wave-color-services-t-mobile:#e30074; --td-wave-color-services-tik-tok-blue:#69c9d0; --td-wave-color-services-tik-tok-red:#ee1d52; --td-wave-color-services-twitter:#1da1f2; --td-wave-color-services-viacom-1:#00f; --td-wave-color-services-viacom-2:#7666aa; --td-wave-color-services-viacom-3:#d700c2; --td-wave-color-services-viacom-4:#ff4851; --td-wave-color-services-viacom-5:#ffd800; --td-wave-color-services-vivo:#670099; --td-wave-color-services-vodafone:#e61107; --td-wave-color-services-waze:#1da1f2; --td-wave-color-solid-accent-bright:#66fff3; --td-wave-color-solid-accent-brighter:#99fff7; --td-wave-color-solid-accent-dark:#3d8f88; --td-wave-color-solid-accent-darker:#244240; --td-wave-color-solid-accent-darkest:#141f1e; --td-wave-color-solid-accent-fill:#3fe; --td-wave-color-solid-base-bright:#18181b; --td-wave-color-solid-base-brighter:#242429; --td-wave-color-solid-base-brightest:#303036; --td-wave-color-solid-base-fill:#000; --td-wave-color-solid-contrast-dark:#e4e4e7; --td-wave-color-solid-contrast-darker:#afafb6; --td-wave-color-solid-contrast-darkest:#787887; --td-wave-color-solid-contrast-fill:#fff; --td-wave-color-solid-rainbow-blue-fill:#33a7ff; --td-wave-color-solid-rainbow-green-brighter:#99ffd4; --td-wave-color-solid-rainbow-green-dark:#33996e; --td-wave-color-solid-rainbow-green-darker:#244235; --td-wave-color-solid-rainbow-green-darkest:#141f1a; --td-wave-color-solid-rainbow-green-fill:#33ffa9; --td-wave-color-solid-rainbow-orange-fill:#ffc45c; --td-wave-color-solid-rainbow-purple-fill:#8f00ff; --td-wave-color-solid-rainbow-red-bright:#ff666c; --td-wave-color-solid-rainbow-red-brighter:#ff999d; --td-wave-color-solid-rainbow-red-dark:#993337; --td-wave-color-solid-rainbow-red-darker:#422425; --td-wave-color-solid-rainbow-red-darkest:#1f1415; --td-wave-color-solid-rainbow-red-fill:#ff4242; --td-wave-color-solid-rainbow-yellow-bright:#ffdf66; --td-wave-color-solid-rainbow-yellow-brighter:#fffae5; --td-wave-color-solid-rainbow-yellow-dark:#998433; --td-wave-color-solid-rainbow-yellow-darker:#423c24; --td-wave-color-solid-rainbow-yellow-darkest:#1f1c14; --td-wave-color-solid-rainbow-yellow-fill:#ffd432; --td-wave-color-solid-special-bright:#ffd9b3; --td-wave-color-solid-special-brighter:#fff2e5; --td-wave-color-solid-special-dark:#963; --td-wave-color-solid-special-darker:#423324; --td-wave-color-solid-special-darkest:#1f1a14; --td-wave-color-solid-special-fill:#ffbf80; --td-wave-color-solid-warning-bright:#ff668f; --td-wave-color-solid-warning-brighter:#ff99b4; --td-wave-color-solid-warning-dark:#99334e; --td-wave-color-solid-warning-darker:#42242c; --td-wave-color-solid-warning-darkest:#1f1417; --td-wave-color-solid-warning-fill:#ff3269; --td-wave-color-text-disabled:#303036; --td-wave-color-text-link:#3fe; --td-wave-color-text-main:#fff; --td-wave-color-text-placeholder:#303036; --td-wave-color-text-secondary:#afafb6; --td-wave-color-text-tertiary:#787887; --td-wave-color-text-danger:#ff4242;
+  --td-select-chev: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5l3 3 3-3' fill='none' stroke='%23afafb6' stroke-width='1.5'/%3E%3C/svg%3E");
+  --td-font: "Inter", "Square Sans Text", Helvetica, Arial, sans-serif;           /* --square-sans-text */
+  --td-font-display: "Inter", "Square Sans Display", Helvetica, Arial, sans-serif; /* --square-sans-display */
+  --td-mono: ui-monospace, Menlo, "Courier New", monospace;                        /* --square-sans-mono (đuôi) */
+  --td-r-none: 0; --td-r-xs: 4px; --td-r-sm: 8px; --td-r-md: 12px; --td-r-full: 1000px;   /* --wave-border-radius--* */
+  --td-r-cover: 2px; --td-r-menuitem: 9px; --td-r-panel: 16px; --td-r-select: 7px; --td-r-tabbar: 20px; --td-r-search: 36px;
+  --td-mix-tint: #FFFFFF;
+  --td-ease-panel: cubic-bezier(.32,.72,0,1); --td-dur-panel: .4s;               /* --player-panel-ease / -duration */
+  --td-shadow-menu: 0 4px 20px 0 rgba(0,0,0,.3);                                  /* ._contextMenu */
+  --td-shadow-panel: 0 10px 12px 0 rgba(0,0,0,.15), 0 0 2px 0 rgba(255,255,255,.08); /* #playQueueSidebar */
+  --td-shadow-cookie: 0 16px 32px 0 rgba(0,0,0,.2);                               /* OneTrust banner */
+  --td-shadow-play: 0 2.2px 5.5px 0 rgba(0,0,0,.1);                               /* nút play tròn 14 trên ảnh bìa */
+  --td-blur-nav: blur(20px) saturate(180%);                                       /* --frosted-glass-nav-blur */
+  color-scheme: dark;
+}
+:root[data-mode="light"] { color-scheme: light; }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--td-bg); color: var(--td-text-10); font: 500 14px/20px var(--td-font); -webkit-font-smoothing: antialiased; }
+.ms { font-family: "Material Symbols Rounded"; font-weight: normal; font-style: normal; font-size: 20px; line-height: 1; letter-spacing: normal; text-transform: none; display: inline-block; white-space: nowrap; direction: ltr; font-feature-settings: "liga"; -webkit-font-smoothing: antialiased; font-variation-settings: "FILL" 1; user-select: none; }
+.ms.o { font-variation-settings: "FILL" 0; }
+code, .code { font-family: var(--td-mono); font-size: 12px; }
+:focus-visible { outline: 1px dotted var(--td-accent); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+/* ---------- vỏ trang (kit) ---------- */
+.shell { display: grid; grid-template-columns: 232px minmax(0, 1fr); min-height: 100vh; }
+.side { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 16px 12px; background: var(--td-bg); border-right: 1px solid var(--td-divider-20); display: flex; flex-direction: column; gap: 2px; }
+.brand { display: flex; align-items: center; gap: 10px; padding: 4px 8px 16px; }
+.brand-mark { width: 32px; height: 32px; border-radius: var(--td-r-sm); background: var(--td-fill-40); color: var(--td-accent); display: grid; place-items: center; }
+.brand b { font-size: 15px; font-weight: 600; display: block; }
+.brand small { color: var(--td-text-20); font-size: 12px; }
+.side h6 { margin: 16px 8px 6px; font-size: 12px; font-weight: 600; color: var(--td-text-30); }
+.side a { display: flex; align-items: center; gap: 10px; height: 36px; padding: 0 8px; border-radius: var(--td-r-md); color: var(--td-text-20); text-decoration: none; font-size: 14px; font-weight: 600; }
+.side a .ms { font-size: 20px; }
+.side a:hover { background: var(--td-surface-10); color: var(--td-text-10); }
+.side a.on { background: var(--td-fill-30); color: var(--td-text-10); }
+main { padding: 0 32px 96px; min-width: 0; }
+
+.bar { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; padding: 12px 0; background: var(--td-nav-surface); -webkit-backdrop-filter: var(--td-blur-nav); backdrop-filter: var(--td-blur-nav); border-bottom: 1px solid var(--td-divider-20); }
+.bar .grow { flex: 1; }
+.ctl { display: flex; align-items: center; gap: 8px; }
+.ctl > span { font-size: 12px; font-weight: 600; color: var(--td-text-20); }
+.seg { display: inline-flex; padding: 2px; border-radius: var(--td-r-full); background: var(--td-fill-40); }
+.seg button { height: 30px; padding: 0 12px; border: none; border-radius: var(--td-r-full); background: transparent; color: var(--td-text-20); font: 600 13px var(--td-font); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.seg button[aria-pressed="true"] { background: var(--td-fill-10); color: var(--td-on-fill-10); }
+.seg .ms { font-size: 16px; }
+.swatches { display: flex; gap: 6px; }
+.sw { width: 26px; height: 26px; border-radius: 50%; border: 2px solid transparent; padding: 0; cursor: pointer; background: var(--c); box-shadow: inset 0 0 0 1px var(--td-divider-10); }
+.sw[aria-pressed="true"] { border-color: var(--td-text-10); }
+
+.intro { padding: 40px 0 8px; max-width: 800px; }
+.intro .eyebrow { font-family: var(--td-mono); font-size: 12px; color: var(--td-accent); }
+.intro h1 { font: 700 36px/38px var(--td-font-display); margin: 10px 0 14px; text-wrap: balance; }
+.intro p { font-size: 15px; line-height: 22px; color: var(--td-text-20); margin: 0 0 10px; max-width: 70ch; font-weight: 400; }
+.intro .facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.fact { font-family: var(--td-mono); font-size: 12px; padding: 4px 10px; border-radius: var(--td-r-xs); background: var(--td-fill-40); color: var(--td-text-20); }
+
+section.block { padding-top: 48px; scroll-margin-top: 64px; }
+section.block > header { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+section.block h2 { font: 700 24px/28px var(--td-font-display); margin: 0; }
+section.block > header p { margin: 0; color: var(--td-text-20); max-width: 76ch; font-size: 13px; line-height: 19px; font-weight: 400; }
+h3.sub { font: 700 16px/24px var(--td-font); margin: 28px 0 10px; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+.spec { background: var(--td-card); border: 1px solid var(--td-divider-20); border-radius: var(--td-r-md); display: flex; flex-direction: column; min-width: 0; }
+.spec.full { grid-column: 1 / -1; }
+.spec-h { display: flex; align-items: center; gap: 8px; padding: 14px 16px 0; flex-wrap: wrap; }
+.spec-h b { font-size: 15px; font-weight: 600; }
+.kind { font-family: var(--td-mono); font-size: 11px; padding: 2px 8px; border-radius: var(--td-r-xs); background: var(--td-wave-color-opacity-accent-fill-ultra-thin); color: var(--td-accent); }
+.spec-h .dp { margin-left: auto; font-family: var(--td-mono); font-size: 11px; color: var(--td-text-20); font-variant-numeric: tabular-nums; }
+.stage { padding: 20px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 14px; min-height: 96px; overflow-x: auto; }
+.stage.col { flex-direction: column; align-items: stretch; }
+.stage.surface { background: var(--td-bg); margin: 12px 12px 0; border-radius: var(--td-r-sm); }
+.cap { font-family: var(--td-mono); font-size: 10px; line-height: 14px; color: var(--td-text-20); display: block; margin-top: 6px; text-align: center; }
+.fig { display: flex; flex-direction: column; align-items: center; }
+.spec-f { display: flex; align-items: center; gap: 8px; padding: 8px 12px 12px 16px; margin-top: auto; }
+.spec-f .note { font-size: 12px; line-height: 16px; color: var(--td-text-20); flex: 1; font-weight: 400; }
+.copy { height: 28px; padding: 0 12px; border-radius: var(--td-r-full); border: none; background: transparent; color: var(--td-accent); font: 600 12px var(--td-font); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; flex: none; }
+.copy:hover { background: var(--td-wave-color-opacity-accent-fill-ultra-thin); }
+.copy .ms { font-size: 16px; }
+
+/* nền tảng */
+.roles { display: grid; grid-template-columns: repeat(auto-fill, minmax(176px, 1fr)); gap: 8px; }
+.role { border-radius: var(--td-r-sm); padding: 10px 12px; min-height: 72px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: inset 0 0 0 1px var(--td-divider-20); cursor: pointer; border: none; text-align: left; font: inherit; position: relative; overflow: hidden; }
+.role::before { content: ""; position: absolute; inset: 0; background: repeating-conic-gradient(var(--td-checker) 0 25%, transparent 0 50%) 0 0 / 12px 12px; z-index: 0; }
+.role > i { position: absolute; inset: 0; z-index: 1; }
+.role b, .role code { position: relative; z-index: 2; }
+.role b { font-size: 12px; font-weight: 600; word-break: break-all; }
+.role code { font-size: 11px; opacity: .9; }
+.type-row { display: grid; grid-template-columns: 230px minmax(0, 1fr) 140px; gap: 16px; align-items: baseline; padding: 10px 0; border-bottom: 1px solid var(--td-divider-20); }
+.type-row:last-child { border-bottom: none; }
+.type-row .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.type-row .meta { font-family: var(--td-mono); font-size: 11px; color: var(--td-text-20); font-variant-numeric: tabular-nums; }
+.shape-cell { display: flex; flex-direction: column; align-items: center; gap: 6px; font-family: var(--td-mono); font-size: 11px; color: var(--td-text-20); text-align: center; }
+.shape-cell i { display: block; width: 64px; height: 64px; background: var(--td-img); border: 1px solid var(--td-divider-20); }
+.scroll-x { overflow-x: auto; }
+table.tok { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+table.tok th, table.tok td { text-align: left; padding: 7px 12px 7px 0; border-bottom: 1px solid var(--td-divider-20); font-size: 13px; vertical-align: top; font-weight: 400; }
+table.tok th { font-size: 11px; font-weight: 600; color: var(--td-text-20); }
+table.tok td:first-child { font-family: var(--td-mono); font-size: 12px; white-space: nowrap; }
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 24px; }
+
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 16px); opacity: 0; pointer-events: none; background: var(--td-surface-30); color: var(--td-text-10); padding: 10px 16px; border-radius: var(--td-r-md); box-shadow: var(--td-shadow-menu); font-size: 13px; transition: opacity .2s, transform .2s; z-index: 50; display: flex; gap: 8px; align-items: center; }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+.toast .ms { color: var(--td-accent); font-size: 18px; }
+
+/* ================= THÀNH PHẦN (.td-*) — chỉ dùng biến ================= */
+.td-ph { background: var(--td-img); color: var(--td-text-30); display: grid; place-items: center; font: 500 10px/12px var(--td-font); text-align: center; overflow: hidden; }
+.td-logo { width: 24px; height: 24px; border-radius: var(--td-r-xs); border: 1px dashed var(--td-text-30); color: var(--td-text-30); font: 600 7px/1 var(--td-font); display: grid; place-items: center; background: transparent; padding: 0; cursor: pointer; }
+
+/* nav item của sidebar: _navigationItem 208×40, r12, pad 8, chữ 14/22 600 */
+.td-nav { display: flex; flex-direction: column; gap: 0; width: 208px; }
+.td-nav-item { display: flex; align-items: center; gap: 12px; width: 100%; height: 40px; padding: 8px; border-radius: var(--td-r-md); border: none; background: transparent; color: var(--td-text-20); font: 600 14px/22px var(--td-font); text-decoration: none; cursor: pointer; text-align: left; }
+.td-nav-item .ms { font-size: 20px; }
+.td-nav-item .end { margin-left: auto; font-size: 18px; }
+.td-nav-item:hover, .td-nav-item.is-hover { background: var(--td-surface-10); color: var(--td-text-10); }
+.td-nav-item.is-on { background: var(--td-fill-30); color: var(--td-text-10); }
+.td-nav-item:focus-visible, .td-nav-item.is-focus { outline: 1px dotted var(--td-accent); outline-offset: 0; }
+.td-nav-sub { width: 190px; }
+.td-nav-sec { display: flex; align-items: center; gap: 8px; padding: 24px 2px 8px 8px; width: 220px; color: var(--td-text-30); font: 500 14px/22px var(--td-font); }
+.td-nav-sec .grow { flex: 1; }
+
+/* nút tròn back/forward 32: _button_6808704 */
+.td-round { width: 32px; height: 32px; border-radius: var(--td-r-full); border: none; background: var(--td-fill-40); color: var(--td-text-10); display: grid; place-items: center; cursor: pointer; padding: 0; }
+.td-round:disabled { color: var(--td-fill-30); cursor: default; }
+.td-round:focus-visible, .td-round.is-focus { outline: 1px dotted var(--td-accent); outline-offset: 0; }
+/* mũi tên cuộn shelf 28×25: _scrollingButton */
+.td-scroll { width: 28px; height: 25px; padding: 1px 6px; border: none; background: transparent; color: var(--td-text-10); display: grid; place-items: center; cursor: pointer; }
+.td-scroll:disabled { color: var(--td-text-30); cursor: default; }
+.td-scroll:focus-visible, .td-scroll.is-focus { outline: 2px solid currentColor; }
+
+/* paging tabs (Market) — tablist gạch đáy 1px divider-20; tab chữ 14/22 500, pad 4 0 10, gạch chọn 2px text-10 */
+.td-tabs { display: flex; gap: 16px; position: relative; }
+.td-tabs::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--td-divider-20); }
+.td-tab { position: relative; padding: 4px 0 10px; border: none; background: transparent; color: var(--td-text-20); font: 500 14px/22px var(--td-font); cursor: pointer; }
+.td-tab.is-on { color: var(--td-text-10); }
+.td-tab.is-on::after { content: ""; position: absolute; z-index: 1; left: 0; right: 0; bottom: 0; height: 2px; background: var(--td-text-10); }
+.td-tab:focus-visible, .td-tab.is-focus, .td-tabs.is-focus { outline: 1px dotted var(--td-accent); outline-offset: 0; }
+
+/* tab bar mobile: _mobileTabBar a 68×40 r20 pad 0 20, icon 28 text-20, mục chọn nền #ffffff1a icon trắng */
+.td-tabbar { display: flex; justify-content: space-between; align-items: center; padding: 0 8px; }
+.td-tabbar a { display: flex; align-items: center; justify-content: center; height: 40px; padding: 0 20px; border-radius: var(--td-r-tabbar); color: var(--td-text-20); text-decoration: none; }
+.td-tabbar a .ms { font-size: 28px; }
+.td-tabbar a:last-child .ms { font-size: 22px; }
+.td-tabbar a.is-on { background: var(--td-tabbar-on); color: var(--td-text-10); }
+
+/* header của shelf: h2 _heading20 (Display 19/26 700) + mũi tên + View all (_semibold20 14/22 600, text-20 → hover text-10) */
+.td-shelf-h { display: flex; align-items: center; gap: 8px; width: 100%; }
+.td-shelf-h h2 { margin: 0; font: 700 19px/26px var(--td-font-display); color: var(--td-text-10); flex: 1; min-width: 0; }
+.td-shelf-sub { margin: 2px 0 0; color: var(--td-text-20); font: 400 14px/22px var(--td-font); }
+.td-viewall { color: var(--td-text-20); font: 600 14px/22px var(--td-font); text-decoration: none; padding: 1px 0; margin-left: 12px; }
+.td-viewall:hover, .td-viewall.is-hover { color: var(--td-text-10); }
+.td-viewall:focus-visible, .td-viewall.is-focus { outline: 2px solid currentColor; outline-offset: 0; }
+
+/* nút Market: _marketButton _small — pad 9 16, r full, 14/22 600 */
+.td-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 40px; padding: 9px 16px; border-radius: var(--td-r-full); border: none; font: 600 14px/22px var(--td-font); cursor: pointer; text-decoration: none; white-space: nowrap; transition: background-color .1s; }
+.td-btn.is-compact { height: 32px; padding: 5px 16px; }
+.td-btn--primary { background: var(--td-fill-10); color: var(--td-on-fill-10); }
+.td-btn--primary:hover, .td-btn--primary.is-hover { background: var(--td-fill-20); }
+.td-btn--primary:active, .td-btn--primary.is-active { background: var(--td-primary-pressed); }
+.td-btn--secondary { background: var(--td-fill-40); color: var(--td-text-10); }
+.td-btn--secondary:hover, .td-btn--secondary.is-hover { background: var(--td-fill-30); }
+.td-btn--secondary:active, .td-btn--secondary.is-active { background: var(--td-fill-20); }
+.td-btn--floating { background: var(--td-floating); color: var(--td-text-10); }
+.td-btn--floating:hover, .td-btn--floating.is-hover { background: var(--td-floating-hover); }
+.td-btn--floating:active, .td-btn--floating.is-active { background: var(--td-floating-pressed); }
+.td-btn:focus-visible, .td-btn.is-focus { outline: 2px solid var(--td-btn-ring, currentColor); outline-offset: 0; }
+.td-btn--primary, .td-btn--floating { --td-btn-ring: var(--td-black); }
+.td-skip { display: flex; gap: 8px; padding: 12px; background: var(--td-fill-40); border-radius: 0 0 2px 2px; }
+
+/* nút icon */
+.td-fav { width: 36px; height: 36px; border-radius: 50%; border: none; background: var(--td-bg); color: var(--td-text-10); display: grid; place-items: center; cursor: pointer; padding: 0; transition: transform .1s; }
+.td-fav:hover, .td-fav.is-hover { color: var(--td-fav-hover); transform: scale(1.1); }
+.td-fav:focus-visible, .td-fav.is-focus { outline: 2px solid currentColor; }
+.td-more { width: 32px; height: 32px; border: none; background: transparent; color: var(--td-fill-20); display: grid; place-items: center; cursor: pointer; padding: 0; }
+.td-more:hover, .td-more.is-hover { color: var(--td-more-hover); }
+.td-more:focus-visible, .td-more.is-focus { outline: 1px dotted var(--td-accent); }
+.td-close { width: 32px; height: 35px; padding: 8px; border: none; background: transparent; color: var(--td-fill-20); cursor: pointer; display: grid; place-items: center; }
+.td-close:hover, .td-close.is-hover { color: var(--td-text-20); }
+.td-close:active, .td-close.is-active { color: var(--td-text-10); }
+.td-close:focus-visible, .td-close.is-focus { outline: 1px dotted var(--td-accent); }
+.td-close .ms, .td-create .ms { font-size: 16px; }
+.td-create { width: 16px; height: 16px; border: none; background: transparent; color: var(--td-create); padding: 0; cursor: pointer; display: grid; place-items: center; }
+.td-create:hover, .td-create.is-hover { color: var(--td-text-10); }
+.td-create:focus-visible, .td-create.is-focus { outline: 1px dotted var(--td-accent); }
+.td-play-mini { width: 14px; height: 14px; border: none; padding: 0; background: transparent; cursor: pointer; display: grid; place-items: center; }
+.td-play-mini i { width: 14px; height: 14px; border-radius: 50%; background: var(--td-white); box-shadow: var(--td-shadow-play); color: var(--td-black); display: grid; place-items: center; transition: transform .1s; }
+.td-play-mini i .ms { font-size: 12px; }
+.td-play-mini:active i, .td-play-mini.is-active i { transform: scale(.9); opacity: .9; }
+.td-play-row { width: 40px; height: 40px; border: none; background: transparent; color: var(--td-white); display: grid; place-items: center; cursor: pointer; padding: 0; }
+.td-play-row:focus-visible, .td-play-row.is-focus { outline: 2px solid currentColor; }
+.td-info { width: 28px; height: 18px; padding: 1px 6px; border: none; background: transparent; color: var(--td-text-10); display: grid; place-items: center; cursor: pointer; }
+.td-info .ms { font-size: 16px; }
+.td-info:focus-visible, .td-info.is-focus { outline: 1px dotted var(--td-accent); }
+
+/* thẻ lưới: _card 141 (desktop, 7 cột) / 165 (mobile, 2 cột); ảnh 1:1 r2 nền --td-img; tiêu đề _medium20 14/22 500; phụ _paragraph20 14/22 400 text-20 */
+.td-card { width: var(--td-card-w, 141px); display: block; color: var(--td-text-10); text-decoration: none; flex: none; }
+.td-cover { position: relative; aspect-ratio: 1; border-radius: var(--td-r-cover); overflow: hidden; }
+.td-cover .td-ph { position: absolute; inset: 0; }
+.td-cover .td-play-mini { position: absolute; left: 8px; bottom: 8px; }
+.td-cover .td-fav { position: absolute; right: 8px; bottom: 8px; }
+.td-card-t { display: block; margin-top: 8px; font: 500 14px/22px var(--td-font); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.td-card-s { display: block; font: 400 14px/22px var(--td-font); color: var(--td-text-20); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.td-card.is-round .td-cover { border-radius: 50%; }
+.td-card.is-round .td-card-t { text-align: center; }
+.td-titlerow { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.td-titlerow .td-card-t { margin-top: 0; min-width: 0; }
+/* thẻ mix: nhãn loại + tiêu đề in lên ảnh, màu nhãn lấy từ dữ liệu ảnh mix (--td-mix-tint) */
+.td-mix .td-cover::after { content: ""; position: absolute; inset: 40% 0 0; background: linear-gradient(transparent, var(--td-wave-color-opacity-base-fill-thick)); }
+.td-mix-l { position: absolute; left: 8px; right: 8px; bottom: 6px; z-index: 1; }
+.td-mix-l small { display: block; font: 600 10px/13px var(--td-font); color: var(--td-mix-tint); }
+.td-mix-l b { display: block; font: 700 12px/16px var(--td-font); color: var(--td-mix-tint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.td-mix-mark { position: absolute; top: 6px; right: 6px; z-index: 1; width: 16px; height: 10px; border: 1px dashed var(--td-mix-tint); border-radius: 2px; }
+
+/* hàng bài: _item 340×56 r2, ảnh 56, gap 12; lưới 3 cột gap 16/32 */
+.td-tracks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px 32px; width: 100%; }
+.td-track { display: flex; align-items: center; gap: 12px; height: 56px; border-radius: var(--td-r-cover); min-width: 0; }
+.td-track .td-cover { width: 56px; flex: none; }
+.td-track .td-cover .td-play-row { position: absolute; left: 8px; top: 8px; opacity: 0; }
+.td-track:hover .td-cover .td-play-row, .td-track .td-play-row.is-focus { opacity: 1; }
+.td-track-txt { flex: 1; min-width: 0; }
+.td-track-txt .td-card-t { margin: 0; }
+.td-artist { color: var(--td-text-20); font: 400 14px/22px var(--td-font); text-decoration: none; }
+.td-artist:hover { text-decoration: underline; }
+.td-artist:focus-visible, .td-artist.is-focus { outline: 1px dotted var(--td-accent); }
+
+/* badge 16×16 */
+.td-badge { width: 16px; height: 16px; border-radius: var(--td-r-xs); display: inline-grid; place-items: center; flex: none; font: 700 9px/1 var(--td-font); }
+.td-badge--explicit { background: var(--td-text-10); color: var(--td-bg); }
+.td-badge--spot { border: 1.5px solid var(--td-wave-color-solid-rainbow-yellow-fill); color: var(--td-wave-color-solid-rainbow-yellow-fill); }
+.td-badge--up { border: 1.5px solid var(--td-text-20); color: var(--td-text-20); }
+.td-badge--pay { color: var(--td-fill-20); }
+.td-badge .ms { font-size: 12px; }
+
+/* thẻ Transfer ở sidebar: _container 212, r12, viền 1px fill-40, pad 16, gap 16 */
+.td-promo { position: relative; width: 212px; padding: 16px; border: 1px solid var(--td-fill-40); border-radius: var(--td-r-md); display: flex; flex-direction: column; gap: 16px; }
+.td-promo .td-close { position: absolute; top: 5px; right: 5px; }
+.td-promo-t { margin: 0; padding-right: 32px; font: 500 12px/18px var(--td-font); }
+.td-promo-p { margin: 4px 0 0; font: 400 12px/18px var(--td-font); color: var(--td-text-20); }
+
+/* context menu: _contextMenu 240, nền surface-30, r12, pad 4 0; mục _actionItem 232×42 r9, chữ 14 500 */
+.td-menu { width: 240px; padding: 4px 0; background: var(--td-surface-30); border-radius: var(--td-r-md); box-shadow: var(--td-shadow-menu); color: var(--td-text-10); }
+.td-menu.is-sub { width: 200px; }
+.td-menu-h { display: flex; gap: 12px; align-items: center; padding: 12px 16px 8px; }
+.td-menu-h .td-ph { width: 38px; height: 38px; border-radius: var(--td-r-cover); flex: none; }
+.td-menu-h b { display: block; font: 600 14px/20px var(--td-font); }
+.td-menu-h small { display: block; font: 600 12px/16px var(--td-font); color: var(--td-text-20); }
+.td-menu ul { list-style: none; margin: 0; padding: 0; }
+.td-menu li { margin: 0 4px; border-radius: var(--td-r-menuitem); }
+.td-menu-item { display: flex; align-items: center; gap: 8px; width: 100%; height: 42px; padding: 0 12px; border: none; background: transparent; border-radius: var(--td-r-menuitem); color: inherit; font: 500 14px/20px var(--td-font); text-align: left; cursor: pointer; }
+.td-menu-item:hover { background: var(--td-fill-40); }
+.td-menu-item .end { margin-left: auto; color: var(--td-text-20); }
+.td-menu-item .ms { font-size: 18px; }
+.td-menu-item:focus-visible, .td-menu-item.is-focus, .td-menu li.is-focus, .td-menu.is-focus { outline: 1px dotted var(--td-accent); outline-offset: -1px; }
+.td-appicon { width: 24px; height: 24px; border-radius: 6px; margin-left: auto; }
+
+/* tìm kiếm: container 280×36 r36 nền floating; input 14 400 text-20 → focus text-10; pad 0 36 0 44 */
+.td-search { position: relative; width: 280px; max-width: 100%; height: 36px; border-radius: var(--td-r-search); background: var(--td-floating); display: flex; align-items: center; }
+.td-search .ms { position: absolute; left: 12px; font-size: 16px; color: var(--td-text-20); pointer-events: none; }
+.td-search input { width: 100%; height: 32px; border: none; background: transparent; padding: 0 36px 0 44px; color: var(--td-text-20); font: 400 14px/20px var(--td-font); outline: none; border-radius: var(--td-r-search); }
+.td-search input::placeholder { color: var(--td-text-20); }
+.td-search input:focus, .td-search input.is-focus { color: var(--td-text-10); }
+.td-search:focus-within, .td-search.is-focus { outline: 2px solid var(--td-text-10); }
+
+/* select ngôn ngữ ở footer: 235×32 r7 nền footer, 12/18 600 */
+.td-select { appearance: none; -webkit-appearance: none; width: 235px; max-width: 100%; height: 32px; padding: 7px 26px 7px 10px; border: none; border-radius: var(--td-r-select); background: var(--td-footer) var(--td-select-chev) no-repeat right 8px center / 12px; color: var(--td-text-10); font: 600 12px/18px var(--td-font); }
+.td-select:focus-visible, .td-select.is-focus { outline: 2px solid var(--td-text-10); }
+
+/* footer: nền --td-footer; nhóm link 4 cột; tiêu đề wave description-demi 14/20 600 tertiary; link description-medium 14/20 500 */
+.td-footer { background: var(--td-footer); padding: 32px 44px 24px; width: 100%; }
+.td-foot-cols { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
+.td-foot-h { font: 600 14px/20px var(--td-font); color: var(--td-wave-color-text-tertiary); }
+.td-foot-list { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-direction: column; gap: 18px; }
+.td-foot-list a { color: var(--td-text-10); text-decoration: none; font: 500 14px/20px var(--td-font); }
+.td-foot-list a:hover { text-decoration: underline; }
+.td-foot-social { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; padding: 40px 0 16px; }
+.td-foot-social p { margin: 0; font: 500 12px/16px var(--td-font); color: var(--td-wave-color-text-tertiary); max-width: 60ch; }
+.td-foot-social ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 24px; }
+.td-foot-social li { width: 20px; height: 20px; border-radius: 50%; border: 1px dashed var(--td-text-20); }
+.td-foot-legal { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 24px; font: 500 12px/16px var(--td-font); color: var(--td-wave-color-text-tertiary); }
+.td-foot-legal a { color: inherit; text-decoration: none; }
+.td-version { margin: 0; padding-top: 16px; font: 500 12px/18px var(--td-font); letter-spacing: .18px; color: var(--td-wave-color-text-tertiary); }
+
+/* panel nổi: #playQueueSidebar 334, r16, viền 1px #ffffff1a, pad 16 16 0 */
+.td-panel { width: 334px; max-width: 100%; min-height: 180px; padding: 16px 16px 0; border: 1px solid var(--td-wave-color-opacity-contrast-fill-ultra-thin); border-radius: var(--td-r-panel); box-shadow: var(--td-shadow-panel); background: var(--td-floating); }
+.td-panel h4 { margin: 0 0 8px; font: 700 16px/24px var(--td-font); }
+
+/* cookie banner (OneTrust, bên thứ ba): 448, nền #1a1a1a, viền 1px base-brightest, r16; nút 12/16 600 ls .12 pad 8 16 r full */
+.td-cookie { width: 448px; max-width: 100%; padding: 16px 16px 18px; background: var(--td-cookie-bg); border: 1px solid var(--td-wave-color-solid-base-brightest); border-radius: var(--td-r-panel); box-shadow: var(--td-shadow-cookie); color: var(--td-text-10); }
+.td-cookie p { margin: 0 0 14px; font: 400 12px/18px var(--td-font); color: var(--td-wave-color-solid-contrast-darker); }
+.td-cookie a { color: inherit; text-decoration: underline; }
+.td-cookie a:focus-visible, .td-cookie a.is-focus { outline: 2px solid var(--td-text-10); }
+.td-cookie .row { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.td-ot { height: 34px; padding: 8px 16px; border-radius: var(--td-r-full); font: 600 12px/16px var(--td-font); letter-spacing: .12px; cursor: pointer; border: 1px solid var(--td-white); background: var(--td-white); color: var(--td-ot-ink); }
+.td-ot.is-ghost { border-color: transparent; background: var(--td-ot-ghost); color: var(--td-white); }
+.td-ot:focus-visible, .td-ot.is-focus { outline: 2px solid var(--td-white); outline-offset: 1px; }
+
+/* thanh trên desktop: header 56 fixed, pad 14 12 10 16 */
+.td-topbar { display: flex; align-items: center; gap: 8px; height: 56px; padding: 14px 12px 10px 16px; width: 100%; }
+.td-topbar .grow { flex: 1; }
+.td-topbar .td-search { margin: 0 auto; }
+
+/* focus mẫu */
+.focus-demo { display: flex; flex-wrap: wrap; gap: 24px; }
+
+/* ---------- màn mẫu ---------- */
+.screens { display: flex; gap: 32px; align-items: flex-start; overflow-x: auto; padding-bottom: 8px; }
+.screen-fig { flex: none; }
+.phone { width: 390px; height: 844px; zoom: .7; border-radius: 40px; border: 10px solid var(--td-surface-30); overflow: hidden; background: var(--td-bg); position: relative; display: flex; flex-direction: column; }
+.desk { width: 1440px; height: 900px; zoom: .5; border-radius: 14px; border: 2px solid var(--td-surface-30); overflow: hidden; background: var(--td-bg); display: grid; grid-template-columns: 240px minmax(0, 1fr); }
+.screen-cap { font-size: 12px; line-height: 17px; color: var(--td-text-20); margin-top: 10px; max-width: 520px; font-weight: 400; }
+.m-head { height: 64px; padding: 16px; display: flex; align-items: center; justify-content: space-between; flex: none; }
+.m-body { flex: 1; overflow: hidden; padding: 0 16px; }
+.m-title { margin: 8px 0 12px; font: 700 24px/28px var(--td-font); }
+.m-grid { display: grid; grid-template-columns: repeat(2, 165px); gap: 16px; justify-content: center; padding: 16px 6px 0; }
+.m-grid .td-card { --td-card-w: 165px; }
+.m-tabbar { flex: none; padding: 8px 0; background: var(--td-bg); border-top: 1px solid var(--td-divider-20); }
+.d-side { padding: 16px; display: flex; flex-direction: column; gap: 0; border-right: 1px solid var(--td-divider-20); }
+.d-main { overflow: hidden; }
+.d-content { padding: 20px 57px 0 58px; display: flex; flex-direction: column; gap: 32px; }
+.d-shelf { display: flex; flex-direction: column; gap: 16px; }
+.d-row { display: flex; gap: 16px; }
+
+@media (max-width: 899px) {
+  .shell { grid-template-columns: minmax(0, 1fr); }
+  .side { display: none; }
+  main { padding: 0 16px 80px; }
+  .grid { grid-template-columns: minmax(0, 1fr); }
+  .two { grid-template-columns: minmax(0, 1fr); }
+  .type-row { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .intro h1 { font-size: 28px; line-height: 32px; }
+  .td-foot-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .td-foot-social { flex-direction: column; align-items: flex-start; }
+  .td-tracks { grid-template-columns: minmax(0, 1fr); }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <nav class="side" aria-label="Mục lục">
+    <div class="brand"><div class="brand-mark"><span class="ms">graphic_eq</span></div><div><b>TIDAL Web</b><small>UI kit tham chiếu</small></div></div>
+    <h6>Nền tảng</h6>
+    <a href="#color"><span class="ms">palette</span>Màu</a>
+    <a href="#type"><span class="ms">text_fields</span>Chữ</a>
+    <a href="#shape"><span class="ms">rounded_corner</span>Bo góc &amp; bóng</a>
+    <a href="#layout"><span class="ms">straighten</span>Bố cục &amp; kích thước</a>
+    <h6>Thành phần</h6>
+    <a href="#navigation"><span class="ms">side_navigation</span>Điều hướng</a>
+    <a href="#actions"><span class="ms">touch_app</span>Hành động</a>
+    <a href="#content"><span class="ms">album</span>Thẻ &amp; hàng bài</a>
+    <a href="#menus"><span class="ms">menu_open</span>Menu, tìm kiếm &amp; panel</a>
+    <a href="#footer"><span class="ms">bottom_navigation</span>Footer &amp; banner</a>
+    <a href="#states"><span class="ms">ads_click</span>Trạng thái</a>
+    <h6>Mẫu</h6>
+    <a href="#screens"><span class="ms">devices</span>Màn hình mẫu</a>
+  </nav>
+
+  <main>
+    <div class="bar" role="toolbar" aria-label="Chủ đề">
+      <div class="ctl"><span>Chế độ</span><div class="seg" id="mode">
+        <button data-v="dark" aria-pressed="true"><span class="ms">dark_mode</span>Tối · site</button>
+        <button data-v="light" aria-pressed="false"><span class="ms">light_mode</span>Sáng · Market</button></div></div>
+      <div class="ctl"><span>Nhãn mix</span><div class="swatches" id="swatches"></div></div>
+      <div class="grow"></div>
+      <button class="copy" id="copy-tokens"><span class="ms">data_object</span>Copy CSS token</button>
+    </div>
+
+    <div class="intro">
+      <div class="eyebrow">tidal.com (bản lưu offline · CSS vars + getComputedStyle) → docs/tidal-ui-kit.html</div>
+      <h1>Bộ thành phần của web player TIDAL</h1>
+      <p>Hệ thiết kế của web player TIDAL (trang Home khi chưa đăng nhập), chép lại bằng HTML/CSS thuần. Site chồng hai hệ token. <b>Wave</b> là hệ gốc của TIDAL: 186 biến trên <code>:root</code>, chỉ có bản tối, gồm màu nhấn cyan <code>#33ffee</code>. <b>Market</b> là hệ component của Square; TIDAL bật nó bằng <code>data-market-theme="tidal dark-mode"</code>. Nút, tab, chữ và nền hover của trang đều đọc biến Market. CSS còn chứa sẵn bộ sáng của Market nhưng site không bật; nút "Sáng · Market" ở thanh trên dùng bộ đó.</p>
+      <p>Số đo lấy bằng <code>getComputedStyle</code> ở khung 1440 × 900 và 390 × 844. Danh mục component do <code>discover.mjs</code> gom được 48 pattern và 41 trạng thái ép qua CDP. Mỗi thẻ ghi tên class gốc của site. Muốn dùng lại: dán khối <code>--td-*</code> (nút Copy CSS token) cùng phần CSS <code>.td-*</code>. Ảnh bìa, logo, wordmark và nội dung của TIDAL không được chép.</p>
+      <div class="facts"><span class="fact">desktop 1440 × 900 · sidebar 240 (thu gọn 78)</span><span class="fact">header 56 · mobile 64</span><span class="fact">lề nội dung 58 / 16</span><span class="fact">thẻ 141 · 7 cột · gap 16</span><span class="fact">hàng bài 56 · 3 cột · gap 16/32</span><span class="fact">mini player 88</span><span class="fact">focus 1px dotted #33ffee</span><span class="fact">base 14/20</span></div>
+    </div>
+
+    <!-- ================= NỀN TẢNG ================= -->
+    <section class="block" id="color">
+      <header><h2>Màu</h2><p>Nhóm đầu là vai trò Market, đổi theo chế độ. Hai giá trị đều đọc từ khối <code>[data-market-theme*=dark-mode]</code> / <code>light-mode</code> trong CSS của site. Nhóm "Kit" là vài vai trò site đặt thẳng trong component (nền nút nổi, nền ảnh chờ, nền footer). Ở chế độ sáng, các vai trò đó không có giá trị gốc nên kit tự dựng, xem ghi chú. Các nhóm Wave là hằng số chỉ có bản tối. Nhiều vai trò có alpha nên ô được lót nền ca-rô. Bấm một ô để copy giá trị.</p></header>
+      <div id="roles-groups"></div>
+    </section>
+
+    <section class="block" id="type">
+      <header><h2>Chữ</h2><p>Font của site là Square Sans Text / Display VF (độc quyền của Square). Kit thay bằng Inter nên độ rộng chữ lệch nhẹ; size, line-height và weight giữ đúng số đo. Bảng thứ nhất là thang <code>.wave-text-*</code> của Wave. Bảng thứ hai là các kiểu Market (<code>._marketText _&lt;tên&gt;</code>) đo trên phần tử thật; kiểu không có phần tử nào trên trang thì không ghi.</p></header>
+      <h3 class="sub">Thang Wave (.wave-text-*)</h3>
+      <div id="typescale"></div>
+      <h3 class="sub">Kiểu Market thực dùng</h3>
+      <div id="typeused"></div>
+    </section>
+
+    <section class="block" id="shape">
+      <header><h2>Bo góc &amp; bóng</h2><p>Wave khai 5 mức bo góc (<code>--wave-border-radius--none / extra-small / small / regular / full</code> = 0 / 4 / 8 / 12 / 1000). Component còn đặt thêm vài bán kính riêng. Site không có hệ số nhân bo góc nên kit không có điều khiển shape.</p></header>
+      <div class="roles" id="shapes" style="grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:16px"></div>
+      <h3 class="sub">Bóng &amp; vật liệu</h3>
+      <div class="scroll-x"><table class="tok">
+        <tr><th>Biến kit</th><th>Giá trị</th><th>Nơi dùng (class gốc)</th></tr>
+        <tr><td>--td-shadow-menu</td><td>0 4px 20px rgba(0,0,0,.3)</td><td>._contextMenu, ._subMenu</td></tr>
+        <tr><td>--td-shadow-panel</td><td>0 10px 12px rgba(0,0,0,.15), 0 0 2px rgba(255,255,255,.08)</td><td>#playQueueSidebar</td></tr>
+        <tr><td>--td-shadow-cookie</td><td>0 16px 32px rgba(0,0,0,.2)</td><td>#onetrust-banner-sdk</td></tr>
+        <tr><td>--td-shadow-play</td><td>0 2.2px 5.5px rgba(0,0,0,.1)</td><td>nút play tròn 14 (tidal-ui__geometry)</td></tr>
+        <tr><td>--td-blur-nav</td><td>blur(20px) saturate(180%)</td><td>--frosted-glass-nav-blur (header nổi)</td></tr>
+        <tr><td>--td-wave-frosted-glass-blur</td><td>blur(26px)</td><td>--frosted-glass-blur</td></tr>
+        <tr><td>--td-ease-panel</td><td>cubic-bezier(.32,.72,0,1) · .4s</td><td>--player-panel-ease / -duration</td></tr>
+      </table></div>
+    </section>
+
+    <section class="block" id="layout">
+      <header><h2>Bố cục &amp; kích thước</h2><p>Hằng số khung đọc từ biến <code>:root</code> của site (<code>--sidebarWidth</code>, <code>--headerHeight</code>…). Số đo lưới đo trên phần tử thật ở hai khung.</p></header>
+      <div class="two">
+        <div class="scroll-x"><table class="tok">
+          <tr><th>Biến site</th><th>Giá trị</th><th>Ý nghĩa</th></tr>
+          <tr><td>--sidebarWidth</td><td>240px</td><td>sidebar trái (desktop)</td></tr>
+          <tr><td>--collapsedSidebarWidth</td><td>78px</td><td>sidebar thu gọn</td></tr>
+          <tr><td>--responsiveSidebarWidth</td><td>20vw</td><td>sidebar co giãn</td></tr>
+          <tr><td>--headerHeight</td><td>56px</td><td>thanh trên (mobile đo 64)</td></tr>
+          <tr><td>--tabbarHeight</td><td>56px</td><td>tab bar mobile</td></tr>
+          <tr><td>--miniPlayerHeight</td><td>88px</td><td>mini player (+24 chừa đáy)</td></tr>
+          <tr><td>--footerHeight</td><td>96px</td><td>footer app</td></tr>
+          <tr><td>--pageWidth</td><td>1500px</td><td>trần bề rộng trang</td></tr>
+          <tr><td>--pageHorizontalMargin</td><td>28 / 48 (wide)</td><td>lề ngang trang</td></tr>
+          <tr><td>--pageBottomMargin</td><td>48px</td><td>lề đáy</td></tr>
+          <tr><td>--floating-panel-border-radius</td><td>16px</td><td>panel nổi</td></tr>
+          <tr><td>--baseFontSize / --baseLineHeight</td><td>14 / 20</td><td>cỡ chữ gốc</td></tr>
+        </table></div>
+        <div class="scroll-x"><table class="tok">
+          <tr><th>Thành phần</th><th>1440</th><th>390</th></tr>
+          <tr><td>thẻ lưới (_card)</td><td>141 × 193 · 7 cột · gap 16</td><td>165 × 217 · 2 cột · gap 16</td></tr>
+          <tr><td>ảnh bìa</td><td>141 · r2</td><td>165 · r2</td></tr>
+          <tr><td>hàng bài (_item)</td><td>340 × 56 · 3 cột · gap 16 / 32</td><td>1 cột</td></tr>
+          <tr><td>vùng nội dung</td><td>x 298 → 1383 (1085)</td><td>x 16 → 374</td></tr>
+          <tr><td>mục sidebar</td><td>208 × 40 · r12 · pad 8</td><td>ẩn</td></tr>
+          <tr><td>tìm kiếm</td><td>280 × 36 · r36</td><td>ẩn (icon ở tab bar)</td></tr>
+          <tr><td>tab bar</td><td>ẩn</td><td>5 mục 68 × 40 · r20</td></tr>
+          <tr><td>context menu</td><td>240 · mục 42 · r12</td><td>như desktop</td></tr>
+          <tr><td>z-index</td><td colspan="2">header 20 · sidebar 50 · player 80 · search 95 · modal 500 · menu 550 · toast 700 · overlay 900</td></tr>
+        </table></div>
+      </div>
+    </section>
+
+    <!-- ================= THÀNH PHẦN ================= -->
+    <section class="block" id="navigation">
+      <header><h2>Điều hướng</h2></header>
+      <div class="grid">
+        <div class="spec" data-sig="b4e0098495 8f55f81d09">
+          <div class="spec-h"><b>Mục sidebar</b><span class="kind">_navigationItem</span><span class="dp">208 × 40 · r12</span></div>
+          <div class="stage">
+            <div class="td-nav">
+              <a class="td-nav-item is-on" href="#navigation"><span class="ms">music_note</span>Music</a>
+              <a class="td-nav-item" href="#navigation"><span class="ms o">explore</span>Explore</a>
+              <a class="td-nav-item" href="#navigation"><span class="ms o">notifications</span>Feed</a>
+              <a class="td-nav-item" href="#navigation"><span class="ms">arrow_upward</span>Upload</a>
+              <button class="td-nav-item" aria-haspopup="true"><span class="ms">view_week</span>Collection<span class="ms end">chevron_right</span></button>
+            </div>
+            <div class="td-nav td-nav-sub">
+              <span class="cap" style="text-align:left;margin:0 0 4px">_submenuItem · 190 × 40</span>
+              <a class="td-nav-item" href="#navigation"><span class="ms o">radio</span>Mixes &amp; Radio</a>
+              <a class="td-nav-item" href="#navigation"><span class="ms o">queue_music</span>Playlists</a>
+            </div>
+          </div>
+          <div class="stage" style="padding-top:0">
+            <div class="fig"><div class="td-nav"><a class="td-nav-item is-on is-focus" data-sig-state="b4e0098495:focus" href="#navigation"><span class="ms">music_note</span>Music</a></div><span class="cap">chọn · focus</span></div>
+            <div class="fig"><div class="td-nav"><button class="td-nav-item is-hover" data-sig-state="8f55f81d09:hover"><span class="ms">view_week</span>Collection<span class="ms end">chevron_right</span></button></div><span class="cap">hover · nền surface-10</span></div>
+            <div class="fig"><div class="td-nav"><button class="td-nav-item is-focus" data-sig-state="8f55f81d09:focus"><span class="ms">view_week</span>Collection<span class="ms end">chevron_right</span></button></div><span class="cap">focus</span></div>
+          </div>
+          <div class="spec-f"><span class="note">Mục chọn nền fill-30, chữ text-10; mục thường chữ text-20 (#ffffff8c). Chữ là _semibold20 14/22 600.</span></div>
+        </div>
+
+        <div class="spec" data-sig="d75351e8e5 37cd1536bd">
+          <div class="spec-h"><b>Logo &amp; back/forward</b><span class="kind">_logoButton · _button_6808704</span><span class="dp">24 · 32 tròn</span></div>
+          <div class="stage">
+            <div class="fig"><button class="td-logo" aria-label="Logo (giữ chỗ)">logo</button><span class="cap">logo 24</span></div>
+            <div class="fig"><button class="td-logo is-focus" style="outline:1px dotted var(--td-accent)" data-sig-state="d75351e8e5:focus" aria-label="Logo (giữ chỗ)">logo</button><span class="cap">focus</span></div>
+            <div class="fig"><div style="display:flex;gap:8px"><button class="td-round" aria-label="Quay lại" disabled><span class="ms">chevron_left</span></button><button class="td-round" aria-label="Tiến tới"><span class="ms">chevron_right</span></button></div><span class="cap">disabled · thường</span></div>
+            <div class="fig"><button class="td-round is-focus" data-sig-state="37cd1536bd:focus" aria-label="Quay lại"><span class="ms">chevron_left</span></button><span class="cap">focus</span></div>
+          </div>
+          <div class="spec-f"><span class="note">Logo và wordmark TIDAL không chép (RULE-09), thay bằng khối giữ chỗ. Nút back khi disabled có màu fill-30.</span></div>
+        </div>
+
+        <div class="spec" data-sig="caa3fbd608 487fe1d432 b5165eed30">
+          <div class="spec-h"><b>Paging tabs</b><span class="kind">_marketPagingTabList _small</span><span class="dp">h 36 · gap 16</span></div>
+          <div class="stage col">
+            <div class="td-tabs" role="tablist"><button class="td-tab is-on" role="tab" aria-selected="true">For you</button><button class="td-tab" role="tab" aria-selected="false">Staff Picks</button><button class="td-tab" role="tab" aria-selected="false">Uploads</button></div>
+            <div style="display:flex;gap:24px;flex-wrap:wrap">
+              <div class="fig"><div class="td-tabs is-focus" data-sig-state="caa3fbd608:focus"><button class="td-tab is-on">For you</button><button class="td-tab">Staff Picks</button></div><span class="cap">tablist · focus</span></div>
+              <div class="fig"><div class="td-tabs"><button class="td-tab is-on is-focus" data-sig-state="487fe1d432:focus">For you</button></div><span class="cap">tab chọn · focus</span></div>
+              <div class="fig"><div class="td-tabs"><button class="td-tab is-focus" data-sig-state="b5165eed30:focus">Staff Picks</button></div><span class="cap">tab thường · focus</span></div>
+              <div class="fig"><div class="td-tabs"><button class="td-tab is-on" data-sig-state="b5165eed30:selected">Staff Picks</button></div><span class="cap">selected (aria-selected)</span></div>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Tab chữ 14/22 500, pad 4 0 10. Tab chọn có gạch đáy 2px text-10, tablist có gạch 1px divider-20. Khi nhấn giữ, gạch và chữ tab chọn đổi sang emphasis-text (luật :active trong CSS, không ép được trên bản lưu).</span></div>
+        </div>
+
+        <div class="spec">
+          <div class="spec-h"><b>Tab bar mobile</b><span class="kind">_mobileTabBar a</span><span class="dp">68 × 40 · r20 · icon 28</span></div>
+          <div class="stage surface" style="justify-content:center">
+            <nav class="td-tabbar" style="width:374px" aria-label="Tab bar mẫu">
+              <a class="is-on" href="#navigation" aria-label="Home"><span class="ms">music_note</span></a>
+              <a href="#navigation" aria-label="Feed"><span class="ms o">notifications</span></a>
+              <a href="#navigation" aria-label="Upload"><span class="ms">arrow_upward</span></a>
+              <a href="#navigation" aria-label="Collection"><span class="ms">view_week</span></a>
+              <a href="#navigation" aria-label="Search"><span class="ms">search</span></a>
+            </nav>
+          </div>
+          <div class="spec-f"><span class="note">Chỉ hiện ở khung hẹp. Mục chọn có nền #ffffff1a, icon trắng; mục thường icon text-20. Riêng icon cuối (Search) cỡ 22.</span></div>
+        </div>
+
+        <div class="spec full" data-sig="babf27d8a2 28e2a55f1c d29cfed112">
+          <div class="spec-h"><b>Header shelf</b><span class="kind">_headerContainer · _heading20 · _viewAllButton · _scrollingButton</span><span class="dp">h 26 · nút cuộn 28 × 25</span></div>
+          <div class="stage col">
+            <div class="td-shelf-h"><h2>Tiêu đề shelf</h2><button class="td-scroll" aria-label="Trước" disabled><span class="ms">chevron_left</span></button><button class="td-scroll" aria-label="Sau"><span class="ms">chevron_right</span></button><a class="td-viewall" href="#navigation">View all</a></div>
+            <div><div class="td-shelf-h"><h2>Shelf có mô tả <span class="ms" style="font-size:16px;vertical-align:-2px">info</span></h2><a class="td-viewall" href="#navigation">View all</a></div><p class="td-shelf-sub">Một dòng mô tả shelf (_paragraph20, text-20).</p></div>
+            <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:center">
+              <div class="fig"><a class="td-viewall is-hover" data-sig-state="28e2a55f1c:hover" href="#navigation">View all</a><span class="cap">hover · text-10</span></div>
+              <div class="fig"><a class="td-viewall is-focus" data-sig-state="28e2a55f1c:focus" href="#navigation">View all</a><span class="cap">focus · 2px solid</span></div>
+              <div class="fig"><button class="td-scroll is-focus" data-sig-state="d29cfed112:focus" aria-label="Sau"><span class="ms">chevron_right</span></button><span class="cap">nút cuộn · focus</span></div>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Tiêu đề là Square Sans Display 19/26 700. "View all" có 134 bản trên trang: 10 cái ở header shelf, còn lại cùng chữ ký nằm trong thẻ và link tiêu đề.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="actions">
+      <header><h2>Hành động</h2><p>Nút có chữ đều là <code>_marketButton _small</code> của Market, gồm ba biến thể: primary trắng, secondary nền fill-40, và bản nổi (nút Download, cùng class secondary nhưng nền frosted). Nút icon là class riêng của TIDAL.</p></header>
+      <div class="grid">
+        <div class="spec full" data-sig="453173ed60 00bb15fa2e 2c841d141e ac1fdeb313">
+          <div class="spec-h"><b>Nút Market</b><span class="kind">_marketButton _primary / _secondary _small</span><span class="dp">h 40 (32 trên header) · pad 9 16 · 14/22 600</span></div>
+          <div class="stage">
+            <div class="fig"><button class="td-btn td-btn--primary is-compact">Create a free account</button><span class="cap">primary · compact 32</span></div>
+            <div class="fig"><button class="td-btn td-btn--primary is-hover" data-sig-state="453173ed60:hover">Create a free account</button><span class="cap">hover · fill-20</span></div>
+            <div class="fig"><button class="td-btn td-btn--primary is-active" data-sig-state="453173ed60:active">Create a free account</button><span class="cap">active · #ccc</span></div>
+            <div class="fig"><button class="td-btn td-btn--primary is-focus" data-sig-state="453173ed60:focus">Create a free account</button><span class="cap">focus · 2px #000</span></div>
+          </div>
+          <div class="stage" style="padding-top:0">
+            <div class="fig"><button class="td-btn td-btn--secondary">Get started</button><span class="cap">secondary · fill-40</span></div>
+            <div class="fig"><button class="td-btn td-btn--secondary is-hover" data-sig-state="00bb15fa2e:hover">Skip to content</button><span class="cap">hover · fill-30</span></div>
+            <div class="fig"><button class="td-btn td-btn--secondary is-active" data-sig-state="00bb15fa2e:active">Skip to content</button><span class="cap">active · fill-20</span></div>
+            <div class="fig"><button class="td-btn td-btn--secondary is-focus" data-sig-state="00bb15fa2e:focus">Skip to content</button><span class="cap">focus · 2px currentColor</span></div>
+          </div>
+          <div class="stage" style="padding-top:0">
+            <div class="fig"><a class="td-btn td-btn--floating is-compact" href="#actions">Download TIDAL</a><span class="cap">nổi · #282828bf</span></div>
+            <div class="fig"><a class="td-btn td-btn--floating is-compact is-hover" data-sig-state="2c841d141e:hover" href="#actions">Download TIDAL</a><span class="cap">hover</span></div>
+            <div class="fig"><a class="td-btn td-btn--floating is-compact is-active" data-sig-state="2c841d141e:active" href="#actions">Download TIDAL</a><span class="cap">active</span></div>
+            <div class="fig"><a class="td-btn td-btn--floating is-compact is-focus" data-sig-state="2c841d141e:focus" href="#actions">Download TIDAL</a><span class="cap">focus · 2px #000</span></div>
+            <div class="fig"><div class="td-skip" style="width:329px"><button class="td-btn td-btn--secondary">Skip to content</button><button class="td-btn td-btn--secondary">Keyboard shortcuts</button></div><span class="cap">khối skip-link · 329 × 64 · pad 12</span></div>
+          </div>
+          <div class="spec-f"><span class="note">Nền hover/active của bản nổi đo được dạng <code>color(srgb)</code> / <code>oklab</code> (site pha màu bằng color-mix). Kit đổi sang rgba tương đương: rgba(62,62,62,.77) / rgba(84,84,84,.78). Primary và nút nổi có vòng focus đen 2px, vì vậy khó thấy trên nền tối.</span></div>
+        </div>
+
+        <div class="spec" data-sig="c0d4a78b65 a8390d8d2c 39b015c721 be9c2e4509">
+          <div class="spec-h"><b>Nút icon</b><span class="kind">_button_c372e89 · _menuButton · _close · _actionButton</span><span class="dp">36 · 32 · 32 × 35 · 16</span></div>
+          <div class="stage">
+            <div class="fig"><button class="td-fav" role="switch" aria-checked="false" aria-label="Thêm vào bộ sưu tập"><span class="ms o">favorite</span></button><span class="cap">favorite 36</span></div>
+            <div class="fig"><button class="td-fav is-hover" data-sig-state="c0d4a78b65:hover" aria-label="Thêm vào bộ sưu tập"><span class="ms o">favorite</span></button><span class="cap">hover · ×1.1 · .8</span></div>
+            <div class="fig"><button class="td-fav is-focus" data-sig-state="c0d4a78b65:focus" aria-label="Thêm vào bộ sưu tập"><span class="ms o">favorite</span></button><span class="cap">focus</span></div>
+          </div>
+          <div class="stage" style="padding-top:0">
+            <div class="fig"><button class="td-more" aria-label="Thêm tuỳ chọn"><span class="ms">more_horiz</span></button><span class="cap">more</span></div>
+            <div class="fig"><button class="td-more is-hover" data-sig-state="a8390d8d2c:hover" aria-label="Thêm tuỳ chọn"><span class="ms">more_horiz</span></button><span class="cap">hover #f0f0f0</span></div>
+            <div class="fig"><button class="td-more is-focus" data-sig-state="a8390d8d2c:focus" aria-label="Thêm tuỳ chọn"><span class="ms">more_horiz</span></button><span class="cap">focus</span></div>
+            <div class="fig"><button class="td-close" aria-label="Đóng"><span class="ms">close</span></button><span class="cap">close</span></div>
+            <div class="fig"><button class="td-close is-hover" data-sig-state="39b015c721:hover" aria-label="Đóng"><span class="ms">close</span></button><span class="cap">hover</span></div>
+            <div class="fig"><button class="td-close is-active" data-sig-state="39b015c721:active" aria-label="Đóng"><span class="ms">close</span></button><span class="cap">active</span></div>
+            <div class="fig"><button class="td-close is-focus" data-sig-state="39b015c721:focus" aria-label="Đóng"><span class="ms">close</span></button><span class="cap">focus</span></div>
+          </div>
+          <div class="stage" style="padding-top:0">
+            <div class="fig"><button class="td-create" aria-label="Tạo…"><span class="ms">add_circle</span></button><span class="cap">create 16 · .3</span></div>
+            <div class="fig"><button class="td-create is-hover" data-sig-state="be9c2e4509:hover" aria-label="Tạo…"><span class="ms">add_circle</span></button><span class="cap">hover</span></div>
+            <div class="fig"><button class="td-create is-focus" data-sig-state="be9c2e4509:focus" aria-label="Tạo…"><span class="ms">add_circle</span></button><span class="cap">focus</span></div>
+          </div>
+          <div class="spec-f"><span class="note">Favorite là một switch (aria-checked) nền đen tròn, xuất hiện 70 lần (mỗi thẻ một cái). Màu nghỉ của more / close lấy fill-20 (.35).</span></div>
+        </div>
+
+        <div class="spec" data-sig="6694a0831c 2ae2a429c3 0b4c3c0ea0 75066b7a56">
+          <div class="spec-h"><b>Nút play &amp; info</b><span class="kind">_iconButton (geometry) · _playButton · _button_1955f3d</span><span class="dp">14 · 40 · 28 × 18</span></div>
+          <div class="stage">
+            <div class="fig"><div class="td-cover td-ph" style="width:88px"><button class="td-play-mini" aria-label="Phát"><i><span class="ms">play_arrow</span></i></button></div><span class="cap">play 14 trên ảnh bìa</span></div>
+            <div class="fig"><div class="td-cover td-ph" style="width:88px"><button class="td-play-mini is-active" data-sig-state="6694a0831c:active" aria-label="Phát"><i><span class="ms">play_arrow</span></i></button></div><span class="cap">active · scale .9</span></div>
+            <div class="fig"><div class="td-cover td-ph" style="width:56px"><button class="td-play-row" style="position:absolute;left:8px;top:8px" aria-label="Phát"><span class="ms">play_arrow</span></button></div><span class="cap">play hàng bài 40</span></div>
+            <div class="fig"><div class="td-cover td-ph" style="width:56px"><button class="td-play-row is-focus" data-sig-state="0b4c3c0ea0:focus" style="position:absolute;left:8px;top:8px" aria-label="Phát"><span class="ms">play_arrow</span></button></div><span class="cap">focus</span></div>
+            <div class="fig"><button class="td-info" aria-label="Spotlight"><span class="ms o">info</span></button><span class="cap">info</span></div>
+            <div class="fig"><button class="td-info is-focus" data-sig-state="75066b7a56:focus" aria-label="Spotlight"><span class="ms o">info</span></button><span class="cap">focus</span></div>
+          </div>
+          <div class="spec-f"><span class="note">Nút play 14 dựng bằng khối <code>tidal-ui__geometry</code>: tròn trắng, bóng 0 2.2 5.5, tam giác đen. Kit đơn giản hoá thành một vòng tròn có icon; khi nhấn giữ, lớp trong co về .9.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="content">
+      <header><h2>Thẻ &amp; hàng bài</h2><p>Trang Home ghép từ các shelf. Mỗi shelf dùng một trong bốn dạng: thẻ vuông (playlist, album), thẻ tròn (nghệ sĩ), thẻ mix (nhãn in lên ảnh) và lưới hàng bài 3 cột. Ảnh bìa là khối giữ chỗ nền <code>--td-img</code> (#242429, đúng màu nền ảnh khi chưa tải).</p></header>
+      <div class="grid">
+        <div class="spec full" data-sig="9a0c2b20be d8fd067d57 e6f8630d7a">
+          <div class="spec-h"><b>Thẻ lưới</b><span class="kind">_card · _imageContainer _aspectRatio1x1 · _round</span><span class="dp">141 × 193 · ảnh r2</span></div>
+          <div class="stage" style="align-items:flex-start">
+            <a class="td-card" href="#content"><div class="td-cover"><div class="td-ph">ảnh bìa</div><button class="td-play-mini" aria-label="Phát"><i><span class="ms">play_arrow</span></i></button><span class="td-fav" style="width:36px;height:36px" aria-hidden="true"><span class="ms o">favorite</span></span></div><span class="td-card-t">Tên playlist</span><span class="td-card-s">Người tạo</span></a>
+            <a class="td-card" href="#content"><div class="td-cover"><div class="td-ph">ảnh bìa</div></div><span class="td-titlerow" style="margin-top:8px"><span class="td-card-t">Tên album rất dài bị cắt</span><i class="td-badge td-badge--explicit" title="Explicit">E</i></span><span class="td-card-s">Nghệ sĩ A</span></a>
+            <a class="td-card is-round" href="#content"><div class="td-cover"><div class="td-ph">ảnh nghệ sĩ</div></div><span class="td-card-t">Nghệ sĩ B</span></a>
+            <a class="td-card td-mix" href="#content"><div class="td-cover"><div class="td-ph">ảnh mix</div><span class="td-mix-mark"></span><div class="td-mix-l"><small>Track Radio</small><b>Tên bài gốc</b></div></div><span class="td-card-t">Tên bài gốc</span><span class="td-card-s">Nghệ sĩ C</span></a>
+            <a class="td-card td-mix" href="#content"><div class="td-cover"><div class="td-ph">ảnh mix</div><span class="td-mix-mark"></span><div class="td-mix-l"><small>Artist Radio</small><b>Nghệ sĩ D</b></div></div><span class="td-card-t">Nghệ sĩ D</span><span class="td-card-s">Artist Radio</span></a>
+          </div>
+          <div class="spec-f"><span class="note">Nhãn mix (loại + tiêu đề) và dấu logo ở góc là ảnh do server render, màu chữ được mã hoá trong URL ảnh. Kit dựng lại bằng chữ màu <code>--td-mix-tint</code>; đổi "Nhãn mix" ở thanh trên để xem 6 màu đo được. Dấu logo thay bằng khung giữ chỗ.</span></div>
+        </div>
+
+        <div class="spec full" data-sig="10ab47c528 e0ae3255de">
+          <div class="spec-h"><b>Lưới hàng bài</b><span class="kind">_grid · _item · _titleRow · _artistText · _badge</span><span class="dp">340 × 56 · ảnh 56 · gap 12</span></div>
+          <div class="stage col">
+            <div class="td-tracks">
+              <div class="td-track"><div class="td-cover"><div class="td-ph">ảnh</div><button class="td-play-row" aria-label="Phát"><span class="ms">play_arrow</span></button></div><div class="td-track-txt"><span class="td-titlerow"><span class="td-card-t">Tên bài một</span></span><a class="td-artist" href="#content">Nghệ sĩ A</a></div><button class="td-more" aria-label="Thêm tuỳ chọn"><span class="ms">more_horiz</span></button></div>
+              <div class="td-track"><div class="td-cover"><div class="td-ph">ảnh</div><button class="td-play-row" aria-label="Phát"><span class="ms">play_arrow</span></button></div><div class="td-track-txt"><span class="td-titlerow"><span class="td-card-t">Tên bài hai</span><i class="td-badge td-badge--explicit" title="Explicit">E</i></span><a class="td-artist" href="#content">Nghệ sĩ B</a>, <a class="td-artist" href="#content">Nghệ sĩ C</a></div><button class="td-more" aria-label="Thêm tuỳ chọn"><span class="ms">more_horiz</span></button></div>
+              <div class="td-track"><div class="td-cover"><div class="td-ph">ảnh</div><button class="td-play-row" aria-label="Phát"><span class="ms">play_arrow</span></button></div><div class="td-track-txt"><span class="td-titlerow"><span class="td-card-t">Bài tải lên</span><i class="td-badge td-badge--spot" title="Spotlighted"><span class="ms">arrow_upward</span></i></span><a class="td-artist is-focus" data-sig-state="10ab47c528:focus" href="#content">Nghệ sĩ D · focus</a></div><button class="td-more" aria-label="Thêm tuỳ chọn"><span class="ms">more_horiz</span></button></div>
+            </div>
+            <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:center">
+              <div class="fig"><i class="td-badge td-badge--explicit" title="Explicit">E</i><span class="cap">explicit</span></div>
+              <div class="fig"><i class="td-badge td-badge--spot" title="Spotlighted"><span class="ms">arrow_upward</span></i><span class="cap">spotlighted</span></div>
+              <div class="fig"><i class="td-badge td-badge--up" title="Uploaded"><span class="ms">arrow_upward</span></i><span class="cap">uploaded</span></div>
+              <div class="fig"><i class="td-badge td-badge--pay" title="Paygated"><span class="ms">sell</span></i><span class="cap">paygated</span></div>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Badge 16 × 16. Explicit có 13 bản, r4. Spotlighted, uploaded và paygated là SVG của site; kit vẽ lại theo ảnh chụp (vàng Wave, xám text-20, xám fill-20), là hình gần đúng. Nút play hàng bài chỉ hiện khi hover.</span></div>
+        </div>
+
+        <div class="spec" data-sig="b49a2915dc 692c79cde6 dfdef13873">
+          <div class="spec-h"><b>Thẻ Transfer</b><span class="kind">_container_e8e75ca · _medium10 · _paragraph10</span><span class="dp">212 × 184 · r12 · pad 16</span></div>
+          <div class="stage surface">
+            <div class="td-promo"><div><button class="td-close" aria-label="Đóng"><span class="ms">close</span></button><p class="td-promo-t">Tiêu đề thẻ gợi ý hai dòng</p><p class="td-promo-p">Một đoạn mô tả ngắn 12/18 màu text-20, xuống dòng trong khung 178.</p></div><button class="td-btn td-btn--secondary">Get started</button></div>
+          </div>
+          <div class="spec-f"><span class="note">Nằm dưới mục Playlists của sidebar. Viền 1px fill-40, không có nền.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="menus">
+      <header><h2>Menu, tìm kiếm &amp; panel</h2></header>
+      <div class="grid">
+        <div class="spec" data-sig="d38d4acfd6 1a800b6e2e a19e5f1da6 bb5ef578c6 da28303cf0 e7628a290a">
+          <div class="spec-h"><b>Context menu</b><span class="kind">_contextMenu · _actionItem · _subMenu</span><span class="dp">240 · mục 42 · r12 / r9</span></div>
+          <div class="stage" style="align-items:flex-start">
+            <div class="td-menu" role="menu">
+              <div class="td-menu-h"><div class="td-ph">ảnh</div><div><b>Tên playlist</b><small>100 items (5:20:15)</small></div></div>
+              <ul>
+                <li><button class="td-menu-item">Play now</button></li>
+                <li><button class="td-menu-item is-focus" data-sig-state="bb5ef578c6:focus">Shuffle · focus</button></li>
+                <li><button class="td-menu-item">Play next</button></li>
+                <li><button class="td-menu-item">Follow</button></li>
+                <li class="is-focus" data-sig-state="da28303cf0:focus" aria-haspopup="true"><button class="td-menu-item" tabindex="-1">Share · focus<span class="ms end">chevron_right</span></button></li>
+                <li><button class="td-menu-item">Open in Desktop app<span class="td-appicon td-ph" style="font-size:6px">icon</span></button></li>
+              </ul>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:16px">
+              <div class="td-menu is-sub"><ul><li><button class="td-menu-item"><span class="ms">link</span>Copy link</button></li><li><button class="td-menu-item"><span class="ms">code</span>Copy embed code</button></li></ul></div>
+              <div class="fig"><div class="td-menu is-sub is-focus" data-sig-state="e7628a290a:focus"><ul><li><button class="td-menu-item"><span class="ms">link</span>Copy link</button></li></ul></div><span class="cap">submenu · focus</span></div>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Menu nền surface-30 (#2d2d2d), bóng 0 4 20 .3. Ảnh đầu menu 38 r2 và icon app 24 là ảnh của site, kit thay bằng khối giữ chỗ. Focus mọi mục là 1px dotted cyan.</span></div>
+        </div>
+
+        <div class="spec" data-sig="22728742c5 a24d6879bf">
+          <div class="spec-h"><b>Tìm kiếm &amp; panel nổi</b><span class="kind">_searchField · #playQueueSidebar</span><span class="dp">280 × 36 · 334 r16</span></div>
+          <div class="stage col">
+            <label class="td-search"><span class="ms">search</span><input type="search" placeholder="Search" aria-label="Tìm kiếm"></label>
+            <div class="fig" style="align-items:flex-start"><label class="td-search is-focus"><span class="ms">search</span><input class="is-focus" data-sig-state="22728742c5:focus" type="search" value="Đang gõ" aria-label="Tìm kiếm (focus)"></label><span class="cap">focus · chữ text-20 → text-10</span></div>
+            <div class="td-panel"><h4>Play queue</h4><p class="td-card-s">Panel nổi bên phải, trống khi chưa phát.</p></div>
+          </div>
+          <div class="spec-f"><span class="note">Ô tìm có nền frosted <code>#282828bf</code>, r36. Panel hàng chờ viền #ffffff1a, r16 (<code>--floating-panel-border-radius</code>).</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="footer">
+      <header><h2>Footer &amp; banner</h2></header>
+      <div class="grid">
+        <div class="spec full" data-sig="84db3b38e4 ee18a3c19b 0fe703267b 2b2242a32f b5f68c422b">
+          <div class="spec-h"><b>Footer</b><span class="kind">_footer · _linkGroup · _list · _socialGroup · _select</span><span class="dp">1200 × 477 · nền #18181b</span></div>
+          <div class="stage" style="padding:0;margin:12px 12px 0;border-radius:8px;overflow:hidden">
+            <footer class="td-footer">
+              <div class="td-foot-cols">
+                <div><span class="td-foot-h">Nhóm link 1</span><ul class="td-foot-list"><li><a href="#footer">Link một</a></li><li><a href="#footer">Link hai</a></li><li><a href="#footer">Link ba</a></li></ul></div>
+                <div><span class="td-foot-h">Nhóm link 2</span><ul class="td-foot-list"><li><a href="#footer">Link một</a></li><li><a href="#footer">Link hai</a></li></ul></div>
+                <div><span class="td-foot-h">Nhóm link 3</span><ul class="td-foot-list"><li><a href="#footer">Link một</a></li><li><a href="#footer">Link hai</a></li></ul></div>
+                <div><span class="td-foot-h">Nhóm link 4</span><ul class="td-foot-list"><li><a href="#footer">Link một</a></li></ul></div>
+              </div>
+              <div class="td-foot-social"><p>Một câu giới thiệu dịch vụ (footnote-medium 12/16).</p><ul aria-label="Mạng xã hội (giữ chỗ)"><li></li><li></li><li></li><li></li><li></li></ul></div>
+              <div class="td-foot-legal"><span class="td-logo" style="width:28px;height:18px">logo</span><span>© năm · tên công ty</span><a href="#footer">Privacy Notice</a><a href="#footer">Terms</a><a href="#footer">Contact</a><span class="grow" style="flex:1"></span>
+                <select class="td-select" aria-label="Ngôn ngữ"><option>English — English (US)</option><option>Tiếng Việt</option></select>
+                <select class="td-select is-focus" data-sig-state="b5f68c422b:focus" aria-label="Ngôn ngữ (focus)"><option>Select · focus</option></select></div>
+              <p class="td-version">Version yyyy.mm.dd</p>
+            </footer>
+          </div>
+          <div class="spec-f"><span class="note">Tiêu đề nhóm dùng wave description-demi màu text-tertiary (#787887). Icon mạng xã hội và logo là ảnh/thương hiệu của bên khác nên chỉ để khung giữ chỗ.</span></div>
+        </div>
+
+        <div class="spec" data-sig="8c050459a5 a37e780765 422c168d54 a0d4a80414 f3d4b9d281">
+          <div class="spec-h"><b>Cookie banner</b><span class="kind">#onetrust-banner-sdk (bên thứ ba)</span><span class="dp">448 × 192 · r16</span></div>
+          <div class="stage surface">
+            <div class="td-cookie" role="region" aria-label="Cookie banner mẫu">
+              <p>Đoạn thông báo cookie mẫu, 12/18 màu contrast-darker. Đọc thêm <a href="#footer">Cookie Policy</a> và <a class="is-focus" data-sig-state="422c168d54:focus" href="#footer">Privacy Notice (focus)</a>.</p>
+              <div class="row"><button class="td-ot">Accept</button><button class="td-ot is-focus" data-sig-state="a0d4a80414:focus">Reject · focus</button><button class="td-ot is-ghost">Settings</button><button class="td-ot is-ghost is-focus" data-sig-state="f3d4b9d281:focus">Settings · focus</button></div>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Banner do OneTrust chèn, không thuộc hệ Wave/Market. Nút sáng: nền trắng, chữ #26282d; nút Settings: nền #3c3c3c. Nội dung thông báo là chữ mẫu.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="states">
+      <header><h2>Trạng thái</h2><p>Ép <code>:hover</code> / <code>:focus-visible</code> / <code>:active</code> qua CDP trên 48 pattern được 9 hover, 27 focus, 5 active và 1 cặp selected (tab). Mọi biến thể đã bày trong thẻ tương ứng ở trên. Site style focus riêng, không dùng viền mặc định của trình duyệt. Có ba kiểu:</p></header>
+      <div class="focus-demo">
+        <div class="fig"><button class="td-nav-item is-focus" style="width:180px"><span class="ms">music_note</span>1px dotted #33ffee</button><span class="cap">TIDAL · mục nav, tab, menu, icon</span></div>
+        <div class="fig"><button class="td-btn td-btn--secondary is-focus">2px solid currentColor</button><span class="cap">Market · nút, View all, favorite</span></div>
+        <div class="fig"><button class="td-btn td-btn--primary is-focus">2px solid #000</button><span class="cap">Market primary / nút nổi</span></div>
+      </div>
+    </section>
+
+    <!-- ================= MÀN MẪU ================= -->
+    <section class="block" id="screens">
+      <header><h2>Màn hình mẫu</h2><p>Ghép từ đúng các class ở trên theo bố cục của site. Mobile 390 × 844: header 64 (logo và nút đăng ký), tiêu đề trang, paging tabs, shelf lưới 2 cột, tab bar đáy. Desktop 1440 × 900: sidebar 240, header 56 có ô tìm ở giữa, nội dung lề 58, shelf 7 thẻ và lưới hàng bài 3 cột. Mọi ảnh là khối giữ chỗ, mọi tên là chữ mẫu.</p></header>
+      <div class="screens">
+        <div class="screen-fig">
+          <div class="phone">
+            <div class="m-head"><span class="td-logo">logo</span><button class="td-btn td-btn--primary is-compact">Log in / Create a free account</button></div>
+            <div class="m-body">
+              <h1 class="m-title">Home</h1>
+              <div class="td-tabs" role="tablist"><button class="td-tab is-on" role="tab" aria-selected="true">For you</button><button class="td-tab" role="tab" aria-selected="false">Staff Picks</button><button class="td-tab" role="tab" aria-selected="false">Uploads</button></div>
+              <div class="td-shelf-h" style="margin-top:32px"><h2>Tiêu đề shelf</h2><button class="td-scroll" aria-label="Trước"><span class="ms">chevron_left</span></button><button class="td-scroll" aria-label="Sau"><span class="ms">chevron_right</span></button><a class="td-viewall" href="#screens">View all</a></div>
+              <div class="m-grid">
+                <a class="td-card" href="#screens"><div class="td-cover"><div class="td-ph">ảnh bìa</div></div><span class="td-card-t">Playlist một</span><span class="td-card-s">Người tạo</span></a>
+                <a class="td-card" href="#screens"><div class="td-cover"><div class="td-ph">ảnh bìa</div></div><span class="td-card-t">Playlist hai</span><span class="td-card-s">Người tạo</span></a>
+                <a class="td-card" href="#screens"><div class="td-cover"><div class="td-ph">ảnh bìa</div></div><span class="td-card-t">Playlist ba</span><span class="td-card-s">Người tạo</span></a>
+                <a class="td-card" href="#screens"><div class="td-cover"><div class="td-ph">ảnh bìa</div></div><span class="td-card-t">Playlist bốn</span><span class="td-card-s">Người tạo</span></a>
+              </div>
+            </div>
+            <div class="m-tabbar"><nav class="td-tabbar" aria-label="Tab bar mẫu">
+              <a class="is-on" href="#screens" aria-label="Home"><span class="ms">music_note</span></a><a href="#screens" aria-label="Feed"><span class="ms o">notifications</span></a><a href="#screens" aria-label="Upload"><span class="ms">arrow_upward</span></a><a href="#screens" aria-label="Collection"><span class="ms">view_week</span></a><a href="#screens" aria-label="Search"><span class="ms">search</span></a></nav></div>
+          </div>
+          <p class="screen-cap" style="max-width:273px">Mobile 390 × 844 · td-btn--primary compact, td-tabs, td-shelf-h, td-card (165), td-tabbar.</p>
+        </div>
+        <div class="screen-fig">
+          <div class="desk">
+            <aside class="d-side">
+              <div style="padding:2px 8px 16px"><span class="td-logo">logo</span></div>
+              <div class="td-nav">
+                <a class="td-nav-item is-on" href="#screens"><span class="ms">music_note</span>Music</a>
+                <a class="td-nav-item" href="#screens"><span class="ms o">explore</span>Explore</a>
+                <a class="td-nav-item" href="#screens"><span class="ms o">notifications</span>Feed</a>
+                <a class="td-nav-item" href="#screens"><span class="ms">arrow_upward</span>Upload</a>
+                <button class="td-nav-item"><span class="ms">view_week</span>Collection<span class="ms end">chevron_right</span></button>
+              </div>
+              <div class="td-nav-sec" style="width:208px">Playlists<span class="grow"></span><button class="td-create" aria-label="Tạo…"><span class="ms">add_circle</span></button><button class="td-create" aria-label="Sắp xếp"><span class="ms">swap_vert</span></button></div>
+              <div class="td-promo" style="width:208px"><div><button class="td-close" aria-label="Đóng"><span class="ms">close</span></button><p class="td-promo-t">Tiêu đề thẻ gợi ý</p><p class="td-promo-p">Mô tả ngắn cho thẻ gợi ý ở sidebar.</p></div><button class="td-btn td-btn--secondary">Get started</button></div>
+            </aside>
+            <div class="d-main">
+              <div class="td-topbar"><button class="td-round" aria-label="Quay lại" disabled><span class="ms">chevron_left</span></button><button class="td-round" aria-label="Tiến tới" disabled><span class="ms">chevron_right</span></button><span class="grow"></span><label class="td-search"><span class="ms">search</span><input type="search" placeholder="Search" aria-label="Tìm kiếm"></label><span class="grow"></span><a class="td-btn td-btn--floating is-compact" href="#screens">Download</a><button class="td-btn td-btn--floating is-compact">Log in</button><button class="td-btn td-btn--primary is-compact">Create a free account</button></div>
+              <div class="d-content">
+                <div class="td-tabs" role="tablist"><button class="td-tab is-on" role="tab" aria-selected="true">For you</button><button class="td-tab" role="tab" aria-selected="false">Staff Picks</button><button class="td-tab" role="tab" aria-selected="false">Uploads</button></div>
+                <div class="d-shelf">
+                  <div class="td-shelf-h"><h2>Tiêu đề shelf</h2><button class="td-scroll" aria-label="Trước" disabled><span class="ms">chevron_left</span></button><button class="td-scroll" aria-label="Sau"><span class="ms">chevron_right</span></button><a class="td-viewall" href="#screens">View all</a></div>
+                  <div class="d-row" id="desk-row"></div>
+                </div>
+                <div class="d-shelf">
+                  <div class="td-shelf-h"><h2>Bài mới</h2><a class="td-viewall" href="#screens">View all</a></div>
+                  <div class="td-tracks" id="desk-tracks"></div>
+                </div>
+                <div class="d-shelf">
+                  <div class="td-shelf-h"><h2>Nghệ sĩ</h2><a class="td-viewall" href="#screens">View all</a></div>
+                  <div class="d-row" id="desk-artists"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="screen-cap" style="max-width:724px">Desktop 1440 × 900 · td-nav-item, td-nav-sec, td-promo, td-topbar (td-round, td-search, td-btn), td-tabs, td-shelf-h, td-card, td-track, td-card.is-round.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"><span class="ms">check_circle</span><span id="toast-t"></span></div>
+
+<script>
+/* Market: [data-market-theme*=dark-mode|light-mode] trong CSS đã lưu (Playwright, getComputedStyle trên phần tử mang data-market-theme="tidal <mode>-mode").
+   Kit: vai trò site đặt thẳng trong component; bản tối đo được, bản sáng do kit dựng (KIT_NOTES). Wave: 128 biến --wave-color-* trên :root, chỉ có bản tối. */
+const MARKET_ROLES=["text-10","text-20","text-30","fill-10","fill-20","fill-30","fill-40","fill-50","surface-5","surface-10","surface-20","surface-30","divider-10","divider-20","emphasis-fill","emphasis-text","critical-fill","critical-text","success-fill","success-text","warning-fill","warning-text"];
+const KIT_ROLES=["bg","accent","on-fill-10","primary-pressed","floating","floating-hover","floating-pressed","img","footer","tabbar-on","nav-surface","card","checker","fav-hover","more-hover","create","cookie-bg","ot-ink","ot-ghost","white","black"];
+const KIT_NOTES={"bg":"nền trang: tối = --wave-color-solid-base-fill (body), sáng = surface-5","accent":"dựng: tối = --wave-color-solid-accent-fill, sáng = accent-dark","on-fill-10":"dựng (tối đo: chữ nút primary)","primary-pressed":"dựng (tối đo: active primary)","floating":"dựng (tối = --frosted-glass-floating-surface)","floating-hover":"dựng (tối đo)","floating-pressed":"dựng (tối đo)","img":"dựng (tối = nền ảnh chờ, base-brighter)","footer":"dựng (tối = nền footer, base-bright)","tabbar-on":"dựng (tối = nền mục chọn tab bar)","nav-surface":"dựng (tối = --frosted-glass-nav-surface)","card":"vỏ kit, không phải token site","checker":"vỏ kit (ô ca-rô)","fav-hover":"dựng (tối đo: hover favorite)","more-hover":"dựng (tối đo: hover more)","create":"dựng (tối đo: nút tạo)","cookie-bg":"dựng (tối đo: OneTrust)"};
+const ROLES=["text-10","text-20","text-30","fill-10","fill-20","fill-30","fill-40","fill-50","surface-5","surface-10","surface-20","surface-30","divider-10","divider-20","emphasis-fill","emphasis-text","critical-fill","critical-text","success-fill","success-text","warning-fill","warning-text","bg","accent","on-fill-10","primary-pressed","floating","floating-hover","floating-pressed","img","footer","tabbar-on","nav-surface","card","checker","fav-hover","more-hover","create","cookie-bg","ot-ink","ot-ghost","white","black"];
+const PALETTES={"tidal":{"label":"TIDAL","dark":["#fffffff2","#ffffff8c","#ffffff4d","#fffffff2","#ffffff59","#ffffff26","#ffffff14","#ffffff0d","#080808","#141414","#1c1c1c","#2d2d2d","#ffffff4d","#ffffff14","#006aff","#4a95ff","#cc0023","#ff5a76","#00b33b","#16d956","#ff9f40","#ff9f40","#000","#33ffee","#101010","#cccccc","#282828bf","rgba(62,62,62,.77)","rgba(84,84,84,.78)","#242429","#18181b","#ffffff1a","#0000008c","#0e0e10","#ffffff14","rgba(255,255,255,.8)","#f0f0f0","rgba(255,255,255,.3)","#1a1a1a","#26282d","#3c3c3c","#fff","#000"],"light":["#000000e6","#0000008c","#0000004d","#000000e6","#0000006b","#00000026","#0000000d","#00000008","#fff","#fff","#fff","#fff","#0000004d","#0000000d","#006aff","#005ad9","#cc0023","#bf0020","#00b23b","#007d2a","#ff9f40","#945c25","#fff","#3d8f88","#fff","#333333","#0000000d","#00000026","#0000006b","#e8e8e8","#f7f7f7","#0000000d","#ffffffb3","#f7f7f7","#0000000d","rgba(0,0,0,.7)","#1a1a1a","rgba(0,0,0,.3)","#fff","#26282d","#3c3c3c","#fff","#000"]}};
+const WAVE={"color-material-dark":"#25252580","color-material-light":"#ededed33","color-opacity-accent-dark-ultra-thick":"#3d8f88cc","color-opacity-accent-darkest-ultra-thick":"#141f1e","color-opacity-accent-fill-regular":"#21feec66","color-opacity-accent-fill-thin":"#21feec33","color-opacity-accent-fill-ultra-thick":"#21feeccc","color-opacity-accent-fill-ultra-thin":"#21feec1a","color-opacity-base-bright-thick":"#18181b99","color-opacity-base-bright-thin":"#18181b33","color-opacity-base-bright-transparent":"#18181b","color-opacity-base-bright-ultra-thick":"#18181bcc","color-opacity-base-brighter-ultra-thick":"#242429cc","color-opacity-base-brightest-regular":"#30303666","color-opacity-base-brightest-thin":"#30303633","color-opacity-base-brightest-ultra-thin":"#3030361a","color-opacity-base-fill-regular":"#0006","color-opacity-base-fill-thick":"#0009","color-opacity-base-fill-thin":"#0003","color-opacity-base-fill-transparent":"#000","color-opacity-base-fill-ultra-thick":"#000c","color-opacity-base-fill-ultra-thin":"#0000001a","color-opacity-contrast-fill-regular":"#fff6","color-opacity-contrast-fill-thick":"#fff9","color-opacity-contrast-fill-thin":"#fff3","color-opacity-contrast-fill-transparent":"#fff","color-opacity-contrast-fill-ultra-thick":"#fffc","color-opacity-contrast-fill-ultra-thin":"#ffffff1a","color-opacity-rainbow-blue-thin":"#33a7ff33","color-opacity-rainbow-yellow-fill-regular":"#ffd43266","color-opacity-rainbow-yellow-fill-thin":"#ffd43233","color-opacity-rainbow-yellow-fill-ultra-thick":"#ffd432cc","color-opacity-rainbow-yellow-fill-ultra-thin":"#ffd4321a","color-opacity-special-fill-regular":"#ffbe7d66","color-opacity-special-fill-thin":"#ffbe7d33","color-opacity-special-fill-ultra-thick":"#ffbe7dcc","color-opacity-special-fill-ultra-thin":"#ffbe7d1a","color-services-facebook":"#1877f2","color-services-instagram-red":"#e1306c","color-services-mtn":"#f8c000","color-services-musix-orange":"#f63","color-services-musix-pink":"#ff0e83","color-services-play":"#47237b","color-services-plus":"#088655","color-services-snapchat":"#fffc00","color-services-sprint":"#ffdd05","color-services-t-mobile":"#e30074","color-services-tik-tok-blue":"#69c9d0","color-services-tik-tok-red":"#ee1d52","color-services-twitter":"#1da1f2","color-services-viacom-1":"#00f","color-services-viacom-2":"#7666aa","color-services-viacom-3":"#d700c2","color-services-viacom-4":"#ff4851","color-services-viacom-5":"#ffd800","color-services-vivo":"#670099","color-services-vodafone":"#e61107","color-services-waze":"#1da1f2","color-solid-accent-bright":"#66fff3","color-solid-accent-brighter":"#99fff7","color-solid-accent-dark":"#3d8f88","color-solid-accent-darker":"#244240","color-solid-accent-darkest":"#141f1e","color-solid-accent-fill":"#3fe","color-solid-base-bright":"#18181b","color-solid-base-brighter":"#242429","color-solid-base-brightest":"#303036","color-solid-base-fill":"#000","color-solid-contrast-dark":"#e4e4e7","color-solid-contrast-darker":"#afafb6","color-solid-contrast-darkest":"#787887","color-solid-contrast-fill":"#fff","color-solid-rainbow-blue-fill":"#33a7ff","color-solid-rainbow-green-brighter":"#99ffd4","color-solid-rainbow-green-dark":"#33996e","color-solid-rainbow-green-darker":"#244235","color-solid-rainbow-green-darkest":"#141f1a","color-solid-rainbow-green-fill":"#33ffa9","color-solid-rainbow-orange-fill":"#ffc45c","color-solid-rainbow-purple-fill":"#8f00ff","color-solid-rainbow-red-bright":"#ff666c","color-solid-rainbow-red-brighter":"#ff999d","color-solid-rainbow-red-dark":"#993337","color-solid-rainbow-red-darker":"#422425","color-solid-rainbow-red-darkest":"#1f1415","color-solid-rainbow-red-fill":"#ff4242","color-solid-rainbow-yellow-bright":"#ffdf66","color-solid-rainbow-yellow-brighter":"#fffae5","color-solid-rainbow-yellow-dark":"#998433","color-solid-rainbow-yellow-darker":"#423c24","color-solid-rainbow-yellow-darkest":"#1f1c14","color-solid-rainbow-yellow-fill":"#ffd432","color-solid-special-bright":"#ffd9b3","color-solid-special-brighter":"#fff2e5","color-solid-special-dark":"#963","color-solid-special-darker":"#423324","color-solid-special-darkest":"#1f1a14","color-solid-special-fill":"#ffbf80","color-solid-warning-bright":"#ff668f","color-solid-warning-brighter":"#ff99b4","color-solid-warning-dark":"#99334e","color-solid-warning-darker":"#42242c","color-solid-warning-darkest":"#1f1417","color-solid-warning-fill":"#ff3269","color-text-disabled":"#303036","color-text-link":"#3fe","color-text-main":"#fff","color-text-placeholder":"#303036","color-text-secondary":"#afafb6","color-text-tertiary":"#787887","color-text-danger":"#ff4242"};
+/* .wave-text-* : [class, size, line-height, weight, letter-spacing] đo bằng getComputedStyle */
+const WAVE_TYPE=[["wave-text-xxx-large-title-bold",63,76,700,""],["wave-text-xx-large-title-bold",58,64,700,""],["wave-text-x-large-title-bold",40.5,48,700,""],["wave-text-large-title-bold",36,38,700,""],["wave-text-title-bold",32,34,700,"-0.32px"],["wave-text-headline-bold",24,28,700,""],["wave-text-subheadline-bold",20,24,700,""],["wave-text-subheadline-bold-small",18,24,700,""],["wave-text-body-bold",16,24,700,""],["wave-text-body-demi",16,24,600,""],["wave-text-body-medium",16,24,500,""],["wave-text-description-bold",14,20,700,""],["wave-text-description-demi",14,20,600,""],["wave-text-description-medium",14,20,500,""],["wave-text-caption-demi",12,16,600,""],["wave-text-footnote-medium",12,16,500,""],["wave-text-footnote-thin",12,18,500,"0.18px"],["wave-text-capital-demi",10,16,600,"1.2px"],["wave-text-badge-bold",8,12,700,"0.96px"]];
+const MARKET_TYPE=[["_heading20 · tiêu đề shelf",19,26,700,";font-family:var(--td-font-display)"],["_semibold20 · mục nav, View all",14,22,600,""],["_medium20 · tiêu đề thẻ / bài",14,22,500,""],["_paragraph20 · phụ đề, nghệ sĩ",14,22,400,";color:var(--td-text-20)"],["menu header · tiêu đề",14,20,600,""],["menu header · meta",12,16,600,";color:var(--td-text-20)"],["_medium10 · tiêu đề thẻ Transfer",12,18,500,""],["_paragraph10 · mô tả thẻ Transfer",12,18,400,";color:var(--td-text-20)"],["OneTrust · nút",12,16,600,";letter-spacing:.12px"]];
+/* màu nhãn mix: giải mã từ URL ảnh mix (base64 chứa "#RRGGBB") */
+const MIXTINTS=[{"c":"#FFFFFF","label":"Nhãn trắng (đa số mix) #FFFFFF"},{"c":"#F4A89C","label":"Hồng đào #F4A89C"},{"c":"#F39F61","label":"Cam #F39F61"},{"c":"#E8D6AB","label":"Be #E8D6AB"},{"c":"#B3474E","label":"Đỏ rượu #B3474E"},{"c":"#B34A47","label":"Đỏ gạch #B34A47"}];
+const CONST_LINES=["--td-font: \"Inter\", \"Square Sans Text\", Helvetica, Arial, sans-serif;","--td-font-display: \"Inter\", \"Square Sans Display\", Helvetica, Arial, sans-serif;","--td-r-none: 0; --td-r-xs: 4px; --td-r-sm: 8px; --td-r-md: 12px; --td-r-full: 1000px;","--td-r-cover: 2px; --td-r-menuitem: 9px; --td-r-panel: 16px; --td-r-select: 7px; --td-r-tabbar: 20px; --td-r-search: 36px;","--td-shadow-menu: 0 4px 20px 0 rgba(0,0,0,.3);","--td-shadow-panel: 0 10px 12px 0 rgba(0,0,0,.15), 0 0 2px 0 rgba(255,255,255,.08);","--td-shadow-cookie: 0 16px 32px 0 rgba(0,0,0,.2);","--td-shadow-play: 0 2.2px 5.5px 0 rgba(0,0,0,.1);","--td-blur-nav: blur(20px) saturate(180%);","--td-ease-panel: cubic-bezier(.32,.72,0,1); --td-dur-panel: .4s;","--td-select-chev: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5l3 3 3-3' fill='none' stroke='%23afafb6' stroke-width='1.5'/%3E%3C/svg%3E\");"];
+(function () {
+  const root = document.documentElement;
+  const state = { mode: "dark", tint: 0 };
+  try { Object.assign(state, JSON.parse(localStorage.getItem("td-kit") || "{}")); } catch (e) {}
+  if (!["dark", "light"].includes(state.mode)) state.mode = "dark";
+
+  const toast = (t) => {
+    const el = document.getElementById("toast");
+    document.getElementById("toast-t").textContent = t;
+    el.classList.add("show");
+    clearTimeout(toast.t);
+    toast.t = setTimeout(() => el.classList.remove("show"), 1600);
+  };
+  const copy = async (text, msg) => {
+    try { await navigator.clipboard.writeText(text); toast(msg); }
+    catch (e) { toast("Trình duyệt chặn clipboard, hãy copy tay"); }
+  };
+  const vals = () => PALETTES.tidal[state.mode];
+
+  function apply() {
+    const v = vals();
+    ROLES.forEach((r, i) => root.style.setProperty("--td-" + r, v[i]));
+    root.style.setProperty("--td-mix-tint", MIXTINTS[state.tint] ? MIXTINTS[state.tint].c : MIXTINTS[0].c);
+    root.dataset.mode = state.mode;
+    document.querySelectorAll("#mode button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === state.mode));
+    document.querySelectorAll("#swatches .sw").forEach((b) => b.setAttribute("aria-pressed", +b.dataset.v === state.tint));
+    renderRoles();
+    try { localStorage.setItem("td-kit", JSON.stringify(state)); } catch (e) {}
+  }
+
+  const sw = document.getElementById("swatches");
+  MIXTINTS.forEach((t, i) => {
+    const b = document.createElement("button");
+    b.className = "sw"; b.dataset.v = i; b.title = t.label; b.setAttribute("aria-label", t.label);
+    b.style.setProperty("--c", t.c);
+    b.onclick = () => { state.tint = i; apply(); };
+    sw.appendChild(b);
+  });
+  document.querySelectorAll("#mode button").forEach((b) => (b.onclick = () => { state.mode = b.dataset.v; apply(); }));
+
+  /* chữ tương phản trên ô màu (có tính alpha: nền trộn với nền trang) */
+  const parse = (v) => {
+    if (v[0] === "#") { let h = v.slice(1); if (h.length <= 4) h = h.replace(/./g, "$&$&"); const n = [0, 2, 4, 6].map((i) => parseInt(h.slice(i, i + 2) || "ff", 16)); return [n[0], n[1], n[2], n[3] / 255]; }
+    const m = (v.match(/[\d.]+/g) || []).map(Number); return [m[0], m[1], m[2], m[3] === undefined ? 1 : m[3]];
+  };
+  const onColor = (v) => {
+    const [r, g, b, a] = parse(v);
+    const base = state.mode === "dark" ? 0 : 255;
+    const mix = (c) => c * a + base * (1 - a);
+    const lum = (0.299 * mix(r) + 0.587 * mix(g) + 0.114 * mix(b)) / 255;
+    return lum > 0.55 ? "#000" : "#fff";
+  };
+  const cell = (box, name, v, note) => {
+    const b = document.createElement("button");
+    b.className = "role"; b.style.color = onColor(v);
+    b.innerHTML = '<i style="background:' + v + '"></i><b>' + name + "</b><code>" + v + (note ? " · " + note : "") + "</code>";
+    b.onclick = () => copy(v, "Đã copy " + name + " " + v);
+    box.appendChild(b);
+  };
+  function renderRoles() {
+    const box = document.getElementById("roles-groups");
+    box.innerHTML = "";
+    const v = vals();
+    const group = (title, items) => {
+      const h = document.createElement("h3"); h.className = "sub"; h.textContent = title; box.appendChild(h);
+      const g = document.createElement("div"); g.className = "roles"; box.appendChild(g);
+      items.forEach((x) => cell(g, x[0], x[1], x[2]));
+    };
+    const idx = (r) => ROLES.indexOf(r);
+    group("Market · chữ & fill (--market-core-*-color)", MARKET_ROLES.filter((r) => /^(text|fill)/.test(r)).map((r) => ["--td-" + r, v[idx(r)]]));
+    group("Market · bề mặt, đường kẻ & ngữ nghĩa", MARKET_ROLES.filter((r) => !/^(text|fill)/.test(r)).map((r) => ["--td-" + r, v[idx(r)]]));
+    group("Kit · vai trò đặt thẳng trong component", KIT_ROLES.map((r) => ["--td-" + r, v[idx(r)], state.mode === "light" && KIT_NOTES[r] ? KIT_NOTES[r] : ""]));
+    const wg = {};
+    Object.entries(WAVE).forEach(([k, val]) => { const g = k.replace(/^color-/, "").split("-").slice(0, 2).join("-"); (wg[g] = wg[g] || []).push(["--td-wave-" + k, val]); });
+    const WNAMES = { "solid-accent": "Wave · accent (cyan)", "solid-base": "Wave · base (nền)", "solid-contrast": "Wave · contrast (chữ/xám)", "text-disabled": "Wave · text", "solid-rainbow": "Wave · rainbow", "solid-special": "Wave · special", "solid-warning": "Wave · warning", "opacity-accent": "Wave · opacity accent", "opacity-base": "Wave · opacity base", "opacity-contrast": "Wave · opacity contrast", "opacity-rainbow": "Wave · opacity rainbow", "opacity-special": "Wave · opacity special", "material-dark": "Wave · material", "services-facebook": "Wave · services (màu đối tác)" };
+    const merged = {};
+    Object.entries(wg).forEach(([g, items]) => { const key = g.startsWith("text") ? "text-disabled" : g.startsWith("material") ? "material-dark" : g.startsWith("services") ? "services-facebook" : g; (merged[key] = merged[key] || []).push(...items); });
+    Object.entries(merged).forEach(([g, items]) => group((WNAMES[g] || "Wave · " + g) + " — chỉ tối", items));
+  }
+
+  /* thang chữ */
+  const row = (box, name, size, lh, w, ls, extra) => {
+    const r = document.createElement("div");
+    r.className = "type-row";
+    r.innerHTML = '<span class="meta">' + name + '</span><span class="t" style="font-size:' + size + "px;line-height:" + lh + "px;font-weight:" + w + ";letter-spacing:" + (ls || "normal") + (extra || "") + '">Âm thanh chất lượng cao</span><span class="meta">' + size + " / " + lh + " · " + w + (ls ? " · ls " + ls : "") + "</span>";
+    box.appendChild(r);
+  };
+  const ts = document.getElementById("typescale");
+  WAVE_TYPE.forEach((t) => row(ts, t[0], t[1], t[2], t[3], t[4], t[3] >= 700 && t[1] >= 18 ? ";font-family:var(--td-font-display)" : ""));
+  const tu = document.getElementById("typeused");
+  MARKET_TYPE.forEach((t) => row(tu, t[0], t[1], t[2], t[3], "", t[4]));
+
+  /* bán kính */
+  const sh = document.getElementById("shapes");
+  [["0", "--wave … none"], ["2", "ảnh bìa, hàng bài"], ["4", "extra-small · badge"], ["7", "select ngôn ngữ"], ["8", "small"], ["9", "mục menu"], ["12", "regular · nav, menu, thẻ"], ["16", "panel nổi, cookie"], ["20", "tab bar"], ["36", "ô tìm kiếm"]].forEach(([r, use]) => {
+    const c = document.createElement("div"); c.className = "shape-cell";
+    c.innerHTML = '<i style="border-radius:' + r + 'px"></i>' + r + "<br>" + use; sh.appendChild(c);
+  });
+  [["1000px", "full · nút"], ["50%", "tròn · nghệ sĩ, favorite"]].forEach(([r, use]) => {
+    const c = document.createElement("div"); c.className = "shape-cell";
+    c.innerHTML = '<i style="border-radius:' + r + (r === "1000px" ? ";width:88px;height:40px" : "") + '"></i>' + r + "<br>" + use; sh.appendChild(c);
+  });
+
+  /* màn desktop: sinh hàng thẻ từ cùng class */
+  const cardHTML = (t, s, round) => '<a class="td-card' + (round ? " is-round" : "") + '" href="#screens"><div class="td-cover"><div class="td-ph">' + (round ? "ảnh nghệ sĩ" : "ảnh bìa") + '</div></div><span class="td-card-t">' + t + "</span>" + (s ? '<span class="td-card-s">' + s + "</span>" : "") + "</a>";
+  document.getElementById("desk-row").innerHTML = [1, 2, 3, 4, 5, 6, 7].map((n) => cardHTML("Playlist " + n, "Người tạo")).join("");
+  document.getElementById("desk-artists").innerHTML = [1, 2, 3, 4, 5, 6, 7].map((n) => cardHTML("Nghệ sĩ " + n, "", true)).join("");
+  document.getElementById("desk-tracks").innerHTML = [1, 2, 3, 4, 5, 6].map((n) => '<div class="td-track"><div class="td-cover"><div class="td-ph">ảnh</div><button class="td-play-row" aria-label="Phát"><span class="ms">play_arrow</span></button></div><div class="td-track-txt"><span class="td-titlerow"><span class="td-card-t">Tên bài ' + n + "</span>" + (n % 3 === 2 ? '<i class="td-badge td-badge--explicit" title="Explicit">E</i>' : "") + '</span><a class="td-artist" href="#screens">Nghệ sĩ ' + n + '</a></div><button class="td-more" aria-label="Thêm tuỳ chọn"><span class="ms">more_horiz</span></button></div>').join("");
+
+  /* mỗi thẻ thành phần có nút copy HTML */
+  document.querySelectorAll(".spec").forEach((spec) => {
+    const stage = spec.querySelector(".stage");
+    if (!stage || !spec.querySelector(".spec-h")) return;
+    let foot = spec.querySelector(".spec-f");
+    if (!foot) { foot = document.createElement("div"); foot.className = "spec-f"; foot.innerHTML = '<span class="note"></span>'; spec.appendChild(foot); }
+    const b = document.createElement("button");
+    b.className = "copy"; b.innerHTML = '<span class="ms">content_copy</span>HTML';
+    b.setAttribute("aria-label", "Copy HTML của " + spec.querySelector(".spec-h b").textContent);
+    b.onclick = () => copy([...spec.querySelectorAll(".stage")].map((s) => s.innerHTML.trim()).join("\n").replace(/\n\s+/g, "\n"), "Đã copy HTML của " + spec.querySelector(".spec-h b").textContent);
+    foot.appendChild(b);
+  });
+
+  /* token hiện tại dưới dạng khối :root */
+  document.getElementById("copy-tokens").onclick = () => {
+    const v = vals();
+    const lines = ROLES.map((r, i) => "  --td-" + r + ": " + v[i] + ";");
+    Object.entries(WAVE).forEach(([k, val]) => lines.push("  --td-wave-" + k + ": " + val + ";"));
+    lines.push("  --td-mix-tint: " + getComputedStyle(root).getPropertyValue("--td-mix-tint").trim() + ";");
+    CONST_LINES.forEach((l) => lines.push("  " + l));
+    copy(":root {\n" + lines.join("\n") + "\n}", "Đã copy token " + (state.mode === "dark" ? "tối (site)" : "sáng (Market)"));
+  };
+
+  /* làm nổi mục đang xem trong mục lục */
+  const links = [...document.querySelectorAll(".side a")];
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (e.isIntersecting) links.forEach((a) => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id));
+  }), { rootMargin: "-30% 0px -60% 0px" });
+  document.querySelectorAll("section.block").forEach((s) => io.observe(s));
+
+  apply();
+})();
+</script>
+</body>
+</html>

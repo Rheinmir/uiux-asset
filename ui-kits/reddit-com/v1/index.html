@@ -1,0 +1,975 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta name="ui-kit-id" content="reddit-com">
+<!-- UI kit rút từ bản lưu trang chủ reddit.com (Chrome "Save page", 28/09/2026) theo skill ui-kit-from-code.
+     Màu, cỡ, bo góc, chữ: đọc CSS var thật bằng Playwright trên bản lưu (theme-dark + theme-light).
+     Không nhúng logo, wordmark, icon RPL hay ảnh/nội dung bài viết của Reddit (RULE-09): thay bằng khối giữ chỗ. -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Reddit UI Kit</title>
+<meta name="ui-kit-skip" content="2a8fd37ca4:ảnh nội dung người dùng/quảng cáo, không nhúng (RULE-09);a178275ca1:ảnh nội dung người dùng/quảng cáo, không nhúng (RULE-09);305f73cd36:ảnh nội dung người dùng/quảng cáo, không nhúng (RULE-09);99959af60a:ảnh nội dung người dùng/quảng cáo, không nhúng (RULE-09);33dc0362bf:ảnh nội dung người dùng/quảng cáo, không nhúng (RULE-09);cd5793814d:ảnh nội dung người dùng/quảng cáo, không nhúng (RULE-09);f89a0c5d05:ảnh nội dung người dùng/quảng cáo, không nhúng (RULE-09);">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400..700,0..1,0&display=block">
+<style>
+/* Token mang đúng tên CSS var của Reddit (--color-*, --radius-*, --spacer-*, --size-button-*),
+   nên khối :root dán sang dự án khác là các class .rd-* chạy luôn. Script bên dưới ghi lại
+   --color-* theo chế độ sáng/tối. Giá trị mặc định dưới đây là theme-light. */
+:root {
+  --color-neutral-background: #FFFFFF;
+  --color-neutral-background-weak: #F6F8F9;
+  --color-neutral-background-container: #F6F8F9;
+  --color-neutral-background-hover: #F6F8F9;
+  --color-neutral-background-selected: #E5EBEE;
+  --color-neutral-background-canvas: #E5EBEE;
+  --color-neutral-content-strong: #181C1F;
+  --color-neutral-content: #333D42;
+  --color-neutral-content-weak: #5C6C74;
+  --color-neutral-content-disabled: #D6D6D6;
+  --color-neutral-border: #00000033;
+  --color-neutral-border-weak: #00000019;
+  --color-neutral-border-medium: #0000007F;
+  --color-neutral-border-strong: #181C1F;
+  --color-secondary-background: #E5EBEE;
+  --color-secondary-background-hover: #DBE4E9;
+  --color-secondary-background-selected: #C9D7DE;
+  --color-secondary-plain: #181C1F;
+  --color-secondary-plain-hover: #000000;
+  --color-secondary-plain-weak: #5C6C74;
+  --color-secondary-onBackground: #000000;
+  --color-primary: #115BCA;
+  --color-primary-hover: #0A449B;
+  --color-primary-visited: #9B00D4;
+  --color-primary-background: #000000;
+  --color-primary-background-hover: #21272A;
+  --color-primary-onBackground: #FFFFFF;
+  --color-brand-background: #D93900;
+  --color-brand-background-hover: #AE2C00;
+  --color-brand-onBackground: #FFFFFF;
+  --color-upvote-background: #D93900;
+  --color-upvote-plain: #AE2C00;
+  --color-upvote-plain-weaker: #FF4500;
+  --color-downvote-background: #6A5CFF;
+  --color-downvote-plain: #523DFF;
+  --color-downvote-plain-weaker: #6A5CFF;
+  --color-success-background: #008A10;
+  --color-success-plain: #016E0B;
+  --color-danger-background: #EB001F;
+  --color-danger-plain: #BC0117;
+  --color-danger-onBackground: #FFFFFF;
+  --color-caution-background: #FFBF0B;
+  --color-caution-onBackground: #000000;
+  --color-interactive-focused: #01668D;
+  --color-interactive-pressed: #00000026;
+  --color-interactive-background-disabled: #0000000C;
+  --color-interactive-content-disabled: #0000003F;
+  --color-scrim-background: #00000099;
+  --color-inverted-neutral-background: #0E1113;
+  --color-inverted-neutral-content-strong: #EEF1F3;
+  --color-category-nsfw: #DE019F;
+  --color-category-spoiler: #131313;
+  --radius-sm: 4px; --radius-2: 8px; --radius-4: 16px; --radius-md: 20px; --radius-6: 24px; --radius-lg: 32px; --radius-full: 9999px;
+  --spacer-4xs: 2px; --spacer-2xs: 4px; --spacer-xs: 8px; --spacer-sm: 12px; --spacer-md: 16px; --spacer-lg: 24px; --spacer-xl: 32px; --spacer-2xl: 48px;
+  --size-button-xs-h: 24px; --size-button-sm-h: 32px; --size-button-md-h: 40px; --size-button-lg-h: 48px;
+  --line-sm: 1px; --line-md: 2px; --line-lg: 4px;
+  --elevation-xs: 0 1px 2px 0 #00000040;
+  --elevation-sm: 0 1px 4px 0 #00000026, 0 4px 4px 0 #00000026;
+  --elevation-md: 0 4px 8px 0 #0000001a, 0 6px 12px 0 #00000040;
+  --elevation-lg: 0 12px 12px 0 #00000026, 0 16px 32px 0 #00000040;
+  --elevation-focus-ring: 0 0 0 4px #1870F4;
+  --boxshadow-tooltip: 0 1px 4px rgba(0,0,0,.33), 0 4px 4px rgba(0,0,0,.33);
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, Menlo, Monaco, Consolas, monospace;
+  --k: 1;
+  color-scheme: light;
+}
+:root[data-mode="dark"] { color-scheme: dark; }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--color-neutral-background); color: var(--color-neutral-content); font: 400 14px/21px var(--font-sans); -webkit-font-smoothing: antialiased; }
+.ms { font-family: "Material Symbols Rounded"; font-weight: normal; font-style: normal; font-size: 20px; line-height: 1; letter-spacing: normal; text-transform: none; display: inline-block; white-space: nowrap; direction: ltr; font-feature-settings: "liga"; -webkit-font-smoothing: antialiased; user-select: none; }
+.ms.fill { font-variation-settings: "FILL" 1; }
+code, .code { font-family: var(--font-mono); font-size: 12px; }
+:focus-visible { outline: 2px solid var(--color-interactive-focused); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+/* ---------- vỏ trang ---------- */
+.shell { display: grid; grid-template-columns: 232px minmax(0, 1fr); min-height: 100vh; }
+.side { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 20px 12px; background: var(--color-neutral-background-weak); border-right: 1px solid var(--color-neutral-border-weak); display: flex; flex-direction: column; gap: 2px; }
+.brand { display: flex; align-items: center; gap: 10px; padding: 4px 12px 16px; }
+.brand-mark { width: 32px; height: 32px; border-radius: 50%; background: var(--color-brand-background); color: var(--color-brand-onBackground); display: grid; place-items: center; }
+.brand b { font-size: 16px; font-weight: 700; display: block; color: var(--color-neutral-content-strong); }
+.brand small { color: var(--color-neutral-content-weak); font-size: 12px; }
+.side h6 { margin: 14px 12px 6px; font-size: 12px; font-weight: 400; letter-spacing: 1.5px; text-transform: uppercase; color: var(--color-neutral-content-weak); }
+.side a { display: flex; align-items: center; gap: 12px; height: 40px; padding: 0 12px; border-radius: 8px; color: var(--color-neutral-content); text-decoration: none; }
+.side a:hover { background: var(--color-neutral-background-hover); color: var(--color-secondary-plain-hover); }
+.side a.on { background: var(--color-neutral-background-selected); color: var(--color-neutral-content-strong); }
+main { padding: 0 32px 96px; min-width: 0; }
+
+.bar { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; padding: 12px 0; background: var(--color-neutral-background); border-bottom: 1px solid var(--color-neutral-border-weak); }
+.bar .grow { flex: 1; }
+.ctl { display: flex; align-items: center; gap: 8px; }
+.ctl > span { font-size: 12px; font-weight: 600; color: var(--color-neutral-content-weak); }
+.seg { display: inline-flex; gap: 2px; padding: 2px; border-radius: 999px; background: var(--color-secondary-background); }
+.seg button { height: 32px; padding: 0 12px; border: none; border-radius: 999px; background: transparent; color: var(--color-secondary-plain); font: 600 12px var(--font-sans); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.seg button[aria-pressed="true"] { background: var(--color-primary-background); color: var(--color-primary-onBackground); }
+.seg .ms { font-size: 18px; }
+
+.intro { padding: 40px 0 8px; max-width: 780px; }
+.intro .eyebrow { font-family: var(--font-mono); font-size: 12px; color: var(--color-primary); }
+.intro h1 { font: 700 32px/36px var(--font-sans); color: var(--color-neutral-content-strong); margin: 8px 0 12px; text-wrap: balance; }
+.intro p { font-size: 16px; line-height: 24px; margin: 0; max-width: 66ch; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.fact { font-family: var(--font-mono); font-size: 12px; padding: 4px 10px; border-radius: 999px; background: var(--color-secondary-background); color: var(--color-secondary-plain); }
+
+section.block { padding-top: 48px; scroll-margin-top: 64px; }
+section.block > header { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+section.block h2 { font: 700 24px/28px var(--font-sans); margin: 0; color: var(--color-neutral-content-strong); }
+section.block > header p { margin: 0; max-width: 72ch; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+.grid.wide { grid-template-columns: repeat(auto-fill, minmax(460px, 1fr)); }
+.spec { background: var(--color-neutral-background-container); border: 1px solid var(--color-neutral-border-weak); border-radius: 16px; display: flex; flex-direction: column; min-width: 0; }
+.spec.full { grid-column: 1 / -1; }
+.spec-h { display: flex; align-items: center; gap: 8px; padding: 14px 16px 0; flex-wrap: wrap; }
+.spec-h b { font-size: 15px; font-weight: 600; color: var(--color-neutral-content-strong); }
+.kind { font-family: var(--font-mono); font-size: 11px; padding: 2px 8px; border-radius: 6px; background: var(--color-secondary-background); color: var(--color-secondary-onBackground); }
+.spec-h .dp { margin-left: auto; font-family: var(--font-mono); font-size: 11px; color: var(--color-neutral-content-weak); font-variant-numeric: tabular-nums; }
+.stage { padding: 20px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; min-height: 96px; overflow-x: auto; }
+.stage.col { flex-direction: column; align-items: stretch; }
+.stage.surface { background: var(--color-neutral-background); margin: 12px 12px 0; border-radius: 12px; }
+.lbl { display: block; font-family: var(--font-mono); font-size: 10px; color: var(--color-neutral-content-weak); margin-bottom: 4px; }
+.cell { display: flex; flex-direction: column; align-items: flex-start; }
+.spec-f { display: flex; align-items: center; gap: 8px; padding: 8px 12px 12px 16px; margin-top: auto; }
+.spec-f .note { font-size: 12px; line-height: 16px; color: var(--color-neutral-content-weak); flex: 1; }
+.copy { height: 32px; padding: 0 12px; border-radius: 999px; border: none; background: transparent; color: var(--color-primary); font: 600 12px var(--font-sans); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.copy:hover { background: var(--color-neutral-background-hover); }
+.copy .ms { font-size: 18px; }
+
+.roles { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
+.role { border-radius: 12px; padding: 12px; min-height: 76px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: inset 0 0 0 1px var(--color-neutral-border-weak); cursor: pointer; border: none; text-align: left; font: inherit; }
+.role b { font-size: 12px; font-weight: 600; }
+.role code { font-size: 11px; opacity: .85; }
+.type-row { display: grid; grid-template-columns: 170px minmax(0, 1fr) 130px; gap: 16px; align-items: baseline; padding: 10px 0; border-bottom: 1px solid var(--color-neutral-border-weak); color: var(--color-neutral-content-strong); }
+.type-row:last-child { border-bottom: none; }
+.type-row .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.type-row .meta { font-family: var(--font-mono); font-size: 11px; color: var(--color-neutral-content-weak); font-variant-numeric: tabular-nums; }
+.shape-cell { display: flex; flex-direction: column; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 11px; color: var(--color-neutral-content-weak); }
+.shape-cell i { display: block; width: 64px; height: 64px; background: var(--color-secondary-background-selected); }
+table.tok { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+table.tok th, table.tok td { text-align: left; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--color-neutral-border-weak); font-size: 13px; }
+table.tok th { font-weight: 600; color: var(--color-neutral-content-weak); font-size: 12px; }
+table.tok td:first-child { font-family: var(--font-mono); font-size: 12px; color: var(--color-neutral-content-strong); }
+.scroll { overflow-x: auto; }
+
+/* ================= các thành phần rd-* (chỉ dùng token --color-*, --radius-*, --spacer-*, --size-*) ================= */
+
+/* nút RPL: :where(button) + .button-<variant> + cỡ (small = 32, x-small = 24, mặc định 40, large = 48) */
+.rd-btn { --h: var(--size-button-md-h); --px: var(--spacer-md); --fs: 14px; --lh: 20px; --fw: 600;
+  --bg: var(--color-secondary-background); --fg: var(--color-secondary-onBackground); --bg-h: var(--color-secondary-background-hover); --fg-h: var(--fg); --bd: transparent;
+  height: var(--h); padding: 0 calc(var(--px) - var(--line-sm)); font: var(--fw) var(--fs)/var(--lh) var(--font-sans); letter-spacing: -.001em;
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--spacer-xs); border: var(--line-sm) solid var(--bd);
+  border-radius: var(--radius-full); background: var(--bg); color: var(--fg); cursor: pointer; white-space: nowrap; text-decoration: none; }
+.rd-btn .ms { font-size: 20px; }
+.rd-btn:hover, .rd-btn.is-hover { background: var(--bg-h); color: var(--fg-h); }
+.rd-btn:active, .rd-btn.is-active { background: linear-gradient(var(--color-interactive-pressed), var(--color-interactive-pressed)), var(--bg-h); }
+.rd-btn:disabled, .rd-btn.is-disabled { background: var(--color-interactive-background-disabled); color: var(--color-interactive-content-disabled); cursor: not-allowed; }
+.rd-btn.lg { --h: var(--size-button-lg-h); --px: var(--spacer-md); }
+.rd-btn.sm { --h: var(--size-button-sm-h); --px: var(--spacer-sm); --fs: 12px; --lh: 16px; }
+.rd-btn.xs { --h: var(--size-button-xs-h); --px: var(--spacer-xs); --fs: 12px; --lh: 14px; --fw: 700; }
+.rd-btn.xs .ms { font-size: 16px; }
+.rd-btn.icon { width: var(--h); padding: 0; }
+.rd-btn.primary { --bg: var(--color-primary-background); --fg: var(--color-primary-onBackground); --bg-h: var(--color-primary-background-hover); }
+.rd-btn.secondary { --bg: var(--color-secondary-background); --fg: var(--color-secondary-onBackground); --bg-h: var(--color-secondary-background-hover); }
+.rd-btn.plain { --bg: transparent; --fg: var(--color-secondary-plain); --bg-h: var(--color-secondary-background-hover); --fg-h: var(--color-secondary-plain-hover); }
+.rd-btn.bordered { --bg: transparent; --fg: var(--color-neutral-content-strong); --bd: var(--color-neutral-border-medium); --bg-h: transparent; }
+.rd-btn.bordered:hover, .rd-btn.bordered.is-hover { border-color: var(--color-neutral-border-strong); }
+.rd-btn.brand { --bg: var(--color-brand-background); --fg: var(--color-brand-onBackground); --bg-h: var(--color-brand-background-hover); }
+.rd-btn.caution { --bg: var(--color-caution-background); --fg: var(--color-caution-onBackground); --bg-h: var(--color-caution-background); }
+.rd-btn.danger { --bg: var(--color-danger-background); --fg: var(--color-danger-onBackground); --bg-h: var(--color-danger-background); }
+.rd-btn.activated { --bg: var(--color-secondary-background-selected); }
+.rd-btn.is-focus { outline: auto 1px; outline-color: -webkit-focus-ring-color; }
+.rd-btn.is-ring { box-shadow: var(--elevation-focus-ring); }
+
+/* rpl-action-bar: nhóm vote + comment + share, mọi nút secondary small 32 */
+.rd-actions { display: flex; align-items: center; gap: var(--spacer-xs); flex-wrap: wrap; }
+.rd-vote { display: inline-flex; align-items: center; height: var(--size-button-sm-h); border-radius: var(--radius-full); background: var(--color-secondary-background); color: var(--color-secondary-onBackground); }
+.rd-vote button { width: 32px; height: 32px; border: none; border-radius: var(--radius-full); background: transparent; color: inherit; display: grid; place-items: center; cursor: pointer; padding: 0; }
+.rd-vote button .ms { font-size: 18px; }
+.rd-vote button:first-child:hover, .rd-vote button.up.is-hover { background: var(--color-secondary-background-hover); color: var(--color-upvote-plain-weaker); }
+.rd-vote button:last-child:hover, .rd-vote button.down.is-hover { background: var(--color-secondary-background-hover); color: var(--color-downvote-plain-weaker); }
+.rd-vote > span { font: 600 12px/16px var(--font-sans); min-width: 16px; text-align: center; }
+.rd-vote.upvoted { background: var(--color-upvote-background); color: var(--color-brand-onBackground); }
+.rd-vote.downvoted { background: var(--color-downvote-background); color: var(--color-brand-onBackground); }
+.rd-vote.upvoted button:hover, .rd-vote.downvoted button:hover { background: var(--color-interactive-pressed); color: inherit; }
+
+/* header 56 + viền 1: logo, search pill 40, hành động bên phải */
+.rd-header { height: 57px; display: flex; align-items: center; gap: var(--spacer-xs); padding: 0 var(--spacer-md); background: var(--color-neutral-background); border-bottom: var(--line-sm) solid var(--color-neutral-border-weak); min-width: 0; }
+.rd-logo { height: 32px; min-width: 96px; padding: 0 10px; border-radius: var(--radius-2); border: 1px dashed var(--color-neutral-border-medium); color: var(--color-neutral-content-weak); font: 400 11px/30px var(--font-mono); text-align: center; flex: none; }
+.rd-header .mid { flex: 1; display: flex; justify-content: center; min-width: 0; }
+.rd-header .right { display: flex; align-items: center; gap: var(--spacer-2xs); flex: none; }
+.rd-search { height: var(--size-button-md-h); width: 560px; max-width: 100%; border-radius: var(--radius-full); background: var(--color-secondary-background); color: var(--color-neutral-content-weak); display: flex; align-items: center; gap: var(--spacer-xs); padding: 0 var(--spacer-md); font: 400 14px/20px var(--font-sans); min-width: 0; }
+.rd-search:hover { background: var(--color-secondary-background-hover); }
+.rd-search .ms { font-size: 20px; }
+.rd-search span.t { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* avatar & icon cộng đồng: luôn tròn, nền là màu khoá của cộng đồng (nội dung người dùng) */
+.rd-avatar { --d: 32px; width: var(--d); height: var(--d); border-radius: var(--radius-full); background: var(--color-secondary-background-selected); color: var(--color-neutral-content-weak); display: inline-grid; place-items: center; flex: none; position: relative; font: 700 10px var(--font-sans); }
+.rd-avatar .ms { font-size: calc(var(--d) * .55); }
+.rd-avatar.s16 { --d: 16px; } .rd-avatar.s24 { --d: 24px; } .rd-avatar.s40 { --d: 40px; } .rd-avatar.s64 { --d: 64px; }
+.rd-avatar.ring { box-shadow: 0 0 0 1px var(--color-neutral-border-weak); }
+.rd-online { position: absolute; right: 0; bottom: 0; width: 8px; height: 8px; border-radius: var(--radius-full); background: var(--color-success-background); box-shadow: 0 0 0 1px var(--color-neutral-background); }
+.rd-count { position: absolute; top: 2px; right: 0; min-width: 16px; height: 16px; padding: 0 4px; border-radius: var(--radius-full); background: var(--color-brand-background); color: var(--color-brand-onBackground); font: 700 10px/16px var(--font-sans); text-align: center; }
+.rd-iconhost { position: relative; display: inline-grid; }
+
+/* left nav 272: mục 40, pad 4/16, bo 8 */
+.rd-nav { width: 272px; max-width: 100%; padding: var(--spacer-md) var(--spacer-md); background: var(--color-neutral-background); border-right: var(--line-sm) solid var(--color-neutral-border-weak); display: flex; flex-direction: column; gap: 0; }
+.rd-nav hr { border: none; height: 1px; background: var(--color-neutral-border-weak); margin: var(--spacer-md) 0; }
+.rd-navitem { display: flex; align-items: center; gap: var(--spacer-sm); min-height: 40px; padding: 4px 16px; border-radius: var(--radius-2); color: var(--color-secondary-plain); font: 400 14px/20px var(--font-sans); text-decoration: none; cursor: pointer; }
+.rd-navitem .ms { font-size: 20px; }
+.rd-navitem:hover, .rd-navitem.is-hover { background: var(--color-neutral-background-hover); color: var(--color-secondary-plain-hover); }
+.rd-navitem:active, .rd-navitem.is-active { background: var(--color-interactive-pressed); color: var(--color-secondary-plain-hover); }
+.rd-navitem.on { background: var(--color-neutral-background-selected); color: var(--color-neutral-content-strong); }
+.rd-navitem.is-focus { outline: auto 1px; outline-color: -webkit-focus-ring-color; }
+.rd-section summary { list-style: none; display: flex; align-items: center; justify-content: space-between; height: 36px; padding: 0 16px; color: var(--color-neutral-content-weak); font: 400 12px/16px var(--font-sans); letter-spacing: .15em; text-transform: uppercase; cursor: pointer; border-radius: var(--radius-2); }
+.rd-section summary::-webkit-details-marker { display: none; }
+.rd-section summary:hover { background: var(--color-neutral-background-hover); }
+.rd-section[open] summary .ms { transform: rotate(180deg); }
+
+/* sort dropdown "Best": button plain small, chữ weak */
+.rd-sort { display: inline-flex; align-items: center; gap: 2px; height: 32px; padding: 0 10px; border: none; border-radius: var(--radius-full); background: transparent; color: var(--color-neutral-content-weak); font: 600 12px/16px var(--font-sans); cursor: pointer; }
+.rd-sort:hover { background: var(--color-secondary-background-hover); color: var(--color-secondary-plain-hover); }
+.rd-sort .ms { font-size: 16px; }
+
+/* link: mỗi kiểu một vai trò màu, hover đo trên bản lưu */
+.rd-link { color: var(--color-neutral-content); text-decoration: none; cursor: pointer; }
+.rd-link.community { font: 600 12px/16px var(--font-sans); display: inline-flex; align-items: center; gap: var(--spacer-xs); }
+.rd-link.community:hover, .rd-link.community.is-hover { color: var(--color-primary-hover); }
+.rd-link.community.sb { color: var(--color-secondary-plain); }
+.rd-link.community.sb:hover, .rd-link.community.sb.is-hover { color: var(--color-secondary-plain); text-decoration: underline; }
+.rd-link.title { font: 600 18px/24px var(--font-sans); color: var(--color-neutral-content-strong); }
+.rd-link.ad { font: 400 12px/16px var(--font-sans); color: var(--color-primary); }
+.rd-link.ad:hover, .rd-link.ad.is-hover { color: var(--color-primary-hover); }
+.rd-link.meta { font: 400 12px/16px var(--font-sans); color: var(--color-neutral-content-weak); }
+.rd-link.meta:hover, .rd-link.meta.is-hover { color: var(--color-secondary-plain-hover); text-decoration: underline; }
+.rd-link.plain12 { font: 600 12px/16px var(--font-sans); }
+.rd-link.mention { font: 400 14px/20px var(--font-sans); color: var(--color-primary); text-decoration: underline; }
+.rd-link.foot { font: 400 10px/15px var(--font-sans); color: var(--color-neutral-content-weak); }
+.rd-link.foot:hover, .rd-link.foot.is-hover { text-decoration: underline; }
+.rd-link.is-focus { outline: auto 1px; outline-color: -webkit-focus-ring-color; }
+
+/* tag nội dung + flair */
+.rd-tag { display: inline-flex; align-items: center; gap: 4px; height: 20px; font: 700 12px/16px var(--font-sans); color: var(--color-neutral-content-strong); }
+.rd-tag .ms { font-size: 14px; }
+.rd-tag.nsfw { color: var(--color-category-nsfw); }
+.rd-flair { display: inline-flex; align-items: center; height: 20px; padding: 0 8px; border-radius: var(--radius-full); background: var(--color-secondary-background); color: var(--color-secondary-onBackground); font: 400 12px/16px var(--font-sans); }
+.rd-pill-meta { font: 400 12px/16px var(--font-sans); color: var(--color-neutral-content-weak); }
+
+/* shreddit-post: nền neutral, bo 16, pad 4/16, hover = neutral-background-hover */
+.rd-post { width: 732px; max-width: 100%; border-radius: var(--radius-4); padding: 4px 16px 12px; background: var(--color-neutral-background); color: var(--color-neutral-content); display: flex; flex-direction: column; gap: var(--spacer-xs); cursor: pointer; }
+.rd-post:hover, .rd-post.is-hover, .rd-post.is-focus { background: var(--color-neutral-background-hover); }
+.rd-post .head { display: flex; align-items: center; gap: var(--spacer-xs); min-height: 32px; padding-top: 4px; flex-wrap: wrap; }
+.rd-post .head .grow { flex: 1; }
+.rd-post .dot::before { content: "•"; margin: 0 2px; color: var(--color-neutral-content-weak); }
+.rd-post p { margin: 0; font: 400 14px/20px var(--font-sans); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.rd-post .ad-body { color: var(--color-primary); }
+.rd-divider { height: 1px; background: var(--color-neutral-border-weak); border: none; margin: 0; width: 732px; max-width: 100%; }
+.rd-media { border-radius: var(--radius-4); border: var(--line-sm) solid var(--color-neutral-border-weak); background: var(--color-neutral-background-weak); min-height: 200px; display: grid; place-items: center; color: var(--color-neutral-content-weak); font: 400 12px var(--font-mono); position: relative; overflow: hidden; }
+.rd-media .ms { font-size: 36px; opacity: .6; }
+.rd-media.spoiler { background: var(--color-neutral-background-canvas); }
+.rd-media.spoiler .rd-btn { position: absolute; top: 8px; left: 8px; }
+.rd-dots { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; }
+.rd-dots i { width: 6px; height: 6px; border-radius: var(--radius-full); background: var(--color-neutral-content-strong); opacity: .5; }
+.rd-dots i.on { opacity: 1; }
+.rd-cta { display: flex; align-items: center; gap: var(--spacer-sm); padding: 8px 12px; border-top: var(--line-sm) solid var(--color-neutral-border-weak); }
+.rd-cta span { flex: 1; font: 400 12px/16px var(--font-sans); color: var(--color-neutral-content-weak); }
+.rd-adwrap { border-radius: var(--radius-4); border: var(--line-sm) solid var(--color-neutral-border-weak); overflow: hidden; }
+.rd-adwrap .rd-media { border: none; border-radius: 0; }
+
+/* thẻ gợi ý cộng đồng (in-feed-community-recs): viền 1, bo 16 */
+.rd-commcard { width: 208px; border: var(--line-sm) solid var(--color-neutral-border); border-radius: var(--radius-4); padding: var(--spacer-md); display: flex; flex-direction: column; align-items: center; gap: var(--spacer-xs); text-align: center; background: transparent; }
+.rd-commcard h4 { margin: 4px 0 0; font: 600 16px/20px var(--font-sans); color: var(--color-neutral-content-strong); }
+.rd-commcard p { margin: 0; font: 400 12px/16px var(--font-sans); color: var(--color-neutral-content-weak); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* thẻ xem trước bài (search-sdui answers preview): nền container-strong, bo 8, ảnh bên phải */
+.rd-preview { width: 280px; max-width: 100%; display: flex; border-radius: var(--radius-2); border: var(--line-sm) solid var(--color-neutral-border-weak); background: var(--color-neutral-background-canvas); overflow: hidden; }
+.rd-preview .txt { flex: 1; padding: 12px 16px; min-width: 0; }
+.rd-preview .txt b { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font: 600 12px/16px var(--font-sans); color: var(--color-neutral-content-strong); }
+.rd-preview .txt small { font: 400 12px/16px var(--font-sans); color: var(--color-neutral-content-weak); }
+.rd-thumb { width: 68px; flex: none; background: var(--color-neutral-background-weak); display: grid; place-items: center; color: var(--color-neutral-content-weak); border-radius: var(--radius-2); border: var(--line-sm) solid var(--color-neutral-border-weak); }
+.rd-preview .rd-thumb { border: none; border-radius: 0; }
+.rd-thumb.big { width: 128px; height: 96px; }
+
+/* thẻ game (games-section): bo 16, nền là ảnh bìa game (vẽ lại bằng gradient token) */
+.rd-game { width: 199px; height: 52px; border-radius: var(--radius-4); padding: 0 12px; display: flex; align-items: center; gap: var(--spacer-sm); background: linear-gradient(90deg, var(--color-neutral-background-weak), var(--color-primary-background-highlighted, var(--color-secondary-background-selected))); color: var(--color-neutral-content-strong); }
+.rd-game b { display: block; font: 600 14px/18px var(--font-sans); }
+.rd-game small { font: 400 12px/16px var(--font-sans); }
+
+/* cột phải 316: thẻ Recent Posts, nền weak, bo 16 */
+.rd-aside { width: 316px; max-width: 100%; border-radius: var(--radius-4); background: var(--color-neutral-background-weak); padding: var(--spacer-md) 0 var(--spacer-xs); }
+.rd-aside .top { display: flex; align-items: center; justify-content: space-between; padding: 0 var(--spacer-md) var(--spacer-xs); }
+.rd-aside h3 { margin: 0; font: 400 12px/16px var(--font-sans); letter-spacing: .15em; text-transform: uppercase; color: var(--color-neutral-content-weak); }
+.rd-recent { padding: 12px var(--spacer-md); border-bottom: var(--line-sm) solid var(--color-neutral-border-weak); display: flex; flex-direction: column; gap: 6px; }
+.rd-recent:last-child { border-bottom: none; }
+.rd-recent h4 { margin: 0; font: 600 14px/20px var(--font-sans); color: var(--color-neutral-content-weak); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.rd-recent small { font: 400 12px/16px var(--font-sans); color: var(--color-neutral-content-weak); }
+
+/* chữ thân bài */
+.rd-body { font: 400 14px/20px var(--font-sans); color: var(--color-neutral-content); margin: 0; }
+.rd-body.ad { color: var(--color-primary); }
+.rd-body.sm { font-size: 12px; line-height: 16px; color: var(--color-neutral-content-weak); }
+.rd-list { margin: 0; padding-left: 20px; font: 400 14px/24px var(--font-sans); color: var(--color-neutral-content); }
+.rd-h1 { font: 400 20px/24px var(--font-sans); color: var(--color-neutral-content); margin: 0; }
+.rd-h3 { font: 700 18px/24px var(--font-sans); color: var(--color-neutral-content); margin: 0; }
+
+/* tooltip (rpl-tooltip) */
+.rd-tooltip { display: inline-block; padding: 4px 8px; border-radius: var(--radius-2); background: var(--color-inverted-neutral-background); color: var(--color-inverted-neutral-content-strong); font: 400 12px/16px var(--font-sans); box-shadow: var(--boxshadow-tooltip); }
+
+/* ---------- màn mẫu ---------- */
+.frame-wrap { overflow-x: auto; padding: 8px 0; }
+.frames { display: flex; gap: 32px; width: max-content; align-items: flex-start; }
+.phone { width: 390px; height: 844px; border-radius: 40px; box-shadow: 0 0 0 10px var(--color-inverted-neutral-background); background: var(--color-neutral-background); position: relative; overflow: hidden; margin: 10px; zoom: .62; }
+.phone .rd-header { padding: 0 8px; }
+.phone .feed { display: flex; flex-direction: column; gap: 4px; padding: 8px 0; }
+.phone .rd-post { border-radius: 0; padding: 4px 16px 12px; }
+.phone .rd-divider { width: 100%; }
+.desk { width: 1440px; height: 900px; border-radius: 16px; box-shadow: 0 0 0 10px var(--color-inverted-neutral-background); background: var(--color-neutral-background); overflow: hidden; margin: 10px; zoom: .55; display: flex; flex-direction: column; }
+.desk .body { flex: 1; display: flex; min-height: 0; }
+.desk .rd-nav { flex: none; }
+.desk .center { flex: 1; display: flex; justify-content: center; gap: 16px; padding: 8px 24px 0; min-width: 0; }
+.desk .feed { width: 732px; display: flex; flex-direction: column; gap: 4px; }
+.desk .rd-aside { margin-top: 16px; flex: none; align-self: flex-start; }
+.frame-cap { font-family: var(--font-mono); font-size: 12px; color: var(--color-neutral-content-weak); margin: 4px 10px 0; max-width: 780px; }
+
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; transition: all .25s ease; z-index: 20;
+  padding: 10px 16px; border-radius: var(--radius-2); background: var(--color-inverted-neutral-background); color: var(--color-inverted-neutral-content-strong); font: 600 14px var(--font-sans); box-shadow: var(--elevation-md); }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; }
+  .side { display: none; }
+  main { padding: 0 16px 80px; }
+  .grid, .grid.wide { grid-template-columns: 1fr; }
+  .intro h1 { font-size: 26px; line-height: 32px; }
+  .type-row { grid-template-columns: 1fr; gap: 2px; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <nav class="side" aria-label="Mục lục">
+    <div class="brand"><div class="brand-mark"><span class="ms fill">forum</span></div><div><b>Reddit UI Kit</b><small>RPL · shreddit</small></div></div>
+    <h6>Nền tảng</h6>
+    <a href="#color"><span class="ms">palette</span>Màu</a>
+    <a href="#type"><span class="ms">text_fields</span>Chữ</a>
+    <a href="#shape"><span class="ms">rounded_corner</span>Bo góc</a>
+    <a href="#layout"><span class="ms">straighten</span>Bố cục &amp; kích thước</a>
+    <h6>Thành phần</h6>
+    <a href="#actions"><span class="ms">touch_app</span>Hành động</a>
+    <a href="#navigation"><span class="ms">explore</span>Điều hướng</a>
+    <a href="#feed"><span class="ms">view_agenda</span>Bài viết &amp; feed</a>
+    <a href="#containment"><span class="ms">web_asset</span>Thẻ &amp; cột phụ</a>
+    <a href="#identity"><span class="ms">account_circle</span>Danh tính &amp; tag</a>
+    <a href="#text"><span class="ms">notes</span>Chữ &amp; link</a>
+    <a href="#states"><span class="ms">ads_click</span>Trạng thái</a>
+    <h6>Mẫu</h6>
+    <a href="#screens"><span class="ms">devices</span>Màn hình mẫu</a>
+  </nav>
+
+  <main>
+    <div class="bar" role="toolbar" aria-label="Chủ đề">
+      <div class="ctl"><span>Chế độ</span><div class="seg" id="mode">
+        <button data-v="light" aria-pressed="true"><span class="ms">light_mode</span>Sáng</button>
+        <button data-v="dark" aria-pressed="false"><span class="ms">dark_mode</span>Tối</button></div></div>
+      <div class="grow"></div>
+      <button class="copy" id="copy-tokens"><span class="ms">data_object</span>Copy CSS token</button>
+    </div>
+
+    <div class="intro">
+      <div class="eyebrow">reddit.com (bản lưu, CSS var trên :root) → docs/reddit-ui-kit.html</div>
+      <h1>Hệ thiết kế của Reddit (RPL), dựng lại bằng HTML</h1>
+      <p>Kit này làm từ bản lưu trang chủ đã đăng nhập, vì Reddit chặn trình duyệt tự động. Màu, bo góc, khoảng cách, cỡ nút và thang chữ lấy từ 630 CSS var đọc được trên <code>:root</code>, ở cả <code>theme-light</code> lẫn <code>theme-dark</code>. Token giữ nguyên tên của Reddit (<code>--color-*</code>, <code>--radius-*</code>, <code>--spacer-*</code>). Muốn dùng ở chỗ khác thì dán khối token cùng CSS <code>.rd-*</code> là chạy. Mỗi thẻ ghi tên thẻ hoặc class trong code của Reddit. Logo, icon RPL, ảnh và nội dung bài viết đã được thay bằng khối giữ chỗ.</p>
+      <div class="facts"><span class="fact">header 56 + 1</span><span class="fact">left nav 272</span><span class="fact">feed 732</span><span class="fact">aside 316</span><span class="fact">post r16 · pad 4/16</span><span class="fact">button 24 · 32 · 40 · 48</span><span class="fact">font: system stack</span></div>
+    </div>
+
+    <!-- ================= NỀN TẢNG ================= -->
+    <section class="block" id="color">
+      <header><h2>Màu</h2><p>52 vai trò màu ngữ nghĩa, lấy trong số 384 biến <code>--color-*</code> của trang. Bấm một ô để copy hex. Luôn ghép màu nền với màu chữ <code>*-onBackground</code> đi cùng cặp. Những ô có kênh alpha (8 chữ số hex) là lớp phủ đè lên nền.</p></header>
+      <div class="roles" id="roles"></div>
+    </section>
+
+    <section class="block" id="type">
+      <header><h2>Chữ</h2><p>Reddit không tải webfont mà dùng font hệ thống (<code>--font-sans</code>: -apple-system, Segoe UI, Roboto…). Bảng dưới là thang <code>--font-*</code> của RPL. Tiếp theo là những kiểu chữ thực sự xuất hiện trên trang, theo số đo khám phá.</p></header>
+      <div class="spec"><div class="stage col" id="typescale"></div></div>
+    </section>
+
+    <section class="block" id="shape">
+      <header><h2>Bo góc</h2><p>Thang <code>--radius-*</code>. Nút, search và avatar dùng <code>full</code>. Post, thẻ cộng đồng và cột phải dùng <code>--radius-4</code> 16. Mục nav và thẻ xem trước dùng <code>--radius-2</code> 8. Reddit không có thang shape để đổi nên kit bỏ nút Shape.</p></header>
+      <div class="spec"><div class="stage" id="shapes" style="gap:28px"></div></div>
+    </section>
+
+    <section class="block" id="layout">
+      <header><h2>Bố cục &amp; kích thước</h2><p>Cỡ nút theo <code>--size-button-*-h</code>, khoảng cách theo <code>--spacer-*</code>, khung trang đo bằng <code>getBoundingClientRect</code> ở viewport 1440.</p></header>
+      <div class="grid wide">
+        <div class="spec"><div class="stage col scroll">
+          <table class="tok"><thead><tr><th>Button</th><th>h</th><th>padX</th><th>font</th><th>class</th></tr></thead><tbody>
+            <tr><td>xs</td><td>24</td><td>8</td><td>700 12/14</td><td>button-x-small</td></tr>
+            <tr><td>sm</td><td>32</td><td>12</td><td>600 12/16</td><td>button-small</td></tr>
+            <tr><td>md</td><td>40</td><td>16</td><td>600 14/20</td><td>(mặc định)</td></tr>
+            <tr><td>lg</td><td>48</td><td>16</td><td>600 14/20</td><td>button-large</td></tr></tbody></table>
+        </div><div class="spec-f"><span class="note">Viền mọi cỡ là <code>--line-sm</code> 1. Padding thật bằng <code>--button-padding − border</code>. Nút Join dùng <code>button-x-small</code> nhưng có class <code>h-lg</code>, nên cao 32.</span></div></div>
+        <div class="spec"><div class="stage col scroll">
+          <table class="tok"><thead><tr><th>Hằng số</th><th>px</th><th>Đo ở</th></tr></thead><tbody>
+            <tr><td>header</td><td>56 + 1</td><td>reddit-header-large, pad 0 16</td></tr>
+            <tr><td>#left-sidebar-container</td><td>272</td><td>nav trái, viền phải 1</td></tr>
+            <tr><td>shreddit-post</td><td>732</td><td>bo 16 · pad 4 16</td></tr>
+            <tr><td>#right-sidebar-container</td><td>316</td><td>thẻ Recent Posts bo 16</td></tr>
+            <tr><td>search</td><td>560 × 40</td><td>faceplate-search-input</td></tr>
+            <tr><td>spacer</td><td>2 · 4 · 8 · 12 · 16 · 24 · 32 · 48</td><td>4xs → 2xl</td></tr>
+            <tr><td>elevation</td><td>xs · sm · md · lg</td><td>--elevation-*</td></tr>
+            <tr><td>focus ring</td><td>0 0 0 4 #1870F4</td><td>--elevation-focus-ring</td></tr></tbody></table>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- ================= HÀNH ĐỘNG ================= -->
+    <section class="block" id="actions">
+      <header><h2>Hành động</h2><p>Mọi nút là <code>button</code> có <code>.button-&lt;variant&gt;</code>. Màu đi qua các biến <code>--button-color-*</code> mà mỗi variant gán lại. Hover và active lấy từ rule trong <code>styles-css-inlined.css</code>, có đối chiếu với số đo hover/nhấn giữ trên trang.</p></header>
+      <div class="grid wide">
+        <div class="spec full" data-sig="ae1ee2e55a">
+          <div class="spec-h"><b>Button · variant</b><span class="kind">.button-primary · -secondary · -plain · -bordered · -brand · -caution</span><span class="dp">h 40 · r full</span></div>
+          <div class="stage">
+            <button class="rd-btn primary">Primary</button>
+            <button class="rd-btn secondary">Secondary</button>
+            <button class="rd-btn plain">Plain</button>
+            <button class="rd-btn bordered">Bordered</button>
+            <button class="rd-btn brand">Get App</button>
+            <button class="rd-btn caution">Caution</button>
+            <button class="rd-btn danger">Danger</button>
+            <button class="rd-btn secondary activated">Activated</button>
+            <button class="rd-btn primary" disabled>Disabled</button>
+          </div>
+          <div class="spec-f"><span class="note">Primary có nền <code>--color-primary-background</code>: gần trắng ở chế độ tối, đen ở chế độ sáng. Brand (cam) chỉ dùng cho CTA như Get App và Log In. Link "Skip to main content" (sig ae1ee2e55a) là một nút primary md.</span></div>
+        </div>
+        <div class="spec">
+          <div class="spec-h"><b>Button · cỡ</b><span class="kind">button-x-small · -small · (md) · -large</span><span class="dp">24 · 32 · 40 · 48</span></div>
+          <div class="stage">
+            <button class="rd-btn secondary xs">x-small</button>
+            <button class="rd-btn secondary sm">small</button>
+            <button class="rd-btn secondary">medium</button>
+            <button class="rd-btn secondary lg">large</button>
+          </div>
+        </div>
+        <div class="spec" data-sig="15f8bb6a9b 47e36fe65a 30c367338f" data-sig-state="15f8bb6a9b:hover 15f8bb6a9b:active 15f8bb6a9b:focus 47e36fe65a:hover 47e36fe65a:active 47e36fe65a:focus 30c367338f:hover 30c367338f:active 30c367338f:focus">
+          <div class="spec-h"><b>Button plain · icon &amp; nhỏ</b><span class="kind">button-plain · icon</span><span class="dp">32 / 24</span></div>
+          <div class="stage col">
+            <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end">
+              <span class="cell"><span class="lbl">nghỉ</span><button class="rd-btn plain sm icon" aria-label="Thêm tuỳ chọn"><span class="ms">more_horiz</span></button></span>
+              <span class="cell"><span class="lbl">hover</span><button class="rd-btn plain sm icon is-hover" aria-label="Thêm tuỳ chọn, hover"><span class="ms">more_horiz</span></button></span>
+              <span class="cell"><span class="lbl">active</span><button class="rd-btn plain sm icon is-active" aria-label="Thêm tuỳ chọn, nhấn"><span class="ms">more_horiz</span></button></span>
+              <span class="cell"><span class="lbl">focus</span><button class="rd-btn plain sm icon is-focus" aria-label="Thêm tuỳ chọn, focus"><span class="ms">more_horiz</span></button></span>
+            </div>
+            <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end">
+              <span class="cell"><span class="lbl">xs nghỉ</span><button class="rd-btn plain xs"><span class="ms">info</span>Privacy</button></span>
+              <span class="cell"><span class="lbl">hover</span><button class="rd-btn plain xs is-hover"><span class="ms">info</span>Privacy</button></span>
+              <span class="cell"><span class="lbl">active</span><button class="rd-btn plain xs is-active"><span class="ms">info</span>Privacy</button></span>
+              <span class="cell"><span class="lbl">focus</span><button class="rd-btn plain xs is-focus"><span class="ms">info</span>Privacy</button></span>
+              <span class="cell"><span class="lbl">menu user</span><button class="rd-btn plain icon is-hover" aria-label="Mở menu người dùng"><span class="rd-avatar"><span class="ms">person</span></span></button></span>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Hover đo được: nền trong suốt chuyển thành <code>#333D42</code> (secondary-background-hover), chữ thành trắng. Nhấn giữ: phủ thêm <code>interactive-pressed</code> 15%. Focus trên bản lưu là viền mặc định của trình duyệt.</span></div>
+        </div>
+        <div class="spec">
+          <div class="spec-h"><b>Join</b><span class="kind">shreddit-join-button · button-primary button-x-small h-lg</span><span class="dp">h 32 · 600 12</span></div>
+          <div class="stage">
+            <button class="rd-btn primary xs" style="--h:32px">Join</button>
+            <button class="rd-btn bordered xs" style="--h:32px">Joined</button>
+          </div>
+          <div class="spec-f"><span class="note">"Joined" dùng <code>button-bordered</code>, vẽ theo CSS <code>.button-primary-toggled</code> và chưa đo được trên trang.</span></div>
+        </div>
+        <div class="spec full">
+          <div class="spec-h"><b>Thanh hành động của post</b><span class="kind">rpl-action-bar · .rpl-vote-button-group.button-secondary</span><span class="dp">h 32 · gap 8</span></div>
+          <div class="stage col">
+            <div class="rd-actions">
+              <div class="rd-vote"><button class="up" aria-label="Upvote"><span class="ms">arrow_upward</span></button><span>128</span><button class="down" aria-label="Downvote"><span class="ms">arrow_downward</span></button></div>
+              <button class="rd-btn secondary sm"><span class="ms">chat_bubble</span>33</button>
+              <button class="rd-btn secondary sm"><span class="ms">ios_share</span>Share</button>
+            </div>
+            <div class="rd-actions">
+              <div class="rd-vote upvoted"><button class="up" aria-label="Bỏ upvote"><span class="ms fill">arrow_upward</span></button><span>129</span><button class="down" aria-label="Downvote"><span class="ms">arrow_downward</span></button></div>
+              <div class="rd-vote downvoted"><button class="up" aria-label="Upvote"><span class="ms">arrow_upward</span></button><span>127</span><button class="down" aria-label="Bỏ downvote"><span class="ms fill">arrow_downward</span></button></div>
+              <div class="rd-vote"><button class="up is-hover" aria-label="Upvote, hover"><span class="ms">arrow_upward</span></button><span>128</span><button class="down" aria-label="Downvote"><span class="ms">arrow_downward</span></button></div>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Thành phần này cần JS để render nên không có trong bản lưu. Thẻ được dựng theo CSS: nền <code>secondary-background</code>, trạng thái đã upvote <code>upvote-background</code> #D93900, đã downvote <code>downvote-background</code> #6A5CFF, hover mũi tên lên <code>upvote-plain-weaker</code>. Icon dùng Material Symbols thay cho icon RPL.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= ĐIỀU HƯỚNG ================= -->
+    <section class="block" id="navigation">
+      <header><h2>Điều hướng</h2><p>Header dính trên cùng, nav trái 272 có thể thu gọn, sort dropdown đặt trên feed.</p></header>
+      <div class="grid wide">
+        <div class="spec full" data-sig="ec7f98c27d e7ad375e28">
+          <div class="spec-h"><b>Header</b><span class="kind">reddit-header-large · header nav</span><span class="dp">h 56 + 1 · pad 0 16</span></div>
+          <div class="stage surface" style="padding:0;display:block;min-height:0">
+            <div class="rd-header">
+              <span class="rd-logo">logo</span>
+              <div class="mid"><div class="rd-search"><span class="ms">search</span><span class="t">Search Reddit</span></div></div>
+              <div class="right">
+                <button class="rd-btn plain icon" aria-label="Quảng cáo trên Reddit"><span class="ms">campaign</span></button>
+                <button class="rd-btn plain icon" aria-label="Mở chat"><span class="ms">sms</span></button>
+                <button class="rd-btn plain"><span class="ms">add</span>Create</button>
+                <span class="rd-iconhost"><button class="rd-btn plain icon" aria-label="Thông báo"><span class="ms">notifications</span></button><span class="rd-count">4</span></span>
+                <button class="rd-btn plain icon" aria-label="Mở menu người dùng"><span class="rd-avatar"><span class="ms">person</span><i class="rd-online"></i></span></button>
+              </div>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Search chỉ render được một phần trong bản lưu. Pill 40 dựng theo <code>faceplate-search-input</code>: nền <code>secondary-background</code>, bo full, chữ gợi ý màu weak. Logo đã thay bằng khối giữ chỗ.</span></div>
+        </div>
+        <div class="spec" data-sig="e56359be48 a8fe96f4d1 e1bb0fe88f 5d7fd56b42" data-sig-state="e1bb0fe88f:hover e1bb0fe88f:active e1bb0fe88f:focus">
+          <div class="spec-h"><b>Left nav</b><span class="kind">nav · left-nav-top-section · faceplate-expandable-section-helper</span><span class="dp">272 · item 40 · r 8</span></div>
+          <div class="stage surface" style="padding:0">
+            <div class="rd-nav">
+              <a class="rd-navitem on"><span class="ms fill">home</span>Home</a>
+              <a class="rd-navitem"><span class="ms">trending_up</span>Popular</a>
+              <a class="rd-navitem is-hover"><span class="ms">newspaper</span>News · hover</a>
+              <a class="rd-navitem is-active"><span class="ms">explore</span>Explore · active</a>
+              <a class="rd-navitem is-focus"><span class="ms">add</span>Start a community · focus</a>
+              <hr>
+              <details class="rd-section" open><summary>Games on Reddit<span class="ms">expand_more</span></summary>
+                <div style="padding:8px 16px"><div class="rd-game"><span class="rd-avatar"><span class="ms">sports_esports</span></span><div><b>Tên game</b><small>Mô tả ngắn</small></div></div></div>
+              </details>
+              <hr>
+              <details class="rd-section"><summary>Custom feeds<span class="ms">expand_more</span></summary></details>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Mục nav đo được: pad 4 16, bo 8. Hover nền <code>#181C1F</code> (neutral-background-hover) và chữ trắng. Nhấn giữ phủ trắng 15%. Tiêu đề section viết hoa, 12, giãn chữ 0.15em.</span></div>
+        </div>
+        <div class="spec" data-sig="931b5c19ac">
+          <div class="spec-h"><b>Nav · Recent</b><span class="kind">left-nav-community-item</span><span class="dp">item 40 · icon 32</span></div>
+          <div class="stage surface" style="padding:0">
+            <div class="rd-nav" style="border:none">
+              <details class="rd-section" open><summary>Recent<span class="ms">expand_more</span></summary>
+                <a class="rd-navitem"><span class="rd-avatar"><span class="ms">groups</span></span>r/cộng-đồng-a</a>
+                <a class="rd-navitem"><span class="rd-avatar"><span class="ms">groups</span></span>r/cộng-đồng-b</a>
+                <a class="rd-navitem"><span class="rd-avatar"><span class="ms">groups</span></span>r/cộng-đồng-c</a>
+              </details>
+            </div>
+          </div>
+        </div>
+        <div class="spec">
+          <div class="spec-h"><b>Sort &amp; kiểu xem</b><span class="kind">shreddit-sort-dropdown · button-small</span><span class="dp">h 32 · 600 12</span></div>
+          <div class="stage">
+            <button class="rd-sort">Best<span class="ms">expand_more</span></button>
+            <button class="rd-sort" aria-label="Kiểu xem"><span class="ms" style="font-size:18px">view_agenda</span><span class="ms">expand_more</span></button>
+          </div>
+          <div class="spec-f"><span class="note">Nút plain small, chữ <code>neutral-content-weak</code>, padding ngang 10.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= FEED ================= -->
+    <section class="block" id="feed">
+      <header><h2>Bài viết &amp; feed</h2><p>Mọi post trong feed là một <code>shreddit-post</code> rộng 732, bo 16, nền trùng nền trang và chỉ hiện nền khi hover. Các post ngăn nhau bằng <code>hr</code> 1 px.</p></header>
+      <div class="grid wide">
+        <div class="spec full" data-sig="afe833dd38 850f8638ed" data-sig-state="afe833dd38:hover 850f8638ed:hover 850f8638ed:focus">
+          <div class="spec-h"><b>Post · chữ</b><span class="kind">shreddit-post (post-type="text")</span><span class="dp">732 · r 16 · pad 4 16</span></div>
+          <div class="stage col surface">
+            <article class="rd-post">
+              <div class="head"><span class="rd-avatar s24"><span class="ms">groups</span></span><a class="rd-link community">r/cộng-đồng</a><span class="rd-pill-meta dot">5 hr. ago</span><span class="rd-pill-meta dot">Because you've visited this community</span><span class="grow"></span><button class="rd-btn primary xs" style="--h:32px">Join</button><button class="rd-btn plain sm icon" aria-label="Tuỳ chọn"><span class="ms">more_horiz</span></button></div>
+              <a class="rd-link title">Tiêu đề bài viết, tối đa hai dòng</a>
+              <p>Đoạn mở đầu của bài chữ, bị cắt sau 3 dòng. Chữ thân 14/20, màu neutral-content. Nội dung bài gốc không được chép vào kit.</p>
+              <div class="rd-actions"><div class="rd-vote"><button aria-label="Upvote"><span class="ms">arrow_upward</span></button><span>5</span><button aria-label="Downvote"><span class="ms">arrow_downward</span></button></div><button class="rd-btn secondary sm"><span class="ms">chat_bubble</span>33</button><button class="rd-btn secondary sm"><span class="ms">ios_share</span>Share</button></div>
+            </article>
+            <hr class="rd-divider">
+            <article class="rd-post is-hover">
+              <div class="head"><span class="rd-avatar s24"><span class="ms">groups</span></span><a class="rd-link community">r/cộng-đồng</a><span class="rd-pill-meta dot">14 hr. ago</span><span class="rd-pill-meta dot">Suggested</span><span class="grow"></span><button class="rd-btn primary xs" style="--h:32px">Join</button></div>
+              <a class="rd-link title">Post ở trạng thái hover hoặc focus</a>
+              <p>Nền đổi từ neutral-background sang neutral-background-hover (#0E1113 thành #181C1F ở chế độ tối).</p>
+            </article>
+          </div>
+        </div>
+        <div class="spec" data-sig="57515e42ee f891406512 9d5bcdcd7b">
+          <div class="spec-h"><b>Post · ảnh / gallery</b><span class="kind">gallery-carousel · faceplate-pagination-indicator</span><span class="dp">media r 16 · viền 1</span></div>
+          <div class="stage col surface">
+            <article class="rd-post">
+              <div class="head"><a class="rd-link community">r/cộng-đồng</a><span class="rd-pill-meta dot">2 hr. ago</span></div>
+              <a class="rd-link title">Bài có ảnh</a>
+              <div class="rd-media"><span class="ms">image</span><div class="rd-dots"><i class="on"></i><i></i><i></i></div></div>
+            </article>
+          </div>
+          <div class="spec-f"><span class="note">Chỗ ảnh để trống. Khung nền weak, bo 16, viền <code>neutral-border-weak</code>.</span></div>
+        </div>
+        <div class="spec" data-sig="901590835c" data-sig-state="901590835c:hover">
+          <div class="spec-h"><b>Post · spoiler</b><span class="kind">shreddit-content-tags · spoiler</span><span class="dp">blur + nút xs</span></div>
+          <div class="stage col surface">
+            <article class="rd-post is-hover">
+              <div class="head"><a class="rd-link community">r/cộng-đồng</a><span class="rd-pill-meta dot">4 days ago</span></div>
+              <span class="rd-tag"><span class="ms fill">warning</span>Spoiler</span>
+              <a class="rd-link title">Bài bị đánh dấu spoiler (đang hover)</a>
+              <div class="rd-media spoiler"><button class="rd-btn secondary xs">View spoiler</button><span class="ms">blur_on</span></div>
+            </article>
+          </div>
+        </div>
+        <div class="spec full" data-sig="b698705490 4a16de6d2b b3f8506e67 ab098990f0 c9a8226ab5 60b8681970 e2139dc6f0">
+          <div class="spec-h"><b>Post quảng cáo</b><span class="kind">shreddit-ad-post · delegated-link</span><span class="dp">tiêu đề + thân màu primary · CTA r full</span></div>
+          <div class="stage col surface">
+            <article class="rd-post">
+              <div class="head"><span class="rd-avatar s24"><span class="ms">storefront</span></span><a class="rd-link community sb">u/nhà-quảng-cáo</a><a class="rd-link ad dot">Ad</a><span class="grow"></span><button class="rd-btn plain sm icon" aria-label="Tuỳ chọn"><span class="ms">more_horiz</span></button></div>
+              <a class="rd-link title" style="color:var(--color-primary)">Tiêu đề quảng cáo dùng màu link</a>
+              <p class="ad-body">Thân quảng cáo cũng dùng màu <code>--color-primary</code>, khác với post thường.</p>
+              <div class="rd-adwrap"><div class="rd-media"><span class="ms">smart_display</span></div>
+                <div class="rd-cta"><span>tên-miền.com</span><button class="rd-btn secondary sm">Sign Up</button></div></div>
+            </article>
+          </div>
+          <div class="spec-f"><span class="note">Custom post dạng Devvit (e2139dc6f0) là một iframe ứng dụng, chỉ còn khung nền bo 16 nên gộp vào đây. Media và CTA đều nằm trong khung viền 1 bo 16, CTA ngăn cách bằng <code>hr</code>.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= THẺ ================= -->
+    <section class="block" id="containment">
+      <header><h2>Thẻ &amp; cột phụ</h2><p>Các khối nằm ngoài feed: gợi ý cộng đồng, xem trước bài, thẻ game và cột Recent Posts bên phải.</p></header>
+      <div class="grid">
+        <div class="spec" data-sig="c167ce41ea ba1b8868f0">
+          <div class="spec-h"><b>Gợi ý cộng đồng</b><span class="kind">in-feed-community-recs</span><span class="dp">viền 1 · r 16</span></div>
+          <div class="stage surface">
+            <div class="rd-commcard"><span class="rd-avatar s64"><span class="ms">groups</span></span><h4>r/cộng-đồng</h4><p>Mô tả cộng đồng, cắt sau hai dòng chữ 12/16.</p><button class="rd-btn primary xs" style="--h:32px">Join</button></div>
+          </div>
+        </div>
+        <div class="spec" data-sig="e3c5bde74d a8d5d1a833 da2e3b2003" data-sig-state="da2e3b2003:focus">
+          <div class="spec-h"><b>Xem trước bài</b><span class="kind">search-sdui-answers-preview · delegated-link</span><span class="dp">r 8 · thumb 68</span></div>
+          <div class="stage col surface">
+            <a class="rd-preview rd-link"><div class="txt"><b>Tiêu đề bài xem trước cắt sau hai dòng</b><small>r/cộng-đồng • 20 upvotes</small></div><span class="rd-thumb"><span class="ms">image</span></span></a>
+            <a class="rd-preview rd-link is-focus"><div class="txt"><b>Đang focus bằng bàn phím</b><small>r/cộng-đồng • 3 upvotes</small></div><span class="rd-thumb"><span class="ms">image</span></span></a>
+            <span class="rd-thumb big"><span class="ms">image</span></span>
+          </div>
+          <div class="spec-f"><span class="note">Nền <code>neutral-background-canvas</code>, viền weak. Thumbnail đứng riêng (a8d5d1a833) bo 8 và có viền.</span></div>
+        </div>
+        <div class="spec" data-sig="a33c03bc24 058b611d06">
+          <div class="spec-h"><b>Thẻ game</b><span class="kind">games-section-badge-wrapper · devvit-games-drawer-item</span><span class="dp">199 × 52 · r 16</span></div>
+          <div class="stage surface"><div class="rd-game"><span class="rd-avatar"><span class="ms">sports_esports</span></span><div><b>Tên game</b><small>Mô tả ngắn</small></div></div></div>
+          <div class="spec-f"><span class="note">Trên site, nền thẻ là ảnh bìa của game. Kit vẽ lại bằng gradient token và có đơn giản hoá.</span></div>
+        </div>
+        <div class="spec" data-sig="1a5a1c2aba 6eca09b240">
+          <div class="spec-h"><b>Recent Posts</b><span class="kind">#right-sidebar-container · recent-posts</span><span class="dp">316 · r 16 · nền weak</span></div>
+          <div class="stage surface">
+            <div class="rd-aside">
+              <div class="top"><h3>Recent Posts</h3><button class="rd-btn plain xs">Clear</button></div>
+              <div class="rd-recent"><a class="rd-link community sb"><span class="rd-avatar s24"><span class="ms">groups</span></span>r/cộng-đồng</a><h4>Tiêu đề bài đã xem, cắt sau hai dòng</h4><small>13 upvotes · 26 comments</small></div>
+              <div class="rd-recent"><a class="rd-link community sb"><span class="rd-avatar s24"><span class="ms">groups</span></span>r/cộng-đồng</a><h4>Bài khác</h4><small>2 upvotes · 2 comments</small></div>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Tiêu đề bài đã xem là 14/600, màu weak (#8BA2AD), để phân biệt với bài chưa xem.</span></div>
+        </div>
+        <div class="spec">
+          <div class="spec-h"><b>Tooltip</b><span class="kind">rpl-tooltip</span><span class="dp">r 8 · 12/16</span></div>
+          <div class="stage"><span class="rd-tooltip">Advertise on Reddit</span><span class="rd-tooltip">Open chat</span></div>
+          <div class="spec-f"><span class="note">Chỉ hiện khi JS chạy nên bản lưu không có. Vẽ theo token: nền inverted và <code>--boxshadow-tooltip</code>.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= DANH TÍNH & TAG ================= -->
+    <section class="block" id="identity">
+      <header><h2>Danh tính &amp; tag</h2><p>Avatar người dùng và icon cộng đồng luôn tròn. Màu nền avatar là màu khoá riêng của từng cộng đồng (<code>communityIcon</code>), thuộc nội dung người dùng chứ không phải token.</p></header>
+      <div class="grid">
+        <div class="spec" data-sig="d340357994 9547528585 93f771e53a b2bc552b7c f53e4e6e13 4578f3cae9 70a4405503 5db7c64e01 856f4712db 213a60539c 38bb7ec15a 81ee5d28c2 df3f11d78d 17594bca23 6ccb98456b">
+          <div class="spec-h"><b>Avatar / icon cộng đồng</b><span class="kind">faceplate-img · shreddit-subreddit-icon</span><span class="dp">16 · 24 · 32 · 40 · 64</span></div>
+          <div class="stage">
+            <span class="rd-avatar s16"><span class="ms">person</span></span>
+            <span class="rd-avatar s24"><span class="ms">groups</span></span>
+            <span class="rd-avatar"><span class="ms">groups</span></span>
+            <span class="rd-avatar s40 ring"><span class="ms">person</span></span>
+            <span class="rd-avatar s64"><span class="ms">groups</span></span>
+          </div>
+          <div class="spec-f"><span class="note">Có 15 biến thể, chỉ khác nhau ở màu nền và ảnh. Kit gom lại thành một hình dạng với 5 cỡ.</span></div>
+        </div>
+        <div class="spec" data-sig="6a8ae1d63f ebb3994be5">
+          <div class="spec-h"><b>Badge</b><span class="kind">rs-notifications-badge · online dot</span><span class="dp">16 · 8</span></div>
+          <div class="stage">
+            <span class="rd-iconhost"><button class="rd-btn plain icon" aria-label="Thông báo, 4 mới"><span class="ms">notifications</span></button><span class="rd-count">4</span></span>
+            <span class="rd-avatar s40"><span class="ms">person</span><i class="rd-online"></i></span>
+          </div>
+          <div class="spec-f"><span class="note">Chấm online dùng <code>success-background</code> với viền 1 cùng màu nền trang. Badge đếm dùng màu brand.</span></div>
+        </div>
+        <div class="spec">
+          <div class="spec-h"><b>Tag nội dung &amp; flair</b><span class="kind">shreddit-content-tags · shreddit-post-flair</span><span class="dp">h 20</span></div>
+          <div class="stage">
+            <span class="rd-tag"><span class="ms fill">warning</span>Spoiler</span>
+            <span class="rd-tag nsfw"><span class="ms fill">explicit</span>NSFW</span>
+            <span class="rd-flair">Discussion</span>
+            <span class="rd-flair">Question</span>
+          </div>
+          <div class="spec-f"><span class="note">Màu của flair do mod đặt riêng cho từng cộng đồng, kit dùng nền secondary.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CHỮ & LINK ================= -->
+    <section class="block" id="text">
+      <header><h2>Chữ &amp; link trên trang</h2><p>Mỗi kiểu link có vai trò màu và hover riêng, lấy theo số đo hover trên bản lưu.</p></header>
+      <div class="grid wide">
+        <div class="spec full" data-sig="c32125cd04 4d482f3864 c0ac13f64b f73bf3e8fc ebf17dfadb 65efdef387 3074bc3307 a7def621ab 5a2758d328" data-sig-state="c32125cd04:hover 4d482f3864:hover ebf17dfadb:hover 3074bc3307:hover 5a2758d328:hover">
+          <div class="spec-h"><b>Link · nghỉ → hover</b><span class="kind">a (faceplate-tracker)</span><span class="dp">12–18 px</span></div>
+          <div class="stage col scroll">
+            <table class="tok"><thead><tr><th>Kiểu</th><th>Nghỉ</th><th>Hover</th><th>Ghi chú</th></tr></thead><tbody>
+              <tr><td>cộng đồng trong post</td><td><a class="rd-link community">r/cộng-đồng</a></td><td><a class="rd-link community is-hover">r/cộng-đồng</a></td><td>600 12 · chữ thành primary-hover</td></tr>
+              <tr><td>cộng đồng ở cột phụ</td><td><a class="rd-link community sb">r/cộng-đồng</a></td><td><a class="rd-link community sb is-hover">r/cộng-đồng</a></td><td>secondary-plain · gạch chân</td></tr>
+              <tr><td>tiêu đề post</td><td><a class="rd-link title">Tiêu đề</a></td><td><a class="rd-link title">Tiêu đề</a></td><td>600 18/24 · không đổi khi hover</td></tr>
+              <tr><td>nhãn Ad</td><td><a class="rd-link ad">Ad</a></td><td><a class="rd-link ad is-hover">Ad</a></td><td>primary → primary-hover</td></tr>
+              <tr><td>meta / luật</td><td><a class="rd-link meta">Reddit Rules</a></td><td><a class="rd-link meta is-hover">Reddit Rules</a></td><td>weak → trắng + gạch chân</td></tr>
+              <tr><td>số comment</td><td><a class="rd-link meta" style="text-decoration:none">17 comments</a></td><td>—</td><td>weak 12</td></tr>
+              <tr><td>nhắc tên (u/…)</td><td><a class="rd-link mention">u/tên</a></td><td>—</td><td>trong thân bài</td></tr>
+              <tr><td>tên cộng đồng (tìm kiếm)</td><td><a class="rd-link plain12">r/cộng-đồng</a></td><td>—</td><td>600 12</td></tr>
+              <tr><td>chân trang</td><td><a class="rd-link foot">Reddit, Inc. © 2026</a></td><td><a class="rd-link foot is-hover">Reddit, Inc. © 2026</a></td><td>10/15 · gạch chân</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="spec" data-sig="b89b732158 9fd3ec1f3e 7983fd12ba">
+          <div class="spec-h"><b>Thân bài</b><span class="kind">shreddit-post-text-body · p · ul</span><span class="dp">14/20 · list 14/24</span></div>
+          <div class="stage col">
+            <p class="rd-body">Đoạn thân bài thường, màu neutral-content.</p>
+            <p class="rd-body ad">Thân của post quảng cáo, màu primary.</p>
+            <p class="rd-body sm">Mô tả phụ 12/16 màu weak.</p>
+            <ul class="rd-list"><li>Mục danh sách thứ nhất</li><li>Mục danh sách thứ hai</li></ul>
+          </div>
+        </div>
+        <div class="spec" data-sig="a672d31662 361a986a93">
+          <div class="spec-h"><b>Tiêu đề trang &amp; section</b><span class="kind">h1 · h3</span><span class="dp">400 20 · 700 18</span></div>
+          <div class="stage col">
+            <h1 class="rd-h1">Tiêu đề h1 của post chi tiết</h1>
+            <h3 class="rd-h3">Suggested communities</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= TRẠNG THÁI ================= -->
+    <section class="block" id="states">
+      <header><h2>Trạng thái focus</h2><p>Trên bản lưu, cả 16 phần tử focus được đều hiện viền mặc định của trình duyệt (<code>outline: auto</code>). Lý do là CSS trong shadow DOM và JS không chạy, nên kit không khẳng định site thật cũng như vậy. Token <code>--elevation-focus-ring</code> (vòng 4 px #1870F4) có tồn tại, và có thể là cách site thật vẽ focus cho nút.</p></header>
+      <div class="grid wide">
+        <div class="spec full" data-sig-state="ae1ee2e55a:focus c32125cd04:focus f73bf3e8fc:focus 4d482f3864:focus ebf17dfadb:focus 65efdef387:focus 3074bc3307:focus c0ac13f64b:focus a7def621ab:focus 5a2758d328:focus">
+          <div class="spec-h"><b>Focus · 2 kiểu</b><span class="kind">:focus-visible</span><span class="dp">outline auto · ring 4</span></div>
+          <div class="stage">
+            <span class="cell"><span class="lbl">mặc định trình duyệt (đo được)</span><button class="rd-btn primary is-focus">Skip to main content</button></span>
+            <span class="cell"><span class="lbl">link (đo được)</span><a class="rd-link community is-focus">r/cộng-đồng</a></span>
+            <span class="cell"><span class="lbl">link tiêu đề (đo được)</span><a class="rd-link title is-focus">Tiêu đề</a></span>
+            <span class="cell"><span class="lbl">link chân trang (đo được)</span><a class="rd-link foot is-focus">Reddit Rules</a></span>
+            <span class="cell"><span class="lbl">--elevation-focus-ring (token)</span><button class="rd-btn secondary is-ring">Focus ring</button></span>
+          </div>
+          <div class="spec-f"><span class="note">Focus bàn phím đo được trên bản lưu chỉ là viền mặc định của trình duyệt, Reddit không style riêng ở tầng CSS toàn cục.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= MÀN MẪU ================= -->
+    <section class="block" id="screens">
+      <header><h2>Màn hình mẫu</h2><p>Ghép lại từ chính các class <code>.rd-*</code> ở trên. Màn desktop 1440 × 900 theo đúng số đo khung. Màn mobile 390 × 844 dựng theo quy tắc responsive thường thấy của Reddit (ẩn cả hai cột phụ, header thu gọn), không đo từ trang.</p></header>
+      <div class="frame-wrap">
+        <div class="frames">
+          <div>
+            <div class="desk">
+              <div class="rd-header">
+                <span class="rd-logo">logo</span>
+                <div class="mid"><div class="rd-search"><span class="ms">search</span><span class="t">Search Reddit</span></div></div>
+                <div class="right">
+                  <button class="rd-btn plain icon" aria-label="Mở chat"><span class="ms">sms</span></button>
+                  <button class="rd-btn plain"><span class="ms">add</span>Create</button>
+                  <span class="rd-iconhost"><button class="rd-btn plain icon" aria-label="Thông báo"><span class="ms">notifications</span></button><span class="rd-count">4</span></span>
+                  <button class="rd-btn plain icon" aria-label="Menu người dùng"><span class="rd-avatar"><span class="ms">person</span><i class="rd-online"></i></span></button>
+                </div>
+              </div>
+              <div class="body">
+                <div class="rd-nav">
+                  <a class="rd-navitem on"><span class="ms fill">home</span>Home</a>
+                  <a class="rd-navitem"><span class="ms">trending_up</span>Popular</a>
+                  <a class="rd-navitem"><span class="ms">newspaper</span>News</a>
+                  <a class="rd-navitem"><span class="ms">explore</span>Explore</a>
+                  <a class="rd-navitem"><span class="ms">add</span>Start a community</a>
+                  <hr>
+                  <details class="rd-section" open><summary>Games on Reddit<span class="ms">expand_more</span></summary><div style="padding:8px 16px"><div class="rd-game"><span class="rd-avatar"><span class="ms">sports_esports</span></span><div><b>Tên game</b><small>Mô tả ngắn</small></div></div></div></details>
+                  <hr>
+                  <details class="rd-section" open><summary>Recent<span class="ms">expand_more</span></summary>
+                    <a class="rd-navitem"><span class="rd-avatar"><span class="ms">groups</span></span>r/cộng-đồng-a</a>
+                    <a class="rd-navitem"><span class="rd-avatar"><span class="ms">groups</span></span>r/cộng-đồng-b</a></details>
+                </div>
+                <div class="center">
+                  <div class="feed">
+                    <div><button class="rd-sort">Best<span class="ms">expand_more</span></button><button class="rd-sort" aria-label="Kiểu xem"><span class="ms" style="font-size:18px">view_agenda</span><span class="ms">expand_more</span></button></div>
+                    <article class="rd-post">
+                      <div class="head"><span class="rd-avatar s24"><span class="ms">groups</span></span><a class="rd-link community">r/cộng-đồng</a><span class="rd-pill-meta dot">5 hr. ago</span><span class="grow"></span><button class="rd-btn primary xs" style="--h:32px">Join</button><button class="rd-btn plain sm icon" aria-label="Tuỳ chọn"><span class="ms">more_horiz</span></button></div>
+                      <a class="rd-link title">Tiêu đề bài viết chữ</a>
+                      <p>Đoạn mở đầu của bài, cắt sau 3 dòng.</p>
+                      <div class="rd-actions"><div class="rd-vote upvoted"><button aria-label="Bỏ upvote"><span class="ms fill">arrow_upward</span></button><span>129</span><button aria-label="Downvote"><span class="ms">arrow_downward</span></button></div><button class="rd-btn secondary sm"><span class="ms">chat_bubble</span>33</button><button class="rd-btn secondary sm"><span class="ms">ios_share</span>Share</button></div>
+                    </article>
+                    <hr class="rd-divider">
+                    <article class="rd-post">
+                      <div class="head"><span class="rd-avatar s24"><span class="ms">storefront</span></span><a class="rd-link community sb">u/nhà-quảng-cáo</a><a class="rd-link ad dot">Ad</a></div>
+                      <a class="rd-link title" style="color:var(--color-primary)">Tiêu đề quảng cáo</a>
+                      <div class="rd-adwrap"><div class="rd-media" style="min-height:260px"><span class="ms">smart_display</span></div><div class="rd-cta"><span>tên-miền.com</span><button class="rd-btn secondary sm">Sign Up</button></div></div>
+                    </article>
+                  </div>
+                  <div class="rd-aside">
+                    <div class="top"><h3>Recent Posts</h3><button class="rd-btn plain xs">Clear</button></div>
+                    <div class="rd-recent"><a class="rd-link community sb"><span class="rd-avatar s24"><span class="ms">groups</span></span>r/cộng-đồng</a><h4>Tiêu đề bài đã xem</h4><small>13 upvotes · 26 comments</small></div>
+                    <div class="rd-recent"><a class="rd-link community sb"><span class="rd-avatar s24"><span class="ms">groups</span></span>r/cộng-đồng</a><h4>Một bài khác</h4><small>14 upvotes · 9 comments</small></div>
+                    <div class="rd-recent"><a class="rd-link community sb"><span class="rd-avatar s24"><span class="ms">groups</span></span>r/cộng-đồng</a><h4>Bài thứ ba</h4><small>2 upvotes · 2 comments</small></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="frame-cap">Desktop 1440 × 900: rd-header · rd-search · rd-nav + rd-section + rd-game · rd-sort · rd-post + rd-vote + rd-btn · rd-adwrap + rd-cta · rd-aside + rd-recent</p>
+          </div>
+          <div>
+            <div class="phone">
+              <div class="rd-header">
+                <button class="rd-btn plain icon" aria-label="Mở menu"><span class="ms">menu</span></button>
+                <span class="rd-logo" style="min-width:72px">logo</span>
+                <div class="mid"></div>
+                <div class="right">
+                  <button class="rd-btn plain icon" aria-label="Tìm kiếm"><span class="ms">search</span></button>
+                  <button class="rd-btn plain icon" aria-label="Menu người dùng"><span class="rd-avatar"><span class="ms">person</span></span></button>
+                </div>
+              </div>
+              <div class="feed">
+                <div style="padding:0 8px"><button class="rd-sort">Best<span class="ms">expand_more</span></button></div>
+                <article class="rd-post">
+                  <div class="head"><span class="rd-avatar s24"><span class="ms">groups</span></span><a class="rd-link community">r/cộng-đồng</a><span class="rd-pill-meta dot">5h</span><span class="grow"></span><button class="rd-btn primary xs" style="--h:32px">Join</button></div>
+                  <a class="rd-link title">Tiêu đề bài viết trên điện thoại</a>
+                  <p>Đoạn mở đầu của bài, cắt sau 3 dòng.</p>
+                  <div class="rd-actions"><div class="rd-vote"><button aria-label="Upvote"><span class="ms">arrow_upward</span></button><span>5</span><button aria-label="Downvote"><span class="ms">arrow_downward</span></button></div><button class="rd-btn secondary sm"><span class="ms">chat_bubble</span>33</button><button class="rd-btn secondary sm"><span class="ms">ios_share</span>Share</button></div>
+                </article>
+                <hr class="rd-divider">
+                <article class="rd-post">
+                  <div class="head"><a class="rd-link community">r/cộng-đồng</a><span class="rd-pill-meta dot">2h</span></div>
+                  <span class="rd-tag"><span class="ms fill">warning</span>Spoiler</span>
+                  <a class="rd-link title">Bài có ảnh bị che</a>
+                  <div class="rd-media spoiler"><button class="rd-btn secondary xs">View spoiler</button><span class="ms">blur_on</span></div>
+                  <div class="rd-actions"><div class="rd-vote downvoted"><button aria-label="Upvote"><span class="ms">arrow_upward</span></button><span>12</span><button aria-label="Bỏ downvote"><span class="ms fill">arrow_downward</span></button></div><button class="rd-btn secondary sm"><span class="ms">chat_bubble</span>4</button></div>
+                </article>
+              </div>
+            </div>
+            <p class="frame-cap">Mobile 390 × 844 (dựng theo quy tắc, không đo): rd-header thu gọn · rd-sort · rd-post · rd-tag · rd-media.spoiler · rd-vote</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"><span id="toast-t"></span></div>
+
+<script>
+/* bảng token dump từ bản lưu: getComputedStyle(:root) ở theme-light và theme-dark */
+const ROLES=["neutral-background", "neutral-background-weak", "neutral-background-container", "neutral-background-hover", "neutral-background-selected", "neutral-background-canvas", "neutral-content-strong", "neutral-content", "neutral-content-weak", "neutral-content-disabled", "neutral-border", "neutral-border-weak", "neutral-border-medium", "neutral-border-strong", "secondary-background", "secondary-background-hover", "secondary-background-selected", "secondary-plain", "secondary-plain-hover", "secondary-plain-weak", "secondary-onBackground", "primary", "primary-hover", "primary-visited", "primary-background", "primary-background-hover", "primary-onBackground", "brand-background", "brand-background-hover", "brand-onBackground", "upvote-background", "upvote-plain", "upvote-plain-weaker", "downvote-background", "downvote-plain", "downvote-plain-weaker", "success-background", "success-plain", "danger-background", "danger-plain", "danger-onBackground", "caution-background", "caution-onBackground", "interactive-focused", "interactive-pressed", "interactive-background-disabled", "interactive-content-disabled", "scrim-background", "inverted-neutral-background", "inverted-neutral-content-strong", "category-nsfw", "category-spoiler"];
+const PALETTES={"reddit":{"label":"Reddit","light":["#FFFFFF", "#F6F8F9", "#F6F8F9", "#F6F8F9", "#E5EBEE", "#E5EBEE", "#181C1F", "#333D42", "#5C6C74", "#D6D6D6", "#00000033", "#00000019", "#0000007F", "#181C1F", "#E5EBEE", "#DBE4E9", "#C9D7DE", "#181C1F", "#000000", "#5C6C74", "#000000", "#115BCA", "#0A449B", "#9B00D4", "#000000", "#21272A", "#FFFFFF", "#D93900", "#AE2C00", "#FFFFFF", "#D93900", "#AE2C00", "#FF4500", "#6A5CFF", "#523DFF", "#6A5CFF", "#008A10", "#016E0B", "#EB001F", "#BC0117", "#FFFFFF", "#FFBF0B", "#000000", "#01668D", "#00000026", "#0000000C", "#0000003F", "#00000099", "#0E1113", "#EEF1F3", "#DE019F", "#131313"],"dark":["#0E1113", "#000000", "#181C1F", "#181C1F", "#2A3236", "#21272A", "#EEF1F3", "#B7CAD4", "#8BA2AD", "#303030", "#FFFFFF33", "#FFFFFF19", "#FFFFFF7F", "#F6F8F9", "#2A3236", "#333D42", "#3D494E", "#DBE4E9", "#FFFFFF", "#8BA2AD", "#FFFFFF", "#648EFC", "#90A9FD", "#CF5FFF", "#EEF1F3", "#FFFFFF", "#000000", "#D93900", "#AE2C00", "#FFFFFF", "#D93900", "#FF895D", "#FF4500", "#6A5CFF", "#9580FF", "#6A5CFF", "#016E0B", "#00C61C", "#BC0117", "#FF8773", "#FFFFFF", "#D8A100", "#000000", "#02B9FB", "#FFFFFF26", "#FFFFFF0C", "#FFFFFF3F", "#00000099", "#FFFFFF", "#181C1F", "#DE019F", "#F2F2F2"]}};
+(function () {
+  const root = document.documentElement;
+  const state = { pal: "reddit", mode: matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light" };
+  try { Object.assign(state, JSON.parse(localStorage.getItem("reddit-kit") || "{}")); } catch (e) {}
+
+  const toast = (t) => {
+    const el = document.getElementById("toast");
+    document.getElementById("toast-t").textContent = t;
+    el.classList.add("show");
+    clearTimeout(toast.t);
+    toast.t = setTimeout(() => el.classList.remove("show"), 1600);
+  };
+  const copy = async (text, msg) => {
+    try { await navigator.clipboard.writeText(text); toast(msg); }
+    catch (e) { toast("Trình duyệt chặn clipboard, hãy copy tay"); }
+  };
+
+  function apply() {
+    const vals = PALETTES.reddit[state.mode];
+    ROLES.forEach((r, i) => root.style.setProperty("--color-" + r, vals[i]));
+    root.dataset.mode = state.mode;
+    document.querySelectorAll("#mode button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === state.mode));
+    renderRoles(vals);
+    try { localStorage.setItem("reddit-kit", JSON.stringify({ mode: state.mode })); } catch (e) {}
+  }
+  document.querySelectorAll("#mode button").forEach((b) => (b.onclick = () => { state.mode = b.dataset.v; apply(); }));
+
+  /* ô màu: nền + chữ đúng cặp; vai trò chữ/viền thì hiện trên nền trang */
+  const PAIRS = { "primary-background": "primary-onBackground", "secondary-background": "secondary-onBackground", "brand-background": "brand-onBackground",
+    "upvote-background": "brand-onBackground", "downvote-background": "brand-onBackground", "success-background": "brand-onBackground", "danger-background": "danger-onBackground",
+    "caution-background": "caution-onBackground", "inverted-neutral-background": "inverted-neutral-content-strong", "primary-onBackground": "primary-background",
+    "brand-onBackground": "brand-background", "danger-onBackground": "danger-background", "caution-onBackground": "caution-background", "secondary-onBackground": "secondary-background",
+    "inverted-neutral-content-strong": "inverted-neutral-background", "primary-background-hover": "primary-onBackground", "brand-background-hover": "brand-onBackground",
+    "secondary-background-hover": "secondary-onBackground", "secondary-background-selected": "secondary-onBackground", "scrim-background": "brand-onBackground" };
+  const isBg = (r) => /background|canvas/.test(r) && !/onBackground/.test(r);
+  function renderRoles(vals) {
+    const box = document.getElementById("roles");
+    box.innerHTML = "";
+    const at = (r) => vals[ROLES.indexOf(r)];
+    ROLES.forEach((r, i) => {
+      const b = document.createElement("button");
+      b.className = "role";
+      if (PAIRS[r]) { b.style.background = vals[i]; b.style.color = at(PAIRS[r]); }
+      else if (isBg(r)) { b.style.background = vals[i]; b.style.color = at("neutral-content-strong"); }
+      else { b.style.background = at("neutral-background"); b.style.color = vals[i]; b.style.boxShadow = "inset 0 -6px 0 " + vals[i] + ", inset 0 0 0 1px " + at("neutral-border-weak"); }
+      b.innerHTML = "<b>" + r + "</b><code>" + vals[i] + "</code>";
+      b.onclick = () => copy(vals[i], "Đã copy " + r + " " + vals[i]);
+      box.appendChild(b);
+    });
+  }
+
+  /* thang chữ RPL (--font-*) + kiểu chữ thực dùng đo được */
+  const TYPE = [["huge-display", 64, 64, 700], ["display", 48, 48, 700], ["title-1", 32, 36, 700], ["title-2", 24, 28, 700], ["title-3", 18, 24, 700],
+    ["headline", 16, 20, 600], ["body-1", 16, 20, 400], ["body-2", 14, 20, 400], ["label-1", 14, 20, 600], ["label-2", 12, 16, 600],
+    ["caption-1", 12, 16, 400], ["caption-2", 10, 16, 400], ["button-md", 14, 20, 600], ["button-sm", 12, 16, 600], ["button-xs", 12, 14, 700],
+    ["· post title", 18, 24, 600], ["· post body", 14, 20, 400], ["· h1 post", 20, 24, 400], ["· section h3", 18, 24, 700], ["· meta", 12, 16, 400], ["· footer", 10, 15, 400]];
+  const ts = document.getElementById("typescale");
+  TYPE.forEach(([name, size, lh, w]) => {
+    const row = document.createElement("div");
+    row.className = "type-row";
+    row.innerHTML = '<span class="meta">' + (name[0] === "·" ? "đo được " + name : "--font-" + name) + '</span><span class="t" style="font-size:' + size + 'px;line-height:' + lh + 'px;font-weight:' + w + '">The front page of the internet</span><span class="meta">' + size + " / " + lh + " · " + w + "</span>";
+    ts.appendChild(row);
+  });
+
+  const sh = document.getElementById("shapes");
+  [["radius-sm", 4], ["radius-2", 8], ["radius-4", 16], ["radius-md", 20], ["radius-6", 24], ["radius-lg", 32]].forEach(([n, r]) => {
+    const c = document.createElement("div");
+    c.className = "shape-cell";
+    c.innerHTML = '<i style="border-radius:' + r + 'px"></i>' + n + " · " + r;
+    sh.appendChild(c);
+  });
+  const full = document.createElement("div");
+  full.className = "shape-cell"; full.innerHTML = '<i style="border-radius:9999px"></i>radius-full';
+  sh.appendChild(full);
+
+  document.querySelectorAll(".spec").forEach((spec) => {
+    const stage = spec.querySelector(".stage");
+    if (!stage || !spec.querySelector(".spec-h")) return;
+    let foot = spec.querySelector(".spec-f");
+    if (!foot) { foot = document.createElement("div"); foot.className = "spec-f"; foot.innerHTML = '<span class="note"></span>'; spec.appendChild(foot); }
+    const b = document.createElement("button");
+    b.className = "copy"; b.innerHTML = '<span class="ms">content_copy</span>HTML';
+    b.onclick = () => copy(stage.innerHTML.trim().replace(/\n\s+/g, "\n"), "Đã copy HTML của " + spec.querySelector(".spec-h b").textContent);
+    foot.appendChild(b);
+  });
+
+  document.getElementById("copy-tokens").onclick = () => {
+    const vals = PALETTES.reddit[state.mode];
+    const lines = ROLES.map((r, i) => "  --color-" + r + ": " + vals[i] + ";");
+    const rest = getComputedStyle(root);
+    const extra = ["--radius-sm", "--radius-2", "--radius-4", "--radius-md", "--radius-6", "--radius-lg", "--radius-full", "--spacer-4xs", "--spacer-2xs", "--spacer-xs", "--spacer-sm", "--spacer-md", "--spacer-lg", "--spacer-xl", "--spacer-2xl",
+      "--size-button-xs-h", "--size-button-sm-h", "--size-button-md-h", "--size-button-lg-h", "--line-sm", "--line-md", "--line-lg", "--elevation-xs", "--elevation-sm", "--elevation-md", "--elevation-lg", "--elevation-focus-ring", "--boxshadow-tooltip", "--font-sans"]
+      .map((n) => "  " + n + ": " + rest.getPropertyValue(n).trim() + ";");
+    copy(":root {\n" + lines.join("\n") + "\n" + extra.join("\n") + "\n}", "Đã copy token Reddit " + (state.mode === "dark" ? "tối" : "sáng"));
+  };
+
+  const links = [...document.querySelectorAll(".side a")];
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (e.isIntersecting) links.forEach((a) => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id));
+  }), { rootMargin: "-30% 0px -60% 0px" });
+  document.querySelectorAll("section.block").forEach((s) => io.observe(s));
+
+  apply();
+})();
+</script>
+</body>
+</html>

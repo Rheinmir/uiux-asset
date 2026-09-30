@@ -1,0 +1,1286 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta name="ui-kit-id" content="justiceforpubgvn-com">
+<!-- UI kit rút từ https://justiceforpubgvn.com/vi (Next.js, CSS viết tay, 28/09/2026) bằng skill ui-kit-from-code.
+     Token và số đo lấy bằng cách parse file CSS thật của site (_next/static/chunks/3builuvm-xa1-.css) và đọc
+     getComputedStyle bằng Playwright; không gõ tay. Không nhúng ảnh, cờ, logo hay nội dung của site:
+     ảnh là khối giữ chỗ, chữ mẫu là câu trung tính viết lại theo đúng nhịp chữ của site. -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="ui-kit-skip" content="b843c0de70:khối code thô của trang attachments/manifest.json (tệp JSON trình duyệt tự hiển thị, không thuộc thiết kế);fe5cbb6737:khối code thô của các tệp attachments/*.txt (văn bản nguồn trình duyệt tự hiển thị)">
+<title>Justice UI Kit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Kit mặc token của site: mọi màu là một vai trò --jf-<role>. Site có hai nền (giấy #ededed và mực #050505)
+   và hai sắc (trung tính ở trang chủ/kho tài liệu, rêu ở trang tuyển thủ/pháp lý). Kit coi "giấy/mực" là
+   sáng/tối và "trung tính/rêu" là palette. Khối :root dưới đây là giá trị mặc định (trung tính · giấy);
+   script ghi đè theo lựa chọn, và sinh hai phạm vi .jf-ink / .jf-paper để thành phần vốn sống trên nền mực
+   (story panel, header) luôn hiện đúng nền của nó dù trang đang ở chế độ nào. */
+:root {
+  --jf-bg:#ededed; --jf-surface:#fafafa; --jf-surfaceAlt:#eae9e6; --jf-line:#c6c6c6; --jf-lineStrong:#111111;
+  --jf-text:#111111; --jf-textMuted:#555b62; --jf-textFaint:#6c6c6c; --jf-accent:#c2c2c2; --jf-onAccent:#030303;
+  --jf-accentHover:#e6e8ea; --jf-inverse:#030303; --jf-onInverse:#ffffff; --jf-inverseMuted:#918f84; --jf-focus:#c2c2c2;
+  --jf-sage:#dce2d9; --jf-sageCard:#f1f4ef; --jf-sageDeep:#19231c; --jf-sageCallout:#435c48; --jf-sageLine:#879589; --jf-sageText:#4d5b4f; --jf-error:#ffb5b5;
+  --jf-sageInk:#171b17; --jf-sageEyebrow:#536657; --jf-sageMeta:#5d6e60; --jf-sageBody:#414b42; --jf-sageRule:#bfc9be; --jf-sageOnDeep:#eef3ee; --jf-sageDeepLine:#a4b8a5; --jf-sageDeepMeta:#aebfad; --jf-sageDeepBody:#ccd8cd; --jf-sageDeepRule:#4d6250; --jf-onCallout:#f0f4ef; --jf-calloutSub:#d4e1d4; --jf-sageNote:#5a685c; --jf-sageLink:#263d2b; --jf-sageLinkLine:#344d39; --jf-sageLinkHover:#000000; --jf-shadowCard:#c5cac5; --jf-shadowMilestone:#aab7aa; --jf-tocHover:#536d58; --jf-backdrop:#000000c7;
+  --jf-display: "Barlow Condensed", Impact, sans-serif;
+  --jf-font: Inter, Arial, sans-serif;
+  --jf-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --jf-ease: cubic-bezier(.2,.7,.2,1);
+  --jf-shadow-menu: 0 12px 24px #00000047;
+  --jf-shadow-dialog: 0 24px 80px #00000080;
+  --jf-page: 1376px;
+  color-scheme: light;
+}
+:root[data-mode="dark"] { color-scheme: dark; }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--jf-bg); color: var(--jf-text); font: 400 14px/1.55 var(--jf-font); -webkit-font-smoothing: antialiased; }
+code, .code { font-family: var(--jf-mono); font-size: 12px; letter-spacing: 0; }
+:focus-visible { outline: 2px solid var(--jf-focus); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+svg.i { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: square; stroke-linejoin: miter; flex: none; display: block; }
+
+/* ---------- vỏ trang ---------- */
+.shell { display: grid; grid-template-columns: 236px minmax(0, 1fr); min-height: 100vh; }
+.side { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 20px 12px; background: var(--jf-inverse); color: var(--jf-onInverse); display: flex; flex-direction: column; gap: 2px; }
+.brand { padding: 4px 12px 18px; }
+.brand b { font: 800 24px/.9 var(--jf-display); letter-spacing: -.015em; display: block; text-transform: uppercase; }
+.brand b span { color: var(--jf-inverseMuted); }
+.brand small { display: block; margin-top: 8px; color: var(--jf-inverseMuted); font-size: 9px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+.side h6 { margin: 16px 12px 6px; font-size: 10px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--jf-inverseMuted); }
+.side a { display: flex; align-items: center; min-height: 34px; padding: 0 12px; color: var(--jf-onInverse); opacity: .78; text-decoration: none; font-size: 12px; font-weight: 700; letter-spacing: .04em; border-left: 2px solid transparent; }
+.side a:hover { opacity: 1; }
+.side a.on { opacity: 1; border-left-color: currentColor; font-weight: 800; }
+main { padding: 0 32px 96px; min-width: 0; }
+
+.bar { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; padding: 14px 0; background: var(--jf-bg); border-bottom: 1px solid var(--jf-line); }
+.bar .grow { flex: 1; }
+.ctl { display: flex; align-items: center; gap: 8px; }
+.ctl > span { font-size: 10px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--jf-textMuted); }
+.seg { display: inline-flex; gap: 2px; padding: 2px; background: var(--jf-surfaceAlt); border: 1px solid var(--jf-line); }
+.seg button { height: 30px; padding: 0 12px; border: none; background: transparent; color: var(--jf-textMuted); font: 700 12px var(--jf-font); letter-spacing: .04em; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--jf-inverse); color: var(--jf-onInverse); }
+
+.intro { padding: 44px 0 8px; max-width: 860px; }
+.intro .eyebrow { font-family: var(--jf-mono); font-size: 12px; color: var(--jf-textMuted); }
+.intro h1 { font: 800 clamp(56px, 7vw, 96px)/.94 var(--jf-display); letter-spacing: -.03em; text-transform: uppercase; margin: 14px 0 18px; text-wrap: balance; }
+.intro h1 span { color: var(--jf-textFaint); }
+.intro p { font-size: 15px; line-height: 1.7; color: var(--jf-textMuted); margin: 0; max-width: 70ch; }
+.intro .facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+.fact { font-family: var(--jf-mono); font-size: 11px; padding: 5px 10px; background: var(--jf-surfaceAlt); border: 1px solid var(--jf-line); color: var(--jf-textMuted); }
+
+section.block { padding-top: 64px; scroll-margin-top: 64px; }
+section.block > header { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
+section.block h2 { font: 800 48px/.9 var(--jf-display); letter-spacing: -.02em; text-transform: uppercase; margin: 0; }
+section.block > header p { margin: 0; color: var(--jf-textMuted); max-width: 76ch; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 16px; }
+.grid.wide { grid-template-columns: repeat(auto-fill, minmax(480px, 1fr)); }
+.spec { background: var(--jf-surface); border: 1px solid var(--jf-line); display: flex; flex-direction: column; min-width: 0; }
+.spec.full { grid-column: 1 / -1; }
+.spec-h { display: flex; align-items: center; gap: 8px; padding: 14px 16px 0; flex-wrap: wrap; }
+.spec-h b { font-size: 14px; font-weight: 700; }
+.kind { font-family: var(--jf-mono); font-size: 11px; padding: 2px 8px; background: var(--jf-inverse); color: var(--jf-onInverse); }
+.spec-h .dp { margin-left: auto; font-family: var(--jf-mono); font-size: 11px; color: var(--jf-textMuted); font-variant-numeric: tabular-nums; }
+.stage { padding: 20px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 16px; min-height: 96px; overflow-x: auto; }
+.stage.col { flex-direction: column; align-items: stretch; }
+.stage.jf-ink, .stage.jf-paper, .stage.sage { margin: 12px 12px 0; background: var(--jf-bg); color: var(--jf-text); }
+.stage.sage { background: var(--jf-sage); color: var(--jf-sageInk); }
+.st { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; min-width: 0; }
+.st > i { font-style: normal; font-family: var(--jf-mono); font-size: 10px; color: var(--jf-textFaint); }
+.spec-f { display: flex; align-items: center; gap: 8px; padding: 8px 12px 12px 16px; margin-top: auto; }
+.spec-f .note { font-size: 12px; color: var(--jf-textMuted); flex: 1; }
+.copy { height: 30px; padding: 0 12px; border: 1px solid transparent; background: transparent; color: var(--jf-text); font: 700 12px var(--jf-font); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.copy:hover { border-color: var(--jf-line); background: var(--jf-surfaceAlt); }
+.states { display: flex; flex-wrap: wrap; gap: 20px 28px; align-items: flex-start; }
+
+/* nền tảng */
+.roles { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; }
+.role { padding: 12px; min-height: 78px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: inset 0 0 0 1px rgba(128,128,128,.3); cursor: pointer; border: none; text-align: left; font: inherit; }
+.role b { font-size: 12px; font-weight: 700; }
+.role code { font-size: 11px; opacity: .85; }
+.role em { font-style: normal; font-size: 10px; font-family: var(--jf-mono); opacity: .8; }
+.ramp-t { margin: 22px 0 8px; font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--jf-textMuted); }
+.ramp { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 6px; }
+.ramp .role { min-height: 64px; }
+.type-row { display: grid; grid-template-columns: 180px minmax(0, 1fr) 210px; gap: 16px; align-items: baseline; padding: 14px 0; border-bottom: 1px solid var(--jf-line); }
+.type-row:last-child { border-bottom: none; }
+.type-row .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.type-row .meta { font-family: var(--jf-mono); font-size: 11px; color: var(--jf-textMuted); font-variant-numeric: tabular-nums; }
+.shape-cell { display: flex; flex-direction: column; align-items: center; gap: 6px; font-family: var(--jf-mono); font-size: 11px; color: var(--jf-textMuted); text-align: center; }
+.shape-cell i { display: block; width: 72px; height: 72px; background: var(--jf-surfaceAlt); border: 1px solid var(--jf-line); }
+table.tok { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+table.tok th, table.tok td { text-align: left; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--jf-line); font-size: 13px; vertical-align: top; }
+table.tok th { font-weight: 800; color: var(--jf-textMuted); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; }
+table.tok td:first-child { font-family: var(--jf-mono); font-size: 12px; white-space: nowrap; }
+.tbl { overflow-x: auto; width: 100%; }
+
+/* ================= thành phần jf-* (tái dùng được: chỉ cần khối --jf-*) =================
+   Số đo chép từ CSS gốc ở viewport 1440 (clamp() giữ nguyên để co theo màn). Mọi góc vuông (r 0), chỉ chấm
+   tròn và nút "?" là 50%. Chữ hiển thị là Barlow Condensed 700/800 viết hoa, chữ thường là Inter. */
+
+/* chữ */
+.jf-eyebrow { display: flex; align-items: center; gap: 12px; margin: 0; font-size: 12px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+.jf-eyebrow::before { content: ""; width: 20px; height: 2px; background: currentColor; flex: none; }
+.jf-eyebrow.bare::before { display: none; }
+.jf-kicker { margin: 0; color: var(--jf-textFaint); font-size: 11px; font-weight: 800; letter-spacing: .17em; text-transform: uppercase; }
+.jf-micro { font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+.jf-d { font-family: var(--jf-display); font-weight: 800; text-transform: uppercase; margin: 0; }
+.jf-hero-title { font: 800 clamp(70px, 6.7vw, 110px)/.88 var(--jf-display); letter-spacing: -.035em; margin: 0; text-wrap: balance; }
+.jf-index-title { font: 800 clamp(70px, 9vw, 134px)/.82 var(--jf-display); letter-spacing: -.035em; text-transform: uppercase; margin: 0; }
+.jf-mag-title { font: 800 clamp(70px, 7vw, 118px)/.86 var(--jf-display); letter-spacing: -.03em; text-transform: uppercase; margin: 0; text-wrap: balance; }
+.jf-story-title { font: 800 clamp(58px, 5.3vw, 86px)/.9 var(--jf-display); letter-spacing: -.02em; text-transform: uppercase; margin: 0; text-wrap: balance; }
+.jf-card-title { font: 800 clamp(40px, 3.6vw, 57px)/.95 var(--jf-display); text-transform: uppercase; margin: 0; }
+.jf-h3-31 { font: 700 31px/1 var(--jf-display); text-transform: uppercase; margin: 0; }
+.jf-statement { border-left: 4px solid var(--jf-accent); margin: 0; padding-left: 19px; max-width: 690px; font-size: clamp(19px, 1.7vw, 24px); font-weight: 700; line-height: 1.42; }
+.jf-desc { max-width: 660px; margin: 0; font-size: clamp(14px, 1.05vw, 17px); line-height: 1.7; color: var(--jf-textMuted); }
+.jf-lead { max-width: 720px; margin: 0; font-size: clamp(20px, 1.7vw, 26px); font-weight: 600; line-height: 1.5; }
+.jf-body { margin: 0; font-size: 15px; line-height: 1.7; color: var(--jf-textMuted); max-width: 640px; }
+.jf-small { margin: 0; font-size: 12px; line-height: 1.6; color: var(--jf-textMuted); }
+.jf-quote { margin: 0; border-left: 3px solid var(--jf-lineStrong); padding: 4px 0 4px 20px; font-size: clamp(17px, 2vw, 21px); font-weight: 600; line-height: 1.55; max-width: 820px; }
+
+/* header site (trang chủ): 76 cao, nền mực 75% + blur 12, vạch dưới #333, lề 40 */
+.jf-header { height: 76px; padding: 0 var(--jf-gutter, 40px); display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 36px; background: color-mix(in srgb, var(--jf-bg) 75%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--jf-line); color: var(--jf-text); width: 100%; }
+.jf-header.solid { background: var(--jf-bg); min-height: 78px; gap: 35px; }
+.jf-wordmark { display: inline-flex; align-items: center; gap: 14px; width: max-content; color: inherit; text-decoration: none; }
+.jf-wordmark b { font: 800 26px/.9 var(--jf-display); letter-spacing: -.015em; text-transform: uppercase; }
+.jf-wordmark b span { color: var(--jf-accent); }
+.jf-wordmark small { border-left: 1px solid var(--jf-line); padding-left: 14px; color: var(--jf-textFaint); font-size: 12px; font-weight: 700; letter-spacing: .14em; white-space: nowrap; text-transform: uppercase; }
+.jf-nav { display: flex; align-items: center; gap: 25px; height: 100%; }
+.jf-nav a { color: var(--jf-textMuted); font-size: 11px; font-weight: 800; letter-spacing: .1em; white-space: nowrap; text-decoration: none; text-transform: uppercase; transition: color .2s; }
+.jf-nav a:hover, .jf-nav a.is-hover { color: var(--jf-text); }
+.jf-nav.interior { gap: 27px; }
+.jf-nav.interior a { letter-spacing: .095em; }
+.jf-nav.under a { position: relative; height: 100%; display: inline-flex; align-items: center; }
+.jf-nav.under a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--jf-accent); transform: scaleX(0); transform-origin: 0; transition: transform .2s; }
+.jf-nav.under a:hover::after, .jf-nav.under a.is-hover::after { transform: scaleX(1); }
+.jf-nav.under a:hover, .jf-nav.under a.is-hover { color: var(--jf-accent); }
+.jf-subnav { display: flex; justify-content: center; gap: 30px; min-height: 39px; align-items: center; padding: 0 12px; background: color-mix(in srgb, var(--jf-bg) 90%, transparent); border-bottom: 1px solid var(--jf-line); }
+.jf-subnav a { color: var(--jf-textMuted); font-size: 10px; font-weight: 800; letter-spacing: .1em; text-decoration: none; text-transform: uppercase; }
+.jf-back { color: var(--jf-accent); font-size: 12px; font-weight: 800; letter-spacing: .12em; text-decoration: none; white-space: nowrap; text-transform: uppercase; }
+/* focus của site: a:focus-visible = outline 2px solid accent, offset 3 */
+.is-focus { outline: 2px solid var(--jf-focus); outline-offset: 3px; }
+
+/* chọn ngôn ngữ: nút 130 × 36 viền #62676c, menu rộng ≥154 pad 4, mục 37 cao; hover/chọn = nền accent */
+.jf-lang { position: relative; justify-self: end; }
+.jf-lang-btn { display: flex; align-items: center; gap: 9px; min-width: 130px; min-height: 36px; padding: 6px 9px; background: var(--jf-surface); color: var(--jf-text); border: 1px solid var(--jf-line); font: 700 11px var(--jf-font); cursor: pointer; white-space: nowrap; }
+.jf-lang-btn > span { flex: 1; text-align: left; }
+.jf-lang-btn svg.i { width: 12px; height: 12px; transition: transform .2s; }
+.jf-lang-btn[aria-expanded="true"] svg.i { transform: rotate(180deg); }
+.jf-flag { width: 24px; height: 16px; flex: none; border: 1px solid var(--jf-line); background: repeating-linear-gradient(135deg, var(--jf-surfaceAlt) 0 3px, var(--jf-line) 3px 4px); }
+.jf-lang-menu { background: var(--jf-surface); border: 1px solid var(--jf-line); width: max(100%, 154px); padding: 4px; box-shadow: var(--jf-shadow-menu); }
+.jf-lang-menu.pop { position: absolute; top: calc(100% + 5px); right: 0; z-index: 3; }
+.jf-lang-menu button { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 37px; padding: 6px 8px; background: none; border: 0; color: var(--jf-text); font: 400 11px var(--jf-font); text-align: left; cursor: pointer; }
+.jf-lang-menu button > span:nth-child(2) { flex: 1; }
+.jf-lang-menu button:hover, .jf-lang-menu button.is-hover, .jf-lang-menu button[aria-selected="true"] { background: var(--jf-accent); color: var(--jf-onAccent); }
+.jf-lang-menu button svg.i { width: 15px; height: 15px; stroke-width: 3; }
+
+/* thanh tiến độ story: 56 cao, nền mực 97% + blur 12; vạch 28 × 7, vạch hiện tại 48 × 7 accent; fill 2px */
+.jf-progress { height: 56px; background: color-mix(in srgb, var(--jf-bg) 97%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--jf-line); width: 100%; }
+.jf-progress .in { height: 54px; display: flex; align-items: center; justify-content: space-between; gap: 25px; padding: 0 var(--jf-gutter, 32px); }
+.jf-progress .in > span { color: var(--jf-textFaint); font-size: 12px; font-weight: 800; letter-spacing: .12em; white-space: nowrap; text-transform: uppercase; }
+.jf-progress .in > span strong { color: var(--jf-accent); margin-left: 7px; }
+.jf-progress nav { display: flex; align-items: center; gap: 9px; }
+.jf-progress nav a { display: block; width: 28px; height: 7px; background: var(--jf-line); transition: background .2s, width .2s; }
+.jf-progress nav a[aria-current="true"] { width: 48px; background: var(--jf-accent); }
+.jf-progress .in > a { color: var(--jf-accent); font-size: 12px; font-weight: 800; letter-spacing: .1em; text-decoration: none; white-space: nowrap; text-transform: uppercase; }
+.jf-progress .fill { height: 2px; background: var(--jf-accent); }
+.jf-bp-phone .jf-progress nav { gap: 4px; }
+.jf-bp-phone .jf-progress nav a { width: 10px; height: 5px; }
+.jf-bp-phone .jf-progress nav a[aria-current="true"] { width: 22px; }
+.jf-bp-phone .jf-progress .in > a { display: none; }
+
+/* nút chính: accent, chữ 13/800 tracking .12em, pad 18 19 18 23, min 257, gap 48; hover nền #e6e8ea + nhấc 2px */
+.jf-cta { display: inline-flex; align-items: center; justify-content: space-between; gap: 48px; min-width: 257px; padding: 18px 19px 18px 23px; background: var(--jf-accent); color: var(--jf-onAccent); border: 0; font: 800 13px var(--jf-font); letter-spacing: .12em; text-align: left; text-decoration: none; cursor: pointer; transition: background .2s, transform .2s; }
+.jf-cta svg.i { width: 20px; height: 20px; }
+.jf-cta:hover, .jf-cta.is-hover { background: var(--jf-accentHover); transform: translateY(-2px); }
+.jf-cta.full { width: 100%; min-width: 0; gap: 16px; min-height: 52px; padding: 14px 16px; }
+/* nút hồ sơ (trang tuyển thủ): 52 cao, pad 0 20, gap 30, 11/800 .09em; chính nền accent rêu, phụ viền */
+.jf-profile { display: inline-flex; align-items: center; justify-content: space-between; gap: 30px; min-height: 52px; padding: 0 20px; font-size: 11px; font-weight: 800; letter-spacing: .09em; text-decoration: none; text-transform: uppercase; transition: background .2s, color .2s; }
+.jf-profile.primary { min-width: 196px; background: var(--jf-accent); color: var(--jf-onAccent); }
+.jf-profile.primary:hover, .jf-profile.primary.is-hover { background: var(--jf-accentHover); }
+.jf-profile.secondary { color: var(--jf-text); border: 1px solid var(--jf-line); }
+.jf-profile.secondary:hover, .jf-profile.secondary.is-hover { background: var(--jf-surfaceAlt); }
+.jf-solid { display: inline-block; padding: 17px 21px; background: var(--jf-accent); color: var(--jf-onAccent); font-size: 11px; font-weight: 800; letter-spacing: .08em; text-decoration: none; text-transform: uppercase; }
+
+/* nút ủng hộ + bộ đếm: 56 cao; nút nền #f1f1f1 chữ 13/800, hover trong suốt chữ trắng nhấc 2px; bộ đếm nền đen 55% viền #6d6d6d */
+.jf-support { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; }
+.jf-support-btn { display: inline-flex; align-items: center; justify-content: center; gap: 13px; min-height: 56px; padding: 12px 20px; background: var(--jf-inverse); color: var(--jf-onInverse); border: 1px solid var(--jf-inverse); font: 800 13px var(--jf-font); letter-spacing: .04em; cursor: pointer; transition: background .2s, color .2s, transform .2s; }
+.jf-support-btn svg.i { width: 21px; height: 21px; }
+.jf-support-btn:hover:not(:disabled), .jf-support-btn.is-hover { background: transparent; color: var(--jf-text); transform: translateY(-2px); }
+.jf-support-btn:disabled { opacity: .75; cursor: default; }
+.jf-count { position: relative; display: flex; align-items: center; gap: 10px; min-height: 56px; padding: 8px 40px 8px 15px; background: color-mix(in srgb, var(--jf-bg) 55%, transparent); border: 1px solid var(--jf-line); }
+.jf-count strong { font: 800 31px/1 var(--jf-display); }
+.jf-count span { color: var(--jf-textMuted); font-size: 11px; font-weight: 700; letter-spacing: .07em; line-height: 1.25; white-space: nowrap; text-transform: uppercase; }
+.jf-help { position: absolute; top: 5px; right: 5px; width: 24px; height: 24px; padding: 0; display: grid; place-items: center; border-radius: 50%; background: var(--jf-surfaceAlt); color: var(--jf-text); border: 1px solid var(--jf-textFaint); font: 800 13px/1 var(--jf-font); cursor: pointer; }
+.jf-help:hover, .jf-help.is-hover { background: var(--jf-text); color: var(--jf-bg); }
+.jf-error { color: var(--jf-error); margin: 9px 0 0; font-size: 12px; }
+.jf-bp-phone .jf-support { display: grid; gap: 8px; }
+.jf-bp-phone .jf-support-btn, .jf-bp-phone .jf-count { width: 100%; min-height: 50px; }
+.jf-bp-phone .jf-count { justify-content: center; padding: 7px 38px; }
+.jf-bp-phone .jf-count strong { font-size: 26px; }
+
+/* link gạch chân: border-bottom 1px, pad-bottom 3–6; biến thể theo chỗ dùng */
+.jf-ulink { display: inline-flex; align-items: center; gap: 4px; padding-bottom: 3px; border-bottom: 1px solid; color: inherit; font-size: 12px; font-weight: 700; text-decoration: none; transition: color .2s; }
+.jf-ulink svg.i { width: 12px; height: 12px; }
+.jf-ulink.accent { color: var(--jf-accent); }
+.jf-ulink.accent:hover, .jf-ulink.accent.is-hover { color: var(--jf-text); }
+.jf-ulink.caps { letter-spacing: .08em; text-transform: uppercase; font-weight: 800; padding-bottom: 5px; }
+.jf-ulink.thick { border-bottom-width: 2px; padding-bottom: 6px; font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.jf-ulink.source { font-size: 12px; }
+.jf-ulink.source:hover, .jf-ulink.source.is-hover { color: var(--jf-textMuted); }
+.jf-ulink.mag { font-size: 12px; font-weight: 800; letter-spacing: .04em; padding-bottom: 5px; }
+.jf-ulink.plain { border-bottom-color: transparent; }
+.jf-share { display: inline-flex; align-items: center; gap: 7px; min-height: 28px; padding: 0 0 5px; background: none; border: 0; border-bottom: 1px solid; color: var(--jf-textMuted); font: 800 12px var(--jf-font); letter-spacing: .08em; text-transform: uppercase; cursor: pointer; }
+.jf-share svg.i { width: 16px; height: 16px; }
+.jf-share:hover, .jf-share.is-hover { color: var(--jf-text); }
+.jf-share-wrap { position: relative; display: inline-block; }
+.jf-share-status { position: absolute; bottom: calc(100% + 7px); right: 0; width: max-content; max-width: 220px; padding: 8px 10px; background: var(--jf-text); color: var(--jf-bg); font-size: 11px; font-weight: 700; line-height: 1.3; }
+.jf-next { display: inline-flex; align-items: center; gap: 20px; color: var(--jf-textFaint); font-size: 13px; font-weight: 800; letter-spacing: .11em; text-decoration: none; text-transform: uppercase; }
+.jf-next svg.i { width: 25px; height: 25px; color: var(--jf-accent); }
+.jf-next:hover, .jf-next.is-hover { color: var(--jf-text); }
+.jf-scroll-cue { display: inline-flex; align-items: center; gap: 14px; color: var(--jf-textFaint); font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+.jf-outline-btn { display: inline-flex; align-items: center; justify-content: center; width: 100%; min-height: 48px; padding: 11px 14px; border: 1px solid var(--jf-textFaint); color: var(--jf-text); font-size: 11px; font-weight: 800; letter-spacing: .08em; text-decoration: none; text-transform: uppercase; }
+
+/* chip hành động: viền 1px, pad 10 13, 9–12/800; chip đầu nền mực; hover nền accent */
+.jf-chips { display: flex; flex-wrap: wrap; gap: 9px; }
+.jf-chip { padding: 10px 13px; border: 1px solid var(--jf-line); color: var(--jf-text); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-decoration: none; text-transform: uppercase; background: transparent; transition: background .2s, color .2s; }
+.jf-chip.dark { background: var(--jf-inverse); color: var(--jf-onInverse); border-color: var(--jf-inverse); }
+.jf-chip:hover, .jf-chip.is-hover { background: var(--jf-accent); color: var(--jf-onAccent); border-color: var(--jf-accent); }
+.jf-chip.muted { color: var(--jf-textFaint); }
+.jf-chip.soft { font-size: 12px; font-weight: 700; letter-spacing: 0; text-transform: none; padding: 8px 10px; line-height: 1.3; }
+.jf-chip.soft:hover, .jf-chip.soft.is-hover { background: var(--jf-text); color: var(--jf-bg); border-color: var(--jf-line); }
+.jf-chip.file { background: var(--jf-inverse); color: var(--jf-onInverse); border: 0; padding: 12px 14px; letter-spacing: .05em; }
+.jf-chip.tag-accent { background: var(--jf-inverse); color: var(--jf-accent); border: 0; letter-spacing: .08em; }
+
+/* slide chiến dịch (hero): nền mực, ảnh xám phủ gradient trái, pad 112 / 82, copy ≤ 790 */
+.jf-slide { position: relative; overflow: hidden; background: var(--jf-bg); color: var(--jf-text); width: 100%; min-height: 560px; display: flex; align-items: center; padding: 112px var(--jf-gutter, 40px) 82px; }
+.jf-slide .photo { position: absolute; inset: 0; place-items: center end; padding-right: 48px; }
+.jf-slide::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, var(--jf-bg) 3%, color-mix(in srgb, var(--jf-bg) 72%, transparent) 53%, transparent 88%); pointer-events: none; }
+.jf-slide .copy-in { position: relative; z-index: 2; max-width: min(59vw, 790px); display: flex; flex-direction: column; gap: 25px; }
+.jf-bp-phone .jf-slide { display: block; padding: 0; min-height: 0; }
+.jf-bp-phone .jf-slide::before { display: none; }
+.jf-bp-phone .jf-slide .photo { position: relative; inset: auto; height: min(56vw, 270px); border-bottom: 1px solid var(--jf-line); }
+.jf-bp-phone .jf-slide .copy-in { max-width: none; padding: 32px 18px 54px; gap: 18px; }
+.jf-bp-phone .jf-hero-title { font-size: clamp(48px, 11.5vw, 62px); line-height: .94; }
+.jf-bp-phone .jf-statement { font-size: 18px; line-height: 1.5; }
+.jf-bp-phone .jf-desc { font-size: 15px; }
+
+/* slide tạp chí: 2 cột 1.05fr / .8fr, gap clamp(48px,7vw,130px) */
+.jf-mag { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(320px, .8fr); align-items: center; gap: clamp(32px, 5vw, 96px); width: 100%; padding: 48px var(--jf-gutter, 40px); background: var(--jf-bg); color: var(--jf-text); }
+.jf-mag .copy-in { display: flex; flex-direction: column; gap: 25px; align-items: flex-start; }
+.jf-mag .jf-kicker { font-size: 12px; letter-spacing: .14em; }
+.jf-mag .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 24px; }
+.jf-excerpt { background: color-mix(in srgb, var(--jf-surface) 62%, transparent); border-top: 2px solid var(--jf-lineStrong); border-bottom: 1px solid var(--jf-line); padding: 30px 32px; }
+.jf-excerpt > span { color: var(--jf-textMuted); font-size: 12px; font-weight: 800; letter-spacing: .05em; }
+.jf-excerpt > strong { display: block; margin: 12px 0 5px; color: var(--jf-line); font: 800 clamp(92px, 10vw, 160px)/.8 var(--jf-display); }
+.jf-excerpt blockquote { margin: 14px 0; font-size: clamp(18px, 1.6vw, 25px); font-weight: 600; line-height: 1.46; }
+.jf-evidence { border-top: 1px solid var(--jf-lineStrong); min-width: 0; }
+.jf-evidence .status { display: flex; flex-wrap: wrap; gap: 8px 22px; padding: 13px 0; color: var(--jf-textMuted); font-size: 12px; font-weight: 700; letter-spacing: .03em; }
+.jf-evidence .ph { aspect-ratio: 16 / 9; border: 1px solid var(--jf-line); display: grid; }
+.jf-evidence .ph img, .jf-evidence a.ph { transition: transform .35s; }
+.jf-evidence .bottom { display: grid; grid-template-columns: minmax(0, .47fr) minmax(0, .53fr); gap: 16px; margin-top: 12px; align-items: start; }
+.jf-sanctions { border-top: 1px solid var(--jf-lineStrong); }
+.jf-sanctions > div { border-bottom: 1px solid var(--jf-line); padding: 22px 0; }
+.jf-sanctions span { display: block; margin-bottom: 8px; color: var(--jf-textFaint); font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.jf-sanctions strong { font: 800 clamp(33px, 3vw, 50px)/1 var(--jf-display); }
+.jf-reported { margin-top: 20px; padding: 18px 20px; background: var(--jf-surfaceAlt); border: 1px dashed var(--jf-textFaint); }
+.jf-reported.compact { padding: 16px; margin-top: 19px; }
+.jf-reported > span { display: block; color: var(--jf-textMuted); font-size: 11px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
+.jf-reported .seq { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 11px; margin-top: 12px; }
+.jf-reported .seq strong { font: 700 clamp(27px, 2.3vw, 38px)/1 var(--jf-display); text-transform: uppercase; }
+.jf-reported.compact .seq strong { font-size: clamp(26px, 2.05vw, 34px); }
+.jf-reported .seq svg.i { width: 17px; height: 17px; color: var(--jf-textFaint); }
+.jf-reported p { margin: 12px 0 0; font-size: 15px; line-height: 1.6; color: var(--jf-textMuted); }
+.jf-reported a { display: inline-block; margin-top: 11px; padding-bottom: 3px; border-bottom: 1px solid var(--jf-textFaint); color: var(--jf-text); font-size: 12px; font-weight: 700; text-decoration: none; }
+
+/* story panel: nền #080808 (chẵn #0d0d0d), 2 cột 1.05fr / .95fr, gap clamp(40px,7vw,120px), pad 75 */
+.jf-panel { position: relative; isolation: isolate; overflow: hidden; background: var(--jf-bg); color: var(--jf-text); border-bottom: 1px solid var(--jf-line); width: 100%; }
+.jf-panel::before { content: ""; position: absolute; inset: 0; z-index: -1; background: radial-gradient(45% 42% at 83% 48%, color-mix(in srgb, var(--jf-text) 4%, transparent), transparent 100%); pointer-events: none; }
+.jf-panel .in { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); align-items: center; gap: clamp(32px, 5vw, 96px); padding: 64px var(--jf-gutter, 40px); }
+.jf-panel .content { max-width: 710px; }
+.jf-story-kicker { display: flex; align-items: center; gap: 18px; margin-bottom: 35px; color: var(--jf-accent); font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+.jf-story-kicker span:first-child { padding: 7px 10px; background: var(--jf-accent); color: var(--jf-onAccent); }
+.jf-date { display: flex; align-items: end; gap: 12px; margin-bottom: 17px; }
+.jf-date strong { color: var(--jf-accent); font: 800 clamp(80px, 9vw, 128px)/.72 var(--jf-display); letter-spacing: -.03em; }
+.jf-date span { color: var(--jf-textFaint); font-size: 11px; font-weight: 800; letter-spacing: .1em; line-height: 1.5; padding-bottom: 2px; text-transform: uppercase; }
+.jf-point { margin-top: 28px; padding-left: 17px; border-left: 3px solid var(--jf-accent); }
+.jf-point > span { color: var(--jf-accent); font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+.jf-point p { margin: 8px 0 0; max-width: 620px; color: var(--jf-textMuted); font-size: 15px; line-height: 1.75; }
+.jf-sources { margin-top: 35px; padding-top: 19px; border-top: 1px solid var(--jf-line); }
+.jf-sources > span { display: block; margin-bottom: 13px; color: var(--jf-textFaint); font-size: 12px; font-weight: 800; letter-spacing: .15em; text-transform: uppercase; }
+.jf-sources > div { display: flex; flex-wrap: wrap; gap: 12px 20px; }
+.jf-panel .jf-next { margin-top: 38px; }
+
+/* hồ sơ vụ việc (explainer): nền #111 viền #4d4d4d, ≤ 540, pad 27 31; khối read-more vạch trên */
+.jf-explainer { display: flex; flex-direction: column; justify-self: end; width: min(100%, 540px); padding: 27px 31px; background: var(--jf-surface); border: 1px solid var(--jf-line); }
+.jf-explainer .top, .jf-explainer .bottom { color: var(--jf-textFaint); font-size: 12px; font-weight: 800; letter-spacing: .15em; text-transform: uppercase; }
+.jf-explainer .bottom { color: var(--jf-accent); margin-top: auto; }
+.jf-readmore { margin: 23px 0; padding-top: 20px; border-top: 1px solid var(--jf-line); }
+.jf-readmore p { margin: 0 0 15px; color: var(--jf-textMuted); font-size: 15px; line-height: 1.7; }
+.jf-readmore p strong { color: var(--jf-text); }
+.jf-addl { margin: 16px 0 0; padding-top: 15px; border-top: 1px solid var(--jf-line); }
+.jf-addl h4 { margin: 0 0 7px; color: var(--jf-accent); font-size: 12px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; }
+.jf-addl p { margin: 0 0 5px; color: var(--jf-textMuted); font-size: 15px; line-height: 1.7; }
+
+/* case module: nền #131313 viền #4d4d4d, ≤ 580, pad 28 32; biến thể điều lệ nền #f8f8f6 */
+.jf-module { justify-self: end; width: min(100%, 580px); padding: 28px 32px; background: var(--jf-surface); border: 1px solid var(--jf-line); color: var(--jf-text); }
+.jf-module .eyebrow, .jf-module-links > span, .jf-chain span, .jf-msanc span, .jf-cmp .intro-l { color: var(--jf-textFaint); font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+.jf-module .jf-card-title { margin: 18px 0 13px; }
+.jf-module .lead { margin: 0 0 21px; color: var(--jf-textMuted); font-size: 15px; line-height: 1.65; }
+.jf-doc { padding: 18px; background: var(--jf-surfaceAlt); border-top: 2px solid var(--jf-lineStrong); border-bottom: 1px solid var(--jf-line); }
+.jf-doc > span { font-size: 12px; font-weight: 800; letter-spacing: .08em; }
+.jf-doc blockquote { margin: 16px 0; font-size: 15px; font-weight: 600; line-height: 1.55; }
+.jf-doc p { margin: 0; color: var(--jf-textMuted); font-size: 12px; line-height: 1.6; }
+.jf-module-links { margin-top: 21px; padding-top: 17px; border-top: 1px solid var(--jf-line); }
+.jf-module-links > div { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 11px; }
+.jf-chain { border-top: 1px solid var(--jf-line); }
+.jf-chain > div { padding: 13px 0; border-bottom: 1px solid var(--jf-line); }
+.jf-chain p { margin: 9px 0 0; color: var(--jf-textMuted); font-size: 12px; line-height: 1.55; }
+.jf-limits { margin: 12px 0 0; color: var(--jf-textFaint); font-size: 12px; line-height: 1.55; }
+.jf-msanc { display: grid; gap: 1px; background: var(--jf-line); border: 1px solid var(--jf-line); margin-top: 16px; }
+.jf-msanc > div { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px; background: var(--jf-surfaceAlt); }
+.jf-msanc strong { text-align: right; font-size: 11px; }
+.jf-cmp { padding-top: 14px; border-top: 1px solid var(--jf-lineStrong); }
+.jf-cmp .intro-l { display: block; margin-bottom: 12px; }
+.jf-cmp .cases { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.jf-case { min-width: 0; padding: 14px 15px 7px; background: var(--jf-surfaceAlt); border: 1px solid var(--jf-line); }
+.jf-case h4 { margin: 0 0 8px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+.jf-case dl { margin: 0; }
+.jf-case dl > div { padding: 9px 0; border-top: 1px solid var(--jf-line); }
+.jf-case dt { margin-bottom: 3px; color: var(--jf-textFaint); font-size: 12px; line-height: 1.35; }
+.jf-case dd { margin: 0; font-size: 12px; line-height: 1.5; }
+.jf-cmp > p { margin: 12px 0; color: var(--jf-textMuted); font-size: 12px; line-height: 1.55; }
+.jf-stills { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+.jf-stills a { min-width: 0; border: 1px solid var(--jf-line); color: inherit; text-decoration: none; }
+.jf-stills .ph { height: 90px; }
+.jf-stills span { display: block; padding: 8px; color: var(--jf-textMuted); font-size: 12px; line-height: 1.35; }
+
+/* so sánh 2 trường hợp (nền sage cố định của section Gyumin trên trang chủ) */
+.jf-gcmp-head { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(260px, .65fr); align-items: end; column-gap: 60px; row-gap: 21px; }
+.jf-gcmp-head .jf-eyebrow { grid-column: 1 / -1; color: var(--jf-sageEyebrow); }
+.jf-gcmp-head h2 { font: 800 clamp(56px, 6.6vw, 106px)/.88 var(--jf-display); letter-spacing: -.025em; text-transform: uppercase; margin: 0; max-width: 900px; }
+.jf-gcmp-head p { margin: 0 0 6px; max-width: 430px; color: var(--jf-sageText); font-size: 16px; line-height: 1.75; }
+.jf-gcmp { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.jf-gcard { display: flex; flex-direction: column; min-height: 385px; padding: 28px 32px 32px; background: var(--jf-sageCard); border-top: 5px solid var(--jf-sageLine); color: var(--jf-sageInk); }
+.jf-gcard .top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 20px; color: var(--jf-sageMeta); font-size: 10px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.jf-gcard h3 { margin: 48px 0 15px; font: 700 clamp(42px, 4.2vw, 66px)/.9 var(--jf-display); text-transform: uppercase; }
+.jf-gcard p { margin: 0 0 16px; max-width: 585px; color: var(--jf-sageBody); font-size: 14px; line-height: 1.7; }
+.jf-gcard .outcome { margin: auto 0 0; padding-top: 23px; border-top: 1px solid var(--jf-sageRule); }
+.jf-gcard.finding { background: var(--jf-sageDeep); color: var(--jf-sageOnDeep); border-top-color: var(--jf-sageDeepLine); }
+.jf-gcard.finding .top { color: var(--jf-sageDeepMeta); }
+.jf-gcard.finding p { color: var(--jf-sageDeepBody); }
+.jf-gcard.finding .outcome { border-color: var(--jf-sageDeepRule); }
+.jf-callout { display: grid; grid-template-columns: minmax(180px, .34fr) 1fr; gap: 42px; padding: 31px 36px 32px; background: var(--jf-sageCallout); color: var(--jf-onCallout); }
+.jf-callout > span { padding-top: 5px; font-size: 10px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+.jf-callout p { margin: 0; max-width: 820px; font-size: 16px; line-height: 1.65; }
+.jf-callout p + p { margin-top: 16px; color: var(--jf-calloutSub); font-size: 13px; }
+.jf-gbottom { display: flex; justify-content: space-between; align-items: flex-start; gap: 30px; }
+.jf-gbottom > p { margin: 0; max-width: 620px; color: var(--jf-sageNote); font-size: 11px; line-height: 1.6; }
+.jf-gbottom nav { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 15px 22px; }
+.jf-gbottom a { color: var(--jf-sageLink); border-bottom: 1px solid var(--jf-sageLinkLine); padding-bottom: 5px; font-size: 10px; font-weight: 800; letter-spacing: .08em; text-decoration: none; white-space: nowrap; text-transform: uppercase; }
+.jf-gbottom a:hover, .jf-gbottom a.is-hover { color: var(--jf-sageLinkHover); border-color: var(--jf-sageLinkHover); }
+
+/* thẻ tuyển thủ: nền #141716, hàng ảnh clamp(360px,30vw,500px), min 580; hover nhấc 5px + bóng 8 10 var(--jf-shadowCard) */
+.jf-pcard { position: relative; display: grid; grid-template-rows: 300px auto; min-height: 440px; overflow: hidden; background: var(--jf-surface); color: var(--jf-text); text-decoration: none; transition: transform .3s, box-shadow .3s; width: 100%; }
+.jf-pcard:hover, .jf-pcard.is-hover { transform: translateY(-5px); box-shadow: 8px 10px 0 var(--jf-shadowCard); }
+.jf-pcard.alt { background: var(--jf-surfaceAlt); }
+.jf-pcard .art { position: relative; overflow: hidden; display: flex; justify-content: center; align-items: end; background: radial-gradient(circle at 50% 20%, var(--jf-line) 0%, var(--jf-surfaceAlt) 43%, var(--jf-surface) 75%); }
+.jf-pcard .art .wm { position: absolute; top: -17%; left: 3%; color: color-mix(in srgb, var(--jf-text) 5%, transparent); font: 800 320px/1 var(--jf-display); }
+.jf-pcard .art .ph { width: 60%; height: 86%; position: relative; z-index: 1; transition: transform .4s; }
+.jf-pcard:hover .art .ph, .jf-pcard.is-hover .art .ph { transform: scale(1.04); }
+.jf-pcard .content { position: relative; z-index: 2; display: grid; grid-template-columns: 1fr auto; padding: 25px 30px 31px; border-top: 1px solid color-mix(in srgb, var(--jf-text) 20%, transparent); }
+.jf-pcard .content > span { grid-column: 1 / -1; color: var(--jf-textFaint); font-size: 10px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+.jf-pcard h2 { grid-column: 1 / -1; margin: 8px 0 3px; font: 800 clamp(62px, 7vw, 104px)/.87 var(--jf-display); letter-spacing: -.025em; text-transform: uppercase; }
+.jf-pcard p { margin: 9px 0 0; color: var(--jf-textMuted); font-size: 12px; }
+.jf-pcard strong { align-self: end; font-size: 11px; letter-spacing: .09em; white-space: nowrap; text-transform: uppercase; }
+
+/* kho tài liệu */
+.jf-archive-h1 { font: 800 clamp(70px, 8vw, 118px)/.88 var(--jf-display); letter-spacing: -.025em; margin: 0; text-transform: uppercase; }
+.jf-archive-h1 span { color: var(--jf-textFaint); }
+.jf-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; padding: 18px 0; border-top: 1px solid var(--jf-line); border-bottom: 1px solid var(--jf-line); font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; width: 100%; }
+.jf-meta a { margin-left: auto; color: var(--jf-textMuted); text-decoration: underline; text-underline-offset: 4px; }
+.jf-record { display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 30px; padding: 32px 0; border-bottom: 1px solid var(--jf-line); width: 100%; }
+.jf-record .num { font: 700 59px/.85 var(--jf-display); }
+.jf-record .sub { color: var(--jf-textMuted); font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+.jf-record h2 { margin: 10px 0; font: 700 clamp(32px, 3.5vw, 50px)/1 var(--jf-display); text-transform: uppercase; }
+.jf-record p { margin: 0; max-width: 800px; color: var(--jf-textMuted); font-size: 14px; line-height: 1.7; }
+.jf-record .jf-chips { margin-top: 20px; }
+.jf-checksum { display: flex; flex-wrap: wrap; gap: 10px 20px; margin-top: 19px; color: var(--jf-textFaint); font-size: 11px; font-weight: 700; letter-spacing: .04em; overflow-wrap: anywhere; }
+.jf-source-block { border-top: 3px solid var(--jf-lineStrong); padding-top: 40px; width: 100%; }
+.jf-source-block h2 { margin: 13px 0 18px; font: 800 clamp(58px, 7vw, 96px)/.9 var(--jf-display); text-transform: uppercase; }
+.jf-source-block h2 span { color: var(--jf-textFaint); }
+.jf-rexcerpt { max-width: 900px; padding: 26px 30px; background: var(--jf-surface); border: 1px solid var(--jf-line); }
+.jf-rexcerpt > span { color: var(--jf-textFaint); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.jf-rexcerpt h3 { margin: 11px 0 15px; font: 700 39px/1.1 var(--jf-display); text-transform: uppercase; }
+.jf-rexcerpt blockquote { margin: 0 0 14px; padding-left: 17px; border-left: 3px solid var(--jf-lineStrong); font-size: 17px; font-weight: 600; line-height: 1.55; }
+.jf-rexcerpt p { color: var(--jf-textMuted); font-size: 12px; line-height: 1.65; }
+.jf-rexcerpt a { display: inline-block; margin-top: 6px; padding-bottom: 4px; border-bottom: 1px solid var(--jf-lineStrong); color: inherit; font-size: 12px; font-weight: 800; text-decoration: none; text-transform: uppercase; }
+.jf-rsource { max-width: 920px; padding: 34px 0; border-top: 3px solid var(--jf-lineStrong); border-bottom: 1px solid var(--jf-line); width: 100%; }
+.jf-rsource h2 { margin: 12px 0 18px; font: 800 clamp(45px, 5vw, 72px)/.95 var(--jf-display); text-transform: uppercase; }
+.jf-rsource > p { color: var(--jf-textMuted); max-width: 820px; font-size: 14px; line-height: 1.7; }
+.jf-rsource .jf-quote { margin: 26px 0; }
+.jf-ecard { min-width: 0; background: var(--jf-surface); border: 1px solid var(--jf-line); max-width: 560px; width: 100%; }
+.jf-ecard > a { display: block; aspect-ratio: 16 / 9; }
+.jf-ecard .body { padding: 23px; }
+.jf-ecard .body > span { color: var(--jf-textMuted); font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+.jf-ecard h3 { margin: 9px 0; font: 700 31px/1 var(--jf-display); text-transform: uppercase; }
+.jf-ecard p { margin: 0 0 17px; color: var(--jf-textMuted); font-size: 12px; line-height: 1.65; }
+
+/* trang tuyển thủ */
+.jf-phero { position: relative; overflow: hidden; background: var(--jf-bg); color: var(--jf-text); width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, .8fr); min-height: 560px; }
+.jf-phero::before { content: ""; position: absolute; inset: 0; opacity: .17; background: linear-gradient(90deg, var(--jf-textFaint) 1px, transparent 1px) 0 0 / 102px 100%; -webkit-mask-image: linear-gradient(90deg, transparent, black); mask-image: linear-gradient(90deg, transparent, black); }
+.jf-phero .copy-in { position: relative; z-index: 2; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 48px 30px 64px var(--jf-gutter, 40px); }
+.jf-crumb { display: flex; align-items: center; gap: 13px; margin-bottom: 64px; color: var(--jf-textFaint); font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+.jf-crumb a { color: inherit; border-bottom: 1px solid var(--jf-line); padding-bottom: 4px; text-decoration: none; }
+.jf-phero h1 { margin: 18px 0 9px; font: 800 clamp(116px, 15vw, 230px)/.72 var(--jf-display); letter-spacing: -.04em; white-space: nowrap; text-transform: uppercase; }
+.jf-phero h1 span { color: var(--jf-accent); }
+.jf-phero .intro-p { margin: 30px 0; max-width: 570px; color: var(--jf-textMuted); font-size: clamp(18px, 1.8vw, 23px); line-height: 1.6; }
+.jf-phero .actions { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
+.jf-pvisual { position: relative; display: flex; justify-content: center; align-items: end; min-width: 0; background: radial-gradient(circle at 54% 33%, var(--jf-textFaint), var(--jf-surfaceAlt) 52%, var(--jf-surface) 80%); border-inline: 1px solid color-mix(in srgb, var(--jf-text) 12%, transparent); }
+.jf-pvisual .num { position: absolute; top: 0; right: 4%; color: color-mix(in srgb, var(--jf-text) 9%, transparent); font: 800 clamp(240px, 30vw, 530px)/.8 var(--jf-display); }
+.jf-pvisual .ph { position: relative; z-index: 1; width: 70%; height: 82%; }
+.jf-pvisual .cap { position: absolute; left: 24px; right: 24px; bottom: 20px; z-index: 2; display: flex; justify-content: space-between; gap: 18px; color: var(--jf-textMuted); font-size: 9px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.jf-pvisual .cap a { color: var(--jf-text); border-bottom: 1px solid; padding-bottom: 3px; text-decoration: none; white-space: nowrap; }
+.jf-bio { display: grid; grid-template-columns: .9fr 1.1fr; gap: 64px; width: 100%; }
+.jf-sec-h2 { margin: 19px 0 0; max-width: 570px; font: 800 clamp(55px, 5.8vw, 86px)/.89 var(--jf-display); letter-spacing: -.025em; text-transform: uppercase; }
+.jf-bio-text p { margin: 0 0 25px; max-width: 690px; color: var(--jf-textMuted); font-size: 16px; line-height: 1.9; }
+.jf-bio-text p:first-child::first-letter { color: var(--jf-text); font: 800 60px/.8 var(--jf-display); }
+.jf-bio-src { display: flex; flex-wrap: wrap; gap: 15px 25px; margin-top: 8px; }
+.jf-milestones { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; width: 100%; }
+.jf-milestone { display: grid; grid-template-columns: 80px 1fr 20px; gap: 25px; min-height: 225px; padding: 28px 30px; background: var(--jf-surface); border-top: 4px solid var(--jf-lineStrong); color: var(--jf-text); text-decoration: none; transition: transform .2s, box-shadow .2s; }
+.jf-milestone:hover, .jf-milestone.is-hover { transform: translateY(-4px); box-shadow: 5px 7px 0 var(--jf-shadowMilestone); }
+.jf-milestone > span { color: var(--jf-textFaint); font: 800 42px/1.1 var(--jf-display); }
+.jf-milestone h3 { margin: 6px 0 12px; font: 800 42px/.95 var(--jf-display); text-transform: uppercase; }
+.jf-milestone p { margin: 0; max-width: 420px; color: var(--jf-textMuted); font-size: 13px; line-height: 1.7; }
+.jf-milestone strong { font-size: 18px; }
+.jf-connect { border-top: 2px solid var(--jf-lineStrong); width: 100%; max-width: 620px; }
+.jf-connect a { display: grid; grid-template-columns: 50px 1fr 18px; align-items: center; gap: 18px; min-height: 92px; border-bottom: 1px solid var(--jf-line); color: inherit; text-decoration: none; transition: padding .2s, background .2s; }
+.jf-connect a:hover, .jf-connect a.is-hover { background: var(--jf-surfaceAlt); padding-inline: 13px; }
+.jf-connect span { font-size: 12px; font-weight: 800; }
+.jf-connect strong { font: 700 31px/1 var(--jf-display); text-transform: uppercase; }
+.jf-caselink { width: 100%; padding: 64px var(--jf-gutter, 40px) 72px; background: var(--jf-bg); color: var(--jf-text); }
+.jf-caselink h2 { margin: 18px 0 21px; max-width: 1000px; font: 800 clamp(73px, 8.5vw, 125px)/.82 var(--jf-display); text-transform: uppercase; }
+.jf-caselink p { color: var(--jf-textMuted); max-width: 650px; font-size: 15px; line-height: 1.7; }
+.jf-caselink .jf-solid { margin-top: 25px; }
+
+/* pháp lý */
+.jf-legal-hero { width: 100%; padding: 80px var(--jf-gutter, 40px) 76px; background: var(--jf-inverse); color: var(--jf-onInverse); }
+.jf-legal-hero .jf-kicker { color: var(--jf-inverseMuted); }
+.jf-legal-hero h1 { margin: 18px 0 20px; font: 800 clamp(80px, 9vw, 140px)/.83 var(--jf-display); letter-spacing: -.035em; text-transform: uppercase; }
+.jf-legal-hero h1 > span:last-child { color: var(--jf-accent); }
+.jf-legal-hero p { margin: 0; max-width: 665px; color: var(--jf-inverseMuted); font-size: 17px; line-height: 1.7; }
+.jf-legal { display: grid; grid-template-columns: 245px minmax(0, 1fr); gap: 64px; width: 100%; }
+.jf-toc { display: grid; align-self: start; }
+.jf-toc > span { padding-bottom: 20px; color: var(--jf-textFaint); font-size: 10px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+.jf-toc a { display: flex; align-items: baseline; gap: 15px; padding: 15px 0; border-top: 1px solid var(--jf-line); color: var(--jf-text); font-size: 12px; font-weight: 700; text-decoration: none; }
+.jf-toc a:hover, .jf-toc a.is-hover { color: var(--jf-tocHover); }
+.jf-toc small { color: var(--jf-textFaint); font-size: 10px; font-weight: 800; }
+.jf-toc a.src { margin-top: 28px; border-top: 2px solid var(--jf-lineStrong); font-size: 11px; font-weight: 800; text-transform: uppercase; }
+.jf-lsection { max-width: 870px; margin-bottom: 40px; padding-bottom: 40px; border-bottom: 1px solid var(--jf-line); }
+.jf-lsection .n { color: var(--jf-textFaint); font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+.jf-lsection h2 { margin: 15px 0 25px; font: 800 clamp(52px, 5vw, 76px)/.88 var(--jf-display); text-transform: uppercase; }
+.jf-lsection p { max-width: 750px; color: var(--jf-textMuted); font-size: 15px; line-height: 1.85; }
+.jf-lsection p a { color: inherit; }
+.jf-end { display: flex; justify-content: space-between; gap: 20px; color: var(--jf-textMuted); font-size: 10px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; width: 100%; }
+.jf-end a { color: var(--jf-text); border-bottom: 1px solid; padding-bottom: 5px; text-decoration: none; }
+
+/* footer: nền #030303, lưới 1fr 1.5fr auto, min 146 */
+.jf-footer { width: 100%; padding: 0 var(--jf-gutter, 40px); background: var(--jf-bg); color: var(--jf-text); }
+.jf-footer .in { display: grid; grid-template-columns: 1fr 1.5fr auto; align-items: center; gap: 35px; min-height: 146px; }
+.jf-footer .brand-f b { display: block; font: 800 27px/.9 var(--jf-display); letter-spacing: -.015em; text-transform: uppercase; }
+.jf-footer .brand-f b span { color: var(--jf-accent); }
+.jf-footer .brand-f small { display: block; margin-top: 8px; color: var(--jf-textFaint); font-size: 12px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+.jf-footer p { margin: 0; max-width: 550px; color: var(--jf-textFaint); font-size: 11px; line-height: 1.6; }
+.jf-footer .links { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 12px 20px; }
+.jf-footer .links a { color: var(--jf-accent); font-size: 11px; font-weight: 800; letter-spacing: .1em; text-decoration: none; white-space: nowrap; text-transform: uppercase; }
+.jf-footer .links a:hover, .jf-footer .links a.is-hover { color: var(--jf-text); }
+.jf-footer .links .jf-share { color: var(--jf-accent); font-size: 11px; }
+.jf-ifooter { display: flex; justify-content: space-between; gap: 20px; padding: 30px 0 35px; width: 100%; }
+.jf-ifooter a { color: var(--jf-text); font-size: 11px; font-weight: 800; letter-spacing: .09em; text-decoration: none; text-transform: uppercase; }
+
+/* hộp thoại: nền #111 viền #777, ≤ 760 (hỏi đáp ≤ 460), pad clamp(24px,5vw,48px); nút đóng 36 */
+.jf-dialog { position: relative; width: min(760px, 100%); background: var(--jf-surface); color: var(--jf-text); border: 1px solid var(--jf-lineStrong); box-shadow: var(--jf-shadow-dialog); padding: clamp(24px, 5vw, 48px); }
+.jf-dialog.small { width: min(460px, 100%); }
+.jf-dialog .x { position: absolute; top: 14px; right: 14px; width: 36px; height: 36px; display: grid; place-items: center; background: var(--jf-surfaceAlt); color: var(--jf-text); border: 1px solid var(--jf-line); cursor: pointer; }
+.jf-dialog .x svg.i { width: 21px; height: 21px; }
+.jf-dialog > span { display: block; color: var(--jf-accent); font-size: 11px; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
+.jf-dialog h2 { margin: 12px 38px 27px 0; font: 800 clamp(46px, 7vw, 76px)/.92 var(--jf-display); text-transform: uppercase; }
+.jf-dialog.small h2 { font-size: clamp(34px, 6vw, 46px); line-height: 1; }
+.jf-dialog .g { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.jf-dialog .g section { padding: 18px; border: 1px solid var(--jf-line); }
+.jf-dialog .g section.find { grid-column: 1 / -1; border-color: var(--jf-accent); }
+.jf-dialog h3 { margin: 0 0 10px; color: var(--jf-accent); font-size: 14px; }
+.jf-dialog p { margin: 0; color: var(--jf-textMuted); font-size: 14px; line-height: 1.65; }
+.jf-scrim { padding: 32px 16px; background: var(--jf-backdrop); display: grid; place-items: center; width: 100%; }
+
+/* ảnh giữ chỗ (RULE-09: không nhúng ảnh của site) */
+.ph { display: grid; place-items: center; background: repeating-linear-gradient(135deg, var(--jf-surfaceAlt) 0 12px, var(--jf-line) 12px 13px), var(--jf-surfaceAlt); color: var(--jf-textFaint); font: 500 11px var(--jf-mono); letter-spacing: 0; text-align: center; padding: 6px; text-transform: none; }
+
+/* ---------- màn mẫu ---------- */
+.screen-wrap { overflow-x: auto; padding: 8px 0; }
+.screens { display: flex; gap: 32px; width: max-content; align-items: flex-start; }
+.phone { width: 390px; height: 844px; border-radius: 40px; box-shadow: 0 0 0 10px #111; background: var(--jf-bg); position: relative; overflow: hidden; margin: 10px; zoom: .7; }
+.phone .scroll { position: absolute; inset: 0; overflow: hidden; }
+.desk { width: 1440px; height: 900px; border-radius: 12px; box-shadow: 0 0 0 10px #111; background: var(--jf-bg); overflow: hidden; margin: 10px; zoom: .5; position: relative; }
+.screen-cap { font-family: var(--jf-mono); font-size: 12px; color: var(--jf-textMuted); margin: 4px 10px 0; max-width: 520px; }
+
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; transition: all .25s var(--jf-ease); z-index: 20; background: var(--jf-inverse); color: var(--jf-onInverse); padding: 12px 16px; font-size: 13px; font-weight: 700; box-shadow: var(--jf-shadow-menu); }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; }
+  .side { display: none; }
+  main { padding: 0 16px 80px; }
+  .grid, .grid.wide { grid-template-columns: 1fr; }
+  .type-row { grid-template-columns: 1fr; gap: 2px; }
+  .jf-mag, .jf-panel .in, .jf-phero, .jf-bio, .jf-legal, .jf-gcmp, .jf-gcmp-head, .jf-callout, .jf-milestones, .jf-footer .in, .jf-cmp .cases { grid-template-columns: 1fr; }
+  .jf-header { grid-template-columns: 1fr auto; }
+  .jf-header .jf-nav { display: none; }
+  .jf-gbottom { flex-direction: column; }
+  .jf-slide .copy-in { max-width: none; }
+  .jf-record { grid-template-columns: 43px minmax(0, 1fr); gap: 15px; }
+  .jf-dialog .g { grid-template-columns: 1fr; }
+  .jf-dialog .g section.find { grid-column: auto; }
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-right" viewBox="0 0 18 18"><path d="M3 9h12M10 4l5 5-5 5"/></symbol>
+  <symbol id="i-down" viewBox="0 0 18 18"><path d="M9 3v12M4 10l5 5 5-5"/></symbol>
+  <symbol id="i-ne" viewBox="0 0 18 18"><path d="M5 13 13 5M6 5h7v7"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 18 18"><path d="m4 7 5 5 5-5"/></symbol>
+  <symbol id="i-check" viewBox="0 0 18 18"><path d="m3 9 4 4 8-8"/></symbol>
+  <symbol id="i-close" viewBox="0 0 18 18"><path d="m4 4 10 10M14 4 4 14"/></symbol>
+  <symbol id="i-share" viewBox="0 0 18 18"><path d="M9 2v10M5 6l4-4 4 4M3 10v6h12v-6"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 18 18"><path d="M9 15S2 10.8 2 6.2A3.6 3.6 0 0 1 9 4.6a3.6 3.6 0 0 1 7 1.6C16 10.8 9 15 9 15Z"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 18 18"><rect x="6" y="6" width="9" height="9"/><path d="M12 6V3H3v9h3"/></symbol>
+</svg>
+<div class="shell">
+  <nav class="side" aria-label="Mục lục">
+    <div class="brand"><b>Justice<span>Kit</span></b><small>UI kit · 2 sắc × 2 nền</small></div>
+    <h6>Nền tảng</h6>
+    <a href="#color">Màu</a>
+    <a href="#type">Chữ</a>
+    <a href="#shape">Góc, viền &amp; bóng</a>
+    <a href="#layout">Bố cục &amp; kích thước</a>
+    <h6>Thành phần</h6>
+    <a href="#navigation">Điều hướng</a>
+    <a href="#actions">Hành động</a>
+    <a href="#campaign">Slide chiến dịch</a>
+    <a href="#story">Mốc sự việc</a>
+    <a href="#modules">Hồ sơ &amp; module</a>
+    <a href="#archive">Kho tài liệu</a>
+    <a href="#players">Tuyển thủ</a>
+    <a href="#legal">Pháp lý &amp; footer</a>
+    <a href="#feedback">Phản hồi</a>
+    <a href="#states">Trạng thái</a>
+    <h6>Mẫu</h6>
+    <a href="#screens">Màn hình mẫu</a>
+  </nav>
+
+  <main>
+    <div class="bar" role="toolbar" aria-label="Chủ đề">
+      <div class="ctl"><span>Sắc</span><div class="seg" id="swatches">
+        <button data-v="neutral" aria-pressed="true">Trung tính</button>
+        <button data-v="moss" aria-pressed="false">Rêu</button></div></div>
+      <div class="ctl"><span>Nền</span><div class="seg" id="mode">
+        <button data-v="light" aria-pressed="true">Giấy</button>
+        <button data-v="dark" aria-pressed="false">Mực</button></div></div>
+      <div class="grow"></div>
+      <button class="copy" id="copy-tokens"><svg class="i"><use href="#i-copy"/></svg>Copy CSS token</button>
+    </div>
+
+    <div class="intro">
+      <div class="eyebrow">justiceforpubgvn.com/_next/static/chunks/3builuvm-xa1-.css → docs/justiceforpubgvn-ui-kit.html</div>
+      <h1>Hệ thiết kế <span>giấy &amp; mực</span></h1>
+      <p>Mọi màu, cỡ chữ và số đo ở đây lấy từ file CSS thật của site (parse tĩnh, cộng <code>getComputedStyle</code> bằng Playwright). Site chỉ khai 8 biến ở <code>:root</code> (<code>--ink</code>, <code>--paper</code>, <code>--accent</code>…); phần còn lại là hex viết tay trong từng class, kit gom lại thành vai trò <code>--jf-*</code>. Dán khối <code>:root</code> (nút Copy CSS token) cùng CSS <code>.jf-*</code> là dùng lại được ở dự án khác. Ảnh, cờ và chữ của site không được chép: ảnh là khối giữ chỗ, chữ mẫu viết lại.</p>
+      <div class="facts"><span class="fact">page-width min(100% − 80px, 1376)</span><span class="fact">lề 40 · 30 (≤1160) · 18 (≤600)</span><span class="fact">header 76 · interior 78 · progress 56</span><span class="fact">Barlow Condensed 800 · Inter</span><span class="fact">r 0 · chỉ chấm tròn 50%</span><span class="fact">breakpoint 1160 · 1100 · 1050 · 800 · 600 · 360</span></div>
+    </div>
+
+    <!-- ================= NỀN TẢNG ================= -->
+    <section class="block" id="color">
+      <header><h2>Màu</h2><p>16 vai trò đổi theo sắc × nền (ô "suy" là vai trò site không có đúng cặp, lấy màu gần nhất), cộng 26 giá trị cố định chỉ có một bản: section đối chiếu nền sage, bóng khối, hover mục lục, nền sau hộp thoại. Ô chữ luôn đặt đúng cặp màu chữ đọc được trên nó. Bấm một ô để copy hex. Bên dưới là 8 biến gốc của site và các hex lặp lại nhiều nhất trong CSS.</p></header>
+      <div class="roles" id="roles"></div>
+      <div class="ramp-t">8 biến :root của site</div>
+      <div class="ramp" id="ramp-vars"></div>
+      <div class="ramp-t">Hex viết tay lặp nhiều nhất (số lần)</div>
+      <div class="ramp" id="ramp"></div>
+    </section>
+
+    <section class="block" id="type">
+      <header><h2>Chữ</h2><p>Hai họ: <b>Barlow Condensed</b> 700/800 viết hoa cho mọi tiêu đề và con số lớn (line-height .72–1, tracking âm), <b>Inter</b> 400–800 cho đoạn văn và nhãn. Nhãn nhỏ là Inter 800 viết hoa tracking .1–.17em. Cỡ dùng <code>clamp()</code> như site; cột phải ghi cỡ ở 1440 → 390.</p></header>
+      <div class="spec"><div class="stage col" id="typescale">
+        <div class="type-row"><span class="meta">player h1 · .player-hero h1</span><span class="t jf-d" style="font-size:120px;line-height:.72;letter-spacing:-.04em">TÊN.</span><span class="meta">clamp(116,15vw,230) / .72 · 800</span></div>
+        <div class="type-row" data-sig="386c238f00"><span class="meta">index h1 · .index-intro h1</span><span class="t jf-index-title" style="font-size:96px">Hai hồ sơ.</span><span class="meta">clamp(70,9vw,134) / .82 · 800</span></div>
+        <div class="type-row" data-sig="ac5bdabe5f"><span class="meta">hero h1 · .campaign-hero h1</span><span class="t jf-hero-title" style="font-size:92px">Tiêu đề chiến dịch.</span><span class="meta">clamp(70,6.7vw,110) / .88 · 800 → 48–62</span></div>
+        <div class="type-row"><span class="meta">magazine h2 · .magazine-copy h2</span><span class="t jf-mag-title" style="font-size:92px">Luật phải rõ</span><span class="meta">clamp(70,7vw,118) / .86 · 800 → 61–83</span></div>
+        <div class="type-row"><span class="meta">story h2 · .story-content h2</span><span class="t jf-story-title">Mốc thứ nhất</span><span class="meta">clamp(58,5.3vw,86) / .9 · 800 → 45–63</span></div>
+        <div class="type-row"><span class="meta">card h3 · .case-module h3</span><span class="t jf-card-title">Một tiêu chuẩn chung</span><span class="meta">clamp(40,3.6vw,57) / .95 · 800 → 38</span></div>
+        <div class="type-row"><span class="meta">record h2 · .archive-content h2</span><span class="t jf-d" style="font:700 44px/1 var(--jf-display)">Tên nguồn tài liệu</span><span class="meta">clamp(32,3.5vw,50) / 1 · 700 → 31</span></div>
+        <div class="type-row"><span class="meta">card h3 31 · source/evidence</span><span class="t jf-h3-31">tep-anh-01.png</span><span class="meta">31 / 1 · 700</span></div>
+        <div class="type-row"><span class="meta">date · .story-date strong</span><span class="t jf-d" style="font-size:96px;line-height:.72;color:var(--jf-textFaint)">17</span><span class="meta">clamp(80,9vw,128) / .72 · 800 accent</span></div>
+        <div class="type-row"><span class="meta">statement · .hero-statement</span><span class="t" style="font-size:23px;font-weight:700;line-height:1.42">Một câu khẳng định ngắn.</span><span class="meta">clamp(19,1.7vw,24) / 1.42 · Inter 700</span></div>
+        <div class="type-row"><span class="meta">lead · .magazine-lead</span><span class="t jf-lead" style="color:inherit">Câu dẫn giải thích vấn đề.</span><span class="meta">clamp(20,1.7vw,26) / 1.5 · 600 → 18–19</span></div>
+        <div class="type-row"><span class="meta">quote · blockquote</span><span class="t" style="font-size:21px;font-weight:600">“Trích nguyên văn một điều khoản.”</span><span class="meta">17–25 / 1.46–1.55 · 600</span></div>
+        <div class="type-row"><span class="meta">body · description</span><span class="t jf-body" style="max-width:none">Đoạn mô tả đọc dài, xám dịu trên nền.</span><span class="meta">14–17 / 1.7–1.9 · 400</span></div>
+        <div class="type-row"><span class="meta">small · lead nhỏ</span><span class="t jf-small">Ghi chú nguồn, giới hạn thông tin.</span><span class="meta">11–13 / 1.55–1.65 · 400</span></div>
+        <div class="type-row"><span class="meta">eyebrow · .eyebrow</span><span class="t jf-eyebrow">Nhãn đầu section</span><span class="meta">12 · 700 · .16em · vạch 20×2</span></div>
+        <div class="type-row"><span class="meta">micro · nhãn khối</span><span class="t jf-micro" style="color:var(--jf-textFaint)">Nguồn · hồ sơ / 01</span><span class="meta">9–12 · 800 · .14–.15em</span></div>
+        <div class="type-row"><span class="meta">wordmark · .wordmark-main</span><span class="t" style="font:800 26px/.9 var(--jf-display);letter-spacing:-.015em">JUSTICE<span style="color:var(--jf-textFaint)">FOR</span></span><span class="meta">26 / .9 · 800 · −.015em</span></div>
+      </div><div class="spec-f"><span class="note">Site đổi font cho tiếng Thái/Hàn (<code>html[lang=th|ko]</code>) và thu cỡ tiêu đề; kit chỉ trình bày bản Việt.</span></div></div>
+    </section>
+
+    <section class="block" id="shape">
+      <header><h2>Góc, viền &amp; bóng</h2><p>Site không có thang shape: mọi khối vuông góc (<code>border-radius</code> chỉ xuất hiện 4 lần, đều là 50%). Kit vì thế không có nút đổi shape. Cá tính nằm ở viền dày một phía và bóng khối lệch không nhoè.</p></header>
+      <div class="grid wide">
+        <div class="spec"><div class="stage" id="shapes" style="gap:24px"></div></div>
+        <div class="spec"><div class="stage col"><div class="tbl">
+          <table class="tok"><thead><tr><th>Hiệu ứng</th><th>Giá trị</th><th>Dùng cho</th></tr></thead><tbody>
+            <tr><td>bóng khối</td><td>8px 10px 0 #c5cac5 · 5px 7px 0 #aab7aa</td><td>hover thẻ tuyển thủ, cột mốc</td></tr>
+            <tr><td>bóng hộp thoại</td><td>0 24px 80px #00000080</td><td>dialog</td></tr>
+            <tr><td>bóng menu</td><td>0 12px 24px #00000047</td><td>menu ngôn ngữ</td></tr>
+            <tr><td>blur</td><td>backdrop-filter: blur(12px)</td><td>header, thanh tiến độ</td></tr>
+            <tr><td>nhấc</td><td>translateY(−2 / −4 / −5px) · .2–.3s</td><td>nút chính, thẻ</td></tr>
+            <tr><td>xuất hiện</td><td>opacity .6s, transform .7s cubic-bezier(.2,.7,.2,1), dịch 32px</td><td>story panel khi vào khung</td></tr></tbody></table>
+        </div></div></div>
+      </div>
+    </section>
+
+    <section class="block" id="layout">
+      <header><h2>Bố cục &amp; kích thước</h2><p>Số đo ở 1440 và 390 theo CSS gốc; breakpoint thật của site là 1160, 1100, 1050, 800, 600 và 360.</p></header>
+      <div class="grid wide">
+        <div class="spec"><div class="stage col"><div class="tbl">
+          <table class="tok"><thead><tr><th>Khung</th><th>1440</th><th>390</th></tr></thead><tbody>
+            <tr><td>page-width</td><td>min(100% − 80, 1376)</td><td>100% − 36</td></tr>
+            <tr><td>section-pad</td><td>110 / 125</td><td>76 / 85</td></tr>
+            <tr><td>header</td><td>76 · pad 0 40 · gap 36</td><td>68 · pad 0 18 · subnav 39</td></tr>
+            <tr><td>interior header</td><td>78 · gap 35</td><td>68 · nav xuống hàng 2</td></tr>
+            <tr><td>story progress</td><td>56 · vạch 28×7 / 48×7</td><td>vạch 10×5 / 22×5</td></tr>
+            <tr><td>story panel</td><td>100svh − 56 · 1.05fr / .95fr</td><td>1 cột · pad 48 / 62</td></tr>
+            <tr><td>hero chiến dịch</td><td>400svh, ghim, 4 slide ngang</td><td>xếp dọc, ảnh cao min(56vw, 270)</td></tr>
+            <tr><td>footer</td><td>146 · 1fr 1.5fr auto</td><td>2 hàng · pad 30</td></tr></tbody></table>
+        </div></div></div>
+        <div class="spec"><div class="stage col"><div class="tbl">
+          <table class="tok"><thead><tr><th>Thành phần</th><th>Số đo</th></tr></thead><tbody>
+            <tr><td>.primary-cta</td><td>min 257 · pad 18 19 18 23 · gap 48 · 13/800</td></tr>
+            <tr><td>.hero-support-*</td><td>56 cao (390: 50) · nút ? 24 tròn</td></tr>
+            <tr><td>.language-trigger</td><td>130 × 36 · menu ≥154 · mục 37</td></tr>
+            <tr><td>.story-explainer</td><td>≤ 540 · pad 27 31 · viền 1</td></tr>
+            <tr><td>.case-module</td><td>≤ 580 · pad 28 32</td></tr>
+            <tr><td>.player-index-card</td><td>min 580 · ảnh clamp(360, 30vw, 500)</td></tr>
+            <tr><td>.player-milestone</td><td>80 · 1fr · 20 · min 225 · viền trên 4</td></tr>
+            <tr><td>.archive-record</td><td>88 · 1fr · gap 30 · pad 32 0</td></tr>
+            <tr><td>.sniping-dialog</td><td>≤ 760 · pad clamp(24, 5vw, 48) · đóng 36</td></tr></tbody></table>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- ================= ĐIỀU HƯỚNG ================= -->
+    <section class="block" id="navigation">
+      <header><h2>Điều hướng</h2><p>Mọi thanh điều hướng của site nằm trên nền mực; khung trình diễn dùng phạm vi <code>.jf-ink</code> nên luôn hiện đúng nền đó.</p></header>
+      <div class="grid">
+        <div class="spec full" data-sig="94118e8c1e c8a5a2843b ea16f22688 9fdec18107"><div class="spec-h"><b>Header trang chủ</b><span class="kind">.site-header · .wordmark · .home-header-nav</span><span class="dp">h 76 · pad 0 40 · gap 36 · blur 12</span></div>
+          <div class="stage col jf-ink" style="padding:0">
+            <div class="jf-header">
+              <a class="jf-wordmark" href="#navigation"><b>JUSTICE<span>FOR</span>KIT</b><small>Dòng thời gian</small></a>
+              <nav class="jf-nav" aria-label="Mẫu"><a href="#navigation">Tuyển thủ</a><a href="#navigation" class="is-hover" data-sig-state="9fdec18107:hover">Nguồn tài liệu</a><a href="#navigation">Pháp lý</a></nav>
+              <div class="jf-lang"><button class="jf-lang-btn" aria-expanded="false"><i class="jf-flag"></i><span>Tiếng Việt</span><svg class="i"><use href="#i-chev"/></svg></button></div>
+            </div>
+            <div class="jf-subnav"><a href="#navigation">Tuyển thủ</a><a href="#navigation">Nguồn tài liệu</a><a href="#navigation">Pháp lý</a></div>
+          </div><div class="spec-f"><span class="note">Nền mực 75% + blur 12, vạch dưới #333. Link 11/800 tracking .1em #d8d8d8, hover lên trắng (link thứ 2 đang hover). Hàng dưới là subnav ≤ 800px: nav tách xuống dải 39px dưới header 68px.</span></div></div>
+
+        <div class="spec" data-sig="e786c231f4 3477a5cf97 aae108e516 9e075ad97e 3a3b11c935 61a66617df 1d9922af92"><div class="spec-h"><b>Chọn ngôn ngữ</b><span class="kind">.language-trigger · .language-menu</span><span class="dp">130 × 36 · mục 37 · pad 4</span></div>
+          <div class="stage jf-ink" style="align-items:flex-start;min-height:330px">
+            <div class="jf-lang"><button class="jf-lang-btn" aria-expanded="true"><i class="jf-flag"></i><span>Tiếng Việt</span><svg class="i"><use href="#i-chev"/></svg></button>
+              <div class="jf-lang-menu pop" role="listbox" aria-label="Ngôn ngữ">
+                <button role="option" aria-selected="true"><i class="jf-flag"></i><span>Tiếng Việt</span><svg class="i"><use href="#i-check"/></svg></button>
+                <button role="option" aria-selected="false" class="is-hover"><i class="jf-flag"></i><span>English</span></button>
+                <button role="option" aria-selected="false"><i class="jf-flag"></i><span>Deutsch</span></button>
+                <button role="option" aria-selected="false"><i class="jf-flag"></i><span>Filipino</span></button>
+                <button role="option" aria-selected="false"><i class="jf-flag"></i><span>Русский</span></button>
+              </div></div>
+          </div><div class="spec-f"><span class="note">Mục đang chọn và mục hover cùng một kiểu: nền accent #c2c2c2 chữ #111, dấu tick 15px nét 3. Menu có 10 ngôn ngữ, kit bày 5. Cờ 24 × 16 là khối giữ chỗ (ảnh cờ của site không chép). Chevron xoay 180° khi mở.</span></div></div>
+
+        <div class="spec full" data-sig="8b1b02d099 05beb38b93"><div class="spec-h"><b>Header trang trong</b><span class="kind">.interior-header · .interior-nav</span><span class="dp">h 78 · gap 35 · link gap 27</span></div>
+          <div class="stage col jf-ink" style="padding:0">
+            <div class="jf-header solid">
+              <a class="jf-wordmark" href="#navigation"><b>JUSTICE<span>FOR</span>KIT</b></a>
+              <nav class="jf-nav interior" aria-label="Mẫu"><a href="#navigation">Dòng thời gian</a><a href="#navigation" class="is-hover" data-sig-state="05beb38b93:hover">Tuyển thủ</a><a href="#navigation">Tài liệu</a></nav>
+              <span></span>
+            </div>
+          </div><div class="spec-f"><span class="note">Nền #080909 đặc. Link #c4c6c5, hover trắng (đang hover: "Tuyển thủ"). ≤ 1100 bỏ nhãn phụ, gap 15.</span></div></div>
+
+        <div class="spec full" data-sig="715de5f228 5d24a27a34"><div class="spec-h"><b>Header kho tài liệu</b><span class="kind">.archive-header · .archive-back</span><span class="dp">min 76 · pad 0 40</span></div>
+          <div class="stage col jf-ink" style="padding:0">
+            <div class="jf-header solid" style="grid-template-columns:1fr auto;min-height:76px">
+              <a class="jf-wordmark" href="#navigation"><b>JUSTICE<span>FOR</span>KIT</b><small>Kho tài liệu</small></a>
+              <a class="jf-back" href="#navigation">Dòng thời gian</a>
+            </div>
+          </div><div class="spec-f"><span class="note">Nút quay lại là chữ accent 12/800 tracking .12em, không có mũi tên.</span></div></div>
+
+        <div class="spec full" data-sig="20418cbff4 3c661ceb5d"><div class="spec-h"><b>Thanh tiến độ mốc</b><span class="kind">.story-progress</span><span class="dp">h 56 · vạch 28×7 · hiện tại 48×7 · fill 2</span></div>
+          <div class="stage col jf-ink" style="padding:0">
+            <div class="jf-progress"><div class="in"><span>Mốc sự việc <strong>03 / 09</strong></span>
+              <nav aria-label="Mốc"><a href="#navigation" aria-label="Mốc 1"></a><a href="#navigation" aria-label="Mốc 2"></a><a href="#navigation" aria-current="true" aria-label="Mốc 3"></a><a href="#navigation" aria-label="Mốc 4"></a><a href="#navigation" aria-label="Mốc 5"></a><a href="#navigation" aria-label="Mốc 6"></a><a href="#navigation" aria-label="Mốc 7"></a><a href="#navigation" aria-label="Mốc 8"></a><a href="#navigation" aria-label="Mốc 9"></a></nav>
+              <a href="#navigation">Nguồn tài liệu ↗</a></div><div class="fill" style="width:33%"></div></div>
+            <div class="jf-bp-phone" style="max-width:390px"><div class="jf-progress"><div class="in" style="--jf-gutter:18px"><span>Mốc <strong>03 / 09</strong></span>
+              <nav aria-label="Mốc (mobile)"><a href="#navigation" aria-label="1"></a><a href="#navigation" aria-label="2"></a><a href="#navigation" aria-current="true" aria-label="3"></a><a href="#navigation" aria-label="4"></a><a href="#navigation" aria-label="5"></a><a href="#navigation" aria-label="6"></a></nav></div><div class="fill" style="width:33%"></div></div></div>
+          </div><div class="spec-f"><span class="note">Dính trên cùng khi cuộn qua các mốc. Vạch là link neo tới từng mốc; vạch hiện tại dài ra (transition width .2s). Hàng 2: bản ≤ 600 (vạch 10×5, bỏ link phải).</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= HÀNH ĐỘNG ================= -->
+    <section class="block" id="actions">
+      <header><h2>Hành động</h2><p>Nút đặc, link gạch chân và chip viền. Không có nút bo góc, không có nút icon rời.</p></header>
+      <div class="grid">
+        <div class="spec" data-sig="370b64344c b10db3b93d"><div class="spec-h"><b>Nút chính</b><span class="kind">.primary-cta</span><span class="dp">min 257 · 18 19 18 23 · 13/800</span></div>
+          <div class="stage jf-ink">
+            <div class="st"><i>nghỉ</i><button class="jf-cta">Mở giải thích<svg class="i"><use href="#i-right"/></svg></button></div>
+            <div class="st"><i>hover</i><a class="jf-cta is-hover" href="#actions">Xem diễn biến<svg class="i"><use href="#i-right"/></svg></a></div>
+          </div><div class="spec-f"><span class="note">Có bản &lt;button&gt; (mở hộp thoại) và &lt;a&gt;. Hover nền #e6e8ea + nhấc 2px. ≤ 600 giãn đủ ngang, min-height 52.</span></div></div>
+
+        <div class="spec" data-sig="31f9afe642 f99108e08f dcf90616dc"><div class="spec-h"><b>Nút ủng hộ + bộ đếm</b><span class="kind">.hero-support-button · .hero-support-count</span><span class="dp">h 56 · ? 24 tròn</span></div>
+          <div class="stage col jf-ink">
+            <div class="jf-support"><button class="jf-support-btn" disabled><svg class="i"><use href="#i-heart"/></svg>Đang xác minh…</button>
+              <div class="jf-count"><strong>1.234.567</strong><span>người ủng hộ</span><button class="jf-help" aria-label="Giải thích bộ đếm">?</button></div></div>
+            <div class="jf-support"><button class="jf-support-btn is-hover"><svg class="i"><use href="#i-heart"/></svg>Đồng hành</button>
+              <div class="jf-count"><strong>1.234.568</strong><span>người ủng hộ</span><button class="jf-help is-hover" aria-label="Giải thích bộ đếm" data-sig-state="dcf90616dc:hover">?</button></div></div>
+            <p class="jf-error">Không gửi được, thử lại sau.</p>
+          </div><div class="spec-f"><span class="note">Hàng 1: disabled (opacity .75) lúc chờ Cloudflare Turnstile. Hàng 2: hover (nút trong suốt chữ trắng, nút ? đảo màu). Dòng đỏ #ffb5b5 là lỗi gửi. Con số là mẫu.</span></div></div>
+
+        <div class="spec" data-sig="6204818d17 31491da144 8642e832df"><div class="spec-h"><b>Nút hồ sơ</b><span class="kind">.profile-primary · .profile-secondary · .player-case-link a</span><span class="dp">h 52 · pad 0 20 · 11/800</span></div>
+          <div class="stage col jf-ink jf-moss">
+            <div class="states">
+              <div class="st"><i>chính</i><a class="jf-profile primary" href="#actions">Đọc tiểu sử<svg class="i"><use href="#i-down"/></svg></a></div>
+              <div class="st"><i>chính · hover</i><a class="jf-profile primary is-hover" href="#actions" data-sig-state="6204818d17:hover">Đọc tiểu sử<svg class="i"><use href="#i-down"/></svg></a></div>
+              <div class="st"><i>phụ</i><a class="jf-profile secondary" href="#actions">Kênh video<svg class="i"><use href="#i-ne"/></svg></a></div>
+              <div class="st"><i>phụ · hover</i><a class="jf-profile secondary is-hover" href="#actions" data-sig-state="31491da144:hover">Kênh video<svg class="i"><use href="#i-ne"/></svg></a></div>
+              <div class="st"><i>khối đặc</i><a class="jf-solid" href="#actions">Xem dòng thời gian</a></div>
+            </div>
+          </div><div class="spec-f"><span class="note">Chỉ có ở trang tuyển thủ (sắc rêu): nút chính nền #c4d0c4 → hover #fff; nút phụ viền #5a625c → hover nền #303a33. "Khối đặc" là CTA của dải liên kết vụ việc (pad 17 21).</span></div></div>
+
+        <div class="spec full" data-sig="286ab26684 3d808a6e54 2343a0a0ed 9d6a398ef2 741863a311 e895f937f1 804c92ea17 f93168ef2c 97633341e5 3fa248e8d1"><div class="spec-h"><b>Link gạch chân · nền mực</b><span class="kind">.source-link · .magazine-source · .story-next · .share-button · .campaign-skip</span><span class="dp">vạch 1px · pad-bottom 3–5</span></div>
+          <div class="stage jf-ink">
+            <div class="st"><i>source-link</i><a class="jf-ulink accent source" href="#actions">Tên nguồn · 20 Sep<svg class="i"><use href="#i-ne"/></svg></a></div>
+            <div class="st"><i>source-link · hover</i><a class="jf-ulink accent source is-hover" href="#actions" data-sig-state="286ab26684:hover">Tên nguồn · 20 Sep<svg class="i"><use href="#i-ne"/></svg></a></div>
+            <div class="st"><i>magazine-source</i><a class="jf-ulink mag" href="#actions">Đọc văn bản gốc · §3.7</a></div>
+            <div class="st"><i>story-next</i><a class="jf-next" href="#actions">Cuộn để xem mốc tiếp theo<svg class="i"><use href="#i-down"/></svg></a></div>
+            <div class="st"><i>share-button</i><div class="jf-share-wrap"><button class="jf-share"><svg class="i"><use href="#i-share"/></svg>Chia sẻ</button></div></div>
+            <div class="st"><i>share · hover</i><button class="jf-share is-hover" data-sig-state="804c92ea17:hover"><svg class="i"><use href="#i-share"/></svg>Chia sẻ</button></div>
+            <div class="st"><i>story-next · hover</i><a class="jf-next is-hover" href="#actions" data-sig-state="741863a311:hover">Mốc tiếp theo<svg class="i"><use href="#i-down"/></svg></a></div>
+            <div class="st"><i>campaign-skip</i><a class="jf-ulink caps" href="#actions" style="color:var(--jf-textMuted)">Đến dòng thời gian</a></div>
+            <div class="st"><i>reported · a</i><div class="jf-reported" style="margin:0;padding:0;border:0;background:none"><a href="#actions">Xem nguồn gốc và giới hạn</a></div></div>
+          </div><div class="spec-f"><span class="note">Link nguồn ở story là accent, hover lên trắng. Cỡ 11–13, 700/800. Nút chia sẻ ≤ 600 cao 44 cho dễ chạm.</span></div></div>
+
+        <div class="spec full" data-sig="1a21f31386 ec46541ba7 e45b23f4c9 69563a49d0 702ad54faf bb6f70865e 66daf5ba85 3bceb618fc 7a88c61d8c 3b8c1a076c"><div class="spec-h"><b>Link gạch chân · nền giấy</b><span class="kind">.index-bottom a · .archive-meta a · .evidence-manifest-link · .player-bio-sources a · .rulebook-excerpt a</span><span class="dp">vạch 1–2px</span></div>
+          <div class="stage jf-paper">
+            <div class="st"><i>index-bottom</i><a class="jf-ulink caps" href="#actions" style="font-size:11px">Về dòng thời gian</a></div>
+            <div class="st"><i>archive-meta (underline)</i><span class="jf-meta" style="border:0;padding:0;width:auto"><a href="#actions" style="margin:0">Tải manifest nguồn</a></span></div>
+            <div class="st"><i>manifest-link</i><a class="jf-ulink caps" href="#actions" style="color:var(--jf-textMuted)">Danh sách tệp ảnh</a></div>
+            <div class="st"><i>bio-sources (2px)</i><a class="jf-ulink thick" href="#actions">Hồ sơ chính thức</a></div>
+            <div class="st"><i>rulebook-excerpt</i><div class="jf-rexcerpt" style="padding:0;border:0;background:none"><a href="#actions">Đọc nguyên trang PDF</a></div></div>
+            <div class="st"><i>breadcrumb</i><div class="jf-crumb" style="margin:0"><a href="#actions">Tuyển thủ</a><span>/ 01</span></div></div>
+            <div class="st"><i>link trong đoạn pháp lý</i><p class="jf-body" style="margin:0"><a href="#actions" style="color:inherit">Tài liệu bổ sung ↗</a></p></div>
+          </div><div class="spec-f"><span class="note">Cùng một cú pháp trên nền sáng: vạch theo màu chữ. "Gyumin bottom" (sage) nằm ở thẻ so sánh bên dưới.</span></div></div>
+
+        <div class="spec full" data-sig="af733db218 78f082a477 a2c31556d8 dee832641c 0527e48f88 c3564fa18b"><div class="spec-h"><b>Chip hành động</b><span class="kind">.archive-links a · .module-links a · .rulebook-files a · .evidence-archive-card-body &gt; a</span><span class="dp">pad 10 13 · viền 1 · 12/800</span></div>
+          <div class="stage jf-paper">
+            <div class="st"><i>archive-links (đầu · sau · span)</i><div class="jf-chips"><a class="jf-chip dark" href="#actions">Nguồn gốc</a><a class="jf-chip" href="#actions">Tải bản lưu</a><span class="jf-chip muted">Chỉ bản gốc</span></div></div>
+            <div class="st"><i>hover</i><div class="jf-chips"><a class="jf-chip dark is-hover" href="#actions" data-sig-state="af733db218:hover">Nguồn gốc</a><a class="jf-chip is-hover" href="#actions" data-sig-state="78f082a477:hover">Tải bản lưu</a></div></div>
+            <div class="st"><i>rulebook-files</i><div class="jf-chips"><a class="jf-chip file" href="#actions">Mở bản VI · trang 16</a></div></div>
+            <div class="st"><i>evidence-card a</i><a class="jf-chip tag-accent" href="#actions">Tải PNG đã làm mờ</a></div>
+          </div>
+          <div class="stage jf-ink">
+            <div class="st"><i>module-links (nền mực)</i><div class="jf-chips"><a class="jf-chip soft" href="#actions">Văn bản · §3.7</a><a class="jf-chip soft is-hover" href="#actions" data-sig-state="dee832641c:hover">Ảnh · chuyển ứng dụng (hover)</a></div></div>
+          </div><div class="spec-f"><span class="note">Chip đầu tiên của kho tài liệu nền mực chữ trắng; hover mọi chip lên accent #c2c2c2. Chip module (Inter 12/700, không viết hoa) hover đảo sáng.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE CHIẾN DỊCH ================= -->
+    <section class="block" id="campaign">
+      <header><h2>Slide chiến dịch</h2><p>Hero trang chủ là 4 slide ngang ghim trong 400svh (cuộn dọc đẩy ngang); ≤ 600 xếp dọc. Kit bày từng slide như một section tĩnh.</p></header>
+      <div class="grid">
+        <div class="spec full" data-sig="cab79dde02 08dabc2756 ac5bdabe5f 581ae537a3 66350b2050"><div class="spec-h"><b>Slide mở đầu</b><span class="kind">.campaign-slide-intro · .hero-statement · .hero-description</span><span class="dp">pad 112 / 82 · copy ≤ 790 · h1 clamp(70,6.7vw,110)</span></div>
+          <div class="stage col jf-ink" style="padding:0">
+            <div class="jf-slide">
+              <div class="photo ph">ảnh chân dung xám toàn khung (object-position center 38%)</div>
+              <div class="copy-in">
+                <p class="jf-eyebrow" style="color:var(--jf-textMuted)">Tên chiến dịch / 17–23.09</p>
+                <h1 class="jf-hero-title">Tiêu đề chiến dịch hai dòng.</h1>
+                <p class="jf-statement">Một câu khẳng định ngắn, in đậm, có vạch accent bên trái.</p>
+                <p class="jf-desc">Đoạn mô tả giải thích bối cảnh, xám #d2d2d2 trên nền mực, cỡ co theo màn từ 14 tới 17px.</p>
+              </div>
+            </div>
+          </div><div class="spec-f"><span class="note">Gradient phủ từ trái (#050505 → trong suốt ở 88%) để chữ đọc được trên ảnh. Ảnh của site không chép.</span></div></div>
+
+        <div class="spec full" data-sig="cfcb78006d 13c6a944fa 694e9df46b 1f4413f4e5 e541880e5e ec076244c5 f7a75f582e"><div class="spec-h"><b>Slide điều lệ (nền giấy)</b><span class="kind">.campaign-slide-rule · .magazine-rule-excerpt</span><span class="dp">1.05fr / .8fr · số § 160</span></div>
+          <div class="stage col jf-paper" style="padding:0">
+            <div class="jf-mag">
+              <div class="copy-in">
+                <p class="jf-kicker">Điều lệ &amp; hướng dẫn</p>
+                <h2 class="jf-mag-title">Luật phải rõ ràng</h2>
+                <p class="jf-lead">Câu dẫn nói điều cần làm rõ, đậm 600.</p>
+                <p class="jf-body">Đoạn bối cảnh #4b4b4b, 15/1.7, tối đa 640px.</p>
+                <div class="actions"><button class="jf-cta">Mở giải thích<svg class="i"><use href="#i-right"/></svg></button><a class="jf-ulink mag" href="#campaign">Đọc văn bản gốc · §3.7</a></div>
+              </div>
+              <div class="jf-excerpt"><span>Điều lệ · §3.7 · trang 16</span><strong>§3.7</strong><blockquote>“Trích nguyên văn một điều khoản, đậm 600.”</blockquote><p class="jf-small">Ghi chú về bản dịch và trang gốc.</p></div>
+            </div>
+          </div><div class="spec-f"><span class="note">Slide duy nhất nền giấy #eae9e6 trong hero; khi nó hiện, thanh cuộn, nút bỏ qua và progress đổi sang tông tối (<code>.campaign-hero-stage-1</code>).</span></div></div>
+
+        <div class="spec full" data-sig="c206d09561 f2b668e757 3cc4daf804 8e23559277 1a36ccbb9f e1fff112b4 9754e7d8f6 c79cd68ee0"><div class="spec-h"><b>Slide điều tra · khối chứng cứ</b><span class="kind">.campaign-slide-investigation · .magazine-evidence</span><span class="dp">ảnh 16:9 · dưới .47fr / .53fr</span></div>
+          <div class="stage col jf-ink" style="padding:0">
+            <div class="jf-mag">
+              <div class="copy-in"><p class="jf-kicker">Kết luận &amp; chứng cứ</p><h2 class="jf-mag-title">Điều tra phải công bằng</h2><p class="jf-lead">Câu dẫn nêu yêu cầu.</p><p class="jf-body">Đoạn bối cảnh #c2c2c2.</p><a class="jf-ulink mag" href="#campaign">Đọc kết luận</a></div>
+              <div class="jf-evidence"><div class="status"><span>20.09 · còn điều tra</span><span>23.09 · công bố</span></div>
+                <a class="ph" href="#campaign">ảnh chứng cứ chính 16:9</a>
+                <div class="bottom"><div class="ph" style="aspect-ratio:16/9">ảnh phụ</div><p class="jf-small">Chú thích ảnh: nguồn, thời điểm, giới hạn.</p></div></div>
+            </div>
+          </div><div class="spec-f"><span class="note">Ảnh chính là link (hover ảnh scale 1.025, .35s). Nền radial #191919 ở 83%.</span></div></div>
+
+        <div class="spec full" data-sig="ad6e5349ea bbe5d45d7b 91d093dbd3 7a9194c2a8 7c93041d82 836f485a84"><div class="spec-h"><b>Slide chế tài · khối phản ánh</b><span class="kind">.magazine-sanctions · .reported-sanction-changes(-compact)</span><span class="dp">dòng pad 22 · hộp viền đứt 1px</span></div>
+          <div class="stage col jf-ink" style="padding:0">
+            <div class="jf-mag">
+              <div class="copy-in"><p class="jf-kicker">Chế tài &amp; quyền giải trình</p><h2 class="jf-mag-title">Án phạt phải tương xứng</h2><button class="jf-cta">Xem diễn biến &amp; tài liệu<svg class="i"><use href="#i-right"/></svg></button></div>
+              <div><div class="jf-sanctions"><div><span>Tài khoản</span><strong>Mức xử lý A</strong></div><div><span>Giải đấu</span><strong>Mức xử lý B</strong></div></div>
+                <div class="jf-reported compact"><span>Phản ánh chưa được xác minh</span><div class="seq"><strong>Mức 1</strong><svg class="i"><use href="#i-right"/></svg><strong>Mức 2</strong></div><p>Mô tả ngắn về nguồn phản ánh và độ tin cậy.</p><a href="#campaign">Xem nguồn gốc và giới hạn</a></div></div>
+            </div>
+          </div><div class="spec-f"><span class="note">Hộp phản ánh nền #202020 viền đứt #787878: chỉ báo "chưa xác minh" bằng hình (viền đứt), không bằng màu cảnh báo. Có bản thường (pad 18 20) và compact (pad 16).</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= MỐC SỰ VIỆC ================= -->
+    <section class="block" id="story">
+      <header><h2>Mốc sự việc</h2><p>Mỗi mốc là một story panel cao 100svh − 56, snap khi cuộn, nội dung trượt lên 32px khi vào khung.</p></header>
+      <div class="grid">
+        <div class="spec full" data-sig="f072ea6c8a 5cd16622b6 5a9c4b21fe 62182b2974 79d6f76b52 112a4478f9 bb254f02ee 55707de028"><div class="spec-h"><b>Story panel</b><span class="kind">.story-panel · .story-kicker · .story-date · .story-main-point · .story-sources</span><span class="dp">1.05fr / .95fr · pad 75</span></div>
+          <div class="stage col jf-ink" style="padding:0">
+            <div class="jf-panel"><div class="in">
+              <div class="content">
+                <div class="jf-story-kicker"><span>01 / 09</span><span>Ngày thứ nhất</span></div>
+                <div class="jf-date"><strong>17</strong><span>Thg 9<br>2026</span></div>
+                <h2 class="jf-story-title">Tiêu đề mốc sự việc</h2>
+                <div class="jf-point"><span>Điều xảy ra</span><p>Đoạn tóm tắt diễn biến chính của mốc này, 15/1.75 #d0d3d6.</p></div>
+                <div class="jf-sources"><span>Nguồn</span><div><a class="jf-ulink accent source" href="#story">Nguồn thứ nhất · 11 Sep<svg class="i"><use href="#i-ne"/></svg></a><a class="jf-ulink accent source" href="#story">Nguồn thứ hai · 21 Sep<svg class="i"><use href="#i-ne"/></svg></a></div></div>
+                <a class="jf-next" href="#story">Cuộn để xem mốc tiếp theo<svg class="i"><use href="#i-down"/></svg></a>
+              </div>
+              <div class="jf-explainer" data-sig="a8a15fc619 317c83bcf7 1cccdd9646 b487916400 277f0cb3f2 890e2215be 5ac6f55d38 694e0eff1a 6123f8cd77">
+                <span class="top">Hồ sơ vụ việc / 01</span>
+                <div class="jf-readmore"><p><strong>Lập luận / phản hồi:</strong> nội dung lập luận chính, chữ đậm trắng mở đầu.</p><p><strong>Điều cần hiểu:</strong> điểm cần phân biệt khi đọc mốc này.</p>
+                  <div class="jf-addl"><h4>Khởi đầu</h4><p>Khối bổ sung có tiêu đề accent 12/800.</p></div>
+                  <div class="jf-addl"><h4>Mốc thời gian</h4><p>Ghi chú thời điểm công bố.</p></div></div>
+                <span class="bottom">Justice kit · 2026</span>
+              </div>
+            </div></div>
+          </div><div class="spec-f"><span class="note">Nền panel xen kẽ #080808 / #0d0d0d, quầng sáng radial ở 83% 48% có parallax. Cột phải là "hồ sơ vụ việc" (story-explainer-compact). Mốc "điều lệ" đổi sang nền giấy #e9e9e7 với chip #262626.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= HỒ SƠ & MODULE ================= -->
+    <section class="block" id="modules">
+      <header><h2>Hồ sơ &amp; module</h2><p>Khối dữ kiện đặt ở cột phải của story panel: văn bản trích, chuỗi cáo buộc, so sánh hai trường hợp, bảng chế tài.</p></header>
+      <div class="grid wide">
+        <div class="spec" data-sig="f4d404182a 9330d051e1 b5b51febed 6ab8bdda9e c024e94253 8812078689 9f3a3a49a2 890e2215be"><div class="spec-h"><b>Case module · văn bản</b><span class="kind">.case-module(-rulebook) · .module-document · .module-links</span><span class="dp">≤ 580 · pad 28 32</span></div>
+          <div class="stage jf-paper">
+            <div class="jf-module">
+              <span class="eyebrow">Văn bản gốc</span><h3 class="jf-card-title">Luật rõ ràng. Trách nhiệm chung.</h3>
+              <p class="lead">Câu dẫn nói module này giúp đọc điều gì.</p>
+              <div class="jf-doc"><span>ĐIỀU LỆ · §3.7 · P.16</span><blockquote>“Trích nguyên văn điều khoản.”</blockquote><p>Ghi chú bản dịch.</p></div>
+              <div class="jf-module-links"><span>Kiểm tra bối cảnh</span><div><a class="jf-chip soft" href="#modules">Văn bản · §3.7</a><a class="jf-chip soft is-hover" href="#modules" data-sig-state="a2c31556d8:hover">Văn bản · §4.1 (hover)</a></div></div>
+            </div>
+          </div><div class="spec-f"><span class="note">Đây là biến thể điều lệ (nền #f8f8f6 viền #aaa); bản thường nền #131313 chữ sáng (đổi "Nền" sang Mực để xem màu tương ứng).</span></div></div>
+
+        <div class="spec" data-sig="8deb7397be bcbc8579fa d1f656215d 1bda9dea94 1ce1d67bfd 44c5e8335f 3b78e03943 d54cf8df22"><div class="spec-h"><b>So sánh hai trường hợp</b><span class="kind">.module-comparison · .comparison-case · .module-stills</span><span class="dp">2 cột gap 10 · ảnh 90</span></div>
+          <div class="stage jf-ink">
+            <div class="jf-module">
+              <span class="eyebrow">Đối chiếu</span><h3 class="jf-card-title">Một tiêu chuẩn cho tất cả.</h3>
+              <div class="jf-cmp"><span class="intro-l">Cùng ba câu hỏi cho mỗi trường hợp</span>
+                <div class="cases"><div class="jf-case"><h4>Trường hợp A</h4><dl><div><dt>Thời điểm</dt><dd>Mô tả ngắn</dd></div><div><dt>Chứng cứ</dt><dd>Mô tả ngắn</dd></div></dl></div>
+                  <div class="jf-case"><h4>Trường hợp B</h4><dl><div><dt>Thời điểm</dt><dd>Mô tả ngắn</dd></div><div><dt>Chứng cứ</dt><dd>Mô tả ngắn</dd></div></dl></div></div>
+                <p>Đoạn kết luận so sánh, 12/1.55.</p>
+                <div class="jf-stills"><a href="#modules"><div class="ph">ảnh 1</div><span>Chú thích ảnh thứ nhất</span></a><a href="#modules"><div class="ph">ảnh 2</div><span>Chú thích ảnh thứ hai</span></a></div></div>
+            </div>
+          </div></div>
+
+        <div class="spec" data-sig="60f6b69498 46db56635d 9e6167215a 10db700cdd 086ccff9e9 836f485a84"><div class="spec-h"><b>Chuỗi dữ kiện · bảng chế tài</b><span class="kind">.module-chain · .module-limits · .module-sanctions</span><span class="dp">dòng pad 13 · lưới gap 1</span></div>
+          <div class="stage jf-ink">
+            <div class="jf-module">
+              <div class="jf-chain"><div><span>Cáo buộc</span><p>Nội dung được nêu trong thông báo.</p></div><div><span>Dựa trên</span><p>Loại dữ liệu được dẫn.</p></div><div><span>Kết luận</span><p>Điều được công bố.</p></div></div>
+              <p class="jf-limits">Giới hạn: trang này chưa có bản lưu chứng cứ đầy đủ.</p>
+              <div class="jf-msanc"><div><span>Tài khoản</span><strong>Mức A</strong></div><div><span>Giải đấu</span><strong>Mức B</strong></div></div>
+              <div class="jf-reported"><span>Phản ánh chưa được xác minh</span><div class="seq"><strong>Mức 1</strong><svg class="i"><use href="#i-right"/></svg><strong>Mức 2</strong></div></div>
+            </div>
+          </div><div class="spec-f"><span class="note">Bảng chế tài dựng bằng lưới nền #555 gap 1px (vạch ngăn là khe hở, không phải border). ≤ 600 xếp nhãn trên giá trị.</span></div></div>
+
+        <div class="spec full" data-sig="d2d5ba2415 b81c7a55ec e5f6ea08f6 079f5e0747 ee0abb8710 f7fe593dee 1c3b0ad88f b98dbdb3e3 0f0d643bfc 1ecc0b8a44 20065bf940 540d9cfe1c 0c3bd8010c 7968ad948d f602dad5a3 3bceb618fc"><div class="spec-h"><b>Section đối chiếu (sage)</b><span class="kind">.gyumin-comparison · -card(-finding) · -callout · -bottom</span><span class="dp">nền #dce2d9 · thẻ min 385 · viền trên 5</span></div>
+          <div class="stage col sage" style="gap:14px;padding:32px 24px">
+            <div class="jf-gcmp-head"><p class="jf-eyebrow">Trường hợp đối chiếu / 2024–2026</p><h2>Cùng câu hỏi. Tiêu chuẩn nào?</h2><p>Đoạn dẫn giải thích vì sao đặt hai trường hợp cạnh nhau.</p></div>
+            <div class="jf-gcmp">
+              <div class="jf-gcard"><div class="top"><span>01 / 2024</span><span>Cáo buộc đương thời</span></div><h3>Trường hợp A</h3><p>Tóm tắt trường hợp thứ nhất.</p><p class="outcome">Kết quả được ghi nhận.</p></div>
+              <div class="jf-gcard finding"><div class="top"><span>02 / 2026</span><span>Kết luận chính thức</span></div><h3>Trường hợp B</h3><p>Tóm tắt trường hợp thứ hai.</p><p class="outcome">Kết quả được công bố.</p></div>
+            </div>
+            <div class="jf-callout"><span>Câu hỏi gửi ban tổ chức</span><div><p>Câu hỏi chính, 16/1.65.</p><p>Câu hỏi phụ nhỏ hơn, #d4e1d4.</p></div></div>
+            <div class="jf-gbottom"><p>Ghi chú nguồn kiểm tra ngày nào, 11/1.6.</p><nav aria-label="Nguồn đối chiếu"><a href="#modules">Bài đăng 2024 ↗</a><a href="#modules" class="is-hover" data-sig-state="3bceb618fc:hover">Hồ sơ ↗</a><a href="#modules">Kết luận ↗</a></nav></div>
+          </div><div class="spec-f"><span class="note">Sắc sage cố định (không đổi theo nút Sắc/Nền): thẻ sáng #f1f4ef viền #879589, thẻ kết luận #19231c viền #a4b8a5, callout #435c48. Link dưới hover lên #000 (link giữa).</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= KHO TÀI LIỆU ================= -->
+    <section class="block" id="archive">
+      <header><h2>Kho tài liệu</h2><p>Trang /sources: danh sách nguồn đánh số, trích điều lệ, nguồn chưa xác minh và thẻ ảnh chứng cứ. Nền giấy trung tính.</p></header>
+      <div class="grid wide">
+        <div class="spec full" data-sig="d36d0d0234 787077d6d8 34162ae71d e45b23f4c9 cab8a07fac 6b351a6be6 6e0becc68b af733db218 78f082a477"><div class="spec-h"><b>Đầu trang + bản ghi nguồn</b><span class="kind">.archive-main h1 · .archive-meta · .archive-record</span><span class="dp">số 59 · 88 / 1fr · gap 30 · pad 32 0</span></div>
+          <div class="stage col jf-paper" style="align-items:flex-start">
+            <h1 class="jf-archive-h1">Kho tài liệu <span>/ nguồn</span></h1>
+            <p class="jf-body" style="max-width:810px">Mỗi mục cho biết địa chỉ gốc, nơi xuất bản và bản lưu cục bộ.</p>
+            <div class="jf-meta"><span>14 nguồn</span><span>8 tệp cục bộ</span><a href="#archive">Tải manifest nguồn</a></div>
+            <div class="jf-record"><span class="num">01</span><div><span class="sub">Thông báo chính thức · tiếng Việt</span><h2>Tên tài liệu nguồn · 23.09</h2><p>Mô tả tài liệu dùng để làm gì trong dòng thời gian.</p>
+              <div class="jf-chips"><a class="jf-chip dark" href="#archive">Nguồn gốc</a><a class="jf-chip" href="#archive">Tải bản lưu</a></div>
+              <div class="jf-checksum"><span>SHA-256 · 3f2a…9c1d</span><span>Lưu ngày 24.09</span></div></div></div>
+          </div></div>
+
+        <div class="spec" data-sig="249d9a24f6 0527e48f88 3a998ee45c 93d68d2bcd 70c66274e2 66daf5ba85"><div class="spec-h"><b>Nguồn điều lệ · trích đoạn</b><span class="kind">.rulebook-source · .rulebook-excerpt</span><span class="dp">viền trên 3 · pad 26 30 · h3 39</span></div>
+          <div class="stage col jf-paper" style="align-items:flex-start">
+            <div class="jf-source-block"><p class="jf-eyebrow">Tài liệu 02</p><h2>Điều lệ <span>giải đấu</span></h2><div class="jf-chips"><a class="jf-chip file" href="#archive">Mở bản VI · trang 16</a></div></div>
+            <div class="jf-rexcerpt"><span>Điều lệ · §3.7 · trang 16/17</span><h3>Tên điều khoản</h3><blockquote>“Trích nguyên văn, vạch trái 3px.”</blockquote><p>Ghi chú bản dịch, in nghiêng khi là bản dịch.</p><a href="#archive">Đọc nguyên trang PDF</a></div>
+          </div></div>
+
+        <div class="spec" data-sig="bc95f452c6 0255375557 ce0b656792 4b3782213c"><div class="spec-h"><b>Nguồn chưa xác minh</b><span class="kind">.reported-source · .reported-source-quote</span><span class="dp">≤ 920 · pad 34 0 · quote 17–21</span></div>
+          <div class="stage col jf-paper" style="align-items:flex-start">
+            <div class="jf-rsource"><p class="jf-eyebrow">02B / Phản ánh chưa xác minh</p><h2>Thông tin được kể lại</h2><blockquote class="jf-quote">Đoạn trích lời kể, đậm 600, vạch trái 3px.</blockquote><p>Đoạn nói rõ ai cung cấp và giới hạn của thông tin.</p></div>
+          </div><div class="spec-f"><span class="note">Khi được neo tới (<code>:target</code>) khối nháy nền #d2d2d2 + viền 5px #333 trong 2s.</span></div></div>
+
+        <div class="spec" data-sig="2ffb171ea0 d47c25c15b 91c26b04e0 fc6dee87ed c3d9fb93a0 c3564fa18b a5ab5ae210 69563a49d0"><div class="spec-h"><b>Thẻ ảnh chứng cứ</b><span class="kind">.evidence-archive-card</span><span class="dp">ảnh 16:9 nền #17191b · body pad 23</span></div>
+          <div class="stage col jf-paper" style="align-items:flex-start">
+            <p class="jf-body">Đoạn giới thiệu nhóm ảnh, 14/1.75.</p>
+            <div class="jf-ecard"><a class="ph" href="#archive">ảnh chứng cứ đã làm mờ 16:9</a><div class="body"><span>Ảnh do người dùng cung cấp / 01</span><h3>tep-anh-01.png</h3><p>Mô tả nội dung ảnh và giới hạn.</p><a class="jf-chip tag-accent" href="#archive">Tải PNG đã làm mờ</a><div class="jf-checksum"><span>SHA-256 · a91e…07bb</span></div></div></div>
+            <a class="jf-ulink caps" href="#archive" style="color:var(--jf-textMuted)">Danh sách tệp ảnh</a>
+          </div></div>
+      </div>
+    </section>
+
+    <!-- ================= TUYỂN THỦ ================= -->
+    <section class="block" id="players">
+      <header><h2>Tuyển thủ</h2><p>Trang /players và /players/&lt;tên&gt; dùng sắc rêu: nền giấy #e8e8e5, mực #0d100f, accent #c4d0c4. Khung trình diễn gắn <code>.jf-moss</code> để luôn hiện sắc này.</p></header>
+      <div class="grid wide">
+        <div class="spec full" data-sig="386c238f00 488ab05103 043fdf4c5e 0d89701d9e bcd3b9b1e4 ea620b8372 9037202180 1a21f31386"><div class="spec-h"><b>Lưới thẻ tuyển thủ</b><span class="kind">.player-index-card(-tanvuu) · -art · -content</span><span class="dp">2 cột gap 17 · min 580 · h2 clamp(62,7vw,104)</span></div>
+          <div class="stage col jf-paper jf-moss" style="align-items:flex-start">
+            <p class="jf-kicker">01 / Tuyển thủ</p><h1 class="jf-index-title">Hai hồ sơ. Hai hành trình.</h1>
+            <p class="jf-body" style="font-size:17px">Đoạn giới thiệu trang danh mục, 17/1.7.</p>
+            <div class="jf-milestones" style="gap:17px">
+              <a class="jf-pcard jf-ink" href="#players"><div class="art"><span class="wm">01</span><div class="ph">ảnh chân dung</div></div><div class="content"><span>Quốc gia / bộ môn</span><h2>Tên A</h2><p>Họ tên thật</p><strong>Xem hồ sơ →</strong></div></a>
+              <a class="jf-pcard jf-ink alt is-hover" href="#players" data-sig-state="043fdf4c5e:hover 0d89701d9e:hover"><div class="art"><span class="wm">02</span><div class="ph">ảnh chân dung</div></div><div class="content"><span>Quốc gia / bộ môn</span><h2>Tên B</h2><p>Họ tên thật</p><strong>Xem hồ sơ →</strong></div></a>
+            </div>
+            <a class="jf-ulink caps" href="#players" style="font-size:11px">Về dòng thời gian</a>
+          </div><div class="spec-f"><span class="note">Thẻ 2 (-tanvuu) nền #232725 và quầng sáng hơn; thẻ phải đang hover: nhấc 5px, bóng khối 8 10 #c5cac5, ảnh scale 1.04. Số chìm 01/02 là chữ trắng 5%.</span></div></div>
+
+        <div class="spec full" data-sig="0acb9aaa8f 7a88c61d8c cf7ac18eb7 55d373cebe 6204818d17 31491da144 b320f73043 702ad54faf"><div class="spec-h"><b>Hero hồ sơ</b><span class="kind">.player-hero · .player-breadcrumb · .player-hero-visual</span><span class="dp">1fr / minmax(390,.8fr) · h1 clamp(116,15vw,230)</span></div>
+          <div class="stage col jf-ink jf-moss" style="padding:0">
+            <div class="jf-phero">
+              <div class="copy-in"><div class="jf-crumb"><a href="#players">Tuyển thủ</a><span>/ 01</span></div><p class="jf-kicker">Quốc gia / bộ môn</p><h1>Tên<span>.</span></h1><p class="intro-p">Một câu giới thiệu tuyển thủ, 18–23/1.6.</p>
+                <div class="actions"><a class="jf-profile primary" href="#players">Đọc tiểu sử<svg class="i"><use href="#i-down"/></svg></a><a class="jf-profile secondary" href="#players">Kênh video<svg class="i"><use href="#i-ne"/></svg></a></div></div>
+              <div class="jf-pvisual"><span class="num">01</span><div class="ph">ảnh chân dung (object-fit contain, đáy)</div><div class="cap"><span>Ảnh chân dung từ nguồn chính thức</span><a href="#players">Nguồn ảnh</a></div></div>
+            </div>
+          </div></div>
+
+        <div class="spec" data-sig="c4e7c82367 d0d25db5fc bb6f70865e"><div class="spec-h"><b>Tiểu sử</b><span class="kind">.player-biography · .player-bio-text</span><span class="dp">.9fr / 1.1fr · 16/1.9 · chữ đầu 60</span></div>
+          <div class="stage col jf-paper jf-moss" style="align-items:flex-start">
+            <div class="jf-bio"><div><p class="jf-kicker">01 / Con người</p><h2 class="jf-sec-h2">Phía sau tên thi đấu</h2></div>
+              <div class="jf-bio-text"><p>Đoạn tiểu sử mở đầu bằng chữ cái lớn Barlow 60px, phần còn lại 16/1.9 #444b46.</p><div class="jf-bio-src"><a class="jf-ulink thick" href="#players">Hồ sơ chính thức</a></div></div></div>
+          </div></div>
+
+        <div class="spec" data-sig="164e0393c0 c3837a4007 44b973b2e1 0b5a869bbb"><div class="spec-h"><b>Cột mốc sự nghiệp</b><span class="kind">.player-achievements · .player-milestone</span><span class="dp">80 · 1fr · 20 · min 225 · viền trên 4</span></div>
+          <div class="stage col jf-paper jf-moss" style="background:var(--jf-surfaceAlt)">
+            <div class="jf-milestones" style="grid-template-columns:1fr">
+              <a class="jf-milestone" href="#players"><span>2024</span><div><h3>Tên giải đấu</h3><p>Thành tích và đội.</p></div><strong>↗</strong></a>
+              <a class="jf-milestone is-hover" href="#players" data-sig-state="c3837a4007:hover"><span>2023</span><div><h3>Tên giải đấu</h3><p>Thành tích và đội.</p></div><strong>↗</strong></a>
+            </div>
+          </div><div class="spec-f"><span class="note">Dải nền #cbd1ca; thẻ #e9ede8. Thẻ 2 đang hover: nhấc 4px, bóng 5 7 #aab7aa.</span></div></div>
+
+        <div class="spec" data-sig="50de422352 66f575ae6f e8ff01c424 3eee77da3b"><div class="spec-h"><b>Danh sách liên kết</b><span class="kind">.player-connect-links</span><span class="dp">50 · 1fr · 18 · min 92</span></div>
+          <div class="stage col jf-paper jf-moss" style="align-items:flex-start">
+            <h2 class="jf-sec-h2" style="font-size:60px">Theo dõi hành trình</h2><p class="jf-body">Đoạn giới thiệu kênh chính thức.</p>
+            <div class="jf-connect"><a href="#players"><span>01</span><strong>Kênh video</strong><svg class="i"><use href="#i-ne"/></svg></a><a href="#players" class="is-hover" data-sig-state="3eee77da3b:hover"><span>02</span><strong>Hồ sơ chính thức</strong><svg class="i"><use href="#i-ne"/></svg></a></div>
+          </div><div class="spec-f"><span class="note">Hover: nền #dce2da và dòng thụt vào 13px hai bên (dòng 2).</span></div></div>
+
+        <div class="spec full" data-sig="052a0542d0 cd4f823a33 7e33e6667f 8642e832df fc69a74d64 04d848ab80"><div class="spec-h"><b>Dải dẫn về vụ việc · footer trang trong</b><span class="kind">.player-case-link · .interior-footer</span><span class="dp">pad 92 / 98 · h2 clamp(73,8.5vw,125)</span></div>
+          <div class="stage col jf-ink jf-moss" style="padding:0">
+            <div class="jf-caselink"><p class="jf-kicker">Vụ việc / 2026</p><h2>Hiểu toàn bộ bối cảnh.</h2><p>Đoạn dẫn sang dòng thời gian.</p><a class="jf-solid" href="#players">Xem dòng thời gian</a></div>
+          </div>
+          <div class="stage jf-paper jf-moss" style="padding:0 24px"><div class="jf-ifooter"><a href="#players">Tên B</a><a href="#players">Tất cả tuyển thủ</a><a href="#players">Pháp lý</a></div></div>
+          </div>
+      </div>
+    </section>
+
+    <!-- ================= PHÁP LÝ & FOOTER ================= -->
+    <section class="block" id="legal">
+      <header><h2>Pháp lý &amp; footer</h2><p>Trang /legal (sắc rêu) và footer trang chủ.</p></header>
+      <div class="grid wide">
+        <div class="spec full" data-sig="187031d0d7 7142e9fd36 fa73c06798 4dc2e8690a a1e55f4b48 4072d0364b 5174ce2674 09f6126e68 3b8c1a076c ec46541ba7"><div class="spec-h"><b>Trang pháp lý</b><span class="kind">.legal-hero · .legal-toc · .legal-section · .legal-end</span><span class="dp">toc 245 · gap 100 · mục pad 15 0 · h2 clamp(52,5vw,76)</span></div>
+          <div class="stage col jf-paper jf-moss" style="padding:0">
+            <div class="jf-legal-hero"><p class="jf-kicker">Minh bạch / 24.09</p><h1><span>Thông tin </span><span>pháp lý.</span></h1><p>Cách trang dùng nguồn, hình ảnh và dữ liệu.</p></div>
+            <div style="padding:40px 24px">
+              <div class="jf-legal">
+                <nav class="jf-toc" aria-label="Mục lục pháp lý"><span>Mục lục</span><a href="#legal"><small>01</small>Tính độc lập</a><a href="#legal" class="is-hover" data-sig-state="4dc2e8690a:hover"><small>02</small>Nguồn &amp; trích dẫn</a><a href="#legal"><small>03</small>Hình ảnh</a><a href="#legal" class="src is-hover" data-sig-state="a1e55f4b48:hover">Kho tài liệu ↗</a></nav>
+                <div><div class="jf-lsection"><span class="n">01 / 05</span><h2>Tính độc lập</h2><p>Đoạn pháp lý 15/1.85 #465047, tối đa 750px. <a href="#legal">Link trong đoạn ↗</a></p></div>
+                  <div class="jf-end"><span>Cập nhật 24.09</span><a href="#legal">Về dòng thời gian</a></div></div>
+              </div>
+            </div>
+          </div><div class="spec-f"><span class="note">Mục lục dính (sticky top 25) ở desktop. Hover mục: chữ #536d58 (mục 02 và link cuối đang hover). ≤ 800 mục lục thành 2 cột, ≤ 600 một cột.</span></div></div>
+
+        <div class="spec full" data-sig="2989efa0e6 79e16e7bf2 cd90ca8335 f93168ef2c"><div class="spec-h"><b>Footer trang chủ</b><span class="kind">.site-footer · .home-footer-links</span><span class="dp">min 146 · 1fr 1.5fr auto · gap 35</span></div>
+          <div class="stage col jf-ink" style="padding:0">
+            <footer class="jf-footer" style="--jf-gutter:24px"><div class="in"><div class="brand-f"><b>JUSTICE<span>FOR</span>KIT</b><small>Dòng thời gian</small></div><p>Nội dung tóm tắt những gì đã được công bố, sắp theo mốc. Ghi chú về trạng thái thông tin.</p>
+              <div class="links"><a href="#legal">Tuyển thủ ↗</a><a href="#legal" class="is-hover" data-sig-state="cd90ca8335:hover">Nguồn tài liệu ↗</a><a href="#legal">Pháp lý ↗</a><button class="jf-share"><svg class="i"><use href="#i-share"/></svg>Chia sẻ</button></div></div></footer>
+          </div><div class="spec-f"><span class="note">Link accent 11/800, hover trắng. ≤ 800 đoạn giữa xuống hàng 2.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= PHẢN HỒI ================= -->
+    <section class="block" id="feedback">
+      <header><h2>Phản hồi</h2><p>Hộp thoại và thông báo nhỏ. Vòng khám phá không mở được chúng (cần bấm nút có tác dụng phụ), nên hai thẻ này dựng theo CSS gốc <code>.sniping-dialog</code> / <code>.share-status</code> và ghi rõ như vậy.</p></header>
+      <div class="grid wide">
+        <div class="spec full"><div class="spec-h"><b>Hộp thoại giải thích</b><span class="kind">dialog.sniping-dialog · .support-info-dialog</span><span class="dp">≤ 760 · pad clamp(24,5vw,48) · backdrop #000000c7</span></div>
+          <div class="stage col jf-ink" style="padding:0">
+            <div class="jf-scrim">
+              <div class="jf-dialog" role="dialog" aria-label="Mẫu hộp thoại"><button class="x" aria-label="Đóng"><svg class="i"><use href="#i-close"/></svg></button><span>Giải thích</span><h2>Câu hỏi chính?</h2>
+                <div class="g"><section class="find"><h3>Kết luận</h3><p>Ô kết luận viền accent, trải 2 cột.</p></section><section><h3>Điều lệ ghi</h3><p>Ô viền #555.</p></section><section><h3>Giới hạn</h3><p>Ô viền #555.</p></section></div></div>
+            </div>
+          </div><div class="spec-f"><span class="note">Dựng theo CSS (RULE-04): chưa đo bằng Playwright vì phải bấm "mở giải thích". Bản nhỏ .support-info-dialog ≤ 460, h2 34–46. Focus trong hộp thoại: outline 3px accent offset 3.</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Trạng thái chia sẻ</b><span class="kind">.share-status</span><span class="dp">pad 8 10 · ≤ 220 · 11/700</span></div>
+          <div class="stage jf-ink" style="min-height:140px;align-items:flex-end">
+            <div class="jf-share-wrap"><span class="jf-share-status" role="status">Đã copy liên kết</span><button class="jf-share"><svg class="i"><use href="#i-share"/></svg>Chia sẻ</button></div>
+          </div><div class="spec-f"><span class="note">Nhãn nổi phía trên nút, nền #f4f4f4 chữ #111; chỉ hiện khi có nội dung (<code>:not(:empty)</code>). Dựng theo CSS.</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Nháy khi neo tới</b><span class="kind">:target · archive-focus / panel-focus</span><span class="dp">2s ease-out</span></div>
+          <div class="stage jf-paper"><div class="jf-rexcerpt" style="box-shadow:0 0 0 5px var(--jf-lineStrong);background:var(--jf-line)"><span>Khối được neo tới</span><h3>Khung lúc 0–30%</h3></div></div>
+          <div class="spec-f"><span class="note">Mở link có #neo: khối đích nháy nền #d2d2d2 + viền 5px #333 rồi tắt dần. Story panel nháy viền trong 5px #f1f1f1 (1.5s). Tắt khi prefers-reduced-motion.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= TRẠNG THÁI ================= -->
+    <section class="block" id="states">
+      <header><h2>Trạng thái</h2><p>Vòng khám phá đo 21 hover và 42 focus bằng chuột và bàn phím thật. Hover được bày ngay trong thẻ của từng thành phần ở trên (nhãn "hover"). Focus của site có <b>một kiểu duy nhất</b> do chính site style (<code>a:focus-visible</code>, <code>.language-trigger:focus-visible</code>…): outline 2px solid accent #c2c2c2, offset 2–3px, không phải viền mặc định của trình duyệt. Ngoại lệ: nút "?" của bộ đếm dùng outline 3px trắng. Không đo được active (không có rule <code>:active</code>) và không có cặp selected nào ngoài mục đang chọn của menu ngôn ngữ (đã bày ở thẻ Chọn ngôn ngữ).</p></header>
+      <div class="grid">
+        <div class="spec full"><div class="spec-h"><b>Focus · nền mực</b><span class="kind">:focus-visible</span><span class="dp">outline 2px solid #c2c2c2 · offset 3</span></div>
+          <div class="stage jf-ink states">
+            <div class="st"><i>wordmark</i><a class="jf-wordmark is-focus" href="#states" data-sig-state="c8a5a2843b:focus"><b>JUSTICE<span>FOR</span>KIT</b></a></div>
+            <div class="st"><i>link header</i><nav class="jf-nav"><a class="is-focus" href="#states" data-sig-state="9fdec18107:focus">Tuyển thủ</a></nav></div>
+            <div class="st"><i>link interior</i><nav class="jf-nav interior"><a class="is-focus" href="#states" data-sig-state="05beb38b93:focus">Tài liệu</a></nav></div>
+            <div class="st"><i>nút ngôn ngữ</i><button class="jf-lang-btn is-focus" data-sig-state="e786c231f4:focus" style="outline-offset:2px"><i class="jf-flag"></i><span>Tiếng Việt</span><svg class="i"><use href="#i-chev"/></svg></button></div>
+            <div class="st"><i>quay lại</i><a class="jf-back is-focus" href="#states" data-sig-state="5d24a27a34:focus">Dòng thời gian</a></div>
+            <div class="st"><i>progress · link</i><div class="jf-progress" style="height:auto;border:0;background:none;width:auto"><div class="in" style="height:auto;padding:0"><a class="is-focus" href="#states" data-sig-state="3c661ceb5d:focus">Nguồn tài liệu ↗</a></div></div></div>
+            <div class="st"><i>source-link</i><a class="jf-ulink accent source is-focus" href="#states" data-sig-state="286ab26684:focus 3d808a6e54:focus">Tên nguồn<svg class="i"><use href="#i-ne"/></svg></a></div>
+            <div class="st"><i>story-next</i><a class="jf-next is-focus" href="#states" data-sig-state="741863a311:focus e895f937f1:focus">Mốc tiếp theo<svg class="i"><use href="#i-down"/></svg></a></div>
+            <div class="st"><i>share</i><button class="jf-share is-focus" data-sig-state="804c92ea17:focus f93168ef2c:focus"><svg class="i"><use href="#i-share"/></svg>Chia sẻ</button></div>
+            <div class="st"><i>campaign-skip</i><a class="jf-ulink caps is-focus" href="#states" style="color:var(--jf-textMuted)" data-sig-state="97633341e5:focus">Đến dòng thời gian</a></div>
+            <div class="st"><i>footer link</i><div class="jf-footer" style="padding:0;background:none"><div class="links"><a class="is-focus" href="#states" data-sig-state="cd90ca8335:focus">Pháp lý ↗</a></div></div></div>
+            <div class="st"><i>chip module</i><a class="jf-chip soft is-focus" href="#states" data-sig-state="dee832641c:focus">Ảnh · chuyển ứng dụng</a></div>
+            <div class="st"><i>ảnh module-stills</i><div class="jf-stills" style="width:180px;grid-template-columns:1fr"><a class="is-focus" href="#states" data-sig-state="3b78e03943:focus"><div class="ph">ảnh</div><span>Chú thích</span></a></div></div>
+            <div class="st"><i>nút "?" · 3px trắng</i><div class="jf-count" style="padding-right:40px;min-height:40px"><strong>12</strong><button class="jf-help" aria-label="Giải thích" style="outline:3px solid var(--jf-text);outline-offset:2px" data-sig-state="dcf90616dc:focus">?</button></div></div>
+          </div></div>
+
+        <div class="spec full"><div class="spec-h"><b>Focus · nền giấy &amp; rêu</b><span class="kind">:focus-visible</span><span class="dp">cùng outline 2px #c2c2c2</span></div>
+          <div class="stage jf-paper states">
+            <div class="st"><i>chip archive</i><div class="jf-chips"><a class="jf-chip dark is-focus" href="#states" data-sig-state="af733db218:focus">Nguồn gốc</a><a class="jf-chip is-focus" href="#states" data-sig-state="78f082a477:focus">Tải bản lưu</a></div></div>
+            <div class="st"><i>chip file</i><a class="jf-chip file is-focus" href="#states" data-sig-state="0527e48f88:focus">Mở bản VI</a></div>
+            <div class="st"><i>chip ảnh</i><a class="jf-chip tag-accent is-focus" href="#states" data-sig-state="c3564fa18b:focus">Tải PNG</a></div>
+            <div class="st"><i>chip module (giấy)</i><a class="jf-chip soft is-focus" href="#states" data-sig-state="a2c31556d8:focus">Văn bản · §3.7</a></div>
+            <div class="st"><i>meta · manifest</i><a class="jf-ulink caps is-focus" href="#states" style="color:var(--jf-textMuted)" data-sig-state="e45b23f4c9:focus 69563a49d0:focus">Tải manifest</a></div>
+            <div class="st"><i>excerpt · index · bio</i><a class="jf-ulink thick is-focus" href="#states" data-sig-state="66daf5ba85:focus 1a21f31386:focus bb6f70865e:focus ec46541ba7:focus">Về dòng thời gian</a></div>
+            <div class="st"><i>ảnh chứng cứ</i><div class="jf-ecard" style="width:180px"><a class="ph is-focus" href="#states" data-sig-state="91c26b04e0:focus">ảnh 16:9</a></div></div>
+            <div class="st"><i>footer trong</i><div class="jf-ifooter" style="padding:0;width:auto"><a class="is-focus" href="#states" data-sig-state="04d848ab80:focus">Tên B</a></div></div>
+            <div class="st"><i>gyumin bottom</i><div class="jf-gbottom"><nav aria-label="Mẫu"><a class="is-focus" href="#states" data-sig-state="3bceb618fc:focus">Hồ sơ ↗</a></nav></div></div>
+          </div>
+          <div class="stage jf-paper jf-moss states">
+            <div class="st"><i>mục lục pháp lý</i><nav class="jf-toc" style="width:200px"><a class="is-focus" href="#states" data-sig-state="4dc2e8690a:focus"><small>01</small>Tính độc lập</a><a class="src is-focus" href="#states" data-sig-state="a1e55f4b48:focus">Kho tài liệu ↗</a></nav></div>
+            <div class="st"><i>link trong đoạn</i><p class="jf-body"><a class="is-focus" href="#states" style="color:inherit" data-sig-state="3b8c1a076c:focus">Tài liệu bổ sung ↗</a></p></div>
+            <div class="st"><i>cột mốc</i><a class="jf-milestone is-focus" href="#states" style="min-height:0;width:260px" data-sig-state="c3837a4007:focus"><span>24</span><div><h3 style="font-size:28px">Tên giải</h3></div><strong>↗</strong></a></div>
+            <div class="st"><i>liên kết kênh</i><div class="jf-connect" style="width:260px"><a class="is-focus" href="#states" data-sig-state="3eee77da3b:focus"><span>01</span><strong>Kênh video</strong><svg class="i"><use href="#i-ne"/></svg></a></div></div>
+          </div>
+          <div class="stage jf-ink jf-moss states">
+            <div class="st"><i>thẻ tuyển thủ</i><a class="jf-pcard is-focus" href="#states" style="width:220px;min-height:0;grid-template-rows:90px auto" data-sig-state="043fdf4c5e:focus 0d89701d9e:focus"><div class="art"><div class="ph">ảnh</div></div><div class="content" style="padding:12px"><h2 style="font-size:40px">Tên</h2></div></a></div>
+            <div class="st"><i>breadcrumb</i><div class="jf-crumb" style="margin:0"><a class="is-focus" href="#states" data-sig-state="7a88c61d8c:focus">Tuyển thủ</a></div></div>
+            <div class="st"><i>nút hồ sơ</i><div class="jf-phero" style="display:flex;gap:15px;min-height:0;background:none"><a class="jf-profile primary is-focus" href="#states" data-sig-state="6204818d17:focus">Đọc tiểu sử</a><a class="jf-profile secondary is-focus" href="#states" data-sig-state="31491da144:focus">Kênh video</a></div></div>
+            <div class="st"><i>nguồn ảnh</i><div class="jf-pvisual" style="background:none;border:0;min-height:30px;width:140px"><div class="cap" style="position:static"><a class="is-focus" href="#states" data-sig-state="702ad54faf:focus">Nguồn ảnh</a></div></div></div>
+            <div class="st"><i>khối đặc</i><a class="jf-solid is-focus" href="#states" data-sig-state="8642e832df:focus">Xem dòng thời gian</a></div>
+          </div><div class="spec-f"><span class="note">Trên nền giấy #ededed, outline #c2c2c2 rất nhạt (tương phản ~1.3:1). Đó là đúng như site đang làm; nếu dùng lại hệ này trên nền sáng, nên đổi --jf-focus sang màu đậm hơn.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= MÀN MẪU ================= -->
+    <section class="block" id="screens">
+      <header><h2>Màn hình mẫu</h2><p>Ghép từ chính các class <code>.jf-*</code> ở trên theo bố cục thật của site, thu nhỏ bằng <code>zoom</code>. Mobile 390 × 844 là trang chủ (header 68 + subnav, slide mở đầu xếp dọc); desktop 1440 × 900 là một mốc sự việc và trang danh mục tuyển thủ.</p></header>
+      <div class="screen-wrap"><div class="screens">
+        <div>
+          <div class="phone jf-ink jf-bp-phone"><div class="scroll">
+            <div class="jf-header" style="--jf-gutter:18px;height:68px;grid-template-columns:1fr auto"><a class="jf-wordmark" href="#screens"><b style="font-size:24px">JUSTICE<span>FOR</span>KIT</b></a><div class="jf-lang"><button class="jf-lang-btn" style="min-width:108px;gap:6px"><i class="jf-flag"></i><span>Tiếng Việt</span><svg class="i"><use href="#i-chev"/></svg></button></div></div>
+            <div class="jf-subnav"><a href="#screens">Tuyển thủ</a><a href="#screens">Nguồn tài liệu</a><a href="#screens">Pháp lý</a></div>
+            <div class="jf-slide"><div class="photo ph">ảnh chân dung xám</div>
+              <div class="copy-in"><p class="jf-eyebrow" style="color:var(--jf-textMuted);font-size:10px;letter-spacing:.09em">Tên chiến dịch / 17–23.09</p><h1 class="jf-hero-title">Tiêu đề chiến dịch.</h1><p class="jf-statement">Một câu khẳng định ngắn, in đậm.</p><p class="jf-desc">Đoạn mô tả giải thích bối cảnh cho người đọc lần đầu.</p>
+                <div class="jf-support"><button class="jf-support-btn"><svg class="i"><use href="#i-heart"/></svg>Đồng hành</button><div class="jf-count"><strong>1.234.567</strong><span>người ủng hộ</span><button class="jf-help" aria-label="Giải thích">?</button></div></div></div></div>
+          </div></div>
+          <p class="screen-cap" style="max-width:280px">Mobile 390 × 844 · jf-header · jf-lang-btn · jf-subnav · jf-slide · jf-statement · jf-support</p>
+        </div>
+        <div>
+          <div class="desk jf-ink">
+            <div class="jf-header"><a class="jf-wordmark" href="#screens"><b>JUSTICE<span>FOR</span>KIT</b><small>Dòng thời gian</small></a><nav class="jf-nav" aria-label="Mẫu"><a href="#screens">Tuyển thủ</a><a href="#screens">Nguồn tài liệu</a><a href="#screens">Pháp lý</a></nav><div class="jf-lang"><button class="jf-lang-btn"><i class="jf-flag"></i><span>Tiếng Việt</span><svg class="i"><use href="#i-chev"/></svg></button></div></div>
+            <div class="jf-progress"><div class="in" style="--jf-gutter:32px"><span>Mốc sự việc <strong>01 / 09</strong></span><nav aria-label="Mốc"><a href="#screens" aria-current="true" aria-label="1"></a><a href="#screens" aria-label="2"></a><a href="#screens" aria-label="3"></a><a href="#screens" aria-label="4"></a><a href="#screens" aria-label="5"></a><a href="#screens" aria-label="6"></a><a href="#screens" aria-label="7"></a><a href="#screens" aria-label="8"></a><a href="#screens" aria-label="9"></a></nav><a href="#screens">Nguồn tài liệu ↗</a></div><div class="fill" style="width:11%"></div></div>
+            <div class="jf-panel" style="height:768px;display:flex;align-items:center"><div class="in" style="width:100%;padding:40px 32px">
+              <div class="content"><div class="jf-story-kicker"><span>01 / 09</span><span>Ngày thứ nhất</span></div><div class="jf-date"><strong style="font-size:128px">17</strong><span>Thg 9<br>2026</span></div><h2 class="jf-story-title" style="font-size:76px">Tiêu đề mốc sự việc</h2>
+                <div class="jf-point"><span>Điều xảy ra</span><p>Đoạn tóm tắt diễn biến chính của mốc này.</p></div>
+                <div class="jf-sources"><span>Nguồn</span><div><a class="jf-ulink accent source" href="#screens">Nguồn thứ nhất · 11 Sep<svg class="i"><use href="#i-ne"/></svg></a><a class="jf-ulink accent source" href="#screens">Nguồn thứ hai · 21 Sep<svg class="i"><use href="#i-ne"/></svg></a></div></div>
+                <a class="jf-next" href="#screens">Cuộn để xem mốc tiếp theo<svg class="i"><use href="#i-down"/></svg></a></div>
+              <div class="jf-explainer"><span class="top">Hồ sơ vụ việc / 01</span><div class="jf-readmore"><p><strong>Lập luận / phản hồi:</strong> nội dung lập luận chính.</p><p><strong>Điều cần hiểu:</strong> điểm cần phân biệt.</p><div class="jf-addl"><h4>Khởi đầu</h4><p>Khối bổ sung.</p></div><div class="jf-addl"><h4>Mốc thời gian</h4><p>Ghi chú thời điểm.</p></div></div><span class="bottom">Justice kit · 2026</span></div>
+            </div></div>
+          </div>
+          <p class="screen-cap">Desktop 1440 × 900 · jf-header · jf-progress · jf-panel (2 cột) · jf-story-kicker · jf-date · jf-point · jf-sources · jf-explainer</p>
+        </div>
+        <div>
+          <div class="desk jf-paper jf-moss" style="background:var(--jf-bg)">
+            <div class="jf-ink jf-moss"><div class="jf-header solid"><a class="jf-wordmark" href="#screens"><b>JUSTICE<span>FOR</span>KIT</b><small>Hồ sơ tuyển thủ</small></a><nav class="jf-nav interior" aria-label="Mẫu"><a href="#screens">Dòng thời gian</a><a href="#screens">Tuyển thủ</a><a href="#screens">Tài liệu</a><a href="#screens">Pháp lý</a></nav><div class="jf-lang"><button class="jf-lang-btn"><i class="jf-flag"></i><span>Tiếng Việt</span><svg class="i"><use href="#i-chev"/></svg></button></div></div></div>
+            <div style="padding:90px 40px 0;display:flex;flex-direction:column;gap:20px">
+              <p class="jf-kicker">01 / Tuyển thủ</p><h1 class="jf-index-title" style="font-size:118px">Hai hồ sơ. Hai hành trình.</h1><p class="jf-body" style="font-size:17px">Đoạn giới thiệu trang danh mục tuyển thủ.</p>
+              <div class="jf-milestones" style="gap:17px;margin-top:20px"><a class="jf-pcard jf-ink" href="#screens" style="grid-template-rows:420px auto"><div class="art"><span class="wm">01</span><div class="ph">ảnh chân dung</div></div><div class="content"><span>Quốc gia / bộ môn</span><h2>Tên A</h2></div></a><a class="jf-pcard jf-ink alt" href="#screens" style="grid-template-rows:420px auto"><div class="art"><span class="wm">02</span><div class="ph">ảnh chân dung</div></div><div class="content"><span>Quốc gia / bộ môn</span><h2>Tên B</h2></div></a></div>
+            </div>
+          </div>
+          <p class="screen-cap">Desktop 1440 × 900 · sắc rêu · jf-header.solid (interior) · jf-index-title · lưới jf-pcard 2 cột gap 17</p>
+        </div>
+      </div></div>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status"><span id="toast-t"></span></div>
+
+<script>
+/* Vai trò màu gom từ CSS thật của site (parse 28/09/2026). neutral = trang chủ + kho tài liệu, moss = trang
+   tuyển thủ + pháp lý. light = nền giấy, dark = nền mực. Mỗi giá trị là một hex có trong CSS gốc; vai trò nào
+   site không có đúng cặp thì lấy màu gần nhất cùng khối và ghi trong DERIVED. */
+const ROLES = ["bg", "surface", "surfaceAlt", "line", "lineStrong", "text", "textMuted", "textFaint", "accent", "onAccent", "accentHover", "inverse", "onInverse", "inverseMuted", "focus", "error"];
+const PALETTES = {
+  neutral: {
+    name: "Trung tính",
+    light: ["#ededed", "#fafafa", "#eae9e6", "#c6c6c6", "#111111", "#111111", "#555b62", "#6c6c6c", "#c2c2c2", "#030303", "#e6e8ea", "#030303", "#ffffff", "#918f84", "#c2c2c2", "#b3261e"],
+    dark:  ["#050505", "#111111", "#1b1b1b", "#4d4d4d", "#777777", "#f4f4f4", "#d0d3d6", "#a9afb5", "#c2c2c2", "#161611", "#e6e8ea", "#f1f1f1", "#101010", "#aaaaaa", "#c2c2c2", "#ffb5b5"],
+  },
+  moss: {
+    name: "Rêu",
+    light: ["#e8e8e5", "#e9ede8", "#cbd1ca", "#bcc3bc", "#151c16", "#111111", "#465047", "#6d766e", "#c4d0c4", "#101410", "#ffffff", "#111714", "#ffffff", "#bcc7be", "#c2c2c2", "#b3261e"],
+    dark:  ["#0d100f", "#141716", "#232725", "#5a625c", "#a4b8a5", "#f7f8f5", "#c1c9c2", "#89938a", "#c4d0c4", "#101410", "#ffffff", "#c4d0c4", "#111914", "#9ca5a0", "#c2c2c2", "#ffb5b5"],
+  },
+};
+const DERIVED = { "neutral.light": ["error"], "moss.light": ["error"], "moss.dark": ["inverse", "inverseMuted"] };
+/* vai trò cố định (chỉ một bản): section đối chiếu nền sage, bóng khối, hover mục lục, nền sau hộp thoại */
+const FIXED = [["sage", "#dce2d9"], ["sageCard", "#f1f4ef"], ["sageDeep", "#19231c"], ["sageCallout", "#435c48"], ["sageLine", "#879589"], ["sageText", "#4d5b4f"], ["sageInk", "#171b17"], ["sageEyebrow", "#536657"], ["sageMeta", "#5d6e60"], ["sageBody", "#414b42"], ["sageRule", "#bfc9be"], ["sageOnDeep", "#eef3ee"], ["sageDeepLine", "#a4b8a5"], ["sageDeepMeta", "#aebfad"], ["sageDeepBody", "#ccd8cd"], ["sageDeepRule", "#4d6250"], ["onCallout", "#f0f4ef"], ["calloutSub", "#d4e1d4"], ["sageNote", "#5a685c"], ["sageLink", "#263d2b"], ["sageLinkLine", "#344d39"], ["sageLinkHover", "#000000"], ["shadowCard", "#c5cac5"], ["shadowMilestone", "#aab7aa"], ["tocHover", "#536d58"], ["backdrop", "#000000c7"]];
+const VARS = [["--ink", "#111"], ["--black", "#030303"], ["--charcoal", "#0a0a0a"], ["--accent", "#c2c2c2"], ["--paper", "#ededed"], ["--paper-light", "#fafafa"], ["--muted", "#6c6c6c"], ["--line", "#c6c6c6"]];
+/* hex viết tay đếm trong CSS gốc (số lần xuất hiện) */
+const RAMP = [["#fff", 24], ["#111", 21], ["#aaa", 20], ["#555", 17], ["#333", 9], ["#050505", 9], ["#eee", 8], ["#222", 7], ["#000", 6], ["#bbb", 5], ["#555b62", 5], ["#d2d2d2", 4], ["#777", 4], ["#666", 4], ["#f1f1f1", 3], ["#454545", 3], ["#1b1b1b", 3], ["#c4d0c4", 2], ["#918f84", 2], ["#62676c", 2]];
+(function () {
+  const root = document.documentElement;
+  const state = { pal: "neutral", mode: matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light" };
+  try { Object.assign(state, JSON.parse(localStorage.getItem("justice-kit") || "{}")); } catch (e) {}
+  if (!PALETTES[state.pal]) state.pal = "neutral";
+  if (!["light", "dark"].includes(state.mode)) state.mode = "light";
+
+  const toast = (t) => {
+    const el = document.getElementById("toast");
+    document.getElementById("toast-t").textContent = t;
+    el.classList.add("show");
+    clearTimeout(toast.t);
+    toast.t = setTimeout(() => el.classList.remove("show"), 1600);
+  };
+  const copy = async (text, msg) => {
+    try { await navigator.clipboard.writeText(text); toast(msg); }
+    catch (e) { toast("Trình duyệt chặn clipboard, hãy copy tay"); }
+  };
+  const full = (v) => (v.length === 4 ? "#" + [...v.slice(1)].map((x) => x + x).join("") : v);
+  const inkOn = (hex) => {
+    const [r, g, b] = [1, 3, 5].map((k) => parseInt(full(hex).slice(k, k + 2), 16));
+    return 0.299 * r + 0.587 * g + 0.114 * b > 150 ? "#111111" : "#ffffff";
+  };
+  const swatch = (box, name, v, extra) => {
+    const b = document.createElement("button");
+    b.className = "role"; b.style.background = v; b.style.color = inkOn(v);
+    b.innerHTML = "<b>" + name + "</b>" + (extra || "") + "<code>" + v + "</code>";
+    b.onclick = () => copy(v, "Đã copy " + name + " " + v);
+    box.appendChild(b);
+  };
+  const decl = (vals) => ROLES.map((r, i) => "--jf-" + r + ":" + vals[i]).join(";");
+
+  /* phạm vi: :root theo lựa chọn; .jf-ink/.jf-paper = nền mực/giấy của sắc đang chọn; .jf-moss ép sắc rêu */
+  const scope = document.createElement("style");
+  document.head.appendChild(scope);
+  function apply() {
+    const P = PALETTES[state.pal], M = PALETTES.moss;
+    const vals = P[state.mode];
+    ROLES.forEach((r, i) => root.style.setProperty("--jf-" + r, vals[i]));
+    root.dataset.mode = state.mode;
+    scope.textContent =
+      ".jf-paper{" + decl(P.light) + "}.jf-ink{" + decl(P.dark) + "}" +
+      ".jf-moss,.jf-moss .jf-paper,.jf-paper.jf-moss{" + decl(M.light) + "}" +
+      ".jf-moss .jf-ink,.jf-ink.jf-moss{" + decl(M.dark) + "}";
+    document.querySelectorAll("#swatches button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === state.pal));
+    document.querySelectorAll("#mode button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === state.mode));
+    const box = document.getElementById("roles");
+    box.innerHTML = "";
+    ROLES.forEach((r, i) => swatch(box, r, vals[i], (DERIVED[state.pal + "." + state.mode] || []).includes(r) ? "<em>suy</em>" : ""));
+    FIXED.forEach(([n, v]) => swatch(box, n, v, "<em>cố định</em>"));
+    try { localStorage.setItem("justice-kit", JSON.stringify(state)); } catch (e) {}
+  }
+  document.querySelectorAll("#swatches button").forEach((b) => (b.onclick = () => { state.pal = b.dataset.v; apply(); }));
+  document.querySelectorAll("#mode button").forEach((b) => (b.onclick = () => { state.mode = b.dataset.v; apply(); }));
+
+  VARS.forEach(([n, v]) => swatch(document.getElementById("ramp-vars"), n, v));
+  RAMP.forEach(([v, c]) => swatch(document.getElementById("ramp"), "×" + c, v));
+
+  /* không có thang bo góc: bày các kiểu viền đặc trưng thay cho ô shape */
+  const sh = document.getElementById("shapes");
+  [["r 0", "mọi khối", "border:1px solid var(--jf-line)"], ["viền trái 3–4", "trích, statement", "border-left:4px solid var(--jf-lineStrong)"], ["viền trên 4–5", "thẻ cột mốc, đối chiếu", "border-top:5px solid var(--jf-lineStrong)"], ["viền đứt", "chưa xác minh", "border:1px dashed var(--jf-textFaint)"], ["bóng khối", "hover thẻ", "box-shadow:8px 10px 0 var(--jf-line)"], ["50%", "chấm, nút ?", "border-radius:50%"]].forEach(([n, u, css]) => {
+    const c = document.createElement("div");
+    c.className = "shape-cell";
+    c.innerHTML = '<i style="' + css + '"></i>' + n + "<br>" + u;
+    sh.appendChild(c);
+  });
+
+  /* mỗi thẻ thành phần có nút copy HTML của phần trình diễn */
+  document.querySelectorAll(".spec").forEach((spec) => {
+    const stage = spec.querySelector(".stage");
+    if (!stage || !spec.querySelector(".spec-h")) return;
+    let foot = spec.querySelector(":scope > .spec-f");
+    if (!foot) { foot = document.createElement("div"); foot.className = "spec-f"; foot.innerHTML = '<span class="note"></span>'; spec.appendChild(foot); }
+    const b = document.createElement("button");
+    b.className = "copy"; b.innerHTML = '<svg class="i"><use href="#i-copy"/></svg>HTML';
+    b.onclick = () => copy([...spec.querySelectorAll(":scope > .stage")].map((s) => s.innerHTML.trim()).join("\n").replace(/\n\s+/g, "\n"), "Đã copy HTML của " + spec.querySelector(".spec-h b").textContent);
+    foot.appendChild(b);
+  });
+
+  document.getElementById("copy-tokens").onclick = () => {
+    const vals = PALETTES[state.pal][state.mode];
+    const lines = ROLES.map((r, i) => "  --jf-" + r + ": " + vals[i] + ";").concat(FIXED.map(([n, v]) => "  --jf-" + n + ": " + v + ";"));
+    copy(":root {\n" + lines.join("\n") + '\n  --jf-display: "Barlow Condensed", Impact, sans-serif;\n  --jf-font: Inter, Arial, sans-serif;\n  --jf-ease: cubic-bezier(.2,.7,.2,1);\n  --jf-shadow-menu: 0 12px 24px #00000047;\n  --jf-shadow-dialog: 0 24px 80px #00000080;\n}', "Đã copy token " + PALETTES[state.pal].name.toLowerCase() + " · " + (state.mode === "dark" ? "mực" : "giấy"));
+  };
+
+  /* menu ngôn ngữ trong header mẫu: bấm để mở/đóng */
+  document.addEventListener("click", (e) => {
+    const t = e.target.closest(".jf-lang-btn");
+    if (t && !t.nextElementSibling) t.setAttribute("aria-expanded", t.getAttribute("aria-expanded") !== "true");
+    if (e.target.closest('a[href^="#"]') && e.target.closest(".stage, .phone, .desk")) e.preventDefault();
+  });
+
+  const links = [...document.querySelectorAll(".side a")];
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (e.isIntersecting) links.forEach((a) => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id));
+  }), { rootMargin: "-30% 0px -60% 0px" });
+  document.querySelectorAll("section.block").forEach((s) => io.observe(s));
+
+  apply();
+})();
+</script>
+</body>
+</html>

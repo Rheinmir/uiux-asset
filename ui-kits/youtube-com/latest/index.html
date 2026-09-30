@@ -1,0 +1,695 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta name="ui-kit-id" content="youtube-com">
+<!-- UI kit rút từ trang youtube.com/results đã lưu (Webpage, Complete), 28/09/2026. Token lấy bằng getComputedStyle trên
+     stylesheet thật của trang (kevlar_base, file rs=…), chạy offline + tắt JS; không crawler nào chạm tới youtube.com.
+     Ảnh, logo, tên kênh, tiêu đề video: KHÔNG nhúng — thay bằng khối giữ chỗ và chữ mẫu. -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>YouTube Desktop UI Kit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&display=block">
+<style>
+/* Kit mặc token của YouTube: mọi màu là một vai trò --yt-sys-color-baseline--<role>, đổi tên thành --yt-<role>.
+   Script ghi cả 190 vai trò lên :root theo chế độ sáng/tối. Các số đo (--yt-r-*, --yt-size-*) lấy từ
+   --yt-sys-measurement--* và từ computed style của phần tử thật. --yt-x-* là hằng hex viết cứng trong CSS của YouTube
+   (không thuộc hệ token sys) nhưng component thật dùng. */
+:root {
+  --yt-r-min: 2px; --yt-r-condensed: 4px; --yt-r-compact: 8px; --yt-r-guide: 10px; --yt-r-cozy: 12px; --yt-r-comfortable: 16px;
+  --yt-r-expanded: 18px; --yt-r-prominent: 20px; --yt-r-hero: 24px; --yt-r-huge: 32px; --yt-r-max: 48px;
+  --yt-masthead-h: 56px; --yt-guide-w: 240px; --yt-mini-guide-w: 72px;
+  --yt-font: Roboto, Arial, sans-serif;
+  --mono: "Roboto Mono", ui-monospace, Menlo, monospace;
+  --yt-x-focus: #005fcc;
+  --yt-x-summary-custom: #082233;
+  color-scheme: dark;
+}
+:root[data-mode="light"] { color-scheme: light; --yt-x-searchbox-bg: #fff; --yt-x-searchbox-border: #c6c6c6; --yt-x-searchbtn-bg: #f8f8f8; --yt-x-searchbtn-border: #d3d3d3; }
+:root[data-mode="dark"] { --yt-x-searchbox-bg: #121212; --yt-x-searchbox-border: #303030; --yt-x-searchbtn-bg: rgba(255,255,255,.08); --yt-x-searchbtn-border: #303030; }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--yt-base-background); color: var(--yt-text-primary); font: 400 14px/20px var(--yt-font); -webkit-font-smoothing: antialiased; }
+.ms { font-family: "Material Symbols Rounded"; font-weight: normal; font-style: normal; font-size: 24px; line-height: 1; letter-spacing: normal; text-transform: none; display: inline-block; white-space: nowrap; direction: ltr; font-feature-settings: "liga"; -webkit-font-smoothing: antialiased; user-select: none; }
+code, .code { font-family: var(--mono); font-size: 12px; }
+:focus-visible { outline: 2px solid var(--yt-call-to-action); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+/* ---------- vỏ trang ---------- */
+.shell { display: grid; grid-template-columns: 232px minmax(0, 1fr); min-height: 100vh; }
+.side { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 20px 12px; background: var(--yt-base-background); border-right: 1px solid var(--yt-outline); display: flex; flex-direction: column; gap: 2px; }
+.brand { display: flex; align-items: center; gap: 10px; padding: 4px 12px 16px; }
+.brand-mark { width: 32px; height: 32px; border-radius: var(--yt-r-compact); background: var(--yt-additive-background); color: var(--yt-text-secondary); display: grid; place-items: center; font: 500 9px/1 var(--mono); text-align: center; }
+.brand b { font-size: 16px; font-weight: 500; display: block; }
+.brand small { color: var(--yt-text-secondary); font-size: 12px; }
+.side h6 { margin: 14px 12px 6px; font-size: 11px; font-weight: 500; letter-spacing: .5px; text-transform: uppercase; color: var(--yt-text-secondary); }
+.side a { display: flex; align-items: center; gap: 16px; height: 40px; padding: 0 12px; border-radius: var(--yt-r-guide); color: var(--yt-text-primary); text-decoration: none; }
+.side a .ms { font-size: 20px; }
+.side a:hover { background: var(--yt-additive-background); }
+.side a.on { background: var(--yt-additive-background); font-weight: 500; }
+main { padding: 0 32px 96px; min-width: 0; }
+
+.bar { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; padding: 12px 0; background: var(--yt-frosted-glass-desktop); backdrop-filter: blur(48px); border-bottom: 1px solid var(--yt-outline); }
+.bar .grow { flex: 1; }
+.ctl { display: flex; align-items: center; gap: 8px; }
+.ctl > span { font-size: 12px; font-weight: 500; color: var(--yt-text-secondary); }
+.seg { display: inline-flex; gap: 8px; }
+.seg button { height: 32px; padding: 0 12px; border: none; border-radius: var(--yt-r-compact); background: var(--yt-additive-background); color: var(--yt-text-primary); font: 500 14px/20px var(--yt-font); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.seg button[aria-pressed="true"] { background: var(--yt-inverted-background); color: var(--yt-text-primary-inverse); }
+.seg .ms { font-size: 18px; }
+
+.intro { padding: 40px 0 8px; max-width: 780px; }
+.intro .eyebrow { font-family: var(--mono); font-size: 12px; color: var(--yt-call-to-action); }
+.intro h1 { font-size: 40px; line-height: 48px; font-weight: 700; margin: 8px 0 12px; text-wrap: balance; }
+.intro p { font-size: 16px; line-height: 24px; color: var(--yt-text-secondary); margin: 0 0 10px; max-width: 68ch; }
+.intro .facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.fact { font-family: var(--mono); font-size: 12px; padding: 4px 10px; border-radius: var(--yt-r-compact); background: var(--yt-additive-background); color: var(--yt-text-secondary); }
+
+section.block { padding-top: 48px; scroll-margin-top: 64px; }
+section.block > header { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+section.block h2 { font-size: 24px; line-height: 32px; font-weight: 700; margin: 0; }
+section.block > header p { margin: 0; color: var(--yt-text-secondary); max-width: 72ch; }
+h3.group { font-size: 13px; font-weight: 500; color: var(--yt-text-secondary); margin: 20px 0 8px; text-transform: uppercase; letter-spacing: .4px; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+.grid.wide { grid-template-columns: repeat(auto-fill, minmax(460px, 1fr)); }
+.spec { background: var(--yt-raised-background); border: 1px solid var(--yt-outline); border-radius: var(--yt-r-cozy); display: flex; flex-direction: column; min-width: 0; }
+.spec.full { grid-column: 1 / -1; }
+.spec-h { display: flex; align-items: center; gap: 8px; padding: 14px 16px 0; flex-wrap: wrap; }
+.spec-h b { font-size: 15px; font-weight: 500; }
+.kind { font-family: var(--mono); font-size: 11px; padding: 2px 8px; border-radius: var(--yt-r-condensed); background: var(--yt-suggested-action); color: var(--yt-call-to-action); }
+.spec-h .dp { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--yt-text-secondary); font-variant-numeric: tabular-nums; }
+.stage { padding: 20px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; min-height: 96px; overflow-x: auto; background: var(--yt-base-background); margin: 12px 12px 0; border-radius: var(--yt-r-compact); }
+.stage.col { flex-direction: column; align-items: stretch; }
+.stage .lab { font-family: var(--mono); font-size: 10px; color: var(--yt-text-disabled); display: block; margin-top: 4px; text-align: center; }
+.stage figure { margin: 0; display: flex; flex-direction: column; align-items: center; }
+.spec-f { display: flex; align-items: center; gap: 8px; padding: 8px 12px 12px 16px; margin-top: auto; }
+.spec-f .note { font-size: 12px; line-height: 18px; color: var(--yt-text-secondary); flex: 1; }
+.copy { height: 32px; padding: 0 12px; border-radius: 16px; border: none; background: transparent; color: var(--yt-call-to-action); font: 500 13px var(--yt-font); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; flex: none; }
+.copy:hover { background: var(--yt-suggested-action); }
+.copy .ms { font-size: 18px; }
+
+/* nền tảng */
+.roles { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; }
+.role { border-radius: var(--yt-r-compact); padding: 0; overflow: hidden; display: flex; flex-direction: column; border: 1px solid var(--yt-outline); cursor: pointer; text-align: left; font: inherit; color: var(--yt-text-primary); background: var(--yt-base-background); }
+.role .sw { height: 48px; display: flex; align-items: flex-end; padding: 6px 8px; font: 500 13px var(--yt-font);
+  background-image: linear-gradient(var(--c), var(--c)), repeating-conic-gradient(#8884 0 25%, transparent 0 50%); background-size: auto, 12px 12px; }
+.role .meta { padding: 6px 8px; display: flex; flex-direction: column; }
+.role b { font-size: 12px; font-weight: 500; overflow-wrap: anywhere; }
+.role code { font-size: 11px; color: var(--yt-text-secondary); }
+.type-row { display: grid; grid-template-columns: 170px minmax(0, 1fr) 150px; gap: 16px; align-items: baseline; padding: 10px 0; border-bottom: 1px solid var(--yt-outline); }
+.type-row:last-child { border-bottom: none; }
+.type-row .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.type-row .meta { font-family: var(--mono); font-size: 11px; color: var(--yt-text-secondary); font-variant-numeric: tabular-nums; }
+.shape-cell { display: flex; flex-direction: column; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px; color: var(--yt-text-secondary); }
+.shape-cell i { display: block; width: 64px; height: 64px; background: var(--yt-tonal-background); border: 1px solid var(--yt-outline); }
+.tbl { overflow-x: auto; }
+table.tok { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+table.tok th, table.tok td { text-align: left; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--yt-outline); font-size: 13px; }
+table.tok th { font-weight: 500; color: var(--yt-text-secondary); font-size: 12px; }
+table.tok td:first-child { font-family: var(--mono); font-size: 12px; }
+
+/* ================= thành phần yt-* (chỉ dùng token --yt-*) ================= */
+/* ytSpecButtonShapeNext: size XS 24 · S 32 · M 40 · L 48, bo = h/2 */
+.yt-btn { --h: 40px; --px: 16px; --fs: 14px; height: var(--h); padding: 0 var(--px); border-radius: calc(var(--h) / 2); font: 500 var(--fs)/var(--h) var(--yt-font);
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: none; cursor: pointer; white-space: nowrap; background: transparent; color: var(--yt-text-primary); text-decoration: none; }
+.yt-btn .ms { font-size: 24px; }
+.yt-btn.xs { --h: 24px; --px: 8px; --fs: 12px; } .yt-btn.xs .ms { font-size: 16px; }
+.yt-btn.s { --h: 32px; --px: 12px; --fs: 12px; } .yt-btn.s .ms { font-size: 20px; }
+.yt-btn.l { --h: 48px; --px: 24px; --fs: 18px; }
+.yt-btn.icon { width: var(--h); padding: 0; border-radius: 50%; }
+.yt-btn.v-filled { background: var(--yt-inverted-background); color: var(--yt-text-primary-inverse); }
+.yt-btn.v-filled:hover, .yt-btn.v-filled.is-hover { background: var(--yt-inverted-background-hover); }
+.yt-btn.v-tonal { background: var(--yt-additive-background); }
+.yt-btn.v-tonal:hover, .yt-btn.v-tonal.is-hover, .yt-btn.v-text:hover, .yt-btn.v-text.is-hover { background: var(--yt-mono-tonal-hover); }
+.yt-btn.v-cta { color: var(--yt-call-to-action); box-shadow: inset 0 0 0 1px var(--yt-outline); padding: 0 15px; }
+.yt-btn.v-cta:hover, .yt-btn.v-cta.is-hover { background: var(--yt-suggested-action); box-shadow: none; }
+.yt-btn.v-overlay { background: var(--yt-overlay-background-medium); color: var(--yt-overlay-text-primary); }
+.yt-btn.is-focus, .yt-focus.is-focus { outline: 1px solid var(--yt-x-focus); outline-offset: 0; }
+
+/* yt-icon-button trong ytd-menu-renderer (⋮ cạnh video): 40×40, không có hover riêng */
+.yt-iconbtn { width: 40px; height: 40px; border: none; background: transparent; color: var(--yt-text-primary); display: inline-grid; place-items: center; cursor: pointer; padding: 0; border-radius: 50%; }
+.yt-iconbtn.sm { width: 24px; height: 24px; }
+
+/* ytChipShapeChip: 32 cao, pad 0 12, bo 8, cách nhau 12 */
+.yt-chips { display: flex; gap: 12px; flex-wrap: nowrap; }
+.yt-chip { height: 32px; padding: 0 12px; border-radius: var(--yt-r-compact); background: var(--yt-additive-background); color: var(--yt-text-primary); font: 500 14px/20px var(--yt-font); display: inline-flex; align-items: center; white-space: nowrap; border: none; cursor: pointer; }
+.yt-chip.on { background: var(--yt-inverted-background); color: var(--yt-text-primary-inverse); }
+
+/* yt-searchbox desktop: ô 536 + nút 64, cao 40, bo 40 0 0 40 */
+.yt-search { display: flex; align-items: center; gap: 16px; width: 100%; max-width: 720px; }
+.yt-search .box { flex: 1; min-width: 0; display: flex; align-items: center; height: 40px; padding: 0 4px 0 16px; background: var(--yt-x-searchbox-bg); border: 1px solid var(--yt-x-searchbox-border); border-right: 0; border-radius: 40px 0 0 40px; }
+.yt-search .box span.t { flex: 1; font: 400 16px/22px var(--yt-font); color: var(--yt-text-secondary); white-space: nowrap; overflow: hidden; }
+.yt-search .box span.t.v { color: var(--yt-text-primary); }
+.yt-search .go { width: 64px; height: 40px; border: 1px solid var(--yt-x-searchbtn-border); background: var(--yt-x-searchbtn-bg); border-radius: 0 40px 40px 0; color: var(--yt-text-primary); display: grid; place-items: center; cursor: pointer; margin-left: -16px; }
+.yt-search .clear { width: 40px; height: 40px; border-radius: 50%; border: none; background: transparent; color: var(--yt-text-primary); display: grid; place-items: center; cursor: pointer; }
+.yt-search .clear:hover, .yt-search .clear.is-hover { background: var(--yt-mono-tonal-hover); }
+
+/* ytd-masthead: cao 56, pad 0 16, nền frosted-glass-desktop + blur 48 */
+.yt-masthead { height: var(--yt-masthead-h); padding: 0 16px; display: flex; align-items: center; gap: 16px; background: var(--yt-frosted-glass-desktop); backdrop-filter: blur(48px); }
+.yt-masthead .start { display: flex; align-items: center; gap: 16px; flex: none; }
+.yt-masthead .mid { flex: 1; display: flex; justify-content: center; min-width: 0; }
+.yt-masthead .end { display: flex; align-items: center; gap: 8px; flex: none; }
+.ph-logo { width: 90px; height: 20px; border-radius: var(--yt-r-condensed); border: 1px dashed var(--yt-text-disabled); color: var(--yt-text-disabled); font: 500 9px/18px var(--mono); text-align: center; position: relative; }
+.ph-logo sup { position: absolute; right: -16px; top: -6px; font: 400 10px var(--yt-font); color: var(--yt-text-secondary); }
+
+/* ytd-guide-renderer: rộng 240, section pad 12 + viền dưới outline, entry 40 cao, bo 10 */
+.yt-guide { width: var(--yt-guide-w); flex: none; }
+.yt-guide .sec { padding: 12px; border-bottom: 1px solid var(--yt-outline); }
+.yt-guide .sec:last-child { border-bottom: none; }
+.yt-guide h4 { margin: 0; padding: 6px 12px 4px; font: 500 16px/22px var(--yt-font); }
+.yt-gentry { height: 40px; padding: 0 12px; border-radius: var(--yt-r-guide); display: flex; align-items: center; gap: 24px; font: 400 14px/20px var(--yt-font); color: var(--yt-text-primary); cursor: pointer; }
+.yt-gentry.on { background: var(--yt-additive-background); font-weight: 500; }
+.yt-gentry .ms { font-size: 24px; }
+.yt-guide .promo { padding: 16px 32px; font: 400 14px/20px var(--yt-font); }
+.yt-guide .promo p { margin: 0 0 12px; }
+.yt-guide .foot { padding: 16px 24px; display: flex; flex-wrap: wrap; gap: 0 8px; }
+.yt-guide .foot a, .yt-link-foot { font: 500 13px/18px var(--yt-font); color: var(--yt-text-secondary); text-decoration: none; }
+.yt-guide .copy-r { width: 100%; margin-top: 12px; font: 400 12px/18px var(--yt-font); color: var(--yt-text-disabled); }
+
+/* ytd-mini-guide-entry-renderer: 64 rộng, pad 16 0 14, bo 10, nhãn 10px */
+.yt-mini { width: var(--yt-mini-guide-w); padding: 4px 4px 0; flex: none; }
+.yt-mentry { width: 64px; padding: 16px 0 14px; border-radius: var(--yt-r-guide); display: flex; flex-direction: column; align-items: center; gap: 6px; font: 400 10px/14px var(--yt-font); color: var(--yt-text-primary); }
+.yt-mentry.on { background: var(--yt-additive-background); }
+
+/* ảnh: giữ chỗ (RULE-09, không nhúng thumbnail/avatar của YouTube) */
+.ph { background: linear-gradient(135deg, var(--yt-tonal-background), var(--yt-additive-background)); color: var(--yt-text-disabled); display: grid; place-items: center; font: 500 11px var(--mono); text-align: center; position: relative; overflow: hidden; }
+.yt-thumb { width: 500px; max-width: 100%; aspect-ratio: 16 / 9; border-radius: var(--yt-r-cozy); flex: none; }
+.yt-thumb.loading { aspect-ratio: auto; height: 74px; background: var(--yt-outline); }
+.yt-thumb .yt-time, .yt-thumb .yt-btn { position: absolute; }
+.yt-thumb .yt-time { right: 8px; bottom: 8px; }
+.yt-thumb .yt-btn { right: 8px; bottom: 8px; }
+.yt-av { width: 24px; height: 24px; border-radius: 50%; flex: none; font-size: 0; }
+.yt-av.lg { width: 136px; height: 136px; font-size: 11px; }
+.yt-avstack { display: inline-flex; align-items: center; height: 44px; }
+.yt-avstack .yt-av { box-shadow: 0 0 0 2px var(--yt-base-background); }
+.yt-avstack .yt-av + .yt-av { margin-left: -8px; }
+
+/* badge-shape */
+.yt-time { height: 20px; padding: 1px 4px; border-radius: var(--yt-r-condensed); background: var(--yt-overlay-background-medium); color: var(--yt-overlay-text-primary); font: 500 12px/18px var(--yt-font); display: inline-flex; align-items: center; gap: 2px; }
+.yt-time .ms { font-size: 14px; }
+.yt-badge { font: 500 12px/18px var(--yt-font); color: var(--yt-text-secondary); border-radius: var(--yt-r-min); padding: 0 4px; display: inline-flex; align-items: center; gap: 4px; }
+.yt-badge.media { box-shadow: inset 0 0 0 1px var(--yt-text-secondary); }
+.yt-badge.tonal { background: var(--yt-additive-background); }
+.yt-badge.ad { color: var(--yt-text-primary); font-weight: 700; padding: 0; }
+.yt-badge .ms { font-size: 14px; }
+.yt-verified { font-size: 14px !important; color: var(--yt-text-secondary); vertical-align: -2px; }
+
+/* ytd-video-renderer (kết quả tìm kiếm) */
+.yt-video { display: flex; gap: 16px; margin-top: 16px; min-width: 0; }
+.yt-video .txt { flex: 1; min-width: 0; }
+.yt-video .row1 { display: flex; align-items: flex-start; }
+.yt-video h3 { flex: 1; margin: 0; font: 400 18px/26px var(--yt-font); color: var(--yt-text-primary); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.yt-meta { font: 400 12px/18px var(--yt-font); color: var(--yt-text-secondary); }
+.yt-meta .dot::before { content: "•"; margin: 0 4px; }
+.yt-video .ch { display: flex; align-items: center; gap: 8px; padding: 12px 0; }
+.yt-video .desc { font: 400 12px/18px var(--yt-font); color: var(--yt-text-secondary); margin: 0 0 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.yt-video .badges { display: flex; gap: 4px; margin-bottom: 8px; }
+
+/* ytd-expandable-metadata-renderer (Summary / chapters): cao 40, bo 8, pad 0 4 */
+.yt-expand { height: 40px; padding: 0 4px 0 12px; border-radius: var(--yt-r-compact); background: var(--yt-additive-background); display: flex; align-items: center; gap: 8px; min-width: 0; }
+.yt-expand.custom { background: var(--yt-x-summary-custom); }
+.yt-expand b { font: 500 12px/18px var(--yt-font); color: var(--yt-text-primary); display: inline-flex; align-items: center; gap: 4px; flex: none; }
+.yt-expand b .ms { font-size: 14px; }
+.yt-expand .ct { flex: 1; min-width: 0; font: 400 12px/18px var(--yt-font); color: var(--yt-text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.yt-expand .th { width: 52px; height: 28px; border-radius: var(--yt-r-condensed); flex: none; font-size: 0; }
+
+/* feed-ad-metadata-view-model (lockup quảng cáo trong kết quả tìm kiếm) */
+.yt-ad h3 { margin: 0; font: 400 18px/26px var(--yt-font); color: var(--yt-text-primary); }
+.yt-ad .d { font: 400 12px/18px var(--yt-font); color: var(--yt-text-secondary); }
+.yt-ad .line { display: flex; align-items: center; gap: 8px; padding-top: 8px; }
+.yt-ad .acts { display: flex; gap: 12px; margin-top: 12px; }
+.yt-ad .acts .yt-btn { width: 178px; }
+
+/* ytd-channel-renderer */
+.yt-channel { display: flex; align-items: center; gap: 16px; min-width: 0; }
+.yt-channel .av-col { width: 500px; max-width: 40%; display: flex; justify-content: center; flex: none; }
+.yt-channel .info { flex: 1; min-width: 0; padding: 0 16px 16px 0; }
+.yt-channel .name { font: 400 18px/26px var(--yt-font); }
+
+.yt-link-title { font: 400 18px/26px var(--yt-font); color: var(--yt-text-primary); text-decoration: none; }
+.yt-link-desc { font: 400 12px/18px var(--yt-font); color: var(--yt-text-secondary); text-decoration: none; }
+.yt-link-av { display: inline-block; line-height: 0; border-radius: 50%; }
+.yt-link-av.is-active { outline: 1px solid rgb(255, 0, 0); }
+
+.yt-divider { height: 1px; background: var(--yt-outline); border: none; margin: 0; }
+
+/* màn mẫu */
+.screen-wrap { overflow-x: auto; padding-bottom: 8px; }
+.desk { width: 1440px; height: 900px; zoom: .62; border-radius: 16px; overflow: hidden; background: var(--yt-base-background); border: 1px solid var(--yt-outline); display: flex; flex-direction: column; }
+.desk.compact { width: 1024px; height: 720px; zoom: .62; }
+.desk .body { flex: 1; display: flex; min-height: 0; }
+.desk .results { flex: 1; min-width: 0; overflow: hidden; padding: 0 24px; }
+.desk .results .inner { max-width: 1250px; margin: 0 auto; }
+.desk .results .yt-chips { padding: 3px 0 13px; }
+.desk .results .sep { margin: 16px 0 0; }
+.cap { font-family: var(--mono); font-size: 12px; color: var(--yt-text-secondary); margin: 6px 4px 0; }
+
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; transition: all .25s ease; z-index: 20;
+  background: var(--yt-inverted-background); color: var(--yt-text-primary-inverse); padding: 12px 16px; border-radius: var(--yt-r-condensed); font: 400 14px/20px var(--yt-font); max-width: calc(100vw - 32px); }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; }
+  .side { display: none; }
+  main { padding: 0 16px 80px; }
+  .grid, .grid.wide { grid-template-columns: 1fr; }
+  .intro h1 { font-size: 30px; line-height: 38px; }
+  .type-row { grid-template-columns: 1fr; gap: 2px; }
+  .yt-video { flex-direction: column; }
+  .yt-channel .av-col { width: auto; max-width: none; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <nav class="side" aria-label="Mục lục">
+    <div class="brand"><div class="brand-mark">logo</div><div><b>YouTube UI Kit</b><small>Desktop · kevlar</small></div></div>
+    <h6>Nền tảng</h6>
+    <a href="#color"><span class="ms">palette</span>Màu</a>
+    <a href="#type"><span class="ms">text_fields</span>Chữ</a>
+    <a href="#shape"><span class="ms">rounded_corner</span>Bo góc</a>
+    <a href="#layout"><span class="ms">straighten</span>Bố cục &amp; kích thước</a>
+    <h6>Thành phần</h6>
+    <a href="#actions"><span class="ms">touch_app</span>Hành động</a>
+    <a href="#navigation"><span class="ms">explore</span>Điều hướng</a>
+    <a href="#content"><span class="ms">video_library</span>Nội dung</a>
+    <a href="#inputs"><span class="ms">search</span>Nhập liệu</a>
+    <a href="#feedback"><span class="ms">label</span>Badge &amp; trạng thái</a>
+    <h6>Mẫu</h6>
+    <a href="#screens"><span class="ms">desktop_windows</span>Màn hình mẫu</a>
+  </nav>
+
+  <main>
+    <div class="bar" role="toolbar" aria-label="Chủ đề">
+      <div class="ctl"><span>Chế độ</span><div class="seg" id="mode">
+        <button data-v="light" aria-pressed="false"><span class="ms">light_mode</span>Sáng</button>
+        <button data-v="dark" aria-pressed="true"><span class="ms">dark_mode</span>Tối</button></div></div>
+      <div class="grow"></div>
+      <button class="copy" id="copy-tokens"><span class="ms">data_object</span>Copy CSS token</button>
+    </div>
+
+    <div class="intro">
+      <div class="eyebrow">rs=…(kevlar_base CSS) · youtube.com/results đã lưu → docs/youtube-ui-kit.html</div>
+      <h1>Hệ thiết kế YouTube desktop</h1>
+      <p>Token và số đo lấy từ stylesheet thật của trang tìm kiếm YouTube mà bạn đã lưu về máy. Màu là 190 vai trò <code>--yt-sys-color-baseline--*</code>, đọc bằng <code>getComputedStyle</code> ở cả <code>html</code> (sáng) lẫn <code>html[dark]</code> (tối). Kích thước của từng component đo trên chính DOM đã lưu (tắt JS, chặn mọi request ra ngoài).</p>
+      <p>Muốn dùng lại: dán khối <code>:root</code> (nút "Copy CSS token") cùng CSS <code>.yt-*</code> vào dự án. Ảnh, logo và tên kênh đều là khối giữ chỗ hoặc chữ mẫu. Icon dùng Material Symbols thay cho bộ icon SVG riêng của YouTube.</p>
+      <div class="facts"><span class="fact">masthead 56 · pad 0 16</span><span class="fact">guide 240 · mini guide 72</span><span class="fact">search 536 + 64 × 40</span><span class="fact">thumb 500 × 281 · r 12</span><span class="fact">button 24/32/40/48 · r h/2</span><span class="fact">chip 32 · r 8 · gap 12</span></div>
+    </div>
+
+    <!-- ================= NỀN TẢNG ================= -->
+    <section class="block" id="color">
+      <header><h2>Màu</h2><p>190 vai trò <code>--yt-sys-color-baseline--*</code> của chế độ đang chọn, gom nhóm theo tiền tố tên. Bấm một ô để copy giá trị. Ô có nền ca-rô là màu có alpha: nó phủ lên nền base. YouTube không có cặp <code>on*</code> kiểu Material, nên cặp nền/chữ nằm ở vai trò <code>-inverse</code> (ví dụ <code>inverted-background</code> ↔ <code>text-primary-inverse</code>).</p></header>
+      <div id="roles"></div>
+    </section>
+
+    <section class="block" id="type">
+      <header><h2>Chữ</h2><p>Roboto (dự phòng Arial). Thang chữ dưới đây là các cỡ <b>thực dùng</b> trên trang tìm kiếm, đo bằng computed style. YouTube không có token typescale trong hệ sys: cỡ chữ viết thẳng vào CSS từng component theo rem (1rem = 10px vì <code>html{font-size:62.5%}</code>).</p></header>
+      <div class="spec"><div class="stage col" id="typescale"></div></div>
+    </section>
+
+    <section class="block" id="shape">
+      <header><h2>Bo góc</h2><p>Thang <code>--yt-sys-measurement--radius-*</code>, kèm bo 10 của guide entry (viết cứng). YouTube không có hệ số nhân shape, nên kit bỏ nút đổi Shape.</p></header>
+      <div class="spec"><div class="stage" id="shapes" style="gap:24px"></div></div>
+    </section>
+
+    <section class="block" id="layout">
+      <header><h2>Bố cục &amp; kích thước</h2><p>Bậc kích thước của button, hệ đo sys và các hằng khung trang, đo trên DOM thật ở viewport 1440 × 900.</p></header>
+      <div class="grid wide">
+        <div class="spec"><div class="stage col"><div class="tbl">
+          <table class="tok"><thead><tr><th>ytSpecButtonShapeNextSize</th><th>h</th><th>padX</th><th>font</th><th>bo</th></tr></thead><tbody>
+            <tr><td>Xs</td><td>24</td><td>8</td><td>12</td><td>12</td></tr>
+            <tr><td>S</td><td>32</td><td>12</td><td>12</td><td>16</td></tr>
+            <tr><td>M</td><td>40</td><td>16</td><td>14</td><td>20</td></tr>
+            <tr><td>L</td><td>48</td><td>24</td><td>18</td><td>24</td></tr></tbody></table>
+        </div></div><div class="spec-f"><span class="note">Đọc từ rule <code>.ytSpecButtonShapeNextSize*</code>. Trang tìm kiếm chỉ dùng M (40) cho mọi nút có trong inventory.</span></div></div>
+        <div class="spec"><div class="stage col"><div class="tbl">
+          <table class="tok"><thead><tr><th>--yt-sys-measurement--</th><th>giá trị (px)</th></tr></thead><tbody>
+            <tr><td>action-height</td><td>tiny 24 · compact 32 · standard 36 · prominent 48 · hero 56</td></tr>
+            <tr><td>avatar-size</td><td>mini 16 · condensed 24 · compact 32 · cozy 36 · comfortable 40 · expanded 48 · prominent 56 · hero 72 · legend 120 · huge 144 · max 160</td></tr>
+            <tr><td>icon-size</td><td>mini 12 · condensed/standard 16 · compact 18 · cozy 20 · comfortable 24 · expanded 36 · prominent 40 · hero 48</td></tr>
+            <tr><td>size</td><td>hairline 1 · min 4 · tiny 6 · mini 8 · condensed 12 · compact 16 · cozy 18 · comfortable 24 · expanded 32 · prominent 36 · hero 40 · legend 48 · huge 56 · max 64 · 72</td></tr>
+            <tr><td>feed</td><td>col-gap 8/12/16 · row-gap 8/12/16 · margin 0/16/16 · max-width 840/1024</td></tr>
+            <tr><td>shelf</td><td>item-gap 12/16/16 · peek 24/48/64</td></tr>
+            <tr><td>stroke</td><td>cozy 0.5 · comfortable 1 · expanded 2</td></tr></tbody></table>
+        </div></div></div>
+        <div class="spec full"><div class="stage col"><div class="tbl">
+          <table class="tok"><thead><tr><th>Phần tử (tên trong code)</th><th>kích thước</th><th>ghi chú</th></tr></thead><tbody>
+            <tr><td>ytd-masthead #container</td><td>1440 × 56 · pad 0 16</td><td>nền frosted-glass-desktop + backdrop blur 48</td></tr>
+            <tr><td>yt-searchbox</td><td>640 · ô 536 × 40 + nút 64 × 40</td><td>margin-left 40; ô bo 40 0 0 40, nút bo 0 40 40 0</td></tr>
+            <tr><td>ytd-guide-renderer</td><td>240 · section pad 12</td><td>entry 40 cao, pad 0 12, icon 24 cách chữ 24</td></tr>
+            <tr><td>ytd-mini-guide-renderer</td><td>72 (pad 0 4) · entry 64</td><td>thay guide khi cửa sổ hẹp (đọc từ CSS, không có trên trang đã lưu)</td></tr>
+            <tr><td>ytd-two-column-search-results-renderer #primary</td><td>max 1250</td><td>cột kết quả, bắt đầu x = 95 khi guide đóng</td></tr>
+            <tr><td>ytd-video-renderer</td><td>1250 × 281 · margin-top 16</td><td>thumb 500 × 281 bo 12, cột chữ 734 cách 16</td></tr>
+            <tr><td>ytd-rich-grid (trang chủ)</td><td>item 310–500 · margin 16 · 4/hàng</td><td>đọc từ biến <code>--ytd-rich-grid-*</code>, không có trên trang tìm kiếm</td></tr>
+            <tr><td>ytd-channel-renderer</td><td>1250 × 136 · avatar 136</td><td>cột avatar 500, nút Subscribe 94 × 40</td></tr></tbody></table>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- ================= HÀNH ĐỘNG ================= -->
+    <section class="block" id="actions">
+      <header><h2>Hành động</h2><p>Mọi nút là <code>yt-button-shape</code> với class <code>ytSpecButtonShapeNext*</code>. Trạng thái hover đo bằng CDP <code>forcePseudoState</code> trên trang đã lưu.</p></header>
+      <div class="grid">
+        <div class="spec" data-sig="b567e4ff15" data-sig-state="b567e4ff15:hover"><div class="spec-h"><b>Button · Filled</b><span class="kind">ytSpecButtonShapeNextFilled</span><span class="dp">M · 40 · r 20</span></div>
+          <div class="stage">
+            <figure><button class="yt-btn v-filled">Learn more</button><span class="lab">nghỉ</span></figure>
+            <figure><button class="yt-btn v-filled is-hover">Learn more</button><span class="lab">hover</span></figure>
+            <figure><button class="yt-btn v-filled">Subscribe</button><span class="lab">subscribe</span></figure>
+          </div><div class="spec-f"><span class="note">Nền <code>inverted-background</code>, hover lên <code>inverted-background-hover</code> (#f1f1f1 → #d9d9d9 khi tối).</span></div></div>
+
+        <div class="spec" data-sig="94b73b5c50" data-sig-state="94b73b5c50:hover"><div class="spec-h"><b>Button · Tonal</b><span class="kind">ytSpecButtonShapeNextTonal</span><span class="dp">M · 40 · r 20</span></div>
+          <div class="stage">
+            <figure><button class="yt-btn v-tonal">Skip navigation</button><span class="lab">nghỉ</span></figure>
+            <figure><button class="yt-btn v-tonal is-hover">Skip navigation</button><span class="lab">hover</span></figure>
+            <figure><button class="yt-btn v-tonal">Watch</button><span class="lab">nút phụ của quảng cáo</span></figure>
+          </div><div class="spec-f"><span class="note">Nền <code>additive-background</code>, hover lên <code>mono-tonal-hover</code>.</span></div></div>
+
+        <div class="spec" data-sig="449aa84d71" data-sig-state="449aa84d71:hover"><div class="spec-h"><b>Button · Text + icon sau</b><span class="kind">ytSpecButtonShapeNextText · IconTrailing</span><span class="dp">M · 40</span></div>
+          <div class="stage">
+            <figure><button class="yt-btn v-text">Filters<span class="ms">tune</span></button><span class="lab">nghỉ</span></figure>
+            <figure><button class="yt-btn v-text is-hover">Filters<span class="ms">tune</span></button><span class="lab">hover</span></figure>
+          </div><div class="spec-f"><span class="note">Trong suốt, hover lên <code>mono-tonal-hover</code>. Nút "Filters" ở đầu kết quả tìm kiếm.</span></div></div>
+
+        <div class="spec" data-sig="dd12454860" data-sig-state="dd12454860:hover"><div class="spec-h"><b>Button · Call to action (viền)</b><span class="kind">ytSpecButtonShapeNextCallToAction · Outline</span><span class="dp">M · 40 · pad 15 · viền 1</span></div>
+          <div class="stage">
+            <figure><button class="yt-btn v-cta"><span class="ms">account_circle</span>Sign in</button><span class="lab">nghỉ</span></figure>
+            <figure><button class="yt-btn v-cta is-hover"><span class="ms">account_circle</span>Sign in</button><span class="lab">hover</span></figure>
+          </div><div class="spec-f"><span class="note">Chữ <code>call-to-action</code>, viền <code>outline</code>. Khi hover, viền tắt và nền lên <code>suggested-action</code>.</span></div></div>
+
+        <div class="spec" data-sig="4bd5af5a87 173d96168b" data-sig-state="4bd5af5a87:hover 173d96168b:hover"><div class="spec-h"><b>Icon button</b><span class="kind">ytSpecButtonShapeNextIconButton · IconOnlyDefault</span><span class="dp">40 × 40 · r 50%</span></div>
+          <div class="stage">
+            <figure><button class="yt-btn icon v-tonal" aria-label="Tìm bằng giọng nói"><span class="ms">mic</span></button><span class="lab">voice</span></figure>
+            <figure><button class="yt-btn icon v-text" aria-label="Xoá"><span class="ms">close</span></button><span class="lab">nghỉ</span></figure>
+            <figure><button class="yt-btn icon v-text is-hover" aria-label="Xoá"><span class="ms">close</span></button><span class="lab">hover</span></figure>
+            <figure><button class="yt-btn icon v-text" aria-label="Cài đặt"><span class="ms">more_vert</span></button><span class="lab">masthead</span></figure>
+          </div><div class="spec-f"><span class="note">Hover: nền <code>mono-tonal-hover</code> (rgba trắng 0.2 khi tối). Nền xám của nút voice nằm ở phần tử cha <code>#voice-search-button</code>, kit gắn thẳng <code>additive-background</code>.</span></div></div>
+
+        <div class="spec" data-sig="ecad03c8e3" data-sig-state="ecad03c8e3:hover"><div class="spec-h"><b>Icon button · Overlay</b><span class="kind">ytSpecButtonShapeNextOverlay</span><span class="dp">40 × 40 · r 50%</span></div>
+          <div class="stage">
+            <figure><div class="ph" style="width:120px;height:68px;border-radius:12px">ảnh<button class="yt-btn icon v-overlay" aria-label="Mở trang quảng cáo" style="position:absolute;right:6px;bottom:6px"><span class="ms">arrow_outward</span></button></div><span class="lab">nghỉ</span></figure>
+            <figure><button class="yt-btn icon v-overlay is-hover" aria-label="Mở trang quảng cáo"><span class="ms">arrow_outward</span></button><span class="lab">hover</span></figure>
+          </div><div class="spec-f"><span class="note">Nền <code>overlay-background-medium</code>, chữ <code>overlay-text-primary</code>. Hover chỉ đổi màu viền (không nhìn thấy), nền giữ nguyên.</span></div></div>
+
+        <div class="spec" data-sig="9fb76c1d72 d41286dac8"><div class="spec-h"><b>Menu ⋮</b><span class="kind">ytd-menu-renderer · yt-icon-button</span><span class="dp">40 × 40 · icon 24</span></div>
+          <div class="stage">
+            <figure><button class="yt-iconbtn" aria-label="Thao tác"><span class="ms">more_vert</span></button><span class="lab">cạnh video</span></figure>
+            <figure><button class="yt-iconbtn sm" aria-label="Thao tác"><span class="ms" style="font-size:20px">more_vert</span></button><span class="lab">24 · topbar menu</span></figure>
+          </div><div class="spec-f"><span class="note">Không đo được hover riêng: nút cũ <code>yt-icon-button</code> không có rule <code>:hover</code>.</span></div></div>
+
+        <div class="spec full" data-sig-state="4bd5af5a87:focus 449aa84d71:focus 94b73b5c50:focus b567e4ff15:focus 902340cfb6:focus ecad03c8e3:focus 2b9f8a98f3:focus 040072e134:focus dd12454860:focus 173d96168b:focus dde4510bcc:focus 992d488bf4:focus 4566c6a458:focus 205fae6668:focus bf07903f17:focus b87fbe6305:focus d4c0063850:focus 24ba8d3814:focus bf07903f17:active"><div class="spec-h"><b>Focus &amp; active · mặc định trình duyệt</b><span class="kind">:focus-visible</span><span class="dp">outline auto #005fcc</span></div>
+          <div class="stage">
+            <figure><button class="yt-btn v-filled is-focus">Learn more</button><span class="lab">button</span></figure>
+            <figure><button class="yt-btn icon v-text is-focus" aria-label="Xoá"><span class="ms">close</span></button><span class="lab">icon</span></figure>
+            <figure><span class="yt-chip on yt-focus is-focus">All</span><span class="lab">chip</span></figure>
+            <figure><a class="yt-link-title yt-focus is-focus" href="#actions">Tiêu đề video mẫu</a><span class="lab">link</span></figure>
+            <figure><span class="yt-link-av is-active"><span class="yt-av ph">ảnh</span></span><span class="lab">active · link avatar</span></figure>
+          </div><div class="spec-f"><span class="note">Cả 18 phần tử bấm được trên trang đều dùng focus mặc định của trình duyệt (<code>outline: auto</code>, #005fcc): site không style riêng. Trạng thái <code>:active</code> đo được duy nhất cũng là mặc định: link avatar chuyển đỏ (rgb 255 0 0, màu <code>:active</code> của UA).</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= ĐIỀU HƯỚNG ================= -->
+    <section class="block" id="navigation">
+      <header><h2>Điều hướng</h2></header>
+      <div class="grid">
+        <div class="spec full" data-sig="5850c95f79 b902ff0e43"><div class="spec-h"><b>Masthead</b><span class="kind">ytd-masthead</span><span class="dp">h 56 · pad 0 16</span></div>
+          <div class="stage" style="padding:0;display:block;min-height:0"><div class="yt-masthead" style="min-width:880px">
+            <div class="start"><button class="yt-btn icon v-text" aria-label="Guide"><span class="ms">menu</span></button><span class="ph-logo">logo<sup>VN</sup></span></div>
+            <div class="mid"><div class="yt-search" style="max-width:640px"><div class="box"><span class="t">Search</span></div><button class="go" aria-label="Tìm"><span class="ms">search</span></button><button class="yt-btn icon v-tonal" aria-label="Tìm bằng giọng nói"><span class="ms">mic</span></button></div></div>
+            <div class="end"><button class="yt-btn icon v-text" aria-label="Cài đặt"><span class="ms">more_vert</span></button><button class="yt-btn v-cta"><span class="ms">account_circle</span>Sign in</button></div>
+          </div></div><div class="spec-f"><span class="note">Nền <code>frosted-glass-desktop</code> (rgba 15 15 15 / 0.8 khi tối) + <code>backdrop-filter: blur(48px)</code>. Nút guide ☰ là <code>yt-icon-button#guide-button</code>. Logo thay bằng khối giữ chỗ.</span></div></div>
+
+        <div class="spec" data-sig="63d4e29655 30a2441ff3 c0c26db9c0 992d488bf4"><div class="spec-h"><b>Guide · section &amp; entry</b><span class="kind">ytd-guide-section-renderer · ytd-guide-entry-renderer</span><span class="dp">240 · entry 40 · r 10</span></div>
+          <div class="stage" style="justify-content:center"><div class="yt-guide">
+            <div class="sec"><div class="yt-gentry on"><span class="ms">home</span>Home</div><div class="yt-gentry"><span class="ms">bolt</span>Shorts</div><div class="yt-gentry"><span class="ms">subscriptions</span>Subscriptions</div></div>
+            <div class="sec"><h4>Explore</h4><div class="yt-gentry"><span class="ms">music_note</span>Music</div><div class="yt-gentry"><span class="ms">sports_esports</span>Gaming</div><div class="yt-gentry"><span class="ms">expand_more</span>Show more</div></div>
+          </div></div><div class="spec-f"><span class="note">Entry <code>[active]</code>: nền <code>additive-background</code>, chữ 500. Tiêu đề section 16/22 · 500. Entry trên trang đã lưu không có hover đo được.</span></div></div>
+
+        <div class="spec" data-sig="cf15a6da75 cff0680d38 b87fbe6305"><div class="spec-h"><b>Guide · promo đăng nhập &amp; footer</b><span class="kind">ytd-guide-signin-promo-renderer · #footer</span><span class="dp">pad 16 32</span></div>
+          <div class="stage" style="justify-content:center"><div class="yt-guide">
+            <div class="sec promo"><p>Sign in to like videos, comment, and subscribe.</p><button class="yt-btn v-cta"><span class="ms">account_circle</span>Sign in</button></div>
+            <div class="foot"><a href="#navigation">About</a><a href="#navigation">Press</a><a href="#navigation">Copyright</a><a href="#navigation">Terms</a><a href="#navigation">Privacy</a><div class="copy-r">© 2026 Google LLC</div></div>
+          </div></div><div class="spec-f"><span class="note">Link footer chữ <code>text-secondary</code> · 500. Dòng bản quyền dùng <code>text-disabled</code>.</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Mini guide</b><span class="kind">ytd-mini-guide-entry-renderer</span><span class="dp">64 · pad 16 0 14 · r 10</span></div>
+          <div class="stage" style="justify-content:center"><div class="yt-mini" style="display:flex;flex-direction:column">
+            <div class="yt-mentry on"><span class="ms">home</span>Home</div><div class="yt-mentry"><span class="ms">bolt</span>Shorts</div><div class="yt-mentry"><span class="ms">account_circle</span>You</div>
+          </div></div><div class="spec-f"><span class="note">Dựng theo rule CSS; trang đã lưu đang mở guide đầy đủ nên không có phần tử này để đo. Cỡ nhãn 10/14 là suy đoán từ bản web hiện hành.</span></div></div>
+
+        <div class="spec" data-sig="24ba8d3814 d4c0063850 b4f10bcb1a 0c7690247e"><div class="spec-h"><b>Chip bar (bộ lọc)</b><span class="kind">yt-chip-cloud-chip-renderer · ytChipShapeChip</span><span class="dp">h 32 · pad 0 12 · r 8 · gap 12</span></div>
+          <div class="stage"><div class="yt-chips" role="tablist"><span class="yt-chip on" role="tab" aria-selected="true">All</span><span class="yt-chip" role="tab">Unwatched</span><span class="yt-chip" role="tab">Watched</span><span class="yt-chip" role="tab">Videos</span><span class="yt-chip" role="tab">Live</span></div></div>
+          <div class="spec-f"><span class="note"><code>ytChipShapeActive</code>: nền <code>inverted-background</code> và chữ <code>text-primary-inverse</code>. <code>ytChipShapeInactive</code>: nền <code>additive-background</code>. Chip không có rule <code>:hover</code> trong CSS đã lưu.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= NỘI DUNG ================= -->
+    <section class="block" id="content">
+      <header><h2>Nội dung</h2><p>Các khối trong danh sách kết quả tìm kiếm. Tiêu đề, kênh và mô tả đều là chữ mẫu.</p></header>
+      <div class="grid">
+        <div class="spec full" data-sig="a33286e288 ce36fa0f94 e8a8a97df9 bf07903f17"><div class="spec-h"><b>Video (kết quả tìm kiếm)</b><span class="kind">ytd-video-renderer</span><span class="dp">thumb 500 × 281 r 12 · gap 16 · title 18/26</span></div>
+          <div class="stage" style="display:block">
+            <div class="yt-video" style="margin:0">
+              <div class="yt-thumb ph">ảnh thumbnail<span class="yt-time"><span class="ms">music_note</span>3:47</span></div>
+              <div class="txt">
+                <div class="row1"><h3>Tiêu đề video mẫu dài vừa đủ để thấy cách xuống dòng</h3><button class="yt-iconbtn" aria-label="Thao tác"><span class="ms">more_vert</span></button></div>
+                <div class="yt-meta">111M views<span class="dot"></span>3 years ago</div>
+                <div class="ch"><span class="yt-av ph">ảnh</span><span class="yt-meta">Tên kênh mẫu <span class="ms yt-verified">check_circle</span></span></div>
+                <p class="desc">Đoạn mô tả mẫu một dòng, bị cắt bằng dấu ba chấm khi quá dài so với cột chữ 734 px của kết quả…</p>
+                <div class="badges"><span class="yt-badge media">CC</span><span class="yt-badge media">4K</span><span class="yt-badge tonal">New</span></div>
+              </div>
+            </div>
+          </div><div class="spec-f"><span class="note">Tiêu đề <code>text-primary</code> 18/26 · 400, tối đa 2 dòng. Metadata, tên kênh và mô tả dùng <code>text-secondary</code> 12/18. Hàng kênh pad 12 0, avatar 24.</span></div></div>
+
+        <div class="spec full" data-sig="205fae6668 4566c6a458 2b9f8a98f3 b10d6f6bb9"><div class="spec-h"><b>Quảng cáo trong kết quả</b><span class="kind">ytd-in-feed-ad-layout-renderer · feed-ad-metadata-view-model</span><span class="dp">title 18/26 · nút 178 × 40</span></div>
+          <div class="stage" style="display:block">
+            <div class="yt-video yt-ad" style="margin:0">
+              <div class="yt-thumb ph">ảnh quảng cáo<button class="yt-btn icon v-overlay" aria-label="Mở trang quảng cáo"><span class="ms">arrow_outward</span></button></div>
+              <div class="txt">
+                <div class="row1"><h3>Tiêu đề quảng cáo mẫu</h3><button class="yt-iconbtn" aria-label="Thao tác"><span class="ms">more_vert</span></button></div>
+                <div class="d">Một dòng mô tả ngắn của nhà quảng cáo.</div>
+                <div class="line"><span class="yt-av ph">ảnh</span><span class="yt-badge ad">Sponsored</span><span class="yt-meta">· Nhà quảng cáo mẫu</span></div>
+                <div class="acts"><button class="yt-btn v-tonal">Watch</button><button class="yt-btn v-filled">Learn more</button></div>
+              </div>
+            </div>
+          </div><div class="spec-f"><span class="note">"Sponsored" là <code>ytBadgeShapeAd</code> 12/18 · 700. Hai nút cùng rộng 178. Media quảng cáo có biến thể xem trước video (<code>ytd-video-preview</code>), kit gộp chung vào khối ảnh.</span></div></div>
+
+        <div class="spec full" data-sig="47717f1e4f"><div class="spec-h"><b>Kênh</b><span class="kind">ytd-channel-renderer</span><span class="dp">avatar 136 · tên 18/26</span></div>
+          <div class="stage" style="display:block">
+            <div class="yt-channel">
+              <div class="av-col"><span class="yt-av lg ph">ảnh avatar</span></div>
+              <div class="info"><div class="name">Tên kênh mẫu <span class="ms yt-verified">check_circle</span></div><div class="yt-meta">1.1M subscribers<span class="dot"></span>1,142 videos</div><div class="yt-meta" style="margin-top:4px">Hai dòng giới thiệu mẫu của kênh, màu text-secondary 12/18.</div></div>
+              <button class="yt-btn v-filled">Subscribe</button>
+            </div>
+          </div><div class="spec-f"><span class="note">Nút Subscribe là Filled M (94 × 40). Avatar kênh bo 50%.</span></div></div>
+
+        <div class="spec" data-sig="902340cfb6"><div class="spec-h"><b>Summary / chapters</b><span class="kind">ytd-expandable-metadata-renderer</span><span class="dp">h 40 · r 8 · pad 0 4</span></div>
+          <div class="stage col">
+            <div class="yt-expand"><b><span class="ms">auto_awesome</span>Summary</b><span class="ct">Tóm tắt mẫu do AI viết, một dòng, bị cắt…</span><button class="yt-iconbtn" aria-label="Mở rộng"><span class="ms">expand_more</span></button></div>
+            <div class="yt-expand custom"><b>6 chapters</b><span class="th ph">ảnh</span><span class="ct">Chương 1 | Chương 2 | Chương 3</span><button class="yt-iconbtn" aria-label="Mở rộng"><span class="ms">expand_more</span></button></div>
+          </div><div class="spec-f"><span class="note">Mặc định nền <code>additive-background</code>. Với <code>[use-custom-colors]</code>, nền lấy màu từ thumbnail (<code>--yt-lightsource-section2-color</code>); màu #082233 là mẫu đo được của một video, không phải token.</span></div></div>
+
+        <div class="spec" data-sig="42bbe50380 040072e134"><div class="spec-h"><b>Ảnh đang tải &amp; avatar stack</b><span class="kind">yt-thumbnail-view-model · yt-avatar-stack-view-model</span><span class="dp">r 12 · stack 108 × 44</span></div>
+          <div class="stage col">
+            <div class="yt-thumb loading ph">khung chờ ảnh</div>
+            <div style="display:flex;align-items:center;gap:8px"><span class="yt-avstack"><span class="yt-av ph">a</span><span class="yt-av ph">b</span><span class="yt-av ph">c</span></span><span class="yt-meta">Kênh mẫu và 2 kênh khác</span></div>
+          </div><div class="spec-f"><span class="note">Khung chờ phủ rgba trắng 0.2 (kit gắn <code>outline</code>, token cùng giá trị ở chế độ tối). Avatar chồng nhau -8 với viền nền 2 px là vẽ theo ảnh chụp.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= NHẬP LIỆU ================= -->
+    <section class="block" id="inputs">
+      <header><h2>Nhập liệu</h2></header>
+      <div class="grid">
+        <div class="spec full" data-sig="50783bd195 dde4510bcc" data-sig-state="173d96168b:hover"><div class="spec-h"><b>Search box</b><span class="kind">yt-searchbox · ytSearchboxComponentInputBox</span><span class="dp">ô 536 × 40 · nút 64 × 40 · chữ 16/22</span></div>
+          <div class="stage col">
+            <div class="yt-search"><div class="box"><span class="t">Search</span></div><button class="go" aria-label="Tìm"><span class="ms">search</span></button><button class="yt-btn icon v-tonal" aria-label="Tìm bằng giọng nói"><span class="ms">mic</span></button></div>
+            <div class="yt-search"><div class="box"><span class="t v">r</span><button class="clear is-hover" aria-label="Xoá"><span class="ms">close</span></button></div><button class="go" aria-label="Tìm"><span class="ms">search</span></button><button class="yt-btn icon v-tonal" aria-label="Tìm bằng giọng nói"><span class="ms">mic</span></button></div>
+          </div><div class="spec-f"><span class="note">Màu ô và nút là hex viết cứng trong CSS (<code>--yt-x-searchbox-*</code>): tối #121212 / viền #303030, sáng #fff / viền #c6c6c6, nút sáng #f8f8f8. Hàng 2 cho thấy nút xoá ở trạng thái hover.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= BADGE ================= -->
+    <section class="block" id="feedback">
+      <header><h2>Badge &amp; trạng thái</h2></header>
+      <div class="grid">
+        <div class="spec" data-sig="c1f80bf13e"><div class="spec-h"><b>Thời lượng trên thumbnail</b><span class="kind">ytBadgeShapeThumbnailDefault</span><span class="dp">h 20 · pad 1 4 · r 4</span></div>
+          <div class="stage"><span class="yt-time">3:47</span><span class="yt-time"><span class="ms">music_note</span>3:47</span><span class="yt-time"><span class="ms">arrow_outward</span>4:26</span></div>
+          <div class="spec-f"><span class="note">Nền <code>overlay-background-medium</code> (đen 0.6), chữ trắng 12/18 · 500.</span></div></div>
+        <div class="spec"><div class="spec-h"><b>Badge metadata</b><span class="kind">ytBadgeShapeMedia · Default · Ad</span><span class="dp">12/18 · 500 · r 2</span></div>
+          <div class="stage"><span class="yt-badge media">CC</span><span class="yt-badge media">4K</span><span class="yt-badge tonal">New</span><span class="yt-badge"><span class="ms">schedule</span>5 products</span><span class="yt-badge ad">Sponsored</span><span class="yt-meta">Tên kênh <span class="ms yt-verified">check_circle</span></span></div>
+          <div class="spec-f"><span class="note">Viền của badge media và nền của "New" vẽ theo ảnh chụp: computed style đo được không có border (nhiều khả năng nằm ở pseudo-element).</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= MẪU MÀN HÌNH ================= -->
+    <section class="block" id="screens">
+      <header><h2>Màn hình mẫu</h2><p>Trang kết quả tìm kiếm ghép lại từ các class ở trên. Khung 1440 × 900 giống viewport lúc đo; khung 1024 × 720 thu guide thành mini guide 72. YouTube desktop không có bản mobile trong nguồn: m.youtube.com là một app khác và bạn chưa lưu, nên kit không có màn mobile.</p></header>
+      <div class="screen-wrap"><div class="desk">
+        <div class="yt-masthead">
+          <div class="start"><button class="yt-btn icon v-text" aria-label="Guide"><span class="ms">menu</span></button><span class="ph-logo">logo<sup>VN</sup></span></div>
+          <div class="mid"><div class="yt-search" style="max-width:640px;margin-left:40px"><div class="box"><span class="t v">r</span><button class="clear" aria-label="Xoá"><span class="ms">close</span></button></div><button class="go" aria-label="Tìm"><span class="ms">search</span></button><button class="yt-btn icon v-tonal" aria-label="Tìm bằng giọng nói"><span class="ms">mic</span></button></div></div>
+          <div class="end"><button class="yt-btn icon v-text" aria-label="Cài đặt"><span class="ms">more_vert</span></button><button class="yt-btn v-cta"><span class="ms">account_circle</span>Sign in</button></div>
+        </div>
+        <div class="body">
+          <div class="yt-guide">
+            <div class="sec"><div class="yt-gentry"><span class="ms">home</span>Home</div><div class="yt-gentry"><span class="ms">bolt</span>Shorts</div><div class="yt-gentry"><span class="ms">subscriptions</span>Subscriptions</div><div class="yt-gentry"><span class="ms">account_circle</span>You</div><div class="yt-gentry"><span class="ms">history</span>History</div></div>
+            <div class="sec promo"><p>Sign in to like videos, comment, and subscribe.</p><button class="yt-btn v-cta"><span class="ms">account_circle</span>Sign in</button></div>
+            <div class="sec"><h4>Explore</h4><div class="yt-gentry"><span class="ms">music_note</span>Music</div><div class="yt-gentry"><span class="ms">sports_esports</span>Gaming</div><div class="yt-gentry"><span class="ms">newspaper</span>News</div></div>
+          </div>
+          <div class="results"><div class="inner">
+            <div style="display:flex;align-items:center"><div class="yt-chips" style="flex:1"><span class="yt-chip on">All</span><span class="yt-chip">Unwatched</span><span class="yt-chip">Watched</span><span class="yt-chip">Videos</span><span class="yt-chip">Recently uploaded</span><span class="yt-chip">Live</span></div><button class="yt-btn v-text">Filters<span class="ms">tune</span></button></div>
+            <div class="yt-video yt-ad" style="margin-top:4px"><div class="yt-thumb ph">ảnh quảng cáo<button class="yt-btn icon v-overlay" aria-label="Mở trang quảng cáo"><span class="ms">arrow_outward</span></button></div><div class="txt"><div class="row1"><h3>Tiêu đề quảng cáo mẫu</h3><button class="yt-iconbtn" aria-label="Thao tác"><span class="ms">more_vert</span></button></div><div class="d">Một dòng mô tả ngắn của nhà quảng cáo.</div><div class="line"><span class="yt-av ph">ảnh</span><span class="yt-badge ad">Sponsored</span><span class="yt-meta">· Nhà quảng cáo mẫu</span></div><div class="acts"><button class="yt-btn v-tonal">Watch</button><button class="yt-btn v-filled">Learn more</button></div></div></div>
+            <div class="yt-video"><div class="yt-thumb ph">ảnh thumbnail<span class="yt-time">3:47</span></div><div class="txt"><div class="row1"><h3>Tiêu đề video mẫu số một</h3><button class="yt-iconbtn" aria-label="Thao tác"><span class="ms">more_vert</span></button></div><div class="yt-meta">111M views<span class="dot"></span>3 years ago</div><div class="ch"><span class="yt-av ph">ảnh</span><span class="yt-meta">Tên kênh mẫu</span></div><p class="desc">Đoạn mô tả mẫu một dòng của video…</p><div class="yt-expand"><b><span class="ms">auto_awesome</span>Summary</b><span class="ct">Tóm tắt mẫu một dòng…</span><button class="yt-iconbtn" aria-label="Mở rộng"><span class="ms">expand_more</span></button></div></div></div>
+          </div></div>
+        </div>
+      </div><div class="cap">desktop 1440 × 900 · masthead + guide 240 + chip bar + ad lockup + video-renderer + summary</div></div>
+
+      <div class="screen-wrap" style="margin-top:24px"><div class="desk compact">
+        <div class="yt-masthead">
+          <div class="start"><button class="yt-btn icon v-text" aria-label="Guide"><span class="ms">menu</span></button><span class="ph-logo">logo<sup>VN</sup></span></div>
+          <div class="mid"><div class="yt-search" style="max-width:520px"><div class="box"><span class="t v">r</span></div><button class="go" aria-label="Tìm"><span class="ms">search</span></button><button class="yt-btn icon v-tonal" aria-label="Tìm bằng giọng nói"><span class="ms">mic</span></button></div></div>
+          <div class="end"><button class="yt-btn v-cta"><span class="ms">account_circle</span>Sign in</button></div>
+        </div>
+        <div class="body">
+          <div class="yt-mini"><div class="yt-mentry"><span class="ms">home</span>Home</div><div class="yt-mentry"><span class="ms">bolt</span>Shorts</div><div class="yt-mentry"><span class="ms">subscriptions</span>Subscriptions</div><div class="yt-mentry"><span class="ms">account_circle</span>You</div></div>
+          <div class="results"><div class="inner">
+            <div class="yt-chips" style="padding:3px 0 13px;overflow:hidden"><span class="yt-chip on">All</span><span class="yt-chip">Unwatched</span><span class="yt-chip">Videos</span><span class="yt-chip">Live</span></div>
+            <div class="yt-channel"><div class="av-col" style="width:360px"><span class="yt-av lg ph">ảnh avatar</span></div><div class="info"><div class="name">Tên kênh mẫu</div><div class="yt-meta">1.1M subscribers<span class="dot"></span>1,142 videos</div></div><button class="yt-btn v-filled">Subscribe</button></div>
+            <div class="yt-video"><div class="yt-thumb ph" style="width:360px">ảnh thumbnail<span class="yt-time">3:47</span></div><div class="txt"><div class="row1"><h3>Tiêu đề video mẫu số hai</h3><button class="yt-iconbtn" aria-label="Thao tác"><span class="ms">more_vert</span></button></div><div class="yt-meta">5.8M views<span class="dot"></span>2 weeks ago</div><div class="ch"><span class="yt-av ph">ảnh</span><span class="yt-meta">Tên kênh mẫu</span></div><div class="badges"><span class="yt-badge media">4K</span></div></div></div>
+          </div></div>
+        </div>
+      </div><div class="cap">desktop hẹp 1024 × 720 · mini guide 72 + channel-renderer + video-renderer (thumb co lại 360)</div></div>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status"><span id="toast-t">Đã copy</span></div>
+
+<script>
+/* 190 vai trò --yt-sys-color-baseline--*, dump bằng getComputedStyle trên html (sáng) và html[dark] (tối) */
+const ROLES=["additive-background","text-primary","text-primary-inverse","text-disabled","base-background","overlay-text-primary","outline","error-indicator","call-to-action","static-white-background","overlay-button-secondary","overlay-call-to-action","tonal-background","additive-background-inverse","static-dark-grey","text-secondary","text-secondary-inverse","text-disabled-inverse","static-brand-black","mono-tonal-hover","mono-tonal-hover-inverse","overlay-background-medium-light","static-brand-white","purple-6","add-on-orange-base-background","add-on-orange-text-primary","static-ad-yellow","overlay-text-secondary","overlay-text-disabled","background-warning","background-complete","text-warning","text-complete","text-error","raised-background","menu-background","inverted-background","inverted-background-hover","outline-inverse","outline-wash","call-to-action-inverse","suggested-action","suggested-action-inverse","touch-response","touch-response-inverse","red-indicator","wordmark-text","error-indicator-inverse","error-background-red","themed-green","themed-green-inverse","themed-overlay-background","brand-red-contrast","genai-1","genai-2","genai-3","genai-4","genai-1-additive","genai-2-additive","genai-3-additive","genai-4-additive","feed-vibrant-gradient1","feed-vibrant-gradient2","feed-vibrant-gradient3","outline-opaque","outline-inverse-opaque","shadow-medium","frosted-glass-mobile","frosted-glass-desktop","mono-filled-hover","mono-filled-hover-inverse","button-chip-background-hover","call-to-action-hover","suggested-action-hover","solid-background","solid-background-inverse","solid-rim","solid-rim-inverse","solid-wash","solid-wash-inverse","tonal-background-inverse","tonal-rim","tonal-rim-inverse","tonal-wash","tonal-wash-inverse","outline-rim","outline-rim-inverse","icon-warning","red-3","red-4","blue-1","blue-2","blue-3","blue-4","blue-5","blue-6","blue-7","green-6","grey-4","grey-6","state-mono-filled-hovered","state-mono-filled-pressed","state-mono-standard-hovered","state-mono-standard-pressed","state-overlay-filled-hovered","state-overlay-filled-pressed","state-overlay-standard-hovered","state-overlay-standard-pressed","static-black","static-brand-red","static-clear-color","static-clear-black","static-grey","static-magenta","overlay-additive-background","overlay-background-solid","overlay-background-heavy","overlay-background-medium","overlay-background-medium-heavy","overlay-background-light","overlay-background-extra-light","overlay-button-primary","overlay-background-brand","overlay-touch-response","overlay-touch-response-inverse","overlay-call-to-action-hover","overlay-text-primary-inverse","overlay-filled-hover","overlay-tonal-hover","overlay-outline","overlay-outline-inverse","overlay-outline-rim","overlay-outline-rim-inverse","overlay-solid-background","overlay-solid-background-inverse","overlay-solid-rim","overlay-solid-rim-inverse","overlay-solid-wash","overlay-solid-wash-inverse","overlay-tonal-background","overlay-tonal-background-inverse","overlay-tonal-rim","overlay-tonal-rim-inverse","overlay-tonal-wash","overlay-tonal-wash-inverse","assistive-feed-vibrant-gradient-1","assistive-feed-vibrant-gradient-2","assistive-feed-vibrant-gradient-3","assistive-feed-themed-gradient-1","assistive-feed-themed-gradient-2","assistive-feed-themed-gradient-3","scrim-background-gradient-1","scrim-background-gradient-2","scrim-background-gradient-3","scrim-background-gradient-4","scrim-background-gradient-5","add-on-green-base-background","add-on-green-primary","add-on-green-text-primary","add-on-magenta-base-background","add-on-magenta-primary","add-on-magenta-text-prinary","add-on-orange-primary","add-on-purple-base-background","add-on-purple-primary","add-on-purple-text-primary","add-on-red-base-background","add-on-red-primary","add-on-red-text-primary","add-on-teal-base-background","add-on-teal-primary","add-on-teal-text-primary","keyboard-background","keyboard-background-action","keyboard-background-bar","keyboard-background-emoji","keyboard-background-key","keyboard-background-key-alt","keyboard-background-switch","keyboard-divider","keyboard-text-action","keyboard-text-character","keyboard-text-chevron","keyboard-text-icon","keyboard-text-symbol","overlay-button-secondary-darker","overlay-green","static-medium-magenta","status-bar","system-bar"];
+const MODES={light:["rgba(0,0,0,0.05)","#0f0f0f","#fff","#909090","#fff","#fff","rgba(0,0,0,0.1)","#c30027","#065fd4","#fff","rgba(255,255,255,0.1)","#3ea6ff","rgba(0,0,0,0.1)","rgba(255,255,255,0.1)","#333","#606060","#aaa","#717171","#000","rgba(0,0,0,0.1)","rgba(255,255,255,0.2)","rgba(0,0,0,0.3)","#fff","#7406ac","#ffd7ca","#882712","#fbc02d","rgba(255,255,255,0.7)","rgba(255,255,255,0.3)","#ffeacf","#deffde","#7c2900","#005917","#990412","#fff","#fff","#0f0f0f","#3f3f3f","rgba(255,255,255,0.2)","rgba(0,0,0,0)","#3ea6ff","#def1ff","#263850","#000","#fff","#e1002d","#000","#f57","rgba(255,85,119,0.2)","#107516","#2ba640","rgba(255,255,255,0.7)","#c30027","#007a65","#7f0e7f","#aa09aa","#ff4e45","rgba(0,122,101,0.2)","rgba(127,14,127,0.2)","rgba(170,9,170,0.2)","rgba(255,78,69,0.2)","#007a65","#7f0e7f","#f57","#e5e5e5","#3f3f3f","rgba(0,0,0,0.25)","rgba(255,255,255,0.9)","rgba(255,255,255,0.9)","#272727","#d9d9d9","rgba(0,0,0,0.1)","#0556bf","#dadfe6","#0f0f0f","#e6e6e6","rgba(255,255,255,0.2)","rgba(255,255,255,0.2)","rgba(255,255,255,0.15)","rgba(255,255,255,0.3)","rgba(255,255,255,0.1)","rgba(0,0,0,0.05)","rgba(255,255,255,0.15)","rgba(255,255,255,0.2)","rgba(255,255,255,0.05)","rgba(255,255,255,0.3)","rgba(255,255,255,0.15)","#be8800","#f57","#fe2a54","#c8c9f9","#a4a6ff","#8689fc","#575bfe","#3b3fff","#2c2ea7","#202275","#8abb03","#bcbbd2","#373740","rgba(255,255,255,0.05)","rgba(255,255,255,0.1)","rgba(0,0,0,0.05)","rgba(0,0,0,0.1)","rgba(0,0,0,0.2)","rgba(0,0,0,0.3)","rgba(255,255,255,0.05)","rgba(255,255,255,0.05)","#0f0f0f","#f03","rgba(255,255,255,0)","rgba(0,0,0,0)","#606060","#ff2791","rgba(40,40,40,0.6)","#000","rgba(0,0,0,0.8)","rgba(0,0,0,0.6)","rgba(0,0,0,0.4)","rgba(0,0,0,0.1)","rgba(0,0,0,0.03)","rgba(255,255,255,0.3)","rgba(225,0,45,0.9)","#fff","#000","#65b8ff","#030303","#e6e6e6","rgba(255,255,255,0.2)","rgba(255,255,255,0.3)","rgba(255,255,255,0.3)","rgba(255,255,255,0.15)","rgba(255,255,255,0.15)","#e6e6e6","#0f0f0f","rgba(255,255,255,0.2)","rgba(255,255,255,0.2)","#fff","rgba(255,255,255,0.2)","rgba(255,255,255,0.3)","rgba(255,255,255,0.15)","rgba(255,255,255,0.15)","rgba(255,255,255,0.15)","rgba(255,255,255,0.15)","rgba(255,255,255,0.15)","#007a65","#7f0e7f","#ff8983","#d4fff8","#ffdeff","#ffe6e6","rgba(255,255,255,0)","rgba(255,255,255,0.3)","rgba(255,255,255,0.6)","rgba(255,255,255,0.9)","white","#fbfee6","#8abb03","#5c7e00","#fb99c9","#c62273","#891c52","#bd3d19","#eabfff","#7406ac","#52077a","#ff8099","#c30027","#7f0119","#d3ffec","#00ad65","#00673c","#ecf1fb","#a6c9fa","#ecf1fb","#fff","#fff","#dbe2fc","#bbc6e7","#caced6","#171c23","#171c23","#666","#2f3032","#46494f","rgba(255,255,255,0.2)","#2ba640","#e01378","rgba(0,0,0,0.6)","#000"],dark:["rgba(255,255,255,0.1)","#f1f1f1","#0f0f0f","#717171","#0f0f0f","#fff","rgba(255,255,255,0.2)","#f57","#3ea6ff","#fff","rgba(255,255,255,0.1)","#3ea6ff","rgba(255,255,255,0.1)","rgba(0,0,0,0.05)","#333","#aaa","#606060","#909090","#000","rgba(255,255,255,0.2)","rgba(0,0,0,0.1)","rgba(0,0,0,0.3)","#fff","#dd98ff","#882712","#ffd7ca","#fbc02d","rgba(255,255,255,0.7)","rgba(255,255,255,0.3)","rgba(124,41,0,0.6)","rgba(0,63,13,0.6)","#ffcd97","#a4ffa4","#ffbfbd","#212121","#282828","#f1f1f1","#d9d9d9","rgba(0,0,0,0.1)","rgba(0,0,0,0)","#065fd4","#263850","#def1ff","#fff","#000","#e1002d","#fff","#c30027","rgba(255,85,119,0.2)","#2ba640","#107516","rgba(0,0,0,0.8)","#f57","#007a65","#7f0e7f","#aa09aa","#ff4e45","rgba(0,122,101,0.3)","rgba(127,14,127,0.3)","rgba(170,9,170,0.3)","rgba(255,78,69,0.3)","#007a65","#7f0e7f","#f57","#3f3f3f","#e5e5e5","rgba(0,0,0,0.25)","rgba(15,15,15,0.7)","rgba(15,15,15,0.8)","#d9d9d9","#272727","rgba(255,255,255,0.2)","#65b8ff","#515561","#e6e6e6","#0f0f0f","rgba(255,255,255,0.2)","rgba(255,255,255,0.2)","rgba(255,255,255,0.3)","rgba(255,255,255,0.15)","rgba(0,0,0,0.1)","rgba(255,255,255,0.1)","rgba(0,0,0,0.05)","rgba(255,255,255,0.05)","rgba(255,255,255,0.2)","rgba(255,255,255,0.15)","rgba(255,255,255,0.3)","#fbc02d","#f03","#fe2a54","#202275","#2c2ea7","#3b3fff","#575bfe","#8689fc","#a4a6ff","#c8c9f9","#f5ffb7","#bcbbd2","#edecfb","rgba(0,0,0,0.05)","rgba(0,0,0,0.1)","rgba(255,255,255,0.05)","rgba(255,255,255,0.1)","rgba(0,0,0,0.2)","rgba(0,0,0,0.3)","rgba(255,255,255,0.05)","rgba(255,255,255,0.05)","#0f0f0f","#f03","rgba(255,255,255,0)","rgba(0,0,0,0)","#606060","#ff2791","rgba(40,40,40,0.6)","#000","rgba(0,0,0,0.8)","rgba(0,0,0,0.6)","rgba(0,0,0,0.4)","rgba(0,0,0,0.1)","rgba(0,0,0,0.03)","rgba(255,255,255,0.3)","rgba(225,0,45,0.9)","#fff","#000","#65b8ff","#030303","#e6e6e6","rgba(255,255,255,0.2)","rgba(255,255,255,0.3)","rgba(255,255,255,0.3)","rgba(255,255,255,0.15)","rgba(255,255,255,0.15)","#e6e6e6","#0f0f0f","rgba(255,255,255,0.2)","rgba(255,255,255,0.2)","#fff","rgba(255,255,255,0.2)","rgba(255,255,255,0.3)","rgba(255,255,255,0.15)","rgba(255,255,255,0.15)","rgba(255,255,255,0.15)","rgba(255,255,255,0.15)","rgba(255,255,255,0.15)","#007a65","#7f0e7f","#ff8983","#005446","#39003f","#590000","rgba(15,15,15,0)","rgba(15,15,15,0.3)","rgba(15,15,15,0.6)","rgba(15,15,15,0.9)","#0f0f0f","#5c7e00","#5c7e00","#fbfee6","#891c52","#fc7aba","#fb99c9","#ffb39b","#52077a","#dd98ff","#eabfff","#7f0119","#f57","#ff8099","#00673c","#00673c","#d3ffec","#171c23","#d5e3fc","#2b3138","#171c23","#2b3138","#42474f","#a0abcb","#30353b","#171c23","#ecf1fb","#fff","#fff","#c5cbd4","rgba(255,255,255,0.2)","#2ba640","#e01378","#fff","#fff"]};
+
+(function () {
+  const root = document.documentElement;
+  const state = { mode: matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light" };
+  try { Object.assign(state, JSON.parse(localStorage.getItem("yt-kit") || "{}")); } catch (e) {}
+  if (!MODES[state.mode]) state.mode = "dark";
+
+  const toast = (t) => {
+    const el = document.getElementById("toast");
+    document.getElementById("toast-t").textContent = t;
+    el.classList.add("show");
+    clearTimeout(toast.t);
+    toast.t = setTimeout(() => el.classList.remove("show"), 1600);
+  };
+  const copy = async (text, msg) => {
+    try { await navigator.clipboard.writeText(text); toast(msg); }
+    catch (e) { toast("Trình duyệt chặn clipboard, hãy copy tay"); }
+  };
+
+  /* nhóm vai trò theo tiền tố tên, giữ thứ tự khai báo trong CSS */
+  const GROUPS = [["Overlay (trên video)", /^overlay/], ["Bàn phím ảo", /^keyboard/], ["Add-on", /^add-on/], ["Tĩnh", /^static/], ["Trạng thái tương tác", /^state-/],
+    ["GenAI & feed", /genai|feed|assistive/], ["Nền & bề mặt", /background|frosted|scrim|raised|menu|solid|tonal|additive/], ["Chữ & icon", /^text|^icon|wordmark/],
+    ["Hành động", /call-to-action|suggested|mono|button|touch/], ["Viền", /outline|rim|wash/], ["Tín hiệu", /error|warning|complete|indicator|green|red|brand/], ["Khác", /./]];
+
+  function renderRoles(vals) {
+    const box = document.getElementById("roles");
+    box.innerHTML = "";
+    const used = new Set();
+    GROUPS.forEach(([title, re]) => {
+      const idx = ROLES.map((r, i) => i).filter((i) => !used.has(i) && re.test(ROLES[i]));
+      if (!idx.length) return;
+      idx.forEach((i) => used.add(i));
+      const h = document.createElement("h3"); h.className = "group"; h.textContent = title + " · " + idx.length; box.appendChild(h);
+      const g = document.createElement("div"); g.className = "roles"; box.appendChild(g);
+      idx.forEach((i) => {
+        const r = ROLES[i], v = vals[i];
+        const b = document.createElement("button");
+        b.className = "role";
+        b.innerHTML = '<span class="sw" style="--c:' + v + '"></span><span class="meta"><b>' + r + "</b><code>" + v + "</code></span>";
+        b.onclick = () => copy(v, "Đã copy " + r + " " + v);
+        g.appendChild(b);
+      });
+    });
+  }
+
+  function apply() {
+    const vals = MODES[state.mode];
+    ROLES.forEach((r, i) => root.style.setProperty("--yt-" + r, vals[i]));
+    root.dataset.mode = state.mode;
+    document.querySelectorAll("#mode button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === state.mode));
+    renderRoles(vals);
+    try { localStorage.setItem("yt-kit", JSON.stringify(state)); } catch (e) {}
+  }
+  document.querySelectorAll("#mode button").forEach((b) => (b.onclick = () => { state.mode = b.dataset.v; apply(); }));
+
+  /* thang chữ thực dùng: tên kit · phần tử đo · size/lh · weight */
+  const TYPE = [["Title / video", "ytd-video-renderer #video-title", 18, 26, 400], ["Title / channel", "ytd-channel-renderer #channel-title", 18, 26, 400],
+    ["Search input", "yt-searchbox input", 16, 22, 400], ["Section header", "ytd-guide-section-renderer #guide-section-title", 16, 22, 500],
+    ["Label / button, chip", "ytSpecButtonShapeNext · ytChipShapeChip", 14, 20, 500], ["Body / guide entry", "ytd-guide-entry-renderer .title", 14, 20, 400],
+    ["Body / guide active", "ytd-guide-entry-renderer[active] .title", 14, 20, 500], ["Caption / metadata", "#metadata-line · ytd-channel-name · snippet", 12, 18, 400],
+    ["Caption / badge", "badge-shape · #prominent-label-text", 12, 18, 500], ["Caption / sponsored", "ytBadgeShapeAd", 12, 18, 700], ["Mini guide label", "ytd-mini-guide-entry-renderer", 10, 14, 400]];
+  const ts = document.getElementById("typescale");
+  TYPE.forEach(([name, src, size, lh, w]) => {
+    const row = document.createElement("div");
+    row.className = "type-row";
+    row.title = src;
+    row.innerHTML = '<span class="meta">' + name + '</span><span class="t" style="font-size:' + size + "px;line-height:" + lh + "px;font-weight:" + w + '">Tiêu đề video mẫu · 111M views</span><span class="meta">' + size + " / " + lh + " · " + w + "</span>";
+    ts.appendChild(row);
+  });
+
+  /* thang bo góc: --yt-sys-measurement--radius-* + guide 10 */
+  const sh = document.getElementById("shapes");
+  [["min", 2], ["condensed", 4], ["compact", 8], ["guide", 10], ["cozy", 12], ["comfortable", 16], ["expanded", 18], ["prominent", 20], ["hero", 24], ["huge", 32], ["max", 48]].forEach(([n, r]) => {
+    const c = document.createElement("div");
+    c.className = "shape-cell";
+    c.innerHTML = '<i style="border-radius:var(--yt-r-' + n + ')"></i>' + n + " · " + r;
+    sh.appendChild(c);
+  });
+  const full = document.createElement("div");
+  full.className = "shape-cell"; full.innerHTML = '<i style="border-radius:50%"></i>50% · avatar, icon';
+  sh.appendChild(full);
+
+  /* nút copy HTML cho mỗi thẻ */
+  document.querySelectorAll(".spec").forEach((spec) => {
+    const stage = spec.querySelector(".stage");
+    if (!stage || !spec.querySelector(".spec-h")) return;
+    let foot = spec.querySelector(".spec-f");
+    if (!foot) { foot = document.createElement("div"); foot.className = "spec-f"; foot.innerHTML = '<span class="note"></span>'; spec.appendChild(foot); }
+    const b = document.createElement("button");
+    b.className = "copy"; b.innerHTML = '<span class="ms">content_copy</span>HTML';
+    b.onclick = () => copy(stage.innerHTML.trim().replace(/\n\s+/g, "\n"), "Đã copy HTML của " + spec.querySelector(".spec-h b").textContent);
+    foot.appendChild(b);
+  });
+
+  /* token của chế độ hiện tại dưới dạng khối :root */
+  document.getElementById("copy-tokens").onclick = () => {
+    const vals = MODES[state.mode];
+    const x = state.mode === "dark" ? ["#121212", "#303030", "rgba(255,255,255,.08)", "#303030"] : ["#fff", "#c6c6c6", "#f8f8f8", "#d3d3d3"];
+    const lines = ROLES.map((r, i) => "  --yt-" + r + ": " + vals[i] + ";");
+    const radii = [...document.querySelectorAll("#shapes .shape-cell")].slice(0, -1).map((c) => "  --yt-r-" + c.textContent.split(" · ")[0] + ": " + c.textContent.split(" · ")[1] + "px;");
+    copy(":root {\n" + lines.join("\n") + "\n" + radii.join("\n") + "\n  --yt-masthead-h: 56px;\n  --yt-guide-w: 240px;\n  --yt-mini-guide-w: 72px;\n  --yt-font: Roboto, Arial, sans-serif;\n  --yt-x-focus: #005fcc;\n  --yt-x-summary-custom: #082233;\n  --yt-x-searchbox-bg: " + x[0] + ";\n  --yt-x-searchbox-border: " + x[1] + ";\n  --yt-x-searchbtn-bg: " + x[2] + ";\n  --yt-x-searchbtn-border: " + x[3] + ";\n}", "Đã copy token " + (state.mode === "dark" ? "tối" : "sáng"));
+  };
+
+  /* làm nổi mục đang xem */
+  const links = [...document.querySelectorAll(".side a")];
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (e.isIntersecting) links.forEach((a) => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id));
+  }), { rootMargin: "-30% 0px -60% 0px" });
+  document.querySelectorAll("section.block").forEach((s) => io.observe(s));
+
+  /* chip bấm được */
+  document.addEventListener("click", (e) => {
+    const c = e.target.closest(".yt-chips .yt-chip");
+    if (!c) return;
+    c.parentElement.querySelectorAll(".yt-chip").forEach((x) => { x.classList.toggle("on", x === c); if (x.hasAttribute("role")) x.setAttribute("aria-selected", x === c); });
+  });
+
+  apply();
+})();
+</script>
+</body>
+</html>

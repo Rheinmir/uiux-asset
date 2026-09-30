@@ -1,0 +1,1123 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta name="ui-kit-id" content="apple-com">
+<!-- UI kit rút từ apple.com (28/09/2026) bằng skill ui-kit-from-code, nhánh B04 (site đang chạy, không có code).
+     Màu = biến --sk-* thật đọc từ stylesheet (:root / .theme-light / .theme-dark); số đo = getComputedStyle của phần tử thật
+     trên 24 trang đã quét. Không chứa ảnh, logo hay nội dung của Apple (RULE-09): ảnh là khối giữ chỗ, chữ là chữ mẫu. -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Apple.com UI Kit</title>
+<meta name="ui-kit-skip" content="9b602d9384:logo chứng nhận địa phương của Apple (RULE-09);2ce7b8c67d:ảnh/video của Apple (RULE-09);cab88036d7:ảnh/video của Apple (RULE-09);e0f5b6bb08:ảnh/video của Apple (RULE-09);219d920b19:ảnh/video của Apple (RULE-09);d19f69f815:ảnh/video của Apple (RULE-09);ccb3714a59:ảnh/video của Apple (RULE-09);b5ec7f62b5:ảnh/video của Apple (RULE-09);0cdb15f144:ảnh/video của Apple (RULE-09);30e2cf14be:ảnh/video của Apple (RULE-09);c85070794c:ảnh/video của Apple (RULE-09);4c58d50114:ảnh/video của Apple (RULE-09);c5cd90e05f:ảnh/video của Apple (RULE-09);77ee5d2ff3:ảnh/video của Apple (RULE-09);a5e006a50c:ảnh/video của Apple (RULE-09);6d73b2fb99:ảnh/video của Apple (RULE-09);d16be82b58:ảnh/video của Apple (RULE-09);5ba625bff6:ảnh/video của Apple (RULE-09);1c8d0a7bb8:ảnh/video của Apple (RULE-09);efc23439e4:ảnh/video của Apple (RULE-09);c131f0df64:ảnh/video của Apple (RULE-09);1f58360785:ảnh/video của Apple (RULE-09);fdc18c5d66:ảnh/video của Apple (RULE-09);ba0cefb26b:ảnh/video của Apple (RULE-09);88fa31829f:ảnh/video của Apple (RULE-09);4cabeb475a:ảnh/video của Apple (RULE-09);c00e0ea029:ảnh/video của Apple (RULE-09);6a570d2198:ảnh/video của Apple (RULE-09);cbfda3d82c:ảnh/video của Apple (RULE-09);d87ca3e6da:ảnh/video của Apple (RULE-09);14f5cb9ef0:ảnh/video của Apple (RULE-09);9ba77cb5c3:ảnh/video của Apple (RULE-09);02d7a77463:ảnh/video của Apple (RULE-09);8d73852d37:ảnh/video của Apple (RULE-09);8ee5735b28:ảnh/video của Apple (RULE-09);e31c7fab5e:ảnh/video của Apple (RULE-09);a1abb5e643:ảnh/video của Apple (RULE-09);c7cfa1a464:ảnh/video của Apple trong khung r28 (RULE-09);7748c2feb1:ảnh/video của Apple trong khung r28 (RULE-09);433e00bdeb:ảnh/video của Apple trong khung r28 (RULE-09)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Token: tên biến đúng như stylesheet của apple.com (--sk-*). Giá trị sáng/tối do script bên dưới ghi lên :root
+   từ bảng ROLES/PALETTES. --ak-* là số đo không phải màu vai trò (bóng, gradient, easing, màu hoàn thiện) đo bằng getComputedStyle. */
+:root {
+  --sk-glyph:#000000; --sk-glyph-gray:#1D1D1F; --sk-glyph-gray-secondary:#6E6E73; --sk-glyph-blue:#0066CC;
+  --sk-fill:#FFFFFF; --sk-fill-secondary:#FAFAFC; --sk-fill-tertiary:#F5F5F7; --sk-fill-gray-quaternary:#E8E8ED;
+  --sk-fill-blue:#0071E3; --sk-body-background-color:#FFFFFF; --sk-body-text-color:#1D1D1F; --sk-focus-color:#0071E3;
+  --ak-text: "SF Pro Text", -apple-system, BlinkMacSystemFont, Inter, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --ak-display: "SF Pro Display", -apple-system, BlinkMacSystemFont, Inter, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --ak-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --ak-ease-nav: .32s cubic-bezier(.4, 0, .6, 1);          /* .globalnav-link transition */
+  --ak-ease-ln: .24s cubic-bezier(.28, .11, .32, 1);        /* .ac-ln-title / menu underline */
+  --ak-ease-card: .7s cubic-bezier(.42, .46, .45, .99);     /* .store-card box-shadow */
+  --ak-ribbon-dark: #1D1D1F;                               /* .ribbon-content-wrapper trên /vn */
+  --ak-music: #DE9444;                                      /* .media-gallery-bg-wrapper-music */
+  --ak-ease-ctl: .1s linear;                                /* IconControl */
+  --ak-blur-nav: saturate(1.8) blur(20px);                  /* #globalnav backdrop-filter */
+  --ak-shadow-ccard: 2px 4px 12px 0 rgba(0,0,0,.08);        /* .rf-ccard nghỉ */
+  --ak-shadow-ccard-hover: 2px 4px 16px 0 rgba(0,0,0,.16);  /* .rf-ccard :hover */
+  --ak-shadow-store: 0 6px 16px -8px rgba(0,0,0,.04);       /* .store-card nghỉ */
+  --ak-shadow-store-hover: 0 14.65px 29.84px -14.92px rgba(0,0,0,.145);
+  --ak-shadow-paddle: -9px 0 9px -13px var(--sk-fill-gray-tertiary); /* ChapterNav paddle */
+  --ak-swatch-inset: inset 0 1px 1px 0 rgba(0,0,0,.1);      /* .colornav-swatch::after */
+  --ak-gn-dark: rgba(29,29,31,.8);                        /* #globalnav trên header tối (trang chủ) */
+  --ak-gn-dark-link: rgba(255,255,255,.8);                 /* .globalnav-link trên header tối */
+  --ak-gradient-hero: linear-gradient(90deg, rgb(2,38,64), rgb(87,134,171)); /* .gradient-text-blue */
+  --ak-gradient-violet: linear-gradient(90deg, rgb(37,53,224), rgb(160,90,240)); /* span 190392cda2, đầu gradient đo được, đuôi theo spec */
+  --ak-gradient-green: linear-gradient(90deg, rgb(10,134,26), rgb(0,190,130));   /* span ec0b57635b, như trên */
+  --ak-finish-silver:#E3E4E5; --ak-finish-blush:#E8D0D0; --ak-finish-citrus:#DDDC8C; --ak-finish-indigo:#596680;
+  --ak-finish-skyblue:#C8D8E0; --ak-finish-starlight:#FAF6F2; --ak-finish-midnight:#222930; --ak-finish-spaceblack:#2E2C2E;
+  color-scheme: light;
+}
+:root[data-mode="dark"] { color-scheme: dark; }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--sk-body-background-color); color: var(--sk-body-text-color); font: 400 17px/1.47059 var(--ak-text); letter-spacing: -.374px; -webkit-font-smoothing: antialiased; }
+code, .code { font-family: var(--ak-mono); font-size: 12px; letter-spacing: 0; }
+:focus-visible { outline: 2px solid var(--sk-focus-color); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+svg.i { width: 1em; height: 1em; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+svg.i.fill { fill: currentColor; stroke: none; }
+
+/* ---------- vỏ trang (mặc token của kit) ---------- */
+.shell { display: grid; grid-template-columns: 236px minmax(0, 1fr); min-height: 100vh; }
+.side { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 20px 12px; background: var(--sk-fill-secondary); border-right: 1px solid var(--sk-fill-gray-quaternary); display: flex; flex-direction: column; gap: 1px; }
+.brand { display: flex; align-items: center; gap: 10px; padding: 4px 10px 14px; }
+.brand-mark { width: 32px; height: 32px; border-radius: 8px; background: var(--sk-fill-gray); color: var(--sk-fill); display: grid; place-items: center; font: 600 11px var(--ak-text); letter-spacing: 0; }
+.brand b { font: 600 15px/1.2 var(--ak-display); display: block; }
+.brand small { color: var(--sk-glyph-gray-secondary); font-size: 12px; letter-spacing: -.12px; }
+.side h6 { margin: 14px 10px 4px; font: 600 11px var(--ak-text); letter-spacing: .4px; text-transform: uppercase; color: var(--sk-glyph-gray-tertiary); }
+.side a { display: flex; align-items: center; height: 32px; padding: 0 10px; border-radius: 8px; color: var(--sk-glyph-gray-secondary-alt); text-decoration: none; font-size: 14px; letter-spacing: -.224px; }
+.side a:hover { background: var(--sk-fill-gray-quaternary-alpha); }
+.side a.on { background: var(--sk-fill-gray); color: var(--sk-fill); }
+main { padding: 0 40px 96px; min-width: 0; }
+
+.bar { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 20px; padding: 12px 0; background: var(--sk-globalnav-background); -webkit-backdrop-filter: var(--ak-blur-nav); backdrop-filter: var(--ak-blur-nav); border-bottom: 1px solid var(--sk-fill-gray-quaternary); }
+.bar .grow { flex: 1; }
+.ctl { display: flex; align-items: center; gap: 8px; }
+.ctl > span { font-size: 12px; color: var(--sk-glyph-gray-secondary); letter-spacing: -.12px; }
+.seg { display: inline-flex; padding: 3px; gap: 2px; border-radius: 999px; background: var(--sk-fill-gray-quaternary); }
+.seg button { height: 28px; padding: 0 14px; border: none; border-radius: 999px; background: transparent; color: var(--sk-glyph-gray); font: 400 13px var(--ak-text); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--sk-fill); box-shadow: var(--ak-shadow-ccard); font-weight: 600; }
+
+.intro { padding: 56px 0 8px; max-width: 820px; }
+.intro .eyebrow { font-family: var(--ak-mono); font-size: 12px; color: var(--sk-glyph-orange); letter-spacing: 0; }
+.intro h1 { font: 600 56px/60px var(--ak-display); letter-spacing: -.28px; margin: 10px 0 14px; text-wrap: balance; }
+.intro p { font-size: 19px; line-height: 27px; letter-spacing: .012em; color: var(--sk-glyph-gray-secondary); margin: 0; max-width: 66ch; }
+.intro .facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+.fact { font-family: var(--ak-mono); font-size: 12px; padding: 4px 10px; border-radius: 999px; background: var(--sk-fill-tertiary); color: var(--sk-glyph-gray-secondary-alt); letter-spacing: 0; }
+
+section.block { padding-top: 64px; scroll-margin-top: 60px; }
+section.block > header { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
+section.block h2 { font: 600 40px/44px var(--ak-display); letter-spacing: 0; margin: 0; }
+section.block > header p { margin: 0; color: var(--sk-glyph-gray-secondary); max-width: 74ch; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 20px; }
+.grid.wide { grid-template-columns: repeat(auto-fill, minmax(480px, 1fr)); }
+.spec { background: var(--sk-fill-tertiary); border-radius: 18px; display: flex; flex-direction: column; min-width: 0; }
+.spec.full { grid-column: 1 / -1; }
+.spec-h { display: flex; align-items: center; gap: 8px; padding: 16px 18px 0; flex-wrap: wrap; }
+.spec-h b { font: 600 17px var(--ak-text); }
+.kind { font-family: var(--ak-mono); font-size: 11px; padding: 2px 8px; border-radius: 6px; background: var(--sk-badge-neutral-background); color: var(--sk-badge-neutral-text-color); letter-spacing: 0; }
+.spec-h .dp { margin-left: auto; font-family: var(--ak-mono); font-size: 11px; color: var(--sk-glyph-gray-secondary); letter-spacing: 0; font-variant-numeric: tabular-nums; }
+.stage { padding: 22px 18px; display: flex; flex-wrap: wrap; align-items: center; gap: 14px; min-height: 96px; overflow-x: auto; }
+.stage.col { flex-direction: column; align-items: stretch; }
+.stage.center { justify-content: center; }
+.stage.white { background: var(--sk-fill); margin: 12px 12px 0; border-radius: 12px; }
+.stage.black { background: var(--sk-glyph); margin: 12px 12px 0; border-radius: 12px; }
+.st-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.st-lab { font-family: var(--ak-mono); font-size: 10px; color: var(--sk-glyph-gray-tertiary); letter-spacing: 0; width: 100%; margin: 4px 0 -4px; }
+.spec-f { display: flex; align-items: center; gap: 8px; padding: 8px 12px 14px 18px; margin-top: auto; }
+.spec-f .note { font-size: 12px; line-height: 16px; letter-spacing: -.12px; color: var(--sk-glyph-gray-secondary); flex: 1; }
+.copy { height: 30px; padding: 0 12px; border-radius: 999px; border: none; background: transparent; color: var(--sk-glyph-blue); font: 400 13px var(--ak-text); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; white-space: nowrap; }
+.copy:hover { background: var(--sk-fill-gray-quaternary-alpha); }
+
+/* nền tảng */
+.roles { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
+.role { border-radius: 12px; padding: 12px; min-height: 78px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: inset 0 0 0 1px var(--sk-fill-gray-quaternary-alpha); cursor: pointer; border: none; text-align: left; font: inherit; }
+.role b { font-size: 12px; font-weight: 600; letter-spacing: -.12px; word-break: break-all; }
+.role code { font-size: 11px; opacity: .85; }
+.role-sep { grid-column: 1 / -1; font: 600 12px var(--ak-text); color: var(--sk-glyph-gray-secondary); margin-top: 10px; letter-spacing: -.12px; }
+.type-row { display: grid; grid-template-columns: 210px minmax(0, 1fr) 150px; gap: 16px; align-items: baseline; padding: 12px 0; border-bottom: 1px solid var(--sk-fill-gray-quaternary); }
+.type-row:last-child { border-bottom: none; }
+.type-row .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.type-row .meta { font-family: var(--ak-mono); font-size: 11px; color: var(--sk-glyph-gray-secondary); letter-spacing: 0; font-variant-numeric: tabular-nums; }
+.shape-cell { display: flex; flex-direction: column; align-items: center; gap: 8px; font-family: var(--ak-mono); font-size: 11px; color: var(--sk-glyph-gray-secondary); letter-spacing: 0; text-align: center; }
+.shape-cell i { display: block; width: 72px; height: 72px; background: var(--sk-fill-gray-quaternary); }
+table.tok { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+table.tok th, table.tok td { text-align: left; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--sk-fill-gray-quaternary); font-size: 13px; letter-spacing: -.1px; vertical-align: top; }
+table.tok th { font-weight: 600; color: var(--sk-glyph-gray-secondary); font-size: 12px; }
+table.tok td:first-child { font-family: var(--ak-mono); font-size: 12px; letter-spacing: 0; }
+.scroll-x { overflow-x: auto; }
+
+/* ================= thành phần .ak-* (chỉ dùng --sk-* và --ak-*) ================= */
+/* nút: .button · .button-reduced · .ac-ln-button · .form-button */
+.ak-btn { --bg: var(--sk-button-background); --bgh: var(--sk-button-background-hover); --bga: var(--sk-button-background-active);
+  --fg: var(--sk-button-color); --fgh: var(--fg); --bd: transparent;
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; white-space: nowrap; text-decoration: none;
+  font: 400 17px/20px var(--ak-text); letter-spacing: -.374px; padding: 11px 21px; min-width: 28px; border-radius: 980px;
+  background: var(--bg); color: var(--fg); border: 1px solid var(--bd); transition: background-color var(--ak-ease-ctl), color var(--ak-ease-ctl), border-color var(--ak-ease-ctl); }
+.ak-btn:hover, .ak-btn.is-hover { background: var(--bgh); color: var(--fgh); }
+.ak-btn:active, .ak-btn.is-active { background: var(--bga); color: var(--fgh); }
+.ak-btn.reduced { font-size: 14px; line-height: 18px; letter-spacing: -.224px; padding: 8px 15px; }
+.ak-btn.small { font-size: 12px; line-height: 16px; letter-spacing: -.12px; padding: 3px 10px; }
+.ak-btn.form { font-size: 17px; line-height: 20px; padding: 17px 30px; border-radius: 12px; min-width: 284px; }
+.ak-btn.neutral { --bg: var(--sk-button-neutral-background); --bgh: var(--sk-button-neutral-background-hover); --bga: var(--sk-button-neutral-background-active); --fg: var(--sk-button-neutral-color); }
+.ak-btn.secondary { --bg: transparent; --fg: var(--sk-button-secondary-color); --bd: var(--sk-button-secondary-color); --fgh: var(--sk-button-color); }
+.ak-btn.secondary:hover, .ak-btn.secondary.is-hover, .ak-btn.secondary:active, .ak-btn.secondary.is-active { border-color: transparent; }
+.ak-btn.secondary-neutral { --bg: transparent; --fg: var(--sk-button-secondary-neutral-color); --bd: var(--sk-button-secondary-neutral-color);
+  --bgh: var(--sk-button-secondary-neutral-background-hover); --bga: var(--sk-button-neutral-background-active); --fgh: var(--sk-button-secondary-neutral-color-hover); }
+.ak-btn.secondary-neutral:hover, .ak-btn.secondary-neutral.is-hover, .ak-btn.secondary-neutral:active, .ak-btn.secondary-neutral.is-active { border-color: transparent; }
+.ak-btn.elevated { font-size: 17px; line-height: 20px; padding: 11px 21px; }
+.ak-btn.locale { border-radius: 8px; font-size: 14px; line-height: 18px; letter-spacing: -.224px; padding: 8px 15px; --bg: var(--sk-button-neutral-background); --bgh: var(--sk-button-neutral-background-hover); --bga: var(--sk-button-neutral-background-active); --fg: var(--sk-button-neutral-color); }
+.theme-inv { --sk-button-neutral-background: var(--sk-fill-tertiary); --sk-button-neutral-background-hover: var(--sk-fill); --sk-button-neutral-background-active: var(--sk-fill-gray-quaternary); --sk-button-neutral-color: var(--sk-glyph); }
+.ak-btn.ring:focus-visible, .ak-btn.is-ring { outline: none; box-shadow: 0 0 0 3px var(--sk-body-background-color), 0 0 0 5px var(--sk-focus-color); }
+
+/* link chữ: a · .more · .icon-wrapper · .link-standalone · .as-buttonlink */
+.ak-link { color: var(--sk-body-link-color); text-decoration: none; display: inline-flex; align-items: baseline; gap: 2px; cursor: pointer; }
+.ak-link:hover, .ak-link.is-hover { text-decoration: underline; }
+.ak-link svg.i { width: .6em; height: .6em; stroke-width: 2.4; transform: translateY(.05em); }
+.ak-link.s12 { font-size: 12px; line-height: 16px; letter-spacing: -.12px; }
+.ak-link.s14 { font-size: 14px; line-height: 20px; letter-spacing: -.224px; }
+.ak-link.s17 { font-size: 17px; line-height: 25px; }
+.ak-link.s21 { font-size: 21px; line-height: 25px; letter-spacing: .231px; }
+.ak-link.s24 { font-size: 24px; line-height: 32px; letter-spacing: .216px; }
+.ak-link.strong { font-weight: 600; }
+.ak-link.gray { color: var(--sk-glyph-gray-secondary); }
+.ak-link.ink { color: var(--sk-glyph-gray); }
+.ak-link.fine { color: var(--sk-glyph-gray-secondary-alt-alpha); }
+
+/* điều khiển tròn: .iconcontrol · .paddlenav-arrow · .play-pause-button · tile-button */
+.ak-ictl { --bg: var(--sk-iconcontrol-scrim-color); --bgh: var(--sk-iconcontrol-scrim-color-hover); --bga: var(--sk-iconcontrol-scrim-color-active);
+  --fg: var(--sk-iconcontrol-content-color); --fgh: var(--sk-iconcontrol-content-color-hover); --d: 36px; --ic: 16px;
+  width: var(--d); height: var(--d); border-radius: 50%; border: 1px solid transparent; display: inline-grid; place-items: center; cursor: pointer; padding: 0;
+  background: var(--bg); color: var(--fg); font-size: var(--ic); transition: background-color var(--ak-ease-ctl), color var(--ak-ease-ctl), opacity var(--ak-ease-ctl), transform var(--ak-ease-ctl); }
+.ak-ictl:hover, .ak-ictl.is-hover { background: var(--bgh); color: var(--fgh); }
+.ak-ictl:active, .ak-ictl.is-active { background: var(--bga); color: var(--fgh); }
+.ak-ictl.primary { --bg: var(--sk-fill-gray); --bgh: var(--sk-button-neutral-background-hover); --bga: var(--sk-button-neutral-background-active); --fg: var(--sk-fill); --fgh: var(--sk-fill); }
+.ak-ictl.secondary { --bg: transparent; border-color: var(--sk-fill-gray); --bgh: var(--sk-button-secondary-neutral-background-hover); --bga: var(--sk-button-neutral-background-active); --fg: var(--sk-fill-gray); --fgh: var(--sk-button-secondary-neutral-color-hover); }
+.ak-ictl.secondary:hover, .ak-ictl.secondary.is-hover, .ak-ictl.secondary:active, .ak-ictl.secondary.is-active { border-color: transparent; }
+.ak-ictl.paddle { --d: 56px; --ic: 22px; --bg: var(--sk-paddlenav-background); --bgh: var(--sk-paddlenav-background-hover); --bga: var(--sk-paddlenav-background-active); --fg: var(--sk-paddlenav-arrow-color); --fgh: var(--sk-iconcontrol-content-color-hover); }
+.ak-ictl.paddle.s { --d: 36px; --ic: 16px; }
+.ak-ictl.play { --d: 56px; --ic: 18px; --bg: transparent; --bgh: transparent; --bga: transparent; --fg: var(--sk-glyph-gray); --fgh: var(--sk-glyph-gray); box-shadow: inset 0 0 0 2px var(--sk-fill-gray-tertiary-alpha); }
+.ak-ictl.play.s { --d: 36px; --ic: 14px; box-shadow: none; --bg: var(--sk-tile-button-background); --bgh: var(--sk-paddlenav-background-hover); --bga: var(--sk-paddlenav-background-active); }
+.ak-ictl.play:active, .ak-ictl.play.is-active { transform: scale(.95); }
+.ak-ictl.tilebtn { --bg: var(--sk-fill-gray); --bgh: var(--sk-button-neutral-background-hover); --bga: var(--sk-button-neutral-background-active); --fg: var(--sk-fill); --fgh: var(--sk-fill); }
+.ak-ictl.chat { --d: 54px; --ic: 26px; --bg: transparent; --bgh: transparent; --bga: transparent; --fg: var(--sk-glyph-gray); --fgh: var(--sk-glyph-gray); }
+.ak-ictl.ghost { --bg: transparent; --bgh: transparent; --bga: var(--sk-fill-gray-quaternary); --fg: var(--sk-glyph-gray); --fgh: var(--sk-glyph-gray); border-radius: 0; }
+.ak-ictl[disabled] { opacity: .42; cursor: default; }
+.ak-paddle-tall { width: 36px; height: 116px; border: none; background: var(--sk-fill); color: var(--sk-paddlenav-arrow-color); box-shadow: var(--ak-shadow-paddle); display: grid; place-items: center; font-size: 18px; cursor: pointer; }
+.ak-paddle-tall:hover, .ak-paddle-tall.is-hover { color: var(--sk-iconcontrol-content-color-hover); }
+
+/* globalnav */
+.ak-gn { width: 100%; height: 44px; background: var(--sk-globalnav-background); -webkit-backdrop-filter: var(--ak-blur-nav); backdrop-filter: var(--ak-blur-nav); }
+.ak-gn .in { max-width: 1024px; height: 100%; margin: 0 auto; padding: 0 22px; display: flex; align-items: center; justify-content: space-between; }
+.ak-gn a { font: 400 12px/12px var(--ak-text); letter-spacing: -.12px; color: var(--sk-glyph-gray-alpha); text-decoration: none; height: 44px; padding: 0 8px; display: flex; align-items: center; transition: color var(--ak-ease-nav); white-space: nowrap; }
+.ak-gn a:hover, .ak-gn a.is-hover { color: var(--sk-glyph); }
+.ak-gn a svg.i { font-size: 15px; }
+.ak-gn .logo { width: 14px; height: 17px; border-radius: 3px; background: currentColor; opacity: .85; }
+.ak-gn.dark { background: var(--ak-gn-dark); }
+.ak-gn.dark a { color: var(--ak-gn-dark-link); }
+.ak-gn.dark a:hover, .ak-gn.dark a.is-hover { color: var(--sk-button-color); }
+.ak-gn.compact { height: 48px; }
+.ak-gn.compact .in { padding: 0 16px; }
+.ak-gn.compact a { height: 48px; padding: 0 10px; }
+.ak-gn.compact a svg.i { font-size: 17px; }
+.ak-flyout { background: var(--sk-fill-secondary); padding: 40px 0 84px; }
+.ak-flyout .cols { max-width: 980px; margin: 0 auto; padding: 0 22px; display: flex; gap: 44px; flex-wrap: wrap; }
+.ak-flyout h3 { margin: 0 0 14px; font: 400 12px/16px var(--ak-text); letter-spacing: -.12px; color: var(--sk-glyph-gray-secondary); }
+.ak-flyout .big a { display: block; font: 600 24px/28px var(--ak-display); letter-spacing: .007em; color: var(--sk-glyph-gray); text-decoration: none; padding: 3px 0; }
+.ak-flyout .sm a { display: block; font: 600 12px/16px var(--ak-text); letter-spacing: -.12px; color: var(--sk-glyph-gray-secondary-alt); text-decoration: none; padding: 7px 11px 7px 0; transition: color var(--ak-ease-nav); }
+.ak-flyout a:hover, .ak-flyout a.is-hover { color: var(--sk-glyph); }
+.ak-msg { height: 40px; display: flex; align-items: center; justify-content: center; gap: 12px; background: var(--sk-fill-tertiary); font-size: 12px; letter-spacing: -.12px; }
+.ak-ls { background: var(--sk-fill-secondary); min-height: 70px; display: flex; align-items: center; gap: 16px; padding: 12px 22px; flex-wrap: wrap; font-size: 17px; }
+.ak-ls .copy-t { flex: 1 1 260px; color: var(--sk-glyph-gray); font-size: 14px; line-height: 18px; letter-spacing: -.224px; }
+.ak-select-ls { width: 349px; max-width: 100%; height: 42px; border-radius: 11px; border: 3px solid var(--sk-fill-gray-quaternary-alpha); background: var(--sk-fill-secondary); display: flex; align-items: center; justify-content: space-between; padding: 0 14px; font-size: 17px; color: var(--sk-glyph-gray-alpha); }
+
+/* localnav · rf-navbar */
+.ak-ln { width: 100%; height: 52px; background: var(--sk-globalnav-background); -webkit-backdrop-filter: var(--ak-blur-nav); backdrop-filter: var(--ak-blur-nav); border-bottom: 1px solid var(--sk-fill-gray-tertiary-alpha); }
+.ak-ln .in { max-width: 980px; height: 100%; margin: 0 auto; padding: 0 22px; display: flex; align-items: center; gap: 20px; }
+.ak-ln .title { font: 600 21px/24px var(--ak-display); letter-spacing: .231px; color: var(--sk-glyph); text-decoration: none; margin-right: auto; white-space: nowrap; }
+.ak-ln .menu { display: flex; align-items: center; gap: 24px; }
+.ak-ln .menu a { font: 400 12px/22px var(--ak-text); letter-spacing: -.12px; color: var(--sk-glyph); text-decoration: none; position: relative; opacity: .8; transition: opacity var(--ak-ease-ln); white-space: nowrap; }
+.ak-ln .menu a:hover, .ak-ln .menu a.is-hover { opacity: 1; }
+.ak-ln .menu a.current { opacity: 1; }
+.ak-ln .menu a.current::after { content: ""; position: absolute; left: 0; right: 0; bottom: -15px; height: 1px; border-radius: 1px; background: var(--sk-glyph); opacity: .8; }
+.ak-rfnav { width: 100%; background: var(--sk-fill-tertiary); min-height: 61px; display: flex; align-items: center; gap: 32px; padding: 0 22px; overflow-x: auto; }
+.ak-rfnav a { font-size: 17px; line-height: 21px; color: var(--sk-glyph-gray); text-decoration: none; white-space: nowrap; padding-bottom: 1px; transition: color var(--ak-ease-nav); }
+.ak-rfnav a.active { font-weight: 600; }
+.ak-rfnav a:hover, .ak-rfnav a.is-hover { color: var(--sk-glyph-blue); }
+
+/* ribbon */
+.ak-ribbon { width: 100%; padding: 16px 22px; background: var(--sk-fill-tertiary); text-align: center; font-size: 14px; line-height: 20px; letter-spacing: -.224px; color: var(--sk-glyph-gray); }
+.ak-ribbon.white { background: var(--sk-fill); }
+.ak-ribbon.big { padding: 24px 22px; font-size: 17px; line-height: 25px; letter-spacing: -.374px; }
+.ak-ribbon.dark { background: var(--ak-ribbon-dark); color: var(--sk-glyph-gray-secondary); --sk-glyph-gray-secondary: #86868B; }
+.ak-ribbon.blue { background: var(--sk-fill-blue); color: var(--sk-button-color); }
+.ak-ribbon.blue .ak-link { color: inherit; text-decoration: underline; }
+
+/* chapternav */
+.ak-chap { display: flex; align-items: flex-end; gap: 8px; overflow-x: auto; padding: 4px; }
+.ak-chap a { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 100px; text-decoration: none; color: var(--sk-glyph-gray-alpha); padding: 0 8px; }
+.ak-chap .ph { width: 54px; height: 54px; border-radius: 10px; background: var(--sk-fill-gray-quaternary); }
+.ak-chap .lab { font: 600 14px/18px var(--ak-text); letter-spacing: -.224px; text-align: center; }
+.ak-chap .new { font: 400 12px/16px var(--ak-text); letter-spacing: -.12px; color: var(--sk-glyph-orange); }
+.ak-chap a:hover .lab, .ak-chap a.is-hover .lab { color: var(--sk-glyph-blue); }
+
+/* tabnav: pill (tabnav-link r99) · platter (TabNav r999) · gạch dưới (tabnav-link current) · chip viền (r20) */
+.ak-pills { display: inline-flex; gap: 4px; flex-wrap: wrap; }
+.ak-pill { height: 36px; padding: 0 16px; border-radius: 99px; display: inline-flex; align-items: center; font: 400 14px var(--ak-text); letter-spacing: -.224px; color: var(--sk-glyph-gray); background: transparent; border: none; cursor: pointer; white-space: nowrap; opacity: .8; transition: opacity var(--ak-ease-ln), background-color var(--ak-ease-ctl); }
+.ak-pill:hover, .ak-pill.is-hover { opacity: 1; }
+.ak-pill.on { background: var(--sk-fill-gray); color: var(--sk-fill); opacity: 1; }
+.ak-platter { display: inline-flex; padding: 6px; border-radius: 999px; background: var(--sk-fill-gray-quaternary); gap: 0; max-width: 100%; overflow-x: auto; }
+.ak-platter .ak-pill { height: 44px; padding: 0 20px; font-size: 17px; letter-spacing: -.374px; opacity: 1; }
+.ak-platter .ak-pill.on { background: var(--sk-fill); color: var(--sk-glyph-gray); box-shadow: var(--ak-shadow-ccard); }
+.ak-utabs { display: flex; gap: 34px; overflow-x: auto; }
+.ak-utabs a { font: 600 17px/25px var(--ak-text); letter-spacing: -.374px; color: var(--sk-glyph-gray-secondary); text-decoration: none; padding: 9px 0 6px; border-bottom: 2px solid transparent; white-space: nowrap; transition: color var(--ak-ease-ln); }
+.ak-utabs a:hover, .ak-utabs a.is-hover { color: var(--sk-glyph-gray); }
+.ak-utabs a.current { color: var(--sk-glyph-gray); border-bottom-color: var(--sk-glyph-gray); }
+.ak-chip { height: 44px; padding: 10px 20px; border-radius: 20px; border: 1px solid var(--sk-fill-gray); background: transparent; color: var(--sk-glyph-gray); font: 400 17px/22px var(--ak-text); letter-spacing: -.374px; cursor: pointer; white-space: nowrap; }
+.ak-chip.on { background: var(--sk-fill-gray); color: var(--sk-fill); }
+.ak-chip:hover, .ak-chip.is-hover { opacity: .8; }
+.ak-icotab { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 140px; padding-bottom: 15px; color: var(--sk-glyph-gray-alpha); font-size: 14px; letter-spacing: -.224px; border-bottom: 2px solid transparent; }
+.ak-icotab .ph { width: 44px; height: 70px; border-radius: 8px; background: var(--sk-fill-gray-quaternary); }
+.ak-icotab.on { border-bottom-color: var(--sk-glyph-gray); color: var(--sk-glyph-gray); }
+
+/* dotnav */
+.ak-dots { display: inline-flex; align-items: center; gap: 0; }
+.ak-dots a { display: block; padding: 8px; cursor: pointer; }
+.ak-dots a::after { content: ""; display: block; width: 8px; height: 8px; border-radius: 999px; background: var(--sk-dotnav-background); transition: width .25s linear, background-color var(--ak-ease-ctl); }
+.ak-dots a:hover::after, .ak-dots a.is-hover::after { background: var(--sk-dotnav-background-hover); }
+.ak-dots a.current::after { width: 32px; background: var(--sk-dotnav-background-current); }
+.ak-dots.scrim { height: 56px; padding: 0 16px; border-radius: 999px; background: var(--sk-tile-button-background); -webkit-backdrop-filter: var(--ak-blur-nav); backdrop-filter: var(--ak-blur-nav); }
+.ak-dotbar { display: inline-flex; align-items: center; gap: 10px; }
+.ak-dots.timed a::after { width: 48px; height: 8px; border-radius: 10px; background: var(--sk-dotnav-background); }
+.ak-dots.timed a.current::after { background: linear-gradient(90deg, var(--sk-dotnav-background-current) 45%, var(--sk-dotnav-background) 45%); }
+
+/* colornav · colorindicator */
+.ak-colornav { display: flex; gap: 10px; flex-wrap: wrap; padding-top: 17px; }
+.ak-cn { display: flex; flex-direction: column; align-items: center; gap: 7px; width: 60px; cursor: pointer; }
+.ak-cn .ring { width: 38px; height: 38px; border-radius: 50%; padding: 3px; border: 2px solid transparent; transition: border-color var(--ak-ease-ctl); }
+.ak-cn .sw { display: block; width: 28px; height: 28px; border-radius: 50%; box-shadow: var(--ak-swatch-inset); }
+.ak-cn.current .ring { border-color: var(--sk-focus-color); }
+.ak-cn:hover .ring, .ak-cn.is-hover .ring { border-color: var(--sk-fill-gray-secondary); }
+.ak-cn .lab { font-size: 12px; line-height: 16px; letter-spacing: -.12px; color: var(--sk-glyph-gray); visibility: hidden; white-space: nowrap; }
+.ak-cn.current .lab { visibility: visible; }
+.ak-ci { display: inline-flex; gap: 7px; align-items: center; }
+.ak-ci i { width: 12px; height: 12px; border-radius: 50%; box-shadow: var(--ak-swatch-inset); display: block; }
+.ak-cswatch { width: 24px; height: 24px; border-radius: 50%; box-shadow: 0 0 0 2px var(--sk-fill), 0 0 0 3px var(--sk-glyph-gray-secondary); display: inline-block; }
+.ak-ctlitem { height: 56px; display: inline-flex; align-items: center; gap: 10px; padding: 0 32px 0 14px; border-radius: 28px; background: var(--sk-tile-button-background); -webkit-backdrop-filter: var(--ak-blur-nav); backdrop-filter: var(--ak-blur-nav); color: var(--sk-glyph-gray); font-size: 17px; }
+
+/* footer */
+.ak-gf { background: var(--sk-fill-tertiary); color: var(--sk-glyph-gray-secondary-alpha); font-size: 12px; line-height: 16px; letter-spacing: -.12px; padding: 0 22px; }
+.ak-gf .in { max-width: 980px; margin: 0 auto; }
+.ak-gf .sosumi { padding: 17px 0 11px; border-bottom: 1px solid var(--sk-fill-gray-tertiary); }
+.ak-gf .sosumi p { margin: 0 0 8px; }
+.ak-gf .crumbs { display: flex; align-items: center; gap: 8px; padding: 17px 0; color: var(--sk-glyph-gray-secondary-alt-alpha); border-bottom: 1px solid var(--sk-fill-gray-tertiary); }
+.ak-gf .crumbs svg.i { font-size: 9px; stroke-width: 2.4; }
+.ak-gf .dir { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 20px; padding: 20px 0; }
+.ak-gf .dir h4 { margin: 0 0 8px; font-weight: 600; font-size: 12px; color: var(--sk-glyph-gray-alpha); }
+.ak-gf .dir a { display: block; color: var(--sk-glyph-gray-secondary-alt-alpha); text-decoration: none; padding: 4px 0; }
+.ak-gf .dir a:hover, .ak-gf .dir a.is-hover { text-decoration: underline; }
+.ak-gf .legal { display: flex; flex-wrap: wrap; gap: 5px 30px; padding: 12px 0 20px; border-top: 1px solid var(--sk-fill-gray-tertiary); }
+.ak-gf .legal a { color: var(--sk-glyph-gray-secondary-alt-alpha); text-decoration: none; }
+
+/* headline lockup · section header */
+.ak-eyebrow { font: 600 12px/16px var(--ak-text); letter-spacing: -.12px; color: var(--sk-glyph-gray-secondary-alt); text-transform: uppercase; }
+.ak-eyebrow.new { color: var(--sk-glyph-orange); text-transform: none; }
+.ak-h-hero { font: 600 64px/70px var(--ak-display); margin: 0; background: var(--ak-gradient-hero); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.ak-h-mx { font: 600 80px/84px var(--ak-display); letter-spacing: -1.2px; margin: 0; }
+.ak-h-grad { font: 600 40px/44px var(--ak-display); margin: 0; -webkit-background-clip: text; background-clip: text; color: transparent; }
+.ak-h-sec { font: 600 48px/52px var(--ak-display); letter-spacing: -.144px; margin: 0; color: var(--sk-headline-text-color); }
+.ak-sechead { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+.ak-sechead ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 24px; }
+.ak-callout { font: 400 21px/25px var(--ak-display); letter-spacing: .231px; color: var(--sk-glyph-gray-secondary); max-width: 34ch; margin: 0; }
+.ak-callout b { color: var(--sk-glyph-gray); font-weight: 600; }
+
+/* tile trang chủ (full-bleed) · tile-rounded · bento-item */
+.ak-tile { position: relative; text-align: center; padding: 56px 20px 0; min-height: 580px; background: var(--sk-fill-tertiary); color: var(--sk-glyph-gray); display: flex; flex-direction: column; align-items: center; overflow: hidden; width: 100%; }
+.ak-tile.dark { background: var(--sk-glyph); color: var(--sk-glyph-gray); --sk-glyph-gray: #F5F5F7; --sk-glyph-gray-secondary: #86868B; }
+.ak-tile .hl { font: 600 56px/60px var(--ak-display); letter-spacing: -.28px; margin: 0; }
+.ak-tile .sub { font: 400 28px/32px var(--ak-display); letter-spacing: .196px; margin: 6px 0 0; }
+.ak-tile .callout { font: 400 19px/23px var(--ak-display); letter-spacing: .228px; margin: 8px 0 0; color: var(--sk-glyph-gray-secondary); }
+.ak-tile .ctas { display: flex; gap: 14px; justify-content: center; margin-top: 20px; }
+.ak-tile .img { margin-top: auto; width: min(640px, 100%); height: 300px; border-radius: 18px 18px 0 0; }
+.ak-tile.half { min-height: 500px; padding-top: 53px; }
+.ak-tile.half .hl { font-size: 40px; line-height: 44px; letter-spacing: 0; }
+.ak-tile.half .sub { font-size: 21px; line-height: 25px; letter-spacing: .231px; }
+.ak-tile.half .img { height: 220px; width: 90%; }
+.ak-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.ph-img { background: linear-gradient(160deg, var(--sk-fill-gray-quaternary), var(--sk-fill-gray-tertiary)); color: var(--sk-glyph-gray-tertiary); display: grid; place-items: center; font: 400 12px var(--ak-mono); letter-spacing: 0; text-align: center; }
+.ak-rtile { width: 452px; max-width: 100%; min-height: 380px; border-radius: 28px; background: var(--sk-fill); color: var(--sk-glyph-gray-secondary); padding: 40px 40px 0; display: flex; flex-direction: column; justify-content: flex-end; gap: 18px; overflow: hidden; }
+.ak-rtile.dark { background: var(--sk-fill-gray); color: var(--sk-fill-tertiary); padding: 40px; }
+.ak-rtile p { margin: 0; font: 600 28px/32px var(--ak-display); letter-spacing: .196px; }
+.ak-rtile p b { color: var(--sk-glyph-gray); font-weight: 600; }
+.ak-rtile.dark p b { color: var(--sk-fill); }
+.ak-rtile .img { height: 180px; border-radius: 12px 12px 0 0; }
+.ak-gtile { width: 405px; max-width: 100%; height: 309px; border-radius: 18px; position: relative; overflow: hidden; background: var(--sk-fill-gray); cursor: pointer; }
+.ak-gtile .copy-t { position: absolute; left: 28px; top: 28px; right: 70px; color: var(--sk-fill-tertiary); font: 600 21px/25px var(--ak-display); letter-spacing: .231px; }
+.ak-gtile .copy-t small { display: block; font: 600 12px/16px var(--ak-text); letter-spacing: -.12px; color: var(--sk-glyph-gray-tertiary); margin-bottom: 6px; }
+.ak-gtile .ak-ictl { position: absolute; right: 20px; bottom: 20px; }
+
+/* thẻ store: .rf-ccard · .rf-recommcard · .rf-hcard · .as-util · .store-card */
+.ak-ccard { width: 400px; max-width: 100%; height: 500px; border-radius: 18px; background: var(--sk-tile-background); box-shadow: var(--ak-shadow-ccard); overflow: hidden; display: flex; flex-direction: column; cursor: pointer;
+  transition: box-shadow .3s cubic-bezier(0, 0, .5, 1), transform .3s cubic-bezier(0, 0, .5, 1); }
+.ak-ccard:hover, .ak-ccard.is-hover, .ak-ccard:active, .ak-ccard.is-active { box-shadow: var(--ak-shadow-ccard-hover); transform: scale(1.01); }
+.ak-ccard .hd { padding: 28px 30px 0; }
+.ak-ccard .hd .ak-eyebrow { display: block; padding-bottom: 8px; }
+.ak-ccard .hd h3 { margin: 0; font: 600 28px/32px var(--ak-display); letter-spacing: .196px; color: var(--sk-glyph-gray); }
+.ak-ccard .hd p { margin: 8px 0 0; font-size: 17px; line-height: 21px; color: var(--sk-glyph-gray); }
+.ak-ccard .img { flex: 1; margin-top: 20px; }
+.ak-ccard.dark { background: var(--sk-glyph); }
+.ak-ccard.dark h3, .ak-ccard.dark p { color: var(--sk-fill-tertiary); }
+.ak-ccard.dark .ak-eyebrow { color: var(--sk-glyph-gray-tertiary); }
+.ak-ccard.dark .ak-eyebrow.new { color: var(--sk-fill-orange); }
+.ak-rcard { width: 313px; max-width: 100%; height: 500px; border-radius: 18px; padding: 28px; background: var(--sk-tile-background); box-shadow: var(--ak-shadow-ccard); display: flex; flex-direction: column; cursor: pointer;
+  transition: box-shadow .3s cubic-bezier(0, 0, .5, 1), transform .3s cubic-bezier(0, 0, .5, 1); }
+.ak-rcard:hover, .ak-rcard.is-hover, .ak-rcard:active, .ak-rcard.is-active { box-shadow: var(--ak-shadow-ccard-hover); transform: scale(1.01); }
+.ak-rcard .img { height: 220px; border-radius: 8px; margin-bottom: 18px; }
+.ak-rcard .ak-ci { justify-content: center; margin-bottom: 20px; }
+.ak-rcard .name { font: 600 17px/21px var(--ak-text); color: var(--sk-glyph-gray); margin: 4px 0 0; }
+.ak-rcard .price { font-size: 12px; line-height: 16px; letter-spacing: -.12px; color: var(--sk-glyph-gray); margin-top: auto; }
+.ak-rcard.util { width: 300px; height: 460px; border-radius: 28px; box-shadow: none; }
+.ak-storecard { width: 300px; max-width: 100%; border-radius: 18px; background: var(--sk-fill); box-shadow: var(--ak-shadow-store); overflow: hidden; text-decoration: none; color: var(--sk-glyph-blue); display: flex; flex-direction: column; transition: box-shadow var(--ak-ease-card); }
+.ak-storecard:hover, .ak-storecard.is-hover, .ak-storecard:active, .ak-storecard.is-active { box-shadow: var(--ak-shadow-store-hover); }
+.ak-storecard .img { height: 169px; }
+.ak-storecard .body { padding: 24px 30px 30px; }
+.ak-storecard h4 { margin: 0; font: 600 19px/23px var(--ak-display); letter-spacing: .228px; color: var(--sk-glyph-gray); }
+.ak-storecard p { margin: 4px 0 12px; font-size: 14px; line-height: 20px; letter-spacing: -.224px; color: var(--sk-glyph-gray-secondary); }
+.ak-refurb { width: 357px; max-width: 100%; border-radius: 18px; background: var(--sk-fill); padding: 60px 30px 40px; text-align: center; }
+.ak-refurb h4 { margin: 18px 0 6px; font: 600 17px/21px var(--ak-text); }
+.ak-refurb p { margin: 0; font-size: 14px; color: var(--sk-glyph-gray-secondary); }
+.ak-feature { width: 450px; max-width: 100%; display: flex; gap: 16px; align-items: flex-start; font-size: 14px; line-height: 20px; letter-spacing: -.224px; color: var(--sk-glyph-gray); }
+.ak-feature .ic { width: 36px; height: 36px; border-radius: 8px; background: var(--sk-fill-gray-quaternary); flex: none; }
+.ak-marquee { display: inline-flex; flex-direction: column; padding: 12px 20px 12px 25px; border-radius: 1440px; background: var(--sk-fill-gray-quaternary-alpha); -webkit-backdrop-filter: var(--ak-blur-nav); backdrop-filter: var(--ak-blur-nav); font-size: 17px; line-height: 21px; }
+.ak-marquee small { font-size: 12px; line-height: 16px; letter-spacing: -.12px; color: var(--sk-glyph-gray-secondary); }
+
+/* media card (1260×680 r28) · media gallery */
+.ak-mcard { width: 1260px; max-width: 100%; aspect-ratio: 1260 / 680; border-radius: 28px; background: var(--sk-fill-tertiary); color: var(--sk-glyph-gray-alpha); overflow: hidden; position: relative; }
+.ak-mcard.dark { background: var(--sk-button-neutral-background); color: var(--sk-glyph-gray-alpha); }
+.ak-mcard .copy-t { position: absolute; left: 36px; top: 40px; width: 370px; max-width: calc(100% - 72px); }
+.ak-mcard h3 { margin: 0 0 8px; font: 600 28px/32px var(--ak-display); letter-spacing: .196px; }
+.ak-mcard p { margin: 0 0 12px; font-size: 17px; line-height: 21px; }
+.ak-mgal { width: 930px; max-width: 100%; aspect-ratio: 930 / 523; position: relative; border-radius: 0; overflow: hidden; }
+.ak-mgal .cap { position: absolute; left: 15px; right: 15px; bottom: 30px; display: flex; align-items: center; gap: 16px; color: var(--sk-fill); }
+.ak-mgal .cap .ak-btn { flex: none; }
+.ak-mgal .cap span { font-size: 12px; line-height: 16px; letter-spacing: -.12px; max-width: 183px; }
+
+/* bento / feature / banner / how-to-buy / icon card */
+.ak-fcard { width: 372px; max-width: 100%; height: 680px; border-radius: 28px; padding: 32px; background: var(--sk-fill-tertiary); color: var(--sk-glyph-gray-alpha); position: relative; display: flex; flex-direction: column; gap: 10px; overflow: hidden; }
+.ak-fcard.dark { background: var(--sk-button-neutral-background); color: var(--sk-button-neutral-color); }
+.ak-fcard .lab { font: 600 17px/21px var(--ak-text); }
+.ak-fcard h3 { margin: 0; font: 600 28px/32px var(--ak-display); letter-spacing: .196px; }
+.ak-fcard .img { margin-top: auto; height: 330px; border-radius: 12px; }
+.ak-fcard .ak-ictl { position: absolute; right: 20px; bottom: 20px; }
+.ak-fcard.pro { height: 495px; background: var(--sk-fill); }
+.ak-banner { width: 1260px; max-width: 100%; min-height: 480px; border-radius: 28px; background: var(--sk-fill-tertiary); color: var(--sk-glyph-gray-alpha); display: grid; grid-template-columns: 400px 1fr; align-items: center; gap: 40px; padding: 0 0 0 60px; overflow: hidden; }
+.ak-banner h3 { margin: 0 0 12px; font: 600 32px/36px var(--ak-display); letter-spacing: .128px; }
+.ak-banner p { margin: 0 0 20px; font-size: 17px; line-height: 21px; }
+.ak-banner .img { height: 480px; }
+.ak-htb { width: 475px; max-width: 100%; min-height: 370px; border-radius: 35px; background: var(--sk-fill-tertiary); padding: 68px 40px; text-align: center; }
+.ak-htb h3 { margin: 0; font: 600 48px/52px var(--ak-display); letter-spacing: -.144px; }
+.ak-htb p { margin: 16px 0 28px; font: 600 24px/28px var(--ak-display); letter-spacing: .216px; }
+.ak-bento { width: 479px; max-width: 100%; min-height: 620px; border-radius: 18px; background: var(--sk-fill); padding: 34px 40px; position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 10px; cursor: pointer; }
+.ak-bento .ak-eyebrow { text-transform: none; }
+.ak-bento h3 { margin: 0; font: 600 21px/25px var(--ak-display); letter-spacing: .231px; }
+.ak-bento .img { margin: auto -40px -34px; height: 400px; }
+.ak-bento .ak-ictl { position: absolute; right: 20px; bottom: 20px; }
+.ak-bento:hover .ak-ictl, .ak-bento.is-hover .ak-ictl { background: var(--sk-button-neutral-background-hover); }
+.ak-bento.sm { width: 312px; min-height: 293px; padding: 28px 32px 52px; }
+.ak-icard { width: 372px; max-width: 100%; min-height: 293px; border-radius: 28px; background: var(--sk-fill-tertiary); color: var(--sk-glyph-gray-alpha); padding: 32px; position: relative; cursor: pointer; transition: transform .3s cubic-bezier(0, 0, .5, 1); }
+.ak-icard:hover, .ak-icard.is-hover { transform: scale(1.01); }
+.ak-icard .emo { width: 40px; height: 40px; border-radius: 50%; border: 2px solid currentColor; display: block; }
+.ak-icard h3 { margin: 22px 0 10px; font: 600 28px/32px var(--ak-display); letter-spacing: .196px; }
+.ak-icard p { margin: 0; font-size: 17px; line-height: 21px; max-width: 264px; }
+.ak-icard .ak-ictl { position: absolute; right: 20px; bottom: 20px; }
+.ak-program { width: 980px; max-width: 100%; min-height: 394px; border-radius: 18px; background: var(--sk-fill); display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; }
+.ak-program .copy-t { padding: 52px 40px; }
+.ak-program h3 { margin: 6px 0 12px; font: 600 32px/36px var(--ak-display); letter-spacing: .128px; }
+.ak-program .img { min-height: 260px; }
+.ak-qa { width: 658px; max-width: 100%; border-radius: 14px; background: var(--sk-fill-tertiary); padding: 32px 36px; }
+.ak-qa h4 { margin: 0 0 10px; font: 600 21px/25px var(--ak-display); letter-spacing: .231px; }
+.ak-qa p { margin: 0; font-size: 17px; line-height: 25px; }
+
+/* stat · spec list */
+.ak-stat { display: flex; flex-direction: column; gap: 4px; width: 215px; }
+.ak-stat .v { font: 600 48px/52px var(--ak-display); letter-spacing: -.144px; color: var(--sk-glyph-gray); }
+.ak-stat .v small { font-size: 24px; letter-spacing: .216px; }
+.ak-stat .c { font-size: 14px; line-height: 20px; letter-spacing: -.224px; color: var(--sk-glyph-gray-secondary); }
+.ak-stat.grad .v { background: var(--ak-gradient-green); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.ak-specs { list-style: none; margin: 0; padding: 0; width: 315px; }
+.ak-specs li { padding: 12px 0; border-top: 1px solid var(--sk-fill-gray-tertiary-alpha); }
+.ak-specs b { display: block; font: 600 28px/32px var(--ak-display); letter-spacing: .196px; color: var(--sk-glyph-gray); }
+.ak-specs span { font-size: 14px; line-height: 20px; letter-spacing: -.224px; color: var(--sk-glyph-gray-secondary); }
+
+/* accordion */
+.ak-acc { width: 980px; max-width: 100%; }
+.ak-acc details { border-bottom: 1px solid var(--sk-fill-gray-tertiary); }
+.ak-acc summary { list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 17px 0; font: 600 17px/21px var(--ak-text); color: var(--sk-glyph-gray); cursor: pointer; transition: color var(--ak-ease-ctl); }
+.ak-acc summary::-webkit-details-marker { display: none; }
+.ak-acc summary:hover, .ak-acc summary.is-hover { color: var(--sk-glyph-blue); }
+.ak-acc summary svg.i { font-size: 14px; color: var(--sk-glyph-gray-secondary); transition: transform var(--ak-ease-ln); }
+.ak-acc details[open] summary svg.i { transform: rotate(180deg); }
+.ak-acc details p { margin: 0 0 20px; font-size: 17px; line-height: 25px; color: var(--sk-glyph-gray-secondary-alt); max-width: 70ch; }
+.ak-iacc { width: 350px; max-width: 100%; }
+.ak-iacc button { width: 100%; text-align: left; background: none; border: none; padding: 28px 0 0; font: 600 28px/32px var(--ak-display); letter-spacing: .196px; color: var(--sk-glyph-gray-tertiary); cursor: pointer; transition: color var(--ak-ease-ln); }
+.ak-iacc button[aria-expanded="true"] { color: var(--sk-glyph-gray); }
+.ak-iacc button:hover, .ak-iacc button.is-hover { color: var(--sk-glyph-gray); }
+.ak-iacc p { margin: 8px 0 0; font-size: 17px; line-height: 25px; color: var(--sk-glyph-gray-secondary); }
+
+/* bảng giá trị */
+.ak-vtable { width: 980px; max-width: 100%; border-radius: 18px; background: var(--sk-fill-tertiary); padding: 40px; display: grid; grid-template-columns: 1fr 321px; gap: 40px; align-items: start; }
+.ak-vtable table { border-collapse: collapse; width: 100%; font-size: 17px; line-height: 25px; }
+.ak-vtable caption { text-align: left; font: 600 17px var(--ak-text); padding-bottom: 8px; }
+.ak-vtable th, .ak-vtable td { text-align: left; padding: 8px 0; border-bottom: 1px solid var(--sk-fill-gray-tertiary); font-weight: 400; }
+.ak-vtable td:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+.ak-vtable h3 { margin: 0 0 10px; font: 600 32px/36px var(--ak-display); letter-spacing: .128px; }
+
+/* nhập liệu */
+.ak-tb { position: relative; width: 432px; max-width: 100%; }
+.ak-tb input { width: 100%; height: 56px; border-radius: 12px; border: 1px solid var(--sk-fill-gray-secondary); background: var(--sk-fill); color: var(--sk-glyph-gray); font: 400 17px/21px var(--ak-text); letter-spacing: -.374px; padding: 18px 16px 0; outline: none; transition: border-color var(--ak-ease-ctl); }
+.ak-tb.icons input { padding: 18px 49px 0 44px; }
+.ak-tb label { position: absolute; left: 16px; top: 17px; font-size: 17px; line-height: 21px; color: var(--sk-glyph-gray-secondary); pointer-events: none; transition: all .125s ease-in; }
+.ak-tb.icons label { left: 44px; }
+.ak-tb input:focus + label, .ak-tb input:not(:placeholder-shown) + label, .ak-tb.is-focus label, .ak-tb.filled label { top: 8px; font-size: 12px; line-height: 16px; letter-spacing: -.12px; }
+.ak-tb input:focus, .ak-tb.is-focus input { border: 2px solid var(--sk-focus-color); padding-left: 15px; }
+.ak-tb.icons input:focus, .ak-tb.icons.is-focus input { padding-left: 43px; }
+.ak-tb .l, .ak-tb .r { position: absolute; top: 50%; transform: translateY(-50%); color: var(--sk-glyph-gray); font-size: 19px; }
+.ak-tb .l { left: 14px; } .ak-tb .r { right: 14px; font-size: 19px; }
+.ak-tb.err input { border-color: var(--sk-glyph-red); background: var(--sk-fill-red-secondary); }
+.ak-tb .msg { display: flex; gap: 6px; align-items: center; margin-top: 8px; font-size: 12px; line-height: 16px; letter-spacing: -.12px; color: var(--sk-glyph-red); }
+.ak-dd { position: relative; display: inline-block; max-width: 100%; }
+.ak-dd select { appearance: none; -webkit-appearance: none; height: 42px; max-width: 100%; border-radius: 210px; border: 1px solid var(--sk-fill-gray-secondary); background: var(--sk-fill); color: var(--sk-glyph-gray); font: 600 21px/25px var(--ak-display); letter-spacing: .231px; padding: 0 42px 0 22px; cursor: pointer; outline: none; }
+.ak-dd select:focus, .ak-dd.is-focus select { border-color: var(--sk-focus-color); }
+.ak-dd svg.i { position: absolute; right: 18px; top: 50%; transform: translateY(-50%); pointer-events: none; font-size: 13px; stroke-width: 2.2; }
+.ak-dd.dark select { background: var(--sk-glyph); color: var(--sk-fill-tertiary); }
+.ak-dd.dark svg.i { color: var(--sk-fill-tertiary); }
+.ak-tip { width: 25px; height: 25px; border: none; background: none; color: var(--sk-glyph-gray); display: inline-grid; place-items: center; cursor: pointer; padding: 0; font-size: 19px; }
+.ak-searchbar { width: 100%; background: var(--sk-fill); padding: 8px 22px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+.ak-searchbar h3 { margin: 0; font: 600 24px/28px var(--ak-display); letter-spacing: .216px; }
+
+/* phản hồi: badge · footnote */
+.ak-badge { display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 6px; background: var(--sk-badge-background); color: var(--sk-badge-text-color); font: 600 12px var(--ak-text); letter-spacing: -.12px; }
+.ak-badge.neutral { background: var(--sk-badge-neutral-background); color: var(--sk-badge-neutral-text-color); }
+.ak-new { font-size: 12px; line-height: 16px; letter-spacing: -.12px; color: var(--sk-glyph-orange); }
+.ak-fn { font-size: .6em; vertical-align: super; line-height: 0; color: inherit; text-decoration: none; }
+.ak-fn:hover { text-decoration: underline; }
+
+/* khối section (độ rộng + nền đo được) */
+.ak-sec { padding: 96px 22px; text-align: center; background: var(--sk-fill); }
+.ak-sec.alt { background: var(--sk-fill-tertiary); }
+.ak-sec.dark { background: var(--sk-glyph); color: var(--sk-fill-tertiary); }
+.ak-sec .rail { max-width: 980px; margin: 0 auto; border: 1px dashed var(--sk-fill-gray-tertiary); border-radius: 8px; padding: 14px; font: 400 12px var(--ak-mono); color: var(--sk-glyph-gray-secondary); letter-spacing: 0; }
+.ak-sec .rail.w1260 { max-width: 1260px; }
+.ak-sec.dark .rail { border-color: var(--sk-glyph-gray-secondary-alt); color: var(--sk-glyph-gray-tertiary); }
+
+/* focus: 3 kiểu đo được */
+.f-outline { outline: 2px solid var(--sk-focus-color); outline-offset: 0; }
+.f-ring { box-shadow: 0 0 0 3px var(--sk-body-background-color), 0 0 0 5px var(--sk-focus-color); }
+.f-field { border: 2px solid var(--sk-focus-color) !important; }
+.f-legacy { outline: 3px solid rgba(131,192,253,.5); }
+
+/* màn mẫu: iPhone 390 × 844 và desktop 1440 × 900, thu nhỏ bằng zoom */
+.screens { overflow-x: auto; padding: 8px 0; }
+.screens .row { display: flex; gap: 32px; width: max-content; align-items: flex-start; }
+.phone { width: 390px; height: 844px; border-radius: 48px; box-shadow: 0 0 0 10px var(--sk-fill-gray), 0 0 0 11px var(--sk-fill-gray-secondary); background: var(--sk-body-background-color); position: relative; overflow: hidden; margin: 12px; zoom: .64; }
+.phone .scroll { position: absolute; inset: 0; overflow: hidden; }
+.phone .status { height: 47px; display: flex; align-items: center; justify-content: space-between; padding: 0 30px 0 36px; font: 600 16px var(--ak-text); background: var(--sk-globalnav-background); }
+.desk { width: 1440px; height: 900px; border-radius: 14px; box-shadow: 0 0 0 1px var(--sk-fill-gray-tertiary), 0 20px 50px -20px var(--sk-fill-gray-secondary); background: var(--sk-body-background-color); overflow: hidden; margin: 12px; zoom: .5; position: relative; }
+.desk .chrome { height: 38px; background: var(--sk-fill-gray-quaternary); display: flex; align-items: center; gap: 8px; padding: 0 16px; }
+.desk .chrome i { width: 12px; height: 12px; border-radius: 50%; background: var(--sk-fill-gray-tertiary); }
+.desk .chrome span { margin: 0 auto; width: 420px; height: 24px; border-radius: 6px; background: var(--sk-fill); font: 400 12px/24px var(--ak-text); text-align: center; color: var(--sk-glyph-gray-secondary); }
+.cap { font-family: var(--ak-mono); font-size: 12px; color: var(--sk-glyph-gray-secondary); margin: 6px 12px 0; letter-spacing: 0; max-width: 560px; }
+.phone + .cap { max-width: 270px; }
+
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; transition: all .25s ease; z-index: 20; background: var(--sk-fill-gray); color: var(--sk-fill); padding: 12px 20px; border-radius: 12px; font-size: 14px; letter-spacing: -.224px; }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; }
+  .side { display: none; }
+  main { padding: 0 16px 80px; }
+  .grid, .grid.wide { grid-template-columns: 1fr; }
+  .intro h1 { font-size: 40px; line-height: 44px; }
+  section.block h2 { font-size: 32px; line-height: 36px; }
+  .type-row { grid-template-columns: 1fr; gap: 2px; }
+  .ak-tiles { grid-template-columns: 1fr; }
+  .ak-banner, .ak-program, .ak-vtable { grid-template-columns: 1fr; padding: 32px; }
+  .ak-banner .img { height: 220px; margin: 0 -32px -32px; }
+  .ak-gf .dir { grid-template-columns: 1fr 1fr; }
+  .ak-tile .hl { font-size: 40px; line-height: 44px; }
+  .ak-tile .sub { font-size: 21px; line-height: 25px; }
+  .ak-h-hero { font-size: 40px; line-height: 44px; }
+  .ak-h-mx { font-size: 48px; line-height: 52px; }
+  .ak-h-sec { font-size: 32px; line-height: 36px; }
+  .ak-gn .hide-s { display: none; }
+  .ak-ln .menu { display: none; }
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-chev" viewBox="0 0 16 16"><path d="M6 3l5 5-5 5"/></symbol>
+  <symbol id="i-down" viewBox="0 0 16 16"><path d="M3 6l5 5 5-5"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></symbol>
+  <symbol id="i-right" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l10-6.5z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5h3v14H8zM13 5h3v14h-3z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5"/></symbol>
+  <symbol id="i-bag" viewBox="0 0 24 24"><path d="M5 8h14l-1 12H6zM9 8V6a3 3 0 016 0v2"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M5 9h14M5 15h14"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 6.5A2.5 2.5 0 016.5 4h11A2.5 2.5 0 0120 6.5v7a2.5 2.5 0 01-2.5 2.5H10l-4 4v-4h0a2 2 0 01-2-2z"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-6-5.5-6-11a6 6 0 0112 0c0 5.5-6 11-6 11z"/><circle cx="12" cy="10" r="2"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.5"/></symbol>
+</svg>
+<div class="shell">
+  <nav class="side" aria-label="Mục lục">
+    <div class="brand"><div class="brand-mark">UI</div><div><b>Apple.com Kit</b><small>--sk-* · 24 trang đã quét</small></div></div>
+    <h6>Nền tảng</h6>
+    <a href="#color">Màu</a>
+    <a href="#type">Chữ</a>
+    <a href="#shape">Bo góc</a>
+    <a href="#layout">Bố cục &amp; kích thước</a>
+    <a href="#focus">Focus</a>
+    <h6>Thành phần</h6>
+    <a href="#actions">Hành động</a>
+    <a href="#navigation">Điều hướng</a>
+    <a href="#selection">Chọn màu &amp; cuộn</a>
+    <a href="#containment">Chứa nội dung</a>
+    <a href="#inputs">Nhập liệu</a>
+    <a href="#feedback">Phản hồi &amp; chú thích</a>
+    <h6>Mẫu</h6>
+    <a href="#screens">Màn hình mẫu</a>
+  </nav>
+
+  <main>
+    <div class="bar" role="toolbar" aria-label="Chủ đề">
+      <div class="ctl"><span>Theme</span><div class="seg" id="mode">
+        <button data-v="light" aria-pressed="true">.theme-light</button>
+        <button data-v="dark" aria-pressed="false">.theme-dark</button></div></div>
+      <div class="grow"></div>
+      <button class="copy" id="copy-tokens"><svg class="i"><use href="#i-plus"/></svg>Copy CSS token</button>
+    </div>
+
+    <div class="intro">
+      <div class="eyebrow">apple.com · stylesheet --sk-* + getComputedStyle → docs/apple-ui-kit.html</div>
+      <h1>Bộ thành phần của apple.com</h1>
+      <p>Chép lại hệ thiết kế đang chạy trên apple.com: 65 biến màu <code>--sk-*</code> lấy đúng tên và giá trị trong stylesheet của site cho cả <code>.theme-light</code> lẫn <code>.theme-dark</code>, cùng số đo px của phần tử thật trên 24 trang (trang chủ, Mac, MacBook, Store, Retail, Trade In…). Không có ảnh, logo hay chữ nào của Apple: ảnh là khối giữ chỗ, chữ là chữ mẫu. Muốn dùng lại, dán khối <code>:root</code> (nút Copy CSS token) cùng CSS <code>.ak-*</code>.</p>
+      <div class="facts"><span class="fact">globalnav 44 · localnav 52</span><span class="fact">content 980 · wide 1260 · hero ≤ 1680</span><span class="fact">section padding 96 · grid gap 20</span><span class="fact">button r 980 · card r 18 / 28</span><span class="fact">focus 2px #0071E3</span><span class="fact">body 17/25 · −0.374</span></div>
+    </div>
+
+    <!-- ================= NỀN TẢNG ================= -->
+    <section class="block" id="color">
+      <header><h2>Màu</h2><p>Tên biến như trong stylesheet của apple.com. Nhóm <code>glyph</code> dùng cho chữ và icon, nhóm <code>fill</code> dùng cho nền, phần còn lại là biến riêng của từng component. Bấm một ô để copy giá trị; đổi theme ở thanh trên để xem giá trị tối.</p></header>
+      <div class="roles" id="roles"></div>
+    </section>
+
+    <section class="block" id="type">
+      <header><h2>Chữ</h2><p>SF Pro Text dùng cho cỡ ≤ 19px, SF Pro Display cho cỡ lớn hơn. Letter-spacing thay đổi theo cỡ chữ. Máy có SF Pro thì kit hiện đúng font; máy khác dùng Inter (Google Fonts) thay thế nên độ rộng chữ sẽ lệch nhẹ.</p></header>
+      <div class="spec"><div class="spec-h"><b>Thang chữ (class typography-* thật)</b><span class="kind">typography-*</span><span class="dp">size / line-height · weight · tracking</span></div><div class="stage col" id="typescale"></div></div>
+      <div class="spec" style="margin-top:20px" data-card="type"><div class="spec-h"><b>Chữ thực dùng (sinh từ inventory)</b><span class="kind">heading · text</span><span class="dp">gom theo size/weight/font</span></div><div class="stage col"><div class="type-row" data-sig="68bb7d9352 1d70e93c09"><span class="meta">SF Pro Display · 2 pattern</span><span class="t" style="font:700 96px/1.15 var(--ak-display)">Tiêu đề mẫu cho khối này.</span><span class="meta">96px · 700</span></div>
+<div class="type-row" data-sig="b9e8f718c8 94bdf27011 9b9516c08a"><span class="meta">SF Pro Display · 3 pattern</span><span class="t" style="font:600 96px/1.15 var(--ak-display)">Mô tả ngắn đi kèm tiêu đề.</span><span class="meta">96px · 600</span></div>
+<div class="type-row" data-sig="466f9ffa48"><span class="meta">SF Pro Display · 1 pattern</span><span class="t" style="font:700 80px/1.15 var(--ak-display)">Chữ mẫu thay nội dung gốc.</span><span class="meta">80px · 700</span></div>
+<div class="type-row" data-sig="3ac590ca72 4e864b4db4 d12d2032f4 c90b9f184a"><span class="meta">SF Pro Display · 4 pattern</span><span class="t" style="font:600 80px/1.15 var(--ak-display)">Tiêu đề mẫu cho khối này.</span><span class="meta">80px · 600</span></div>
+<div class="type-row" data-sig="bd8a740a6f 089b5778c4 b7fa4628eb"><span class="meta">SF Pro Display · 3 pattern</span><span class="t" style="font:600 64px/1.15 var(--ak-display)">Mô tả ngắn đi kèm tiêu đề.</span><span class="meta">64px · 600</span></div>
+<div class="type-row" data-sig="3b97d365e5 00d4d56e96"><span class="meta">SF Pro Display · 2 pattern</span><span class="t" style="font:600 56px/1.15 var(--ak-display)">Chữ mẫu thay nội dung gốc.</span><span class="meta">56px · 600</span></div>
+<div class="type-row" data-sig="c858885108 4d26716d19"><span class="meta">SF Pro Display · 2 pattern</span><span class="t" style="font:600 48px/1.15 var(--ak-display)">Tiêu đề mẫu cho khối này.</span><span class="meta">48px · 600</span></div>
+<div class="type-row" data-sig="25ffdd158d 4eb49f4f94 87bccaee8a b6f4b40811"><span class="meta">SF Pro Display · 4 pattern</span><span class="t" style="font:600 40px/1.15 var(--ak-display)">Mô tả ngắn đi kèm tiêu đề.</span><span class="meta">40px · 600</span></div>
+<div class="type-row" data-sig="59b9eadb11"><span class="meta">SF Pro Display · 1 pattern</span><span class="t" style="font:800 32px/1.15 var(--ak-display)">Chữ mẫu thay nội dung gốc.</span><span class="meta">32px · 800</span></div>
+<div class="type-row" data-sig="e64550fcf6 d6597041df 3b59d11844 1a610aac1b"><span class="meta">SF Pro Display · 4 pattern</span><span class="t" style="font:600 32px/1.15 var(--ak-display)">Tiêu đề mẫu cho khối này.</span><span class="meta">32px · 600</span></div>
+<div class="type-row" data-sig="4ef9b1239c 3ddb4e9833 fbfaa3e59d 71b8d5fa73 d1e26866d1"><span class="meta">SF Pro Display · 5 pattern</span><span class="t" style="font:600 28px/1.15 var(--ak-display)">Mô tả ngắn đi kèm tiêu đề.</span><span class="meta">28px · 600</span></div>
+<div class="type-row" data-sig="c371925fbc"><span class="meta">SF Pro Text · 1 pattern</span><span class="t" style="font:700 26px/1.15 var(--ak-display)">Chữ mẫu thay nội dung gốc.</span><span class="meta">26px · 700</span></div>
+<div class="type-row" data-sig="a2c18f07ea"><span class="meta">SF Pro Text · 1 pattern</span><span class="t" style="font:600 26px/1.15 var(--ak-display)">Tiêu đề mẫu cho khối này.</span><span class="meta">26px · 600</span></div>
+<div class="type-row" data-sig="4ecc743f11 b26a0e33c7"><span class="meta">SF Pro Display · 2 pattern</span><span class="t" style="font:600 24px/1.15 var(--ak-display)">Mô tả ngắn đi kèm tiêu đề.</span><span class="meta">24px · 600</span></div>
+<div class="type-row" data-sig="09d8c18219"><span class="meta">SF Pro Display · 1 pattern</span><span class="t" style="font:400 24px/1.15 var(--ak-display)">Chữ mẫu thay nội dung gốc.</span><span class="meta">24px · 400</span></div>
+<div class="type-row" data-sig="72396db8e3 69ac6e8551 e1526745c2 cdf95d9d73 0bc00aa737 b9f6806b41 4d126452d7"><span class="meta">SF Pro Display · 7 pattern</span><span class="t" style="font:600 21px/1.15 var(--ak-display)">Tiêu đề mẫu cho khối này.</span><span class="meta">21px · 600</span></div>
+<div class="type-row" data-sig="7ad0464c20"><span class="meta">SF Pro Display · 1 pattern</span><span class="t" style="font:400 21px/1.15 var(--ak-display)">Mô tả ngắn đi kèm tiêu đề.</span><span class="meta">21px · 400</span></div>
+<div class="type-row" data-sig="6be0322bcb 4e0074e2f1"><span class="meta">SF Pro Display · 2 pattern</span><span class="t" style="font:600 19px/1.15 var(--ak-text)">Chữ mẫu thay nội dung gốc.</span><span class="meta">19px · 600</span></div>
+<div class="type-row" data-sig="db8709deff"><span class="meta">SF Pro Text · 1 pattern</span><span class="t" style="font:700 17px/1.15 var(--ak-text)">Tiêu đề mẫu cho khối này.</span><span class="meta">17px · 700</span></div>
+<div class="type-row" data-sig="3254765bbe 1d6f9be1d2 723fff9517 5f17c47dd9 99f753c7a8"><span class="meta">SF Pro Text · 5 pattern</span><span class="t" style="font:600 17px/1.15 var(--ak-text)">Mô tả ngắn đi kèm tiêu đề.</span><span class="meta">17px · 600</span></div>
+<div class="type-row" data-sig="a6d6a730fe 6ab19f5596 56f6760698"><span class="meta">SF Pro Text · 3 pattern</span><span class="t" style="font:400 17px/1.15 var(--ak-text)">Chữ mẫu thay nội dung gốc.</span><span class="meta">17px · 400</span></div>
+<div class="type-row" data-sig="d63dbf7782"><span class="meta">SF Pro Text · 1 pattern</span><span class="t" style="font:600 16px/1.15 var(--ak-text)">Tiêu đề mẫu cho khối này.</span><span class="meta">16px · 600</span></div>
+<div class="type-row" data-sig="c64f3baeb3 fcb17dfdc1"><span class="meta">SF Pro Text · 2 pattern</span><span class="t" style="font:400 14px/1.15 var(--ak-text)">Mô tả ngắn đi kèm tiêu đề.</span><span class="meta">14px · 400</span></div>
+<div class="type-row" data-sig="2be6dcdad6 4366d599ef 67a90fcba6 fc534a13a5"><span class="meta">SF Pro Text · 4 pattern</span><span class="t" style="font:400 12px/1.15 var(--ak-text)">Chữ mẫu thay nội dung gốc.</span><span class="meta">12px · 400</span></div></div><div class="spec-f"><span class="note">Mỗi dòng là một tổ hợp cỡ/đậm/font gặp trên các trang đã quét, kèm số pattern mang tổ hợp đó. Chữ mẫu đã thay nội dung gốc.</span></div></div>
+    </section>
+
+    <section class="block" id="shape">
+      <header><h2>Bo góc</h2><p>apple.com không có thang shape nhân hệ số. Dưới đây là các bán kính đo được, xếp theo thành phần dùng nó.</p></header>
+      <div class="spec"><div class="stage" id="shapes" style="gap:28px"></div></div>
+    </section>
+
+    <section class="block" id="layout">
+      <header><h2>Bố cục &amp; kích thước</h2><p>Hằng số khung trang và kích thước thẻ, đo ở viewport 1440 × 900.</p></header>
+      <div class="grid wide">
+        <div class="spec"><div class="stage col scroll-x">
+          <table class="tok"><thead><tr><th>Hằng số</th><th>px</th><th>Nguồn</th></tr></thead><tbody>
+            <tr><td>#globalnav</td><td>44</td><td>đo; var <code>--r-globalnav-height</code> 48 (compact)</td></tr>
+            <tr><td>.globalnav-content</td><td>max 1024 · pad 0 22</td><td>đo</td></tr>
+            <tr><td>#ac-localnav</td><td>52</td><td><code>--r-localnav-height</code> 48 + viền; đo 52</td></tr>
+            <tr><td>viewport-content</td><td>980</td><td>footer, sosumi, accordion</td></tr>
+            <tr><td>section wide</td><td>1260</td><td>media card, section header</td></tr>
+            <tr><td>hero max</td><td>1680</td><td><code>--global-content-max-width-hero</code></td></tr>
+            <tr><td>section padding</td><td>96</td><td><code>--global-section-padding</code></td></tr>
+            <tr><td>grid gap</td><td>20</td><td><code>--ric-gap</code> (12 cột)</td></tr>
+            <tr><td>breakpoint</td><td>≤833 · 834–1023 · ≥1024</td><td><code>--r-localnav-viewport-*</code></td></tr></tbody></table>
+        </div></div>
+        <div class="spec"><div class="stage col scroll-x">
+          <table class="tok"><thead><tr><th>Thẻ</th><th>w × h · r</th><th>Class gốc</th></tr></thead><tbody>
+            <tr><td>tile trang chủ</td><td>1440 × 692 · 0</td><td>.tile-wrapper, pad 56/63</td></tr>
+            <tr><td>tile nửa</td><td>702 × 580 · 0</td><td>.tile-wrapper</td></tr>
+            <tr><td>store card</td><td>400 × 500 · 18</td><td>.rf-ccard</td></tr>
+            <tr><td>recomm card</td><td>313 × 500 · 18</td><td>.rf-recommcard, pad 28</td></tr>
+            <tr><td>media card</td><td>1260 × 680 · 28</td><td>.re-media-card</td></tr>
+            <tr><td>feature card</td><td>372 × 680 · 28</td><td>FeatureCard, pad 32</td></tr>
+            <tr><td>tile rounded</td><td>452 × 380 · 28</td><td>.tile-rounded, pad 40</td></tr>
+            <tr><td>bento</td><td>479 × 620 · 18</td><td>.dd-bento-card</td></tr>
+            <tr><td>store location</td><td>300 × 331 · 18</td><td>.store-card</td></tr></tbody></table>
+        </div></div>
+      </div>
+    </section>
+
+    <section class="block" id="focus">
+      <header><h2>Focus</h2><p>Mọi trạng thái focus-visible đo được thuộc một trong bốn kiểu dưới đây, ép bằng CDP <code>forcePseudoState</code>. Kiểu phổ biến nhất là viền 2px <code>#0071E3</code>.</p></header>
+      <div class="grid">
+        <div class="spec full" data-card="focus" data-sig-state="495d2177c0:focus 6df1bbebf2:focus fddc8e9283:focus 3a6a2c12ed:focus af98e1488d:focus 37c4aaf421:focus 0ab512244b:focus 06f42a654a:focus 393412a57e:focus bff2a6069a:focus 54172b62c1:focus 89a5c151f8:focus d8f4d9efab:focus dc11f8faf6:focus 351687f68c:focus c1edf42d3f:focus 0ac9370cf0:focus 09d36fcb93:focus ebc31458df:focus 98a47913bb:focus 721a595de8:focus bbc4785910:focus 0d2227d585:focus e3a6a52a34:focus 36942d7b09:focus 02c3c48efd:focus 15f6571b8f:focus 2665d83554:focus 035b5aa4b1:focus 9d3388a9ba:focus 059ceea45b:focus 5cfb083a4d:focus 8553648e33:focus 5aac8243d0:focus 37cff3547c:focus 2915be390d:focus af2edc896f:focus 16ed3f8a06:focus befc2dd564:focus b3c892552e:focus d396160c82:focus b06a928f94:focus 3d25683233:focus fb504787c1:focus a7301158a2:focus eb16abba22:focus 3d2d1ff49a:focus 7845144919:focus 9653fb4c64:focus 5ad00b477d:focus b8d4b31696:focus 4cc5e3c7b6:focus 397e3f880c:focus 6d97072b70:focus bad1236196:focus dca3531eb0:focus 9353bb973e:focus 03d80ba80d:focus b3ffd21193:focus ad3e21a5f5:focus 4554a7aee1:focus a245313f9d:focus 5a93fccee9:focus 71c7050bc7:focus ff1694d1fd:focus 658ac28de2:focus 36ca6d161b:focus 602c213c81:focus 91d6c06232:focus c9cd3324fa:focus ec2423b6c1:focus f8076745c9:focus e22b04a1e1:focus 7f995902ef:focus 4f9c3f2c36:focus 1afefa6f3f:focus 55dc9c6038:focus f70f910228:focus b9c7339b72:focus 69d08ecfdd:focus 79a9c03267:focus cc4979c476:focus f042267e59:focus 446966cfc4:focus 4e1e949729:focus 3d2ee6084c:focus 3cc61c453e:focus 2e7eb03c8e:focus 8d25beca46:focus 6b033a5a29:focus 1e2e07d01c:focus baf6ab33b1:focus 2f512e750f:focus 317ac9b0ab:focus 74864a14fb:focus f03dbe4546:focus f09e38423a:focus 9b71415a14:focus 2031375803:focus 6e247c5bc5:focus 9c4af9dad7:focus 3ee55c56e6:focus 9bc987e6ae:focus f550906b5e:focus bea3d6e07f:focus 61809d8e68:focus 8a3b48d219:focus 9bf0bb1882:focus 8c983e1128:focus 8f8bf79a0e:focus cc2f4fc142:focus 065d052c6d:focus 37e79d5b57:focus b54351fc91:focus 3bbc8334e1:focus cb5992ca2b:focus 14e7dd489c:focus 1e067401fd:focus bad7d681bd:focus a6ee51851c:focus f39cbc6eb8:focus 83485ceed4:focus f7f6639aa0:focus 45843047a5:focus ce4d61117b:focus c96b1e1a70:focus a0be33950a:focus e80db1d618:focus 1c2c8932a5:focus 640e02efdf:focus fa5da06b52:focus 80de92e528:focus e2b507b418:focus 695498077e:focus 87c5ccef28:focus 4bedad1896:focus 7eddc33b55:focus e785bc1862:focus b0842a56b9:focus 71b089fbe6:focus 5d525c8cf7:focus f774cca9f3:focus 3b160a3fb9:focus 4898956583:focus f3e5133f4b:focus e1a860884f:focus ff93c1ea6d:focus 49b4a373f5:focus 9c7b6900f4:focus 7eacd2d603:focus 56a73e344a:focus fa8282ddc6:focus 7ca6f1fba4:focus 715a85bd90:focus 2fb93c4bd3:focus 4814a63388:focus d538f12543:focus b3ba0a8dc1:focus 9b6aad9ee7:focus 58374dbc56:focus 39be512257:focus 7a4799e908:focus 3380af83fe:focus a164d1c519:focus b214c5f5ee:focus 184b09b4a8:focus ac85b8b9f3:focus 4938e168d4:focus 5e4bc7964f:focus a2bb48e24e:focus 2a0c626e9d:focus 1d34aa6733:focus 9fbe14a591:focus f1a555d632:focus 3e96eab96a:focus 4fe3fa5900:focus bcda0e05fe:focus 6e6bb7bee9:focus 6d0a6997bb:focus 7c1d2a9d03:focus 36bb881708:focus b349e83c2b:focus 938d53fc87:focus c7ca24abf0:focus 2298669121:focus a43233a034:focus 461ed2ecbd:focus 9e1d2a5034:focus 09b9abdfd9:focus ce44c7593a:focus" data-demo="focus"><div class="spec-h"><b>Focus · 4 kiểu</b><span class="kind">:focus-visible</span><span class="dp">outline 2 · ring 3+2 · field 2</span></div>
+          <div class="stage">
+            <div class="st-lab">outline 2px solid --sk-focus-color (link, thẻ, nút tròn, dotnav)</div>
+            <a class="ak-link s17 f-outline">Tìm hiểu thêm <svg class="i"><use href="#i-chev"/></svg></a>
+            <button class="ak-ictl paddle s f-outline" aria-label="Tiếp"><svg class="i"><use href="#i-right"/></svg></button>
+            <span class="ak-pill on f-outline">Tab đang chọn</span>
+            <div class="st-lab">ring 0 0 0 3px nền + 0 0 0 5px --sk-focus-color (.button, play/pause)</div>
+            <button class="ak-btn f-ring">Mua</button>
+            <button class="ak-ictl play f-ring" aria-label="Phát"><svg class="i"><use href="#i-play"/></svg></button>
+            <div class="st-lab">field: border 2px --sk-focus-color (.form-textbox, .form-dropdown)</div>
+            <div class="ak-tb is-focus filled"><input placeholder=" " value="Hà Nội" aria-label="Vị trí"><label>Tìm theo vị trí</label></div>
+            <div class="st-lab">legacy: outline 3px rgba(131,192,253,.5) (.icon-wrapper cũ)</div>
+            <a class="ak-link s21 f-legacy">Gọi cho chúng tôi</a>
+          </div><div class="spec-f"><span class="note">Viền dùng <code>outline</code> nên không làm xê dịch bố cục. Riêng ô nhập đổi độ dày border từ 1 lên 2 và bù padding 1px.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= HÀNH ĐỘNG ================= -->
+    <section class="block" id="actions">
+      <header><h2>Hành động</h2></header>
+      <div class="grid">
+        <div class="spec full" data-card="buttons" data-sig="bbc4785910 0d2227d585 e3a6a52a34 36942d7b09 02c3c48efd 15f6571b8f" data-sig-state="bbc4785910:hover bbc4785910:active 0d2227d585:hover 0d2227d585:active e3a6a52a34:hover e3a6a52a34:active 36942d7b09:hover 36942d7b09:active 02c3c48efd:hover 02c3c48efd:active 15f6571b8f:hover" data-demo="hover active"><div class="spec-h"><b>Button · 4 variant × trạng thái</b><span class="kind">.button · -neutral · -secondary · -secondary-neutral</span><span class="dp">h 44 · pad 11/21 · r 980</span></div>
+          <div class="stage">
+            <div class="st-lab">nghỉ</div>
+            <button class="ak-btn">Mua</button>
+            <button class="ak-btn neutral">Tìm hiểu thêm</button>
+            <button class="ak-btn secondary">Xem giá</button>
+            <button class="ak-btn secondary-neutral">Tìm cửa hàng</button>
+            <div class="st-lab">:hover (--sk-button-background-hover)</div>
+            <button class="ak-btn is-hover">Mua</button>
+            <button class="ak-btn neutral is-hover">Tìm hiểu thêm</button>
+            <button class="ak-btn secondary is-hover">Xem giá</button>
+            <button class="ak-btn secondary-neutral is-hover">Tìm cửa hàng</button>
+            <div class="st-lab">:active (--sk-button-background-active)</div>
+            <button class="ak-btn is-active">Mua</button>
+            <button class="ak-btn neutral is-active">Tìm hiểu thêm</button>
+            <button class="ak-btn secondary is-active">Xem giá</button>
+            <button class="ak-btn secondary-neutral is-active">Tìm cửa hàng</button>
+            <div class="st-lab">disabled (opacity --sk-link-disabled-opacity .42)</div>
+            <button class="ak-btn" disabled style="opacity:.42;cursor:default">Hết hàng</button>
+          </div><div class="spec-f"><span class="note">Secondary đổi sang nền xanh, chữ trắng khi hover và mất viền. Nút neutral trên nền tối (.theme-dark) đảo thành nền <code>#F5F5F7</code>, chữ đen.</span></div></div>
+
+        <div class="spec full" data-card="buttons2" data-sig="2665d83554 035b5aa4b1 9d3388a9ba 059ceea45b 5cfb083a4d 8553648e33 5aac8243d0 37cff3547c 2915be390d 0e4708da60 af2edc896f" data-sig-state="2665d83554:hover 2665d83554:active 035b5aa4b1:hover 035b5aa4b1:active 9d3388a9ba:hover 9d3388a9ba:active 5cfb083a4d:hover 5cfb083a4d:active 8553648e33:hover 8553648e33:active 5aac8243d0:hover 5aac8243d0:active 37cff3547c:hover 37cff3547c:active 2915be390d:hover 2915be390d:active 0e4708da60:hover 0e4708da60:active af2edc896f:hover af2edc896f:active" data-demo="hover active"><div class="spec-h"><b>Button · cỡ và biến thể theo ngữ cảnh</b><span class="kind">.button-reduced · .ac-ln-button · .form-button · .ac-ls-button · .button-elevated</span><span class="dp">44 · 36 · 24 · 56</span></div>
+          <div class="stage">
+            <button class="ak-btn">Mặc định 17</button>
+            <button class="ak-btn reduced">Reduced 14</button>
+            <button class="ak-btn small">Localnav 12</button>
+            <button class="ak-btn form">Tiếp tục tra cứu</button>
+            <button class="ak-btn secondary elevated">Xem phim <svg class="i fill"><use href="#i-play"/></svg></button>
+            <div class="st-lab">.ac-ls-button (r 8, chỉ trên thanh chọn khu vực) · nghỉ / hover / active</div>
+            <span class="theme-inv" style="display:inline-flex;gap:10px;padding:10px;border-radius:12px;background:var(--sk-fill-secondary)"><button class="ak-btn locale">Tiếp tục</button><button class="ak-btn locale is-hover">Tiếp tục</button><button class="ak-btn locale is-active">Tiếp tục</button></span>
+            <div class="st-lab">.form-button :hover / :active</div>
+            <button class="ak-btn form is-hover">Tiếp tục tra cứu</button>
+            <button class="ak-btn small is-hover">Đăng ký</button>
+            <button class="ak-btn reduced secondary-neutral is-active">Đọc câu chuyện</button>
+          </div><div class="spec-f"><span class="note">Chiều cao = line-height + padding dọc + viền 1px trong suốt: 20 + 22 + 2 = 44; 18 + 16 + 2 = 36; 16 + 6 + 2 = 24; form 20 + 34 + 2 = 56 (r 12).</span></div></div>
+
+        <div class="spec" data-card="links" data-sig="397e3f880c 6d97072b70 bad1236196 dca3531eb0 981c375b61 9353bb973e 03d80ba80d b3ffd21193 ad3e21a5f5 4554a7aee1 a245313f9d 5a93fccee9 71c7050bc7 ff1694d1fd 658ac28de2 36ca6d161b 602c213c81 91d6c06232 c9cd3324fa ec2423b6c1 f8076745c9 e22b04a1e1 7f995902ef 4f9c3f2c36 1afefa6f3f 55dc9c6038 f70f910228 b9c7339b72 69d08ecfdd 79a9c03267 25adaf7168 9c014b55e7 af0fbe3a03 f4c9512258 8587ca05cb 2429aa0cec" data-sig-state="bad1236196:hover 9353bb973e:hover ad3e21a5f5:hover a245313f9d:hover 5a93fccee9:hover ff1694d1fd:hover" data-demo="hover"><div class="spec-h"><b>Link chữ</b><span class="kind">a · .more · .icon-wrapper · .link-standalone · .as-buttonlink</span><span class="dp">12 · 14 · 17 · 21 · 24</span></div>
+          <div class="stage col" style="gap:10px;align-items:flex-start">
+            <a class="ak-link s17">Tìm hiểu thêm <svg class="i"><use href="#i-chev"/></svg></a>
+            <a class="ak-link s17 is-hover">Mua <svg class="i"><use href="#i-chev"/></svg></a>
+            <a class="ak-link s21">Xem các cách mua <svg class="i"><use href="#i-chev"/></svg></a>
+            <a class="ak-link s21 strong">Xem thiết bị của bạn đáng giá bao nhiêu <svg class="i"><use href="#i-chev"/></svg></a>
+            <a class="ak-link s24">Trò chuyện với chuyên gia <svg class="i"><use href="#i-chev"/></svg></a>
+            <a class="ak-link s14">Tìm hiểu thêm <svg class="i"><use href="#i-chev"/></svg></a>
+            <a class="ak-link s17 strong gray">Tìm hiểu thêm</a>
+            <a class="ak-link s17 strong ink">Sạc không dây (1 m)</a>
+            <a class="ak-link s12">Tìm cửa hàng</a>
+            <a class="ak-link s12 fine is-hover">ví dụ.com/đường-dẫn</a>
+          </div><div class="spec-f"><span class="note">Hover chỉ bật gạch chân, không đổi màu. Chevron là glyph SF Pro Icons trên site, ở đây thay bằng SVG.</span></div></div>
+
+        <div class="spec" data-card="iconctl" data-sig="cc4979c476 f042267e59 446966cfc4 4e1e949729 3d2ee6084c 3cc61c453e 2e7eb03c8e 8d25beca46 6b033a5a29 1e2e07d01c baf6ab33b1 2f512e750f 317ac9b0ab d148a8324c 74864a14fb f03dbe4546 9f3a2d1b33" data-sig-state="f042267e59:hover f042267e59:active 4e1e949729:hover 4e1e949729:active 3d2ee6084c:hover 3d2ee6084c:active 8d25beca46:active 6b033a5a29:hover 6b033a5a29:active 1e2e07d01c:hover 1e2e07d01c:active baf6ab33b1:hover baf6ab33b1:active 317ac9b0ab:hover 317ac9b0ab:active 74864a14fb:hover 74864a14fb:active f03dbe4546:hover f03dbe4546:active" data-demo="hover active"><div class="spec-h"><b>Nút tròn điều khiển</b><span class="kind">.iconcontrol · .paddlenav-arrow · .play-pause-button · tile-button</span><span class="dp">36 · 56 · 54</span></div>
+          <div class="stage">
+            <div class="st-lab">iconcontrol tertiary · primary · secondary — nghỉ / hover / active</div>
+            <button class="ak-ictl" aria-label="Tiếp"><svg class="i"><use href="#i-right"/></svg></button>
+            <button class="ak-ictl is-hover" aria-label="Tiếp"><svg class="i"><use href="#i-right"/></svg></button>
+            <button class="ak-ictl is-active" aria-label="Tiếp"><svg class="i"><use href="#i-right"/></svg></button>
+            <button class="ak-ictl primary" aria-label="Thêm"><svg class="i"><use href="#i-plus"/></svg></button>
+            <button class="ak-ictl primary is-hover" aria-label="Thêm"><svg class="i"><use href="#i-plus"/></svg></button>
+            <button class="ak-ictl secondary" aria-label="Thêm"><svg class="i"><use href="#i-plus"/></svg></button>
+            <button class="ak-ictl secondary is-hover" aria-label="Thêm"><svg class="i"><use href="#i-plus"/></svg></button>
+            <button class="ak-ictl" disabled aria-label="Trước"><svg class="i"><use href="#i-left"/></svg></button>
+            <div class="st-lab">paddlenav 56 / 36 (alpha) — nghỉ / hover / active</div>
+            <button class="ak-ictl paddle" aria-label="Trước"><svg class="i"><use href="#i-left"/></svg></button>
+            <button class="ak-ictl paddle is-hover" aria-label="Tiếp"><svg class="i"><use href="#i-right"/></svg></button>
+            <button class="ak-ictl paddle is-active" aria-label="Tiếp"><svg class="i"><use href="#i-right"/></svg></button>
+            <button class="ak-ictl paddle s" aria-label="Tiếp"><svg class="i"><use href="#i-right"/></svg></button>
+            <button class="ak-paddle-tall" aria-label="Cuộn tiếp"><svg class="i"><use href="#i-right"/></svg></button>
+            <button class="ak-paddle-tall is-hover" aria-label="Cuộn tiếp"><svg class="i"><use href="#i-right"/></svg></button>
+            <div class="st-lab">play/pause 56 viền · 36 alpha — nghỉ / hover / active scale .95 · tile-button · chat 54</div>
+            <button class="ak-ictl play" aria-label="Tạm dừng"><svg class="i"><use href="#i-pause"/></svg></button>
+            <button class="ak-ictl play is-active" aria-label="Tạm dừng"><svg class="i"><use href="#i-pause"/></svg></button>
+            <button class="ak-ictl play s" aria-label="Phát"><svg class="i"><use href="#i-play"/></svg></button>
+            <button class="ak-ictl play s is-hover" aria-label="Phát"><svg class="i"><use href="#i-play"/></svg></button>
+            <button class="ak-ictl play s is-active" aria-label="Phát"><svg class="i"><use href="#i-play"/></svg></button>
+            <button class="ak-ictl tilebtn" aria-label="Mở thêm"><svg class="i"><use href="#i-plus"/></svg></button>
+            <button class="ak-ictl tilebtn is-hover" aria-label="Mở thêm"><svg class="i"><use href="#i-plus"/></svg></button>
+            <button class="ak-ictl chat" aria-label="Trò chuyện"><svg class="i"><use href="#i-chat"/></svg></button>
+            <button class="ak-ictl ghost is-active" aria-label="Điều khiển"><svg class="i"><use href="#i-menu"/></svg></button>
+            <button class="ak-tip" aria-label="Trợ giúp thêm"><svg class="i"><use href="#i-info"/></svg></button>
+          </div><div class="spec-f"><span class="note">Nền hover/active lấy từ <code>--sk-iconcontrol-scrim-color-*</code> và <code>--sk-paddlenav-background-*</code>. Play/pause 56 trên site có thêm vòng tiến trình SVG; kit chỉ vẽ viền tĩnh.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= ĐIỀU HƯỚNG ================= -->
+    <section class="block" id="navigation">
+      <header><h2>Điều hướng</h2></header>
+      <div class="grid">
+        <div class="spec full" data-card="globalnav" data-sig="42860b46d0 1f21ded756 d9f815eb16 495d2177c0 6df1bbebf2 fddc8e9283 b44cd0b57e 3a6a2c12ed 5a36c05e7b 9acdd5169d af98e1488d 37c4aaf421 e518349f38 b646cdc210 0ab512244b 81403b45b0 2a0001d9b5 06f42a654a 393412a57e 170bef4702 ea825b7019 c53a668406 bff2a6069a 812420c988 54172b62c1 89a5c151f8 d8f4d9efab 45330ae794 dc11f8faf6 dd7f3c9f87 989e55d2cb b219c52611" data-sig-state="6df1bbebf2:hover 6df1bbebf2:active fddc8e9283:hover af98e1488d:hover 37c4aaf421:hover 06f42a654a:hover 393412a57e:hover bff2a6069a:hover 89a5c151f8:hover 89a5c151f8:active d8f4d9efab:hover dc11f8faf6:hover" data-demo="hover active"><div class="spec-h"><b>Global nav · flyout · thanh khu vực</b><span class="kind">#globalnav · .globalnav-flyout · .globalmessage-segment · #ac-localeswitcher</span><span class="dp">h 44 · blur 20 · link 12</span></div>
+          <div class="stage col" style="gap:14px;padding:18px 0">
+            <nav class="ak-gn" aria-label="Global nav mẫu"><div class="in"><a aria-label="Trang chủ"><span class="logo" title="logo (giữ chỗ)"></span></a><a>Mục 1</a><a class="hide-s">Mục 2</a><a class="hide-s is-hover">Mục 3</a><a class="hide-s">Mục 4</a><a class="hide-s">Mục 5</a><a class="hide-s">Mục 6</a><a class="hide-s">Mục 7</a><a class="hide-s">Mục 8</a><a class="hide-s">Mục 9</a><a class="hide-s">Mục 10</a><a class="hide-s">Mục 11</a><a aria-label="Tìm kiếm"><svg class="i"><use href="#i-search"/></svg></a><a aria-label="Túi"><svg class="i"><use href="#i-bag"/></svg></a></div></nav>
+            <div class="ak-flyout"><div class="cols">
+              <div class="big"><h3>Khám phá</h3><a>Danh mục A</a><a class="is-hover">Danh mục B</a><a>Danh mục C</a></div>
+              <div class="sm"><h3>Mua sắm</h3><a>Mua sản phẩm A</a><a class="is-hover">Mua sản phẩm B</a><a>Phụ kiện</a></div>
+              <div class="sm"><h3>Thêm</h3><a>Hỗ trợ</a><a>Ứng dụng</a></div></div></div>
+            <div class="ak-msg"><a class="ak-link s12 fine">Trang chủ cửa hàng giáo dục</a><a class="ak-link s12 fine is-hover">Thoát</a></div>
+            <div class="theme-dark-demo" data-theme-scope="dark" style="background:var(--sk-glyph)"><nav class="ak-gn dark" aria-label="Global nav tối mẫu"><div class="in"><a aria-label="Trang chủ"><span class="logo"></span></a><a>Mục 1</a><a class="hide-s is-hover">Mục 2</a><a class="hide-s">Mục 3</a><a class="hide-s">Mục 4</a><a aria-label="Tìm kiếm"><svg class="i"><use href="#i-search"/></svg></a><a aria-label="Túi"><svg class="i"><use href="#i-bag"/></svg></a></div></nav></div>
+            <div class="ak-ls"><span class="copy-t">Chọn quốc gia hoặc khu vực khác để xem nội dung dành cho vị trí của bạn.</span><div class="ak-select-ls"><span>Việt Nam</span><svg class="i"><use href="#i-down"/></svg></div><span class="theme-inv"><button class="ak-btn locale">Tiếp tục</button></span><button class="ak-tip" aria-label="Đóng"><svg class="i"><use href="#i-close"/></svg></button></div>
+          </div><div class="spec-f"><span class="note">Nền <code>rgba(250,250,252,.8)</code> + <code>backdrop-filter: saturate(1.8) blur(20px)</code>. Link hover đổi từ <code>.8</code> alpha sang màu đặc, transition .32s. Header tối (trang chủ) nền <code>rgba(29,29,31,.8)</code>. Mobile cao 48 (<code>--r-globalnav-height</code>).</span></div></div>
+
+        <div class="spec full" data-card="localnav" data-sig="d7d5263be3 9fbe14a591 f1a555d632 3e96eab96a 71d7713d1f 4fe3fa5900 bcda0e05fe 6e6bb7bee9 6d0a6997bb 15fc4fc519 08c1ff11f7" data-sig-state="9fbe14a591:hover f1a555d632:hover 3e96eab96a:hover 6e6bb7bee9:hover 6d0a6997bb:hover 6d0a6997bb:active" data-demo="hover active"><div class="spec-h"><b>Local nav · thanh danh mục Store</b><span class="kind">#ac-localnav · .as-localnav · .rf-navbar</span><span class="dp">h 52 · title 21/600 · link 12 · Buy 24 · rf 61</span></div>
+          <div class="stage col" style="gap:14px;padding:18px 0">
+            <nav class="ak-ln" aria-label="Local nav mẫu"><div class="in"><a class="title">Sản phẩm A</a><div class="menu"><a class="current">Tổng quan</a><a class="is-hover">Vì sao chọn</a><a>Thông số</a><a>So sánh</a></div><button class="ak-btn small">Mua</button></div></nav>
+            <nav class="ak-ln" aria-label="Local nav store mẫu"><div class="in"><a class="title">Nâng cấp</a><div class="menu"><a class="current">Tổng quan</a><a>Cách nâng cấp</a></div><button class="ak-btn small is-hover">Đăng ký</button></div></nav>
+            <nav class="ak-rfnav" aria-label="Danh mục store mẫu"><a class="active">Tất cả mẫu</a><a class="is-hover">Hướng dẫn mua</a><a>Cách mua</a><a>Ưu đãi</a><button class="ak-ictl paddle s" aria-label="Tiếp" style="margin-left:auto"><svg class="i"><use href="#i-right"/></svg></button></nav>
+          </div><div class="spec-f"><span class="note">Mục đang chọn có gạch 1px (opacity .8) sát đáy thanh. Link nghỉ ở opacity .8; hover lên 1, transition .24s <code>cubic-bezier(.28,.11,.32,1)</code>.</span></div></div>
+
+        <div class="spec" data-card="ribbon" data-sig="cffd0bf65c f09e38423a fd0b5cd647 a5d53baf7c 550d310ea5 74781182ec 3c548cd982 91b9f039f7 f43521a43d" data-sig-state="f09e38423a:hover" data-demo="hover"><div class="spec-h"><b>Ribbon</b><span class="kind">.ribbon · .ribbon-content-wrapper · .footer-ribbon</span><span class="dp">52 · 58 · 73</span></div>
+          <div class="stage col" style="padding:18px 0;gap:10px">
+            <div class="ak-ribbon">Thuê thiết bị mới với phí hằng tháng thấp. <a class="ak-link s14">Tìm hiểu thêm <svg class="i"><use href="#i-chev"/></svg></a></div>
+            <div class="ak-ribbon white">Mua sản phẩm với giá ưu đãi giáo dục. <a class="ak-link s14 is-hover">Mua <svg class="i"><use href="#i-chev"/></svg></a></div>
+            <div class="ak-ribbon dark">Trả góp hằng tháng thật dễ dàng. <a class="ak-link s14">Tìm hiểu thêm <svg class="i"><use href="#i-chev"/></svg></a></div>
+            <div class="ak-ribbon big white">Khẩu hiệu cuối trang.</div>
+          </div><div class="spec-f"><span class="note">Pad 16/0 (chữ 14) hoặc 24/0 (chữ 17), nền <code>--sk-fill-tertiary</code>, trắng, hoặc <code>#1D1D1F</code> (bản /vn, không đổi theo theme).</span></div></div>
+
+        <div class="spec" data-card="chapternav" data-sig="ed6d8e7031 9b71415a14 3fd40aead9 dee1789686 2031375803 6e247c5bc5 6a318ad802 0ff8f0a8f9 9c4af9dad7" data-sig-state="9b71415a14:hover 2031375803:hover 6e247c5bc5:hover 9c4af9dad7:hover" data-demo="hover"><div class="spec-h"><b>Chapter nav · product nav</b><span class="kind">ChapterNav · .rf-productnav · .rc-index · .rs-shop-header</span><span class="dp">label 14/18/600</span></div>
+          <div class="stage col" style="gap:18px">
+            <div class="ak-chap"><a><span class="ph"></span><span class="lab">Mẫu A</span><span class="new">Mới</span></a><a class="is-hover"><span class="ph"></span><span class="lab">Mẫu B</span></a><a><span class="ph"></span><span class="lab">Mẫu C</span></a><a><span class="ph"></span><span class="lab">So sánh</span></a></div>
+            <div style="display:flex;align-items:baseline;gap:24px;flex-wrap:wrap"><span style="font:600 80px/84px var(--ak-display);letter-spacing:-1.2px">Store</span><span style="font:600 28px/32px var(--ak-display);letter-spacing:.196px">Mới nhất.</span><a class="ak-link s17 strong ink">Tất cả phụ kiện</a></div>
+          </div><div class="spec-f"><span class="note">Icon sản phẩm là ảnh của site, ở đây thay bằng khối xám 54 × 54. Hover đổi nhãn sang màu link.</span></div></div>
+
+        <div class="spec full" data-card="tabnav" data-sig="7c1d2a9d03 7f9cf0eee3 a2c97f500e 36bb881708 7a4223df4d 8856b51ee7 9824065c51 574c96e668 b349e83c2b cd3f56b75a 39245858e5 938d53fc87 bf6971bf2e ee8a4ee77a b140a2dcff 6403bd4962 1b5a6d6978 c7ca24abf0 2298669121 a43233a034 b5c256c331" data-sig-state="a2c97f500e:hover 9824065c51:hover 574c96e668:hover 39245858e5:hover ee8a4ee77a:hover 6403bd4962:hover a43233a034:hover" data-demo="hover active"><div class="spec-h"><b>Tab nav · 4 kiểu</b><span class="kind">.tabnav-link · TabNav_platter · .tabnav-items · .tabnav-item</span><span class="dp">pill 36 r99 · platter 56 r999 · chip 44 r20</span></div>
+          <div class="stage col" style="gap:20px;align-items:flex-start">
+            <div class="ak-pills"><span class="ak-pill on">Phụ kiện &amp; thiết yếu</span><span class="ak-pill is-hover">Luôn đầy pin</span><span class="ak-pill">Bảo vệ</span><span class="ak-pill">Âm thanh</span></div>
+            <div class="ak-platter"><span class="ak-pill on">Tất cả</span><span class="ak-pill">Laptop</span><span class="ak-pill">Desktop</span><span class="ak-pill">Màn hình</span></div>
+            <div class="ak-utabs"><a class="current">Nghe gọi và nhắn tin</a><a class="is-hover">Sao chép giữa máy</a><a>Mở khoá</a></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="ak-chip on">Tất cả</button><button class="ak-chip is-hover">Bắt đầu</button><button class="ak-chip">Ứng dụng</button></div>
+            <div style="display:flex;gap:0"><span class="ak-icotab on"><span class="ph"></span>Mẫu A</span><span class="ak-icotab"><span class="ph"></span>Mẫu B</span><button class="ak-ictl ghost" aria-label="Cuộn tiếp" style="width:34px;height:54px;align-self:center"><svg class="i"><use href="#i-right"/></svg></button></div>
+          </div><div class="spec-f"><span class="note">Pill hover: opacity .8 → 1. Platter: tab chọn nền trắng + bóng. Gạch dưới: 17/600, mục chọn có đường 2px. Chip viền (store ưu đãi): r 20, chọn thì nền đặc.</span></div></div>
+      </div>
+    </section>
+
+    <section class="block" id="selection">
+      <header><h2>Chọn màu &amp; cuộn</h2></header>
+      <div class="grid">
+        <div class="spec" data-card="colornav" data-sig="2c938f7354 baabd05fa2 d21d39f2be 8398a095a7 f69a0818ae 0176efd691 632316034a ac1cbb2855 b54fa6f7d8 f7680ae4c6 342b3f1fe4 7d686ade0a f2f29b3c1b 2bc94940ef ce6a9fd8f3 7ca6f1fba4 4cb1b653ba 084e8053ad 715a85bd90 8db2f887cb 60974b11fc d9df43376f 2fb93c4bd3 254f54e75c 9af048e44d f5768ee7ea" data-demo="hover active"><div class="spec-h"><b>Color nav · color indicator</b><span class="kind">.colornav · .colorindicator · .control-item</span><span class="dp">38 ring · 28 · 24 · 12</span></div>
+          <div class="stage col" style="gap:16px;align-items:flex-start">
+            <div class="ak-colornav"><span class="ak-cn current"><span class="ring"><span class="sw" style="background:var(--ak-finish-skyblue)"></span></span><span class="lab">Xanh trời</span></span><span class="ak-cn is-hover"><span class="ring"><span class="sw" style="background:var(--ak-finish-silver)"></span></span><span class="lab">Bạc</span></span><span class="ak-cn"><span class="ring"><span class="sw" style="background:var(--ak-finish-starlight)"></span></span><span class="lab">Ánh sao</span></span><span class="ak-cn"><span class="ring"><span class="sw" style="background:var(--ak-finish-midnight)"></span></span><span class="lab">Nửa đêm</span></span></div>
+            <span class="ak-ci" aria-label="5 màu"><i style="background:var(--ak-finish-silver)"></i><i style="background:var(--ak-finish-blush)"></i><i style="background:var(--ak-finish-citrus)"></i><i style="background:var(--ak-finish-indigo)"></i><i style="background:var(--ak-finish-skyblue)"></i></span>
+            <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><span class="ak-ctlitem"><span class="ak-cswatch" style="background:var(--ak-finish-silver)"></span>Bạc · Màu</span><span class="ak-ctlitem">Kích cỡ</span><span class="ak-cswatch" style="background:var(--ak-finish-spaceblack)"></span></div>
+          </div><div class="spec-f"><span class="note">Swatch có bóng trong <code>inset 0 1px 1px rgba(0,0,0,.1)</code>. Swatch đang chọn có viền 2px <code>--sk-focus-color</code>, cách swatch 3px.</span></div></div>
+
+        <div class="spec" data-card="dotnav" data-sig="472af2b3f7 c70c846b5a 9653fb4c64 e1d4458386 d7bf16a9a6 d8bcb4c049 5ad00b477d b8d4b31696 4cc5e3c7b6" data-sig-state="9653fb4c64:hover 9653fb4c64:active" data-demo="hover active"><div class="spec-h"><b>Dot nav · gallery control</b><span class="kind">.dotnav · .media-gallery-dotnav</span><span class="dp">dot 8 · current 32 · scrim 56</span></div>
+          <div class="stage col" style="gap:18px;align-items:flex-start">
+            <nav class="ak-dots" aria-label="Chấm"><a class="current" aria-label="Mục 1"></a><a class="is-hover" aria-label="Mục 2"></a><a aria-label="Mục 3"></a><a aria-label="Mục 4"></a></nav>
+            <div class="ak-dotbar"><nav class="ak-dots scrim" aria-label="Chấm có nền"><a class="current" aria-label="Mục 1"></a><a aria-label="Mục 2"></a><a aria-label="Mục 3"></a><a aria-label="Mục 4"></a><a aria-label="Mục 5"></a></nav><button class="ak-ictl play s" aria-label="Tạm dừng"><svg class="i"><use href="#i-pause"/></svg></button></div>
+            <nav class="ak-dots timed" aria-label="Chấm có thời gian"><a class="current" aria-label="Chương 1"></a><a aria-label="Chương 2"></a><a aria-label="Chương 3"></a></nav>
+          </div><div class="spec-f"><span class="note">Chấm hiện tại giãn rộng (transition width .25s linear). Chế độ timed dùng thanh 48 × 8 chạy tiến trình; kit vẽ tĩnh ở 45%.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= CHỨA NỘI DUNG ================= -->
+    <section class="block" id="containment">
+      <header><h2>Chứa nội dung</h2></header>
+      <div class="grid wide">
+        <div class="spec full" data-card="headline" data-sig="069ef73600 190392cda2 ec0b57635b ec5a3cdbd7 3ec095f5c9 cc1aae9856 b047c4b162 8376bdc529 228e3e88b9 4902cf87c5 8a21f920b1 25c2375a90 6a39cab44e"><div class="spec-h"><b>Headline lockup · section header</b><span class="kind">.typography-hero-headline · .gradient-text · .mx-headline · SectionHeader</span><span class="dp">80 · 64 · 48 · 40 · 21</span></div>
+          <div class="stage col" style="gap:22px">
+            <p class="ak-h-mx">Nhanh. Nhanh hơn.</p>
+            <p class="ak-h-hero">Mạnh đến bất ngờ.</p>
+            <p class="ak-h-grad" style="background-image:var(--ak-gradient-violet)">Xử lý mọi việc hằng ngày.</p>
+            <div class="ak-sechead"><h3 class="ak-h-sec">Xem toàn bộ dòng máy.</h3><ul><li><a class="ak-link s17">Xem phim <svg class="i"><use href="#i-chev"/></svg></a></li><li><a class="ak-link s17">Mua <svg class="i"><use href="#i-chev"/></svg></a></li></ul></div>
+            <p class="ak-callout"><b>Pin dùng cả ngày.</b> Làm việc, học và giải trí suốt ngày mà không cần mang sạc.</p>
+          </div><div class="spec-f"><span class="note">Gradient hero đo được (<code>linear-gradient(90deg, rgb(2,38,64), rgb(87,134,171))</code>). Hai headline màu khác chỉ đo được màu đầu nên màu cuối vẽ theo spec.</span></div></div>
+
+        <div class="spec full" data-card="tile" data-sig="6701dc46c5 8bf8a4471f 09fa9b5e61 60cee5c71f c2850f0e94 f5446e7bd6 f1aea2ee0c 76b0649db9 fbfb7c2cb2 0ec9e50143 ed74afbe94 675d62576a 469466a4c8 01cfbf8efb 63e2cd25fd f0ecf4e297 fe7c803c03 33027f6622 351687f68c 48d8506b70 62e7a4b008 c1edf42d3f 0ac9370cf0 bc4128f372 51bffd7547 671d37612e c3c0c38493 7ba7f2a6b5 aa3df44304 ba21f91526 09d36fcb93 6f0a922119 ebc31458df f5a21146ed 7f60cc9aa5 7383a612b1 2c4044df2a 98a47913bb 1a7b2448da 62da3906b7 993d216e3a b7dc6ea597 1130757d00 5128e51fe5 4623bb99a6 d8a2048849 4cd123c35f 7125c194e5 e57d45d24c 943ca5ed90 7b68637f56 e2e05db188 9c3fad7748 7e8a6706c7 9356bfc600 b371e99fad 721a595de8 38d0747964 79baf92dc3 c21895b670 5b866bb103 222e322f4b 3762dc0101 fc9f0c3951" data-sig-state="c1edf42d3f:hover c1edf42d3f:active" data-demo="hover active"><div class="spec-h"><b>Tile trang chủ · tile rounded · gallery tile</b><span class="kind">.tile-wrapper · .tile-rounded · .gallery-item · .bento-item</span><span class="dp">692 · 580 · 452×380 r28 · 405×309 r18</span></div>
+          <div class="stage col" style="gap:12px;padding:18px 0">
+            <div class="ak-tile"><h3 class="hl">Sản phẩm A</h3><p class="sub">Mạnh hơn nữa.</p><div class="ctas"><button class="ak-btn">Tìm hiểu thêm</button><button class="ak-btn secondary">Mua</button></div><div class="img ph-img">ảnh sản phẩm</div></div>
+            <div class="ak-tiles"><div class="ak-tile half dark"><h3 class="hl">Sản phẩm B</h3><p class="sub">Xin chào.</p><p class="callout">Đặt trước từ ngày 16/10</p><div class="ctas"><button class="ak-btn reduced">Tìm hiểu thêm</button><button class="ak-btn reduced secondary">Đặt trước</button></div><div class="img ph-img">ảnh</div></div><div class="ak-tile half"><h3 class="hl">Sản phẩm C</h3><p class="sub">Nay có chip mới.</p><div class="ctas"><button class="ak-btn reduced">Tìm hiểu thêm</button><button class="ak-btn reduced secondary is-hover">Mua</button></div><div class="img ph-img">ảnh</div></div></div>
+          </div>
+          <div class="stage" style="align-items:flex-start">
+            <div class="ak-rtile"><p><b>Màn hình lớn hơn, sáng hơn.</b> Đủ rõ cho mọi việc.</p><div class="img ph-img">ảnh</div></div>
+            <div class="ak-rtile dark"><p><b>Xử lý mượt</b> những tác vụ nặng nhất.</p></div>
+            <div class="ak-gtile" role="button" tabindex="0"><div class="copy-t"><small>An toàn</small>Tính năng vệ tinh giữ bạn luôn kết nối.</div><button class="ak-ictl tilebtn is-hover" aria-label="Mở"><svg class="i"><use href="#i-plus"/></svg></button></div>
+            <div class="ak-gtile ph-img" style="background:var(--sk-fill-tertiary)">gallery-item · ảnh nền</div>
+          </div><div class="spec-f"><span class="note">Tile trang chủ tràn viền, nền <code>--sk-fill-tertiary</code> hoặc đen, headline 56/60 + subhead 28/32 + 2 nút. Tile nửa: 40/44 + 21/25. Toàn thẻ gallery bấm được; nút + đổi nền khi hover thẻ.</span></div></div>
+
+        <div class="spec full" data-card="storecard" data-sig="3ee55c56e6 89a9fd8770 9bc987e6ae f550906b5e ee0653c1a8 bea3d6e07f 61809d8e68 8a3b48d219 9bf0bb1882 8c983e1128 8f8bf79a0e 455dc8994f cc2f4fc142 065d052c6d 37e79d5b57 79a7afe332 b54351fc91 3bbc8334e1 cb5992ca2b 14e7dd489c 1e067401fd bad7d681bd a6ee51851c 6b782ef183 f39cbc6eb8 83485ceed4 f7f6639aa0 45843047a5 ce4d61117b c96b1e1a70 a0be33950a e80db1d618 1c2c8932a5 640e02efdf fa5da06b52 80de92e528 68da9610a7 e2b507b418 695498077e 87c5ccef28 4bedad1896 7eddc33b55 e785bc1862 b0842a56b9 43786f53b3 71b089fbe6 5d525c8cf7 3552bcdcf3 ce39dacff1 f774cca9f3 3b160a3fb9 c70f7e746a cdb4f5e22b 3ae6422e7e 05ad7c8575 ac88412905 4898956583 f3e5133f4b e1a860884f ff93c1ea6d 49b4a373f5 9c7b6900f4 7eacd2d603 56a73e344a 2a0c3adaf3" data-sig-state="3ee55c56e6:hover f550906b5e:hover 61809d8e68:hover 8a3b48d219:hover 9bf0bb1882:hover 8c983e1128:hover 8f8bf79a0e:hover cc2f4fc142:hover 065d052c6d:hover 37e79d5b57:hover 14e7dd489c:hover 1e067401fd:hover bad7d681bd:hover f39cbc6eb8:hover f39cbc6eb8:active 83485ceed4:hover 83485ceed4:active f7f6639aa0:hover f7f6639aa0:active ce4d61117b:hover 1c2c8932a5:hover 640e02efdf:hover fa5da06b52:hover 80de92e528:hover e2b507b418:hover e2b507b418:active 87c5ccef28:hover 4bedad1896:hover 4bedad1896:active e785bc1862:hover 5d525c8cf7:hover f774cca9f3:hover 3b160a3fb9:hover e1a860884f:hover ff93c1ea6d:hover 49b4a373f5:hover 9c7b6900f4:hover 7eacd2d603:hover 56a73e344a:hover" data-demo="hover active"><div class="spec-h"><b>Thẻ Store</b><span class="kind">.rf-ccard · .rf-recommcard · .rf-hcard · .as-util · .rf-refurb</span><span class="dp">400×500 · 313×500 · r 18 · shadow 2 4 12</span></div>
+          <div class="stage" style="align-items:flex-start">
+            <div class="ak-ccard dark"><div class="hd"><span class="ak-eyebrow new">Mới</span><h3>Sản phẩm A</h3><p>Mạnh nhất từ trước tới nay.</p></div><div class="img ph-img">ảnh sản phẩm</div></div>
+            <div class="ak-ccard is-hover"><div class="hd"><span class="ak-eyebrow">Đặt trước 16/10</span><h3>Sản phẩm B</h3><p>Từ 699 US$ hoặc 58,25 US$/th.</p></div><div class="img ph-img">:hover · scale 1.01</div></div>
+            <div class="ak-rcard"><div class="img ph-img">ảnh</div><span class="ak-ci"><i style="background:var(--ak-finish-blush)"></i><i style="background:var(--ak-finish-citrus)"></i><i style="background:var(--ak-finish-indigo)"></i><i style="background:var(--ak-finish-skyblue)"></i></span><span class="ak-new">Mới</span><p class="name">Ốp lưng vải cho sản phẩm A — Đỏ</p><p class="price">59,00 US$</p></div>
+            <div class="ak-rcard util is-hover"><div class="img ph-img">ảnh</div><span class="ak-new">Khắc tên miễn phí</span><p class="name">Tai nghe D — Xanh</p><p class="price">549,00 US$ hoặc 91,50 US$/th. trong 6 th.</p></div>
+            <div class="ak-refurb"><div class="ph-img" style="height:200px;border-radius:8px">ảnh</div><h4>Sản phẩm A tân trang</h4><p>Từ 499 US$</p></div>
+            <div class="ak-feature"><span class="ic"></span><span>Nhận ưu đãi tốt nhất khi mua trực tiếp. <a class="ak-link s14">Xem cách <svg class="i"><use href="#i-chev"/></svg></a></span></div>
+            <span class="ak-marquee">Từ 1.299 US$ hoặc 108,25 US$/th.<small>trong 12 th.</small></span>
+          </div><div class="spec-f"><span class="note">Hover hoặc active: <code>scale(1.01)</code>, bóng tăng từ <code>2px 4px 12px .08</code> lên <code>2px 4px 16px .16</code>. Eyebrow 12/600 <code>#424245</code>, riêng chữ "Mới" màu cam <code>--sk-glyph-orange</code>.</span></div></div>
+
+        <div class="spec" data-card="storeloc" data-sig="fa8282ddc6 19867db65d" data-sig-state="fa8282ddc6:hover fa8282ddc6:active" data-demo="hover active"><div class="spec-h"><b>Thẻ cửa hàng</b><span class="kind">.store-card · .store-name</span><span class="dp">300×331 · r 18</span></div>
+          <div class="stage center" style="gap:16px">
+            <a class="ak-storecard"><div class="img ph-img">ảnh cửa hàng</div><div class="body"><h4>Cửa hàng Trung tâm</h4><p>120 Đường Mẫu, Quận 1</p><span class="ak-link s14">Xem chi tiết <svg class="i"><use href="#i-chev"/></svg></span></div></a>
+            <a class="ak-storecard is-hover"><div class="img ph-img">:hover</div><div class="body"><h4>Cửa hàng Bờ sông</h4><p>45 Đường Mẫu</p></div></a>
+          </div><div class="spec-f"><span class="note">Chỉ đổi bóng (<code>0 6px 16px -8px .04</code> → <code>0 14.65px 29.84px -14.92px .145</code>), transition .7s.</span></div></div>
+
+        <div class="spec" data-card="mediacard" data-sig="1093950d7c 2092db760a 16ed3f8a06 deeac07236 befc2dd564 b3c892552e d396160c82 b06a928f94 3d25683233 fb504787c1 a7301158a2 eb16abba22 3d2d1ff49a 85ea1ab53f 9292cacf9a 944a033899 7845144919 e59a23cbfe a280e733c9 85dc4b5be8 d282bb4b0e" data-sig-state="7845144919:hover d282bb4b0e:focus" data-demo="hover"><div class="spec-h"><b>Media card · media gallery</b><span class="kind">.re-media-card · .media-gallery</span><span class="dp">1260×680 r28 · 930×523</span></div>
+          <div class="stage col" style="gap:14px">
+            <div class="ak-mcard dark"><div class="copy-t"><h3>Sản phẩm D</h3><p>Khám phá điều kỳ diệu.</p><a class="ak-link s17">Mua <svg class="i"><use href="#i-chev"/></svg></a></div></div>
+            <div class="ak-mgal ph-img" style="background:var(--sk-fill-gray)"><div class="cap"><button class="ak-btn reduced neutral theme-inv is-hover">Xem ngay</button><span>Chương trình mẫu · Hài kịch</span></div></div>
+            <div class="ak-mgal f-outline" tabindex="0" style="background:var(--ak-music)" aria-label="Gallery nền màu, đang focus"><div class="cap"><span>Danh sách phát mẫu · ảnh bìa (giữ chỗ)</span></div></div>
+          </div><div class="spec-f"><span class="note">Ảnh nền tràn khung là ảnh của site, ở đây giữ chỗ. Nút trong gallery dùng neutral đảo trên nền tối.</span></div></div>
+
+        <div class="spec full" data-card="bento" data-sig="86bb7379c1 562c790c1e d98c93dfd5 2ff002e619 9b6aad9ee7 58374dbc56 3db9358ada 39be512257 7a4799e908 8ab002a17f e40e70a4bc d0935ec223 07ddbf7c42 6dd793fca7 3380af83fe a164d1c519 2fd5bba516 53b232bd71 3480c3b13d 7c6d73f977 d428224e8a 29af6382a9 b214c5f5ee 184b09b4a8 2128603135 ac85b8b9f3 4938e168d4 5e4bc7964f a2bb48e24e df1fa5ddc6 96686dc92a 2b2a17ee42 0918117b1e 1cfb6fc679 e1f67c8358 c19716f679 2a0c626e9d 0a11028808 15232ad7a6 369320c500 1d34aa6733 3dc4fd5b6d dc7fd079da dd1c52269c f67ae36455 512b3fcec9 c9c24466ea 222e9d8b69 4d1a651ca1 6f71f03476" data-sig-state="58374dbc56:hover ac85b8b9f3:hover 4938e168d4:hover 5e4bc7964f:hover a2bb48e24e:hover 1d34aa6733:active" data-demo="hover active"><div class="spec-h"><b>Feature · bento · banner · icon card</b><span class="kind">FeatureCard · .dd-bento-card · BannerCard · .how-to-buy-card · .re-icon-card · Card_program</span><span class="dp">r 28 · 18 · 35 · 14</span></div>
+          <div class="stage" style="align-items:flex-start">
+            <div class="ak-fcard dark"><span class="lab">Hiệu năng và pin</span><h3>Nhanh cho mọi việc hằng ngày.</h3><div class="img ph-img">ảnh</div><button class="ak-ictl tilebtn" aria-label="Mở"><svg class="i"><use href="#i-plus"/></svg></button></div>
+            <div class="ak-fcard"><span class="lab">Hệ điều hành</span><h3>Dễ dùng. Dễ yêu.</h3><div class="img ph-img">ảnh</div><button class="ak-ictl tilebtn is-hover" aria-label="Mở"><svg class="i"><use href="#i-plus"/></svg></button></div>
+            <div class="ak-bento is-hover" tabindex="0"><span class="ak-eyebrow">Vì sao hàng tân trang</span><h3>Đã kiểm tra, chứng nhận, bảo hành.</h3><div class="img ph-img">ảnh</div><button class="ak-ictl tilebtn" aria-label="Mở"><svg class="i"><use href="#i-plus"/></svg></button></div>
+            <div class="ak-icard is-hover"><span class="emo"></span><h3>Của riêng bạn.</h3><p>Khắc tên viết tắt hoặc emoji lên sản phẩm, miễn phí.</p><button class="ak-ictl tilebtn" aria-label="Mở"><svg class="i"><use href="#i-plus"/></svg></button></div>
+            <div class="ak-htb"><h3>Trò chuyện.</h3><p>Lên kế hoạch cùng nhân viên bán hàng.</p><button class="ak-btn reduced">Liên hệ</button></div>
+            <div class="ak-bento sm"><span class="ak-eyebrow">Tiết kiệm</span><h3>Ưu đãi giúp bạn tiết kiệm hơn.</h3></div>
+            <div class="ak-banner"><div><h3>Trả lời vài câu hỏi để tìm máy phù hợp.</h3><p>Chúng tôi sẽ gợi ý dựa trên nhu cầu của bạn.</p><button class="ak-btn">Bắt đầu</button></div><div class="img ph-img">ảnh</div></div>
+            <div class="ak-program"><div class="copy-t"><span class="ak-eyebrow" style="text-transform:none">Chỉ có tại cửa hàng</span><h3>Trải nghiệm tận tay.</h3><a class="ak-link s17">Tìm hiểu thêm <svg class="i"><use href="#i-chev"/></svg></a></div><div class="img ph-img">ảnh</div></div>
+          </div><div class="spec-f"><span class="note">Feature card 372 × 680 pad 32 có nút + góc dưới. Bento 479 × 620 r18: hover làm nút + đổi nền. Icon card hover <code>scale(1.01)</code>. How-to-buy dùng r 35.</span></div></div>
+
+        <div class="spec" data-card="stat" data-sig="3d9ae58e08 8aace9d868 30a0250776 329754d3bd f1cad459d7 2d4a396ec8 f5d23b2420 f6b3a9d83d 9607386b03"><div class="spec-h"><b>Stat · spec list</b><span class="kind">.stat · .spec-list · .battery-gradient-text</span><span class="dp">48/52 · 28/32</span></div>
+          <div class="stage" style="align-items:flex-start;gap:32px">
+            <div class="ak-stat"><span class="v">24 <small>giờ</small></span><span class="c">thời lượng pin tối đa</span></div>
+            <div class="ak-stat grad"><span class="v">14 giờ</span><span class="c">nhiều hơn thế hệ trước</span></div>
+            <ul class="ak-specs"><li><b>Nhanh gấp 6×</b><span>so với thế hệ cũ</span></li><li><b>Tới 16 giờ</b><span>xem video</span></li></ul>
+          </div></div>
+
+        <div class="spec" data-card="accordion" data-sig="2db6d5834e 2a0b8aa086 4814a63388 c52262c311 c2acab249a 8292a235ca b9c015c39b 46e23bfb5f 8ae6a83e85 d538f12543 a9d04b49cc b3ba0a8dc1" data-sig-state="4814a63388:hover" data-demo="hover"><div class="spec-h"><b>Accordion · hỏi đáp</b><span class="kind">.rc-accordion · ImageAccordion · .dd-answer</span><span class="dp">row 56 · 17/600 · r 14</span></div>
+          <div class="stage col" style="gap:20px">
+            <div class="ak-acc"><details open><summary>Chương trình nâng cấp là gì? <svg class="i"><use href="#i-down"/></svg></summary><p>Câu trả lời mẫu mô tả chương trình, điều kiện và cách tham gia.</p></details><details><summary class="is-hover">Tôi có thể đổi máy cũ không? <svg class="i"><use href="#i-down"/></svg></summary><p>Có.</p></details></div>
+            <div class="ak-iacc"><button aria-expanded="true">Máy tính và điện thoại</button><p>Nghe gọi, nhắn tin từ máy tính.</p><button aria-expanded="false" class="is-hover">Máy tính và máy tính bảng</button></div>
+            <div class="ak-qa"><h4>Nếu tôi chưa sẵn sàng thì sao?</h4><p>Không sao. Chúng tôi giữ báo giá cho bạn trong 14 ngày.</p></div>
+          </div><div class="spec-f"><span class="note">Hover đổi màu tiêu đề. ImageAccordion làm mờ mục không mở (<code>--sk-glyph-gray-tertiary</code>).</span></div></div>
+
+        <div class="spec" data-card="table" data-sig="cdcfcab5ca b77ce2b145"><div class="spec-h"><b>Bảng giá trị</b><span class="kind">.dd-table · .dd-wrapper</span><span class="dp">321 · r 18</span></div>
+          <div class="stage"><div class="ak-vtable"><div><h3>Nhận 35–885 US$ khi đổi máy.</h3><a class="ak-link s17">Xem giá trị <svg class="i"><use href="#i-chev"/></svg></a></div><table><caption>Giá trị đổi máy</caption><tbody><tr><th>Mẫu A</th><td>tới 650 US$</td></tr><tr><th>Mẫu B</th><td>tới 470 US$</td></tr><tr><th>Mẫu C</th><td>tới 290 US$</td></tr></tbody></table></div></div></div>
+
+        <div class="spec full" data-card="sections" data-sig="c52be36398 2720d6ff6f 8a717d9f12 4c1ef2af9a 3ff7da838f b8950e4fb4 d44285a479 c4c0780208 8d6c3f73e3 3d5790cc99 6dee5d12ea f157a7a89f 25f7b1be24 da3f43b19d 858e742d39 af9a13dae0 5df0fc39d0 3d163edf77 5755a5da5d 3400c8e374 e8fc890c61 e52e3ed255"><div class="spec-h"><b>Khối section · nền và độ rộng</b><span class="kind">section · MarcomSection · .dd-* overview</span><span class="dp">pad 96 · 980 / 1260</span></div>
+          <div class="stage col" style="gap:0;padding:18px 0">
+            <div class="ak-sec"><div class="rail">nền --sk-fill · nội dung 980</div></div>
+            <div class="ak-sec alt"><div class="rail w1260">nền --sk-fill-tertiary · nội dung 1260</div></div>
+            <div class="ak-sec dark"><div class="rail">nền --sk-glyph (đen) · chữ --sk-fill-tertiary</div></div>
+          </div><div class="spec-f"><span class="note">Trang marketing xếp các section toàn khổ 1440, xen nền trắng / xám / đen, đệm 96 trên dưới. Nội dung bên trong theo lưới 12 cột, gap 20.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= NHẬP LIỆU ================= -->
+    <section class="block" id="inputs">
+      <header><h2>Nhập liệu</h2></header>
+      <div class="grid wide">
+        <div class="spec" data-card="inputs" data-sig="461ed2ecbd 13a825e2ae 9e1d2a5034 8169b8c2dc 09b9abdfd9 ce44c7593a" data-demo="focus"><div class="spec-h"><b>Textbox · dropdown · tooltip</b><span class="kind">.form-textbox · .form-dropdown · .form-tooltip-button</span><span class="dp">56 r 12 · 42 r 210</span></div>
+          <div class="stage col" style="gap:18px;align-items:flex-start">
+            <div class="ak-tb icons"><span class="l"><svg class="i"><use href="#i-search"/></svg></span><input placeholder=" " aria-label="Tìm theo vị trí"><label>Tìm theo vị trí, mã bưu chính</label><span class="r"><svg class="i"><use href="#i-pin"/></svg></span></div>
+            <div class="ak-tb filled"><input placeholder=" " value="W1234567" aria-label="Số đơn hàng"><label>Số đơn hàng</label></div>
+            <div class="ak-tb is-focus"><input placeholder=" " aria-label="Email"><label>Email</label></div>
+            <div class="ak-tb err filled"><input placeholder=" " value="abc" aria-label="Mã bưu chính"><label>Mã bưu chính</label><div class="msg"><svg class="i"><use href="#i-alert"/></svg>Nhập mã bưu chính hợp lệ.</div></div>
+            <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><span class="ak-dd"><select aria-label="Mẫu máy"><option>Mẫu A (2020)</option><option>Mẫu B</option></select><svg class="i"><use href="#i-down"/></svg></span><span class="ak-dd dark"><select aria-label="Cỡ"><option>13 inch</option><option>15 inch</option></select><svg class="i"><use href="#i-down"/></svg></span><button class="ak-tip" aria-label="Trợ giúp thêm"><svg class="i"><use href="#i-info"/></svg></button></div>
+          </div><div class="spec-f"><span class="note">Nhãn nổi: 17 → 12 khi có giá trị hoặc đang focus (transition .125s ease-in). Viền 1px <code>--sk-fill-gray-secondary</code>, focus 2px xanh. Trạng thái lỗi vẽ theo spec (không gặp khi quét).</span></div></div>
+
+        <div class="spec" data-card="search" data-sig="b52d27de7f d06729f67a"><div class="spec-h"><b>Thanh tìm cửa hàng</b><span class="kind">.store-search · .store-search-bar</span><span class="dp">h 56 · pad 8</span></div>
+          <div class="stage" style="padding:18px 0"><div class="ak-searchbar"><h3>Tìm cửa hàng</h3><div class="ak-tb icons" style="width:432px"><span class="l"><svg class="i"><use href="#i-search"/></svg></span><input placeholder=" " aria-label="Tìm cửa hàng"><label>Tìm theo vị trí</label></div><a class="ak-link s17">Xem tất cả <svg class="i"><use href="#i-chev"/></svg></a></div></div></div>
+      </div>
+    </section>
+
+    <!-- ================= PHẢN HỒI ================= -->
+    <section class="block" id="feedback">
+      <header><h2>Phản hồi &amp; chú thích</h2></header>
+      <div class="grid">
+        <div class="spec" data-card="badges"><div class="spec-h"><b>Badge · nhãn Mới</b><span class="kind">.badge · .badge-neutral · eyebrow</span><span class="dp">12/600</span></div>
+          <div class="stage"><span class="ak-badge">Mới</span><span class="ak-badge neutral">Chỉ bán online</span><span class="ak-new">Mới</span><span class="ak-eyebrow">Đặt trước 16/10</span><span class="ak-eyebrow new">Mới</span></div>
+          <div class="spec-f"><span class="note">Badge: nền cam 10%, chữ <code>--sk-badge-text-color</code>. Nhãn Mới trên thẻ Store chỉ đổi màu chữ.</span></div></div>
+        <div class="spec full" data-card="footer" data-sig="f37a1e3357 519176313c 63a83cc086 60eab017b8 b41586786f 08d60d4306 f9053614e3 be104e4aa9 2a892ac5ea e3ee5bbb52 4d552fc241 01ffa013b9 82af11b5e7 087a40c819 301831fd97 00f239d545 9ebebbdc5c 1147d1192e 0a3b5563a3 69bfcfdc0f cde30f3ae8 6e8a50de60" data-demo="hover"><div class="spec-h"><b>Footer · footnote</b><span class="kind">#ac-globalfooter · .ac-gf-sosumi · .as-globalfooter-breadcrumbs</span><span class="dp">12/16 · 980</span></div>
+          <div class="stage col" style="padding:18px 0">
+            <p style="margin:0 22px 12px;font-size:17px">Pin dùng tới 24 giờ.<a class="ak-fn ak-link" href="#fn1">1</a> Trả góp 0%.<a class="ak-fn ak-link" href="#fn2">◊</a></p>
+            <footer class="ak-gf"><div class="in">
+              <div class="sosumi"><p id="fn1">1. Dữ liệu mẫu từ thử nghiệm nội bộ; kết quả thực tế có thể khác.</p><p id="fn2">◊ Điều kiện trả góp mẫu. <a class="ak-link s12">Tìm hiểu thêm</a></p></div>
+              <div class="crumbs"><span class="logo" style="width:12px;height:14px;border-radius:2px;background:currentColor;opacity:.7"></span><svg class="i"><use href="#i-chev"/></svg><span>Cửa hàng trực tuyến</span></div>
+              <div class="dir"><div><h4>Mua sắm và tìm hiểu</h4><a>Store</a><a class="is-hover">Sản phẩm A</a><a>Sản phẩm B</a></div><div><h4>Tài khoản</h4><a>Quản lý tài khoản</a><a>Tài khoản Store</a></div><div><h4>Cửa hàng</h4><a>Tìm cửa hàng</a><a>Hoạt động</a></div><div><h4>Doanh nghiệp</h4><a>Mua cho doanh nghiệp</a></div><div><h4>Giá trị</h4><a>Trợ năng</a><a>Môi trường</a></div></div>
+              <div class="legal"><span>Bản quyền © 2026 Công ty Mẫu.</span><a>Quyền riêng tư</a><a>Điều khoản</a><a>Bản đồ trang</a><span style="margin-left:auto">Việt Nam</span></div>
+            </div></footer>
+          </div><div class="spec-f"><span class="note">Chữ 12/16. Tiêu đề cột <code>--sk-glyph-gray-alpha</code>, link <code>.72</code> alpha, chú thích <code>.56</code> alpha. Link hover gạch chân. Số chú thích 0.6em, lên -0.5em.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= MÀN MẪU ================= -->
+    <section class="block" id="screens">
+      <header><h2>Màn hình mẫu</h2><p>Ghép từ các class <code>.ak-*</code> ở trên theo bố cục apple.com: global nav cố định trên cùng, các tile tràn viền xếp chồng (mobile) hoặc chia đôi (desktop), footer 12px ở cuối. Trang Store dùng rf-navbar và các hàng thẻ 400 × 500.</p></header>
+      <div class="screens"><div class="row">
+        <div>
+          <div class="phone"><div class="scroll">
+            <div class="status"><span>9:41</span><span>●●● ▮</span></div>
+            <nav class="ak-gn compact" aria-label="Nav mobile"><div class="in"><a aria-label="Trang chủ"><span class="logo"></span></a><span style="display:flex"><a aria-label="Tìm"><svg class="i"><use href="#i-search"/></svg></a><a aria-label="Túi"><svg class="i"><use href="#i-bag"/></svg></a><a aria-label="Menu"><svg class="i"><use href="#i-menu"/></svg></a></span></div></nav>
+            <div class="ak-ribbon">Thuê thiết bị với phí thấp. <a class="ak-link s14">Tìm hiểu <svg class="i"><use href="#i-chev"/></svg></a></div>
+            <div class="ak-tile" style="min-height:500px;padding-top:44px"><h3 class="hl" style="font-size:40px;line-height:44px">Sản phẩm A</h3><p class="sub" style="font-size:21px;line-height:25px">Mạnh hơn nữa.</p><div class="ctas"><button class="ak-btn reduced">Tìm hiểu thêm</button><button class="ak-btn reduced secondary">Mua</button></div><div class="img ph-img" style="height:250px">ảnh</div></div>
+            <div class="ak-tile dark" style="min-height:420px;margin-top:12px;padding-top:44px"><h3 class="hl" style="font-size:40px;line-height:44px">Sản phẩm B</h3><p class="sub" style="font-size:21px;line-height:25px">Xin chào.</p><div class="ctas"><button class="ak-btn reduced">Tìm hiểu thêm</button><button class="ak-btn reduced secondary">Đặt trước</button></div></div>
+          </div></div>
+          <div class="cap">mobile 390 × 844 · globalnav compact 48 + ribbon + tile ×2 (40/44 · 21/25) + button reduced</div>
+        </div>
+        <div>
+          <div class="phone"><div class="scroll" style="background:var(--sk-fill-tertiary)">
+            <div class="status"><span>9:41</span><span>●●● ▮</span></div>
+            <nav class="ak-gn compact" aria-label="Nav mobile"><div class="in"><a aria-label="Trang chủ"><span class="logo"></span></a><span style="display:flex"><a aria-label="Tìm"><svg class="i"><use href="#i-search"/></svg></a><a aria-label="Túi"><svg class="i"><use href="#i-bag"/></svg></a><a aria-label="Menu"><svg class="i"><use href="#i-menu"/></svg></a></span></div></nav>
+            <div style="padding:40px 20px 24px"><div style="font:600 48px/52px var(--ak-display);letter-spacing:-.144px">Store</div><p class="ak-callout" style="margin-top:8px;font-size:19px;line-height:23px"><b>Cách tốt nhất để mua</b> sản phẩm bạn yêu thích.</p></div>
+            <div class="ak-chap" style="padding:0 16px 20px"><a><span class="ph"></span><span class="lab">Mẫu A</span></a><a><span class="ph"></span><span class="lab">Mẫu B</span></a><a><span class="ph"></span><span class="lab">Mẫu C</span></a></div>
+            <div style="display:flex;gap:16px;padding:0 20px;overflow:hidden"><div class="ak-ccard dark" style="width:300px;height:420px;flex:none"><div class="hd"><span class="ak-eyebrow new">Mới</span><h3>Sản phẩm A</h3><p>Mạnh nhất.</p></div><div class="img ph-img">ảnh</div></div><div class="ak-ccard" style="width:300px;height:420px;flex:none"><div class="hd"><span class="ak-eyebrow">Đặt trước</span><h3>Sản phẩm B</h3></div></div></div>
+          </div></div>
+          <div class="cap">mobile store · chapternav + rf-ccard kéo ngang (300 × 420)</div>
+        </div>
+      </div></div>
+
+      <div class="screens" style="margin-top:24px"><div>
+        <div class="desk">
+          <div class="chrome"><i></i><i></i><i></i><span>ví dụ.com</span></div>
+          <nav class="ak-gn" aria-label="Nav desktop"><div class="in"><a aria-label="Trang chủ"><span class="logo"></span></a><a>Mục 1</a><a>Mục 2</a><a>Mục 3</a><a>Mục 4</a><a>Mục 5</a><a>Mục 6</a><a>Mục 7</a><a>Mục 8</a><a>Mục 9</a><a>Mục 10</a><a>Mục 11</a><a aria-label="Tìm"><svg class="i"><use href="#i-search"/></svg></a><a aria-label="Túi"><svg class="i"><use href="#i-bag"/></svg></a></div></nav>
+          <div class="ak-ribbon">Thuê thiết bị mới với phí hằng tháng thấp. <a class="ak-link s14">Tìm hiểu thêm <svg class="i"><use href="#i-chev"/></svg></a></div>
+          <div class="ak-tile" style="min-height:692px;padding-bottom:0"><h3 class="hl">Sản phẩm A</h3><p class="sub">Mạnh hơn nữa.</p><div class="ctas"><button class="ak-btn">Tìm hiểu thêm</button><button class="ak-btn secondary">Mua</button></div><div class="img ph-img" style="height:420px;width:900px">ảnh sản phẩm</div></div>
+          <div class="ak-tiles" style="padding:12px"><div class="ak-tile half dark"><h3 class="hl">Sản phẩm B</h3><p class="sub">Xin chào.</p><div class="ctas"><button class="ak-btn reduced">Tìm hiểu thêm</button><button class="ak-btn reduced secondary">Đặt trước</button></div></div><div class="ak-tile half"><h3 class="hl">Sản phẩm C</h3><p class="sub">Nay có chip mới.</p><div class="ctas"><button class="ak-btn reduced">Tìm hiểu thêm</button><button class="ak-btn reduced secondary">Mua</button></div></div></div>
+        </div>
+        <div class="cap">desktop 1440 × 900 · globalnav 44 (content 1024) + ribbon 52 + tile 692 + tile nửa ×2 (gap 12)</div>
+      </div></div>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status"><span id="toast-t">Đã copy</span></div>
+
+<script>
+/* 65 biến --sk-* của apple.com: .theme-light và .theme-dark, sinh từ stylesheet đã tải (roles.cjs) */
+const ROLES=["glyph","glyph-gray","glyph-gray-alpha","glyph-gray-secondary","glyph-gray-secondary-alt","glyph-gray-tertiary","glyph-blue","glyph-orange","glyph-green","glyph-red","fill","fill-secondary","fill-tertiary","fill-gray","fill-gray-secondary","fill-gray-tertiary","fill-gray-quaternary","fill-gray-tertiary-alpha","fill-gray-quaternary-alpha","fill-blue","fill-orange","fill-orange-secondary","fill-green","fill-green-secondary","fill-red","fill-red-secondary","fill-yellow","fill-yellow-secondary","body-background-color","body-text-color","body-link-color","focus-color","button-background","button-background-hover","button-background-active","button-neutral-background","button-neutral-background-hover","button-neutral-background-active","button-neutral-color","button-secondary-color","badge-background","badge-text-color","iconcontrol-scrim-color","iconcontrol-content-color","iconcontrol-scrim-color-hover","paddlenav-background","dotnav-background","dotnav-background-current","tile-background","thumbnav-image-border-color-current","sosumi-text-color","iconcontrol-scrim-color-active","iconcontrol-content-color-hover","paddlenav-background-hover","paddlenav-background-active","paddlenav-arrow-color","dotnav-background-hover","badge-neutral-background","badge-neutral-text-color","button-secondary-neutral-color","button-secondary-neutral-background-hover","button-secondary-neutral-color-hover","tile-button-background","tile-button-icon-color","globalnav-background","button-color"];
+const PALETTES={"apple":{"label":"apple.com","light":["#000000","#1D1D1F","rgba(0,0,0,0.88)","#6E6E73","#424245","#86868B","#0066CC","#B64400","#008009","#E30000","#FFFFFF","#FAFAFC","#F5F5F7","#1D1D1F","#86868B","#D2D2D7","#E8E8ED","rgba(0,0,0,0.16)","rgba(0,0,0,0.08)","#0071E3","#F56300","#FFF9F4","#03A10E","#F5FFF6","#E30000","#FFF2F4","#FFE045","#FFFEF2","#FFFFFF","#1D1D1F","#0066CC","#0071E3","#0071E3","#0076DF","#006EDB","#1D1D1F","#272729","#18181A","#FFFFFF","#0066CC","rgba(245,99,0,0.1)","#B64400","#E8E8ED","rgba(0,0,0,0.56)","#ECECF0","rgba(210,210,215,0.64)","rgba(0,0,0,0.42)","rgba(0,0,0,0.8)","#FFFFFF","#0071E3","rgba(0,0,0,0.56)","#DFDFE4","rgba(0,0,0,0.64)","rgba(223,223,227,0.7)","rgba(193,193,198,0.65)","rgba(0,0,0,0.56)","rgba(0,0,0,0.54)","rgba(29,29,31,0.07)","#424245","#1D1D1F","#272729","#FFFFFF","rgba(210,210,215,0.64)","rgba(0,0,0,0.56)","rgba(250,250,252,0.8)","#FFFFFF"],"dark":["#FFFFFF","#F5F5F7","rgba(255,255,255,0.92)","#86868B","#D2D2D7","#6E6E73","#2997FF","#FF791B","#03A10E","#FF3037","#000000","#161617","#1D1D1F","#F5F5F7","#6E6E73","#424245","#333336","rgba(255,255,255,0.24)","rgba(255,255,255,0.2)","#0071E3","#F56300","#290D00","#03A10E","#002B03","#FF3037","#330000","#AD8200","#2B2000","#000000","#F5F5F7","#2997FF","#0071E3","#0071E3","#0076DF","#006EDB","#F5F5F7","#FFFFFF","#EDEDF2","#000000","#2997FF","rgba(245,99,0,0.2)","#FF791B","#333336","rgba(255,255,255,0.8)","#37373A","rgba(66,66,69,0.72)","rgba(255,255,255,0.36)","rgba(255,255,255,0.8)","#000000","#0071E3","rgba(255,255,255,0.56)","#2F2F32","#FFFFFF","rgba(73,73,76,0.73)","rgba(57,57,60,0.74)","rgba(255,255,255,0.8)","rgba(255,255,255,0.48)","rgba(245,245,247,0.14)","#D2D2D7","#F5F5F7","#FFFFFF","#000000","rgba(66,66,69,0.72)","rgba(255,255,255,0.8)","rgba(29,29,31,0.8)","#FFFFFF"]}};
+(function () {
+  const root = document.documentElement;
+  const state = { mode: matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light" };
+  try { Object.assign(state, JSON.parse(localStorage.getItem("apple-kit") || "{}")); } catch (e) {}
+
+  const toast = (t) => {
+    const el = document.getElementById("toast");
+    document.getElementById("toast-t").textContent = t;
+    el.classList.add("show");
+    clearTimeout(toast.t);
+    toast.t = setTimeout(() => el.classList.remove("show"), 1600);
+  };
+  const copy = async (text, msg) => {
+    try { await navigator.clipboard.writeText(text); toast(msg); }
+    catch (e) { toast("Trình duyệt chặn clipboard, hãy copy tay"); }
+  };
+
+  function apply() {
+    const vals = PALETTES.apple[state.mode];
+    ROLES.forEach((r, i) => root.style.setProperty("--sk-" + r, vals[i]));
+    root.dataset.mode = state.mode;
+    document.querySelectorAll("#mode button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === state.mode));
+    renderRoles(vals);
+    try { localStorage.setItem("apple-kit", JSON.stringify(state)); } catch (e) {}
+  }
+  document.querySelectorAll("#mode button").forEach((b) => (b.onclick = () => { state.mode = b.dataset.v; apply(); }));
+
+  /* ô màu: nhóm theo tiền tố, chữ ghép với nền đối lập */
+  const GROUPS = [["glyph", "Glyph · chữ & icon"], ["fill", "Fill · nền"], ["body", "Trang"], ["focus", "Trang"], ["", "Component"]];
+  function renderRoles(vals) {
+    const box = document.getElementById("roles");
+    box.innerHTML = "";
+    let last = "";
+    const ink = vals[ROLES.indexOf("glyph-gray")], paper = vals[ROLES.indexOf("fill")];
+    ROLES.forEach((r, i) => {
+      const g = GROUPS.find(([p]) => r.startsWith(p))[1];
+      if (g !== last) { const h = document.createElement("div"); h.className = "role-sep"; h.textContent = g; box.appendChild(h); last = g; }
+      const v = vals[i];
+      const b = document.createElement("button");
+      b.className = "role";
+      b.style.background = r.startsWith("glyph") || /color$|text-color|content-color/.test(r) ? paper : v;
+      b.style.color = r.startsWith("glyph") || /color$|text-color|content-color/.test(r) ? v : (isDark(v) ? vals[ROLES.indexOf("fill-tertiary")] === v ? ink : "#FFFFFF" : ink);
+      b.innerHTML = "<b>--sk-" + r + "</b><code>" + v + "</code>";
+      b.onclick = () => copy(v, "Đã copy --sk-" + r + " " + v);
+      box.appendChild(b);
+    });
+  }
+  function isDark(v) {
+    const m = v.match(/^#([0-9A-F]{2})([0-9A-F]{2})([0-9A-F]{2})$/i) || [];
+    let rgb = m.length ? m.slice(1).map((x) => parseInt(x, 16)) : (v.match(/[\d.]+/g) || [255, 255, 255]).map(Number);
+    const a = rgb.length > 3 ? rgb[3] : 1;
+    if (a < .5) return state.mode === "dark";
+    return (0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2]) < 140;
+  }
+
+  /* thang chữ: class typography-* đo bằng getComputedStyle */
+  const TYPE = [["typography-page-header-title", 80, 84, 600, "-1.2", "D", "Store"], ["typography-hero-headline", 64, 70, 600, "0", "D", "Mạnh đến bất ngờ."],
+    ["typography-tile-headline", 56, 60, 600, "-0.28", "D", "Sản phẩm A"], ["SectionHeader_headline", 48, 52, 600, "-0.144", "D", "Xem toàn bộ dòng máy."],
+    ["typography-banner-card-headline", 32, 36, 600, "0.128", "D", "Tìm máy phù hợp."], ["typography-quote-reduced", 32, 32, 300, "0.128", "D", "“Một câu trích dẫn.”"],
+    ["typography-product-tile-headline", 28, 32, 600, "0.196", "D", "Sản phẩm B"], ["typography-tile-subhead", 28, 32, 400, "0.196", "D", "Mạnh hơn nữa."],
+    ["ac-ln-title", 21, 24, 600, "0.231", "D", "Sản phẩm A"], ["typography-tile-callout", 19, 23, 400, "0.228", "D", "Đặt trước từ ngày 16/10"],
+    ["body (typography-body)", 17, 25, 400, "-0.374", "T", "Chữ thân bài mặc định của mọi trang."], ["typography-feature-card-label", 17, 21, 600, "-0.374", "T", "Hiệu năng và pin"],
+    ["typography-body-reduced", 14, 20, 400, "-0.224", "T", "Chữ phụ, mô tả thẻ Store."], ["typography-chapternav-label", 14, 18, 600, "-0.224", "T", "Mẫu A"],
+    ["typography-caption", 12, 16, 400, "-0.12", "T", "Chú thích và footer."], ["rf-ccard-content-header-eyebrow", 12, 16, 600, "-0.12", "T", "ĐẶT TRƯỚC 16/10"]];
+  const ts = document.getElementById("typescale");
+  TYPE.forEach(([name, size, lh, w, ls, fam, sample]) => {
+    const row = document.createElement("div");
+    row.className = "type-row";
+    row.innerHTML = '<span class="meta">' + name + '</span><span class="t" style="font:' + w + " " + size + "px/" + lh + "px var(--ak-" + (fam === "D" ? "display" : "text") + ");letter-spacing:" + ls + 'px">' + sample + '</span><span class="meta">' + size + " / " + lh + " · " + w + " · " + ls + "</span>";
+    ts.appendChild(row);
+  });
+
+  /* bán kính đo được */
+  const sh = document.getElementById("shapes");
+  [["0", 0, "tile, section"], ["8", 8, ".ac-ls-button"], ["11", 11, ".ac-ls-dropdown"], ["12", 12, "textbox · form-button"], ["14", 14, ".dd-answer"],
+   ["18", 18, "store card · bento"], ["28", 28, "tile-rounded · media"], ["35", 35, "how-to-buy"], ["980", 980, ".button (pill)"], ["50%", "50%", "iconcontrol · swatch"]].forEach(([n, r, use]) => {
+    const c = document.createElement("div");
+    c.className = "shape-cell";
+    c.innerHTML = '<i style="border-radius:' + (typeof r === "number" ? r + "px" : r) + '"></i>' + n + "<br>" + use;
+    sh.appendChild(c);
+  });
+
+  /* nút copy HTML cho mỗi thẻ */
+  document.querySelectorAll(".spec").forEach((spec) => {
+    const stage = spec.querySelector(".stage");
+    if (!stage || !spec.querySelector(".spec-h")) return;
+    let foot = spec.querySelector(".spec-f");
+    if (!foot) { foot = document.createElement("div"); foot.className = "spec-f"; foot.innerHTML = '<span class="note"></span>'; spec.appendChild(foot); }
+    const b = document.createElement("button");
+    b.className = "copy"; b.textContent = "Copy HTML";
+    b.onclick = () => copy([...spec.querySelectorAll(".stage")].map((s) => s.innerHTML.trim()).join("\n").replace(/\n\s+/g, "\n"), "Đã copy HTML của " + spec.querySelector(".spec-h b").textContent);
+    foot.appendChild(b);
+  });
+
+  /* khối :root của theme đang chọn */
+  document.getElementById("copy-tokens").onclick = () => {
+    const vals = PALETTES.apple[state.mode];
+    const lines = ROLES.map((r, i) => "  --sk-" + r + ": " + vals[i] + ";");
+    const ak = [...document.styleSheets[document.styleSheets.length - 1].cssRules].find((r) => r.selectorText === ":root");
+    const extra = ak ? [...ak.style].filter((k) => k.startsWith("--ak-")).map((k) => "  " + k + ": " + ak.style.getPropertyValue(k).trim() + ";") : [];
+    copy(":root {\n" + lines.concat(extra).join("\n") + "\n}", "Đã copy token " + (state.mode === "dark" ? ".theme-dark" : ".theme-light"));
+  };
+
+  /* mục lục: tô mục đang xem */
+  const links = [...document.querySelectorAll(".side a")];
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (e.isIntersecting) links.forEach((a) => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id));
+  }), { rootMargin: "-30% 0px -60% 0px" });
+  document.querySelectorAll("section.block").forEach((s) => io.observe(s));
+
+  /* image accordion bấm được */
+  document.querySelectorAll(".ak-iacc button").forEach((b) => b.addEventListener("click", () => {
+    b.parentElement.querySelectorAll("button").forEach((x) => x.setAttribute("aria-expanded", x === b));
+  }));
+
+  apply();
+})();
+</script>
+</body>
+</html>

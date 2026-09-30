@@ -1,0 +1,1155 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta name="ui-kit-id" content="music-apple-com">
+<!-- UI kit rút từ music.apple.com/us/new (web app Apple Music) ngày 29/09/2026, theo skill ui-kit-from-code (nhánh B04: nguồn là URL).
+     Màu, chữ, số đo đọc bằng Playwright từ CSS vars ở :root và getComputedStyle của phần tử thật; danh mục từ discover.mjs (14 trang, 160 pattern).
+     Không nhúng ảnh, logo, wordmark hay nội dung của Apple (RULE-09): mọi ảnh bìa là khối giữ chỗ, tên bài/nghệ sĩ là chữ mẫu. -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Apple Music Web UI Kit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..24,400..700,0..1,0&display=block">
+<style>
+/* Kit mặc token thật của web app: mọi màu là một biến --am-<tên biến gốc> (vd --am-keyColor = --keyColor của site).
+   Chế độ sáng/tối và "Tăng tương phản" (biến *_IC / *-default_IC của site) do script bên dưới ghi lên :root.
+   Font là font hệ thống như site (-apple-system → SF Pro trên máy Apple); icon SF Symbols thay bằng Material Symbols Rounded. */
+:root {
+  --am-pageBG:#fff; --am-systemPrimary:rgba(0,0,0,.88); --am-systemSecondary:rgba(0,0,0,.56); --am-systemTertiary:rgba(0,0,0,.48);
+  --am-systemQuaternary:rgba(0,0,0,.1); --am-systemQuinary:rgba(0,0,0,.05); --am-keyColor:#d60017; --am-keyColor-rgb:214,0,23;
+  --am-labelDivider:rgba(0,0,0,.15); --am-opaqueShelfBG:#f2f2f2; --am-systemGray6:#f2f2f7; --am-systemGray5:#e5e5ea; --am-systemGray4:#d1d1d6;
+  /* hằng số không đổi theo theme (đọc từ :root của site) */
+  --am-white:#fff; --am-black:#000; --am-onDark:rgba(255,255,255,.92); --am-onDarkSecondary:rgba(255,255,255,.64);
+  --am-focus:0 0 0 4px rgba(var(--am-keyColor-rgb),.6);          /* box-shadow focus của nút, link */
+  --am-focus-onTint:0 0 0 4px rgba(255,255,255,.6);               /* focus trong songs-list / nền tint */
+  --am-focus-outline:4px solid rgba(var(--am-keyColor-rgb),.6);   /* outline focus của mục nav, thẻ */
+  --am-font:-apple-system,BlinkMacSystemFont,"SF Pro","SF Pro Text","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --am-font-rounded:ui-rounded,-apple-system,BlinkMacSystemFont,sans-serif;
+  --am-mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
+  --am-transition:opacity .1s ease-in;                            /* --global-transition */
+  --am-tint-bg:#370c18; --am-tint-sec:rgb(216,173,190); --am-tint-ter:rgb(165,122,139); --am-tint-div:rgb(136,56,78); --am-tint-shelf:rgb(45,2,14);
+  color-scheme: light;
+}
+:root[data-mode="dark"] { color-scheme: dark; }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--am-pageBG); color: var(--am-systemPrimary); font: 400 13px/16px var(--am-font); -webkit-font-smoothing: antialiased; }
+.ms { font-family: "Material Symbols Rounded"; font-weight: normal; font-style: normal; font-size: 20px; line-height: 1; letter-spacing: normal; text-transform: none; display: inline-block; white-space: nowrap; direction: ltr; font-feature-settings: "liga"; -webkit-font-smoothing: antialiased; font-variation-settings: "FILL" 1; user-select: none; }
+.ms.o { font-variation-settings: "FILL" 0; }
+code, .code { font-family: var(--am-mono); font-size: 12px; }
+:focus-visible { outline: 3px solid rgba(var(--am-keyColor-rgb),.6); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+/* ---------- vỏ trang (kit) ---------- */
+.shell { display: grid; grid-template-columns: 232px minmax(0, 1fr); min-height: 100vh; }
+.side { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 20px 12px; background: var(--am-glassMaterialBackground, var(--am-systemGray6)); border-right: .5px solid var(--am-labelDivider); display: flex; flex-direction: column; gap: 2px; }
+.brand { display: flex; align-items: center; gap: 10px; padding: 4px 8px 16px; }
+.brand-mark { width: 32px; height: 32px; border-radius: 8px; background: var(--am-keyColor); color: var(--am-white); display: grid; place-items: center; }
+.brand b { font-size: 15px; font-weight: 600; display: block; }
+.brand small { color: var(--am-systemSecondary); font-size: 12px; }
+.side h6 { margin: 14px 8px 6px; font-size: 11px; font-weight: 600; letter-spacing: .3px; text-transform: uppercase; color: var(--am-systemSecondary); }
+.side a { display: flex; align-items: center; gap: 10px; height: 36px; padding: 0 8px; border-radius: 8px; color: var(--am-systemPrimary); text-decoration: none; font-size: 14px; }
+.side a .ms { font-size: 20px; color: var(--am-keyColor); }
+.side a:hover { background: var(--am-systemQuinary); }
+.side a.on { background: var(--am-navSidebarSelectedState); }
+main { padding: 0 32px 96px; min-width: 0; }
+
+.bar { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; padding: 14px 0; background: var(--am-systemHeaderMaterialSover); -webkit-backdrop-filter: saturate(1.8) blur(20px); backdrop-filter: saturate(1.8) blur(20px); border-bottom: .5px solid var(--am-labelDivider); }
+.bar .grow { flex: 1; }
+.ctl { display: flex; align-items: center; gap: 8px; }
+.ctl > span { font-size: 12px; font-weight: 600; color: var(--am-systemSecondary); }
+.seg { display: inline-flex; padding: 2px; border-radius: 9px; background: var(--am-segmentedControlBG); }
+.seg button { height: 28px; padding: 0 12px; border: none; border-radius: 7px; background: transparent; color: var(--am-systemPrimary); font: 400 13px var(--am-font); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.seg button[aria-pressed="true"] { background: var(--am-segmentedControlSelectedBG); color: var(--am-segmentedControlSelectedText); font-weight: 600; box-shadow: 0 3px 8px var(--am-systemQuinary), 0 0 0 .5px var(--am-systemQuaternary); }
+.seg .ms { font-size: 16px; }
+.swatches { display: flex; gap: 6px; }
+.sw { width: 26px; height: 26px; border-radius: 50%; border: 2px solid transparent; padding: 0; cursor: pointer; background: var(--c); box-shadow: inset 0 0 0 1px var(--am-systemQuaternary); }
+.sw[aria-pressed="true"] { border-color: var(--am-systemPrimary); }
+
+.intro { padding: 40px 0 8px; max-width: 780px; }
+.intro .eyebrow { font-family: var(--am-mono); font-size: 12px; color: var(--am-keyColor); }
+.intro h1 { font: 700 34px/40px var(--am-font); margin: 8px 0 12px; text-wrap: balance; }
+.intro p { font-size: 15px; line-height: 22px; color: var(--am-systemSecondary); margin: 0 0 10px; max-width: 68ch; }
+.intro .facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.fact { font-family: var(--am-mono); font-size: 12px; padding: 4px 10px; border-radius: 6px; background: var(--am-opaqueShelfBG); color: var(--am-systemSecondary); }
+
+section.block { padding-top: 48px; scroll-margin-top: 64px; }
+section.block > header { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+section.block h2 { font: 700 26px/30px var(--am-font); margin: 0; }
+section.block > header p { margin: 0; color: var(--am-systemSecondary); max-width: 74ch; font-size: 13px; line-height: 18px; }
+h3.sub { font: 700 17px/22px var(--am-font); margin: 28px 0 10px; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+.grid.wide { grid-template-columns: repeat(auto-fill, minmax(460px, 1fr)); }
+.spec { background: var(--am-opaqueShelfBG); border-radius: 12px; display: flex; flex-direction: column; min-width: 0; }
+.spec.full { grid-column: 1 / -1; }
+.spec-h { display: flex; align-items: center; gap: 8px; padding: 14px 16px 0; flex-wrap: wrap; }
+.spec-h b { font-size: 15px; font-weight: 600; }
+.kind { font-family: var(--am-mono); font-size: 11px; padding: 2px 8px; border-radius: 5px; background: rgba(var(--am-keyColor-rgb),.12); color: var(--am-keyColor); }
+.spec-h .dp { margin-left: auto; font-family: var(--am-mono); font-size: 11px; color: var(--am-systemSecondary); font-variant-numeric: tabular-nums; }
+.stage { padding: 20px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 14px; min-height: 96px; overflow-x: auto; }
+.stage.col { flex-direction: column; align-items: stretch; }
+.stage.surface { background: var(--am-pageBG); margin: 12px 12px 0; border-radius: 10px; }
+.stage.tinted { margin: 12px 12px 0; border-radius: 10px; }
+.cap { font-family: var(--am-mono); font-size: 10px; color: var(--am-systemSecondary); display: block; margin-top: 6px; text-align: center; }
+.am-tint .cap { color: var(--am-tint-ter); }
+.fig { display: flex; flex-direction: column; align-items: center; }
+.spec-f { display: flex; align-items: center; gap: 8px; padding: 8px 12px 12px 16px; margin-top: auto; }
+.spec-f .note { font-size: 12px; line-height: 16px; color: var(--am-systemSecondary); flex: 1; }
+.copy { height: 28px; padding: 0 12px; border-radius: 14px; border: none; background: transparent; color: var(--am-keyColor); font: 600 12px var(--am-font); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; flex: none; }
+.copy:hover { background: rgba(var(--am-keyColor-rgb),.1); }
+.copy .ms { font-size: 16px; }
+
+/* nền tảng */
+.roles { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; }
+.role { border-radius: 10px; padding: 10px 12px; min-height: 72px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: inset 0 0 0 .5px var(--am-labelDivider); cursor: pointer; border: none; text-align: left; font: inherit; position: relative; overflow: hidden; }
+.role::before { content: ""; position: absolute; inset: 0; background: repeating-conic-gradient(var(--am-systemGray5) 0 25%, transparent 0 50%) 0 0 / 12px 12px; z-index: 0; opacity: .6; }
+.role > i { position: absolute; inset: 0; z-index: 1; }
+.role b, .role code { position: relative; z-index: 2; }
+.role b { font-size: 12px; font-weight: 600; word-break: break-all; }
+.role code { font-size: 11px; opacity: .9; }
+.type-row { display: grid; grid-template-columns: 190px minmax(0, 1fr) 130px; gap: 16px; align-items: baseline; padding: 10px 0; border-bottom: .5px solid var(--am-labelDivider); }
+.type-row:last-child { border-bottom: none; }
+.type-row .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.type-row .meta { font-family: var(--am-mono); font-size: 11px; color: var(--am-systemSecondary); font-variant-numeric: tabular-nums; }
+.shape-cell { display: flex; flex-direction: column; align-items: center; gap: 6px; font-family: var(--am-mono); font-size: 11px; color: var(--am-systemSecondary); text-align: center; }
+.shape-cell i { display: block; width: 64px; height: 64px; background: var(--am-systemGray4); }
+.scroll-x { overflow-x: auto; }
+table.tok { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+table.tok th, table.tok td { text-align: left; padding: 7px 12px 7px 0; border-bottom: .5px solid var(--am-labelDivider); font-size: 13px; vertical-align: top; }
+table.tok th { font-weight: 600; color: var(--am-systemSecondary); font-size: 12px; }
+table.tok td:first-child { font-family: var(--am-mono); font-size: 12px; white-space: nowrap; }
+
+/* ================= các thành phần am-* (tái dùng được: chỉ cần khối token --am-*) ================= */
+/* ảnh bìa giữ chỗ — site nhúng ảnh thật; kit không chép ảnh (RULE-09) */
+.am-ph { position: relative; display: grid; place-items: center; overflow: hidden; color: var(--am-systemTertiary); font: 500 10px/1.2 var(--am-font); text-align: center;
+  background: linear-gradient(135deg, var(--am-systemGray4), var(--am-systemGray6)); }
+.am-ph.warm { background: linear-gradient(135deg, var(--am-systemPink), var(--am-systemOrange)); color: rgba(255,255,255,.8); }
+.am-ph.cool { background: linear-gradient(135deg, var(--am-systemIndigo), var(--am-systemTeal)); color: rgba(255,255,255,.8); }
+.am-ph.deep { background: linear-gradient(135deg, var(--am-systemPurple), var(--am-systemRed)); color: rgba(255,255,255,.8); }
+.am-ph.moss { background: linear-gradient(135deg, var(--am-systemGreen), var(--am-systemBrown)); color: rgba(255,255,255,.8); }
+
+/* focus: ba kiểu đo được */
+.am-focus-shadow, .is-focus.am-f-shadow { box-shadow: var(--am-focus) !important; }
+.is-focus.am-f-tint { box-shadow: var(--am-focus-onTint) !important; }
+.is-focus.am-f-outline { outline: var(--am-focus-outline) !important; outline-offset: 0; }
+.am-link { color: inherit; text-decoration: none; cursor: pointer; }
+.am-link:hover, .am-link.is-hover { text-decoration: underline; }
+.am-link:focus-visible { outline: none; box-shadow: var(--am-focus); }
+
+/* --- sidebar điều hướng (desktop) · .navigation --- */
+.am-nav { width: 260px; min-height: 360px; background: var(--am-glassMaterialBackground); -webkit-backdrop-filter: saturate(2) blur(60px); backdrop-filter: saturate(2) blur(60px);
+  border-right: .5px solid var(--am-labelDivider); display: flex; flex-direction: column; font-size: 13px; }
+.am-nav-head { padding: 36px 12px 0 20px; }
+.am-logo { height: 24px; width: 86px; border-radius: 4px; margin: 0 0 26px 8px; border: 1px dashed var(--am-systemTertiary); color: var(--am-systemTertiary); font: 500 10px/22px var(--am-font); text-align: center; }
+.am-nav-list { list-style: none; margin: 0; padding: 0; }
+.am-nav-item { border-radius: 8px; padding: 4px; font: 400 14px/20px var(--am-font); }
+.am-nav-item a { display: flex; align-items: center; gap: 8px; height: 28px; padding: 0 4px; color: var(--am-systemPrimary); text-decoration: none; border-radius: 6px; }
+.am-nav-item .ms { font-size: 20px; color: var(--am-keyColor); width: 22px; }
+.am-nav-item.is-on { background: rgba(31,31,31,.04); }
+:root[data-mode="dark"] .am-nav-item.is-on, .am-tint .am-nav-item.is-on { background: rgba(255,255,255,.08); }
+.am-nav-foot { margin-top: auto; }
+.am-native-cta { border-top: 1px solid var(--am-systemQuaternary); padding: 16px 12px; }
+.am-native-cta button { display: flex; align-items: center; gap: 6px; width: 235px; height: 22px; border: none; background: none; color: var(--am-systemPrimary); font: 400 13px/16px var(--am-font); cursor: pointer; padding: 0; }
+.am-native-cta .ms { font-size: 18px; }
+.am-signin-wrap { padding: 0 12px 20px; }
+
+/* --- header mobile · .navigation__header (390) --- */
+.am-mhead { height: 52px; display: grid; grid-template-columns: 120px 1fr 120px; align-items: center; padding: 4px 0; background: var(--am-mobileNavigationBG); }
+.am-menuicon { width: 44px; height: 44px; border: none; background: none; color: var(--am-systemPrimary); display: grid; place-items: center; cursor: pointer; }
+.am-menuicon .ms { font-size: 28px; }
+.am-mhead .am-logo { margin: 0 auto; }
+.am-mhead .am-btn-pill { justify-self: end; margin-right: 16px; width: auto; }
+
+/* --- nút --- */
+.am-btn-pill { height: 36px; padding: 0 16px; border: none; border-radius: 1000px; background: var(--am-keyColor); color: var(--am-white); font: 400 14px/1 var(--am-font); display: inline-flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; width: 235px; }
+.am-btn-pill .ms { font-size: 16px; }
+.am-btn-pill:hover, .am-btn-pill.is-hover { background: var(--am-keyColor-rollover); }
+.am-btn-pill:active, .am-btn-pill.is-active { background: var(--am-keyColor-pressed); }
+.am-btn-play { height: 36px; min-width: 130px; padding: 0 12px; border: none; border-radius: 24px; background: var(--am-white); color: var(--am-black); font: 600 15px/1 var(--am-font); display: inline-flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; }
+.am-btn-play .ms { font-size: 20px; }
+.am-btn-sq { height: 32px; padding: 0 30px; border: none; border-radius: 7px; background: var(--am-keyColor); color: var(--am-onDark); font: 600 13px/1 var(--am-font); cursor: pointer; }
+.am-btn-banner { height: 28px; width: 100px; border: none; border-radius: 3px; background: var(--am-white); color: var(--am-black); font: 600 13px/1 var(--am-font); cursor: pointer; }
+.am-btn-cta { height: 36px; min-width: 150px; padding: 0 16px; border: none; border-radius: 4px; background: var(--am-white); color: var(--am-black); font: 500 16px/1 var(--am-font); cursor: pointer; }
+.am-textbtn { border: none; background: none; padding: 0; color: inherit; font: 400 13px/16px var(--am-font); cursor: pointer; display: inline-flex; align-items: center; gap: 3px; border-radius: 3px; }
+.am-textbtn .ms { font-size: 15px; }
+.am-more-text { border: none; background: none; padding: 0 0 0 5px; color: inherit; font: 600 11px/14px var(--am-font); cursor: pointer; }
+.am-preview-label { border: none; background: none; padding: 0; color: inherit; font: 500 10px/13px var(--am-font); letter-spacing: .2px; cursor: pointer; }
+.am-close { width: 18px; height: 18px; border: none; background: none; color: inherit; padding: 0; display: grid; place-items: center; cursor: pointer; }
+.am-close .ms { font-size: 18px; }
+
+/* nút tròn "…" (contextual-menu__trigger) và nút play platter */
+.am-more { width: 28px; height: 28px; border-radius: 50%; border: none; background: transparent; color: var(--am-keyColor); display: grid; place-items: center; cursor: pointer; padding: 0; }
+.am-more .ms { font-size: 20px; }
+.am-more.is-plain { color: inherit; }
+.am-platter { width: 30px; height: 30px; border-radius: 50%; border: none; padding: 0; display: grid; place-items: center; cursor: pointer; color: var(--am-systemPrimary);
+  background: var(--am-systemStandardThinMaterialSover); -webkit-backdrop-filter: saturate(1.8) blur(20px); backdrop-filter: saturate(1.8) blur(20px); }
+.am-platter .ms { font-size: 18px; }
+.am-platter.l { width: 60px; height: 60px; } .am-platter.l .ms { font-size: 32px; }
+.am-circle-btn { width: 36px; height: 36px; border-radius: 50%; border: none; display: grid; place-items: center; cursor: pointer; padding: 0; background: rgba(255,255,255,.14); color: var(--am-onDark); }
+.am-circle-btn.play { width: 56px; height: 56px; background: rgba(255,255,255,.85); color: var(--am-black); }
+.am-circle-btn.play .ms { font-size: 34px; }
+.am-circle-btn.fav { width: 34px; }
+.am-circle-btn[disabled] { opacity: .45; cursor: default; }
+
+/* --- lockup vuông · .product-lockup --- */
+.am-lockup { width: 204px; font-size: 13px; }
+.am-lockup-art { position: relative; width: 100%; aspect-ratio: 1; border-radius: 7px; overflow: hidden;
+  box-shadow: 0 1px 1px rgba(0,0,0,.01), 0 2px 2px rgba(0,0,0,.01), 0 4px 4px rgba(0,0,0,.01), 0 8px 8px rgba(0,0,0,.01), 0 16px 16px rgba(0,0,0,.01); }
+.am-lockup-art > .am-ph { position: absolute; inset: 0; }
+.am-lockup-art::before { content: ""; position: absolute; inset: 0; box-shadow: inset 0 0 0 1px var(--am-systemQuinary); border-radius: inherit; z-index: 2; pointer-events: none; }
+.am-lockup-hover { position: absolute; inset: 0; z-index: 3; display: flex; align-items: flex-end; justify-content: space-between; padding: 10px; background: var(--am-lockupHoverBGColor); opacity: 0; transition: var(--am-transition); }
+.am-lockup-art:hover .am-lockup-hover, .am-lockup-art.is-hover .am-lockup-hover { opacity: 1; }
+.am-lockup-hover .am-more { color: var(--am-onDark); background: var(--am-systemStandardThinMaterialSover); }
+.am-lockup-title { margin-top: 6px; font: 400 12px/15px var(--am-font); color: var(--am-systemPrimary); display: flex; justify-content: space-between; gap: 6px; }
+.am-lockup-sub { font: 400 12px/15px var(--am-font); color: var(--am-systemSecondary); }
+.am-lockup-desc { font: 400 12px/15px var(--am-font); color: var(--am-systemSecondary); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.am-lockup.s { width: 144px; }
+.am-lockup.circle .am-lockup-art { border-radius: 50%; }
+.am-lockup.circle { text-align: center; width: 120px; }
+.am-lockup.circle .am-lockup-title { justify-content: center; }
+.am-lockup.video { width: 390px; }
+.am-lockup.video .am-lockup-art { aspect-ratio: 16 / 9; }
+.am-badge-e { display: inline-grid; place-items: center; min-width: 11px; height: 11px; padding: 0 2px; border-radius: 2px; background: var(--am-systemTertiary); color: var(--am-pageBG); font: 700 8px/1 var(--am-font); vertical-align: 1px; margin-left: 4px; }
+
+/* --- editorial card (hero) · .editorial-card --- */
+.am-editorial { width: 540px; max-width: 100%; }
+.am-eyebrow { font: 600 11px/14px var(--am-font); color: var(--am-systemSecondary); text-transform: uppercase; letter-spacing: 0; }
+.am-editorial h4 { margin: 0; font: 400 17px/22px var(--am-font); color: var(--am-systemPrimary); }
+.am-editorial .sub { font: 400 17px/22px var(--am-font); color: var(--am-systemSecondary); margin-bottom: 16px; }
+.am-editorial-art { position: relative; aspect-ratio: 540 / 309; border-radius: 10px; overflow: hidden; }
+.am-editorial-art > .am-ph:not(.mini-art) { position: absolute; inset: 0; }
+.am-editorial-art .cap-in { position: absolute; left: 16px; bottom: 16px; right: 100px; z-index: 2; color: var(--am-white); font: 400 12px/15px var(--am-font); }
+.am-editorial-art .mini-art { position: absolute; right: 16px; bottom: 16px; width: 60px; height: 60px; border-radius: 4px; z-index: 2; }
+
+/* --- track lockup (hàng bài trong shelf) · .track-lockup --- */
+.am-track { display: grid; grid-template-columns: 52px minmax(0, 1fr) 28px; align-items: center; height: 55px; padding: 7.5px 14px 7.5px 0; border-top: .5px solid var(--am-labelDivider); width: 353px; max-width: 100%; }
+.am-track-art { position: relative; width: 40px; height: 40px; border-radius: 4px; overflow: hidden; }
+.am-track-art > .am-ph { position: absolute; inset: 0; }
+.am-track-art .am-play-std { position: absolute; inset: 0; display: grid; place-items: center; opacity: 0; background: var(--am-trackLockupArtworkOverlay, rgba(51,51,51,.3)); color: var(--am-white); border: none; cursor: pointer; }
+.am-track:hover .am-play-std, .am-track.is-hover .am-play-std { opacity: 1; }
+.am-track ul { list-style: none; margin: 0; padding: 0 4px; display: grid; gap: 1px; min-width: 0; }
+.am-track li { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 400 13px/16px var(--am-font); }
+.am-track li + li { font-size: 12px; line-height: 15px; color: var(--am-systemSecondary); }
+
+/* --- horizontal lockup (episode radio) · .horizontal-lockup --- */
+.am-hlock { display: grid; grid-template-columns: 88px minmax(0, 1fr) 28px; gap: 16px; align-items: center; width: 480px; max-width: 100%; }
+.am-hlock .art { width: 88px; height: 88px; border-radius: 6px; position: relative; overflow: hidden; }
+.am-hlock .art > .am-ph { position: absolute; inset: 0; }
+.am-hlock .art .am-platter { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); opacity: 0; z-index: 2; }
+.am-hlock .art:hover .am-platter, .am-hlock .art.is-hover .am-platter { opacity: 1; }
+.am-hlock h5 { margin: 0; font: 400 15px/20px var(--am-font); }
+.am-hlock p { margin: 0; font: 400 12px/15px var(--am-font); color: var(--am-systemSecondary); }
+
+/* --- radio station tile · play-button--platter is-large --- */
+.am-station { position: relative; width: 185px; aspect-ratio: 1; border-radius: 10px; background: var(--am-white); box-shadow: 0 0 0 .5px var(--am-systemQuaternary), 0 4px 12px var(--am-systemQuinary); display: grid; place-items: center; overflow: hidden; }
+.am-station.s { width: 117px; border-radius: 20px; }
+.am-station .num { font: 800 72px/1 var(--am-font); color: var(--am-keyColor); }
+.am-station.s .num { font-size: 46px; }
+.am-station .lbl { position: absolute; bottom: 10%; font: 500 10px var(--am-font); color: #6e6e73; }
+.am-station .am-platter { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); opacity: 0; }
+.am-station:hover .am-platter, .am-station.is-hover .am-platter { opacity: 1; }
+
+/* --- link box (lối tắt thể loại) · .link-box --- */
+.am-linkbox { width: 253px; height: 58px; padding: 0 16px; border-radius: 10px; background: var(--am-systemQuinary); color: var(--am-keyColor); display: flex; align-items: center; justify-content: space-between; font: 400 13px/16px var(--am-font); text-decoration: none; }
+.am-linkbox .ms { font-size: 18px; }
+.am-linkgrid { display: grid; grid-auto-flow: column; grid-template-rows: repeat(3, 58px); gap: 12px 20px; }
+
+/* --- tiêu đề shelf · .header / .title__button --- */
+.am-shelf-title { display: inline-flex; align-items: center; gap: 2px; font: 700 17px/22px var(--am-font); color: var(--am-systemPrimary); text-decoration: none; padding-right: 10px; border: none; background: none; cursor: pointer; }
+.am-shelf-title .ms { font-size: 20px; color: var(--am-systemSecondary); }
+.am-page-title { font: 700 34px/40px var(--am-font); margin: 0; }
+
+/* --- tiêu đề trang chi tiết · .headings (album/playlist) --- */
+.am-detail-head { display: grid; grid-template-columns: 270px minmax(0, 1fr); gap: 34px; align-items: center; }
+.am-detail-art { width: 270px; height: 270px; border-radius: 10px; overflow: hidden; position: relative; box-shadow: 0 10px 20px rgba(0,0,0,.1); }
+.am-detail-art > .am-ph { position: absolute; inset: 0; }
+.am-detail-head h1 { margin: 0; font: 700 26px/30px var(--am-font); color: var(--am-systemPrimary); }
+.am-detail-head .artist { font: 400 26px/30px var(--am-font); }
+.am-detail-head .meta { font: 600 12px/15px var(--am-font); color: var(--am-systemSecondary); margin-top: 4px; }
+.am-detail-head .desc { margin: 24px 0 18px; font: 400 13px/18px var(--am-font); color: var(--am-systemSecondary); max-width: 440px; }
+.am-concert { display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 0 8px; border-radius: 5.5px; background: rgba(255,255,255,.2); color: var(--am-white); font: 500 12px/1 var(--am-font); text-decoration: none; }
+.am-concert .ms { font-size: 14px; }
+
+/* --- danh sách bài · .songs-list --- */
+.am-songs { width: 100%; font-size: 12px; color: var(--am-systemSecondary); }
+.am-disc { font: 600 12px/15px var(--am-font); color: var(--am-systemSecondary); padding: 0 0 12px; }
+.am-songrow { display: grid; grid-template-columns: 40px minmax(0, 1fr) 46px 28px; align-items: center; height: 46px; border-top: .5px solid var(--am-labelDivider); padding-left: 12px; position: relative; }
+.am-songrow:nth-child(even) { background: var(--am-tracklistAltRowColor); }
+.am-songrow:hover, .am-songrow.is-hover { background: var(--am-tracklistHoverColor); border-radius: 12px; }
+.am-songrow.is-on { background: var(--am-keyColor); color: var(--am-onDark); border-radius: 12px; border-top-color: transparent; }
+.am-songrow.is-on .t, .am-songrow.is-on .am-more { color: var(--am-white); }
+.am-songrow .idx { font: 400 13px/16px var(--am-font); position: relative; }
+.am-songrow .idx .am-play-std { display: none; }
+.am-songrow:hover .idx span, .am-songrow.is-hover .idx span { display: none; }
+.am-songrow:hover .idx .am-play-std, .am-songrow.is-hover .idx .am-play-std { display: grid; }
+.am-play-std { width: 40px; height: 18px; border: none; background: none; color: var(--am-systemPrimary); display: grid; place-items: center; padding: 0; cursor: pointer; }
+.am-play-std .ms { font-size: 18px; }
+.am-songrow .t { font: 400 13px/16px var(--am-font); color: var(--am-systemPrimary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.am-songrow time { font: 400 13px/38px var(--am-font); }
+.am-songrow.art { grid-template-columns: 52px minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr) 46px 28px; height: 50px; }
+.am-songrow.art .am-track-art { width: 40px; height: 40px; }
+.am-songrow .c { font: 400 13px/16px var(--am-font); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 12px; }
+
+/* --- vùng tint theo ảnh bìa · .app-container.is-dark-theme.has-theme-override --- */
+.am-tint { background: var(--am-tint-bg); color: var(--am-onDark); }
+.am-tint .am-disc, .am-tint .am-songs, .am-tint .am-songrow .idx, .am-tint .am-songrow time, .am-tint .am-lockup-sub, .am-tint .am-lockup-desc, .am-tint .am-eyebrow, .am-tint .am-track li + li { color: var(--am-tint-sec); }
+.am-tint .am-songrow, .am-tint .am-track { border-top-color: var(--am-tint-div); }
+.am-tint .am-more { color: var(--am-tint-sec); }
+.am-tint .am-detail-head .meta, .am-tint .am-detail-head .desc { color: var(--am-systemSecondary-vibrant, #a1a1a6); }
+.am-tint-band { background: var(--am-tint-shelf); }
+
+/* --- footer · .footer --- */
+.am-footer { padding: 14px 24px 24px; background: var(--am-footerBg); font: 400 11px/13px var(--am-font); color: var(--am-systemPrimary); }
+.am-footer.am-tint-band { color: var(--am-onDark); }
+.am-langs { list-style: none; margin: 0 0 12px; padding: 0; display: flex; flex-wrap: wrap; row-gap: 6px; }
+.am-langs li + li { border-left: 1px solid var(--am-labelDivider); }
+.am-langs li:first-child .am-link, .am-langs li:first-child button { padding-left: 0; }
+.am-langs .am-link { padding: 0 10px; color: var(--am-systemSecondary); display: block; }
+.am-footer.am-tint-band .am-langs .am-link { color: var(--am-onDarkSecondary); }
+.am-legal { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 16px; }
+.am-footer .copy-line { color: var(--am-systemSecondary); margin-top: 6px; }
+.am-footer.am-tint-band .copy-line { color: var(--am-onDarkSecondary); }
+
+/* --- player · .chrome-player (desktop) / .mini-player (mobile) --- */
+.am-chrome { width: 668px; max-width: 100%; height: 56px; border-radius: 1000px; display: grid; grid-template-columns: 152px minmax(0, 1fr) 57px; align-items: center; padding: 0 16px;
+  background: var(--am-glassMaterialBackground); -webkit-backdrop-filter: saturate(2) blur(60px); backdrop-filter: saturate(2) blur(60px);
+  box-shadow: 0 0 0 .5px var(--am-glassMaterialInnerStrokeCombined), 0 10px 40px var(--am-glassMaterialShadowColor); }
+.am-chrome .ctrls { display: flex; justify-content: space-between; align-items: center; color: var(--am-systemPrimary); }
+.am-chrome .ctrls .ms { font-size: 20px; }
+.am-chrome .ctrls .dim { color: var(--am-systemTertiary); font-size: 16px; }
+.am-chrome .ctrls .big { font-size: 26px; }
+.am-chrome .lcd { height: 56px; display: grid; place-items: center; color: var(--am-systemTertiary); }
+.am-chrome .lcd .ms { font-size: 26px; }
+.am-chrome .acts { display: flex; justify-content: flex-end; gap: 6px; align-items: center; }
+.am-iconbtn { width: 24px; height: 28px; border-radius: 4px; border: none; background: none; color: var(--am-systemPrimary); display: grid; place-items: center; padding: 0; cursor: pointer; }
+.am-iconbtn .ms { font-size: 20px; }
+.am-iconbtn[aria-expanded="true"] { color: var(--am-keyColor); }
+.am-mini { width: 366px; max-width: 100%; height: 52px; border-radius: 1000px; display: flex; align-items: center; gap: 11px; padding: 0 16px;
+  background: var(--am-glassMaterialBackground); -webkit-backdrop-filter: saturate(2.2) blur(16px); backdrop-filter: saturate(2.2) blur(16px); box-shadow: 0 10px 40px var(--am-glassMaterialShadowColor); }
+.am-mini .art { width: 32px; height: 32px; border-radius: 6px; flex: none; background: var(--am-playerMissingArtworkBg); color: var(--am-playerMissingArtworkIcon); display: grid; place-items: center; }
+.am-mini .meta { flex: 1; min-width: 0; font-size: 13px; color: var(--am-systemTertiary); }
+.am-mini .ctl { display: flex; gap: 14px; color: var(--am-systemPrimary); }
+.am-mini .ctl .ms { font-size: 24px; }
+
+/* --- side panel Up Next · .side-panel --- */
+.am-panel { width: 300px; height: 360px; background: var(--am-glassMaterialBackground); -webkit-backdrop-filter: saturate(2) blur(60px); backdrop-filter: saturate(2) blur(60px); box-shadow: 0 10px 40px var(--am-glassMaterialShadowColor); display: flex; flex-direction: column; padding: 22px 20px; }
+.am-panel h3 { margin: 0; font: 700 17px/22px var(--am-font); }
+.am-panel .empty { margin: auto; font: 400 12px/15px var(--am-font); color: var(--am-systemSecondary); }
+
+/* --- context menu · .contextual-menu --- */
+.am-ctx { width: 185px; border-radius: 6px; background: var(--am-fallbackMaterialBG, var(--am-pageBG)); box-shadow: 0 0 0 .5px var(--am-contextMenuBorderColor), 0 10px 30px var(--am-glassMaterialShadowColor); list-style: none; margin: 0; padding: 0; overflow: hidden; }
+.am-ctx button { width: 100%; height: 32px; padding: 0 10px; border: none; background: transparent; color: var(--am-contextMenuTextColor); font: 400 13px/16px var(--am-font); display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+.am-ctx li:first-child button { border-radius: 6px 6px 0 0; }
+.am-ctx li:last-child button { border-radius: 0 0 6px 6px; }
+.am-ctx li + li button { border-top: 1px solid var(--am-labelDivider); }
+.am-ctx button:hover, .am-ctx button.is-hover { background: var(--am-systemQuinary); }
+.am-ctx .ms { font-size: 16px; color: var(--am-systemSecondary); }
+
+/* --- banner · .banner (upsell) / .banner-container (chọn quốc gia) --- */
+.am-upsell { background: var(--am-keyColorBG, var(--am-keyColor)); color: var(--am-white); padding: 12px 30px; display: flex; align-items: center; gap: 16px; box-shadow: 0 1px 0 rgba(0,0,0,.05), 0 1px 3px rgba(0,0,0,.07); }
+.am-upsell .txt { flex: 1; min-width: 0; }
+.am-upsell b { display: block; font: 600 18px/22px var(--am-font); }
+.am-upsell small { font: 400 13px/18px var(--am-font); opacity: .9; }
+.am-country { background: var(--am-bannerDarkGray); color: var(--am-onDark); padding: 15px 32px 20px 24px; display: grid; grid-template-columns: 18px minmax(0, 1fr) auto auto; gap: 16px 24px; align-items: center; font: 400 15px/20px var(--am-font); }
+.am-select { position: relative; width: 300px; }
+.am-select-btn { width: 100%; height: 32px; padding: 0 12px 0 30px; border-radius: 7px; border: 1px solid var(--am-dropdownLightGray); background: var(--am-dropdownBackground); color: var(--am-onDark); font: 400 15px/1 var(--am-font); display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+.am-select-btn .ms { font-size: 18px; color: var(--am-dropdownLightGrayIcon, #999); }
+.am-select-list { list-style: none; margin: 0; padding: 0; width: 300px; border-radius: 7px; border: 1px solid var(--am-dropdownLightGray); background: var(--am-dropdownBackground); overflow: hidden; }
+.am-select-list li { height: 33px; display: flex; align-items: center; gap: 8px; padding: 0 12px; font: 400 15px/1 var(--am-font); color: var(--am-onDark); cursor: pointer; }
+.am-select-list li .ms { font-size: 16px; width: 16px; color: var(--am-dropdownLightGrayIcon, #999); }
+.am-select-list li:hover, .am-select-list li.is-hover { background: var(--am-dropdownLightGray); }
+
+/* --- upsell toàn trang · .upsell-personal (Home khi chưa đăng nhập) --- */
+.am-upsell-hero { position: relative; min-height: 360px; border-radius: 10px; overflow: hidden; color: var(--am-onDark); text-align: center; padding: 28px 20px; display: flex; flex-direction: column; align-items: center; gap: 12px;
+  background: linear-gradient(160deg, var(--am-keyColor), var(--am-systemPink) 70%, var(--am-liveBadgePlatterBG)); }
+.am-upsell-hero .wm { height: 24px; width: 110px; border: 1px dashed rgba(255,255,255,.6); border-radius: 4px; font: 500 10px/22px var(--am-font); }
+.am-upsell-hero h2 { margin: 0; font: 600 48px/1.08 var(--am-font); letter-spacing: -.576px; max-width: 520px; }
+.am-upsell-hero p { margin: 0; font: 400 17px/24px var(--am-font); max-width: 500px; }
+.am-upsell-hero .am-textbtn { color: var(--am-onDark); }
+
+/* --- trạng thái hiển thị trong kit (sao chép các rule :hover / :focus-visible đo được) --- */
+.states { display: flex; flex-wrap: wrap; gap: 18px; align-items: flex-end; }
+.states > div { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+
+/* --- màn mẫu --- */
+.frames { display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-start; }
+.frame-wrap { overflow-x: auto; max-width: 100%; }
+.phone { zoom: .62; width: 390px; height: 844px; border-radius: 48px; overflow: hidden; position: relative; box-shadow: 0 0 0 10px var(--am-systemGray5), 0 30px 60px var(--am-glassMaterialShadowColor); background: var(--am-pageBG); }
+.desk { zoom: .5; width: 1440px; height: 900px; border-radius: 12px; overflow: hidden; position: relative; box-shadow: 0 0 0 1px var(--am-labelDivider), 0 30px 60px var(--am-glassMaterialShadowColor); background: var(--am-pageBG); display: grid; grid-template-columns: 260px minmax(0, 1fr); }
+.phone.am-tint, .desk.am-tint { background: var(--am-tint-bg); }
+.frame-cap { font-size: 12px; color: var(--am-systemSecondary); max-width: 720px; margin-top: 10px; line-height: 17px; }
+.shelf-row { display: flex; gap: 20px; overflow: hidden; }
+.scr-main { position: relative; overflow: hidden; }
+.scr-pad { padding: 0 40px; }
+
+/* toast */
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; transition: .2s; background: var(--am-systemPrimary); color: var(--am-pageBG); padding: 10px 16px; border-radius: 10px; font-size: 13px; z-index: 50; }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+@media (max-width: 900px) {
+  .shell { grid-template-columns: minmax(0, 1fr); }
+  .side { display: none; }
+  main { padding: 0 16px 80px; }
+  .grid, .grid.wide { grid-template-columns: minmax(0, 1fr); }
+  .type-row { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .intro h1 { font-size: 28px; line-height: 34px; }
+  .am-detail-head { grid-template-columns: minmax(0, 1fr); }
+  .am-country { grid-template-columns: 18px minmax(0, 1fr); }
+  .am-upsell { flex-wrap: wrap; padding: 12px 16px; }
+  .am-upsell-hero h2 { font-size: 34px; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <nav class="side" aria-label="Mục lục">
+    <div class="brand"><div class="brand-mark"><span class="ms">music_note</span></div><div><b>Apple Music Web</b><small>UI kit tham chiếu</small></div></div>
+    <h6>Nền tảng</h6>
+    <a href="#color"><span class="ms">palette</span>Màu</a>
+    <a href="#type"><span class="ms">text_fields</span>Chữ</a>
+    <a href="#shape"><span class="ms">rounded_corner</span>Bo góc &amp; vật liệu</a>
+    <a href="#layout"><span class="ms">straighten</span>Bố cục &amp; kích thước</a>
+    <h6>Thành phần</h6>
+    <a href="#navigation"><span class="ms">side_navigation</span>Điều hướng</a>
+    <a href="#actions"><span class="ms">touch_app</span>Hành động</a>
+    <a href="#lockups"><span class="ms">album</span>Lockup &amp; shelf</a>
+    <a href="#detail"><span class="ms">queue_music</span>Trang chi tiết</a>
+    <a href="#player"><span class="ms">play_circle</span>Player &amp; panel</a>
+    <a href="#feedback"><span class="ms">campaign</span>Banner &amp; menu</a>
+    <a href="#states"><span class="ms">ads_click</span>Trạng thái</a>
+    <h6>Mẫu</h6>
+    <a href="#screens"><span class="ms">devices</span>Màn hình mẫu</a>
+  </nav>
+
+  <main>
+    <div class="bar" role="toolbar" aria-label="Chủ đề">
+      <div class="ctl"><span>Chế độ</span><div class="seg" id="mode">
+        <button data-v="light" aria-pressed="true"><span class="ms">light_mode</span>Sáng</button>
+        <button data-v="dark" aria-pressed="false"><span class="ms">dark_mode</span>Tối</button></div></div>
+      <div class="ctl"><span>Tương phản</span><div class="seg" id="contrast">
+        <button data-v="standard" aria-pressed="true">Thường</button>
+        <button data-v="ic" aria-pressed="false">Tăng (_IC)</button></div></div>
+      <div class="ctl"><span>Tint ảnh bìa</span><div class="swatches" id="swatches"></div></div>
+      <div class="grow"></div>
+      <button class="copy" id="copy-tokens"><span class="ms">data_object</span>Copy CSS token</button>
+    </div>
+
+    <div class="intro">
+      <div class="eyebrow">music.apple.com/us/new (CSS vars :root + getComputedStyle) → docs/apple-music-ui-kit.html</div>
+      <h1>Bộ thành phần của Apple Music trên web</h1>
+      <p>Hệ thiết kế của web app Apple Music, chép lại bằng HTML/CSS thuần. Màu là 67 biến CSS đọc thẳng từ <code>:root</code> của site, cả sáng lẫn tối, kèm bộ "tăng tương phản" mà site khai bằng hậu tố <code>_IC</code>. Chữ và số đo lấy bằng <code>getComputedStyle</code> trên phần tử thật ở khung 1440 và 390. Danh mục thành phần do <code>discover.mjs</code> gom qua 14 trang (New, Home, Radio, album, playlist, room, nghệ sĩ) được 160 pattern. Mỗi thẻ ghi tên class gốc của site.</p>
+      <p>Muốn dùng lại: dán khối <code>--am-*</code> (nút Copy CSS token) cùng phần CSS <code>.am-*</code>. Ảnh bìa, logo và wordmark của Apple không được chép. Chỗ nào có ảnh thật thì kit để khối giữ chỗ ghi "ảnh bìa".</p>
+      <div class="facts"><span class="fact">desktop 1440 × 900 · sidebar 260</span><span class="fact">mobile 390 × 844 · header 52</span><span class="fact">gutter 40 / 25</span><span class="fact">lockup 204 / 144 · r 7</span><span class="fact">track row 55 · song row 46</span><span class="fact">focus 0 0 0 4px keyColor .6</span><span class="fact">transition opacity .1s ease-in</span></div>
+    </div>
+
+    <!-- ================= NỀN TẢNG ================= -->
+    <section class="block" id="color">
+      <header><h2>Màu</h2><p>Mỗi ô là một biến trên <code>:root</code> của site, đổi theo chế độ và mức tương phản đang chọn. Nhiều vai trò có alpha nên ô được lót nền ca-rô. Bấm một ô để copy giá trị. Site chỉ có một màu nhấn (<code>keyColor</code>, đỏ Apple Music); trang album, playlist, nghệ sĩ còn nhận thêm 5 màu tint rút từ ảnh bìa (xem thanh trên và phần Trang chi tiết).</p></header>
+      <div id="roles-groups"></div>
+    </section>
+
+    <section class="block" id="type">
+      <header><h2>Chữ</h2><p>Site khai thang chữ kiểu Apple (<code>--large-title</code>, <code>--title-1</code>… mỗi mức có biến thể <code>-emphasized</code>, <code>-medium</code>, <code>-semibold</code>, <code>-bold</code>, <code>-tall</code>, <code>-short</code>) trên font hệ thống <code>-apple-system</code>. Bảng thứ nhất là thang chuẩn, bảng thứ hai là các kiểu thực dùng đo được trên trang.</p></header>
+      <div class="spec"><div class="stage col" id="typescale"></div></div>
+      <h3 class="sub">Kiểu chữ thực dùng</h3>
+      <div class="spec"><div class="stage col" id="typeused"></div></div>
+    </section>
+
+    <section class="block" id="shape">
+      <header><h2>Bo góc &amp; vật liệu</h2><p>Site không có thang shape hay hệ số bo góc, mỗi component đặt bán kính riêng. Dưới đây là mọi bán kính đo được và nơi dùng. Bề mặt nổi (sidebar, player, panel) dùng "glass material": nền mờ đục kèm <code>backdrop-filter</code>.</p></header>
+      <div class="spec"><div class="stage" id="shapes" style="gap:24px"></div></div>
+      <div class="grid wide" style="margin-top:16px">
+        <div class="spec"><div class="stage col"><div class="scroll-x">
+          <table class="tok"><thead><tr><th>Vật liệu</th><th>nền (sáng)</th><th>blur</th><th>dùng cho</th></tr></thead><tbody>
+            <tr><td>glassMaterialBackground</td><td>rgba(245,245,247,.55)</td><td>saturate(2) blur(60px)</td><td>sidebar, chrome player, side panel</td></tr>
+            <tr><td>mini-player</td><td>= glassMaterialBackground</td><td>saturate(2.2) blur(16px)</td><td>player nổi trên mobile</td></tr>
+            <tr><td>systemStandardThinMaterialSover</td><td>hsla(0,0%,96.5%,.48)</td><td>—</td><td>nút tròn trên ảnh bìa</td></tr>
+            <tr><td>chrome-volume__slider</td><td>rgba(246,246,246,.6)</td><td>blur(60px) saturate(2)</td><td>thanh âm lượng</td></tr>
+            <tr><td>systemHeaderMaterialSover</td><td>hsla(0,0%,100%,.8)</td><td>—</td><td>header dính (kit dùng cho thanh trên)</td></tr></tbody></table>
+        </div></div><div class="spec-f"><span class="note">Ở chế độ tăng tương phản, các biến vật liệu (<code>-default_IC</code>) thành màu đặc, không còn trong suốt.</span></div></div>
+        <div class="spec"><div class="stage col"><div class="scroll-x">
+          <table class="tok"><thead><tr><th>Bóng</th><th>giá trị</th><th>dùng cho</th></tr></thead><tbody>
+            <tr><td>panel / player</td><td>0 10px 40px glassMaterialShadowColor</td><td>side panel, mini player</td></tr>
+            <tr><td>artwork chi tiết</td><td>0 10px 20px rgba(0,0,0,.1)</td><td>ảnh bìa 270 ở trang album</td></tr>
+            <tr><td>lockup</td><td>5 lớp 0 1/2/4/8/16px rgba(0,0,0,.01)</td><td>ảnh bìa lockup vuông</td></tr>
+            <tr><td>banner upsell</td><td>0 1px 0 rgba(0,0,0,.05), 0 1px 3px rgba(0,0,0,.07)</td><td>dải đỏ đầu/cuối trang</td></tr></tbody></table>
+        </div></div></div>
+      </div>
+    </section>
+
+    <section class="block" id="layout">
+      <header><h2>Bố cục &amp; kích thước</h2><p>Hằng số khung và lưới đọc từ biến <code>--web-navigation-width</code>, <code>--bodyGutter</code>, <code>--grid-*</code> của <code>.shelf-grid</code>, và kích thước đo ở hai khung 1440 × 900 và 390 × 844.</p></header>
+      <div class="grid wide">
+        <div class="spec"><div class="stage col"><div class="scroll-x">
+          <table class="tok"><thead><tr><th>Hằng số</th><th>desktop</th><th>mobile</th><th>ghi chú</th></tr></thead><tbody>
+            <tr><td>--web-navigation-width</td><td>260</td><td>ẩn</td><td>sidebar; mobile dùng header 52 + menu</td></tr>
+            <tr><td>--bodyGutter</td><td>40</td><td>25</td><td>lề trái/phải của shelf</td></tr>
+            <tr><td>--viewport-default</td><td>medium</td><td>xsmall</td><td>bậc lưới hiện hành</td></tr>
+            <tr><td>grid cột (small/medium/large)</td><td>4 / 5 / 6</td><td>cuộn ngang</td><td>--grid-small … --grid-large</td></tr>
+            <tr><td>gap cột · hàng</td><td>20 · 24</td><td>10 · 24</td><td>--grid-column-gap-*</td></tr>
+            <tr><td>nav item</td><td>227 × 36, 14/20</td><td>358 × 44, 16/22</td><td>padding 4, r 8</td></tr>
+            <tr><td>z-index</td><td colspan="3">default 1 · bubbles 50 · gpu 1001 · web-chrome 9901 · menus 9951 · modal 10001</td></tr></tbody></table>
+        </div></div></div>
+        <div class="spec"><div class="stage col"><div class="scroll-x">
+          <table class="tok"><thead><tr><th>Thành phần</th><th>desktop</th><th>mobile</th></tr></thead><tbody>
+            <tr><td>product-lockup (vuông)</td><td>204 × 254, art 204</td><td>144 × 194</td></tr>
+            <tr><td>editorial-card</td><td>540 × 384, art 540 × 309</td><td>298 × 246</td></tr>
+            <tr><td>track-lockup</td><td>353 × 55, art 40</td><td>270 × 55</td></tr>
+            <tr><td>songs-list-row</td><td>1100 × 46, cột số 40</td><td>—</td></tr>
+            <tr><td>artwork trang chi tiết</td><td>270 × 270, r 10</td><td>—</td></tr>
+            <tr><td>chrome-player</td><td>668 × 56 (152 · 427 · 57)</td><td>mini 366 × 52</td></tr>
+            <tr><td>side-panel (Up Next)</td><td>300 × 900</td><td>—</td></tr>
+            <tr><td>banner upsell · quốc gia</td><td>71 · 74</td><td>98 · 132</td></tr></tbody></table>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- ================= ĐIỀU HƯỚNG ================= -->
+    <section class="block" id="navigation">
+      <header><h2>Điều hướng</h2></header>
+      <div class="grid">
+        <div class="spec" data-sig="04c733e9f7 a953f49df3 ff8c4ba5d1"><div class="spec-h"><b>Sidebar</b><span class="kind">.navigation</span><span class="dp">w 260 · pad 36 12 0 20</span></div>
+          <div class="stage">
+            <div class="fig"><nav class="am-nav" aria-label="Mẫu sidebar">
+              <div class="am-nav-head"><div class="am-logo">logo</div>
+                <ul class="am-nav-list">
+                  <li class="am-nav-item"><a href="#navigation"><span class="ms o">search</span>Search</a></li>
+                  <li class="am-nav-item"><a href="#navigation"><span class="ms o">home</span>Home</a></li>
+                  <li class="am-nav-item is-on"><a href="#navigation"><span class="ms">grid_view</span>New</a></li>
+                  <li class="am-nav-item"><a href="#navigation"><span class="ms o">radio</span>Radio</a></li>
+                </ul></div>
+              <div class="am-nav-foot">
+                <div class="am-native-cta"><button><span class="ms o">library_music</span>Open in Music<span class="ms" style="font-size:14px">north_east</span></button></div>
+                <div class="am-signin-wrap"><button class="am-btn-pill"><span class="ms">person</span>Sign In</button></div>
+              </div>
+            </nav></div>
+          </div>
+          <div class="spec-f"><span class="note">Nền là vật liệu kính. Trên trang có tint (album, nghệ sĩ) sidebar đổi sang biến thể tối <code>rgba(38,38,40,.6)</code>. Logo Apple Music là SVG của Apple nên kit để khung giữ chỗ.</span></div></div>
+
+        <div class="spec" data-sig="821bfe1cf1 172c1a3f3c f45c41f5c1 c28f92b982" data-sig-state="821bfe1cf1:focus 172c1a3f3c:focus f45c41f5c1:focus c28f92b982:focus"><div class="spec-h"><b>Mục điều hướng</b><span class="kind">.navigation-item</span><span class="dp">227 × 36 · pad 4 · r 8 · 14/20</span></div>
+          <div class="stage col" style="gap:4px;max-width:260px">
+            <ul class="am-nav-list">
+              <li class="am-nav-item"><a href="#navigation"><span class="ms o">search</span>Search</a></li>
+              <li class="am-nav-item is-on"><a href="#navigation"><span class="ms">grid_view</span>New</a></li>
+              <li class="am-nav-item is-focus am-f-outline"><a href="#navigation"><span class="ms o">radio</span>Radio</a></li>
+            </ul>
+            <span class="cap">thường · đang chọn (--selected) · focus</span>
+          </div>
+          <div class="stage tinted am-tint" style="max-width:284px">
+            <ul class="am-nav-list" style="width:227px">
+              <li class="am-nav-item is-on"><a href="#navigation" style="color:inherit"><span class="ms">grid_view</span>New</a></li>
+              <li class="am-nav-item is-focus am-f-shadow"><a href="#navigation" style="color:inherit"><span class="ms o">home</span>Home</a></li>
+            </ul>
+          </div>
+          <div class="spec-f"><span class="note">Mục đang chọn nền <code>rgba(31,31,31,.04)</code> (sáng) hoặc <code>rgba(255,255,255,.08)</code> (tối/tint). Giá trị này site gõ thẳng, không qua biến. Focus: mục <code>li</code> viền 4px, mục Search (<code>a</code>) bóng 4px.</span></div></div>
+
+        <div class="spec" data-sig="97104e6dc7 01d2d3d915 2894862698 8200b65670" data-sig-state="2894862698:focus 8200b65670:focus"><div class="spec-h"><b>Mở app Music</b><span class="kind">.native-cta</span><span class="dp">259 × 55 · pad 16 12 · viền trên 1</span></div>
+          <div class="stage surface"><div class="am-native-cta" style="width:259px"><button class="is-focus am-f-shadow"><span class="ms o">library_music</span>Open in Music<span class="ms" style="font-size:14px">north_east</span></button></div></div>
+          <div class="stage tinted am-tint"><div class="am-native-cta" style="width:259px;border-top-color:rgba(255,255,255,.1)"><button style="color:inherit"><span class="ms o">library_music</span>Open in Music<span class="ms" style="font-size:14px">north_east</span></button></div></div>
+          <div class="spec-f"><span class="note">Nút nằm cuối sidebar. Ô trên có trạng thái focus (bóng keyColor 4px).</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Header mobile</b><span class="kind">.navigation__header</span><span class="dp">390 × 52 · cột 120 · 1fr · 120</span></div>
+          <div class="stage surface" style="padding:0;overflow:hidden"><div class="am-mhead" style="width:100%;min-width:320px"><button class="am-menuicon" aria-label="Menu"><span class="ms">menu</span></button><div class="am-logo">logo</div><button class="am-btn-pill">Sign In</button></div></div>
+          <div class="spec-f"><span class="note">Dưới 484px sidebar ẩn (<code>--viewport-sidebar: hidden</code>). Nút menu 44 × 44 mở danh sách mục điều hướng 358 × 44. Đo ở khung 390, crawler (1440) không gặp nên không có sig.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= HÀNH ĐỘNG ================= -->
+    <section class="block" id="actions">
+      <header><h2>Hành động</h2><p>Site ít loại nút: một nút viên thuốc màu nhấn (đăng nhập), vài nút trắng trên nền màu, nút chữ, và các nút tròn đặt trên ảnh bìa.</p></header>
+      <div class="grid">
+        <div class="spec" data-sig="791401b3c0"><div class="spec-h"><b>Nút viên thuốc</b><span class="kind">.commerce-button.signin</span><span class="dp">h 36 · r 1000 · 14/400</span></div>
+          <div class="stage">
+            <div class="fig"><button class="am-btn-pill"><span class="ms">person</span>Sign In</button><span class="cap">nghỉ</span></div>
+            <div class="fig"><button class="am-btn-pill is-hover" style="width:auto">Sign In</button><span class="cap">rollover</span></div>
+            <div class="fig"><button class="am-btn-pill is-active" style="width:auto">Sign In</button><span class="cap">pressed</span></div>
+          </div>
+          <div class="spec-f"><span class="note">Nền <code>keyColor</code>. Rollover/pressed dựng từ <code>--keyColor-rollover</code> / <code>-pressed</code>, discover không đo được (nút này không đổi style qua :hover thuần CSS).</span></div></div>
+
+        <div class="spec" data-sig="5063456f47" data-sig-state="5063456f47:focus"><div class="spec-h"><b>Nút phát trắng</b><span class="kind">.primary-actions__button--play</span><span class="dp">130 × 36 · r 24 · 15/600</span></div>
+          <div class="stage tinted am-tint">
+            <div class="fig"><button class="am-btn-play"><span class="ms">play_arrow</span>Preview</button><span class="cap">nghỉ</span></div>
+            <div class="fig"><button class="am-btn-play is-focus am-f-shadow"><span class="ms">play_arrow</span>Preview</button><span class="cap">focus</span></div>
+          </div>
+          <div class="spec-f"><span class="note">Chỉ xuất hiện trên header trang album/playlist, luôn trên nền tint.</span></div></div>
+
+        <div class="spec" data-sig="77e7ab6dae 5a5cc71ab2 f549536513" data-sig-state="77e7ab6dae:focus 5a5cc71ab2:focus f549536513:focus"><div class="spec-h"><b>Nút vuông trong banner</b><span class="kind">.select-button · .cta-btn</span><span class="dp">32 r7 · 28 r3 · 36 r4</span></div>
+          <div class="stage" style="background:var(--am-bannerDarkGray);margin:12px 12px 0;border-radius:10px">
+            <div class="fig"><button class="am-btn-sq">Continue</button><span class="cap" style="color:var(--am-onDarkSecondary)">select-button</span></div>
+            <div class="fig"><button class="am-btn-sq is-focus am-f-shadow">Continue</button><span class="cap" style="color:var(--am-onDarkSecondary)">focus</span></div>
+          </div>
+          <div class="stage" style="background:var(--am-keyColor);margin:12px 12px 0;border-radius:10px">
+            <div class="fig"><button class="am-btn-banner">Try It Now</button><span class="cap" style="color:var(--am-onDark)">banner · 100 × 28</span></div>
+            <div class="fig"><button class="am-btn-cta">Try It Now</button><span class="cap" style="color:var(--am-onDark)">cta-btn · 150 × 36</span></div>
+            <div class="fig"><button class="am-btn-cta is-focus am-f-shadow">Try It Now</button><span class="cap" style="color:var(--am-onDark)">focus</span></div>
+          </div>
+          <div class="spec-f"><span class="note">Continue: 13/600, padding 0 30. Hai nút trắng có cùng nhãn, khác kích thước và bo góc.</span></div></div>
+
+        <div class="spec" data-sig="c8c979549d 61b70450d7 b6a971a98a 4b37773954 9c26fc0be3" data-sig-state="c8c979549d:focus 61b70450d7:focus b6a971a98a:focus 4b37773954:focus 9c26fc0be3:focus"><div class="spec-h"><b>Nút chữ</b><span class="kind">.link-with-chevron · .more · .title__button</span><span class="dp">13 · 11/600 · 10/500 · 17/700</span></div>
+          <div class="stage tinted am-tint" style="gap:22px">
+            <div class="fig"><button class="am-textbtn">See All Plans<span class="ms">chevron_right</span></button><span class="cap">secondary-action</span></div>
+            <div class="fig"><button class="am-textbtn">Also available in the iTunes Store<span class="ms">north_east</span></button><span class="cap">link, r 3</span></div>
+            <div class="fig"><button class="am-more-text">MORE</button><span class="cap">.more (cắt mô tả)</span></div>
+            <div class="fig"><button class="am-preview-label" style="color:var(--am-tint-sec)">PREVIEW</button><span class="cap">nhãn trong songs-list</span></div>
+            <div class="fig"><button class="am-shelf-title" style="color:inherit">More By Nghệ sĩ<span class="ms">chevron_right</span></button><span class="cap">.title__button</span></div>
+            <div class="fig"><button class="am-textbtn is-focus am-f-shadow">See All Plans<span class="ms">chevron_right</span></button><span class="cap">focus</span></div>
+            <div class="fig"><button class="am-preview-label is-focus am-f-tint">PREVIEW</button><span class="cap">focus trong list</span></div>
+          </div>
+          <div class="spec-f"><span class="note">Màu kế thừa từ nền. Focus dùng bóng keyColor, riêng nút trong songs-list dùng bóng trắng .6.</span></div></div>
+
+        <div class="spec" data-sig="846db58d6e 1f7e563ec2 f1785ad061 d859763bf1 8567a4fb0d 88013b8379 c4efa07759 250cbda262" data-sig-state="846db58d6e:focus"><div class="spec-h"><b>Nút "…" menu ngữ cảnh</b><span class="kind">.contextual-menu__trigger</span><span class="dp">28 × 28 · r 50%</span></div>
+          <div class="stage surface">
+            <div class="fig"><button class="am-more" aria-label="more"><span class="ms">more_horiz</span></button><span class="cap">trang sáng</span></div>
+            <div class="fig"><button class="am-more is-plain" aria-label="more" style="color:var(--am-systemSecondary)"><span class="ms">more_horiz</span></button><span class="cap">trong bảng</span></div>
+            <div class="fig"><button class="am-more is-focus am-f-shadow" aria-label="more"><span class="ms">more_horiz</span></button><span class="cap">focus</span></div>
+          </div>
+          <div class="stage tinted am-tint">
+            <div class="fig"><button class="am-more" aria-label="more"><span class="ms">more_horiz</span></button><span class="cap">tint</span></div>
+            <div class="fig"><button class="am-more is-focus am-f-tint" aria-label="more"><span class="ms">more_horiz</span></button><span class="cap">focus trong list</span></div>
+            <div class="fig"><button class="am-more" aria-label="more" disabled style="color:var(--am-onDark);opacity:.4"><span class="ms">more_horiz</span></button><span class="cap">disabled (trang nghệ sĩ)</span></div>
+          </div>
+          <div class="spec-f"><span class="note">Có mặt ở mọi lockup và hàng bài (hơn 1000 lần trên 14 trang). Màu theo ngữ cảnh: keyColor, chữ phụ hoặc tint.</span></div></div>
+
+        <div class="spec" data-sig="d2c7e6fd8b 4e2270a7bf 0c1e8d5827" data-sig-state="d2c7e6fd8b:hover 0c1e8d5827:hover d2c7e6fd8b:focus 0c1e8d5827:focus"><div class="spec-h"><b>Nút play tròn trên ảnh</b><span class="kind">.play-button--platter</span><span class="dp">30 · 60 (is-large)</span></div>
+          <div class="stage tinted" style="background:linear-gradient(135deg,var(--am-systemPurple),var(--am-systemPink))">
+            <div class="fig"><button class="am-platter" aria-label="Play"><span class="ms">play_arrow</span></button><span class="cap" style="color:#fff">30</span></div>
+            <div class="fig"><button class="am-platter l" aria-label="Play"><span class="ms">play_arrow</span></button><span class="cap" style="color:#fff">60 is-large</span></div>
+            <div class="fig"><button class="am-platter is-focus am-f-shadow" aria-label="Play"><span class="ms">play_arrow</span></button><span class="cap" style="color:#fff">focus</span></div>
+          </div>
+          <div class="spec-f"><span class="note">Nền là vật liệu <code>systemStandardThinMaterialSover</code> (ô tròn 30 đo được: <code>rgba(246,246,246,.48)</code>). Nút chỉ hiện khi rê chuột lên ảnh (hover của pattern cha, xem thẻ lockup).</span></div></div>
+
+        <div class="spec" data-sig="6d997464de a9dcf6b7db 1772d7a55f 547cb7268c a88fdf4c7c e324d77f29 5a0cddbeb5" data-sig-state="6d997464de:focus a9dcf6b7db:focus"><div class="spec-h"><b>Nút tròn header nghệ sĩ</b><span class="kind">.artist-expression-header__*</span><span class="dp">info 36 · play 56 · favorite 34 × 36</span></div>
+          <div class="stage tinted am-tint" style="justify-content:center">
+            <button class="am-circle-btn" aria-label="Artist info"><span class="ms o" style="font-size:20px">info_i</span></button>
+            <button class="am-circle-btn play" aria-label="Play"><span class="ms">play_arrow</span></button>
+            <button class="am-circle-btn fav" aria-label="Favorite" disabled><span class="ms o" style="font-size:20px">star</span></button>
+            <button class="am-circle-btn play is-focus am-f-shadow" aria-label="Play (focus)"><span class="ms">play_arrow</span></button>
+          </div>
+          <div class="spec-f"><span class="note">Nền mờ trên ảnh nghệ sĩ. Độ mờ nền và màu nút vẽ theo ảnh chụp, không đo được qua style (nền là SVG mask). Favorite bị disabled khi chưa đăng nhập.</span></div></div>
+
+        <div class="spec" data-sig="85042acd88" data-sig-state="85042acd88:focus"><div class="spec-h"><b>Nút đóng</b><span class="kind">.close-button</span><span class="dp">18 × 18</span></div>
+          <div class="stage" style="background:var(--am-bannerDarkGray);color:var(--am-onDark);margin:12px 12px 0;border-radius:10px">
+            <button class="am-close" aria-label="Close"><span class="ms">close</span></button>
+            <button class="am-close is-focus am-f-shadow" aria-label="Close (focus)"><span class="ms">close</span></button>
+          </div></div>
+      </div>
+    </section>
+
+    <!-- ================= LOCKUP & SHELF ================= -->
+    <section class="block" id="lockups">
+      <header><h2>Lockup &amp; shelf</h2><p>Trang được xếp từ các shelf: tiêu đề 17/700 kèm mũi tên, rồi một hàng lưới cuộn ngang. Mỗi shelf chọn một loại lockup.</p></header>
+      <div class="grid">
+        <div class="spec full" data-sig="17d6d83ab7 925f897d3a db04716585 ffb8214724 fd2105f04c" data-sig-state="ffb8214724:focus"><div class="spec-h"><b>Tiêu đề trang &amp; shelf</b><span class="kind">h1 · .header .title</span><span class="dp">34/40 700 · 17/22 700</span></div>
+          <div class="stage col surface" style="gap:18px">
+            <h1 class="am-page-title">New</h1>
+            <div style="display:flex;gap:28px;flex-wrap:wrap;align-items:center">
+              <a class="am-shelf-title" href="#lockups">Best New Songs<span class="ms">chevron_right</span></a>
+              <span class="am-shelf-title" style="cursor:default">Latest Release</span>
+              <a class="am-shelf-title is-focus am-f-shadow" href="#lockups">Best New Songs<span class="ms">chevron_right</span></a>
+            </div>
+          </div>
+          <div class="stage tinted am-tint"><a class="am-shelf-title" href="#lockups" style="color:inherit">Top Songs<span class="ms" style="color:var(--am-tint-sec)">chevron_right</span></a><span class="am-shelf-title" style="color:inherit;cursor:default">Other Versions</span></div>
+          <div class="spec-f"><span class="note">Shelf có trang "xem tất cả" thì tiêu đề là link kèm chevron; không có thì chỉ là <code>h2</code> (padding phải 10).</span></div></div>
+
+        <div class="spec full" data-sig="1724071a65 ef47da12c7 183c530537 ef998b607b 3e5f53ea8c"><div class="spec-h"><b>Editorial card (hero)</b><span class="kind">.editorial-card</span><span class="dp">540 × 384 · art r 10 · eyebrow 11/600</span></div>
+          <div class="stage surface">
+            <div class="am-editorial">
+              <div class="am-eyebrow">New album</div>
+              <h4>Tên album nổi bật</h4>
+              <div class="sub">Nghệ sĩ</div>
+              <div class="am-editorial-art"><div class="am-ph deep">ảnh bìa 540 × 309</div><div class="cap-in">Một dòng giới thiệu ngắn của biên tập viên.</div><div class="mini-art am-ph warm">ảnh</div></div>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Hàng đầu trang New (<code>shelf-grid__list--grid-type-A</code>, 2 cột + phần lộ của cột 3). Mobile: 298 × 246.</span></div></div>
+
+        <div class="spec full" data-sig="cef44929a8 829b5b7835 61a2282659 645081c4ec 41a510efd8 fbb4446636 dec0de9ac8 0aa4cad045 5606a00ac1 c2f4f358fc 2992a0a557 d2c7e6fd8b" data-sig-state="829b5b7835:hover 61a2282659:hover 645081c4ec:hover 41a510efd8:hover fbb4446636:hover 645081c4ec:focus 41a510efd8:focus fbb4446636:focus cef44929a8:focus"><div class="spec-h"><b>Product lockup (vuông)</b><span class="kind">.product-lockup</span><span class="dp">204 · 144 · art r 7 · chữ 12/15</span></div>
+          <div class="stage surface" style="align-items:flex-start;gap:20px">
+            <div class="fig"><div class="am-lockup"><div class="am-lockup-art"><div class="am-ph cool">ảnh bìa 204</div><div class="am-lockup-hover"><button class="am-platter" aria-label="Play"><span class="ms">play_arrow</span></button><button class="am-more" aria-label="more"><span class="ms">more_horiz</span></button></div></div>
+              <div class="am-lockup-title"><a class="am-link" href="#lockups">Tên album</a><span class="am-badge-e">E</span></div><a class="am-link am-lockup-sub" href="#lockups">Nghệ sĩ</a></div><span class="cap">nghỉ</span></div>
+            <div class="fig"><div class="am-lockup"><div class="am-lockup-art is-hover"><div class="am-ph cool">ảnh bìa 204</div><div class="am-lockup-hover"><button class="am-platter" aria-label="Play"><span class="ms">play_arrow</span></button><button class="am-more" aria-label="more"><span class="ms">more_horiz</span></button></div></div>
+              <div class="am-lockup-title"><a class="am-link is-hover" href="#lockups">Tên album</a></div><a class="am-link am-lockup-sub is-hover" href="#lockups">Nghệ sĩ</a></div><span class="cap">hover: phủ + nút + gạch chân</span></div>
+            <div class="fig"><div class="am-lockup"><div class="am-lockup-art is-focus am-f-outline"><div class="am-ph cool">ảnh bìa 204</div></div>
+              <div class="am-lockup-title"><span>Tên album</span></div><a class="am-link am-lockup-sub is-focus am-f-shadow" href="#lockups">Nghệ sĩ</a></div><span class="cap">focus</span></div>
+            <div class="fig"><div class="am-lockup s"><div class="am-lockup-art"><div class="am-ph moss">ảnh 144</div></div>
+              <div class="am-lockup-title"><span>Tên album</span></div><div class="am-lockup-desc">Mô tả biên tập hai dòng, cắt bằng dấu ba chấm khi quá dài như ở shelf Essential Albums.</div></div><span class="cap">144 · có mô tả</span></div>
+            <div class="fig am-tint" style="padding:12px;border-radius:10px"><div class="am-lockup s"><div class="am-lockup-art"><div class="am-ph warm">ảnh 144</div></div>
+              <div class="am-lockup-title"><a class="am-link" href="#lockups" style="color:inherit">Tên album</a></div><a class="am-link am-lockup-sub" href="#lockups">2026</a></div><span class="cap">trên tint</span></div>
+          </div>
+          <div class="spec-f"><span class="note">Hover đo được: lớp phủ <code>lockupHoverBGColor</code> hiện nút play/"…" (children đổi), tiêu đề và phụ đề gạch chân. Focus: ảnh viền 4px keyColor .6.</span></div></div>
+
+        <div class="spec" data-sig="561e3032db 113eb5852d dadd5492bb 70aea0e16d" data-sig-state="561e3032db:focus"><div class="spec-h"><b>Lockup video</b><span class="kind">.vertical-video</span><span class="dp">16:9 · r 7 · phụ đề 12/15</span></div>
+          <div class="stage surface" style="align-items:flex-start">
+            <div class="am-lockup video" style="width:300px"><div class="am-lockup-art"><div class="am-ph deep">ảnh video 16:9</div></div><div class="am-lockup-title"><span>Tên video</span></div><div class="am-lockup-sub">18 min 19 sec</div></div>
+            <div class="am-lockup video" style="width:200px"><div class="am-lockup-art is-focus am-f-outline"><div class="am-ph cool">focus</div></div><div class="am-lockup-title"><span>Tên video</span></div></div>
+          </div>
+          <div class="spec-f"><span class="note">Shelf Watch Interviews, Music Videos; trên trang tint phụ đề theo <code>--tint-sec</code>.</span></div></div>
+
+        <div class="spec" data-sig="6234764064 b1316e37c2 e16bfce116 e39a9bfde8 d1a1a24702"><div class="spec-h"><b>Track lockup</b><span class="kind">.track-lockup</span><span class="dp">353 × 55 · art 40 · pad 7.5 14 7.5 0</span></div>
+          <div class="stage col surface" style="gap:0">
+            <div class="am-track"><div class="am-track-art"><div class="am-ph warm"></div><button class="am-play-std" aria-label="Play"><span class="ms">play_arrow</span></button></div><ul><li>Tên bài hát<span class="am-badge-e">E</span></li><li>Nghệ sĩ</li></ul><button class="am-more" aria-label="more"><span class="ms">more_horiz</span></button></div>
+            <div class="am-track is-hover"><div class="am-track-art"><div class="am-ph cool"></div><button class="am-play-std" aria-label="Play"><span class="ms">play_arrow</span></button></div><ul><li>Rê chuột: hiện nút play</li><li>Nghệ sĩ</li></ul><button class="am-more" aria-label="more"><span class="ms">more_horiz</span></button></div>
+          </div>
+          <div class="stage col tinted am-tint" style="gap:0">
+            <div class="am-track"><div class="am-track-art"><div class="am-ph deep"></div></div><ul><li>Tên bài hát</li><li>Tên album · 2026</li></ul><button class="am-more" aria-label="more"><span class="ms">more_horiz</span></button></div>
+          </div>
+          <div class="spec-f"><span class="note">Shelf 4 hàng (<code>grid-type-TrackLockupsShelf</code>), mỗi cột 353. Trang nghệ sĩ dùng 1 hàng trên nền tint (Top Songs).</span></div></div>
+
+        <div class="spec" data-sig="8b81540eff aa321090ea c9a996d441 57a35fe8d7 da5c01416a 71bf90e766 69b91be543" data-sig-state="0c1e8d5827:hover"><div class="spec-h"><b>Horizontal lockup</b><span class="kind">.horizontal-lockup</span><span class="dp">art 88 · tiêu đề 15/20 · headline 11/600</span></div>
+          <div class="stage col surface">
+            <div class="am-hlock"><div class="art"><div class="am-ph moss">ảnh</div><button class="am-platter l" aria-label="Play"><span class="ms">play_arrow</span></button></div><div><div class="am-eyebrow">Tên chương trình</div><h5>Episode 748</h5><p>Mô tả tập phát sóng, tối đa hai dòng.</p></div><button class="am-more" aria-label="more"><span class="ms">more_horiz</span></button></div>
+            <div class="am-hlock"><div class="art is-hover"><div class="am-ph warm">ảnh</div><button class="am-platter l" aria-label="Play"><span class="ms">play_arrow</span></button></div><div><div class="am-eyebrow">Hover</div><h5>Nút play 60 hiện giữa ảnh</h5><p>Trạng thái hover đo được.</p></div><button class="am-more" aria-label="more"><span class="ms">more_horiz</span></button></div>
+          </div>
+          <div class="stage col tinted am-tint"><div class="am-hlock"><div class="art"><div class="am-ph cool">ảnh</div></div><div><div class="am-eyebrow">Apple Music Today</div><h5>Tiêu đề bài biên tập</h5></div><span></span></div></div>
+          <div class="spec-f"><span class="note">Radio (Subscribe to Play Episodes) và trang nghệ sĩ. Trên tint, headline lấy màu <code>--tint-sec</code> của từng nghệ sĩ nên mỗi trang ra một sig.</span></div></div>
+
+        <div class="spec" data-sig="9db7ae727e b5d956a03c" data-sig-state="9db7ae727e:hover b5d956a03c:hover 9db7ae727e:focus b5d956a03c:focus"><div class="spec-h"><b>Ô đài radio</b><span class="kind">.play-button--platter.is-large</span><span class="dp">185 r 10 · 117 r 20</span></div>
+          <div class="stage surface">
+            <div class="fig"><div class="am-station"><span class="num">1</span><span class="lbl">ảnh logo đài</span><button class="am-platter l" aria-label="Play"><span class="ms">play_arrow</span></button></div><span class="cap">185</span></div>
+            <div class="fig"><div class="am-station s is-hover"><span class="num">1</span><button class="am-platter l" aria-label="Play"><span class="ms">play_arrow</span></button></div><span class="cap">117 · hover</span></div>
+            <div class="fig"><div class="am-station s is-focus am-f-shadow"><span class="num">1</span></div><span class="cap">focus</span></div>
+          </div>
+          <div class="spec-f"><span class="note">Ảnh đài là ảnh của Apple nên kit vẽ số và chữ giữ chỗ. Hover hiện nút play 60 giữa ô.</span></div></div>
+
+        <div class="spec" data-sig="5d494347a1 33fa3bdaf7"><div class="spec-h"><b>Lockup nghệ sĩ tròn</b><span class="kind">grid-type-H</span><span class="dp">art tròn · tên 12/15</span></div>
+          <div class="stage tinted am-tint" style="align-items:flex-start">
+            <div class="am-lockup circle s" style="width:96px"><div class="am-lockup-art"><div class="am-ph cool"></div></div><div class="am-lockup-title" style="color:inherit">Nghệ sĩ A</div></div>
+            <div class="am-lockup circle s" style="width:96px"><div class="am-lockup-art"><div class="am-ph warm"></div></div><div class="am-lockup-title" style="color:inherit">Nghệ sĩ B</div></div>
+            <div class="am-lockup circle s" style="width:96px"><div class="am-lockup-art"><div class="am-ph moss"></div></div><div class="am-lockup-title" style="color:inherit">Nghệ sĩ C</div></div>
+          </div>
+          <div class="spec-f"><span class="note">Shelf Featured Artists ở cuối playlist.</span></div></div>
+
+        <div class="spec" data-sig="674b90f1ac de2c0e2b8d" data-sig-state="674b90f1ac:focus"><div class="spec-h"><b>Link box</b><span class="kind">.link-box</span><span class="dp">253 × 58 · r 10 · pad 0 16</span></div>
+          <div class="stage surface"><div class="am-linkgrid" style="grid-template-rows:repeat(2,58px)">
+            <a class="am-linkbox" href="#lockups">Concerts<span class="ms">chevron_right</span></a>
+            <a class="am-linkbox is-focus am-f-outline" href="#lockups">Charts<span class="ms">chevron_right</span></a>
+            <a class="am-linkbox" href="#lockups">Spatial Audio<span class="ms">chevron_right</span></a>
+            <a class="am-linkbox" href="#lockups">Decades<span class="ms">chevron_right</span></a>
+          </div></div>
+          <div class="spec-f"><span class="note">Lưới lối tắt cuối trang New (<code>grid--flow-column</code>, 3 hàng). Nền <code>systemQuinary</code>, chữ keyColor. Ô thứ hai ở trạng thái focus.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= TRANG CHI TIẾT ================= -->
+    <section class="block" id="detail">
+      <header><h2>Trang chi tiết (album · playlist · nghệ sĩ)</h2><p>Các trang này luôn ở theme tối (<code>.app-container.is-dark-theme.has-theme-override</code>) và nhận 5 biến tint sinh từ ảnh bìa: <code>--joe-color</code> (nền), <code>--systemSecondary-vibrantOnDark-blended-plusL</code> (chữ phụ), <code>--systemTertiary-…</code>, <code>--labelDivider-…</code> (đường kẻ), <code>--opaqueShelfBG-blended-plusD</code> (dải shelf). Kit gọi chúng là <code>--am-tint-bg / sec / ter / div / shelf</code>. Đổi "Tint ảnh bìa" ở thanh trên để xem ba bộ đo được.</p></header>
+      <div class="grid">
+        <div class="spec full" data-sig="ad9fd5856a 4e3ac50f28 a2c608b027 db782fa3e8 31eb7d2210 78913ce522 270fd22965 9a318e47b8 cf381a5eec 56338c85d4 26e9a8b5bf b6c177e9b3 c8a34c04dc 293224340b ad48e7eb52 de39d9ff3a 2445ee2d22 c36329cd84" data-sig-state="c8a34c04dc:hover c8a34c04dc:focus c36329cd84:hover c36329cd84:focus"><div class="spec-h"><b>Header album / playlist</b><span class="kind">.headings · .artwork-wrapper</span><span class="dp">art 270 r 10 · 26/30 700 + 400 · meta 12/600</span></div>
+          <div class="stage tinted am-tint" style="padding:28px">
+            <div class="am-detail-head">
+              <div class="am-detail-art"><div class="am-ph deep">ảnh bìa 270</div></div>
+              <div>
+                <h1>Tên album<span class="am-badge-e" style="background:var(--am-onDark);color:var(--am-tint-bg)">E</span></h1>
+                <a class="am-link artist" href="#detail">Nghệ sĩ</a>
+                <div class="meta">Pop · 2026</div>
+                <p class="desc">Đoạn giới thiệu của biên tập viên, cắt sau ba dòng, nút MORE nằm cuối dòng thứ ba…<button class="am-more-text">MORE</button></p>
+                <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+                  <button class="am-btn-play"><span class="ms">play_arrow</span>Preview</button>
+                  <a class="am-concert" href="#detail"><span class="ms">confirmation_number</span>Upcoming Concerts</a>
+                  <a class="am-link artist is-hover" href="#detail" style="font-size:15px">hover: gạch chân</a>
+                  <a class="am-concert is-focus am-f-shadow" href="#detail">focus</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Nền trang = <code>--joe-color</code>. Mỗi album/nghệ sĩ ra một màu nền nên discover đếm mỗi trang là một sig; kit gom lại thành một thẻ. Mô tả dùng <code>#a1a1a6</code> (<code>systemSecondary-vibrant</code> tối). Nút Upcoming Concerts (trang nghệ sĩ) cao 22, r 5.5, 12/500.</span></div></div>
+
+        <div class="spec full" data-sig="7784fcab71 ca1e4a96ae 3e21a86251 9b1fd6e1c0 6a4e3e94ff d8326d8fd6 53226031fe 6c46b5b93d 7b9903863d 7fbb19e60c 461c0e637c 2bff027e8f c19eb02163 280672d6ed 9027bdc22c 7fd2ce245a" data-sig-state="ca1e4a96ae:hover 3e21a86251:hover 9b1fd6e1c0:hover 6a4e3e94ff:hover d8326d8fd6:hover ca1e4a96ae:focus 3e21a86251:focus 9b1fd6e1c0:focus 6a4e3e94ff:focus d8326d8fd6:focus 461c0e637c:focus 2bff027e8f:focus c19eb02163:focus 280672d6ed:focus 9027bdc22c:focus 7fd2ce245a:focus 4b37773954:focus 1f7e563ec2:focus f1785ad061:focus d859763bf1:focus 88013b8379:focus c4efa07759:focus 250cbda262:focus"><div class="spec-h"><b>Danh sách bài</b><span class="kind">.songs-list · .songs-list-row</span><span class="dp">hàng 46 · cột số 40 · r 12 khi hover/chọn</span></div>
+          <div class="stage col tinted am-tint" style="padding:20px 24px">
+            <div class="am-songs" role="list">
+              <div class="am-disc">Disc 1</div>
+              <div class="am-songrow" role="listitem"><div class="idx"><span>1</span><button class="am-play-std" aria-label="Play"><span class="ms">play_arrow</span></button></div><a class="am-link t" href="#detail">Tên bài thứ nhất</a><time>3:46</time><button class="am-more" aria-label="more"><span class="ms">more_horiz</span></button></div>
+              <div class="am-songrow is-hover" role="listitem"><div class="idx"><span>2</span><button class="am-play-std" aria-label="Play" style="color:inherit"><span class="ms">play_arrow</span></button></div><a class="am-link t is-hover" href="#detail">Hover: nút play thay số, tên gạch chân</a><time>3:28</time><button class="am-more" aria-label="more"><span class="ms">more_horiz</span></button></div>
+              <div class="am-songrow" role="listitem"><div class="idx"><span>3</span></div><span class="t">Bài chỉ có bản nghe thử<span class="am-badge-e">E</span></span><button class="am-preview-label" style="color:var(--am-onDark)">PREVIEW</button><button class="am-more is-focus am-f-tint" aria-label="more"><span class="ms">more_horiz</span></button></div>
+              <div class="am-songrow" role="listitem"><div class="idx"><button class="am-play-std is-focus am-f-tint" aria-label="Play" style="display:grid;color:inherit"><span class="ms">play_arrow</span></button></div><a class="am-link t is-focus am-f-tint" href="#detail">Focus: bóng trắng .6</a><time>3:55</time><button class="am-more" aria-label="more"><span class="ms">more_horiz</span></button></div>
+            </div>
+          </div>
+          <div class="stage col surface" style="padding:20px 24px">
+            <div class="am-songs">
+              <div class="am-songrow art is-on"><div class="am-track-art"><div class="am-ph warm"></div></div><span class="t">Hàng đang chọn</span><span class="c">Nghệ sĩ</span><span class="c">Album</span><time>3:45</time><button class="am-more" aria-label="more"><span class="ms">more_horiz</span></button></div>
+              <div class="am-songrow art"><div class="am-track-art"><div class="am-ph cool"></div></div><span class="t">Tên bài</span><a class="am-link c" href="#detail">Nghệ sĩ</a><span class="c">Album</span><time>2:35</time><button class="am-more is-plain" aria-label="more" style="color:var(--am-systemSecondary)"><span class="ms">more_horiz</span></button></div>
+              <div class="am-songrow art"><div class="am-track-art"><div class="am-ph moss"></div></div><span class="t">Tên bài</span><a class="am-link c is-hover" href="#detail">Nghệ sĩ (hover)</a><span class="c">Album</span><time>3:50</time><button class="am-more is-plain" aria-label="more" style="color:var(--am-systemSecondary)"><span class="ms">more_horiz</span></button></div>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Trên: album (cột số). Dưới: playlist / room (ảnh 40 + cột Artist, Album). Hàng đang chọn nền keyColor, chữ trắng. Hàng chẵn nền <code>tracklistAltRowColor</code>. Trong list, mọi nút focus bằng bóng trắng .6 (cả trên trang sáng) vì hàng focus đổi sang nền keyColor.</span></div></div>
+
+        <div class="spec full" data-sig="527c096d14 e56ec8c2eb d08bc59f7a 8706161ec6 d5e473de5b"><div class="spec-h"><b>Dải shelf xen kẽ</b><span class="kind">.section--alternate</span><span class="dp">pad 12 0 0 260 (bù sidebar)</span></div>
+          <div class="stage am-tint-band" style="margin:12px 12px 0;border-radius:10px;color:var(--am-onDark);align-items:flex-start;gap:20px">
+            <div style="width:100%"><span class="am-shelf-title" style="color:inherit;cursor:default">Other Versions</span></div>
+            <div class="am-lockup s"><div class="am-lockup-art"><div class="am-ph warm">ảnh</div></div><div class="am-lockup-title" style="color:inherit">Phiên bản A</div><div class="am-lockup-sub" style="color:var(--am-tint-sec)">16 songs</div></div>
+            <div class="am-lockup s"><div class="am-lockup-art"><div class="am-ph deep">ảnh</div></div><div class="am-lockup-title" style="color:inherit">Phiên bản B</div><div class="am-lockup-sub" style="color:var(--am-tint-sec)">12 songs</div></div>
+          </div>
+          <div class="spec-f"><span class="note">Nền = <code>--opaqueShelfBG-blended-plusD</code>, đậm hơn nền trang một bậc để tách các shelf phía dưới.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= PLAYER & PANEL ================= -->
+    <section class="block" id="player">
+      <header><h2>Player &amp; panel</h2></header>
+      <div class="grid">
+        <div class="spec full" data-sig="386ec8ba43 0c482b6aa1 6e6df12016 62cc5c5476" data-sig-state="0c482b6aa1:focus 62cc5c5476:focus"><div class="spec-h"><b>Chrome player (desktop)</b><span class="kind">.chrome-player</span><span class="dp">668 × 56 · r 1000 · cột 152 · 427 · 57</span></div>
+          <div class="stage" style="background:linear-gradient(120deg,var(--am-systemGray5),var(--am-systemGray6));margin:12px 12px 0;border-radius:10px">
+            <div class="am-chrome"><div class="ctrls"><span class="ms dim">shuffle</span><span class="ms">fast_rewind</span><span class="ms big">play_arrow</span><span class="ms">fast_forward</span><span class="ms dim">repeat</span></div>
+              <div class="lcd"><span class="ms" aria-label="logo (giữ chỗ)">music_note</span></div>
+              <div class="acts"><button class="am-iconbtn" aria-label="Up Next" aria-expanded="false"><span class="ms">format_list_bulleted</span></button><button class="am-iconbtn" aria-label="Mute"><span class="ms">volume_up</span></button></div></div>
+          </div>
+          <div class="stage" style="gap:18px">
+            <div class="fig"><button class="am-iconbtn" aria-label="Up Next" aria-expanded="true"><span class="ms">format_list_bulleted</span></button><span class="cap">Up Next đang mở</span></div>
+            <div class="fig"><button class="am-iconbtn is-focus am-f-shadow" aria-label="Up Next"><span class="ms">format_list_bulleted</span></button><span class="cap">focus</span></div>
+            <div class="fig"><button class="am-iconbtn is-focus am-f-shadow" aria-label="Mute"><span class="ms">volume_up</span></button><span class="cap">chrome-volume focus</span></div>
+          </div>
+          <div class="spec-f"><span class="note">Nằm nổi giữa đáy vùng nội dung (<code>.player-bar__floating-player</code>, cao 54, pad 0 20). Chưa phát bài thì ô LCD chỉ hiện logo Apple (kit thay bằng icon). Nút 24 × 28, r 4.</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Mini player (mobile)</b><span class="kind">.mini-player</span><span class="dp">366 × 52 · r 1000 · art 32 r 6</span></div>
+          <div class="stage" style="background:linear-gradient(120deg,var(--am-systemGray5),var(--am-systemGray6));margin:12px 12px 0;border-radius:10px">
+            <div class="am-mini"><div class="art"><span class="ms">music_note</span></div><div class="meta">Not Playing</div><div class="ctl"><span class="ms">play_arrow</span><span class="ms">fast_forward</span></div></div>
+          </div>
+          <div class="spec-f"><span class="note">Đo ở khung 390: <code>saturate(2.2) blur(16px)</code>, bóng 0 10 40.</span></div></div>
+
+        <div class="spec" data-sig="b60e503531 700cc69ae8"><div class="spec-h"><b>Side panel Up Next</b><span class="kind">.side-panel</span><span class="dp">300 × 900</span></div>
+          <div class="stage surface"><div class="am-panel"><h3>Up Next</h3><div class="empty">No upcoming songs.</div></div></div>
+          <div class="stage tinted am-tint"><div class="am-panel" style="height:160px;background:rgba(38,38,40,.6)"><h3>Up Next</h3><div class="empty" style="color:var(--am-tint-sec)">No upcoming songs.</div></div></div>
+          <div class="spec-f"><span class="note">Trượt vào từ phải khi bấm nút Up Next trên chrome player. Trên trang tint dùng nền kính tối.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= BANNER & MENU ================= -->
+    <section class="block" id="feedback">
+      <header><h2>Banner &amp; menu</h2><p>Khách chưa đăng nhập luôn thấy hai banner ghim ở đáy trang: quảng cáo gói và chọn quốc gia.</p></header>
+      <div class="grid">
+        <div class="spec full" data-sig="05a78551a4 47c703489a 5a5cc71ab2" data-sig-state="05a78551a4:focus"><div class="spec-h"><b>Banner upsell</b><span class="kind">.banner</span><span class="dp">h 71 · pad 12 30 · tiêu đề 18/600</span></div>
+          <div class="stage col" style="padding:12px"><div class="am-upsell"><div class="txt"><b>Tiêu đề quảng cáo gói nghe nhạc</b><small>Một dòng mô tả gói và giá.</small></div><button class="am-btn-banner">Try It Now</button></div></div>
+          <div class="stage col" style="padding:0 12px 12px"><div class="am-upsell is-focus am-f-outline"><div class="txt"><b>Focus</b><small>Cả banner là vùng bấm được, focus bằng viền 4px.</small></div></div></div>
+          <div class="spec-f"><span class="note">Nền <code>keyColorBG</code> (#d60017, không đổi theo theme). Mobile: banner nằm ngay dưới header, chữ căn giữa.</span></div></div>
+
+        <div class="spec full" data-sig="ffbf60de9c 866f809404 5b9a591ce7 27d6da4e17" data-sig-state="866f809404:focus 27d6da4e17:hover 27d6da4e17:focus"><div class="spec-h"><b>Banner chọn quốc gia &amp; dropdown</b><span class="kind">.banner-container · .dropdown-button · .select-list</span><span class="dp">nền #444 · select 300 × 32 r 7 · mục 33</span></div>
+          <div class="stage col" style="padding:12px">
+            <div class="am-country"><button class="am-close" aria-label="Close"><span class="ms">close</span></button><span>Choose another country to see content specific to your location</span>
+              <div class="am-select"><button class="am-select-btn" aria-haspopup="menu" aria-expanded="false">Vietnam<span class="ms">expand_more</span></button></div><button class="am-btn-sq">Continue</button></div>
+          </div>
+          <div class="stage" style="background:var(--am-bannerDarkGray);margin:0 12px;border-radius:10px;align-items:flex-start;gap:24px">
+            <div class="fig"><ul class="am-select-list" role="menu"><li role="menuitem" aria-selected="true"><span class="ms">check</span>Vietnam</li><li role="menuitem"><span class="ms"></span>United States</li></ul><span class="cap" style="color:var(--am-onDarkSecondary)">danh sách mở</span></div>
+            <div class="fig"><ul class="am-select-list" role="menu"><li role="menuitem" class="is-hover"><span class="ms">check</span>Vietnam</li></ul><span class="cap" style="color:var(--am-onDarkSecondary)">hover: nền #707070</span></div>
+            <div class="fig"><ul class="am-select-list" role="menu"><li role="menuitem" class="is-focus am-f-outline"><span class="ms">check</span>Vietnam</li></ul><span class="cap" style="color:var(--am-onDarkSecondary)">focus</span></div>
+            <div class="fig" style="width:300px"><button class="am-select-btn is-focus am-f-shadow">Vietnam<span class="ms">expand_more</span></button><span class="cap" style="color:var(--am-onDarkSecondary)">nút focus</span></div>
+          </div>
+          <div class="spec-f"><span class="note">Màu dropdown là hằng số của site (<code>--dropdownBackground #575757</code>, <code>--dropdownLightGray #707070</code>), giống nhau ở cả hai theme.</span></div></div>
+
+        <div class="spec" data-sig="2af10fc3d6 397cf9c473 4b90aac500 f549536513 c8c979549d 8000e9b939"><div class="spec-h"><b>Upsell toàn trang</b><span class="kind">.upsell-personal</span><span class="dp">h1 SF Pro Display 64/600 · 17 · nút 150 × 36</span></div>
+          <div class="stage col"><div class="am-upsell-hero"><div class="wm">wordmark</div><h2>Tiêu đề quảng cáo gói nghe nhạc</h2><p>Một dòng mô tả gói và giá.</p><button class="am-btn-cta">Try It Now</button><button class="am-textbtn">See All Plans<span class="ms">chevron_right</span></button></div></div>
+          <div class="spec-f"><span class="note">Trang Home khi chưa đăng nhập. Nền gốc là ảnh gradient đỏ-hồng kèm nốt nhạc 3D; kit vẽ lại bằng gradient từ token. Tiêu đề thật 64px (<code>--headline-super</code> khai 48px), kit dùng 48 để vừa thẻ.</span></div></div>
+
+        <div class="spec" data-sig="a0923a6e22 74c6e93f04 e2c346ae1b"><div class="spec-h"><b>Menu ngữ cảnh</b><span class="kind">.contextual-menu-item</span><span class="dp">w 185 · mục 32 · pad 0 10 · r 6</span></div>
+          <div class="stage surface" style="align-items:flex-start;gap:20px">
+            <ul class="am-ctx" role="menu"><li><button role="menuitem">View Schedule<span class="ms">calendar_month</span></button></li><li><button role="menuitem">Share<span class="ms">ios_share</span></button></li><li><button role="menuitem">Copy Link<span class="ms">link</span></button></li></ul>
+            <ul class="am-ctx" role="menu"><li><button role="menuitem" class="is-hover">Hover<span class="ms">calendar_month</span></button></li><li><button role="menuitem">Copy Link<span class="ms">link</span></button></li></ul>
+          </div>
+          <div class="spec-f"><span class="note">Mở bằng nút "…" trên lockup. Mục đầu bo 6 6 0 0, mục cuối 0 0 6 6, có đường kẻ giữa các mục. Mục được trỏ nền <code>systemQuinary</code>.</span></div></div>
+
+        <div class="spec full" data-sig="1bbfd82555 7a14698c3c 960c7b67ab c2f6335b90 7cd9727e04 e2c523c29c ff8cd3b17f 09cc313735 c13576a58b d935357613 2bae5923bc 8ec6368c4f a467aeac01 fcb1d5246e f3300a3aa1 31b2114823 4b205464bd 8b2c95240f 64d075e5d8" data-sig-state="8ec6368c4f:hover a467aeac01:hover 31b2114823:hover 4b205464bd:hover 8b2c95240f:hover 64d075e5d8:hover 8ec6368c4f:focus a467aeac01:focus 31b2114823:focus 4b205464bd:focus 8b2c95240f:focus 64d075e5d8:focus"><div class="spec-h"><b>Footer</b><span class="kind">footer · .languages · .legal</span><span class="dp">pad 14 300 90 · chữ 11/13</span></div>
+          <div class="stage col" style="padding:12px"><div class="am-footer">
+            <ul class="am-langs"><li><button class="am-link am-textbtn" style="font-size:11px;padding:0 10px 0 0">United States</button></li><li><a class="am-link" href="#feedback">Español (México)</a></li><li><a class="am-link is-hover" href="#feedback">Tiếng Việt (hover)</a></li><li><a class="am-link is-focus am-f-shadow" href="#feedback">Français (focus)</a></li></ul>
+            <div class="copy-line">Copyright © 2026 Công ty. All rights reserved.</div>
+            <ul class="am-legal"><li><a class="am-link" href="#feedback">Internet Service Terms</a></li><li><a class="am-link" href="#feedback">Privacy</a></li><li><a class="am-link" href="#feedback">Support</a></li><li><a class="am-link" href="#feedback">Feedback</a></li></ul>
+          </div></div>
+          <div class="stage col" style="padding:0 12px 12px"><div class="am-footer am-tint-band">
+            <ul class="am-langs"><li><button class="am-link am-textbtn" style="font-size:11px;padding:0 10px 0 0;color:inherit">United States</button></li><li><a class="am-link" href="#feedback">English (UK)</a></li><li><a class="am-link is-hover" href="#feedback">hover</a></li></ul>
+            <ul class="am-legal"><li><a class="am-link" href="#feedback" style="color:inherit">Internet Service Terms</a></li><li><a class="am-link is-hover" href="#feedback" style="color:inherit">Support (hover)</a></li></ul>
+          </div></div>
+          <div class="spec-f"><span class="note">Nền <code>footerBg</code>; trên trang tint thì nền là dải shelf (<code>--tint-shelf</code>), nên mỗi trang chi tiết ra một sig footer. Link hover: gạch chân.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= TRẠNG THÁI ================= -->
+    <section class="block" id="states">
+      <header><h2>Trạng thái</h2><p>Kết quả ép <code>:hover</code> / <code>:focus-visible</code> / <code>:active</code> qua CDP trên 160 pattern: 23 hover, 60 focus, 0 active, 0 cặp selected (mục đang chọn của sidebar là class <code>--selected</code>, đã bày ở thẻ Mục điều hướng). Site style focus riêng, không dùng viền mặc định của trình duyệt. Có ba kiểu:</p></header>
+      <div class="grid">
+        <div class="spec full"><div class="spec-h"><b>Focus · 3 kiểu</b><span class="kind">:focus-visible</span><span class="dp">4px · keyColor .6 / trắng .6</span></div>
+          <div class="stage surface" style="gap:28px">
+            <div class="fig"><button class="am-btn-pill is-focus am-f-shadow" style="width:auto">box-shadow keyColor</button><span class="cap">34 pattern · nút, link, "…"</span></div>
+            <div class="fig"><div class="am-linkbox is-focus am-f-outline" style="width:180px">outline keyColor<span class="ms">chevron_right</span></div><span class="cap">8 pattern · thẻ, mục nav, banner</span></div>
+            <div class="fig am-tint" style="padding:10px;border-radius:8px"><button class="am-more is-focus am-f-tint" aria-label="more"><span class="ms">more_horiz</span></button><span class="cap">18 pattern · trong songs-list</span></div>
+          </div>
+          <div class="spec-f"><span class="note">Mỗi pattern có thẻ riêng ở trên, bày cả trạng thái nghỉ lẫn focus.</span></div></div>
+        <div class="spec full"><div class="spec-h"><b>Hover · 3 kiểu</b><span class="kind">:hover</span><span class="dp">gạch chân · phủ ảnh · nền</span></div>
+          <div class="stage surface" style="gap:28px">
+            <div class="fig"><a class="am-link is-hover" href="#states">Link gạch chân</a><span class="cap">18 · link, nút chữ footer</span></div>
+            <div class="fig"><div class="am-lockup s" style="width:100px"><div class="am-lockup-art is-hover"><div class="am-ph cool"></div><div class="am-lockup-hover"><button class="am-platter" aria-label="Play"><span class="ms">play_arrow</span></button></div></div></div><span class="cap">4 · nút platter hiện trên ảnh</span></div>
+            <div class="fig"><ul class="am-select-list" style="width:160px"><li class="is-hover">Mục dropdown</li></ul><span class="cap">1 · nền #707070</span></div>
+          </div>
+          <div class="spec-f"><span class="note">Hàng bài và mục menu có hover dựng bằng JS/class của site. Discover không bắt được, kit dựng lại từ <code>tracklistHoverColor</code> và <code>systemQuinary</code> (không đo trực tiếp).</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= MÀN MẪU ================= -->
+    <section class="block" id="screens">
+      <header><h2>Màn hình mẫu</h2><p>Ghép từ đúng các class ở trên theo bố cục của site. Mobile 390 × 844: header 52, shelf cuộn ngang, mini player nổi ở đáy. Desktop 1440 × 900: sidebar 260, nội dung có gutter 40, chrome player nổi giữa đáy. Trang chi tiết đổi sang theme tint. Mọi ảnh là khối giữ chỗ.</p></header>
+      <div class="frames">
+        <div><div class="frame-wrap"><div class="phone">
+          <div class="am-mhead"><button class="am-menuicon" aria-label="Menu"><span class="ms">menu</span></button><div class="am-logo">logo</div><button class="am-btn-pill">Sign In</button></div>
+          <div style="padding:0 25px">
+            <h1 class="am-page-title" style="margin:20px 0 18px">New</h1>
+            <div class="shelf-row" style="gap:10px">
+              <div class="am-editorial" style="width:298px;flex:none"><div class="am-eyebrow">New album</div><h4>Tên album nổi bật</h4><div class="sub">Nghệ sĩ</div><div class="am-editorial-art" style="aspect-ratio:298/170"><div class="am-ph deep">ảnh bìa</div><div class="cap-in">Giới thiệu ngắn.</div></div></div>
+              <div class="am-editorial" style="width:298px;flex:none"><div class="am-eyebrow">Updated playlist</div><h4>Playlist</h4><div class="sub">Apple Music</div><div class="am-editorial-art" style="aspect-ratio:298/170"><div class="am-ph cool">ảnh bìa</div></div></div>
+            </div>
+            <div style="margin:26px 0 6px"><a class="am-shelf-title" href="#screens">Best New Songs<span class="ms">chevron_right</span></a></div>
+            <div class="am-track" style="width:270px"><div class="am-track-art"><div class="am-ph warm"></div></div><ul><li>Bài hát một</li><li>Nghệ sĩ</li></ul><button class="am-more" aria-label="more"><span class="ms">more_horiz</span></button></div>
+            <div class="am-track" style="width:270px"><div class="am-track-art"><div class="am-ph cool"></div></div><ul><li>Bài hát hai<span class="am-badge-e">E</span></li><li>Nghệ sĩ</li></ul><button class="am-more" aria-label="more"><span class="ms">more_horiz</span></button></div>
+            <div class="am-track" style="width:270px"><div class="am-track-art"><div class="am-ph moss"></div></div><ul><li>Bài hát ba</li><li>Nghệ sĩ</li></ul><button class="am-more" aria-label="more"><span class="ms">more_horiz</span></button></div>
+            <div style="margin:22px 0 10px"><a class="am-shelf-title" href="#screens">New This Week<span class="ms">chevron_right</span></a></div>
+            <div class="shelf-row" style="gap:10px"><div class="am-lockup s" style="flex:none"><div class="am-lockup-art"><div class="am-ph deep"></div></div><div class="am-lockup-title">Album</div><div class="am-lockup-sub">Nghệ sĩ</div></div><div class="am-lockup s" style="flex:none"><div class="am-lockup-art"><div class="am-ph warm"></div></div><div class="am-lockup-title">Album</div><div class="am-lockup-sub">Nghệ sĩ</div></div><div class="am-lockup s" style="flex:none"><div class="am-lockup-art"><div class="am-ph cool"></div></div><div class="am-lockup-title">Album</div></div></div>
+          </div>
+          <div style="position:absolute;left:12px;right:12px;bottom:18px"><div class="am-mini" style="width:100%"><div class="art"><span class="ms">music_note</span></div><div class="meta">Not Playing</div><div class="ctl"><span class="ms">play_arrow</span><span class="ms">fast_forward</span></div></div></div>
+        </div></div>
+        <div class="frame-cap">Mobile · New: <code>.navigation__header</code>, <code>.editorial-card</code>, <code>.header</code>, <code>.track-lockup</code>, <code>.product-lockup</code> 144, <code>.mini-player</code>.</div></div>
+
+        <div><div class="frame-wrap"><div class="phone am-tint">
+          <div class="am-mhead" style="background:transparent;color:inherit"><button class="am-menuicon" aria-label="Menu" style="color:inherit"><span class="ms">menu</span></button><div class="am-logo" style="color:var(--am-tint-sec);border-color:var(--am-tint-sec)">logo</div><button class="am-btn-pill">Sign In</button></div>
+          <div style="padding:16px 25px 0;text-align:center">
+            <div class="am-detail-art" style="width:220px;height:220px;margin:0 auto"><div class="am-ph deep">ảnh bìa</div></div>
+            <h1 style="font:700 22px/26px var(--am-font);margin:18px 0 2px">Tên album</h1>
+            <div style="font:400 22px/26px var(--am-font);color:var(--am-keyColor)">Nghệ sĩ</div>
+            <div style="font:600 12px/15px var(--am-font);color:var(--am-tint-sec);margin:4px 0 16px">Pop · 2026</div>
+            <button class="am-btn-play"><span class="ms">play_arrow</span>Preview</button>
+          </div>
+          <div class="am-songs" style="padding:18px 16px 0">
+            <div class="am-songrow" style="grid-template-columns:32px minmax(0,1fr) 28px"><div class="idx">1</div><span class="t">Bài thứ nhất</span><button class="am-more" aria-label="more"><span class="ms">more_horiz</span></button></div>
+            <div class="am-songrow" style="grid-template-columns:32px minmax(0,1fr) 28px"><div class="idx">2</div><span class="t">Bài thứ hai</span><button class="am-more" aria-label="more"><span class="ms">more_horiz</span></button></div>
+            <div class="am-songrow" style="grid-template-columns:32px minmax(0,1fr) 28px"><div class="idx">3</div><span class="t">Bài thứ ba<span class="am-badge-e">E</span></span><button class="am-more" aria-label="more"><span class="ms">more_horiz</span></button></div>
+            <div class="am-songrow" style="grid-template-columns:32px minmax(0,1fr) 28px"><div class="idx">4</div><span class="t">Bài thứ tư</span><button class="am-more" aria-label="more"><span class="ms">more_horiz</span></button></div>
+          </div>
+          <div style="position:absolute;left:12px;right:12px;bottom:18px"><div class="am-mini" style="width:100%;background:rgba(38,38,40,.6);color:var(--am-onDark)"><div class="art"><span class="ms">music_note</span></div><div class="meta" style="color:var(--am-tint-sec)">Not Playing</div><div class="ctl" style="color:inherit"><span class="ms">play_arrow</span><span class="ms">fast_forward</span></div></div></div>
+        </div></div>
+        <div class="frame-cap">Mobile · album trên tint: header căn giữa và danh sách rút gọn (bỏ cột thời lượng). <strong>Vẽ theo spec</strong>: bố cục album mobile suy từ ảnh 390, không đo từng số.</div></div>
+
+        <div style="width:100%"><div class="frame-wrap"><div class="desk">
+          <nav class="am-nav" aria-label="Mẫu sidebar" style="min-height:900px">
+            <div class="am-nav-head"><div class="am-logo">logo</div><ul class="am-nav-list"><li class="am-nav-item"><a href="#screens"><span class="ms o">search</span>Search</a></li><li class="am-nav-item"><a href="#screens"><span class="ms o">home</span>Home</a></li><li class="am-nav-item is-on"><a href="#screens"><span class="ms">grid_view</span>New</a></li><li class="am-nav-item"><a href="#screens"><span class="ms o">radio</span>Radio</a></li></ul></div>
+            <div class="am-nav-foot"><div class="am-native-cta"><button><span class="ms o">library_music</span>Open in Music<span class="ms" style="font-size:14px">north_east</span></button></div><div class="am-signin-wrap"><button class="am-btn-pill"><span class="ms">person</span>Sign In</button></div></div>
+          </nav>
+          <div class="scr-main" style="overflow:visible">
+            <div class="scr-pad">
+              <h1 class="am-page-title" style="margin:36px 0 26px">New</h1>
+              <div class="shelf-row">
+                <div class="am-editorial" style="flex:none"><div class="am-eyebrow">New deluxe edition</div><h4>Tên album nổi bật</h4><div class="sub">Nghệ sĩ</div><div class="am-editorial-art"><div class="am-ph deep">ảnh bìa 540 × 309</div><div class="cap-in">Một dòng giới thiệu của biên tập viên.</div><div class="mini-art am-ph warm">ảnh</div></div></div>
+                <div class="am-editorial" style="flex:none"><div class="am-eyebrow">Updated playlist</div><h4>Playlist nổi bật</h4><div class="sub">Apple Music</div><div class="am-editorial-art"><div class="am-ph cool">ảnh bìa 540 × 309</div><div class="cap-in">Giới thiệu ngắn.</div></div></div>
+              </div>
+              <div style="margin:36px 0 8px"><a class="am-shelf-title" href="#screens">Best New Songs<span class="ms">chevron_right</span></a></div>
+              <div style="display:grid;grid-template-columns:repeat(3,353px);column-gap:20px">
+                <div class="am-track"><div class="am-track-art"><div class="am-ph warm"></div></div><ul><li>Bài hát một</li><li>Nghệ sĩ</li></ul><button class="am-more" aria-label="more"><span class="ms">more_horiz</span></button></div>
+                <div class="am-track"><div class="am-track-art"><div class="am-ph moss"></div></div><ul><li>Bài hát hai<span class="am-badge-e">E</span></li><li>Nghệ sĩ</li></ul><button class="am-more" aria-label="more"><span class="ms">more_horiz</span></button></div>
+                <div class="am-track"><div class="am-track-art"><div class="am-ph cool"></div></div><ul><li>Bài hát ba</li><li>Nghệ sĩ</li></ul><button class="am-more" aria-label="more"><span class="ms">more_horiz</span></button></div>
+                <div class="am-track"><div class="am-track-art"><div class="am-ph deep"></div></div><ul><li>Bài hát bốn</li><li>Nghệ sĩ</li></ul><button class="am-more" aria-label="more"><span class="ms">more_horiz</span></button></div>
+                <div class="am-track"><div class="am-track-art"><div class="am-ph warm"></div></div><ul><li>Bài hát năm</li><li>Nghệ sĩ</li></ul><button class="am-more" aria-label="more"><span class="ms">more_horiz</span></button></div>
+                <div class="am-track"><div class="am-track-art"><div class="am-ph moss"></div></div><ul><li>Bài hát sáu</li><li>Nghệ sĩ</li></ul><button class="am-more" aria-label="more"><span class="ms">more_horiz</span></button></div>
+              </div>
+            </div>
+            <div style="position:absolute;left:0;right:0;bottom:84px;display:flex;justify-content:center"><div class="am-chrome"><div class="ctrls"><span class="ms dim">shuffle</span><span class="ms">fast_rewind</span><span class="ms big">play_arrow</span><span class="ms">fast_forward</span><span class="ms dim">repeat</span></div><div class="lcd"><span class="ms">music_note</span></div><div class="acts"><button class="am-iconbtn" aria-label="Up Next"><span class="ms">format_list_bulleted</span></button><button class="am-iconbtn" aria-label="Mute"><span class="ms">volume_up</span></button></div></div></div>
+            <div style="position:absolute;left:-260px;right:0;bottom:0"><div class="am-upsell"><div class="txt"><b>Tiêu đề quảng cáo gói nghe nhạc</b><small>Một dòng mô tả gói và giá.</small></div><button class="am-btn-banner">Try It Now</button></div></div>
+          </div>
+        </div></div>
+        <div class="frame-cap">Desktop · New: <code>.navigation</code>, <code>.navigation-item</code>, <code>.native-cta</code>, <code>.signin</code>, <code>.editorial-card</code>, <code>.track-lockup</code> (lưới 3 × 353, gap 20), <code>.chrome-player</code>, <code>.banner</code>.</div></div>
+
+        <div style="width:100%"><div class="frame-wrap"><div class="desk am-tint">
+          <nav class="am-nav" aria-label="Mẫu sidebar" style="min-height:900px;background:rgba(38,38,40,.6);color:var(--am-onDark)">
+            <div class="am-nav-head"><div class="am-logo" style="color:var(--am-tint-sec);border-color:var(--am-tint-sec)">logo</div><ul class="am-nav-list"><li class="am-nav-item"><a href="#screens" style="color:inherit"><span class="ms o">search</span>Search</a></li><li class="am-nav-item"><a href="#screens" style="color:inherit"><span class="ms o">home</span>Home</a></li><li class="am-nav-item is-on"><a href="#screens" style="color:inherit"><span class="ms">grid_view</span>New</a></li><li class="am-nav-item"><a href="#screens" style="color:inherit"><span class="ms o">radio</span>Radio</a></li></ul></div>
+          </nav>
+          <div class="scr-main">
+            <div class="scr-pad" style="padding-top:44px">
+              <div class="am-detail-head"><div class="am-detail-art"><div class="am-ph deep">ảnh bìa 270</div></div>
+                <div><h1>Tên album<span class="am-badge-e" style="background:var(--am-onDark);color:var(--am-tint-bg)">E</span></h1><a class="am-link artist" href="#screens">Nghệ sĩ</a><div class="meta">Pop · 2026</div><p class="desc">Đoạn giới thiệu của biên tập viên, cắt sau ba dòng…<button class="am-more-text">MORE</button></p><button class="am-btn-play"><span class="ms">play_arrow</span>Preview</button></div></div>
+              <div class="am-songs" style="margin-top:40px;width:1100px">
+                <div class="am-disc">Disc 1</div>
+                <div class="am-songrow is-hover"><div class="idx"><span>1</span><button class="am-play-std" aria-label="Play" style="color:inherit"><span class="ms">play_arrow</span></button></div><span class="t">Bài thứ nhất</span><time>3:46</time><button class="am-more" aria-label="more"><span class="ms">more_horiz</span></button></div>
+                <div class="am-songrow"><div class="idx"><span>2</span></div><span class="t">Bài thứ hai</span><time>3:28</time><button class="am-more" aria-label="more"><span class="ms">more_horiz</span></button></div>
+                <div class="am-songrow"><div class="idx"><span>3</span></div><span class="t">Bài thứ ba</span><time>3:55</time><button class="am-more" aria-label="more"><span class="ms">more_horiz</span></button></div>
+                <div class="am-songrow"><div class="idx"><span>4</span></div><span class="t">Bài thứ tư<span class="am-badge-e">E</span></span><time>3:32</time><button class="am-more" aria-label="more"><span class="ms">more_horiz</span></button></div>
+                <div class="am-songrow"><div class="idx"><span>5</span></div><span class="t">Bài thứ năm</span><button class="am-preview-label" style="color:var(--am-onDark)">PREVIEW</button><button class="am-more" aria-label="more"><span class="ms">more_horiz</span></button></div>
+                <div class="am-songrow"><div class="idx"><span>6</span></div><span class="t">Bài thứ sáu</span><time>2:43</time><button class="am-more" aria-label="more"><span class="ms">more_horiz</span></button></div>
+              </div>
+            </div>
+            <div style="position:absolute;right:0;top:0;bottom:0" class="am-panel-host"><div class="am-panel" style="height:100%;background:rgba(38,38,40,.6)"><h3>Up Next</h3><div class="empty" style="color:var(--am-tint-sec)">No upcoming songs.</div></div></div>
+            <div style="position:absolute;left:0;right:300px;bottom:40px;display:flex;justify-content:center"><div class="am-chrome" style="background:rgba(38,38,40,.6);color:var(--am-onDark)"><div class="ctrls" style="color:inherit"><span class="ms dim">shuffle</span><span class="ms">fast_rewind</span><span class="ms big">play_arrow</span><span class="ms">fast_forward</span><span class="ms dim">repeat</span></div><div class="lcd"><span class="ms">music_note</span></div><div class="acts"><button class="am-iconbtn" aria-label="Up Next" aria-expanded="true"><span class="ms">format_list_bulleted</span></button><button class="am-iconbtn" aria-label="Mute" style="color:inherit"><span class="ms">volume_up</span></button></div></div></div>
+          </div>
+        </div></div>
+        <div class="frame-cap">Desktop · album trên tint, Up Next đang mở: <code>.headings</code>, <code>.artwork-wrapper</code>, <code>.songs-list-row</code> (hàng 1 ở trạng thái hover), <code>.side-panel</code>, <code>.chrome-player</code> bản kính tối.</div></div>
+      </div>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"><span id="toast-t"></span></div>
+
+<script>
+/* 67 biến màu đọc từ :root của music.apple.com (Playwright, colorScheme light/dark).
+   "ic" = bản tăng tương phản: lấy biến <tên>-default_IC hoặc <tên>_IC của site nếu có, không có thì giữ giá trị thường. */
+const ROLES=["pageBG","systemPrimary","systemSecondary","systemTertiary","systemQuaternary","systemQuinary","keyColor","keyColor-rollover","keyColor-pressed","keyColor-disabled","keyColor-rgb","systemRed","systemOrange","systemYellow","systemGreen","systemMint","systemTeal","systemCyan","systemBlue","systemIndigo","systemPurple","systemPink","systemBrown","systemGray","systemGray2","systemGray3","systemGray4","systemGray5","systemGray6","systemLink","labelDivider","vibrantDivider","navSidebarBG","navSidebarSelectedState","glassMaterialBackground","glassMaterialInnerStrokeCombined","glassMaterialShadowColor","playerBackground","miniPlayerBackground","systemHeaderMaterialSover","systemStandardThinMaterialSover","shelfBG","opaqueShelfBG","footerBg","mobileNavigationBG","cardHoverColor","tracklistHoverColor","tracklistAltRowColor","segmentedControlBG","segmentedControlSelectedBG","segmentedControlSelectedText","titleBadgeBG","titleBadgeColor","modalCloseButtonBGColor","searchBarBorderColor","searchBoxIconFill","genericJoeColor","contextMenuTextColor","contextMenuBorderColor","playerMissingArtworkBg","playerMissingArtworkIcon","lockupHoverBGColor","modalScrimColor","dropdownBackground","dropdownLightGray","bannerDarkGray","liveBadgePlatterBG"];
+const PALETTES={"standard":{"label":"Thường","light":["#fff","rgba(0,0,0,.88)","rgba(0,0,0,.56)","rgba(0,0,0,.48)","rgba(0,0,0,.1)","rgba(0,0,0,.05)","#d60017","#a20000","#b00","rgba(214,0,23,.25)","214,0,23","#ff3b30","#ff9500","#fc0","#28cd41","#00c7be","#59adc4","#55bef0","#007aff","#5856d6","#af52de","#ff2d55","#a2845e","#8e8e93","#aeaeb2","#c7c7cc","#d1d1d6","#e5e5ea","#f2f2f7","#0068da","rgba(0,0,0,.15)","rgba(60,60,67,.29)","rgba(60,60,67,.03)","rgba(60,60,67,.1)","rgba(245,245,247,.55)","rgba(0,0,0,.05)","rgba(0,0,0,.1)","hsla(0,0%,100%,.88)","hsla(0,0%,100%,.9)","hsla(0,0%,100%,.8)","hsla(0,0%,96.5%,.48)","rgba(0,0,0,.05)","#f2f2f2","#fbfbfb","#fff","rgba(120,120,128,.25)","rgba(0,0,0,.06)","rgba(0,0,0,.015)","rgba(118,118,128,.12)","#fff","rgba(0,0,0,.88)","rgba(118,118,128,.12)","#000","#e8e8ed","rgba(0,0,0,.15)","rgba(0,0,0,.65)","#ebebeb","rgba(0,0,0,.85)","rgba(0,0,0,.15)","#e9e9e9","#dcdcdc","rgba(51,51,51,.3)","rgba(0,0,0,.45)","#575757","#707070","#444","#ff5066"],"dark":["#1f1f1f","hsla(0,0%,100%,.92)","hsla(0,0%,100%,.64)","hsla(0,0%,100%,.4)","hsla(0,0%,100%,.1)","hsla(0,0%,100%,.05)","#fa586a","#ff8a9c","#ff7183","rgba(250,88,106,.35)","250,88,106","#ff453a","#ff9f0a","#ffd60a","#32d74b","#63e6e2","#6ac4dc","#5ac8f5","#0a84ff","#5e5ce6","#bf5af2","#ff375f","#ac8e68","#98989d","#636366","#48484a","#3a3a3c","#2c2c2e","#1c1c1e","#419cff","hsla(0,0%,100%,.1)","rgba(235,235,245,.19)","rgba(235,235,245,.03)","rgba(235,235,245,.1)","rgba(38,38,40,.6)","hsla(0,0%,100%,.2)","rgba(0,0,0,.2)","rgba(45,45,45,.88)","rgba(37,37,37,.9)","rgba(30,30,30,.8)","rgba(40,40,40,.5)","hsla(0,0%,100%,.05)","#2b2b2b","#323232","#2e2e2e","rgba(120,120,128,.41)","hsla(0,0%,100%,.06)","hsla(0,0%,100%,.015)","rgba(118,118,128,.24)","#636366","hsla(0,0%,100%,.85)","rgba(118,118,128,.24)","#fff","#333336","hsla(0,0%,100%,.15)","hsla(0,0%,100%,.9)","#323232","hsla(0,0%,100%,.85)","hsla(0,0%,100%,.1)","#323232","#434343","rgba(51,51,51,.3)","rgba(0,0,0,.45)","#575757","#707070","#444","#ff5066"]},"ic":{"label":"Tăng tương phản","light":["#fff","#000","rgba(0,0,0,.76)","rgba(0,0,0,.56)","rgba(0,0,0,.35)","rgba(0,0,0,.1)","#d60017","#a20000","#b00","rgba(214,0,23,.25)","214,0,23","#d70015","#c93400","#a05a00","#007d1b","#0c817b","#008299","#0071a4","#0040dd","#3634a3","#ad44ab","#d30f45","#7f6545","#69696e","#8e8e93","#aeaeb2","#bcbcc0","#d8d8dc","#ebebf0","#0059cb","rgba(0,0,0,.3)","rgba(60,60,67,.29)","#fafafa","rgba(60,60,67,.1)","#f2f2f2","#0d0d0d","rgba(0,0,0,.1)","#fafafa","#fafafa","#fff","#dcdcdc","rgba(0,0,0,.05)","#f2f2f2","#fbfbfb","#fff","rgba(120,120,128,.25)","rgba(0,0,0,.1)","rgba(0,0,0,.05)","rgba(0,0,0,.2)","#fff","#000","rgba(118,118,128,.12)","#000","#e8e8ed","rgba(0,0,0,.15)","rgba(0,0,0,.65)","#ebebeb","rgba(0,0,0,.85)","rgba(0,0,0,.15)","#e9e9e9","#dcdcdc","rgba(51,51,51,.3)","rgba(0,0,0,.45)","#575757","#707070","#444","#ff5066"],"dark":["#1f1f1f","#fff","hsla(0,0%,100%,.7)","hsla(0,0%,100%,.5)","hsla(0,0%,100%,.3)","hsla(0,0%,100%,.1)","#fa586a","#ff8a9c","#ff7183","rgba(250,88,106,.35)","250,88,106","#ff6961","#ffb340","#ffd426","#31de4b","#63e6e2","#5de6ff","#70d7ff","#409cff","#7d7aff","#da8fff","#ff6482","#b59469","#98989d","#7c7c80","#545456","#444446","#363638","#242426","#419cff","hsla(0,0%,100%,.3)","rgba(235,235,245,.19)","#282828","rgba(235,235,245,.1)","#0e0e0e","#e7e7e7","rgba(0,0,0,.2)","#282828","#282828","#1e1e1e","#0a0a0a","hsla(0,0%,100%,.05)","#2b2b2b","#323232","#2e2e2e","rgba(120,120,128,.41)","hsla(0,0%,100%,.1)","hsla(0,0%,100%,.05)","hsla(0,0%,100%,.24)","#fff","#000","rgba(118,118,128,.24)","#fff","#333336","hsla(0,0%,100%,.15)","hsla(0,0%,100%,.9)","#323232","hsla(0,0%,100%,.85)","hsla(0,0%,100%,.1)","#323232","#434343","rgba(51,51,51,.3)","rgba(0,0,0,.45)","#575757","#707070","#444","#ff5066"]}};
+/* 3 bộ tint đo trên .app-container của trang album / playlist (ảnh bìa khác nhau cho màu khác nhau) */
+const TINTS={a:{label:"Tint A · đỏ rượu",bg:"#370c18",sec:"rgb(216,173,190)",ter:"rgb(165,122,139)",div:"rgb(136,56,78)",shelf:"rgb(45,2,14)"},
+  b:{label:"Tint B · cam đất",bg:"#bc5532",sec:"rgb(255,246,216)",ter:"rgb(255,195,165)",div:"rgb(255,192,127)",shelf:"rgb(178,75,40)"},
+  c:{label:"Tint C · than chì",bg:"#0e1216",sec:"rgb(175,179,188)",ter:"rgb(124,128,137)",div:"rgb(59,67,74)",shelf:"rgb(4,8,12)"}};
+const EXTRA={"keyColorBG":"#d60017","fallbackMaterialBG":["hsla(0,0%,100%,.97)","rgba(31,31,31,.97)"],"trackLockupArtworkOverlay":"rgba(51,51,51,.3)","dropdownLightGrayIcon":"#999","systemSecondary-vibrant":["rgba(0,0,0,.56)","#a1a1a6"]};
+(function () {
+  const root = document.documentElement;
+  const state = { mode: matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light", contrast: "standard", tint: "a" };
+  try { Object.assign(state, JSON.parse(localStorage.getItem("am-kit") || "{}")); } catch (e) {}
+
+  const toast = (t) => {
+    const el = document.getElementById("toast");
+    document.getElementById("toast-t").textContent = t;
+    el.classList.add("show");
+    clearTimeout(toast.t);
+    toast.t = setTimeout(() => el.classList.remove("show"), 1600);
+  };
+  const copy = async (text, msg) => {
+    try { await navigator.clipboard.writeText(text); toast(msg); }
+    catch (e) { toast("Trình duyệt chặn clipboard, hãy copy tay"); }
+  };
+  const setVars = (el, vals) => ROLES.forEach((r, i) => el.style.setProperty("--am-" + r, vals[i]));
+  const extra = (el, dark) => Object.entries(EXTRA).forEach(([k, v]) => el.style.setProperty("--am-" + k, Array.isArray(v) ? v[dark ? 1 : 0] : v));
+
+  function apply() {
+    const pal = PALETTES[state.contrast] || PALETTES.standard;
+    setVars(root, pal[state.mode]); extra(root, state.mode === "dark");
+    const t = TINTS[state.tint] || TINTS.a;
+    ["bg", "sec", "ter", "div", "shelf"].forEach((k) => root.style.setProperty("--am-tint-" + k, t[k]));
+    /* vùng tint của site luôn ở theme tối (is-dark-theme) */
+    document.querySelectorAll(".am-tint").forEach((el) => { setVars(el, pal.dark); extra(el, true); });
+    root.dataset.mode = state.mode;
+    document.querySelectorAll("#mode button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === state.mode));
+    document.querySelectorAll("#contrast button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === state.contrast));
+    document.querySelectorAll("#swatches .sw").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === state.tint));
+    renderRoles(pal[state.mode]);
+    try { localStorage.setItem("am-kit", JSON.stringify(state)); } catch (e) {}
+  }
+
+  const sw = document.getElementById("swatches");
+  Object.entries(TINTS).forEach(([key, t]) => {
+    const b = document.createElement("button");
+    b.className = "sw"; b.dataset.v = key; b.title = t.label; b.setAttribute("aria-label", t.label);
+    b.style.setProperty("--c", t.bg);
+    b.onclick = () => { state.tint = key; apply(); };
+    sw.appendChild(b);
+  });
+  document.querySelectorAll("#mode button").forEach((b) => (b.onclick = () => { state.mode = b.dataset.v; apply(); }));
+  document.querySelectorAll("#contrast button").forEach((b) => (b.onclick = () => { state.contrast = b.dataset.v; apply(); }));
+
+  /* ô màu, chia nhóm như site đặt tên */
+  const GROUPS = [
+    ["Chữ (label)", (r) => /^system(Primary|Secondary|Tertiary|Quaternary|Quinary)$|^titleBadge|^contextMenuText|^segmentedControlSelectedText|^searchBoxIconFill/.test(r)],
+    ["Màu nhấn", (r) => /^keyColor/.test(r) && r !== "keyColor-rgb"],
+    ["Màu hệ thống", (r) => /^system(Red|Orange|Yellow|Green|Mint|Teal|Cyan|Blue|Indigo|Purple|Pink|Brown|Link)$/.test(r)],
+    ["Xám", (r) => /^systemGray/.test(r)],
+    ["Nền & vật liệu", (r) => /BG$|Bg$|Background|Material|Sover|footer|genericJoe|shelf|Shelf|dropdown|banner|liveBadge|modalClose/.test(r)],
+    ["Đường kẻ & trạng thái", () => true],
+  ];
+  const onColor = (v) => {
+    const m = v.match(/[\d.]+/g) || [];
+    let r, g, b, a = 1;
+    if (v[0] === "#") { let h = v.slice(1); if (h.length === 3) h = h.replace(/./g, "$&$&"); [r, g, b] = [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16)); }
+    else if (v.startsWith("hsla")) { const l = +m[2]; r = g = b = l * 2.55; a = m[3] !== undefined ? +m[3] : 1; }
+    else { [r, g, b] = m.map(Number); a = m[3] !== undefined ? +m[3] : 1; }
+    const lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    if (a < 0.5) return "var(--am-systemPrimary)";
+    return lum > 0.6 ? "#000" : "#fff";
+  };
+  function renderRoles(vals) {
+    const box = document.getElementById("roles-groups");
+    box.innerHTML = "";
+    const used = new Set();
+    GROUPS.forEach(([name, test]) => {
+      const idx = ROLES.map((r, i) => i).filter((i) => ROLES[i] !== "keyColor-rgb" && !used.has(i) && test(ROLES[i]));
+      if (!idx.length) return;
+      idx.forEach((i) => used.add(i));
+      const h = document.createElement("h3"); h.className = "sub"; h.textContent = name; box.appendChild(h);
+      const g = document.createElement("div"); g.className = "roles"; box.appendChild(g);
+      idx.forEach((i) => {
+        const r = ROLES[i], v = vals[i];
+        const b = document.createElement("button");
+        b.className = "role"; b.style.color = onColor(v);
+        b.innerHTML = '<i style="background:' + v + '"></i><b>--' + r + "</b><code>" + v + "</code>";
+        b.onclick = () => copy(v, "Đã copy " + r + " " + v);
+        g.appendChild(b);
+      });
+    });
+  }
+
+  /* thang chữ chuẩn: font shorthand của biến --<tên> trên :root */
+  const TYPE = [["--header", 34, 1.1765, 400], ["--header-emphasized", 34, 1.1765, 700], ["--large-title", 26, 1.2308, 400], ["--large-title-emphasized", 26, 1.2308, 700],
+    ["--title-1", 22, 1.1818, 400], ["--title-2", 17, 1.2941, 400], ["--title-2-emphasized", 17, 1.2941, 700], ["--title-3", 15, 1.3334, 400],
+    ["--headline", 13, 1.2308, 700], ["--body", 13, 1.2308, 400], ["--body-emphasized", 13, 1.2308, 600], ["--callout", 12, 1.25, 400],
+    ["--subhead", 11, 1.2727, 400], ["--subhead-emphasized", 11, 1.2727, 600], ["--footnote", 10, 1.3, 400], ["--caption-2", 10, 1.3, 500]];
+  const ts = document.getElementById("typescale");
+  TYPE.forEach(([name, size, lh, w]) => {
+    const row = document.createElement("div");
+    row.className = "type-row";
+    row.innerHTML = '<span class="meta">' + name + '</span><span class="t" style="font-size:' + size + "px;line-height:" + lh + ";font-weight:" + w + '">Mới phát hành tuần này</span><span class="meta">' + size + " / " + Math.round(size * lh * 10) / 10 + " · " + w + "</span>";
+    ts.appendChild(row);
+  });
+  const USED = [["Tiêu đề trang (h1)", 34, 40, 700, ""], ["Tiêu đề album", 26, 30, 700, ""], ["Nghệ sĩ trên header album", 26, 30, 400, ""], ["Tiêu đề shelf", 17, 22, 700, ""],
+    ["Tiêu đề editorial", 17, 22, 400, ""], ["Tiêu đề horizontal lockup", 15, 20, 400, ""], ["Nút Preview", 15, 15, 600, ""], ["Mục sidebar", 14, 20, 400, ""],
+    ["Tên bài / body", 13, 16, 400, ""], ["Phụ đề lockup", 12, 15, 400, "secondary"], ["Meta album", 12, 15, 600, "secondary"], ["Eyebrow", 11, 14, 600, "upper"],
+    ["Footer", 11, 13, 400, ""], ["PREVIEW", 10, 13, 500, "upper"]];
+  const tu = document.getElementById("typeused");
+  USED.forEach(([name, size, lh, w, x]) => {
+    const row = document.createElement("div");
+    row.className = "type-row";
+    const style = "font-size:" + size + "px;line-height:" + lh + "px;font-weight:" + w + (x === "upper" ? ";text-transform:uppercase" : "") + (x === "secondary" ? ";color:var(--am-systemSecondary)" : "");
+    row.innerHTML = '<span class="meta">' + name + '</span><span class="t" style="' + style + '">Mới phát hành tuần này</span><span class="meta">' + size + " / " + lh + " · " + w + "</span>";
+    tu.appendChild(row);
+  });
+
+  /* bán kính đo được */
+  const sh = document.getElementById("shapes");
+  [["3", "nút banner"], ["4", "cta, nút player"], ["5.5", "Concerts"], ["6", "menu, art mini"], ["7", "lockup, dropdown"], ["8", "mục nav"], ["10", "editorial, album, link box"], ["12", "hàng bài hover"], ["20", "ô đài 117"], ["24", "Preview"]].forEach(([r, use]) => {
+    const c = document.createElement("div");
+    c.className = "shape-cell";
+    c.innerHTML = '<i style="border-radius:' + r + 'px"></i>' + r + "<br>" + use;
+    sh.appendChild(c);
+  });
+  [["1000px", "viên thuốc"], ["50%", "tròn"]].forEach(([r, use]) => {
+    const c = document.createElement("div");
+    c.className = "shape-cell";
+    c.innerHTML = '<i style="border-radius:' + r + (r === "1000px" ? ";width:96px;height:40px" : "") + '"></i>' + r + "<br>" + use;
+    sh.appendChild(c);
+  });
+
+  /* mỗi thẻ thành phần có nút copy HTML của phần trình diễn */
+  document.querySelectorAll(".spec").forEach((spec) => {
+    const stage = spec.querySelector(".stage");
+    if (!stage || !spec.querySelector(".spec-h")) return;
+    let foot = spec.querySelector(".spec-f");
+    if (!foot) { foot = document.createElement("div"); foot.className = "spec-f"; foot.innerHTML = '<span class="note"></span>'; spec.appendChild(foot); }
+    const b = document.createElement("button");
+    b.className = "copy"; b.innerHTML = '<span class="ms">content_copy</span>HTML';
+    b.onclick = () => copy(stage.innerHTML.trim().replace(/\n\s+/g, "\n"), "Đã copy HTML của " + spec.querySelector(".spec-h b").textContent);
+    foot.appendChild(b);
+  });
+
+  /* token hiện tại dưới dạng khối :root */
+  document.getElementById("copy-tokens").onclick = () => {
+    const vals = PALETTES[state.contrast][state.mode], t = TINTS[state.tint];
+    const lines = ROLES.map((r, i) => "  --am-" + r + ": " + vals[i] + ";");
+    Object.entries(EXTRA).forEach(([k, v]) => lines.push("  --am-" + k + ": " + (Array.isArray(v) ? v[state.mode === "dark" ? 1 : 0] : v) + ";"));
+    ["bg", "sec", "ter", "div", "shelf"].forEach((k) => lines.push("  --am-tint-" + k + ": " + t[k] + ";"));
+    lines.push("  --am-white: #fff;", "  --am-black: #000;", "  --am-onDark: rgba(255,255,255,.92);", "  --am-onDarkSecondary: rgba(255,255,255,.64);",
+      "  --am-focus: 0 0 0 4px rgba(var(--am-keyColor-rgb),.6);", "  --am-focus-onTint: 0 0 0 4px rgba(255,255,255,.6);", "  --am-focus-outline: 4px solid rgba(var(--am-keyColor-rgb),.6);",
+      '  --am-font: -apple-system,BlinkMacSystemFont,"SF Pro","Helvetica Neue",Helvetica,Arial,sans-serif;', "  --am-transition: opacity .1s ease-in;");
+    copy(":root {\n" + lines.join("\n") + "\n}", "Đã copy token " + (state.mode === "dark" ? "tối" : "sáng") + (state.contrast === "ic" ? " · tăng tương phản" : ""));
+  };
+
+  /* làm nổi mục đang xem trong mục lục */
+  const links = [...document.querySelectorAll(".side a")];
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (e.isIntersecting) links.forEach((a) => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id));
+  }), { rootMargin: "-30% 0px -60% 0px" });
+  document.querySelectorAll("section.block").forEach((s) => io.observe(s));
+
+  apply();
+})();
+</script>
+</body>
+</html>

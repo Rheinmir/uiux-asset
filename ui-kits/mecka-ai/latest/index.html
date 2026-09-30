@@ -1,0 +1,1533 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta name="ui-kit-id" content="mecka-ai">
+<!-- UI kit rút từ https://www.mecka.ai (home · /careers · /privacy · /blog/wetlab/), 30/09/2026.
+     Nguồn token: CSS inline của trang (khối :root "MECKA — Data Engine for Physical AI"), styles.css + all-runs.css của blog,
+     :root inline của /careers; số đo trạng thái + responsive đo bằng Playwright trên site thật (quét 320→1600px, bước 10px). -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="ui-kit-skip" content="a0b3a4cb25:nút COPY DEBUG PROMPT của trang 404 mặc định Vercel (/blog), không thuộc hệ Mecka;85b50e7110:link VIEW DOCUMENTATION của trang 404 Vercel;55b66bb069:tiêu đề 404 Vercel (font geist);a4fdb226b4:mô tả 404 Vercel;a0b3a4cb25:hover:trang 404 Vercel;a0b3a4cb25:focus:trang 404 Vercel;85b50e7110:hover:trang 404 Vercel;85b50e7110:focus:trang 404 Vercel">
+<title>Mecka UI Kit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600&display=swap">
+<style>
+/* Kit mặc chính token của mecka.ai: mọi màu là một vai trò --mk-<role>. Script đổi 4 hệ (Trang chủ · Blog WetLabs ·
+   Careers · Privacy) × sáng/tối. .mk-dark / .mk-light ép một khối về chế độ tối/sáng của hệ đang chọn, giống class .dark
+   của site. Mọi điểm gãy của site được viết lại bằng @container mk (…) để cùng một markup co giãn được trong khung thử. */
+:root {
+  --mk-bg:#ECE5D8; --mk-panel:#E4DCCB; --mk-deep:#DDD3BF; --mk-ink:#19140D; --mk-body:#6B6253; --mk-inkSoft:#6B6253; --mk-inkFaint:#9C9384;
+  --mk-line:#2A2318; --mk-lineStrong:#4A4234; --mk-accent:#CF5A22; --mk-accentHot:#FF5A1F; --mk-accentSoft:#E07A3E; --mk-onAccent:#FFFFFF;
+  --mk-glassA:rgba(255,251,243,.62); --mk-glassB:rgba(236,229,216,.42); --mk-glassEdge:rgba(255,255,255,.55);
+  --mk-chip:rgba(255,255,255,.5); --mk-chipEdge:rgba(255,255,255,.6); --mk-focus:#005FCC;
+  --mk-shGlass:0 1px 0 rgba(255,255,255,.7) inset, 0 -1px 0 rgba(0,0,0,.04) inset, 0 12px 34px -12px rgba(20,15,8,.4), 0 2px 8px -4px rgba(20,15,8,.25);
+  /* hằng số cố định (không đổi theo hệ) */
+  --mk-white:#FFFFFF; --mk-black:#0C0A07; --mk-glow:rgba(255,90,31,.5); --mk-hl:rgba(255,255,255,.3);
+  --mk-h-paper:#EFE9DE; --mk-h-ink:#23201B; --mk-h-soft:#7D7466; --mk-h-line:rgba(35,32,27,.12); --mk-h-line2:rgba(35,32,27,.26); --mk-h-hot:#C8501F; --mk-h-panel:rgba(243,238,229,.9); --mk-h-on:rgba(200,80,31,.07);
+  --mk-np-a:#E47C42; --mk-np-b:#CF5A22; --mk-np-peekA:#E27A40; --mk-np-peekB:#D86E33; --mk-np-src:rgba(255,243,235,.74); --mk-np-sh:0 18px 44px -18px rgba(20,15,8,.55); --mk-np-thumbEdge:0 1px 0 rgba(255,255,255,.12) inset, 0 0 0 1px rgba(0,0,0,.12);
+  --mk-menu-a:#F6F1E8; --mk-menu-b:#ECE4D6; --mk-menu-edge:rgba(255,255,255,.6); --mk-menu-sep:rgba(42,35,24,.12); --mk-menu-hover:rgba(200,80,31,.1); --mk-menu-sh:0 1px 0 rgba(255,255,255,.7) inset, 0 22px 50px -20px rgba(20,15,8,.5);
+  --mk-padTop:#17130C; --mk-ua-focus:#005FCC; --mk-ua-focus-dark:#99C8FF;
+  --mk-ok-bg:#253322; --mk-ok-ink:#CDE4BE; --mk-part-bg:#3D311A; --mk-part-ink:#F4D394; --mk-fail-bg:#363636; --mk-fail-ink:#EDEDED;
+  --mk-sw-ok:#507548; --mk-sw-part:#CF5A22; --mk-sw-fail:#19140D;
+  --mk-wl-rule:#B07300; --mk-wl-hover:#242424; --mk-wl-rowHover:#1D1D1D; --mk-wl-h:#FFFFFF; --mk-wl-dek:#D4D4D4; --mk-wl-tick:#555555;
+  --mk-wl-easy:#F3EFD9; --mk-wl-med:#F4E3D1; --mk-wl-hard:#E4DDD0; --mk-wl-benchHover:#E8DECE;
+  --mk-wl-rec:#ECE5D8; --mk-wl-recInk:#19140D; --mk-wl-input:#0D0D0D; --mk-wl-gate:#9B9B9B;
+  --mk-sans:"Space Grotesk","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --mk-mono:"Space Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --mk-ease:cubic-bezier(.22,.61,.36,1);
+  --mk-maxw:1440px;
+  --mk-pad:clamp(20px,5cqi,96px);
+  --k:1;
+  --stage-h:900px;
+  color-scheme:light;
+}
+:root[data-mode="dark"] { color-scheme:dark; }
+* { box-sizing:border-box; }
+html,body { margin:0; }
+body { background:var(--mk-bg); color:var(--mk-ink); font:400 14px/1.5 var(--mk-sans); -webkit-font-smoothing:antialiased; }
+code,.code { font-family:var(--mk-mono); font-size:12px; }
+:focus-visible { outline:2px solid var(--mk-accent); outline-offset:2px; }
+@media (prefers-reduced-motion: reduce) { *,*::before,*::after { animation:none !important; transition:none !important; } }
+
+/* ================= vỏ trang ================= */
+.shell { display:grid; grid-template-columns:236px minmax(0,1fr); min-height:100vh; }
+.side { position:sticky; top:0; height:100vh; overflow-y:auto; padding:22px 14px; border-right:1px solid var(--mk-line); display:flex; flex-direction:column; gap:1px; background:var(--mk-bg); }
+.side .brand { padding:0 10px 14px; border-bottom:1px solid var(--mk-line); margin-bottom:6px; }
+.side .brand b { display:block; font:600 22px/1 var(--mk-sans); letter-spacing:-.04em; }
+.side .brand small { font:400 10.5px/1.4 var(--mk-mono); letter-spacing:.14em; text-transform:uppercase; color:var(--mk-inkSoft); }
+.side h6 { margin:14px 10px 6px; font:700 10px/1 var(--mk-mono); letter-spacing:.2em; text-transform:uppercase; color:var(--mk-accent); }
+.side a { display:flex; gap:10px; align-items:baseline; padding:7px 10px; color:var(--mk-inkSoft); text-decoration:none; font-size:13.5px; font-weight:500; }
+.side a i { font:normal 10.5px var(--mk-mono); color:var(--mk-inkFaint); min-width:20px; }
+.side a:hover { color:var(--mk-ink); background:var(--mk-panel); }
+.side a.on { color:var(--mk-ink); background:var(--mk-panel); }
+.side a.on i { color:var(--mk-accentHot); }
+main { padding:0 36px 110px; min-width:0; }
+.bar { position:sticky; top:0; z-index:30; display:flex; flex-wrap:wrap; align-items:center; gap:10px 18px; padding:12px 0; background:var(--mk-bg); border-bottom:1px solid var(--mk-line); }
+.bar .grow { flex:1; }
+.ctl { display:flex; align-items:center; gap:8px; }
+.ctl > span { font:700 10px var(--mk-mono); letter-spacing:.16em; text-transform:uppercase; color:var(--mk-inkSoft); }
+.swatches { display:flex; gap:4px; flex-wrap:wrap; }
+.sw { display:inline-flex; align-items:center; gap:7px; height:32px; padding:0 11px; border:1px solid var(--mk-lineStrong); background:transparent; color:var(--mk-ink); font:500 12px var(--mk-sans); cursor:pointer; border-radius:calc(2px * var(--k)); }
+.sw i { width:10px; height:10px; background:var(--c); display:block; }
+.sw[aria-pressed="true"] { background:var(--mk-ink); color:var(--mk-bg); border-color:var(--mk-ink); }
+.seg { display:inline-flex; }
+.seg button { height:32px; padding:0 12px; border:1px solid var(--mk-lineStrong); background:transparent; color:var(--mk-ink); font:400 11px var(--mk-mono); letter-spacing:.1em; text-transform:uppercase; cursor:pointer; }
+.seg button + button { border-left:none; }
+.seg button[aria-pressed="true"] { background:var(--mk-ink); color:var(--mk-bg); }
+.copy { height:32px; padding:0 12px; border:1px solid var(--mk-accent); background:transparent; color:var(--mk-accent); font:400 11px var(--mk-mono); letter-spacing:.1em; text-transform:uppercase; cursor:pointer; display:inline-flex; align-items:center; gap:6px; }
+.copy:hover { background:var(--mk-accent); color:var(--mk-onAccent); }
+.palnote { flex-basis:100%; font:400 11px/1.4 var(--mk-mono); color:var(--mk-inkSoft); }
+
+.intro { padding:44px 0 8px; max-width:900px; }
+.intro .eyebrow { font:400 11px/1.6 var(--mk-mono); letter-spacing:.14em; text-transform:uppercase; color:var(--mk-accent); }
+.intro h1 { font:600 clamp(40px,5vw,72px)/.96 var(--mk-sans); letter-spacing:-.04em; margin:12px 0 16px; }
+.intro p { font-size:16px; line-height:1.55; color:var(--mk-body); margin:0 0 10px; max-width:70ch; }
+.facts { display:flex; flex-wrap:wrap; gap:6px; margin-top:18px; }
+.fact { font:400 11px var(--mk-mono); letter-spacing:.04em; padding:5px 9px; border:1px solid var(--mk-lineStrong); color:var(--mk-inkSoft); }
+.fact b { color:var(--mk-accent); font-weight:700; }
+
+section.block { padding-top:64px; scroll-margin-top:64px; }
+section.block > header { margin-bottom:20px; border-top:1px solid var(--mk-line); padding-top:14px; }
+section.block > header .n { font:400 12px var(--mk-mono); letter-spacing:.18em; color:var(--mk-accent); }
+section.block > header h2 { font:600 clamp(28px,3vw,42px)/1.02 var(--mk-sans); letter-spacing:-.03em; margin:10px 0 8px; }
+section.block > header p { margin:0; color:var(--mk-body); max-width:78ch; font-size:14.5px; }
+h3.sub { font:600 18px/1.2 var(--mk-sans); letter-spacing:-.02em; margin:28px 0 10px; }
+.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(360px,1fr)); gap:14px; }
+.spec { border:1px solid var(--mk-lineStrong); display:flex; flex-direction:column; min-width:0; background:var(--mk-bg); }
+.spec.full { grid-column:1 / -1; }
+.spec-h { display:flex; align-items:center; gap:8px; padding:12px 14px; flex-wrap:wrap; border-bottom:1px solid var(--mk-lineStrong); }
+.spec-h b { font-size:14.5px; font-weight:600; letter-spacing:-.01em; }
+.kind { font:400 10.5px var(--mk-mono); padding:2px 7px; border:1px solid var(--mk-accent); color:var(--mk-accent); }
+.spec-h .dp { margin-left:auto; font:400 10.5px var(--mk-mono); color:var(--mk-inkSoft); }
+.stage { padding:20px 16px; display:flex; flex-wrap:wrap; align-items:center; gap:14px; min-height:96px; overflow-x:auto; }
+.stage.col { flex-direction:column; align-items:stretch; }
+.stage.flush { padding:0; }
+.spec-f { display:flex; align-items:center; gap:8px; padding:10px 14px; margin-top:auto; border-top:1px dashed var(--mk-lineStrong); }
+.spec-f .note { font-size:12px; line-height:1.45; color:var(--mk-inkSoft); flex:1; }
+.lbl { font:400 10px var(--mk-mono); letter-spacing:.1em; text-transform:uppercase; color:var(--mk-inkSoft); display:block; margin-bottom:6px; }
+.stack { display:flex; flex-direction:column; gap:6px; }
+
+/* nền tảng */
+.roles { display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:6px; }
+.role { border:1px solid var(--mk-lineStrong); padding:10px; min-height:84px; display:flex; flex-direction:column; justify-content:space-between; text-align:left; cursor:pointer; font-family:var(--mk-sans); }
+.role b { font-size:12.5px; font-weight:600; }
+.role code { font-size:10.5px; opacity:.85; word-break:break-all; }
+.tscroll { overflow-x:auto; }
+table.tok { border-collapse:collapse; width:100%; font-variant-numeric:tabular-nums; min-width:640px; }
+table.tok th, table.tok td { text-align:left; padding:8px 12px 8px 0; border-bottom:1px solid var(--mk-lineStrong); font-size:13px; vertical-align:top; }
+table.tok th { font:700 10px var(--mk-mono); letter-spacing:.14em; text-transform:uppercase; color:var(--mk-inkSoft); }
+table.tok td:first-child { font-family:var(--mk-mono); font-size:11.5px; }
+.type-row { display:grid; grid-template-columns:170px minmax(0,1fr) 250px; gap:16px; align-items:baseline; padding:12px 0; border-bottom:1px solid var(--mk-lineStrong); }
+.type-row .t { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.type-row .meta { font:400 10.5px/1.5 var(--mk-mono); color:var(--mk-inkSoft); }
+.shape-row { display:flex; flex-wrap:wrap; gap:16px; }
+.shape-cell { display:flex; flex-direction:column; align-items:center; gap:6px; font:400 10.5px var(--mk-mono); color:var(--mk-inkSoft); text-align:center; max-width:92px; }
+.shape-cell i { display:block; width:64px; height:64px; background:var(--mk-panel); border:1px solid var(--mk-line); }
+
+/* ================= RESPONSIVE: bản đồ, biểu đồ, phòng thử ================= */
+.bpmap { border:1px solid var(--mk-lineStrong); padding:14px 16px 8px; overflow-x:auto; }
+.bpmap-in { min-width:860px; position:relative; }
+.bp-axis { position:relative; height:26px; margin-left:120px; border-bottom:1px solid var(--mk-line); }
+.bp-axis span { position:absolute; bottom:4px; transform:translateX(-50%); font:400 10px var(--mk-mono); color:var(--mk-inkSoft); }
+.bp-axis span::after { content:""; position:absolute; left:50%; bottom:-5px; width:1px; height:5px; background:var(--mk-line); }
+.bp-lane { display:grid; grid-template-columns:120px 1fr; min-height:58px; border-bottom:1px dashed var(--mk-lineStrong); }
+.bp-lane > b { font:600 13px var(--mk-sans); padding-top:10px; }
+.bp-lane > b small { display:block; font:400 10px var(--mk-mono); color:var(--mk-inkSoft); letter-spacing:.06em; }
+.bp-track { position:relative; }
+.bp-decl { position:absolute; top:0; bottom:0; width:0; border-left:1px dotted var(--mk-inkFaint); }
+.bp-decl.dead { border-left:1px dashed var(--mk-accentHot); }
+.bp-decl em { position:absolute; top:2px; left:3px; font:normal 9.5px var(--mk-mono); color:var(--mk-inkFaint); white-space:nowrap; }
+.bp-decl.dead em { color:var(--mk-accentHot); }
+.bp-tick { position:absolute; width:9px; height:9px; border-radius:50%; background:var(--mk-accent); transform:translate(-50%,-50%); border:none; padding:0; cursor:pointer; }
+.bp-tick:hover, .bp-tick:focus-visible { background:var(--mk-ink); outline:2px solid var(--mk-accentHot); outline-offset:2px; }
+.bp-legend { display:flex; flex-wrap:wrap; gap:6px 18px; font:400 10.5px var(--mk-mono); color:var(--mk-inkSoft); margin:10px 0 4px; }
+.bp-legend i { display:inline-block; width:14px; vertical-align:middle; margin-right:6px; }
+.bp-detail { font:400 12px/1.5 var(--mk-mono); padding:10px 12px; background:var(--mk-panel); margin-top:10px; min-height:40px; }
+.fl-row { display:grid; grid-template-columns:200px minmax(0,1fr) 230px; gap:14px; align-items:center; padding:8px 0; border-bottom:1px solid var(--mk-lineStrong); }
+.fl-row b { font-size:13px; font-weight:600; display:block; }
+.fl-row code { font-size:10.5px; color:var(--mk-inkSoft); }
+.fl-row svg { width:100%; height:54px; display:block; overflow:visible; }
+.fl-row .fl-meta { font:400 10.5px/1.55 var(--mk-mono); color:var(--mk-inkSoft); }
+.fl-line { fill:none; stroke:var(--mk-accent); stroke-width:1.6; }
+.fl-calc { fill:none; stroke:var(--mk-ink); stroke-width:1; stroke-dasharray:3 3; opacity:.55; }
+.fl-bp { stroke:var(--mk-inkFaint); stroke-width:1; stroke-dasharray:1 3; }
+.fl-now { stroke:var(--mk-accentHot); stroke-width:1; }
+.lab-ctl { display:flex; flex-wrap:wrap; align-items:center; gap:10px 16px; padding:12px 0; }
+.lab-ctl input[type=range] { flex:1; min-width:200px; accent-color:var(--mk-accent); }
+.lab-ctl output { font:700 13px var(--mk-mono); min-width:70px; }
+.lab-ruler { position:relative; height:22px; border-bottom:1px solid var(--mk-line); margin:0 0 8px; }
+.lab-ruler i { position:absolute; bottom:0; width:1px; height:9px; background:var(--mk-line); }
+.lab-ruler i.on { background:var(--mk-accentHot); height:18px; }
+.lab-ruler span { position:absolute; bottom:10px; transform:translateX(-50%); font:400 9.5px var(--mk-mono); color:var(--mk-inkSoft); white-space:nowrap; }
+.lab-wrap { display:grid; grid-template-columns:minmax(0,1fr) 300px; gap:16px; align-items:start; }
+.lab-view { border:1px solid var(--mk-lineStrong); background:var(--mk-panel); height:640px; overflow:hidden; position:relative; }
+.lab-read { border:1px solid var(--mk-lineStrong); max-height:640px; overflow:auto; }
+.lab-read table { border-collapse:collapse; width:100%; }
+.lab-read td { font:400 11px/1.35 var(--mk-mono); padding:6px 10px; border-bottom:1px solid var(--mk-lineStrong); vertical-align:top; }
+.lab-read td:last-child { text-align:right; color:var(--mk-ink); font-weight:700; }
+.lab-read tr.chg td { background:var(--mk-panel); }
+.lab-read tr.chg td:last-child { color:var(--mk-accent); }
+.strat { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:14px; }
+.strat .spec .stage { align-items:flex-start; }
+.mini { display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap; }
+.mini figure { margin:0; display:flex; flex-direction:column; gap:5px; font:400 9.5px var(--mk-mono); color:var(--mk-inkSoft); }
+.mini .box { border:1px solid var(--mk-line); background:var(--mk-panel); display:grid; gap:3px; padding:4px; }
+.mini .box > i { background:var(--mk-lineStrong); opacity:.45; min-height:10px; display:block; }
+.mini .box > i.a { background:var(--mk-accent); opacity:.8; }
+.gaps { counter-reset:g; display:grid; gap:10px; }
+.gap { display:grid; grid-template-columns:48px minmax(0,1fr); gap:14px; border:1px solid var(--mk-lineStrong); padding:14px; }
+.gap::before { counter-increment:g; content:"( " counter(g,decimal-leading-zero) " )"; font:400 11px var(--mk-mono); color:var(--mk-accent); }
+.gap h4 { margin:0 0 6px; font:600 15px/1.3 var(--mk-sans); }
+.gap p { margin:0 0 6px; font-size:13.5px; line-height:1.55; color:var(--mk-body); }
+.gap .ev { font:400 11px/1.5 var(--mk-mono); color:var(--mk-inkSoft); }
+.sev { font:700 9.5px var(--mk-mono); letter-spacing:.14em; padding:2px 6px; margin-left:6px; vertical-align:2px; border:1px solid currentColor; }
+.sev.hi { color:var(--mk-accentHot); } .sev.md { color:var(--mk-accent); } .sev.lo { color:var(--mk-inkSoft); }
+
+/* khung màn hình (mọi khung là một container "mk": các điểm gãy của site đổi thành @container) */
+.scr-row { display:flex; gap:24px; align-items:flex-start; overflow-x:auto; padding:10px 2px 6px; }
+.scr-fig { margin:0; flex:none; }
+.scr { container:mk / inline-size; position:relative; background:var(--mk-bg); color:var(--mk-ink); outline:1px solid var(--mk-lineStrong); }
+.scr-in { position:absolute; inset:0; overflow:auto; overscroll-behavior:contain; scrollbar-width:thin; }
+.scr-cap { font:400 10.5px/1.5 var(--mk-mono); color:var(--mk-inkSoft); margin-top:8px; max-width:560px; }
+.scr-cap b { color:var(--mk-accent); }
+.toast { position:fixed; left:50%; bottom:24px; transform:translate(-50%,20px); opacity:0; pointer-events:none; transition:all .25s var(--mk-ease); z-index:99; background:var(--mk-ink); color:var(--mk-bg); font:400 12px var(--mk-mono); padding:10px 16px; }
+.toast.show { opacity:1; transform:translate(-50%,0); }
+.ph { display:grid; place-items:center; text-align:center; font:400 10px/1.4 var(--mk-mono); letter-spacing:.08em; text-transform:uppercase; color:var(--mk-inkSoft); background:repeating-linear-gradient(45deg, color-mix(in srgb, var(--mk-ink) 6%, transparent) 0 6px, transparent 6px 12px); border:1px dashed var(--mk-inkFaint); }
+
+/* ================= các thành phần mk-* (tái dùng được: chỉ cần khối :root) ================= */
+.mk-mono { font-family:var(--mk-mono); }
+.mk-eyebrow { font:700 12px/1 var(--mk-mono); letter-spacing:.26em; text-transform:uppercase; color:var(--mk-inkSoft); display:flex; align-items:center; gap:10px; }
+.mk-eyebrow::before { content:""; width:26px; height:1px; background:var(--mk-accentHot); flex:none; }
+.mk-eyebrow b { color:var(--mk-accent); font-weight:600; }
+.mk-h2 { font:600 clamp(30px,4.6cqi,68px)/1 var(--mk-sans); letter-spacing:-.03em; margin:0; }
+.mk-lead { font-size:clamp(15px,1.25cqi,19px); line-height:1.5; color:var(--mk-body); margin:0; }
+.mk-wrap { max-width:var(--mk-maxw); margin:0 auto; padding-left:var(--mk-pad); padding-right:var(--mk-pad); }
+.mk-sec { padding-block:clamp(72px,10cqi,150px); position:relative; background:var(--mk-bg); color:var(--mk-ink); }
+
+/* section header bar: số · tên · spec */
+.mk-sechead { display:flex; align-items:baseline; justify-content:space-between; gap:24px; flex-wrap:wrap; padding-top:18px; border-top:1px solid var(--mk-line); margin-bottom:clamp(36px,6cqi,80px); width:100%; }
+.mk-sechead .idx { font:400 12px var(--mk-mono); letter-spacing:.18em; color:var(--mk-accent); }
+.mk-sechead .sp { font:400 11px var(--mk-mono); letter-spacing:.12em; color:var(--mk-inkFaint); text-align:right; }
+
+/* tag / chip kỹ thuật */
+.mk-tag { display:inline-flex; align-items:center; gap:7px; font:400 10.5px var(--mk-mono); letter-spacing:.16em; text-transform:uppercase; padding:5px 9px; border:1px solid var(--mk-line); color:var(--mk-inkSoft); border-radius:calc(2px * var(--k)); }
+.mk-tag .dot { width:5px; height:5px; background:var(--mk-accentHot); border-radius:50%; box-shadow:0 0 6px var(--mk-glow); }
+.mk-blink { width:6px; height:6px; border-radius:50%; background:var(--mk-accentHot); box-shadow:0 0 8px var(--mk-glow); animation:mkBlink 1.6s steps(1) infinite; display:inline-block; }
+@keyframes mkBlink { 50% { opacity:.25; } }
+
+/* nút */
+.mk-btn { display:inline-flex; align-items:center; gap:12px; font:400 12px/1.2 var(--mk-mono); letter-spacing:.1em; text-transform:uppercase; padding:13px 20px; border-radius:calc(2px * var(--k)); border:1px solid var(--mk-ink); background:var(--mk-ink); color:var(--mk-bg); text-decoration:none; cursor:pointer; transition:background .25s var(--mk-ease), color .25s var(--mk-ease), gap .25s var(--mk-ease); }
+.mk-btn .arr { transition:transform .25s var(--mk-ease); }
+.mk-btn:hover, .mk-btn.is-hover { gap:18px; background:var(--mk-accent); border-color:var(--mk-accent); color:var(--mk-white); }
+.mk-btn:hover .arr, .mk-btn.is-hover .arr { transform:translateX(3px); }
+.mk-btn.ghost { background:transparent; color:var(--mk-ink); }
+.mk-btn.ghost:hover, .mk-btn.ghost.is-hover { background:var(--mk-ink); color:var(--mk-bg); border-color:var(--mk-ink); }
+.mk-dark .mk-btn { background:var(--mk-accent); border-color:var(--mk-accent); color:var(--mk-onAccent); }
+.mk-dark .mk-btn:hover, .mk-dark .mk-btn.is-hover { background:var(--mk-accentHot); border-color:var(--mk-accentHot); }
+.mk-dark .mk-btn.ghost { background:transparent; color:var(--mk-ink); border-color:var(--mk-inkFaint); }
+.mk-dark .mk-btn.ghost:hover, .mk-dark .mk-btn.ghost.is-hover { background:var(--mk-ink); color:var(--mk-bg); }
+/* focus của site = viền mặc định trình duyệt (outline:auto, xanh UA) */
+.is-uafocus { outline:2px solid var(--mk-ua-focus) !important; outline-offset:1px; }
+.is-uafocus-dk { outline:2px solid var(--mk-ua-focus-dark) !important; outline-offset:1px; }
+
+/* link có mũi tên */
+.mk-tlink { display:inline-flex; align-items:center; gap:10px; font:400 12px var(--mk-mono); letter-spacing:.08em; text-transform:uppercase; border-bottom:1px solid currentColor; padding-bottom:4px; color:var(--mk-accent); text-decoration:none; transition:gap .25s var(--mk-ease); }
+.mk-tlink:hover, .mk-tlink.is-hover { gap:16px; }
+
+/* thanh điều hướng kính lỏng */
+.mk-navwrap { display:flex; justify-content:center; padding:0 24px; }
+.mk-navglass { display:inline-flex; align-items:center; justify-content:space-between; gap:16px; max-width:calc(100cqi - 48px); padding:7px 7px 7px 18px; border-radius:calc(16px * var(--k)); background:linear-gradient(180deg,var(--mk-glassA),var(--mk-glassB)); border:1px solid var(--mk-glassEdge); -webkit-backdrop-filter:blur(18px) saturate(180%); backdrop-filter:blur(18px) saturate(180%); box-shadow:var(--mk-shGlass); color:var(--mk-ink); transition:background .45s var(--mk-ease), border-color .45s var(--mk-ease), box-shadow .45s var(--mk-ease); }
+.mk-brand { display:flex; align-items:center; color:inherit; text-decoration:none; }
+.mk-logo { height:25px; width:103px; display:grid; place-items:center; font:700 9px var(--mk-mono); letter-spacing:.1em; border:1px dashed currentColor; opacity:.7; }
+.mk-navglass .right { display:flex; align-items:center; gap:8px; }
+.mk-menubtn { display:inline-flex; align-items:center; gap:9px; color:var(--mk-ink); font:400 11.5px var(--mk-mono); letter-spacing:.12em; text-transform:uppercase; background:var(--mk-chip); border:1px solid var(--mk-chipEdge); padding:9px 14px; border-radius:calc(11px * var(--k)); cursor:pointer; transition:background .25s, color .25s, border-color .25s; }
+.mk-menubtn:hover, .mk-menubtn.is-hover { background:var(--mk-ink); color:var(--mk-bg); border-color:var(--mk-ink); }
+.mk-menubtn .bars { display:flex; flex-direction:column; gap:3px; }
+.mk-menubtn .bars i { width:15px; height:1.5px; background:currentColor; display:block; }
+.mk-navcta { font:400 11.5px var(--mk-mono); letter-spacing:.1em; text-transform:uppercase; color:var(--mk-white); background:var(--mk-accent); border:1px solid var(--mk-accent); padding:10px 15px; border-radius:calc(11px * var(--k)); white-space:nowrap; text-decoration:none; box-shadow:0 1px 0 var(--mk-hl) inset; transition:background .25s; }
+.mk-navcta:hover, .mk-navcta.is-hover { background:var(--mk-accentHot); border-color:var(--mk-accentHot); }
+@container mk (max-width: 720px) { .mk-navcta { display:none; } .mk-navglass { gap:14px; } }
+
+/* bảng mục lục (Document Index) */
+.mk-menu { width:min(300px, calc(100cqi - 32px)); background:linear-gradient(180deg,var(--mk-menu-a),var(--mk-menu-b)); border:1px solid var(--mk-menu-edge); border-radius:calc(14px * var(--k)); box-shadow:var(--mk-menu-sh); padding:8px; color:var(--mk-ink); }
+.mk-menu .head { display:flex; align-items:center; justify-content:space-between; padding:6px 10px 10px; border-bottom:1px solid var(--mk-menu-sep); font:400 10.5px var(--mk-mono); letter-spacing:.18em; text-transform:uppercase; color:var(--mk-inkSoft); }
+.mk-menu .x { background:none; border:none; color:var(--mk-inkSoft); font-size:13px; padding:2px 4px; border-radius:5px; cursor:pointer; }
+.mk-menu ul { list-style:none; margin:0; padding:7px 0 2px; display:flex; flex-direction:column; gap:1px; }
+.mk-menu a { display:flex; align-items:center; gap:12px; padding:9px 10px; border-radius:calc(8px * var(--k)); font:500 14px var(--mk-sans); letter-spacing:-.01em; color:var(--mk-ink); text-decoration:none; transition:background .16s; }
+.mk-menu a .n { font:500 11px var(--mk-mono); letter-spacing:.06em; color:var(--mk-inkFaint); min-width:20px; }
+.mk-menu a:hover, .mk-menu a.is-hover { background:var(--mk-menu-hover); }
+
+/* khung trang: viền đen 14px + dấu góc cam */
+.mk-frame { position:absolute; inset:0; border:14px solid var(--mk-black); pointer-events:none; z-index:20; }
+.mk-frame i { position:absolute; width:10px; height:10px; }
+.mk-frame i::before, .mk-frame i::after { content:""; position:absolute; background:var(--mk-accentHot); }
+.mk-frame i::before { left:0; top:4px; width:10px; height:1.5px; }
+.mk-frame i::after { top:0; left:4px; height:10px; width:1.5px; }
+.mk-frame .tl { left:3px; top:3px; } .mk-frame .tr { right:3px; top:3px; } .mk-frame .bl { left:3px; bottom:3px; } .mk-frame .br { right:3px; bottom:3px; }
+@container mk (max-width: 680px) { .mk-frame { border-width:8px; } }
+
+/* dấu cắt góc (crop marks) */
+.mk-crop { position:relative; }
+.mk-crop .cm { position:absolute; width:14px; height:14px; pointer-events:none; opacity:.55; }
+.mk-crop .cm.tl { top:-1px; left:-1px; border-top:1.5px solid currentColor; border-left:1.5px solid currentColor; }
+.mk-crop .cm.tr { top:-1px; right:-1px; border-top:1.5px solid currentColor; border-right:1.5px solid currentColor; }
+.mk-crop .cm.bl { bottom:-1px; left:-1px; border-bottom:1.5px solid currentColor; border-left:1.5px solid currentColor; }
+.mk-crop .cm.br { bottom:-1px; right:-1px; border-bottom:1.5px solid currentColor; border-right:1.5px solid currentColor; }
+
+/* ---------- hero: sân khấu bản vẽ kỹ thuật (token hero có phạm vi riêng) ---------- */
+.mk-stage { position:relative; height:var(--stage-h); background:var(--mk-h-paper); overflow:hidden; color:var(--mk-h-ink); }
+.mk-stage::before { content:""; position:absolute; inset:0; pointer-events:none; background-image:linear-gradient(var(--mk-h-line) 1px,transparent 1px),linear-gradient(90deg,var(--mk-h-line) 1px,transparent 1px),linear-gradient(var(--mk-h-line) 1px,transparent 1px),linear-gradient(90deg,var(--mk-h-line) 1px,transparent 1px); background-size:120px 120px,120px 120px,24px 24px,24px 24px; opacity:.9; -webkit-mask-image:radial-gradient(circle at 52% 46%,#000 60%,transparent 100%); mask-image:radial-gradient(circle at 52% 46%,#000 60%,transparent 100%); }
+.mk-stage .frame { position:absolute; inset:22px; border:1px solid var(--mk-h-line2); pointer-events:none; z-index:4; }
+.mk-stage .crop { position:absolute; z-index:5; width:16px; height:16px; }
+.mk-stage .crop::before, .mk-stage .crop::after { content:""; position:absolute; background:var(--mk-h-ink); }
+.mk-stage .crop::before { width:16px; height:1px; } .mk-stage .crop::after { width:1px; height:16px; }
+.mk-stage .crop.tl { top:15px; left:15px; } .mk-stage .crop.tr { top:15px; right:15px; transform:scaleX(-1); }
+.mk-stage .crop.bl { bottom:15px; left:15px; transform:scaleY(-1); } .mk-stage .crop.br { bottom:15px; right:15px; transform:scale(-1); }
+@container mk (max-width: 680px) { .mk-stage .frame { inset:16px; } .mk-stage .crop.tl { top:9px; left:9px; } .mk-stage .crop.tr { top:9px; right:9px; } .mk-stage .crop.bl { bottom:9px; left:9px; } .mk-stage .crop.br { bottom:9px; right:9px; } }
+.mk-robot { position:absolute; top:54%; left:58%; transform:translate(-50%,-50%); height:calc(var(--stage-h) * .47); aspect-ratio:588/668; z-index:1; }
+@container mk (max-width: 900px) { .mk-robot { width:min(78cqi, calc(var(--stage-h) * .4)); height:auto; top:66%; left:50%; } }
+@container mk (max-width: 560px) { .mk-robot { top:68%; } }
+.mk-herocopy { position:absolute; left:5cqi; top:calc(var(--stage-h) * .15); max-width:540px; z-index:5; }
+@container mk (max-width: 900px) { .mk-herocopy { left:7cqi; top:calc(var(--stage-h) * .12); } }
+.mk-herocopy .mk-eyebrow { color:var(--mk-h-soft); letter-spacing:.3em; }
+.mk-herocopy .mk-eyebrow::before { background:var(--mk-h-hot); } .mk-herocopy .mk-eyebrow b { color:var(--mk-h-hot); font-weight:700; }
+.mk-wordmark { font:700 clamp(72px,11cqi,148px)/.86 var(--mk-sans); letter-spacing:-.045em; margin:.14em 0 .2em; color:var(--mk-h-ink); }
+.mk-wordmark::after { content:"®"; font-size:.16em; vertical-align:super; color:var(--mk-h-soft); margin-left:.12em; }
+.mk-tagline { font:500 clamp(18px,2cqi,25px)/1.34 var(--mk-sans); color:var(--mk-h-ink); max-width:28ch; margin:0; }
+.mk-tagline b { color:var(--mk-h-hot); font-weight:600; }
+.mk-loadbar { display:inline-block; width:58px; height:1px; background:var(--mk-h-line2); position:relative; overflow:hidden; vertical-align:middle; margin-left:8px; }
+.mk-loadbar i { position:absolute; inset:0; width:34%; background:var(--mk-h-hot); animation:mkSlide 2.2s linear infinite; }
+@keyframes mkSlide { from { transform:translateX(-100%); } to { transform:translateX(300%); } }
+.mk-panel { position:absolute; bottom:34px; z-index:6; background:var(--mk-h-panel); -webkit-backdrop-filter:blur(2px); backdrop-filter:blur(2px); border:1px solid var(--mk-h-line2); font-family:var(--mk-mono); color:var(--mk-h-ink); }
+.mk-panel .ph2 { display:flex; justify-content:space-between; align-items:center; padding:7px 11px; border-bottom:1px solid var(--mk-h-line2); font-size:9.5px; letter-spacing:.2em; text-transform:uppercase; color:var(--mk-h-soft); }
+.mk-panel .ph2 b { color:var(--mk-h-ink); font-weight:700; }
+.mk-bom { left:34px; width:264px; }
+.mk-bom ul { list-style:none; margin:0; padding:0; }
+.mk-bom li { display:flex; gap:10px; align-items:center; padding:6px 11px; font-size:11px; color:var(--mk-h-soft); border-bottom:1px solid var(--mk-h-line); position:relative; letter-spacing:.04em; transition:color .25s, background .25s; }
+.mk-bom li:last-child { border-bottom:none; }
+.mk-bom li::before { content:""; position:absolute; left:0; top:0; bottom:0; width:2px; background:transparent; }
+.mk-bom li .n { font-weight:700; width:22px; }
+.mk-bom li .st { margin-left:auto; font-size:9px; letter-spacing:.12em; opacity:.6; }
+.mk-bom li.on { color:var(--mk-h-ink); background:var(--mk-h-on); } .mk-bom li.on::before { background:var(--mk-h-hot); } .mk-bom li.on .n, .mk-bom li.on .st { color:var(--mk-h-hot); opacity:1; }
+.mk-bom li.done { color:var(--mk-h-ink); } .mk-bom li.done::before { background:var(--mk-h-line2); } .mk-bom li.done .st { opacity:.5; }
+.mk-title { right:34px; width:296px; }
+.mk-title .row { display:flex; border-bottom:1px solid var(--mk-h-line); } .mk-title .row:last-child { border-bottom:none; }
+.mk-title .k { padding:6px 11px; color:var(--mk-h-soft); letter-spacing:.12em; font-size:10px; border-right:1px solid var(--mk-h-line); min-width:82px; text-transform:uppercase; }
+.mk-title .v { padding:6px 11px; font-weight:700; letter-spacing:.04em; font-size:11px; }
+.mk-title .big { font:700 17px var(--mk-sans); letter-spacing:.04em; }
+.mk-triad { position:absolute; right:34px; top:74px; z-index:6; width:96px; height:96px; }
+.mk-triad svg { width:100%; height:100%; overflow:visible; }
+.mk-triad line { stroke:var(--mk-h-ink); stroke-width:1.2; } .mk-triad text { font:700 9px var(--mk-mono); fill:var(--mk-h-soft); }
+@container mk (max-width: 900px) { .mk-bom, .mk-title, .mk-triad { display:none; } }
+
+/* thẻ tin tức xếp lớp (news-pop) */
+.mk-news { width:330px; display:flex; flex-direction:column; }
+.mk-stage .mk-news { position:absolute; left:var(--mk-pad); bottom:258px; z-index:8; }
+@container mk (max-width: 900px) { .mk-stage .mk-news { bottom:calc(var(--stage-h) * .06); } }
+.mk-news .stack { position:relative; order:2; }
+.mk-news .peek { position:absolute; left:12px; right:12px; height:16px; border-radius:11px 11px 0 0; background:linear-gradient(180deg,var(--mk-np-peekA),var(--mk-np-peekB)); transition:opacity .3s var(--mk-ease), transform .3s var(--mk-ease); }
+.mk-news .peek.p1 { top:-8px; opacity:.92; } .mk-news .peek.p2 { top:-16px; left:24px; right:24px; opacity:.7; }
+.mk-news .list { order:1; max-height:0; opacity:0; overflow:hidden; display:flex; flex-direction:column; gap:10px; transition:max-height .42s var(--mk-ease), opacity .25s var(--mk-ease), margin .3s var(--mk-ease); }
+.mk-news:hover .list, .mk-news:focus-within .list, .mk-news.is-open .list { max-height:360px; opacity:1; margin-bottom:10px; }
+.mk-news:hover .peek, .mk-news:focus-within .peek, .mk-news.is-open .peek { opacity:0; transform:translateY(6px); }
+.mk-npcard { position:relative; z-index:1; display:flex; gap:13px; align-items:stretch; text-decoration:none; background:linear-gradient(165deg,var(--mk-np-a) 0%,var(--mk-np-b) 100%); border-radius:calc(12px * var(--k)); padding:11px; box-shadow:var(--mk-np-sh); overflow:hidden; transition:transform .2s var(--mk-ease); }
+.mk-npcard:hover, .mk-npcard.is-hover { transform:translateX(2px); }
+.mk-npcard .thumb { width:96px; flex:none; border-radius:7px; min-height:68px; box-shadow:var(--mk-np-thumbEdge); color:var(--mk-np-src); border-color:var(--mk-np-src); }
+.mk-npcard .meta { display:flex; flex-direction:column; justify-content:center; gap:5px; min-width:0; }
+.mk-npcard .src { font:700 10px var(--mk-mono); letter-spacing:.16em; text-transform:uppercase; color:var(--mk-np-src); }
+.mk-npcard .hl { font:600 13.5px/1.2 var(--mk-sans); letter-spacing:-.01em; color:var(--mk-white); }
+
+/* ---------- các section trang chủ ---------- */
+.mk-meet { display:grid; grid-template-columns:1.05fr 1fr; gap:clamp(36px,5cqi,80px); align-items:center; }
+.mk-meet .fig { aspect-ratio:1/1; color:var(--mk-inkFaint); }
+.mk-meet-title { font:600 clamp(28px,3.6cqi,50px)/1.02 var(--mk-sans); letter-spacing:-.035em; max-width:13ch; margin:0 0 38px; }
+.mk-pts { display:flex; flex-direction:column; gap:28px; }
+.mk-pt { display:grid; grid-template-columns:64px 1fr; gap:18px; padding-top:20px; border-top:1px solid var(--mk-line); }
+.mk-pt .n { font:400 12px var(--mk-mono); letter-spacing:.1em; color:var(--mk-accent); }
+.mk-pt p { margin:0; font-size:clamp(16px,1.5cqi,21px); line-height:1.42; color:var(--mk-ink); }
+@container mk (max-width: 980px) { .mk-meet { grid-template-columns:1fr; } .mk-meet .fig { max-width:460px; } }
+
+.mk-chal { display:grid; grid-template-columns:repeat(3,1fr); border-top:1px solid var(--mk-line); }
+.mk-chalcard { padding:34px 30px 40px; border-right:1px solid var(--mk-line); min-height:340px; display:flex; flex-direction:column; }
+.mk-chalcard:last-child { border-right:none; }
+.mk-chalcard .cn { font:400 11px var(--mk-mono); letter-spacing:.14em; color:var(--mk-accent); text-transform:uppercase; }
+.mk-chalcard h3 { margin:18px 0 14px; font:600 clamp(21px,2cqi,28px)/1.02 var(--mk-sans); letter-spacing:-.02em; }
+.mk-chalcard p { margin:0; color:var(--mk-body); font-size:15.5px; line-height:1.5; }
+.mk-chalcard .fig { margin-top:auto; height:96px; }
+@container mk (max-width: 860px) { .mk-chal { grid-template-columns:1fr; } .mk-chalcard { border-right:none; border-bottom:1px solid var(--mk-line); min-height:0; } .mk-chalcard .fig { margin-top:20px; } }
+
+.mk-split { display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:end; margin-bottom:56px; }
+.mk-split .mk-h2 { max-width:12ch; }
+.mk-split .accent { color:var(--mk-accent); }
+@container mk (max-width: 860px) { .mk-split { grid-template-columns:1fr; } }
+.mk-loop { width:100%; }
+.mk-loop svg { width:100%; height:auto; display:block; overflow:visible; }
+.mk-loop rect { fill:none; stroke:var(--mk-lineStrong); }
+.mk-loop line, .mk-loop path { stroke:var(--mk-lineStrong); fill:none; }
+.mk-loop circle { fill:var(--mk-accent); }
+.mk-loop text { font-family:var(--mk-mono); fill:var(--mk-inkSoft); }
+.mk-loop text.big { font-family:var(--mk-sans); font-weight:600; fill:var(--mk-ink); }
+
+.mk-prim { display:grid; grid-template-columns:repeat(5,1fr); border:1px solid var(--mk-line); }
+.mk-tile { aspect-ratio:1/1; border-right:1px solid var(--mk-line); border-bottom:1px solid var(--mk-line); padding:16px; position:relative; display:flex; flex-direction:column; justify-content:space-between; overflow:hidden; transition:background .2s; }
+.mk-tile:nth-child(5n) { border-right:none; }
+.mk-tile:nth-last-child(-n+5) { border-bottom:none; }
+.mk-tile .pv { position:absolute; inset:18%; border:1px dashed var(--mk-inkFaint); border-radius:50%; opacity:.5; }
+.mk-tile .pidx { position:relative; font:400 10px var(--mk-mono); color:var(--mk-inkFaint); letter-spacing:.1em; }
+.mk-tile .pl { position:relative; }
+.mk-tile .pname { font:600 14px var(--mk-sans); letter-spacing:-.01em; }
+.mk-tile .pcode { font:400 10px var(--mk-mono); letter-spacing:.12em; color:var(--mk-inkFaint); margin-top:3px; }
+.mk-tile:hover, .mk-tile.is-hover { background:var(--mk-deep); }
+.mk-tile:hover .pname, .mk-tile.is-hover .pname { color:var(--mk-accent); }
+@container mk (max-width: 980px) { .mk-prim { grid-template-columns:repeat(2,1fr); } .mk-tile:nth-child(5n) { border-right:1px solid var(--mk-line); } .mk-tile:nth-child(2n) { border-right:none; } .mk-tile:nth-last-child(-n+5) { border-bottom:1px solid var(--mk-line); } }
+
+.mk-pads { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+.mk-pad { display:flex; flex-direction:column; background:linear-gradient(180deg,var(--mk-padTop) 0%,var(--mk-panel) 100%); border:1px solid var(--mk-line); border-radius:calc(18px * var(--k)); padding:30px 30px 28px; min-height:366px; color:var(--mk-ink); text-decoration:none; transition:border-color .25s var(--mk-ease), transform .25s var(--mk-ease); }
+.mk-pad:hover, .mk-pad.is-hover { border-color:color-mix(in srgb, var(--mk-accent) 50%, transparent); transform:translateY(-3px); }
+.mk-pad.is-active { border-color:color-mix(in srgb, var(--mk-accent) 50%, transparent); transform:none; }
+.mk-pad .ico { width:46px; height:46px; border-radius:calc(12px * var(--k)); display:grid; place-items:center; background:color-mix(in srgb, var(--mk-accent) 12%, transparent); border:1px solid color-mix(in srgb, var(--mk-accent) 30%, transparent); color:var(--mk-accent); }
+.mk-pad .ico svg { width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:1.6; }
+.mk-pad .cat { font:400 11px var(--mk-mono); letter-spacing:.16em; text-transform:uppercase; color:var(--mk-accent); margin-top:28px; }
+.mk-pad h3 { font:600 clamp(22px,2cqi,28px)/1.08 var(--mk-sans); letter-spacing:-.02em; margin:12px 0 0; }
+.mk-pad p { color:var(--mk-body); font-size:14.5px; line-height:1.55; margin:18px 0 0; padding-top:18px; border-top:1px solid var(--mk-line); }
+.mk-pad .go { margin-top:auto; padding-top:24px; display:inline-flex; align-items:center; gap:12px; font:600 14px var(--mk-sans); }
+.mk-arr { width:26px; height:26px; border-radius:50%; border:1px solid var(--mk-inkFaint); display:grid; place-items:center; font:600 12px var(--mk-sans); transition:background .25s, color .25s, transform .25s, border-color .25s; }
+.mk-pad:hover .go, .mk-pad.is-hover .go, .mk-pad.is-active .go { color:var(--mk-accent); }
+.mk-pad:hover .mk-arr, .mk-pad.is-hover .mk-arr, .mk-pad.is-active .mk-arr { background:var(--mk-accent); color:var(--mk-onAccent); border-color:var(--mk-accent); transform:translate(2px,-2px); }
+@container mk (max-width: 860px) { .mk-pads { grid-template-columns:1fr; } .mk-pad { min-height:0; } }
+
+.mk-contact { position:relative; border:1px solid var(--mk-line); padding:clamp(40px,7cqi,110px) var(--mk-pad); text-align:center; }
+.mk-contact .mk-h2 { font-size:clamp(38px,6.5cqi,104px); margin-top:20px; }
+.mk-contact .sub { margin:22px auto 0; max-width:46ch; }
+.mk-contact .acts { margin-top:40px; display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+.mk-contact .mk-eyebrow { justify-content:center; color:var(--mk-accent); font-weight:400; letter-spacing:.22em; font-size:11px; }
+
+.mk-faq { display:grid; grid-template-columns:.7fr 1.3fr; gap:clamp(30px,5cqi,80px); }
+.mk-faqlist { border-top:1px solid var(--mk-line); }
+.mk-faqitem { border-bottom:1px solid var(--mk-line); }
+.mk-faqq { display:flex; align-items:center; gap:20px; width:100%; background:none; border:none; text-align:left; padding:26px 0; color:var(--mk-ink); font-family:var(--mk-sans); cursor:pointer; }
+.mk-faqq .qn { font:400 12px var(--mk-mono); letter-spacing:.1em; color:var(--mk-accent); }
+.mk-faqq .qt { font-size:clamp(18px,1.9cqi,25px); font-weight:600; letter-spacing:-.02em; flex:1; }
+.mk-faqq .qx { width:16px; height:16px; position:relative; flex:none; }
+.mk-faqq .qx::before, .mk-faqq .qx::after { content:""; position:absolute; background:var(--mk-ink); transition:transform .35s var(--mk-ease), opacity .35s; }
+.mk-faqq .qx::before { left:7px; top:0; width:2px; height:16px; }
+.mk-faqq .qx::after { top:7px; left:0; height:2px; width:16px; }
+.mk-faqitem.open .qx::before { transform:rotate(90deg); opacity:0; }
+.mk-faqa { overflow:hidden; display:none; }
+.mk-faqitem.open .mk-faqa { display:block; }
+.mk-faqa .inner { padding:0 0 28px 52px; color:var(--mk-body); font-size:16px; line-height:1.55; max-width:60ch; }
+@container mk (max-width: 860px) { .mk-faq { grid-template-columns:1fr; } .mk-faqa .inner { padding-left:0; } }
+
+.mk-footer { background:var(--mk-bg); color:var(--mk-ink); padding-top:clamp(60px,8cqi,120px); }
+.mk-ftop { display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:30px; padding-bottom:60px; border-bottom:1px solid var(--mk-line); }
+.mk-ftop .big { font:600 clamp(30px,4cqi,56px)/1 var(--mk-sans); letter-spacing:-.03em; max-width:14ch; margin-bottom:26px; }
+.mk-fcol h5 { font:500 11px var(--mk-mono); letter-spacing:.14em; text-transform:uppercase; color:var(--mk-inkFaint); margin:0 0 18px; }
+.mk-fcol ul { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:11px; }
+.mk-fcol a { color:var(--mk-inkSoft); font-size:14px; text-decoration:none; transition:color .2s; }
+.mk-fcol a:hover, .mk-fcol a.is-hover { color:var(--mk-accent); }
+.mk-fbot { display:flex; align-items:center; justify-content:space-between; padding:26px 0 40px; gap:20px; flex-wrap:wrap; font:400 11px var(--mk-mono); letter-spacing:.08em; color:var(--mk-inkFaint); }
+.mk-fword { padding:8px 0 30px; }
+.mk-fword .ph { width:min(760px,76cqi); height:calc(min(760px,76cqi) * .243); margin:0 auto; color:var(--mk-inkFaint); border-color:var(--mk-inkFaint); }
+@container mk (max-width: 860px) { .mk-ftop { grid-template-columns:1fr 1fr; } }
+
+/* ---------- Careers (/careers: token riêng, 1 cột dưới 860px) ---------- */
+.mk-car { max-width:1180px; margin:0 auto; padding:40px 32px 0; display:grid; grid-template-columns:minmax(300px,38%) 1fr; gap:72px; align-items:start; line-height:1.5; }
+.mk-car .intro2 { position:sticky; top:40px; }
+.mk-car .logo2 { width:132px; height:32px; margin-bottom:40px; color:var(--mk-accent); border-color:var(--mk-accent); }
+.mk-car .ey { font:400 10.5px var(--mk-mono); letter-spacing:.18em; text-transform:uppercase; color:var(--mk-inkSoft); margin-bottom:16px; }
+.mk-car h1 { font:300 clamp(1.8rem,2.6cqi,2.5rem)/1.06 var(--mk-sans); letter-spacing:-.025em; margin:0; }
+.mk-car h1 em { font-style:normal; color:var(--mk-accent); }
+.mk-car .intro2 p { margin:18px 0 0; font-size:.95rem; color:var(--mk-body); line-height:1.6; max-width:42ch; }
+.mk-car .facts2 { margin-top:26px; display:flex; flex-direction:column; gap:7px; }
+.mk-car .facts2 div { display:flex; gap:10px; font:400 12px var(--mk-mono); }
+.mk-car .facts2 b { color:var(--mk-accent); }
+.mk-car .board { margin-top:26px; display:inline-block; font-size:13px; font-weight:500; color:var(--mk-accent); text-decoration:none; }
+.mk-car .home { margin-top:34px; display:inline-block; font-size:12.5px; color:var(--mk-inkSoft); text-decoration:none; }
+.mk-car .home:hover, .mk-car .home.is-hover { color:var(--mk-accent); }
+.mk-car .intro2 > a { display:table; }
+.mk-dept { margin-bottom:30px; }
+.mk-dept-h { display:flex; align-items:baseline; gap:12px; padding-bottom:8px; margin-bottom:2px; border-bottom:1px solid var(--mk-lineStrong); }
+.mk-dept-h h2 { font:600 1.02rem var(--mk-sans); letter-spacing:-.01em; margin:0; }
+.mk-dept-h .n { font:400 11px var(--mk-mono); color:var(--mk-accent); letter-spacing:.08em; }
+.mk-dept-h .c { margin-left:auto; font:400 10.5px var(--mk-mono); color:var(--mk-inkFaint); letter-spacing:.1em; }
+.mk-role { display:flex; align-items:center; justify-content:space-between; gap:18px; padding:12px 8px; border-bottom:1px solid var(--mk-line); color:var(--mk-ink); text-decoration:none; transition:background .15s, padding .15s; }
+.mk-role:hover, .mk-role.is-hover { background:var(--mk-panel); padding-left:14px; }
+.mk-role .rt { font-size:.98rem; font-weight:500; letter-spacing:-.005em; }
+.mk-role .rm { display:flex; gap:14px; align-items:center; flex:0 0 auto; color:var(--mk-inkSoft); font:400 12px var(--mk-mono); }
+.mk-role .arr { color:var(--mk-accent); opacity:.5; transition:transform .15s, opacity .15s; }
+.mk-role:hover .arr, .mk-role.is-hover .arr { opacity:1; transform:translateX(3px); }
+@container mk (max-width: 860px) { .mk-car { grid-template-columns:1fr; gap:40px; padding-top:28px; } .mk-car .intro2 { position:static; } .mk-role { flex-direction:column; align-items:flex-start; gap:5px; } }
+
+/* ---------- Privacy (/privacy: 1 cột 760px, lề max(20px,5vw)) ---------- */
+.mk-legal { max-width:calc(760px + 2 * max(20px,5cqi)); margin:0 auto; padding:18px max(20px,5cqi) 60px; font-family:var(--mk-sans); color:var(--mk-body); }
+.mk-legal .back0 { font:600 13px var(--mk-sans); letter-spacing:.02em; color:var(--mk-inkSoft); text-decoration:none; }
+.mk-legal .back { display:inline-block; margin:24px 0 36px; font:500 14px var(--mk-sans); color:var(--mk-inkFaint); text-decoration:none; }
+.mk-legal .kick { font:500 11px var(--mk-sans); letter-spacing:.18em; text-transform:uppercase; color:var(--mk-accent); }
+.mk-legal h1 { font:300 clamp(2rem,5cqi,3.2rem)/1.1 var(--mk-sans); letter-spacing:-.03em; color:var(--mk-ink); margin:14px 0 10px; }
+.mk-legal h2 { font:500 24px/1.3 var(--mk-sans); letter-spacing:-.02em; color:var(--mk-ink); margin:42px 0 14px; }
+.mk-legal p, .mk-legal li { font-size:16px; line-height:1.75; }
+.mk-legal strong { font-weight:500; color:var(--mk-inkSoft); }
+.mk-legal ul { padding-left:24px; margin:8px 0; }
+.mk-legal a.mail { color:var(--mk-accent); }
+
+/* ---------- Blog WetLabs (/blog/wetlab/: IBM Plex, tối, sidebar ≥1100) ---------- */
+.mk-wl { font:400 17px/1.7 var(--mk-sans); background:var(--mk-bg); color:var(--mk-ink); }
+.mk-wl .shellw { width:min(1180px, 100% - 56px); margin:auto; }
+@container mk (min-width: 1100px) { .mk-wl .shellw { width:min(1360px, 100% - 64px); } }
+@container mk (max-width: 650px) { .mk-wl .shellw { width:calc(100% - 36px); } .mk-wl { font-size:17px; line-height:1.65; } }
+.mk-wl-top { display:flex; align-items:center; justify-content:space-between; gap:24px; padding:27px 0 22px; border-bottom:1px solid var(--mk-line); }
+@container mk (max-width: 650px) { .mk-wl-top { padding:23px 0 19px; gap:12px; } }
+.mk-wl-word { display:inline-flex; align-items:center; color:var(--mk-ink); text-decoration:none; }
+.mk-wl-word .mk-logo { color:var(--mk-accent); }
+.mk-wl-word:hover, .mk-wl-word.is-hover { color:var(--mk-accent); }
+.mk-wl-layout { display:block; }
+@container mk (min-width: 1100px) { .mk-wl-layout { display:grid; grid-template-columns:220px minmax(0,840px); gap:56px; justify-content:center; align-items:start; } .mk-wl-side { position:sticky; top:28px; margin-top:48px; } .mk-wl-toc { margin-top:0; } }
+@container mk (max-width: 1099px) { .mk-wl-side { max-width:840px; margin:auto; } .mk-wl-toc nav { max-height:50vh; } .mk-wl-content { padding-top:32px; } }
+.mk-wl-content { max-width:840px; margin:0 auto; padding-bottom:40px; }
+.mk-wl-toc { border-top:4px solid var(--mk-wl-rule); margin:32px 0 0; }
+.mk-wl-toc > summary { font:500 13px/1.5 var(--mk-mono); letter-spacing:.06em; text-transform:uppercase; padding:18px 0; cursor:pointer; }
+.mk-wl-toc nav { overflow:auto; overscroll-behavior:contain; }
+.mk-wl-toc ul { list-style:none; margin:0; padding:0 4px 12px 0; }
+.mk-wl-toc a { display:block; position:relative; padding:7px 8px 7px 16px; text-decoration:none; color:var(--mk-inkSoft); font-size:14px; line-height:1.5; }
+.mk-wl-toc a::before { content:""; position:absolute; left:0; top:18px; width:6px; height:1px; background:var(--mk-wl-tick); }
+.mk-wl-toc a.l3 { padding-left:30px; font-size:13px; } .mk-wl-toc a.l3::before { left:15px; }
+.mk-wl-toc a:hover, .mk-wl-toc a.is-hover { color:var(--mk-wl-h); }
+.mk-wl-toc a[aria-current] { color:var(--mk-wl-h); font-weight:600; } .mk-wl-toc a[aria-current]::before { background:var(--mk-accent); }
+.mk-wl-tab { display:block; padding:7px 8px 7px 16px; font-size:14px; font-weight:600; color:var(--mk-inkSoft); text-decoration:none; }
+.mk-wl-tab:hover, .mk-wl-tab.is-hover { color:var(--mk-wl-h); }
+.mk-wl-h1 { font:700 clamp(30px,3.6cqi,43px)/1.12 var(--mk-sans); letter-spacing:-.025em; color:var(--mk-wl-h); margin:0 0 22px; text-wrap:balance; }
+@container mk (max-width: 650px) { .mk-wl-h1 { font-size:clamp(29px,7.6cqi,36px); line-height:1.15; } }
+.mk-wl-name { margin:0 0 8px; font:700 clamp(24px,3cqi,28px)/1.2 var(--mk-sans); color:var(--mk-wl-h); }
+.mk-wl-dek { max-width:62ch; margin:0 0 24px; color:var(--mk-wl-dek); font-size:22px; line-height:1.52; }
+@container mk (max-width: 650px) { .mk-wl-dek { font-size:19px; margin-bottom:20px; } }
+.mk-wl-date { font:400 13px var(--mk-mono); color:var(--mk-inkSoft); }
+.mk-wl-byline { font-size:14px; line-height:1.6; color:var(--mk-inkSoft); margin:8px 0 0; }
+.mk-wl-hero { margin:30px auto; aspect-ratio:16/9; }
+.mk-wl-h2 { margin:57px 0 22px; padding-top:34px; border-top:1px solid var(--mk-line); font:700 clamp(27px,3cqi,34px)/1.18 var(--mk-sans); letter-spacing:-.02em; color:var(--mk-wl-h); }
+@container mk (max-width: 650px) { .mk-wl-h2 { margin-top:42px; padding-top:26px; font-size:30px; } }
+.mk-wl-h3 { font:700 23px/1.3 var(--mk-sans); letter-spacing:-.02em; color:var(--mk-wl-h); margin:29px 0 14px; }
+.mk-wl p.body { margin:0 0 16px; }
+.mk-wl a.inl { color:inherit; text-decoration-thickness:1px; text-underline-offset:4px; }
+.mk-wl a.inl:hover, .mk-wl a.inl.is-hover { color:var(--mk-accent); }
+.mk-wl code { font:14px var(--mk-mono); overflow-wrap:anywhere; }
+.mk-wl-tldr { margin:36px 0; padding:24px 28px; border-top:4px solid var(--mk-wl-rule); background:var(--mk-panel); }
+@container mk (max-width: 650px) { .mk-wl-tldr { margin:28px 0; padding:20px 18px; } }
+.mk-wl-tldr h2 { margin:0 0 14px; font:600 13px/1.4 var(--mk-mono); letter-spacing:.04em; text-transform:uppercase; color:var(--mk-wl-h); }
+.mk-wl-tldr ul { margin:0; padding-left:21px; } .mk-wl-tldr li { margin:0 0 10px; padding-left:4px; line-height:1.6; }
+.mk-wl-scroll { overflow-x:auto; background:var(--mk-bg); margin:22px 0; }
+.mk-wl-scroll table { border-collapse:collapse; width:100%; font-size:15px; }
+.mk-wl-scroll th, .mk-wl-scroll td { text-align:left; padding:13px 12px; border-bottom:1px solid var(--mk-line); vertical-align:top; }
+.mk-wl-scroll thead th { background:var(--mk-panel); } .mk-wl-scroll tbody th { background:var(--mk-panel); font-weight:650; width:132px; }
+.mk-wl-scroll tbody tr:hover { background:var(--mk-wl-rowHover); }
+@container mk (max-width: 650px) { .mk-wl-scroll th, .mk-wl-scroll td { padding:11px 10px; font-size:13px; } .mk-wl-scroll::after { content:"Swipe table if needed"; display:block; padding:8px 10px; font-size:11px; color:var(--mk-inkSoft); border-top:1px solid var(--mk-line); } }
+.mk-bench { margin:28px 0; padding:22px; background:var(--mk-bg); color:var(--mk-ink); font-family:var(--mk-sans); }
+@container mk (max-width: 650px) { .mk-bench { padding:15px 10px; } }
+@container mk (max-width: 600px) { .mk-bench { margin:24px 0; } }
+.mk-bench table { border-collapse:collapse; table-layout:fixed; width:100%; font-size:15px; line-height:1.4; }
+.mk-bench caption { text-align:left; font-weight:650; font-size:20px; line-height:1.3; margin-bottom:13px; }
+.mk-bench caption small { display:block; font-size:13px; font-weight:400; margin-top:7px; color:var(--mk-inkSoft); }
+.mk-bench th, .mk-bench td { padding:13px 12px; text-align:left; border-bottom:1px solid var(--mk-line); }
+.mk-bench thead th { border-bottom:1px solid var(--mk-ink); } .mk-bench thead th:first-child { width:35%; }
+.mk-bench tbody th { font-weight:400; } .mk-bench td { font-variant-numeric:tabular-nums; }
+.mk-bench .grp th { padding:8px 12px; font-size:12px; letter-spacing:.045em; text-transform:uppercase; font-weight:650; border-bottom:0; }
+.mk-bench .g-easy th { background:var(--mk-wl-easy); } .mk-bench .g-med th { background:var(--mk-wl-med); } .mk-bench .g-hard th { background:var(--mk-wl-hard); }
+.mk-bench tbody tr:hover { background:var(--mk-wl-benchHover); }
+.mk-bench .cnt { white-space:nowrap; display:inline-flex; gap:6px; font-weight:650; } .mk-bench .cnt .s { font-weight:400; color:var(--mk-inkSoft); }
+.mk-bench .cnt .ok { color:var(--mk-sw-ok); } .mk-bench .cnt .pa { color:var(--mk-sw-part); }
+.mk-bench .model { display:inline-flex; align-items:center; gap:6px; white-space:nowrap; font-weight:650; }
+.mk-av { width:19px; height:19px; flex:0 0 19px; border-radius:50%; border:1px dashed currentColor; display:inline-block; opacity:.7; }
+.mk-legend { display:flex; flex-wrap:wrap; gap:8px 22px; font-size:14px; line-height:1.4; margin:14px 0 20px; }
+.mk-legend span { display:inline-flex; align-items:center; gap:6px; }
+.mk-sw { width:10px; height:10px; display:inline-block; border-radius:1px; flex-shrink:0; }
+.mk-sw.ok { background:var(--mk-sw-ok); } .mk-sw.pa { background:var(--mk-sw-part); } .mk-sw.fa { background:var(--mk-sw-fail); }
+@container mk (max-width: 600px) { .mk-bench table { font-size:14px; } .mk-bench th, .mk-bench td { padding:11px 5px; } .mk-bench th:first-child, .mk-bench td:first-child { padding-left:0; } .mk-bench thead th:first-child { width:33%; } .mk-bench .model { gap:5px; font-size:12px; } .mk-bench .cnt { gap:3px; font-size:12px; } .mk-legend { gap:9px 16px; font-size:13px; } }
+
+/* bảng các lần chạy → thẻ dưới 740px */
+.mk-runs { font-size:14px; }
+.mk-runs-f { display:grid; grid-template-columns:minmax(180px,1.6fr) minmax(130px,1fr) minmax(130px,1fr) auto; gap:14px; align-items:end; }
+.mk-runs-f label { display:grid; gap:7px; font-size:14px; font-weight:600; }
+.mk-runs select, .mk-runsbtn { min-height:44px; border:1px solid var(--mk-lineStrong); border-radius:calc(3px * var(--k)); background:transparent; color:var(--mk-ink); font:inherit; }
+.mk-runs select { width:100%; padding:10px 28px 10px 10px; background:var(--mk-panel); }
+.mk-runsbtn { padding:10px 15px; cursor:pointer; }
+.mk-runsbtn:hover, .mk-runsbtn.is-hover { background:var(--mk-wl-hover); }
+.mk-wl :is(a,button,select,summary,input):focus-visible, .mk-wl .is-focus { outline:3px solid var(--mk-accent); outline-offset:4px; }
+.mk-runs-t { width:100%; border-collapse:collapse; line-height:1.4; margin-top:18px; }
+.mk-runs-t th, .mk-runs-t td { padding:13px 10px; border-bottom:1px solid var(--mk-line); text-align:left; vertical-align:middle; }
+.mk-runs-t th { font-size:13px; font-weight:600; color:var(--mk-inkSoft); }
+.mk-runs-t th:first-child, .mk-runs-t td:first-child { padding-left:0; }
+.mk-runs-t tr.row { cursor:pointer; }
+.mk-runs-t tr.row:hover:not(.sel) { background:color-mix(in srgb, var(--mk-accent) 8%, transparent); }
+.mk-runs-t tr.sel { background:var(--mk-deep); } .mk-runs-t tr.sel td:first-child { padding-left:10px; }
+.mk-runs-t .task { color:inherit; text-decoration-thickness:1px; text-underline-offset:3px; }
+.mk-runs-t .task:hover, .mk-runs-t .task.is-hover { color:var(--mk-accent); }
+.mk-runs-t .sub { display:block; margin-top:3px; font-size:12px; color:var(--mk-inkSoft); }
+.mk-runs-t .val { font-variant-numeric:tabular-nums; white-space:nowrap; }
+.mk-runs-t .act { border:0; background:transparent; padding:8px 0; min-height:44px; color:var(--mk-ink); font:inherit; text-decoration:underline; cursor:pointer; }
+.mk-out { display:inline-block; padding:4px 7px; font-size:12px; font-weight:600; background:var(--mk-fail-bg); color:var(--mk-fail-ink); }
+.mk-out.ok { background:var(--mk-ok-bg); color:var(--mk-ok-ink); } .mk-out.pa { background:var(--mk-part-bg); color:var(--mk-part-ink); }
+.mk-runs-d { padding:22px; background:var(--mk-panel); border-left:3px solid var(--mk-accent); }
+.mk-runs-d h3 { margin:0; font-size:19px; line-height:1.35; color:var(--mk-wl-h); }
+.mk-runs-d .top { display:flex; justify-content:space-between; align-items:start; gap:18px; margin-bottom:14px; }
+.mk-runs-d h4 { margin:18px 0 12px; font-size:16px; }
+.mk-entry { padding:14px 0; border-top:1px solid var(--mk-line); } .mk-entry h5 { margin:0 0 8px; font-size:13px; color:var(--mk-inkSoft); } .mk-entry p { margin:0; white-space:pre-wrap; }
+.mk-pager { display:flex; justify-content:space-between; align-items:center; gap:14px; margin-top:24px; font-size:14px; }
+@container mk (max-width: 740px) {
+  .mk-runs-f { grid-template-columns:1fr 1fr; } .mk-runs-f label:first-child { grid-column:1 / -1; } .mk-runs-f > button { grid-column:1 / -1; justify-self:start; }
+  .mk-runs-t thead { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }
+  .mk-runs-t, .mk-runs-t tbody { display:block; }
+  .mk-runs-t tr.row { display:grid; grid-template-columns:1fr 1fr; padding:14px; border:1px solid var(--mk-line); margin:12px 0 0; gap:14px 18px; }
+  .mk-runs-t tr.row td { border:0; padding:0; display:block; min-width:0; }
+  .mk-runs-t tr.row td::before { content:attr(data-label); display:block; font-size:11px; font-weight:600; color:var(--mk-inkSoft); margin-bottom:5px; }
+  .mk-runs-t tr.row td:first-child { grid-column:1 / -1; } .mk-runs-t tr.row td:first-child::before { display:none; }
+  .mk-runs-t .task { font-size:16px; font-weight:600; } .mk-runs-t .act { min-height:36px; }
+  .mk-runs-t tr.det, .mk-runs-t tr.det > td { display:block; padding:0; } .mk-runs-d { padding:18px 14px; }
+}
+.mk-pair { margin:24px 0 40px; padding:20px 0; border-top:1px solid var(--mk-line); border-bottom:1px solid var(--mk-line); }
+@container mk (max-width: 650px) { .mk-pair { padding:16px 0; margin:20px 0 30px; } }
+.mk-pair figure { margin:0 0 16px; } .mk-pair figcaption { font-size:14px; color:var(--mk-wl-dek); margin-top:12px; }
+.mk-pair .vid { aspect-ratio:72/35; }
+.mk-rec { display:inline-flex; align-items:center; gap:12px; min-height:44px; padding:10px 18px; border:1px solid var(--mk-wl-rec); border-radius:calc(3px * var(--k)); background:var(--mk-wl-rec); color:var(--mk-wl-recInk); font:600 15px/1.4 var(--mk-sans); text-decoration:none; }
+.mk-rec:hover, .mk-rec.is-hover { background:var(--mk-white); border-color:var(--mk-white); }
+.mk-skip { display:inline-block; background:var(--mk-bg); color:var(--mk-ink); padding:10px; text-decoration:none; font-size:17px; }
+.mk-skip:hover, .mk-skip.is-hover { color:var(--mk-accent); }
+.mk-wl-foot { border-top:1px solid var(--mk-line); padding:26px 0 42px; display:flex; justify-content:space-between; gap:20px; align-items:center; font-size:13px; color:var(--mk-inkSoft); }
+@container mk (max-width: 650px) { .mk-wl-foot { align-items:flex-start; flex-direction:column; gap:12px; } }
+/* cổng xem trước riêng (private preview) */
+.mk-gate { width:430px; max-width:100%; background:var(--mk-glassA); border:1px solid var(--mk-glassEdge); box-shadow:var(--mk-shGlass); padding:34px 34px 22px; color:var(--mk-ink); font-family:system-ui,sans-serif; }
+.mk-gate .k { font:700 10px var(--mk-mono); letter-spacing:.16em; text-transform:uppercase; color:var(--mk-accent); }
+.mk-gate h2 { font:700 38px/1.05 system-ui,sans-serif; letter-spacing:-1.33px; color:var(--mk-wl-h); margin:16px 0 14px; }
+.mk-gate p { font-size:15px; line-height:1.6; color:var(--mk-wl-gate); margin:0 0 24px; }
+.mk-gate label { display:block; font:700 10px var(--mk-mono); letter-spacing:.14em; color:var(--mk-inkSoft); margin-bottom:8px; }
+.mk-gate input { width:100%; height:48px; background:var(--mk-wl-input); border:1px solid var(--mk-accent); box-shadow:0 0 0 1px var(--mk-accent); color:var(--mk-white); padding:11px 13px; font-size:16px; }
+.mk-gate .unlock { width:100%; height:48px; margin-top:12px; background:var(--mk-accent); border:1px solid var(--mk-wl-rule); color:var(--mk-onAccent); font:700 13px ui-monospace,monospace; letter-spacing:.78px; text-transform:uppercase; cursor:pointer; }
+.mk-gate .unlock:hover, .mk-gate .unlock.is-hover { background:var(--mk-accentHot); }
+.mk-gate .ft { display:flex; justify-content:space-between; margin-top:26px; font:400 11px ui-monospace,monospace; color:var(--mk-inkFaint); }
+.mk-gate .ft a { color:inherit; text-decoration:none; } .mk-gate .ft a:hover, .mk-gate .ft a.is-hover { color:var(--mk-white); }
+
+@media (max-width: 900px) {
+  .shell { grid-template-columns:1fr; }
+  .side { display:none; }
+  .bar { position:static; }
+  main { padding:0 16px 80px; }
+  .grid, .strat { grid-template-columns:1fr; }
+  .type-row { grid-template-columns:1fr; gap:2px; }
+  .fl-row { grid-template-columns:1fr; gap:4px; }
+  .lab-wrap { grid-template-columns:1fr; }
+  .lab-view { height:520px; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <nav class="side" aria-label="Mục lục">
+    <div class="brand"><b>mecka kit</b><small>schematic · instruction-manual</small></div>
+    <h6>Nền tảng</h6>
+    <a href="#color"><i>01</i>Màu</a>
+    <a href="#type"><i>02</i>Chữ</a>
+    <a href="#shape"><i>03</i>Bo góc &amp; chi tiết</a>
+    <a href="#layout"><i>04</i>Bố cục &amp; kích thước</a>
+    <h6>Responsive</h6>
+    <a href="#bp"><i>R1</i>Bản đồ điểm gãy</a>
+    <a href="#fluid"><i>R2</i>Chữ &amp; khoảng co giãn</a>
+    <a href="#lab"><i>R3</i>Phòng thử bề rộng</a>
+    <a href="#strat"><i>R4</i>Chiến lược</a>
+    <a href="#gaps"><i>R5</i>Lỗ hổng đo được</a>
+    <h6>Thành phần</h6>
+    <a href="#actions"><i>05</i>Hành động</a>
+    <a href="#navigation"><i>06</i>Điều hướng</a>
+    <a href="#hero"><i>07</i>Hero · bản vẽ</a>
+    <a href="#containment"><i>08</i>Section trang chủ</a>
+    <a href="#careers"><i>09</i>Careers &amp; Legal</a>
+    <a href="#article"><i>10</i>Bài viết WetLabs</a>
+    <a href="#data"><i>11</i>Dữ liệu &amp; nhập liệu</a>
+    <a href="#feedback"><i>12</i>Trạng thái</a>
+    <h6>Mẫu</h6>
+    <a href="#screens"><i>13</i>Màn hình mẫu</a>
+  </nav>
+
+  <main>
+    <div class="bar" role="toolbar" aria-label="Chủ đề">
+      <div class="ctl"><span>Hệ</span><div class="swatches" id="swatches"></div></div>
+      <div class="ctl"><span>Chế độ</span><div class="seg" id="mode">
+        <button data-v="light" aria-pressed="true">Sáng</button><button data-v="dark" aria-pressed="false">Tối</button></div></div>
+      <div class="grow"></div>
+      <button class="copy" id="copy-tokens">Copy CSS token</button>
+      <div class="palnote" id="palnote"></div>
+    </div>
+
+    <div class="intro">
+      <div class="eyebrow">mecka.ai · CSS inline + blog/wetlab/styles.css + all-runs.css → docs/mecka-ui-kit.html</div>
+      <h1>Hệ thiết kế của Mecka, và cách nó co giãn</h1>
+      <p>Bộ kit chép lại hệ "bản vẽ kỹ thuật" của mecka.ai: nền giấy kem, section đen, chữ Space Grotesk + Space Mono, đường kẻ 1px, dấu cắt góc, nút góc vuông 2px, kính lỏng ở thanh điều hướng. Màu và số đo lấy từ khối <code>:root</code> trong CSS của site. Trạng thái hover/focus và toàn bộ hành vi responsive thì đo bằng Playwright trên site đang chạy: quét 129 bề rộng từ 320 đến 1600px trên cả 4 bề mặt.</p>
+      <p>Muốn dùng lại: copy khối <code>:root</code> (nút "Copy CSS token") và CSS <code>.mk-*</code>. Mọi <code>@media</code> của site được viết lại thành <code>@container mk</code>. Bọc trang bằng <code>container: mk / inline-size</code> thì component co giãn theo khung chứa chứ không theo cửa sổ. Không có container thì component hiện bản desktop.</p>
+      <div class="facts">
+        <span class="fact">--pad <b>clamp(20px, 5vw, 96px)</b></span><span class="fact">--maxw <b>1440</b></span>
+        <span class="fact">@media theo bề rộng <b>32</b> (22 ở trang chủ) · <b>14</b> ngưỡng</span><span class="fact">điểm gãy thật (đo) <b>680 · 720 · 860 · 900 · 980</b></span>
+        <span class="fact">page-frame <b>14 → 8</b> ≤680</span><span class="fact">ease <b>cubic-bezier(.22,.61,.36,1)</b></span>
+        <span class="fact">blog: <b>650 · 740 · 1100</b></span><span class="fact">careers: <b>860</b></span>
+      </div>
+    </div>
+
+    <!-- ================= NỀN TẢNG ================= -->
+    <section class="block" id="color">
+      <header><span class="n">( 01 )</span><h2>Màu</h2><p>Mỗi hệ có một bộ vai trò riêng. Trang chủ có 2 chế độ thật: section kem (<code>:root</code>) và section đen (<code>.dark</code>). Blog WetLabs khai 3 khối <code>:root</code> (kem, tối, in ấn). Careers chỉ có sáng, Privacy chỉ có tối. Bấm một ô để copy mã màu.</p></header>
+      <div class="roles" id="roles"></div>
+      <h3 class="sub">Màu cố định (không đổi theo hệ)</h3>
+      <div class="tscroll"><table class="tok">
+        <thead><tr><th>token</th><th>giá trị</th><th>nguồn trên site</th></tr></thead>
+        <tbody>
+          <tr><td>--mk-h-paper / h-ink / h-hot</td><td>#EFE9DE · #23201B · #C8501F</td><td><code>.hero-wrap</code> khai token riêng (paper, ink, hot) khác token gốc: hero là một bản "standalone" dán vào</td></tr>
+          <tr><td>--mk-np-a → np-b</td><td>#E47C42 → #CF5A22 (165°)</td><td>thẻ tin tức cam <code>.np-card</code></td></tr>
+          <tr><td>--mk-menu-a → menu-b</td><td>#F6F1E8 → #ECE4D6</td><td><code>.menu-panel</code>, luôn sáng kể cả khi nav ở trên nền tối</td></tr>
+          <tr><td>--mk-ok / part / fail</td><td>#253322/#CDE4BE · #3D311A/#F4D394 · #363636/#EDEDED</td><td>nhãn kết quả <code>.wetlab-runs__outcome</code> (tối)</td></tr>
+          <tr><td>--mk-sw-ok / part / fail</td><td>#507548 · #CF5A22 · #19140D</td><td>ô chú giải <code>.benchmark-swatch</code></td></tr>
+          <tr><td>--mk-wl-easy / med / hard</td><td>#F3EFD9 · #F4E3D1 · #E4DDD0</td><td>dải nhóm độ khó trong <code>.benchmark-table</code></td></tr>
+          <tr><td>--mk-ua-focus</td><td>#005FCC (sáng) · #99C8FF (tối)</td><td>focus ring mặc định của Chrome. Trang chủ, careers, privacy không style focus riêng (đo được)</td></tr>
+        </tbody></table></div>
+    </section>
+
+    <section class="block" id="type">
+      <header><span class="n">( 02 )</span><h2>Chữ</h2><p>Trang chủ: Space Grotesk 300–700 + Space Mono (nhãn viết hoa, giãn chữ .08–.30em). Blog: IBM Plex Sans/Mono (khối benchmark nền kem vẫn dùng Grotesk). Privacy: Outfit. Cỡ chữ lớn đều dùng <code>clamp()</code> theo <code>vw</code>; cột phải ghi cỡ đo được ở 390 và 1440px.</p></header>
+      <div id="typescale">
+        <div class="type-row" data-sig="fac29c6097"><span class="meta">wordmark (hero h1)<br>.hero-copy .wordmark</span><span class="t" style="font:700 clamp(72px,11vw,148px)/.86 var(--mk-sans);letter-spacing:-.045em">mecka</span><span class="meta">700 · clamp(72px, 11vw, 148px) / .86 · -.045em<br>đo: 72 @390 · 148 @1440 (chạm trần 1350)</span></div>
+        <div class="type-row" data-sig="a86be7f9d7"><span class="meta">contact h2<br>.contact .h2</span><span class="t" style="font:600 clamp(38px,6.5vw,104px)/1 var(--mk-sans);letter-spacing:-.03em">Khám phá robot</span><span class="meta">600 · clamp(38px, 6.5vw, 104px)<br>đo: 38 @390 · 93.6 @1440 · chạm trần 1600</span></div>
+        <div class="type-row"><span class="meta">.display (khai báo)<br>không phần tử nào dùng</span><span class="t" style="font:600 clamp(44px,7.4vw,116px)/.96 var(--mk-sans);letter-spacing:-.035em">Display</span><span class="meta">600 · clamp(44px, 7.4vw, 116px) / .96<br>token chết: không có trong DOM</span></div>
+        <div class="type-row" data-sig="ac1144e1f1 462fac7846"><span class="meta">.h2 (section)<br>kem + đen</span><span class="t" style="font:600 clamp(30px,4.6vw,68px)/1 var(--mk-sans);letter-spacing:-.03em">Dữ liệu thực tế</span><span class="meta">600 · clamp(30px, 4.6vw, 68px) / 1.0 · -.03em<br>đo: 30 @390 · 66.2 @1440 · trần 1480</span></div>
+        <div class="type-row"><span class="meta">footer big<br>.footer-brand .big</span><span class="t" style="font:600 clamp(30px,4vw,56px)/1 var(--mk-sans);letter-spacing:-.03em">Dựng cho thế giới thật</span><span class="meta">600 · clamp(30px, 4vw, 56px) / 1.0</span></div>
+        <div class="type-row" data-sig="ea33509dee"><span class="meta">meet-title</span><span class="t" style="font:600 clamp(28px,3.6vw,50px)/1.02 var(--mk-sans);letter-spacing:-.035em">Dạy robot về thế giới</span><span class="meta">600 · clamp(28px, 3.6vw, 50px) / 1.02 · max 13ch</span></div>
+        <div class="type-row" data-sig="52c98bc2c2 c503c9c040"><span class="meta">h3 thẻ<br>.chal-card h3 · .pad h3</span><span class="t" style="font:600 clamp(21px,2vw,28px)/1.05 var(--mk-sans);letter-spacing:-.02em">Việc thật thì nhiễu.</span><span class="meta">600 · clamp(21px, 2vw, 28px) · pad: clamp(22px, 2vw, 28px)</span></div>
+        <div class="type-row" data-sig="9d7f18abe8"><span class="meta">tagline (hero)</span><span class="t" style="font:500 clamp(18px,2vw,25px)/1.34 var(--mk-sans)">Lớp <b style="color:var(--mk-accent)">dữ liệu và triển khai</b></span><span class="meta">500 · clamp(18px, 2vw, 25px) / 1.34 · max 28ch</span></div>
+        <div class="type-row"><span class="meta">câu hỏi FAQ<br>.faq-q .qt</span><span class="t" style="font:600 clamp(18px,1.9vw,25px)/1.2 var(--mk-sans);letter-spacing:-.02em">Mecka làm gì?</span><span class="meta">600 · clamp(18px, 1.9vw, 25px)</span></div>
+        <div class="type-row" data-sig="3f75ed916b"><span class="meta">meet point p</span><span class="t" style="font:400 clamp(16px,1.5vw,21px)/1.42 var(--mk-sans)">Robot sẽ là công nghệ mở rộng GDP lớn nhất.</span><span class="meta">400 · clamp(16px, 1.5vw, 21px) / 1.42</span></div>
+        <div class="type-row" data-sig="1bb3f83420"><span class="meta">.lead</span><span class="t" style="font:400 clamp(15px,1.25vw,19px)/1.5 var(--mk-sans);color:var(--mk-body)">Đoạn dẫn của section, màu ink-soft.</span><span class="meta">400 · clamp(15px, 1.25vw, 19px) / 1.5<br>đứng yên 15px tới 1200px</span></div>
+        <div class="type-row" data-sig="0ea80ec1a3"><span class="meta">thân thẻ<br>.chal-card p · .pad p · .faq-a</span><span class="t" style="font:400 15.5px/1.5 var(--mk-sans);color:var(--mk-body)">Mô hình cần trải nghiệm vô số tình huống biên.</span><span class="meta">15.5/1.5 · 14.5/1.55 · 16/1.55 (cố định)</span></div>
+        <div class="type-row"><span class="meta">mono nhãn<br>eyebrow · sec-head · btn</span><span class="t" style="font:400 12px var(--mk-mono);letter-spacing:.18em;text-transform:uppercase">( 03 ) The Mecka Loop</span><span class="meta">Space Mono 12 · .26em eyebrow · .18em idx · .1em btn</span></div>
+        <div class="type-row" data-sig="3d97abb7b6"><span class="meta">mono nhỏ<br>footer h5 · spec · tag</span><span class="t" style="font:500 11px var(--mk-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--mk-inkFaint)">Resources · FIG 02 · MK-002</span><span class="meta">11 .14em · 11 .12em · 10.5 .16em · 9.5 .2em (panel)</span></div>
+        <div class="type-row" data-sig="8ec0a9b5a7"><span class="meta">careers h1</span><span class="t" style="font:300 clamp(1.8rem,2.6vw,2.5rem)/1.06 var(--mk-sans);letter-spacing:-.025em">Xây lớp dữ liệu cho <span style="color:var(--mk-accent)">AI vật lý</span>.</span><span class="meta">300 · clamp(1.8rem, 2.6vw, 2.5rem) · 28.8 tới 1110px</span></div>
+        <div class="type-row" data-sig="516a4a0cab 194f45113b"><span class="meta">careers dept h2 · p</span><span class="t" style="font:600 1.02rem var(--mk-sans)">Research <span style="font:400 .95rem var(--mk-sans);color:var(--mk-body)">— đoạn giới thiệu .95rem/1.6</span></span><span class="meta">600 1.02rem · p .95rem/1.6 max 42ch</span></div>
+        <div class="type-row" data-sig="6f9863defe"><span class="meta">blog h1<br>IBM Plex Sans</span><span class="t" style="font:700 clamp(30px,3.6vw,43px)/1.12 'IBM Plex Sans',sans-serif;letter-spacing:-.025em">Robot đã sẵn sàng cho phòng lab?</span><span class="meta">700 · clamp(30px, 3.6vw, 43px) · ≤650: clamp(29px, 7.6vw, 36px)</span></div>
+        <div class="type-row" data-sig="9246cd7514 fb4cd09446"><span class="meta">blog tên bài · dek</span><span class="t" style="font:700 clamp(24px,3vw,28px)/1.2 'IBM Plex Sans',sans-serif">Benchmark <span style="font-weight:400;font-size:22px">— dek 22px/1.52 (19 ≤650)</span></span><span class="meta">700 clamp(24px, 3vw, 28px) · dek 22 → 19</span></div>
+        <div class="type-row" data-sig="5fc14954e1 8b787b8dd6"><span class="meta">blog h2 · h3</span><span class="t" style="font:700 clamp(27px,3vw,34px)/1.18 'IBM Plex Sans',sans-serif;letter-spacing:-.02em">Cách chúng tôi đo <span style="font-size:23px">· h3 23px</span></span><span class="meta">700 · clamp(27px, 3vw, 34px) · ≤650: 30px · h3 23</span></div>
+        <div class="type-row" data-sig="91019296dd 95b234c0ec 7af7d1dbf2"><span class="meta">blog thân · byline · luật</span><span class="t" style="font:400 17px/1.7 'IBM Plex Sans',sans-serif">Thân bài 17/1.7 <span style="font-size:14px;color:var(--mk-inkSoft)">· byline 14/1.6</span></span><span class="meta">17/1.7 (1.65 ≤650) · 14/1.6 · 14</span></div>
+        <div class="type-row" data-sig="eea03250d6 3fc20b2ccf 0d5999eb07 b6da47c69b"><span class="meta">blog nhãn nhỏ<br>TL;DR · th · h5 · detail h3</span><span class="t" style="font:600 13px/1.4 'IBM Plex Mono',monospace;letter-spacing:.04em;text-transform:uppercase">TL;DR <span style="font:700 16px 'IBM Plex Sans';text-transform:none">Transcript</span></span><span class="meta">mono 600 13 .04em · th 600 13 · h 700 16 · 700 19</span></div>
+        <div class="type-row" data-sig="c62fbeec44 615998d766 77bac7d940 eea391747b"><span class="meta">privacy<br>Outfit</span><span class="t" style="font:300 clamp(2rem,5vw,3.2rem)/1.1 Outfit,sans-serif;letter-spacing:-.03em">Chính sách <span style="font:500 24px Outfit">· h2 24</span></span><span class="meta">h1 300 clamp(2rem, 5vw, 3.2rem) · h2 500 24 · p 16 (α .6 / strong .78)</span></div>
+        <div class="type-row" data-sig="1644f7b100 4819516337"><span class="meta">cổng preview<br>system-ui</span><span class="t" style="font:700 38px/1.05 system-ui,sans-serif;letter-spacing:-1.33px">Vào bản xem trước.</span><span class="meta">700 38 · -1.33px · p 15/1.6 #9B9B9B</span></div>
+      </div>
+    </section>
+
+    <section class="block" id="shape">
+      <header><span class="n">( 03 )</span><h2>Bo góc &amp; chi tiết kỹ thuật</h2><p>Site không có thang bo góc: section và lưới dùng góc 0, còn bo tròn chỉ ở vài lớp nổi (kính, thẻ). Thang dưới đây gom mọi bán kính thực dùng. Chi tiết "bản vẽ" (dấu cắt góc, thước chia, viền trang) là một phần của hệ.</p></header>
+      <div class="shape-row" id="shapes"></div>
+      <h3 class="sub">Chi tiết bản vẽ</h3>
+      <div class="grid">
+        <div class="spec" data-sig="331fc18783 439d0321d1 dbeb53b5b3 5c453e977d">
+          <div class="spec-h"><b>Dấu cắt góc</b><span class="kind">.cropframe .cm</span><span class="dp">14 × 14 · 1.5px · α .55</span></div>
+          <div class="stage">
+            <div class="mk-crop" style="width:150px;height:90px;display:grid;place-items:center;font:400 10px var(--mk-mono);color:var(--mk-ink)"><span class="cm tl"></span><span class="cm tr"></span><span class="cm bl"></span><span class="cm br"></span>kem</div>
+            <div class="mk-crop mk-dark" style="width:150px;height:90px;display:grid;place-items:center;font:400 10px var(--mk-mono)"><span class="cm tl"></span><span class="cm tr"></span><span class="cm bl"></span><span class="cm br"></span>đen</div>
+          </div>
+          <div class="spec-f"><span class="note">Viền theo <code>currentColor</code> nên tự đổi màu theo section. Dùng ở meet-stage và khung contact.</span></div>
+        </div>
+        <div class="spec" data-sig="341e0a8e7f">
+          <div class="spec-h"><b>Khung trang</b><span class="kind">.page-frame</span><span class="dp">viền 14 (8 ≤680) · góc 10 × 1.5</span></div>
+          <div class="stage"><div class="scr" style="width:260px;height:150px"><div class="scr-in ph">nội dung trang</div><div class="mk-frame"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div></div>
+          <div class="scr" style="width:150px;height:150px"><div class="scr-in ph">≤680</div><div class="mk-frame"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div></div></div>
+          <div class="spec-f"><span class="note"><code>position:fixed</code> inset 0, z 55. Khung bên phải hẹp hơn 680px nên viền còn 8px (@container).</span></div>
+        </div>
+        <div class="spec">
+          <div class="spec-h"><b>Thước chia &amp; thanh quét</b><span class="kind">.tickrail · .scrollhint</span><span class="dp">vạch 1px · nhịp 5</span></div>
+          <div class="stage col">
+            <div style="display:flex;align-items:flex-end;height:18px;opacity:.5;color:var(--mk-ink)" id="tickrail"></div>
+            <span class="mk-mono" style="font-size:11px;letter-spacing:.24em;color:var(--mk-inkSoft);display:flex;align-items:center;gap:12px">SCROLL <span class="mk-loadbar" style="margin:0"><i></i></span></span>
+          </div>
+          <div class="spec-f"><span class="note">CSS khai <code>.tickrail</code> nhưng trang hiện không dùng. Thanh quét 58 × 1 chạy 2.2s linear.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="layout">
+      <header><span class="n">( 04 )</span><h2>Bố cục &amp; kích thước</h2><p>Mỗi bề mặt tự dựng khung riêng. Đây là nguồn gốc chính của độ lệch responsive giữa các trang (xem R5).</p></header>
+      <div class="tscroll"><table class="tok">
+        <thead><tr><th>khung</th><th>công thức</th><th>@390</th><th>@768</th><th>@1440</th><th>ghi chú</th></tr></thead>
+        <tbody>
+          <tr><td>home .wrap</td><td>max 1440 · padding clamp(20px, 5vw, 96px)</td><td>lề 20</td><td>lề 38.4</td><td>lề 72</td><td>chạm trần 96px ở 1920</td></tr>
+          <tr><td>home .sec</td><td>padding-block clamp(72px, 10vw, 150px)</td><td>72</td><td>77</td><td>144</td><td>sec-head mb clamp(36, 6vw, 80)</td></tr>
+          <tr><td>careers .layout</td><td>max 1180 · padding 40 32 · grid minmax(300px, 38%) 1fr · gap 72</td><td>lề 32</td><td>lề 32</td><td>lề 32</td><td>1 cột ≤860, gap 40</td></tr>
+          <tr><td>blog .shell</td><td>min(1180px, 100% − 56px) → ≥1100 min(1360px, 100% − 64px) → ≤650 100% − 36px</td><td>lề 18</td><td>lề 28</td><td>lề 40</td><td>4 luật .shell chồng nhau trong 2 file</td></tr>
+          <tr><td>blog .article-layout</td><td>≥1100: grid 220px minmax(0, 840px) · gap 56</td><td>1 cột</td><td>1 cột</td><td>2 cột</td><td>sidebar sticky top 28</td></tr>
+          <tr><td>privacy</td><td>cột 760 · lề max(20px, 5vw)</td><td>lề 20</td><td>lề 38</td><td>căn giữa</td><td>h1 clamp(2rem, 5vw, 3.2rem)</td></tr>
+          <tr><td>hero stage</td><td>fixed inset 0 · scene 560vh (JS pin)</td><td colspan="3">robot: cao 47vh, tâm (58%, 54%) → ≤900: rộng min(78vw, 40vh), tâm (50%, 66–68%)</td><td>hero-robot.js đổi quỹ đạo nổ ≤900</td></tr>
+          <tr><td>nav</td><td>fixed top 18 · max-width calc(100vw − 48px)</td><td colspan="3">kính: padding 7 7 7 18 · r16 · Menu 37px cao · Careers 39px (ẩn ≤720)</td><td>menu-panel min(300px, 100vw − 32px), max-h 100dvh − 96px</td></tr>
+        </tbody></table></div>
+    </section>
+
+    <!-- ================= RESPONSIVE ================= -->
+    <section class="block" id="bp">
+      <header><span class="n">( R1 )</span><h2>Bản đồ điểm gãy</h2><p>Chấm cam là bề rộng mà giá trị đo trên site thật <b>đổi</b> (Playwright, bước 10px, nên chấm ở 690 nghĩa là <code>max-width:680px</code>). Vạch chấm là ngưỡng <code>@media</code> khai trong CSS. Vạch đứt đỏ là ngưỡng chết: rule trỏ vào phần tử không còn trong DOM, hoặc bị một rule sau ghi đè. Bấm vào chấm để xem chi tiết.</p></header>
+      <div class="bpmap"><div class="bpmap-in" id="bpmap"></div></div>
+      <div class="bp-legend"><span><i style="height:9px;width:9px;border-radius:50%;background:var(--mk-accent)"></i>giá trị đổi (đo)</span><span><i style="border-top:1px dotted var(--mk-inkFaint)"></i>@media khai báo</span><span><i style="border-top:1px dashed var(--mk-accentHot)"></i>@media chết</span></div>
+      <div class="bp-detail" id="bpdetail" aria-live="polite">Chọn một chấm.</div>
+    </section>
+
+    <section class="block" id="fluid">
+      <header><span class="n">( R2 )</span><h2>Chữ &amp; khoảng co giãn</h2><p>Mỗi dòng là một giá trị <code>clamp()</code>. Đường cam là số đo thật từ 320 đến 1600px, đường đứt là số tính từ công thức. Hai đường trùng nhau nghĩa là CSS chạy đúng như viết. Vạch mờ là chỗ chạm sàn hoặc trần. Vạch đỏ chạy theo bề rộng đang chọn ở phòng thử R3.</p></header>
+      <div id="fluidrows"></div>
+    </section>
+
+    <section class="block" id="lab">
+      <header><span class="n">( R3 )</span><h2>Phòng thử bề rộng</h2><p>Kéo thanh trượt để đổi bề rộng khung. Khung chứa đúng markup <code>.mk-*</code> của phần Thành phần: mọi điểm gãy là <code>@container</code>, nên khung co giãn đúng như cửa sổ trình duyệt. Bảng bên phải là số đo <b>trên site thật</b> ở bề rộng gần nhất (làm tròn 10px); dòng tô màu là giá trị vừa đổi so với bước trước.</p></header>
+      <div class="lab-ctl">
+        <div class="seg" id="labpage"><button data-v="home" aria-pressed="true">Trang chủ</button><button data-v="careers" aria-pressed="false">Careers</button><button data-v="wetlab" aria-pressed="false">Blog</button><button data-v="privacy" aria-pressed="false">Privacy</button></div>
+        <input type="range" id="labw" min="320" max="1600" step="10" value="390" aria-label="Bề rộng khung">
+        <output id="labout" for="labw">390px</output>
+        <div class="seg" id="labpre"><button data-v="360">360</button><button data-v="390">390</button><button data-v="768">768</button><button data-v="900">900</button><button data-v="1024">1024</button><button data-v="1440">1440</button></div>
+      </div>
+      <div class="lab-ruler" id="labruler"></div>
+      <div class="lab-wrap">
+        <div class="lab-view" id="labview"></div>
+        <div class="lab-read"><table id="labread"></table></div>
+      </div>
+    </section>
+
+    <section class="block" id="strat">
+      <header><span class="n">( R4 )</span><h2>Chiến lược responsive của site</h2><p>Gom các kỹ thuật mecka.ai dùng, xếp từ nhiều tới ít. Mỗi thẻ ghi rule gốc, ngưỡng, và cách kit viết lại.</p></header>
+      <div class="strat">
+        <div class="spec"><div class="spec-h"><b>1 · Mọi kích cỡ lớn đều fluid</b><span class="kind">clamp(min, Nvw, max)</span></div>
+          <div class="stage col"><div class="mini"><figure><div class="box" style="width:60px"><i class="a" style="min-height:8px"></i><i></i><i></i></div>390</figure><figure><div class="box" style="width:120px"><i class="a" style="min-height:18px"></i><i></i><i></i></div>1440</figure></div></div>
+          <div class="spec-f"><span class="note">CSS trang chủ gọi <code>clamp()</code> 23 lần: chữ tiêu đề, lề trang, padding section, khoảng cách lưới. Phần lớn chạm sàn dưới khoảng 650px và chạm trần quanh 1350–1600px. Vì vậy trên mobile chữ thường nằm ở sàn, không co thêm nữa.</span></div></div>
+        <div class="spec"><div class="spec-h"><b>2 · Lưới gập cột</b><span class="kind">grid-template-columns</span></div>
+          <div class="stage col"><div class="mini"><figure><div class="box" style="grid-template-columns:repeat(3,1fr);width:120px"><i></i><i></i><i></i></div>&gt;860</figure><figure><div class="box" style="width:40px"><i></i><i></i><i></i></div>≤860</figure><figure><div class="box" style="grid-template-columns:repeat(5,1fr);width:120px"><i></i><i></i><i></i><i></i><i></i></div>&gt;980</figure><figure><div class="box" style="grid-template-columns:1fr 1fr;width:50px"><i></i><i></i><i></i><i></i></div>≤980</figure></div></div>
+          <div class="spec-f"><span class="note">3 → 1 ở 860 (challenge, pad, opp-head, plat-head, FAQ). 4 → 2 ở 860 (footer). 5 → 2 ở 980 (primitives, phải viết lại các viền <code>nth-child</code>). 2 → 1 ở 980 (meet).</span></div></div>
+        <div class="spec"><div class="spec-h"><b>3 · Ẩn dần phần trang trí</b><span class="kind">display:none</span></div>
+          <div class="stage col"><div class="mini"><figure><div class="box" style="width:140px;grid-template-columns:1fr 2fr 1fr"><i class="a"></i><i></i><i class="a"></i></div>&gt;900 HUD</figure><figure><div class="box" style="width:60px"><i></i></div>≤900</figure></div></div>
+          <div class="spec-f"><span class="note">≤900 bỏ bảng BOM, khối tiêu đề bản vẽ, trục XYZ. ≤720 bỏ nút Careers trên nav, nên ở mobile chỉ vào Careers được qua Menu. ≤680 viền trang 14 → 8 và khung stage 22 → 16.</span></div></div>
+        <div class="spec"><div class="spec-h"><b>4 · Bảng → thẻ</b><span class="kind">td::before { content: attr(data-label) }</span></div>
+          <div class="stage col"><div class="mini"><figure><div class="box" style="width:150px;grid-template-columns:2fr 1fr 1fr 1fr"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>&gt;740 bảng</figure><figure><div class="box" style="width:70px;grid-template-columns:1fr 1fr"><i class="a" style="grid-column:1/-1"></i><i></i><i></i><i></i><i></i></div>≤740 thẻ</figure></div></div>
+          <div class="spec-f"><span class="note">Blog: <code>thead</code> ẩn theo kiểu sr-only, mỗi <code>tr</code> thành lưới 2 cột có viền, ô đầu kéo hết hàng, nhãn cột lấy từ <code>data-label</code>. Bảng setup giữ dạng bảng và cuộn ngang, kèm dòng "Swipe table if needed" ≤650.</span></div></div>
+        <div class="spec"><div class="spec-h"><b>5 · Sidebar → details</b><span class="kind">&lt;details&gt; + sticky</span></div>
+          <div class="stage col"><div class="mini"><figure><div class="box" style="width:140px;grid-template-columns:1fr 3fr"><i class="a" style="min-height:40px"></i><i></i></div>≥1100</figure><figure><div class="box" style="width:60px"><i class="a" style="min-height:6px"></i><i style="min-height:30px"></i></div>≤1099</figure></div></div>
+          <div class="spec-f"><span class="note">Mục lục bài viết: ≥1100 là cột 220px sticky top 28, danh sách cao tối đa <code>100dvh − 132px</code>. Dưới 1100 thành khối <code>details</code> đóng sẵn trên đầu bài, cao tối đa 50dvh.</span></div></div>
+        <div class="spec"><div class="spec-h"><b>6 · Sticky → static · hàng → cột</b><span class="kind">careers ≤860</span></div>
+          <div class="stage col"><div class="mini"><figure><div class="box" style="width:140px;grid-template-columns:2fr 3fr"><i class="a" style="min-height:30px"></i><i></i></div>&gt;860</figure><figure><div class="box" style="width:60px"><i class="a"></i><i></i><i></i></div>≤860</figure></div></div>
+          <div class="spec-f"><span class="note">Cột giới thiệu thôi sticky. Dòng vị trí tuyển dụng đổi từ ngang (tên · meta bên phải) sang dọc (meta xuống dưới, gap 5).</span></div></div>
+        <div class="spec"><div class="spec-h"><b>7 · Responsive bằng JS</b><span class="kind">innerWidth ≤ 900</span></div>
+          <div class="stage col"><div class="mini"><figure><div class="box" style="width:120px;height:60px"></div>biên độ 1 × 1</figure><figure><div class="box" style="width:30px;height:36px"></div>0.25 × 0.6</figure></div></div>
+          <div class="spec-f"><span class="note"><code>hero-robot.js</code>: ≤900 thu biên độ nổ còn x 0.25, y 0.6 để chi tiết không đè nhãn. Nhãn chuyển thành một cột giữa phía trên, hiện lần lượt từng nhãn. Chấm dẫn r 3.5 → 10, và cỡ chữ SVG ≤900 tăng lên 44/84/44 để bù cho SVG bị thu nhỏ.</span></div></div>
+        <div class="spec"><div class="spec-h"><b>8 · Đơn vị theo viewport động</b><span class="kind">vh · svh · dvh · min()</span></div>
+          <div class="stage col"><div class="mini"><figure><div class="box" style="width:44px;height:80px"><i class="a" style="min-height:62px"></i></div>dvh</figure><figure><div class="box" style="width:44px;height:80px"><i style="min-height:70px"></i></div>vh</figure></div></div>
+          <div class="spec-f"><span class="note">Menu dùng <code>100dvh</code> (đúng). Hero-copy <code>top:12vh/15vh</code> và news-pop <code>bottom:6vh</code> dùng <code>vh</code>, nên nhảy khi thanh địa chỉ mobile co lại. Blog dùng <code>50dvh</code> và <code>65svh</code>. Rộng dùng <code>min()</code>: menu 300 / 100vw − 32, wordmark chân trang 760 / 76vw.</span></div></div>
+        <div class="spec"><div class="spec-h"><b>9 · Hover chỉ ở desktop</b><span class="kind">@media (min-width:901px) + :has()</span></div>
+          <div class="stage col"><div class="mini"><figure><div class="box" style="width:120px"><i style="opacity:.12"></i><i class="a"></i></div>hover news → tagline mờ .12</figure></div></div>
+          <div class="spec-f"><span class="note"><code>.stage:has(.news-pop:hover) .tagline { opacity:.12 }</code> chỉ chạy ≥901. Site không dùng <code>@media (hover:hover)</code>, nên máy tính bảng rộng hơn 900px có màn cảm ứng vẫn nhận các hiệu ứng hover.</span></div></div>
+      </div>
+    </section>
+
+    <section class="block" id="gaps">
+      <header><span class="n">( R5 )</span><h2>Lỗ hổng responsive đo được</h2><p>Mỗi mục có số đo từ lần quét, không phải suy đoán. Mức: <span class="sev hi">CAO</span> ảnh hưởng đọc/dùng, <span class="sev md">VỪA</span> lệch thị giác, <span class="sev lo">THẤP</span> nợ kỹ thuật.</p></header>
+      <div class="gaps">
+        <div class="gap"><div><h4>Sơ đồ Loop và meet chỉ co tỉ lệ, chữ còn 3px <span class="sev hi">CAO</span></h4><p><code>#loop-stage svg</code> có viewBox 1000 × 350, chữ nhỏ nhất 9px. SVG chỉ co theo bề rộng, không có bản mobile. Ở 390px hệ số co là 0.35, nên chữ 9px còn <b>3.2px</b>. Sơ đồ meet (viewBox 620) còn 5.1px. Chữ dưới 6px chỉ đọc được từ khoảng 700px trở lên.</p><p class="ev">đo: loop scale 0.28 @320 · 0.35 @390 · 0.69 @770 · 1.30 @1440 · min text 2.5 → 11.7px</p><p>Cách sửa: dưới 700px đổi sang viewBox dọc (xếp 3 hệ sinh thái chồng lên nhau), hoặc bỏ chữ trong SVG và in chú giải HTML bên dưới. Hero đã có hướng đúng: tăng cỡ chữ SVG ≤900.</p></div></div>
+        <div class="gap"><div><h4>Careers: vùng bóp 870–1080px <span class="sev hi">CAO</span></h4><p>Lên 2 cột ngay ở 861px, nhưng cột trái giữ tối thiểu 300px và gap 72, nên cột phải chỉ còn khoảng 420px. Dòng vị trí vẫn xếp ngang (tên + meta), nên tên vị trí xuống tới <b>6 dòng</b>. Ở 600–860 (1 cột) chỉ 1 dòng.</p><p class="ev">đo: max dòng tên 3 @320 · 1 @600 · 6 @870 · 5 @1010 · 4 @1070 · 3 @1080</p><p>Cách sửa: dời điểm gãy layout lên khoảng 1080, hoặc để dòng vị trí tự xếp dọc theo bề rộng cột bằng <code>@container</code> (chính là cách kit viết lại).</p></div></div>
+        <div class="gap"><div><h4>Vùng chạm dưới 44px ở mobile <span class="sev md">VỪA</span></h4><p>Ở 390px: nút Menu cao 37px (cũng là đường duy nhất tới Careers vì CTA bị ẩn), logo 25px, <code>.tlink</code> 22px, link chân trang 18px. Blog thì làm đúng: nút và select <code>min-height:44px</code>, nút View ≤740 36px.</p><p class="ev">đo @390: menubtn 88×37 · brand 103×25 · tlink 141–207×22 · footer a 51–111×18</p></div></div>
+        <div class="gap"><div><h4>5 truy vấn @media chết <span class="sev lo">THẤP</span></h4><p><code>@media (max-width:1100px) { .news-pop { display:none } }</code> bị ghi đè bởi <code>.news-pop { display:flex }</code> viết sau, nên thẻ tin hiện ở mọi bề rộng. Ngoài ra <code>≤1180 .hero-pop</code>, <code>≤1080 .hero-statusbar/.hero-bom</code>, <code>≤980 .hero-grid/.hero-stage/.hero-reg</code>, <code>≤900 .topbar .status</code> trỏ vào phần tử không có trong DOM. Đây là CSS còn sót của bản hero cũ.</p><p class="ev">đo: news-pop hiện = 1 ở mọi bề rộng 320→1600</p></div></div>
+        <div class="gap"><div><h4>Khe hở 900 / 901 <span class="sev lo">THẤP</span></h4><p>Site dùng cặp <code>max-width:900px</code> và <code>min-width:901px</code>. Ở bề rộng lẻ (900.5px khi zoom 110%, hoặc trên màn DPR lẻ) cả hai đều không khớp. Khi đó robot rơi về vị trí mặc định (<code>top:50%</code>, height 47vh) chứ không theo bản nào. Viết <code>(width &gt; 900px)</code> theo cú pháp range để khỏi hở.</p></div></div>
+        <div class="gap"><div><h4>Bốn hệ khung, bốn lề mobile <span class="sev md">VỪA</span></h4><p>Lề ở 390px: trang chủ 20, careers 32, blog 18, privacy 20. Rộng tối đa: 1440 / 1180 / 1360 / 760. Blog có 4 luật <code>.shell</code> chồng nhau (1120 → 1180 → 1360, rồi 36px). Chuyển giữa các trang sẽ thấy lề nhảy.</p><p class="ev">đo: gutter blog 18 @390 · 28 @770 · 40 @1440 · 120 @1600</p></div></div>
+        <div class="gap"><div><h4>Token hover không tồn tại trong menu <span class="sev lo">THẤP</span></h4><p><code>.menu-list a:hover { color: var(--hot) }</code>, nhưng <code>--hot</code> chỉ khai trong <code>.hero-wrap</code>, mà menu nằm ngoài khối đó. Giá trị không hợp lệ nên màu chữ khi hover không đổi, chỉ nền đổi. Kit chép đúng hành vi này.</p></div></div>
+        <div class="gap"><div><h4>Quá nhiều ngưỡng sát nhau <span class="sev lo">THẤP</span></h4><p>14 ngưỡng khác nhau trên 32 truy vấn (trang chủ: 560 · 680 · 720 · 860 · 900 · 901 · 980 · 1080 · 1100 · 1180; blog thêm 600 · 650 · 740 · 1099). Có những cặp chỉ cách 40–100px: 860/900, 980/1080/1100, 600/650. Nên gom về 4 bậc, ví dụ 560 · 740 · 900 · 1100, rồi đặt tên thành token.</p></div></div>
+      </div>
+    </section>
+
+    <!-- ================= THÀNH PHẦN ================= -->
+    <section class="block" id="actions">
+      <header><span class="n">( 05 )</span><h2>Hành động</h2><p>Nút của trang chủ: chữ Space Mono viết hoa, góc 2px, hover giãn khoảng cách mũi tên (gap 12 → 18) và đổi sang cam. Nút blog: IBM Plex, góc 3px, cao tối thiểu 44px, focus viền cam 3px cách 4px.</p></header>
+      <div class="grid">
+        <div class="spec" data-sig="557bfa2ee9">
+          <div class="spec-h"><b>Nút chính</b><span class="kind">.btn · .btn.ghost</span><span class="dp">pad 13 × 20 · r2 · mono 12 .1em</span></div>
+          <div class="stage col">
+            <span class="lbl">kem · nghỉ / hover / focus (UA) / ghost / ghost hover</span>
+            <div style="display:flex;flex-wrap:wrap;gap:10px">
+              <a class="mk-btn" href="#actions">Talk to us <span class="arr">→</span></a>
+              <a class="mk-btn is-hover" data-sig-state="557bfa2ee9:hover" href="#actions">Talk to us <span class="arr">→</span></a>
+              <a class="mk-btn is-uafocus" data-sig-state="557bfa2ee9:focus" href="#actions">Talk to us <span class="arr">→</span></a>
+              <a class="mk-btn ghost" href="#actions">Xem thêm</a>
+              <a class="mk-btn ghost is-hover" href="#actions">Xem thêm</a>
+            </div>
+            <div class="mk-dark" style="padding:14px;display:flex;flex-wrap:wrap;gap:10px">
+              <a class="mk-btn" href="#actions">Talk to us <span class="arr">→</span></a>
+              <a class="mk-btn is-hover" href="#actions">Talk to us <span class="arr">→</span></a>
+              <a class="mk-btn ghost" href="#actions">Xem thêm</a>
+              <a class="mk-btn ghost is-hover" href="#actions">Xem thêm</a>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Đo được: hover nền #19140D → #CF5A22, chữ → #FFF, mũi tên dịch 3px. Focus là outline:auto của trình duyệt, site không style focus riêng. Trên nền đen, nút mặc định là cam, chữ #120C06.</span></div>
+        </div>
+        <div class="spec" data-sig="9d0042996f">
+          <div class="spec-h"><b>Link mũi tên</b><span class="kind">.tlink</span><span class="dp">mono 12 .08em · gạch 1px · pb 4</span></div>
+          <div class="stage">
+            <a class="mk-tlink" href="#actions">Read the thesis →</a>
+            <a class="mk-tlink is-hover" href="#actions">Read the thesis →</a>
+            <a class="mk-tlink is-uafocus" data-sig-state="9d0042996f:focus" href="#actions">Read the thesis →</a>
+          </div>
+          <div class="spec-f"><span class="note">Hover: gap 10 → 16 (0.25s). Cao 22px, dưới ngưỡng 44px (R5-03).</span></div>
+        </div>
+        <div class="spec" data-sig="c536e10707">
+          <div class="spec-h"><b>Nút tròn mũi tên</b><span class="kind">.pad-link .arr-c</span><span class="dp">26 × 26 · viền 1 line-paper</span></div>
+          <div class="stage mk-dark"><span class="mk-arr">↗</span><span class="mk-pad is-hover" style="min-height:0;padding:0;border:none;background:none;transform:none"><span class="mk-arr">↗</span></span></div>
+          <div class="spec-f"><span class="note">Khi hover cả thẻ pad: nền cam, chữ #120C06, dịch (2, −2).</span></div>
+        </div>
+        <div class="spec pal-wl-dark" data-sig="7bb81fb483">
+          <div class="spec-h"><b>Nút xem bản ghi (blog)</b><span class="kind">.pair-record</span><span class="dp">min-h 44 · pad 10 × 18 · r3 · Plex 600 15</span></div>
+          <div class="stage mk-wl" style="font-size:15px">
+            <a class="mk-rec" href="#actions">Xem bản ghi <span>→</span></a>
+            <a class="mk-rec is-hover" data-sig-state="7bb81fb483:hover" href="#actions">Xem bản ghi <span>→</span></a>
+            <a class="mk-rec is-focus" data-sig-state="7bb81fb483:focus" href="#actions">Xem bản ghi <span>→</span></a>
+          </div>
+          <div class="spec-f"><span class="note">Nút kem trên nền tối. Hover nền #FFF. Focus-visible: outline 3px solid #D49A34, offset 4 (style riêng của site, đo được).</span></div>
+        </div>
+        <div class="spec pal-wl-dark" data-sig="c0f6dc949a 8a972bdbb5 2243c545a2">
+          <div class="spec-h"><b>Nút viền (blog)</b><span class="kind">.wetlab-runs__button</span><span class="dp">min-h 44 · pad 10 × 15 · r3</span></div>
+          <div class="stage mk-wl" style="font-size:14px">
+            <button class="mk-runsbtn">Clear filters</button>
+            <button class="mk-runsbtn is-hover" data-sig-state="c0f6dc949a:hover">Clear filters</button>
+            <button class="mk-runsbtn is-focus" data-sig-state="c0f6dc949a:focus">Clear filters</button>
+            <button class="mk-runsbtn">Close</button>
+            <button class="mk-runsbtn is-hover" data-sig-state="8a972bdbb5:hover">Close</button>
+            <button class="mk-runsbtn is-focus" data-sig-state="8a972bdbb5:focus">Close</button>
+            <button class="mk-runsbtn is-hover" data-sig-state="2243c545a2:hover">Hide transcript</button>
+            <button class="mk-runsbtn is-focus" data-sig-state="2243c545a2:focus">Hide transcript</button>
+          </div>
+          <div class="spec-f"><span class="note">Hover nền #242424 (bản tối) hoặc #E2D8C8 (bản kem). <code>:disabled</code> α .45.</span></div>
+        </div>
+        <div class="spec pal-wl-dark" data-sig="01c51f0dee">
+          <div class="spec-h"><b>Link bỏ qua (skip link)</b><span class="kind">.skip</span><span class="dp">top −100 → 10 khi focus</span></div>
+          <div class="stage mk-wl">
+            <a class="mk-skip" href="#actions">Skip to the article</a>
+            <a class="mk-skip is-hover" data-sig-state="01c51f0dee:hover" href="#actions">Skip to the article</a>
+            <a class="mk-skip is-focus" data-sig-state="01c51f0dee:focus" href="#actions">Skip to the article</a>
+          </div>
+          <div class="spec-f"><span class="note">Chỉ blog có skip link. Trang chủ và careers không có.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="navigation">
+      <header><span class="n">( 06 )</span><h2>Điều hướng</h2><p>Nav kính lỏng cố định ở trên, tự đổi sang bản tối khi điểm dò (giữa ngang, y = 30px) nằm trên section đen. Menu mở một bảng "Document Index" chứ không có danh sách link ngang, nên ở mọi bề rộng nav chỉ có logo, Menu và Careers.</p></header>
+      <div class="grid">
+        <div class="spec full" data-sig="062b8b3243 7a9e757e45 43df2f8cd2 fa75e2f2a7 f2485a1660 c8757752f6">
+          <div class="spec-h"><b>Nav kính lỏng</b><span class="kind">.nav &gt; .nav-glass</span><span class="dp">pad 7 7 7 18 · r16 · blur 18 · sat 180%</span></div>
+          <div class="stage col" style="background:repeating-linear-gradient(90deg,var(--mk-panel) 0 24px,var(--mk-bg) 24px 48px)">
+            <span class="lbl">trên nền kem · Menu hover · Careers hover</span>
+            <div class="mk-navwrap"><div class="mk-navglass"><a class="mk-brand is-uafocus" data-sig-state="43df2f8cd2:focus" href="#navigation"><span class="mk-logo">logo mecka</span></a><div class="right"><button class="mk-menubtn">Menu <span class="bars"><i></i><i></i></span></button><a class="mk-navcta" href="#navigation">Careers</a></div></div></div>
+            <div class="mk-navwrap"><div class="mk-navglass"><span class="mk-brand"><span class="mk-logo">logo mecka</span></span><div class="right"><button class="mk-menubtn is-hover" data-sig-state="f2485a1660:hover">Menu <span class="bars"><i></i><i></i></span></button><a class="mk-navcta is-hover" data-sig-state="c8757752f6:hover" href="#navigation">Careers</a></div></div></div>
+            <div class="mk-navwrap"><div class="mk-navglass"><span class="mk-brand"><span class="mk-logo">logo mecka</span></span><div class="right"><button class="mk-menubtn is-uafocus" data-sig-state="f2485a1660:focus">Menu <span class="bars"><i></i><i></i></span></button><a class="mk-navcta is-uafocus" data-sig-state="c8757752f6:focus" href="#navigation">Careers</a></div></div></div>
+            <span class="lbl">trên nền đen (.nav.on-dark)</span>
+            <div class="mk-dark" style="padding:16px 0"><div class="mk-navwrap"><div class="mk-navglass"><span class="mk-brand"><span class="mk-logo">logo mecka</span></span><div class="right"><button class="mk-menubtn">Menu <span class="bars"><i></i><i></i></span></button><a class="mk-navcta" href="#navigation">Careers</a></div></div></div></div>
+            <span class="lbl">khung 390 (@container ≤720: ẩn Careers)</span>
+            <div class="scr" style="width:390px;height:80px;background:transparent;outline:none"><div class="scr-in" style="padding-top:12px"><div class="mk-navwrap"><div class="mk-navglass"><span class="mk-brand"><span class="mk-logo">logo mecka</span></span><div class="right"><button class="mk-menubtn">Menu <span class="bars"><i></i><i></i></span></button><a class="mk-navcta" href="#navigation">Careers</a></div></div></div></div></div>
+          </div>
+          <div class="spec-f"><span class="note">Menu 11.5px mono, pad 9 × 14, r11, hover đảo sang nền mực. Careers nền #CF5A22, hover #FF5A1F. Logo là SVG của Mecka nên kit để khung giữ chỗ (RULE-09). Đo: nav 331 × 55 ở 1440px.</span></div>
+        </div>
+        <div class="spec">
+          <div class="spec-h"><b>Bảng mục lục</b><span class="kind">.menu-panel</span><span class="dp">w min(300, 100vw−32) · r14 · pad 8</span></div>
+          <div class="stage">
+            <div class="mk-menu"><div class="head"><span>Document Index</span><button class="x" aria-label="Đóng">✕</button></div>
+              <ul><li><a href="#navigation"><span class="n">01</span>Meet Mecka</a></li><li><a class="is-hover" href="#navigation"><span class="n">02</span>The Challenge</a></li><li><a href="#navigation"><span class="n">03</span>The Mecka Loop</a></li><li><a href="#navigation"><span class="n">04</span>Primitives</a></li><li><a href="#navigation"><span class="n">→</span>Careers</a></li></ul></div>
+          </div>
+          <div class="spec-f"><span class="note">Luôn là nền giấy sáng, kể cả khi nav đang ở bản tối. Hover chỉ tô nền cam 10%, vì <code>var(--hot)</code> không khai ở đây (R5-07). Căn giữa bằng <code>left:0; right:0; margin-inline:auto</code>, cao tối đa <code>100dvh − 96px</code>.</span></div>
+        </div>
+        <div class="spec mk-dark" data-sig="6dad778721 b946f1912e 8043b5e3b7 06080546bc 4b0f7a4fc9">
+          <div class="spec-h"><b>Chân trang</b><span class="kind">.footer</span><span class="dp">grid 1.4 1 1 1 → 1 1 (≤860)</span></div>
+          <div class="stage flush"><footer class="mk-footer" style="width:100%"><div class="mk-wrap" style="--mk-pad:20px">
+            <div class="mk-ftop" style="grid-template-columns:1.4fr 1fr 1fr"><div><div class="big" style="font-size:30px">Dựng cho thế giới thật.</div><a class="mk-tlink" href="#navigation">Explore →</a></div>
+              <div class="mk-fcol"><h5>Resources</h5><ul><li><a href="#navigation">Egoverse</a></li><li><a class="is-hover" data-sig-state="06080546bc:hover" href="#navigation">Contact</a></li><li><a class="is-uafocus" data-sig-state="06080546bc:focus" href="#navigation">Focus</a></li></ul></div>
+              <div class="mk-fcol"><h5>Company</h5><ul><li><a href="#navigation">Careers</a></li><li><a href="#navigation">Privacy</a></li></ul></div></div>
+            <div class="mk-fbot"><span>Mecka AI © 2026</span><span>DOC. MK-001 / REV C</span></div></div>
+            <div class="mk-fword"><div class="ph" style="width:min(760px,80%)">wordmark mecka (ảnh SVG)</div></div></footer></div>
+          <div class="spec-f"><span class="note">Link 14px màu paper-soft, hover cam. Wordmark cuối trang rộng min(760px, 76vw) (ảnh gốc, giữ chỗ).</span></div>
+        </div>
+        <div class="spec pal-wl-dark" data-sig="e2632d9b07 d0977aa745 39f49d1de4 9971b30168 cd6d778f05 a90084deff">
+          <div class="spec-h"><b>Thanh trên + chân trang blog</b><span class="kind">.topbar · .footer</span><span class="dp">pad 27 0 22 (23 0 19 ≤650)</span></div>
+          <div class="stage col mk-wl" style="font-size:14px">
+            <div class="mk-wl-top"><a class="mk-wl-word" href="#navigation"><span class="mk-logo">logo 25px</span></a><span></span></div>
+            <div style="display:flex;gap:10px"><a class="mk-wl-word is-hover" data-sig-state="d0977aa745:hover" href="#navigation"><span class="mk-logo">hover</span></a><a class="mk-wl-word is-focus" data-sig-state="d0977aa745:focus" href="#navigation"><span class="mk-logo">focus</span></a><a class="mk-wl-word is-focus" data-sig-state="39f49d1de4:focus" href="#navigation"><span class="mk-logo" style="height:21px">chân trang</span></a></div>
+            <div class="mk-wl-foot"><span class="mk-logo" style="height:21px">logo</span><span>WetLabs Benchmark</span></div>
+          </div>
+          <div class="spec-f"><span class="note">Wordmark là ảnh 25px (27px ở chân trang). Chân trang ≤650 xếp dọc, gap 12.</span></div>
+        </div>
+        <div class="spec pal-wl-dark" data-sig="746dc717d7 9ed5b1bdb7 ad6f0b4a7e 6e3e3127af b315e69038 74a4d6729c">
+          <div class="spec-h"><b>Mục lục bài viết</b><span class="kind">details.article-contents</span><span class="dp">viền trên 4 #B07300 · summary mono 13</span></div>
+          <div class="stage mk-wl" style="align-items:flex-start">
+            <details class="mk-wl-toc is-focus" data-sig-state="746dc717d7:focus" open style="width:220px;margin:0"><summary class="is-focus" data-sig-state="9ed5b1bdb7:focus">In this post</summary><nav><ul>
+              <li><a class="is-focus" aria-current="location" data-sig-state="6e3e3127af:focus" href="#navigation">TL;DR</a></li><li><a href="#navigation">How we tested</a></li><li><a class="l3 is-hover" data-sig-state="b315e69038:hover" href="#navigation">Mục con (hover)</a></li><li><a class="l3 is-focus" data-sig-state="b315e69038:focus" href="#navigation">Mục con (focus)</a></li>
+              <li><a class="mk-wl-tab is-hover" style="padding-left:16px" data-sig-state="74a4d6729c:hover" href="#navigation">Explore all runs</a></li><li><a class="mk-wl-tab is-focus" data-sig-state="74a4d6729c:focus" href="#navigation">Explore all runs</a></li></ul></nav></details>
+          </div>
+          <div class="spec-f"><span class="note">Mục đang đọc (<code>aria-current</code>) chữ trắng 600, gạch dẫn cam. Hover chữ trắng. ≥1100 sticky trong cột 220; dưới đó thành khối gập ở đầu bài (R4-5).</span></div>
+        </div>
+        <div class="spec pal-careers-light" data-sig="14dc433f9c 0d2fd3a039 2ec68028f6">
+          <div class="spec-h"><b>Link careers</b><span class="kind">.logo · .board · .home</span><span class="dp">13/500 cam · 12.5 muted</span></div>
+          <div class="stage mk-car" style="display:flex;gap:18px;padding:20px 16px;max-width:none">
+            <a class="ph logo2 is-uafocus" data-sig-state="14dc433f9c:focus" href="#navigation" style="margin:0">logo 132</a>
+            <a class="board is-uafocus" style="margin:0" data-sig-state="0d2fd3a039:focus" href="#navigation">Apply on Ashby →</a>
+            <a class="home" style="margin:0" href="#navigation">← Back to mecka.ai</a>
+            <a class="home is-hover" style="margin:0" data-sig-state="2ec68028f6:hover" href="#navigation">← Back (hover)</a>
+            <a class="home is-uafocus" style="margin:0" data-sig-state="2ec68028f6:focus" href="#navigation">← Back (focus)</a>
+          </div>
+          <div class="spec-f"><span class="note">Hover .home: #9E5A39 → #C8501F.</span></div>
+        </div>
+        <div class="spec pal-priv-dark" data-sig="7528aae204 d7259ff2ea df460cd222">
+          <div class="spec-h"><b>Đầu trang privacy</b><span class="kind">legal header</span><span class="dp">Outfit · α .7 / .45</span></div>
+          <div class="stage mk-legal" style="display:block;padding:18px 16px">
+            <a class="back0 is-uafocus" data-sig-state="d7259ff2ea:focus" href="#navigation">← mecka.ai</a><br>
+            <a class="back is-uafocus" data-sig-state="df460cd222:focus" href="#navigation">← Back to Home</a>
+            <div class="kick">Legal</div>
+          </div>
+          <div class="spec-f"><span class="note">Chỉ có link chữ. Không có nav chung với trang chủ.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="hero">
+      <header><span class="n">( 07 )</span><h2>Hero · sân khấu bản vẽ</h2><p>Hero là một sân khấu cố định (<code>position:fixed</code>), cuộn 560vh để robot "tháo rời" từng phần. Token riêng (<code>.hero-wrap</code>): giấy #EFE9DE, mực #23201B, cam #C8501F. Ảnh robot cắt lớp là tài sản của Mecka, kit để khung giữ chỗ đúng tỉ lệ 588:668.</p></header>
+      <div class="grid">
+        <div class="spec full" data-sig="995961f8a9 fac29c6097">
+          <div class="spec-h"><b>Sân khấu hero · 1440 và 390</b><span class="kind">.stage#heroStage</span><span class="dp">khung inset 22 (16 ≤680) · lưới 120/24</span></div>
+          <div class="stage flush"><div class="scr-row" style="padding:14px" id="herodemo"></div></div>
+          <div class="spec-f"><span class="note">≤900: robot từ (58%, 54%) cao 47vh chuyển thành rộng min(78vw, 40vh) ở (50%, 66%). HUD ẩn. Chữ lùi vào 7vw / 12vh. Thẻ tin xuống <code>bottom:6vh</code>.</span></div>
+        </div>
+        <div class="spec" data-sig="55c34ac5cb 5750fb119f">
+          <div class="spec-h"><b>Bảng BOM</b><span class="kind">.panel.bom</span><span class="dp">264 · mono 11 · 3 trạng thái</span></div>
+          <div class="stage" style="background:var(--mk-h-paper)"><div class="mk-panel mk-bom" style="position:static"><div class="ph2"><span>Bill of Materials</span><b>2 / 6</b></div>
+            <ul><li class="done"><span class="n">01</span><span>Telemetry</span><span class="st">SEP</span></li><li class="done"><span class="n">02</span><span>Locomotion</span><span class="st">SEP</span></li><li class="on"><span class="n">03</span><span>Kinematics</span><span class="st">MOV</span></li><li><span class="n">04</span><span>Degrees of Freedom</span><span class="st">STBY</span></li><li><span class="n">05</span><span>Motion Capture</span><span class="st">STBY</span></li></ul></div></div>
+          <div class="spec-f"><span class="note">STBY → MOV (nền cam 7%, vạch trái 2px) → SEP. JS đổi trạng thái theo tiến độ cuộn. Ẩn ≤900.</span></div>
+        </div>
+        <div class="spec" data-sig="ab5b5cba55">
+          <div class="spec-h"><b>Khối tiêu đề bản vẽ</b><span class="kind">.panel.titleblock</span><span class="dp">296 · k 82px</span></div>
+          <div class="stage" style="background:var(--mk-h-paper)"><div class="mk-panel mk-title" style="position:static"><div class="ph2"><span>Drawing</span><b>MK-001</b></div>
+            <div class="row"><div class="k">Unit</div><div class="v big">MECKA</div></div><div class="row"><div class="k">Title</div><div class="v">DATA + DEPLOY</div></div><div class="row"><div class="k">Scale</div><div class="v">1:4 · ISO 30°</div></div><div class="row"><div class="k">Sheet</div><div class="v">1 OF 1</div></div></div>
+            <div class="mk-triad" style="position:static"><svg viewBox="0 0 96 96" aria-hidden="true"><line x1="48" y1="54" x2="48" y2="10"/><line x1="48" y1="54" x2="86" y2="76"/><line x1="48" y1="54" x2="10" y2="76"/><text x="44" y="7">Z</text><text x="88" y="84">X</text><text x="2" y="84">Y</text></svg></div></div>
+          <div class="spec-f"><span class="note">Cùng trục XYZ 96 × 96 (vẽ lại đơn giản). Ẩn ≤900.</span></div>
+        </div>
+        <div class="spec" data-sig="dfdb2dab5a 7e13e95c83">
+          <div class="spec-h"><b>Thẻ tin xếp lớp</b><span class="kind">.news-pop .np-card</span><span class="dp">330 · r12 · pad 11 · thumb 96</span></div>
+          <div class="stage" style="background:var(--mk-h-paper);align-items:flex-end;padding-top:40px">
+            <div class="mk-news"><div class="stack"><span class="peek p2"></span><span class="peek p1"></span><a class="mk-npcard" href="#hero"><span class="thumb ph">ảnh</span><span class="meta"><span class="src">Báo chí</span><span class="hl">Tiêu đề tin chính của công ty</span></span></a></div></div>
+            <div class="mk-news is-open"><div class="stack"><span class="peek p2"></span><span class="peek p1"></span><a class="mk-npcard is-hover" data-sig-state="dfdb2dab5a:hover" href="#hero"><span class="thumb ph">ảnh</span><span class="meta"><span class="src">hover</span><span class="hl">Dịch phải 2px</span></span></a></div>
+              <div class="list"><a class="mk-npcard is-hover" data-sig-state="7e13e95c83:hover" href="#hero"><span class="thumb ph">ảnh</span><span class="meta"><span class="src">▶ Phim</span><span class="hl">Mục phụ hiện khi hover</span></span></a><a class="mk-npcard is-uafocus" data-sig-state="7e13e95c83:focus" href="#hero"><span class="thumb ph">ảnh</span><span class="meta"><span class="src">Focus</span><span class="hl">focus-within mở danh sách</span></span></a></div></div>
+            <div class="mk-news"><div class="stack"><a class="mk-npcard is-uafocus" data-sig-state="dfdb2dab5a:focus" href="#hero"><span class="thumb ph">ảnh</span><span class="meta"><span class="src">Focus</span><span class="hl">outline UA</span></span></a></div></div>
+          </div>
+          <div class="spec-f"><span class="note">Hai lớp "peek" phía sau biến mất khi hover/focus-within. Danh sách phụ mở với max-height 0 → 360. Tiêu đề 600 13.5/1.2 trắng. Hiện ở MỌI bề rộng (R5-04).</span></div>
+        </div>
+        <div class="spec" data-sig="9d7f18abe8">
+          <div class="spec-h"><b>Khối chữ hero</b><span class="kind">.hero-copy</span><span class="dp">left 5vw (7vw ≤900) · top 15vh (12vh)</span></div>
+          <div class="stage col" style="background:var(--mk-h-paper)"><div class="mk-eyebrow" style="color:var(--mk-h-soft)"><b style="color:var(--mk-h-hot)">FIG.01</b> Robotics Operations Unit</div>
+            <div class="mk-wordmark" style="font-size:88px">mecka</div><p class="mk-tagline">Lớp <b>dữ liệu và triển khai</b> cho AI vật lý.<span class="mk-loadbar"><i></i></span></p></div>
+          <div class="spec-f"><span class="note">Mờ dần theo cuộn: opacity = 1 − t/0.12. Ở ≥901, hover thẻ tin làm tagline mờ còn .12 (<code>:has()</code>).</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="containment">
+      <header><span class="n">( 08 )</span><h2>Section trang chủ</h2><p>Mỗi section = <code>.sec</code> (padding fluid) + <code>.wrap</code> + <code>.sec-head</code> (số · tên · spec). Section kem và đen xen kẽ. Section đen dùng class <code>.dark</code> (kit: <code>.mk-dark</code>).</p></header>
+      <div class="grid">
+        <div class="spec full">
+          <div class="spec-h"><b>Đầu section</b><span class="kind">.sec-head</span><span class="dp">pt 18 · viền trên 1 · mb clamp(36, 6vw, 80)</span></div>
+          <div class="stage col"><div class="mk-sechead" style="margin:0"><span class="idx">( 03 ) The Mecka Loop</span><span class="sp">Systems integrator / phase 2</span></div>
+            <div class="mk-dark" style="padding:14px"><div class="mk-sechead" style="margin:0"><span class="idx">( 04 ) Primitives</span><span class="sp">MK-SIG / perception modules</span></div></div></div>
+        </div>
+        <div class="spec full mk-dark" data-sig="f4f681c043 3f75ed916b ea33509dee">
+          <div class="spec-h"><b>Meet · hình + luận điểm</b><span class="kind">.meet-grid · .pt</span><span class="dp">1.05fr 1fr → 1 cột ≤980</span></div>
+          <div class="stage flush"><div class="mk-wrap" style="--mk-pad:24px;width:100%;padding-block:30px"><div class="mk-meet">
+            <div class="fig mk-crop ph" style="max-width:360px"><span class="cm tl"></span><span class="cm tr"></span><span class="cm bl"></span><span class="cm br"></span>hình bimanual (SVG vẽ bằng JS)</div>
+            <div><h2 class="mk-meet-title">Dạy robot về thế giới sống</h2><div class="mk-pts"><div class="mk-pt"><span class="n">( 01 )</span><p>Luận điểm thứ nhất, 16–21px, dòng 1.42.</p></div><div class="mk-pt"><span class="n">( 02 )</span><p>Luận điểm thứ hai, viền trên màu black-line.</p></div></div></div></div></div></div>
+        </div>
+        <div class="spec full" data-sig="b48f4ca92b 52c98bc2c2 0ea80ec1a3">
+          <div class="spec-h"><b>Lưới thách thức</b><span class="kind">.chal-grid .chal-card</span><span class="dp">3 cột · pad 34 30 40 · min-h 340 → 1 cột ≤860</span></div>
+          <div class="stage flush"><div class="mk-chal" style="width:100%">
+            <div class="mk-chalcard" style="min-height:260px"><span class="cn">( Challenge 01 )</span><h3>Việc thật thì nhiễu.</h3><p>Mô hình cần gặp rất nhiều tình huống biên.</p><div class="fig ph">hình SVG 96px</div></div>
+            <div class="mk-chalcard" style="min-height:260px"><span class="cn">( Challenge 02 )</span><h3>Video thô chưa đủ.</h3><p>Cần gán nhãn, ngữ cảnh, kiểm định.</p><div class="fig ph">hình SVG 96px</div></div>
+            <div class="mk-chalcard" style="min-height:260px"><span class="cn">( Challenge 03 )</span><h3>Phòng lab chưa phải đích.</h3><p>Phải thử trong quy trình thật.</p><div class="fig ph">hình SVG 96px</div></div></div></div>
+        </div>
+        <div class="spec full">
+          <div class="spec-h"><b>Tiêu đề chia đôi + sơ đồ</b><span class="kind">.opp-head · .loop-stage</span><span class="dp">1fr 1fr → 1 cột ≤860 · SVG 1000 × 350</span></div>
+          <div class="stage col"><div class="mk-split" style="margin-bottom:24px"><h2 class="mk-h2" style="font-size:40px">Bộ tích hợp của hệ sinh thái.</h2><p class="mk-lead">Đoạn dẫn nằm cột phải, căn đáy với tiêu đề.</p></div>
+            <div class="mk-loop" id="loopdemo"></div></div>
+          <div class="spec-f"><span class="note">Sơ đồ gốc là hình vẽ của Mecka. Kit thay bằng khung đo cùng viewBox 1000 × 350, chữ 9 và 18px, để thấy chữ co theo bề rộng (R5-01).</span></div>
+        </div>
+        <div class="spec full mk-dark" data-sig="a9f3114f5a f106c9215d">
+          <div class="spec-h"><b>Lưới primitives</b><span class="kind">.prim-grid .prim-tile</span><span class="dp">5 cột vuông → 2 cột ≤980 · pad 16</span></div>
+          <div class="stage flush"><div class="mk-prim" style="width:100%" id="primdemo"></div></div>
+          <div class="spec-f"><span class="note">Hover: nền #16120B, tên cam (ô thứ 2). Ở 390px mỗi ô 174px vuông.</span></div>
+        </div>
+        <div class="spec full mk-dark" data-sig="881dcff49d cff54e02ff c503c9c040 c536e10707">
+          <div class="spec-h"><b>Thẻ nền tảng</b><span class="kind">a.pad</span><span class="dp">r18 · pad 30 30 28 · min-h 366 → auto ≤860</span></div>
+          <div class="stage flush"><div class="mk-pads" style="width:100%;padding:18px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))">
+            <a class="mk-pad" href="#containment" style="min-height:300px"><span class="ico"><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg></span><span class="cat">Mobile App</span><h3>Thu dữ liệu ở quy mô lớn</h3><p class="is-uafocus" data-sig-state="cff54e02ff:focus">Mô tả 14.5/1.55 có viền trên.</p><span class="go">Use Now <span class="mk-arr">↗</span></span></a>
+            <a class="mk-pad is-hover" data-sig-state="881dcff49d:hover" href="#containment" style="min-height:300px"><span class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/></svg></span><span class="cat">Hover</span><h3>Nhấc 3px, viền cam 50%</h3><p>Link + nút tròn chuyển cam.</p><span class="go">Explore <span class="mk-arr">↗</span></span></a>
+            <a class="mk-pad is-active" data-sig-state="881dcff49d:active" href="#containment" style="min-height:300px"><span class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12h8M12 8v8"/></svg></span><span class="cat">Active (nhấn)</span><h3>Viền cam, hết nhấc</h3><p>Đo khi nhấn giữ.</p><span class="go">Learn <span class="mk-arr">↗</span></span></a>
+            <a class="mk-pad is-uafocus" data-sig-state="881dcff49d:focus" href="#containment" style="min-height:300px"><span class="ico"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></span><span class="cat">Focus</span><h3>outline mặc định</h3><p>Site không style focus riêng.</p><span class="go">Go <span class="mk-arr">↗</span></span></a></div></div>
+          <div class="spec-f"><span class="note">Nền gradient #17130C → black-panel. Icon 46 × 46 r12, nền cam 12%, viền cam 30%.</span></div>
+        </div>
+        <div class="spec full" data-sig="cf5c2badc8 43426b8113 a86be7f9d7">
+          <div class="spec-h"><b>Khối liên hệ</b><span class="kind">.contact-inner.cropframe</span><span class="dp">pad clamp(40, 7vw, 110) --pad · căn giữa</span></div>
+          <div class="stage flush"><div style="padding:20px;width:100%"><div class="mk-contact mk-crop"><span class="cm tl"></span><span class="cm tr"></span><span class="cm bl"></span><span class="cm br"></span>
+            <span class="mk-eyebrow">( Contact ) — Request access</span><h2 class="mk-h2" style="font-size:56px">Tìm hiểu một đợt triển khai robot.</h2><p class="mk-lead sub">Cho chương trình doanh nghiệp và đối tác dữ liệu.</p><div class="acts"><a class="mk-btn" href="#containment">Talk to us <span class="arr">→</span></a></div></div></div></div>
+        </div>
+        <div class="spec full" data-sig="2bfdcfaae9 36e7b42de7 db052f73c2">
+          <div class="spec-h"><b>FAQ</b><span class="kind">.faq-item .faq-q</span><span class="dp">.7fr 1.3fr → 1 cột ≤860 · q pad 26 0</span></div>
+          <div class="stage"><div class="mk-faq" style="width:100%"><h2 class="mk-h2" style="font-size:44px">Hay được hỏi.</h2><div class="mk-faqlist" id="faqdemo">
+            <div class="mk-faqitem open"><button class="mk-faqq"><span class="qn">( 01 )</span><span class="qt">Mecka làm gì?</span><span class="qx"></span></button><div class="mk-faqa"><div class="inner">Câu trả lời thụt 52px (0 ở ≤860), max 60ch, 16/1.55.</div></div></div>
+            <div class="mk-faqitem"><button class="mk-faqq is-uafocus" data-sig-state="db052f73c2:focus"><span class="qn">( 02 )</span><span class="qt">Focus (viền trình duyệt)</span><span class="qx"></span></button><div class="mk-faqa"><div class="inner">Nội dung.</div></div></div>
+            <div class="mk-faqitem"><button class="mk-faqq"><span class="qn">( 03 )</span><span class="qt">Bấm để mở</span><span class="qx"></span></button><div class="mk-faqa"><div class="inner">Site animate height 0 → auto (.4s); kit mở/đóng bằng display.</div></div></div></div></div></div>
+          <div class="spec-f"><span class="note">Dấu + xoay 90° và mờ vạch dọc khi mở. Nút là cả dòng (cao 84px), vùng chạm tốt.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="careers">
+      <header><span class="n">( 09 )</span><h2>Careers &amp; Legal</h2><p>Hai trang có hệ riêng. /careers: token kem nâu riêng, cột giới thiệu sticky, danh sách vị trí. /privacy: nền #080605, Outfit, một cột 760px.</p></header>
+      <div class="grid">
+        <div class="spec full pal-careers-light" data-sig="c8fde28ef2 516a4a0cab 8ec0a9b5a7 194f45113b">
+          <div class="spec-h"><b>Dòng vị trí tuyển dụng</b><span class="kind">a.role</span><span class="dp">pad 12 8 · hover pad-left 14 · ≤860 xếp dọc</span></div>
+          <div class="stage col" style="font-family:var(--mk-sans)">
+            <div class="mk-dept"><div class="mk-dept-h"><span class="n">01</span><h2>Research</h2><span class="c">3</span></div>
+              <a class="mk-role" href="#careers"><span class="rt">Research Scientist – Computer Vision</span><span class="rm"><span>Toronto</span><span>Full-time</span><span class="arr">→</span></span></a>
+              <a class="mk-role is-hover" data-sig-state="c8fde28ef2:hover" href="#careers"><span class="rt">Hover: nền #F4EEDE, thụt 14</span><span class="rm"><span>New York</span><span>Full-time</span><span class="arr">→</span></span></a>
+              <a class="mk-role is-uafocus" data-sig-state="c8fde28ef2:focus" href="#careers"><span class="rt">Focus (outline trình duyệt)</span><span class="rm"><span>New York</span><span class="arr">→</span></span></a></div>
+            <span class="lbl">khung 420px = đúng bề rộng cột phải ở 870px (vùng bóp, R5-02): site vẫn xếp ngang, tên dồn dòng</span>
+            <div style="width:420px;max-width:100%"><a class="mk-role" href="#careers"><span class="rt">Technical Program Manager, Robotic Data &amp; Deliveries</span><span class="rm"><span>New York · Toronto · San Francisco</span><span>Full-time</span><span class="arr">→</span></span></a></div>
+          </div>
+        </div>
+        <div class="spec pal-priv-dark" data-sig="c62fbeec44 615998d766 7de33c2fa9 77bac7d940 eea391747b 53b597739d">
+          <div class="spec-h"><b>Văn bản pháp lý</b><span class="kind">/privacy</span><span class="dp">760 · Outfit · h1 300</span></div>
+          <div class="stage mk-legal" style="display:block;padding:10px 16px 20px">
+            <h1 style="font-size:40px">Privacy Policy</h1><p>Effective date: tháng 3, 2026</p>
+            <h2>1. Thông tin thu thập</h2><p><strong>Thông tin bạn cung cấp</strong></p><ul><li>Thông tin tài khoản.</li><li>Nội dung tải lên.</li></ul>
+            <p>Liên hệ: <a class="mail is-uafocus" data-sig-state="53b597739d:focus" href="#careers">email@example.com</a></p>
+          </div>
+          <div class="spec-f"><span class="note">Chữ trắng ấm với độ mờ: h1 .95, h2 .92, strong .78, p .6. Link cam α .9.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="article">
+      <header><span class="n">( 10 )</span><h2>Bài viết WetLabs</h2><p>Blog dựng trên styles.css (gốc kem) rồi phủ một lớp <code>:root</code> tối với IBM Plex và cam hổ phách #D49A34. Khối benchmark trong bài tự khai lại token kem, nên nằm trong bài tối vẫn là nền giấy.</p></header>
+      <div class="grid">
+        <div class="spec full pal-wl-dark" data-sig="6f9863defe 9246cd7514 fb4cd09446 95b234c0ec 7c42189c63">
+          <div class="spec-h"><b>Đầu bài</b><span class="kind">.content.original-blog</span><span class="dp">cột 840 · h1 clamp(30, 3.6vw, 43)</span></div>
+          <div class="stage col mk-wl"><h1 class="mk-wl-h1">Robot đã sẵn sàng cho việc trong phòng lab chưa?</h1><p class="mk-wl-name">Tên benchmark</p><p class="mk-wl-dek">Dek 22px màu #D4D4D4, tối đa 62ch.</p><span class="mk-wl-date">September 24, 2026</span><p class="mk-wl-byline">By Tác giả A, Tác giả B, và cộng sự</p><div class="mk-wl-hero ph">ảnh biểu đồ hero (16:9)</div></div>
+        </div>
+        <div class="spec pal-wl-dark" data-sig="5c7438deb0 6e5633a238 b0df921ea4 eea03250d6">
+          <div class="spec-h"><b>TL;DR</b><span class="kind">.tldr</span><span class="dp">pad 24 28 (20 18 ≤650) · viền trên 4</span></div>
+          <div class="stage col mk-wl" style="font-size:15px"><div class="mk-wl-tldr" style="margin:0"><h2>TL;DR</h2><ul><li>Chín tác vụ, ba mô hình, <b>540 lần chạy</b>.</li><li>Tỉ lệ hoàn thành của từng mô hình.</li></ul></div></div>
+        </div>
+        <div class="spec pal-wl-dark" data-sig="5fc14954e1 8b787b8dd6 91019296dd 2ef926b964 ac44169144">
+          <div class="spec-h"><b>Thân bài</b><span class="kind">.content h2 · p · a · code</span><span class="dp">17/1.7 · h2 viền trên</span></div>
+          <div class="stage col mk-wl"><h2 class="mk-wl-h2" style="margin-top:0">Cách chúng tôi đo</h2><h3 class="mk-wl-h3">Tay kẹp không giữ được</h3>
+            <p class="body">Đoạn văn có <a class="inl" href="#article">link</a>, <a class="inl is-hover" data-sig-state="2ef926b964:hover" href="#article">link hover</a>, <a class="inl is-focus" data-sig-state="2ef926b964:focus" href="#article">link focus</a> và <code>model-id-5-5</code>.</p></div>
+        </div>
+        <div class="spec full pal-wl-dark" data-sig="6e8fce9e61 ac22a5e371 6091bbb009 2e9551ba4b 4a597182f0 d41ffb3cad">
+          <div class="spec-h"><b>Bảng cấu hình (cuộn ngang)</b><span class="kind">.table-scroll</span><span class="dp">th 132 · pad 13 12 (11 10 ≤650)</span></div>
+          <div class="stage col mk-wl"><div class="mk-wl-scroll"><table><thead><tr><th>Setup</th><th>Configuration</th></tr></thead><tbody><tr><th>Robots</th><td>Hai cặp tay 6 bậc tự do, kẹp song song.</td></tr><tr><th>Models</th><td>Mô hình A (<code>model-a</code>), mô hình B, mô hình C.</td></tr></tbody></table></div>
+            <span class="lbl">khung 390: hiện dòng nhắc "Swipe table if needed"</span><div class="scr" style="width:390px;height:220px"><div class="scr-in mk-wl" style="padding:0 18px"><div class="mk-wl-scroll"><table><thead><tr><th>Setup</th><th>Configuration</th></tr></thead><tbody><tr><th>Robots</th><td>Hai cặp tay 6 bậc tự do.</td></tr></tbody></table></div></div></div></div>
+        </div>
+        <div class="spec full pal-wl-light" data-sig="84ee7b70f6 009273f6c3 9e05bb03e9 c17cc6ba0e 68d54c603a fde20ab964 84cd0419f7 8c2d862959 d96b4d9319 84b311e11c c430ae7bb6 5e507f3076 20e9c9c452 0a5f669deb">
+          <div class="spec-h"><b>Khối benchmark (kem trong bài tối)</b><span class="kind">.benchmark-block .benchmark-table</span><span class="dp">pad 22 · table-layout fixed · cột đầu 35%</span></div>
+          <div class="stage flush"><div class="mk-bench" style="width:100%;margin:0">
+            <table><caption>Chín tác vụ trong một bảng<small>thành công / một phần / thất bại · 20 lần mỗi mô hình</small></caption>
+              <thead><tr><th>Task</th><th><span class="model"><i class="mk-av"></i>Model A</span></th><th><span class="model"><i class="mk-av"></i>Model B</span></th><th><span class="model"><i class="mk-av"></i>Model C</span></th></tr></thead>
+              <tbody><tr class="grp g-easy"><th colspan="4">Easy</th></tr><tr><th>Nhấc ống nghiệm</th><td><span class="cnt"><span class="ok">17</span><span class="s">/</span><span class="pa">1</span><span class="s">/</span>2</span></td><td><span class="cnt"><span class="ok">5</span><span class="s">/</span><span class="pa">1</span><span class="s">/</span>14</span></td><td><span class="cnt"><span class="ok">7</span><span class="s">/</span><span class="pa">5</span><span class="s">/</span>8</span></td></tr>
+                <tr class="grp g-med"><th colspan="4">Medium</th></tr><tr><th>Đặt cốc</th><td><span class="cnt"><span class="ok">9</span><span class="s">/</span><span class="pa">7</span><span class="s">/</span>4</span></td><td><span class="cnt"><span class="ok">4</span><span class="s">/</span><span class="pa">9</span><span class="s">/</span>7</span></td><td><span class="cnt"><span class="ok">7</span><span class="s">/</span><span class="pa">6</span><span class="s">/</span>7</span></td></tr>
+                <tr class="grp g-hard"><th colspan="4">Hard</th></tr><tr><th>Khuấy cốc</th><td><span class="cnt"><span class="ok">0</span><span class="s">/</span><span class="pa">11</span><span class="s">/</span>9</span></td><td><span class="cnt"><span class="ok">0</span><span class="s">/</span><span class="pa">10</span><span class="s">/</span>10</span></td><td><span class="cnt"><span class="ok">0</span><span class="s">/</span><span class="pa">3</span><span class="s">/</span>17</span></td></tr></tbody></table>
+            <div class="mk-legend"><span><i class="mk-sw ok"></i>Thành công</span><span><i class="mk-sw pa"></i>Một phần</span><span><i class="mk-sw fa"></i>Thất bại</span></div></div></div>
+          <div class="spec-f"><span class="note">Số liệu là mẫu. Logo mô hình (19px) là ảnh bên thứ ba, kit thay bằng vòng tròn giữ chỗ. ≤600: chữ 14, pad ô 11 5, cột đầu 33%.</span></div>
+        </div>
+        <div class="spec full pal-wl-dark" data-sig="d5104fd454 a3155f7a8b 4579267cfc">
+          <div class="spec-h"><b>Cặp ví dụ</b><span class="kind">.example-pair .pair-grid</span><span class="dp">1 cột · video 72:35 · pad 20 0</span></div>
+          <div class="stage col mk-wl"><div class="mk-pair" style="margin:0"><figure><div class="vid ph">video lần chạy (72:35)</div><figcaption>Model A · Một phần. Chú thích 14px #D4D4D4.</figcaption></figure><a class="mk-rec" href="#article">Xem bản ghi →</a></div><div class="ph" style="aspect-ratio:16/7">biểu đồ trong bài (nền tối / nền kem)</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="data">
+      <header><span class="n">( 11 )</span><h2>Dữ liệu &amp; nhập liệu</h2><p>Bảng "All runs" của blog là component có tương tác và reflow mạnh nhất site. Trên 740px là bảng. Từ 740px trở xuống, mỗi hàng thành một thẻ 2 cột, nhãn lấy từ <code>data-label</code>.</p></header>
+      <div class="grid">
+        <div class="spec full pal-wl-dark" data-sig="05f83c56ab 7b4fc18d60 78f2196ad2 e661c527fd 823845e086 8ec3a367b6 410d07b218 73dd909fef 3112ff41f1 3fc20b2ccf 0fbc931f1b eb97879b75 d8d8d27459 7af7d1dbf2 0d5999eb07 b6da47c69b">
+          <div class="spec-h"><b>Bảng các lần chạy</b><span class="kind">.wetlab-runs</span><span class="dp">bộ lọc 1.6fr 1fr 1fr auto → 2 cột ≤740 · hàng → thẻ</span></div>
+          <div class="stage col mk-wl" style="font-size:14px">
+            <div class="scr-row" id="runsdemo"></div>
+            <span class="lbl">trạng thái đo được</span>
+            <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center">
+              <select class="mk-runsbtn is-focus" data-sig-state="7b4fc18d60:focus" aria-label="Task" style="background:var(--mk-panel);min-width:200px"><option>All tasks</option></select>
+              <a class="task is-hover" style="color:var(--mk-accent)" data-sig-state="73dd909fef:hover" href="#data">Tên tác vụ (hover)</a>
+              <a class="task is-focus" style="color:inherit" data-sig-state="73dd909fef:focus" href="#data">Tên tác vụ (focus)</a>
+              <button class="mk-runsbtn is-focus" style="border:0;text-decoration:underline" data-sig-state="3112ff41f1:focus">View (focus)</button>
+              <span class="is-uafocus-dk" data-sig-state="e661c527fd:focus">1m 49s (focus UA)</span>
+              <span class="is-uafocus-dk" data-sig-state="823845e086:focus">13,848 (focus UA)</span>
+              <span class="is-uafocus-dk" data-sig-state="8ec3a367b6:focus">ô tác vụ (focus UA)</span>
+              <span class="is-uafocus-dk" data-sig-state="410d07b218:focus">ô tác vụ đã chọn</span>
+              <span class="is-uafocus-dk" style="background:var(--mk-deep);padding:4px 8px" data-sig-state="78f2196ad2:focus">hàng .is-selected (focus UA)</span>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Hàng đang chọn nền #282115. Hover hàng nền cam 8%. Ô số dùng <code>tabular-nums</code>. Các ô có <code>tabindex</code> nhận focus mặc định trình duyệt (xanh #99C8FF vì <code>color-scheme:dark</code>). Link, nút, select có focus riêng: viền cam 3px.</span></div>
+        </div>
+        <div class="spec pal-wl-dark" data-sig="c89e542388 9691a367f2 769b5a6076 93685d91cd 1644f7b100 4819516337">
+          <div class="spec-h"><b>Cổng xem trước</b><span class="kind">private preview</span><span class="dp">430 · input 48 · nút 48</span></div>
+          <div class="stage"><div class="mk-gate"><div class="k">Mecka / Private preview</div><h2>Vào bản xem trước.</h2><p>Dùng mật khẩu xem trước chung. Phiên chỉ giữ trong trình duyệt này.</p><label for="gp">Preview password</label><input id="gp" type="password" aria-label="Mật khẩu">
+            <button class="unlock">Unlock preview</button><button class="unlock is-hover" data-sig-state="769b5a6076:hover">Unlock (hover)</button><button class="unlock is-uafocus-dk" data-sig-state="769b5a6076:focus">Unlock (focus UA)</button>
+            <div class="ft"><span>Private · No indexing</span><a href="#data">mecka.ai</a></div><div class="ft" style="margin-top:6px"><a class="is-hover" data-sig-state="93685d91cd:hover" href="#data">mecka.ai (hover)</a><a class="is-uafocus-dk" data-sig-state="93685d91cd:focus" href="#data">mecka.ai (focus)</a></div></div></div>
+          <div class="spec-f"><span class="note">Gặp khi crawl nhánh /blog. Font system-ui, khác hẳn phần còn lại. Nút #D49A34, hover #E0AA49, viền #B07300.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="feedback">
+      <header><span class="n">( 12 )</span><h2>Trạng thái</h2><p>Nhãn trạng thái, chấm nhấp nháy, thanh tiến độ, chip kỹ thuật.</p></header>
+      <div class="grid">
+        <div class="spec pal-wl-dark" data-sig="a71eefb2ee b934e91e61 86a0427013">
+          <div class="spec-h"><b>Nhãn kết quả</b><span class="kind">.wetlab-runs__outcome</span><span class="dp">pad 4 7 · 12/600 · góc 0</span></div>
+          <div class="stage mk-wl"><span class="mk-out ok">Success</span><span class="mk-out pa">Partial</span><span class="mk-out">Fail</span></div>
+          <div class="spec-f"><span class="note">Bản kem: #F4D3B5 / #E9DFBF / #DDD5C8.</span></div>
+        </div>
+        <div class="spec">
+          <div class="spec-h"><b>Chip kỹ thuật</b><span class="kind">.tag .dot</span><span class="dp">mono 10.5 .16em · pad 5 9 · r2</span></div>
+          <div class="stage"><span class="mk-tag"><span class="dot"></span>Live</span><span class="mk-tag">MK-002</span><span class="mk-blink"></span><span class="mk-mono" style="font-size:9.5px;letter-spacing:.14em;color:var(--mk-inkSoft)">.pop-head .blink 1.6s</span></div>
+          <div class="spec-f"><span class="note">CSS có khai <code>.tag</code> nhưng trang chủ hiện không dùng. Chấm cam có quầng sáng <code>--mk-glow</code>.</span></div>
+        </div>
+        <div class="spec">
+          <div class="spec-h"><b>Tiến độ tháo rời</b><span class="kind">hero progress</span><span class="dp">track 3px · pct mono</span></div>
+          <div class="stage col"><div style="display:flex;align-items:center;gap:12px;font:400 11px var(--mk-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--mk-inkSoft)"><span style="color:var(--mk-ink)">Disassembling…</span><span style="flex:1;max-width:220px;height:3px;background:var(--mk-deep);border-radius:2px;overflow:hidden"><i style="display:block;height:100%;width:46%;background:var(--mk-accentHot)"></i></span><span style="color:var(--mk-accent)">46%</span></div></div>
+          <div class="spec-f"><span class="note">Nhãn: "Assembly · intact" (t &lt; 4%) → "Disassembling…" → "Exploded · N parts". Thanh trạng thái hero trong CSS đã không còn trong DOM, JS chỉ cập nhật BOM.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= MÀN MẪU ================= -->
+    <section class="block" id="screens">
+      <header><span class="n">( 13 )</span><h2>Màn hình mẫu</h2><p>Cùng một markup cho mọi khung; chỉ bề rộng khung khác nhau. Mỗi khung cuộn được bên trong. Kích thước theo máy thật: 390 × 844 (điện thoại), 1000 × 800 (vùng bóp careers), 1440 × 900 (desktop).</p></header>
+      <h3 class="sub">Trang chủ</h3>
+      <div class="scr-row" data-screens="home" data-sizes="390x844:.62,1440x900:.46"></div>
+      <p class="scr-cap"><b>Dùng:</b> nav kính · khung trang · sân khấu hero (robot giữ chỗ, BOM, khối tiêu đề, trục, thẻ tin) · sec-head · meet · lưới thách thức · opp-head + sơ đồ · primitives · pad · contact · FAQ · footer. <b>390:</b> HUD ẩn, lưới 1–2 cột, viền trang 8px, không có nút Careers.</p>
+      <h3 class="sub">Careers: điện thoại · vùng bóp · desktop</h3>
+      <div class="scr-row" data-screens="careers" data-sizes="390x844:.62,1000x800:.5,1440x900:.46"></div>
+      <p class="scr-cap"><b>1000px:</b> đã lên 2 cột, dòng vị trí vẫn ngang, tên dồn nhiều dòng (R5-02). <b>Dùng:</b> intro sticky · dept-head · role.</p>
+      <h3 class="sub">Blog WetLabs</h3>
+      <div class="scr-row" data-screens="wetlab" data-sizes="390x844:.62,1440x900:.46"></div>
+      <p class="scr-cap"><b>Dùng:</b> topbar · mục lục (details đóng ≤1099, cột sticky ≥1100) · h1/dek/byline · TL;DR · bảng cuộn ngang · khối benchmark · bảng các lần chạy (thẻ ≤740) · cặp ví dụ · chân trang.</p>
+      <h3 class="sub">Privacy</h3>
+      <div class="scr-row" data-screens="privacy" data-sizes="390x844:.62,1440x900:.46"></div>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- ================= TEMPLATE (markup dùng chung cho khung mẫu + phòng thử) ================= -->
+<template id="tpl-hero">
+  <div class="mk-navwrap" style="position:sticky;top:18px;height:0;z-index:15;align-items:flex-start"><div class="mk-navglass"><span class="mk-brand"><span class="mk-logo">logo mecka</span></span><div class="right"><button class="mk-menubtn">Menu <span class="bars"><i></i><i></i></span></button><a class="mk-navcta" href="#screens">Careers</a></div></div></div>
+  <div class="mk-stage">
+    <div class="frame"></div><span class="crop tl"></span><span class="crop tr"></span><span class="crop bl"></span><span class="crop br"></span>
+    <div class="mk-robot ph">robot cắt lớp · 588:668</div>
+    <div class="mk-herocopy"><div class="mk-eyebrow"><b>FIG.01</b> Robotics Operations Unit</div><h1 class="mk-wordmark">mecka</h1><p class="mk-tagline">Lớp <b>dữ liệu và triển khai</b> cho AI vật lý.<span class="mk-loadbar"><i></i></span></p></div>
+    <div class="mk-news"><div class="stack"><span class="peek p2"></span><span class="peek p1"></span><a class="mk-npcard" href="#screens"><span class="thumb ph">ảnh</span><span class="meta"><span class="src">Báo chí</span><span class="hl">Tiêu đề tin chính</span></span></a></div></div>
+    <div class="mk-triad"><svg viewBox="0 0 96 96" aria-hidden="true"><line x1="48" y1="54" x2="48" y2="10"/><line x1="48" y1="54" x2="86" y2="76"/><line x1="48" y1="54" x2="10" y2="76"/><text x="44" y="7">Z</text><text x="88" y="84">X</text><text x="2" y="84">Y</text></svg></div>
+    <div class="mk-panel mk-bom"><div class="ph2"><span>Bill of Materials</span><b>0 / 6</b></div><ul><li><span class="n">01</span><span>Telemetry</span><span class="st">STBY</span></li><li><span class="n">02</span><span>Locomotion</span><span class="st">STBY</span></li><li><span class="n">03</span><span>Kinematics</span><span class="st">STBY</span></li><li><span class="n">04</span><span>Degrees of Freedom</span><span class="st">STBY</span></li></ul></div>
+    <div class="mk-panel mk-title"><div class="ph2"><span>Drawing</span><b>MK-001</b></div><div class="row"><div class="k">Unit</div><div class="v big">MECKA</div></div><div class="row"><div class="k">Title</div><div class="v">DATA + DEPLOY</div></div><div class="row"><div class="k">Sheet</div><div class="v">1 OF 1</div></div></div>
+  </div>
+</template>
+<template id="tpl-home">
+  <section class="mk-sec mk-dark"><div class="mk-wrap"><div class="mk-sechead"><span class="idx">( 01 ) Meet Mecka</span><span class="sp">FIG 02 — MK-002</span></div>
+    <div class="mk-meet"><div class="fig mk-crop ph"><span class="cm tl"></span><span class="cm tr"></span><span class="cm bl"></span><span class="cm br"></span>hình bimanual</div>
+      <div><h2 class="mk-meet-title">Dạy robot về thế giới sống</h2><div class="mk-pts"><div class="mk-pt"><span class="n">( 01 )</span><p>Robot sẽ là công nghệ mở rộng GDP lớn nhất từng có.</p></div><div class="mk-pt"><span class="n">( 02 )</span><p>Hạ tầng để robot học từ thế giới thật.</p></div></div></div></div></div></section>
+  <section class="mk-sec"><div class="mk-wrap"><div class="mk-sechead"><span class="idx">( 02 ) The Challenge</span><span class="sp">3 failure modes</span></div>
+    <h2 class="mk-h2" style="max-width:18ch;margin-bottom:56px">AI vật lý đang bị chặn bởi dữ liệu thật.</h2>
+    <div class="mk-chal"><div class="mk-chalcard"><span class="cn">( Challenge 01 )</span><h3>Việc thật thì nhiễu.</h3><p>Mô hình cần gặp vô số tình huống biên.</p><div class="fig ph">hình</div></div><div class="mk-chalcard"><span class="cn">( Challenge 02 )</span><h3>Video thô chưa đủ.</h3><p>Cần gán nhãn, ngữ cảnh, QA.</p><div class="fig ph">hình</div></div><div class="mk-chalcard"><span class="cn">( Challenge 03 )</span><h3>Lab chưa phải đích.</h3><p>Phải thử trong môi trường thật.</p><div class="fig ph">hình</div></div></div></div></section>
+  <section class="mk-sec"><div class="mk-wrap"><div class="mk-sechead"><span class="idx">( 03 ) The Mecka Loop</span><span class="sp">Systems integrator</span></div>
+    <div class="mk-split" style="margin-bottom:48px"><h2 class="mk-h2">Bộ tích hợp của hệ sinh thái robot.</h2><p class="mk-lead">Nối phần cứng, mô hình và đối tác thương mại qua một lớp dữ liệu.</p></div><div class="mk-loop" data-fill="loop"></div></div></section>
+  <section class="mk-sec mk-dark"><div class="mk-wrap"><div class="mk-sechead"><span class="idx">( 04 ) Signal &amp; action primitives</span><span class="sp">MK-SIG</span></div>
+    <div class="mk-split" style="margin-bottom:44px"><h2 class="mk-h2">Cách đo và tác động lên thế giới.</h2><p class="mk-lead">Mỗi mô-đun là một cách ghi nhận thực tại.</p></div><div class="mk-prim" data-fill="prim"></div></div></section>
+  <section class="mk-sec mk-dark"><div class="mk-wrap"><div class="mk-sechead"><span class="idx">( 05 ) Platform</span><span class="sp">Foundations</span></div>
+    <div class="mk-split"><h2 class="mk-h2">Nền móng cho <span class="accent">AI vật lý</span></h2><p class="mk-lead">Dữ liệu người thật từ khắp thế giới.</p></div>
+    <div class="mk-pads"><a class="mk-pad" href="#screens"><span class="ico"><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/></svg></span><span class="cat">Mobile App</span><h3>Thu dữ liệu quy mô lớn</h3><p>Ghi dữ liệu môi trường và tác vụ.</p><span class="go">Use Now <span class="mk-arr">↗</span></span></a><a class="mk-pad" href="#screens"><span class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="2"/></svg></span><span class="cat">Data Tools</span><h3>Duyệt, trực quan, suy luận</h3><p>Giao diện web xem dữ liệu.</p><span class="go">Explore <span class="mk-arr">↗</span></span></a><a class="mk-pad" href="#screens"><span class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/></svg></span><span class="cat">Enterprise</span><h3>Đánh giá &amp; triển khai</h3><p>Hỗ trợ triển khai thực tế.</p><span class="go">Learn More <span class="mk-arr">↗</span></span></a></div></div></section>
+  <section class="mk-sec"><div class="mk-wrap"><div class="mk-contact mk-crop"><span class="cm tl"></span><span class="cm tr"></span><span class="cm bl"></span><span class="cm br"></span><span class="mk-eyebrow">( Contact ) — Request access</span><h2 class="mk-h2">Tìm hiểu một đợt triển khai robot.</h2><p class="mk-lead sub">Cho chương trình doanh nghiệp và đối tác dữ liệu.</p><div class="acts"><a class="mk-btn" href="#screens">Talk to us <span class="arr">→</span></a></div></div></div></section>
+  <section class="mk-sec"><div class="mk-wrap"><div class="mk-sechead"><span class="idx">( 07 ) FAQ</span><span class="sp">Reference / 3 entries</span></div><div class="mk-faq"><h2 class="mk-h2">Hay được hỏi.</h2><div class="mk-faqlist">
+    <div class="mk-faqitem open"><button class="mk-faqq"><span class="qn">( 01 )</span><span class="qt">Mecka làm gì?</span><span class="qx"></span></button><div class="mk-faqa"><div class="inner">Hạ tầng dữ liệu, đánh giá và triển khai cho robot.</div></div></div>
+    <div class="mk-faqitem"><button class="mk-faqq"><span class="qn">( 02 )</span><span class="qt">Mecka làm cho ai?</span><span class="qx"></span></button><div class="mk-faqa"><div class="inner">Lab robot, đội mô hình, doanh nghiệp.</div></div></div></div></div></div></section>
+  <footer class="mk-footer mk-dark"><div class="mk-wrap"><div class="mk-ftop"><div><div class="big">Dựng cho thế giới thật.</div><a class="mk-tlink" href="#screens">Explore →</a></div><div class="mk-fcol"><h5>Resources</h5><ul><li><a href="#screens">Egoverse</a></li><li><a href="#screens">Contact</a></li></ul></div><div class="mk-fcol"><h5>Company</h5><ul><li><a href="#screens">Careers</a></li><li><a href="#screens">Privacy</a></li></ul></div><div class="mk-fcol"><h5>Connect</h5><ul><li><a href="#screens">LinkedIn</a></li><li><a href="#screens">X</a></li></ul></div></div><div class="mk-fbot"><span>Mecka AI © 2026</span><span>DOC. MK-001 / REV C</span></div></div><div class="mk-fword"><div class="ph">wordmark (ảnh)</div></div></footer>
+</template>
+<template id="tpl-careers">
+  <div class="pal-careers-light" style="min-height:100%"><div class="mk-car">
+    <aside class="intro2"><div class="ph logo2">logo 132</div><div class="ey">( Careers ) — We're hiring</div><h1>Xây lớp dữ liệu và triển khai cho <em>AI vật lý</em>.</h1><p>Robot sẽ là ngành lớn nhất trong lịch sử, và nó chạy bằng dữ liệu thật chất lượng cao.</p>
+      <div class="facts2"><div><b>29</b> open roles</div><div><b>7</b> teams</div><div>· US, Canada, China</div></div><a class="board" href="#screens">Apply on Ashby →</a><br><a class="home" href="#screens">← Back to mecka.ai</a></aside>
+    <div class="list" style="padding-bottom:80px">
+      <div class="mk-dept"><div class="mk-dept-h"><span class="n">01</span><h2>Research</h2><span class="c">3</span></div>
+        <a class="mk-role" href="#screens"><span class="rt">Research Scientist – Computer Vision (Body Pose Detection)</span><span class="rm"><span>Toronto GTA · New York</span><span>Full-time</span><span class="arr">→</span></span></a>
+        <a class="mk-role" href="#screens"><span class="rt">Research Scientist – Computer Vision (Hand Tracking &amp; Manipulation)</span><span class="rm"><span>New York</span><span>Full-time</span><span class="arr">→</span></span></a>
+        <a class="mk-role" href="#screens"><span class="rt">Research Scientist (Spatial AI &amp; Neural Reconstruction)</span><span class="rm"><span>New York</span><span>Full-time</span><span class="arr">→</span></span></a></div>
+      <div class="mk-dept"><div class="mk-dept-h"><span class="n">02</span><h2>Operations</h2><span class="c">3</span></div>
+        <a class="mk-role" href="#screens"><span class="rt">Country Launch Lead</span><span class="rm"><span>New York</span><span>Full-time</span><span class="arr">→</span></span></a>
+        <a class="mk-role" href="#screens"><span class="rt">Staff Technical Program Manager (Deployment &amp; Logistics)</span><span class="rm"><span>New York</span><span>Full-time</span><span class="arr">→</span></span></a>
+        <a class="mk-role" href="#screens"><span class="rt">Technical Program Manager, Robotic Data &amp; Deliveries</span><span class="rm"><span>New York · Toronto GTA · San Francisco</span><span>Full-time</span><span class="arr">→</span></span></a></div>
+    </div></div></div>
+</template>
+<template id="tpl-wetlab">
+  <div class="pal-wl-dark mk-wl" style="min-height:100%"><div class="shellw">
+    <header class="mk-wl-top"><a class="mk-wl-word" href="#screens"><span class="mk-logo">logo</span></a><span></span></header>
+    <div class="mk-wl-layout">
+      <aside class="mk-wl-side"><details class="mk-wl-toc"><summary>In this post</summary><nav><ul><li><a aria-current="location" href="#screens">TL;DR</a></li><li><a href="#screens">How we tested</a></li><li><a href="#screens">Results across the nine tasks</a></li><li><a class="l3" href="#screens">The grasp does not hold</a></li><li><a class="l3" href="#screens">Too many steps left</a></li><li><a href="#screens">Explore all runs</a></li><li><a href="#screens">Limitations</a></li></ul></nav></details></aside>
+      <article class="mk-wl-content">
+        <h1 class="mk-wl-h1">Robot đã sẵn sàng cho việc trong phòng lab chưa?</h1><p class="mk-wl-name">Tên benchmark</p><p class="mk-wl-dek">Chín tác vụ. Ba mô hình. 540 lần chạy.</p><span class="mk-wl-date">September 24, 2026</span><p class="mk-wl-byline">By Tác giả A, Tác giả B, Tác giả C và cộng sự</p>
+        <div class="mk-wl-hero ph">ảnh biểu đồ hero</div>
+        <div class="mk-wl-tldr"><h2>TL;DR</h2><ul><li>Chín tác vụ, ba mô hình, 20 lần mỗi mô hình.</li><li>Tỉ lệ hoàn thành của mỗi mô hình.</li></ul></div>
+        <h2 class="mk-wl-h2">Cách chúng tôi đo</h2><p class="body">Thân bài 17/1.7 IBM Plex Sans trên nền #050505.</p>
+        <div class="mk-wl-scroll"><table><thead><tr><th>Setup</th><th>Configuration</th></tr></thead><tbody><tr><th>Robots</th><td>Hai cặp tay 6 bậc tự do, kẹp song song.</td></tr><tr><th>Observations</th><td>Ảnh từ trên xuống, hai camera cổ tay, cảm biến bản thể.</td></tr></tbody></table></div>
+        <div class="pal-wl-light mk-bench"><table><caption>Chín tác vụ trong một bảng<small>thành công / một phần / thất bại</small></caption><thead><tr><th>Task</th><th><span class="model"><i class="mk-av"></i>A</span></th><th><span class="model"><i class="mk-av"></i>B</span></th><th><span class="model"><i class="mk-av"></i>C</span></th></tr></thead><tbody><tr class="grp g-easy"><th colspan="4">Easy</th></tr><tr><th>Nhấc ống</th><td><span class="cnt"><span class="ok">17</span><span class="s">/</span><span class="pa">1</span><span class="s">/</span>2</span></td><td><span class="cnt"><span class="ok">5</span><span class="s">/</span><span class="pa">1</span><span class="s">/</span>14</span></td><td><span class="cnt"><span class="ok">7</span><span class="s">/</span><span class="pa">5</span><span class="s">/</span>8</span></td></tr><tr class="grp g-hard"><th colspan="4">Hard</th></tr><tr><th>Khuấy cốc</th><td><span class="cnt"><span class="ok">0</span><span class="s">/</span><span class="pa">11</span><span class="s">/</span>9</span></td><td><span class="cnt"><span class="ok">0</span><span class="s">/</span><span class="pa">10</span><span class="s">/</span>10</span></td><td><span class="cnt"><span class="ok">0</span><span class="s">/</span><span class="pa">3</span><span class="s">/</span>17</span></td></tr></tbody></table><div class="mk-legend"><span><i class="mk-sw ok"></i>Success</span><span><i class="mk-sw pa"></i>Partial</span><span><i class="mk-sw fa"></i>Fail</span></div></div>
+        <h2 class="mk-wl-h2">Explore all runs</h2>
+        <div data-fill="runs"></div>
+        <div class="mk-pair"><figure><div class="vid ph">video</div><figcaption>Model A · Partial.</figcaption></figure><a class="mk-rec" href="#screens">Xem bản ghi →</a></div>
+      </article>
+    </div>
+    <footer class="mk-wl-foot"><span class="mk-logo" style="height:21px">logo</span><span>WetLabs Benchmark</span></footer>
+  </div></div>
+</template>
+<template id="tpl-runs">
+  <div class="mk-runs">
+    <div class="mk-runs-f"><label>Task<select><option>All tasks</option></select></label><label>Model<select><option>All models</option></select></label><label>Outcome<select><option>All</option></select></label><button class="mk-runsbtn">Clear filters</button></div>
+    <table class="mk-runs-t"><thead><tr><th>Task</th><th>Model</th><th>Outcome</th><th>Time</th><th>Tokens</th><th>Run</th></tr></thead><tbody>
+      <tr class="row sel"><td><a class="task" href="#data">Nhấc ống nghiệm khỏi giá</a><span class="sub">Attempt 1 · Easy</span></td><td data-label="Model">Model A</td><td data-label="Outcome"><span class="mk-out ok">Success</span></td><td data-label="Time" class="val">1m 49s</td><td data-label="Tokens" class="val">2,196</td><td data-label="Run"><button class="act">View</button></td></tr>
+      <tr class="det"><td colspan="6"><div class="mk-runs-d"><div class="top"><div><h3>Model A · Nhấc ống nghiệm</h3><span class="sub">Attempt 1 · Easy</span></div><button class="mk-runsbtn">Close</button></div><h4>Transcript</h4><div class="mk-entry"><h5>task</h5><p>Luật: nhấc ống 50 mL ra khỏi giá mà không nhấc cả giá.</p></div></div></td></tr>
+      <tr class="row"><td><a class="task" href="#data">Đặt cốc vào vị trí</a><span class="sub">Attempt 2 · Medium</span></td><td data-label="Model">Model B</td><td data-label="Outcome"><span class="mk-out pa">Partial</span></td><td data-label="Time" class="val">3m 02s</td><td data-label="Tokens" class="val">13,848</td><td data-label="Run"><button class="act">View</button></td></tr>
+      <tr class="row"><td><a class="task" href="#data">Khuấy cốc</a><span class="sub">Attempt 1 · Hard</span></td><td data-label="Model">Model C</td><td data-label="Outcome"><span class="mk-out">Fail</span></td><td data-label="Time" class="val">4m 10s</td><td data-label="Tokens" class="val">9,410</td><td data-label="Run"><button class="act">View</button></td></tr>
+    </tbody></table>
+    <div class="mk-pager"><button class="mk-runsbtn" disabled style="opacity:.45">Previous</button><span>Page 1 of 22</span><button class="mk-runsbtn">Next</button></div>
+  </div>
+</template>
+<template id="tpl-privacy">
+  <div class="pal-priv-dark" style="min-height:100%"><div class="mk-legal"><a class="back0" href="#screens">← mecka.ai</a><br><a class="back" href="#screens">← Back to Home</a><div class="kick">Legal</div><h1>Privacy Policy</h1><p>Effective date: tháng 3, 2026</p><p>Chính sách này mô tả cách công ty thu thập, sử dụng và chia sẻ thông tin khi bạn dùng website, ứng dụng và dịch vụ.</p><h2>1. Thông tin thu thập</h2><p><strong>Thông tin bạn cung cấp</strong></p><ul><li>Thông tin đăng ký tài khoản (tên, email, tổ chức).</li><li>Nội dung bạn tải lên hoặc chia sẻ.</li></ul><h2>2. Cách sử dụng</h2><p>Nội dung mẫu.</p></div></div>
+</template>
+
+<script>
+/* 4 hệ × sáng/tối, parse từ CSS của mecka.ai (null = hệ đó không có chế độ này) */
+const ROLES=["bg","panel","deep","ink","body","inkSoft","inkFaint","line","lineStrong","accent","accentHot","accentSoft","onAccent","glassA","glassB","glassEdge","chip","chipEdge","focus","shGlass"];
+const SH_L="0 1px 0 rgba(255,255,255,.7) inset, 0 -1px 0 rgba(0,0,0,.04) inset, 0 12px 34px -12px rgba(20,15,8,.4), 0 2px 8px -4px rgba(20,15,8,.25)";
+const SH_D="0 1px 0 rgba(255,255,255,.18) inset, 0 -1px 0 rgba(0,0,0,.2) inset, 0 14px 40px -14px rgba(0,0,0,.6)";
+const PALETTES={
+ home:{label:"Trang chủ",src:":root + .dark (CSS inline trang chủ)",
+  light:["#ECE5D8","#E4DCCB","#DDD3BF","#19140D","#6B6253","#6B6253","#9C9384","#2A2318","#4A4234","#CF5A22","#FF5A1F","#E07A3E","#FFFFFF","rgba(255,251,243,.62)","rgba(236,229,216,.42)","rgba(255,255,255,.55)","rgba(255,255,255,.5)","rgba(255,255,255,.6)","#005FCC",SH_L],
+  dark:["#0C0A07","#13100B","#16120B","#E9E2D4","#A39A88","#A39A88","#6E6450","#2A241A","#6E6450","#CF5A22","#FF5A1F","#E07A3E","#120C06","rgba(60,52,40,.42)","rgba(18,15,10,.32)","rgba(255,255,255,.14)","rgba(255,255,255,.08)","rgba(255,255,255,.14)","#005FCC",SH_D]},
+ wl:{label:"Blog WetLabs",src:"styles.css :root (kem) + :root tối + all-runs.css",fonts:['"IBM Plex Sans",Grotesk,Arial,sans-serif','"IBM Plex Mono",Mono,monospace'],
+  light:["#ECE5D8","#E4DCCB","#F2DDC8","#19140D","#19140D","#6B6253","#6B6253","#CFC5B4","#19140D","#CF5A22","#CF5A22","#CF5A22","#ECE5D8","rgba(255,251,243,.62)","rgba(236,229,216,.42)","rgba(255,255,255,.55)","rgba(207,90,34,.08)","#D4CBBC","#CF5A22",SH_L],
+  dark:["#050505","#151515","#282115","#EDEDED","#EDEDED","#B5B7BA","#A7A7A7","#3A3A3A","#EDEDED","#D49A34","#E0AA49","#B07300","#050505","rgba(21,21,21,.96)","rgba(21,21,21,.96)","#343434","#242424","#3A3A3A","#D49A34","0 28px 80px rgba(0,0,0,.4)"]},
+ careers:{label:"Careers",src:":root inline /careers (chỉ sáng)",
+  light:["#EFE9DE","#F4EEDE","#F4EEDE","#1C1210","#3A2417","#9E5A39","#B8896A","rgba(28,18,16,.07)","rgba(28,18,16,.12)","#C8501F","#C8501F","#9E5A39","#FFFFFF","rgba(255,251,243,.62)","rgba(236,229,216,.42)","rgba(255,255,255,.55)","rgba(255,255,255,.5)","rgba(255,255,255,.6)","#005FCC",SH_L],dark:null},
+ priv:{label:"Privacy",src:"style inline /privacy (chỉ tối, Outfit)",fonts:['Outfit,system-ui,sans-serif',null],
+  light:null,dark:["#080605","#080605","#080605","rgba(249,244,237,.95)","rgba(249,244,237,.6)","rgba(249,244,237,.7)","rgba(249,244,237,.45)","rgba(249,244,237,.12)","rgba(249,244,237,.78)","rgba(204,120,72,.9)","rgba(204,120,72,.9)","rgba(204,120,72,.9)","#080605","rgba(60,52,40,.42)","rgba(18,15,10,.32)","rgba(255,255,255,.14)","rgba(255,255,255,.08)","rgba(255,255,255,.14)","#005FCC",SH_D]}
+};
+/* vai trò không đo được trực tiếp (dùng giá trị gần nhất) — khai ra ở ghi chú hệ */
+const GUESS={wl:"deep sáng = hàng chọn #F2DDC8; kính/chip dùng giá trị trang chủ (blog không có kính)",careers:"deep = panel; kính/chip lấy từ trang chủ; tối: dùng tối của trang chủ",priv:"line (α .12) suy ra, không đo; sáng: dùng sáng của trang chủ"};
+const SWEEP={"home":{"pad (.wrap padding)":{"f":[20,20,20,20,20,20,20,20,20,20.5,21,21.5,22,22.5,23,23.5,24,24.5,25,25.5,26,26.5,27,27.5,28,28.5,29,29.5,30,30.5,31,31.5,32,32.5,33,33.5,34,34.5,35,35.5,36,36.5,37,37.5,38,38.5,39,39.5,40,40.5,41,41.5,42,42.5,43,43.5,44,44.5,45,45.5,46,46.5,47,47.5,48,48.5,49,49.5,50,50.5,51,51.5,52,52.5,53,53.5,54,54.5,55,55.5,56,56.5,57,57.5,58,58.5,59,59.5,60,60.5,61,61.5,62,62.5,63,63.5,64,64.5,65,65.5,66,66.5,67,67.5,68,68.5,69,69.5,70,70.5,71,71.5,72,72.5,73,73.5,74,74.5,75,75.5,76,76.5,77,77.5,78,78.5,79,79.5,80]},"frame border":{"s":[[320,8],[690,14]]},"stage .frame inset":{"s":[[320,16],[690,22]]},"wordmark fs":{"f":[72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72.6,73.7,74.8,75.9,77,78.1,79.2,80.3,81.4,82.5,83.6,84.7,85.8,86.9,88,89.1,90.2,91.3,92.4,93.5,94.6,95.7,96.8,97.9,99,100.1,101.2,102.3,103.4,104.5,105.6,106.7,107.8,108.9,110,111.1,112.2,113.3,114.4,115.5,116.6,117.7,118.8,119.9,121,122.1,123.2,124.3,125.4,126.5,127.6,128.7,129.8,130.9,132,133.1,134.2,135.3,136.4,137.5,138.6,139.7,140.8,141.9,143,144.1,145.2,146.3,147.4,148,148,148,148,148,148,148,148,148,148,148,148,148,148,148,148,148,148,148,148,148,148,148,148,148,148]},"tagline fs":{"f":[18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18.2,18.4,18.6,18.8,19,19.2,19.4,19.6,19.8,20,20.2,20.4,20.6,20.8,21,21.2,21.4,21.6,21.8,22,22.2,22.4,22.6,22.8,23,23.2,23.4,23.6,23.8,24,24.2,24.4,24.6,24.8,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25]},".h2 fs":{"f":[30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30.4,30.8,31.3,31.7,32.2,32.7,33.1,33.6,34,34.5,35,35.4,35.9,36.3,36.8,37.3,37.7,38.2,38.6,39.1,39.6,40,40.5,40.9,41.4,41.9,42.3,42.8,43.2,43.7,44.2,44.6,45.1,45.5,46,46.5,46.9,47.4,47.8,48.3,48.8,49.2,49.7,50.1,50.6,51.1,51.5,52,52.4,52.9,53.4,53.8,54.3,54.7,55.2,55.7,56.1,56.6,57,57.5,58,58.4,58.9,59.3,59.8,60.3,60.7,61.2,61.6,62.1,62.6,63,63.5,63.9,64.4,64.9,65.3,65.8,66.2,66.7,67.2,67.6,68,68,68,68,68,68,68,68,68,68,68,68,68]},"contact .h2 fs":{"f":[38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38.4,39,39.7,40.3,41,41.6,42.3,42.9,43.6,44.2,44.9,45.5,46.2,46.8,47.5,48.1,48.8,49.4,50.1,50.7,51.4,52,52.7,53.3,54,54.6,55.3,55.9,56.6,57.2,57.9,58.5,59.2,59.8,60.5,61.1,61.8,62.4,63.1,63.7,64.4,65,65.7,66.3,67,67.6,68.3,68.9,69.6,70.2,70.9,71.5,72.2,72.8,73.5,74.1,74.8,75.4,76.1,76.7,77.4,78,78.7,79.3,80,80.6,81.3,81.9,82.6,83.2,83.9,84.5,85.2,85.8,86.5,87.1,87.8,88.4,89.1,89.7,90.4,91,91.7,92.3,93,93.6,94.3,94.9,95.6,96.2,96.9,97.5,98.2,98.8,99.5,100.1,100.8,101.4,102.1,102.7,103.4,104]},".lead fs":{"f":[15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15.1,15.3,15.4,15.5,15.6,15.8,15.9,16,16.1,16.3,16.4,16.5,16.6,16.8,16.9,17,17.1,17.3,17.4,17.5,17.6,17.8,17.9,18,18.1,18.3,18.4,18.5,18.6,18.8,18.9,19,19,19,19,19,19,19,19,19]},"faq .qt fs":{"f":[18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18.1,18.2,18.4,18.6,18.8,19,19.2,19.4,19.6,19.8,20,20.1,20.3,20.5,20.7,20.9,21.1,21.3,21.5,21.7,21.9,22,22.2,22.4,22.6,22.8,23,23.2,23.4,23.6,23.8,23.9,24.1,24.3,24.5,24.7,24.9,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25]},"sec padding-block":{"f":[72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,150,150,150,150,150,150,150,150,150,150]},"sec-head mb":{"f":[36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36.6,37.2,37.8,38.4,39,39.6,40.2,40.8,41.4,42,42.6,43.2,43.8,44.4,45,45.6,46.2,46.8,47.4,48,48.6,49.2,49.8,50.4,51,51.6,52.2,52.8,53.4,54,54.6,55.2,55.8,56.4,57,57.6,58.2,58.8,59.4,60,60.6,61.2,61.8,62.4,63,63.6,64.2,64.8,65.4,66,66.6,67.2,67.8,68.4,69,69.6,70.2,70.8,71.4,72,72.6,73.2,73.8,74.4,75,75.6,76.2,76.8,77.4,78,78.6,79.2,79.8,80,80,80,80,80,80,80,80,80,80,80,80,80,80,80,80,80,80,80,80,80,80,80,80,80,80,80]},"navcta":{"s":[[320,0],[730,1]]},"news-pop":{"s":[[320,1]]},"BOM panel":{"s":[[320,0],[910,1]]},"titleblock":{"s":[[320,0],[910,1]]},"axis triad":{"s":[[320,0],[910,1]]},"meet-grid cols":{"s":[[320,1],[990,2]]},"chal-grid cols":{"s":[[320,1],[870,3]]},"opp-head cols":{"s":[[320,1],[870,2]]},"prim-grid cols":{"s":[[320,2],[990,5]]},"plat-head cols":{"s":[[320,1],[870,2]]},"pad-grid cols":{"s":[[320,1],[870,3]]},"faq-grid cols":{"s":[[320,1],[870,2]]},"footer-top cols":{"s":[[320,2],[870,4]]},"robot w":{"f":[250,257,265,273,281,289,296,304,312,320,328,335,343,351,359,360,360,360,360,360,360,360,360,360,360,360,360,360,360,360,360,360,360,360,360,360,360,360,360,360,360,360,360,360,360,360,360,360,360,360,360,360,360,360,360,360,360,360,360,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372,372]},"robot h":{"f":[284,292,301,310,319,328,337,346,354,363,372,381,390,399,408,409,409,409,409,409,409,409,409,409,409,409,409,409,409,409,409,409,409,409,409,409,409,409,409,409,409,409,409,409,409,409,409,409,409,409,409,409,409,409,409,409,409,409,409,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423,423]},"robot cx%":{"s":[[320,50],[910,58]]},"robot cy%":{"s":[[320,68],[570,66],[910,54]]},"loop svg scale":{"f":[0.28,0.29,0.3,0.31,0.32,0.33,0.34,0.35,0.36,0.369,0.378,0.387,0.396,0.405,0.414,0.423,0.432,0.441,0.45,0.459,0.468,0.477,0.486,0.495,0.504,0.513,0.522,0.531,0.54,0.549,0.558,0.567,0.576,0.585,0.594,0.603,0.612,0.621,0.63,0.639,0.648,0.657,0.666,0.675,0.684,0.693,0.702,0.711,0.72,0.729,0.738,0.747,0.756,0.765,0.774,0.783,0.792,0.801,0.81,0.819,0.828,0.837,0.846,0.855,0.864,0.873,0.882,0.891,0.9,0.909,0.918,0.927,0.936,0.945,0.954,0.963,0.972,0.981,0.99,0.999,1.008,1.017,1.026,1.035,1.044,1.053,1.062,1.071,1.08,1.089,1.098,1.107,1.116,1.125,1.134,1.143,1.152,1.161,1.17,1.179,1.188,1.197,1.206,1.215,1.224,1.233,1.242,1.251,1.26,1.269,1.278,1.287,1.296,1.295,1.294,1.293,1.292,1.291,1.29,1.289,1.288,1.287,1.286,1.285,1.284,1.283,1.282,1.281,1.28]},"loop min text px":{"f":[2.5,2.6,2.7,2.8,2.9,3,3.1,3.2,3.2,3.3,3.4,3.5,3.6,3.6,3.7,3.8,3.9,4,4.1,4.1,4.2,4.3,4.4,4.5,4.5,4.6,4.7,4.8,4.9,4.9,5,5.1,5.2,5.3,5.3,5.4,5.5,5.6,5.7,5.8,5.8,5.9,6,6.1,6.2,6.2,6.3,6.4,6.5,6.6,6.6,6.7,6.8,6.9,7,7,7.1,7.2,7.3,7.4,7.5,7.5,7.6,7.7,7.8,7.9,7.9,8,8.1,8.2,8.3,8.3,8.4,8.5,8.6,8.7,8.7,8.8,8.9,9,9.1,9.2,9.2,9.3,9.4,9.5,9.6,9.6,9.7,9.8,9.9,10,10,10.1,10.2,10.3,10.4,10.4,10.5,10.6,10.7,10.8,10.9,10.9,11,11.1,11.2,11.3,11.3,11.4,11.5,11.6,11.7,11.7,11.6,11.6,11.6,11.6,11.6,11.6,11.6,11.6,11.6,11.6,11.6,11.5,11.5,11.5,11.5]},"menu-panel w":{"s":[[320,288],[330,298],[340,300]]},"footer wordmark w":{"f":[243,251,258,266,274,281,289,296,304,312,319,327,334,342,350,357,365,372,380,388,395,403,410,418,426,433,441,448,456,464,471,479,486,494,502,509,517,524,532,540,547,555,562,570,578,585,593,600,608,616,623,631,638,646,654,661,669,676,684,692,699,707,714,722,730,737,745,752,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760]}},"careers":{"layout cols":{"s":[[320,1],[870,2]]},"layout gap":{"s":[[320,40],[870,72]]},"intro position":{"s":[[320,"static"],[870,"sticky"]]},"h1 fs":{"f":[28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.8,28.9,29.1,29.4,29.6,29.9,30.2,30.4,30.7,30.9,31.2,31.5,31.7,32,32.2,32.5,32.8,33,33.3,33.5,33.8,34.1,34.3,34.6,34.8,35.1,35.4,35.6,35.9,36.1,36.4,36.7,36.9,37.2,37.4,37.7,38,38.2,38.5,38.7,39,39.3,39.5,39.8,40,40,40,40,40,40,40]},"role direction":{"s":[[320,"column"],[870,"row"]]},"max role title lines":{"s":[[320,3],[360,2],[600,1],[870,6],[1010,5],[1070,4],[1080,3]]}},"privacy":{"h1 fs":{"f":[32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32.5,33,33.5,34,34.5,35,35.5,36,36.5,37,37.5,38,38.5,39,39.5,40,40.5,41,41.5,42,42.5,43,43.5,44,44.5,45,45.5,46,46.5,47,47.5,48,48.5,49,49.5,50,50.5,51,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2,51.2]},"content left":{"f":[20,20,20,20,20,20,20,20,20,21,21,22,22,23,23,24,24,25,25,26,26,27,27,28,28,29,29,30,30,31,31,32,32,33,33,34,34,35,35,36,36,37,37,38,38,39,39,40,40,41,41,42,42,45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200,205,210,215,220,225,230,235,240,245,250,255,260,265,270,275,280,285,290,295,300,305,310,315,320,325,330,335,340,345,350,355,360,365,370,375,380,385,390,395,400,405,410,415,420]},"content w":{"f":[280,290,300,310,320,330,340,350,360,369,378,387,396,405,414,423,432,441,450,459,468,477,486,495,504,513,522,531,540,549,558,567,576,585,594,603,612,621,630,639,648,657,666,675,684,693,702,711,720,729,738,747,756,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760,760]},"body fs":{"s":[[320,11]]}},"wetlab":{"shell w":{"f":[284,294,304,314,324,334,344,354,364,374,384,394,404,414,424,434,444,454,464,474,484,494,504,514,524,534,544,554,564,574,584,594,604,614,604,614,624,634,644,654,664,674,684,694,704,714,724,734,744,754,764,774,784,794,804,814,824,834,844,854,864,874,884,894,904,914,924,934,944,954,964,974,984,994,1004,1014,1024,1034,1036,1046,1056,1066,1076,1086,1096,1106,1116,1126,1136,1146,1156,1166,1176,1186,1196,1206,1216,1226,1236,1246,1256,1266,1276,1286,1296,1306,1316,1326,1336,1346,1356,1360,1360,1360,1360,1360,1360,1360,1360,1360,1360,1360,1360,1360,1360,1360,1360,1360,1360]},"shell gutter":{"f":[18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,35,40,45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120]},"article-layout":{"s":[[320,"block"],[1100,"grid"]]},"sidebar sticky":{"s":[[320,"static"],[1100,"sticky"]]},"h1 fs":{"f":[29,29,29,29,29,29,29,29.6,30.4,31.2,31.9,32.7,33.4,34.2,35,35.7,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30.2,30.6,31,31.3,31.7,32,32.4,32.8,33.1,33.5,33.8,34.2,34.6,34.9,35.3,35.6,36,36.4,36.7,37.1,37.4,37.8,38.2,38.5,38.9,39.2,39.6,40,40.3,40.7,41,41.4,41.8,42.1,42.5,42.8,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43,43]},"dek fs":{"s":[[320,19],[660,22]]},"body fs":{"s":[[320,17]]},"runs table mode":{"s":[[320,"block"],[750,"table"]]},"runs filters cols":{"s":[[320,2],[750,4]]},"pair-grid cols":{"s":[[320,1]]},"benchmark td pad":{"s":[[320,5],[610,12]]},"table swipe hint":{"s":[[320,"\"Swipe table if needed\""],[660,"none"]]}}};
+const DECL={
+ home:[[560,"robot top 68%"],[680,"page-frame 14→8 · stage frame 22→16"],[720,"ẩn nút Careers"],[860,"lưới 3→1 · footer 4→2 · FAQ 1 cột"],[900,"ẩn HUD · robot/hero-copy bản mobile · JS mob"],[901,"min-width: news-pop bottom 258 · :has() mờ tagline"],[980,"primitives 5→2 · meet 1 cột (+ .hero-grid chết)"],[1080,".hero-statusbar/.hero-bom: không có trong DOM",1],[1100,".news-pop display:none bị ghi đè",1],[1180,".hero-pop: không có trong DOM",1]],
+ careers:[[860,"1 cột · intro static · role dọc"]],
+ wetlab:[[600,"benchmark-table thu gọn"],[650,"shell 100%−36 · h1/dek nhỏ · swipe hint"],[740,"runs: bảng → thẻ · lọc 2 cột"],[1100,"layout 2 cột · mục lục sticky (max 1099 / min 1100)"]],
+ privacy:[]
+};
+const FORM={"pad (.wrap padding)":[20,5,96],"wordmark fs":[72,11,148],"tagline fs":[18,2,25],".h2 fs":[30,4.6,68],"contact .h2 fs":[38,6.5,104],".lead fs":[15,1.25,19],"faq .qt fs":[18,1.9,25],"sec padding-block":[72,10,150],"sec-head mb":[36,6,80],"h1 fs@careers":[28.8,2.6,40],"h1 fs@privacy":[32,5,51.2]};
+const PAGES={home:"Trang chủ",careers:"Careers",wetlab:"Blog WetLabs",privacy:"Privacy"};
+const W0=320,W1=1600;
+
+(function () {
+  const root = document.documentElement;
+  const state = { pal:"home", mode: matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light", lab:"home", w:390 };
+  try { Object.assign(state, JSON.parse(localStorage.getItem("mecka-kit") || "{}")); } catch (e) {}
+  if (!PALETTES[state.pal]) state.pal = "home";
+
+  const toast = (t) => { const el = document.getElementById("toast"); el.textContent = t; el.classList.add("show"); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove("show"), 1700); };
+  const copy = async (text, msg) => { try { await navigator.clipboard.writeText(text); toast(msg); } catch (e) { toast("Trình duyệt chặn clipboard, hãy copy tay"); } };
+
+  const vals = (key, mode) => PALETTES[key][mode] || PALETTES.home[mode];
+  const decl = (v, fonts) => ROLES.map((r, i) => "--mk-" + r + ":" + v[i]).join(";") + (fonts ? (fonts[0] ? ";--mk-sans:" + fonts[0] : "") + (fonts[1] ? ";--mk-mono:" + fonts[1] : "") : "") + ";color:var(--mk-ink)";
+
+  /* CSS có phạm vi: .mk-dark/.mk-light theo hệ đang chọn; .pal-<hệ>-<chế độ> cố định cho thẻ của từng trang */
+  const scoped = document.createElement("style"); document.head.appendChild(scoped);
+  const fixed = [];
+  const PK = { home:"home", wl:"wl", careers:"careers", priv:"priv" };
+  Object.keys(PALETTES).forEach((k) => ["light","dark"].forEach((m) => fixed.push(".pal-" + PK[k] + "-" + m + "{" + decl(vals(k, m), PALETTES[k].fonts) + "}")));
+  const fixedCss = fixed.join("\n");
+
+  function apply() {
+    const p = PALETTES[state.pal], v = vals(state.pal, state.mode);
+    ROLES.forEach((r, i) => root.style.setProperty("--mk-" + r, v[i]));
+    const f = p.fonts || [];
+    root.style.setProperty("--mk-sans", f[0] || '"Space Grotesk","Helvetica Neue",Helvetica,Arial,sans-serif');
+    root.style.setProperty("--mk-mono", f[1] || '"Space Mono",ui-monospace,Menlo,monospace');
+    root.dataset.mode = state.mode;
+    scoped.textContent = ".mk-dark{" + decl(vals(state.pal, "dark")) + ";background:var(--mk-bg)}\n.mk-light{" + decl(vals(state.pal, "light")) + ";background:var(--mk-bg)}\n" + fixedCss;
+    document.querySelectorAll("#swatches .sw").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === state.pal));
+    document.querySelectorAll("#mode button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === state.mode));
+    const miss = !p[state.mode];
+    document.getElementById("palnote").textContent = p.label + " · nguồn: " + p.src + (miss ? " · KHÔNG có chế độ " + (state.mode === "dark" ? "tối" : "sáng") + ", đang hiện của trang chủ" : "") + (GUESS[state.pal] ? " · " + GUESS[state.pal] : "");
+    renderRoles(v);
+    try { localStorage.setItem("mecka-kit", JSON.stringify(state)); } catch (e) {}
+  }
+
+  const sw = document.getElementById("swatches");
+  Object.entries(PALETTES).forEach(([key, p]) => {
+    const b = document.createElement("button"); b.className = "sw"; b.dataset.v = key;
+    b.innerHTML = "<i></i>" + p.label; b.querySelector("i").style.setProperty("--c", (p.light || p.dark)[9]);
+    b.onclick = () => { state.pal = key; apply(); }; sw.appendChild(b);
+  });
+  document.querySelectorAll("#mode button").forEach((b) => (b.onclick = () => { state.mode = b.dataset.v; apply(); }));
+
+  const PAIR = { bg:"ink", panel:"ink", deep:"ink", ink:"bg", body:"bg", inkSoft:"bg", inkFaint:"bg", line:"bg", lineStrong:"bg", accent:"onAccent", accentHot:"onAccent", accentSoft:"onAccent", onAccent:"accent", glassA:"ink", glassB:"ink", glassEdge:"ink", chip:"ink", chipEdge:"ink", focus:"bg" };
+  function renderRoles(v) {
+    const box = document.getElementById("roles"); box.innerHTML = "";
+    ROLES.forEach((r, i) => {
+      if (r === "shGlass") return;
+      const b = document.createElement("button"); b.className = "role";
+      b.style.background = /^rgba/.test(v[i]) ? "linear-gradient(" + v[i] + "," + v[i] + ")," + v[0] : v[i];
+      b.style.color = v[ROLES.indexOf(PAIR[r] || "ink")];
+      b.innerHTML = "<b>" + r + "</b><code>" + v[i] + "</code>";
+      b.onclick = () => copy(v[i], "Đã copy " + r + " " + v[i]); box.appendChild(b);
+    });
+  }
+
+  /* bo góc thực dùng */
+  const sh = document.getElementById("shapes");
+  [["0","section · lưới · bảng · nhãn blog"],["1","ô chú giải"],["2","nút · tag · thanh tiến độ"],["3","nút/select blog"],["7","thumb tin"],["8","mục menu"],["11","Menu · Careers · peek"],["12","thẻ tin · icon pad"],["14","menu-panel"],["16","nav kính"],["18","thẻ pad"],["50%","nút ↗ · chấm"]].forEach(([r, n]) => {
+    const c = document.createElement("div"); c.className = "shape-cell";
+    c.innerHTML = '<i style="border-radius:' + (r.includes("%") ? r : r + "px") + '"></i>' + r + "<br>" + n; sh.appendChild(c);
+  });
+  const tr = document.getElementById("tickrail");
+  for (let i = 0; i < 40; i++) { const t = document.createElement("i"); t.style.cssText = "width:1px;background:currentColor;flex:1 0 auto;margin-right:7px;height:" + (i % 5 ? 6 : 13) + "px"; tr.appendChild(t); }
+
+  /* phần tử điền bằng JS: sơ đồ loop, lưới primitives, bảng runs */
+  function fill(scope) {
+    scope.querySelectorAll('[data-fill="loop"]').forEach((el) => {
+      el.innerHTML = '<svg viewBox="0 0 1000 350" role="img" aria-label="Sơ đồ giữ chỗ 1000×350"><rect x="20" y="30" width="250" height="120"/><rect x="20" y="200" width="250" height="120"/><rect x="730" y="115" width="250" height="120"/><rect x="390" y="95" width="220" height="160" style="stroke:var(--mk-accent)"/><path d="M270 90 H390 M270 260 H390 M610 175 H730"/><circle cx="390" cy="90" r="5"/><circle cx="390" cy="260" r="5"/><circle cx="730" cy="175" r="5"/>' +
+        '<text class="big" x="40" y="80" font-size="18">Hệ sinh thái A</text><text x="40" y="104" font-size="9">NHÃN 9PX · PHẦN CỨNG</text><text class="big" x="40" y="250" font-size="18">Hệ sinh thái B</text><text x="40" y="274" font-size="9">NHÃN 9PX · MÔ HÌNH</text><text class="big" x="750" y="165" font-size="18">Hệ sinh thái C</text><text x="750" y="189" font-size="9">NHÃN 9PX · THƯƠNG MẠI</text><text class="big" x="410" y="170" font-size="18">Lớp tích hợp</text><text x="410" y="194" font-size="9">DỮ LIỆU + TRIỂN KHAI</text></svg>';
+    });
+    scope.querySelectorAll('[data-fill="prim"]').forEach((el) => {
+      el.innerHTML = Array.from({ length: 10 }, (_, i) => '<div class="mk-tile' + (i === 1 ? " is-hover" : "") + '"><span class="pv"></span><span class="pidx">' + String(i + 1).padStart(2, "0") + '</span><span class="pl"><div class="pname">Mô-đun ' + (i + 1) + '</div><div class="pcode">MK-' + String(i + 1).padStart(2, "0") + "</div></span></div>").join("");
+    });
+    scope.querySelectorAll('[data-fill="runs"]').forEach((el) => el.appendChild(document.getElementById("tpl-runs").content.cloneNode(true)));
+    scope.querySelectorAll(".mk-faqq").forEach((q) => (q.onclick = () => q.parentElement.classList.toggle("open")));
+  }
+  fill(document);
+  document.getElementById("loopdemo").setAttribute("data-fill", "loop"); fill(document.getElementById("loopdemo").parentElement);
+  document.getElementById("primdemo").setAttribute("data-fill", "prim"); fill(document.getElementById("primdemo").parentElement);
+
+  /* một khung màn hình = container "mk" với bề rộng thật; zoom chỉ để thu nhỏ khi xem */
+  function frame(page, w, h, z) {
+    const s = document.createElement("div"); s.className = "scr";
+    s.style.cssText = "width:" + w + "px;height:" + h + "px;--stage-h:" + h + "px;zoom:" + z;
+    const inn = document.createElement("div"); inn.className = "scr-in";
+    if (page === "home" || page === "hero") inn.appendChild(document.getElementById("tpl-hero").content.cloneNode(true));
+    if (page !== "hero") inn.appendChild(document.getElementById("tpl-" + page).content.cloneNode(true));
+    s.appendChild(inn);
+    if (page === "home" || page === "hero") { const f = document.createElement("div"); f.className = "mk-frame"; f.innerHTML = '<i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i>'; s.appendChild(f); }
+    fill(s);
+    s.querySelectorAll(".mk-wl-toc").forEach((d) => (d.open = w >= 1100));
+    return s;
+  }
+  document.querySelectorAll("[data-screens]").forEach((row) => {
+    row.dataset.sizes.split(",").forEach((sz) => {
+      const [wh, z] = sz.split(":"), [w, h] = wh.split("x").map(Number);
+      const fig = document.createElement("figure"); fig.className = "scr-fig";
+      fig.appendChild(frame(row.dataset.screens, w, h, +z));
+      const cap = document.createElement("figcaption"); cap.className = "scr-cap"; cap.textContent = w + " × " + h + " · thu nhỏ " + Math.round(z * 100) + "%";
+      fig.appendChild(cap); row.appendChild(fig);
+    });
+  });
+  const hd = document.getElementById("herodemo");
+  [[1440, 900, .42], [390, 844, .45]].forEach(([w, h, z]) => { const fig = document.createElement("figure"); fig.className = "scr-fig"; fig.appendChild(frame("hero", w, h, z)); const c = document.createElement("figcaption"); c.className = "scr-cap"; c.textContent = w + " × " + h; fig.appendChild(c); hd.appendChild(fig); });
+  const rd = document.getElementById("runsdemo");
+  [[900, .7], [390, .8]].forEach(([w, z]) => { const s = document.createElement("div"); s.className = "scr pal-wl-dark mk-wl"; s.style.cssText = "width:" + w + "px;height:640px;zoom:" + z; const inn = document.createElement("div"); inn.className = "scr-in"; inn.style.padding = "0 18px"; inn.appendChild(document.getElementById("tpl-runs").content.cloneNode(true)); s.appendChild(inn); const fig = document.createElement("figure"); fig.className = "scr-fig"; fig.appendChild(s); const c = document.createElement("figcaption"); c.className = "scr-cap"; c.textContent = w + "px · " + (w > 740 ? "bảng" : "thẻ (≤740)"); fig.appendChild(c); rd.appendChild(fig); });
+
+  /* ---------- R1: bản đồ điểm gãy ---------- */
+  const X = (w) => ((w - W0) / (W1 - W0)) * 100;
+  const pageKey = { home:"home", careers:"careers", wetlab:"wetlab", privacy:"privacy" };
+  const bp = document.getElementById("bpmap"), det = document.getElementById("bpdetail");
+  let axis = '<div class="bp-axis">'; for (let w = 320; w <= 1600; w += 160) axis += '<span style="left:' + X(w) + '%">' + w + "</span>"; bp.innerHTML = axis + "</div>";
+  Object.keys(PAGES).forEach((pg) => {
+    const data = SWEEP ? SWEEP[pg] : {};
+    const ticks = [];
+    Object.entries(data).forEach(([k, d]) => { if (d.s) d.s.slice(1).forEach(([w, v], i) => ticks.push({ w, k, from: d.s[i][1], to: v })); });
+    const byW = {}; ticks.forEach((t) => (byW[t.w] = (byW[t.w] || []).concat(t)));
+    const lane = document.createElement("div"); lane.className = "bp-lane";
+    const rows = Math.max(1, ...Object.values(byW).map((a) => a.length));
+    lane.style.minHeight = Math.max(58, 22 + rows * 13) + "px";
+    lane.innerHTML = "<b>" + PAGES[pg] + "<small>" + ticks.length + " thay đổi · " + DECL[pg].length + " @media</small></b>";
+    const trk = document.createElement("div"); trk.className = "bp-track";
+    DECL[pg].forEach(([w, t, dead], i) => { const d = document.createElement("div"); d.className = "bp-decl" + (dead ? " dead" : ""); d.style.left = X(w) + "%"; d.title = w + "px · " + t; const near = i && w - DECL[pg][i - 1][0] < 40; d.innerHTML = '<em style="' + (near ? "top:auto;bottom:2px" : "") + '">' + w + "</em>"; trk.appendChild(d); });
+    Object.entries(byW).forEach(([w, arr]) => arr.forEach((t, i) => {
+      const b = document.createElement("button"); b.className = "bp-tick"; b.style.left = X(+w - 5) + "%"; b.style.top = 22 + i * 13 + "px";
+      b.setAttribute("aria-label", PAGES[pg] + " " + t.k + " đổi tại " + w + "px");
+      b.onclick = () => { det.textContent = PAGES[pg] + " · " + t.k + ": " + t.from + " → " + t.to + " (đổi giữa " + (w - 10) + " và " + w + "px)" + (DECL[pg].find((d) => Math.abs(d[0] - (w - 10)) <= 10) ? " · khớp @media " + DECL[pg].find((d) => Math.abs(d[0] - (w - 10)) <= 10)[1] : " · không khớp @media nào (do fluid/JS)"); };
+      trk.appendChild(b);
+    }));
+    lane.appendChild(trk); bp.appendChild(lane);
+  });
+
+  /* ---------- R2: giá trị co giãn ---------- */
+  const fl = document.getElementById("fluidrows"); const nowLines = [];
+  if (SWEEP) Object.entries(SWEEP).forEach(([pg, facets]) => Object.entries(facets).forEach(([k, d]) => {
+    if (!d.f) return;
+    const arr = d.f, lo = Math.min(...arr), hi = Math.max(...arr), span = hi - lo || 1;
+    const pts = arr.map((v, i) => (i / (arr.length - 1)) * 1000 + "," + (50 - ((v - lo) / span) * 46)).join(" ");
+    const fk = FORM[k] || FORM[k + "@" + pg]; let calc = "";
+    if (fk) { const [mn, vw, mx] = fk; calc = arr.map((_, i) => { const w = W0 + i * 10, v = Math.min(mx, Math.max(mn, (w * vw) / 100)); return (i / (arr.length - 1)) * 1000 + "," + (50 - ((v - lo) / span) * 46); }).join(" "); }
+    let first = null, last = null; for (let i = 1; i < arr.length; i++) if (arr[i] !== arr[i - 1]) { if (first === null) first = W0 + i * 10; last = W0 + i * 10; }
+    const row = document.createElement("div"); row.className = "fl-row";
+    row.innerHTML = "<div><b>" + k + "</b><code>" + PAGES[pg] + (fk ? " · clamp(" + fk[0] + "px, " + fk[1] + "vw, " + fk[2] + "px)" : "") + "</code></div>" +
+      '<svg viewBox="0 0 1000 54" preserveAspectRatio="none" aria-hidden="true">' + (first ? '<line class="fl-bp" x1="' + X(first) * 10 + '" x2="' + X(first) * 10 + '" y1="0" y2="54"/>' : "") + (last ? '<line class="fl-bp" x1="' + X(last) * 10 + '" x2="' + X(last) * 10 + '" y1="0" y2="54"/>' : "") + (calc ? '<polyline class="fl-calc" points="' + calc + '"/>' : "") + '<polyline class="fl-line" points="' + pts + '"/><line class="fl-now" y1="0" y2="54"/></svg>' +
+      '<div class="fl-meta">' + arr[0] + " @320 → " + arr[arr.length - 1] + " @1600<br>đổi từ " + first + " tới " + last + " · @390 = " + arr[7] + "</div>";
+    nowLines.push(row.querySelector(".fl-now")); fl.appendChild(row);
+  }));
+
+  /* ---------- R3: phòng thử ---------- */
+  const view = document.getElementById("labview"), range = document.getElementById("labw"), out = document.getElementById("labout"), read = document.getElementById("labread"), ruler = document.getElementById("labruler");
+  let cur = null;
+  const valAt = (d, w) => { w = Math.min(W1, Math.max(W0, Math.round(w / 10) * 10)); if (d.f) return d.f[(w - W0) / 10]; let v = d.s[0][1]; d.s.forEach(([x, y]) => { if (x <= w) v = y; }); return v; };
+  function renderLab() {
+    const w = +state.w, pg = state.lab;
+    out.textContent = w + "px"; range.value = w;
+    document.querySelectorAll("#labpage button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === pg));
+    if (!cur || cur.dataset.pg !== pg) { view.innerHTML = ""; cur = frame(pg, w, 640, 1); cur.dataset.pg = pg; view.appendChild(cur); }
+    const z = Math.min(1, (view.clientWidth - 2) / w);
+    cur.style.width = w + "px"; cur.style.zoom = z; cur.style.height = Math.round(638 / z) + "px"; cur.style.setProperty("--stage-h", Math.round(638 / z) + "px");
+    cur.querySelectorAll(".mk-wl-toc").forEach((d) => (d.open = w >= 1100));
+    ruler.innerHTML = DECL[pg].map(([x, t, dead], i) => '<i style="left:' + X(x) + '%' + (dead ? ';background:var(--mk-accentHot)' : '') + '" title="' + t + '"></i>' + (i && x - DECL[pg][i - 1][0] < 40 ? "" : '<span style="left:' + X(x) + '%">' + x + "</span>")).join("") + '<i class="on" style="left:' + X(w) + '%"></i>';
+    const data = SWEEP ? SWEEP[pg] : {};
+    read.innerHTML = '<tr><td colspan="2" style="font-weight:700">Đo trên ' + PAGES[pg] + " @ " + Math.round(w / 10) * 10 + "px</td></tr>" + Object.entries(data).map(([k, d]) => { const v = valAt(d, w), p = valAt(d, w - 10); return '<tr class="' + (v !== p ? "chg" : "") + '"><td>' + k + "</td><td>" + v + "</td></tr>"; }).join("");
+    nowLines.forEach((l) => { l.setAttribute("x1", X(w) * 10); l.setAttribute("x2", X(w) * 10); });
+    try { localStorage.setItem("mecka-kit", JSON.stringify(state)); } catch (e) {}
+  }
+  range.oninput = () => { state.w = +range.value; renderLab(); };
+  document.querySelectorAll("#labpage button").forEach((b) => (b.onclick = () => { state.lab = b.dataset.v; renderLab(); }));
+  document.querySelectorAll("#labpre button").forEach((b) => (b.onclick = () => { state.w = +b.dataset.v; renderLab(); }));
+  addEventListener("resize", renderLab);
+
+  /* nút Copy HTML cho mỗi thẻ */
+  document.querySelectorAll(".spec").forEach((spec) => {
+    const stage = spec.querySelector(".stage"); if (!stage || !spec.querySelector(".spec-h")) return;
+    let foot = spec.querySelector(".spec-f");
+    if (!foot) { foot = document.createElement("div"); foot.className = "spec-f"; foot.innerHTML = '<span class="note"></span>'; spec.appendChild(foot); }
+    const b = document.createElement("button"); b.className = "copy"; b.textContent = "Copy HTML";
+    b.onclick = () => copy(stage.innerHTML.trim().replace(/\s+data-sig-state="[^"]*"/g, "").replace(/\n\s+/g, "\n"), "Đã copy HTML " + spec.querySelector(".spec-h b").textContent);
+    foot.appendChild(b);
+  });
+
+  document.getElementById("copy-tokens").onclick = () => {
+    const v = vals(state.pal, state.mode);
+    copy(":root {\n" + ROLES.map((r, i) => "  --mk-" + r + ": " + v[i] + ";").join("\n") + "\n  --mk-maxw: 1440px;\n  --mk-pad: clamp(20px, 5cqi, 96px);\n  --mk-ease: cubic-bezier(.22,.61,.36,1);\n}", "Đã copy token " + PALETTES[state.pal].label + " " + (state.mode === "dark" ? "tối" : "sáng"));
+  };
+
+  const links = [...document.querySelectorAll(".side a")];
+  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) links.forEach((a) => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id)); }), { rootMargin: "-30% 0px -60% 0px" });
+  document.querySelectorAll("section.block").forEach((s) => io.observe(s));
+
+  apply(); renderLab();
+})();
+</script>
+
+</body>
+</html>

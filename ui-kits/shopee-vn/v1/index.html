@@ -1,0 +1,868 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta name="ui-kit-id" content="shopee-vn">
+<!-- UI kit rút từ trang chủ shopee.vn do user tự lưu (Webpage, Complete), đo offline + tắt JS, 30/09/2026.
+     Token: parse tĩnh khối :root (--nc-*, --nt-*, --ne-*, --nr-*, --brand-primary-color) + class Tailwind shopee-* trong CSS đã lưu;
+     số đo component: getComputedStyle trên DOM đã lưu. Không nhúng logo, ảnh hay nội dung của site (khối giữ chỗ). -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Shopee UI Kit</title>
+<meta name="ui-kit-skip" content="612fcd2a37:ảnh icon 16px của site, không nhúng (RULE-09);8bbb279cb0:ô trang trí rỗng 18×21 trong ô flash sale, không có nội dung;df3de83326:active:màu active mặc định của trình duyệt trên thẻ a, site không style;85eb275e96:active:màu active mặc định của trình duyệt trên thẻ a, site không style;e8d84b0a46:active:màu active mặc định của trình duyệt trên thẻ a, site không style">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400..700,0..1,0&display=block">
+<style>
+/* Bộ kit mặc chính token của site: mỗi màu là một vai trò --sp-<role>, mọi bo góc nhân với --k.
+   Site chỉ có giao diện sáng; palette thứ hai là theme--ofs (Shopee Mall) đổi --brand-primary-color. */
+:root {
+  --sp-primary:#ee4d2d; --sp-onPrimary:#ffffff; --sp-primaryHover:#f05d40; --sp-primaryActive:#e2492b; --sp-primaryDisabled:#facac0;
+  --sp-search:#fb5533; --sp-searchHover:#fb6445; --sp-searchActive:#ee5130; --sp-headerFrom:#f53d2d; --sp-headerTo:#ff6633;
+  --sp-primaryBg:#fef6f5; --sp-pink:#feeeea; --sp-mall:#d0011b; --sp-blue:#066bc8; --sp-link:#0088ff; --sp-green:#26aa99;
+  --sp-success:#30b566; --sp-error:#ee2c4a; --sp-caution:#f69113; --sp-flashBg:#ffe97a; --sp-flashText:#ec3814;
+  --sp-barFrom:#eb1717; --sp-barTo:#ffb000; --sp-barTrack:#ffbda6; --sp-black:#000000;
+  --sp-text87:rgba(0,0,0,.87); --sp-text80:rgba(0,0,0,.8); --sp-text65:rgba(0,0,0,.65); --sp-text54:rgba(0,0,0,.54); --sp-text26:rgba(0,0,0,.26);
+  --sp-title:#555555; --sp-label:#222222; --sp-body:#333333;
+  --sp-line:rgba(0,0,0,.09); --sp-lineSoft:rgba(0,0,0,.05); --sp-lineFooter:rgba(0,0,0,.2); --sp-hoverFill:rgba(0,0,0,.02);
+  --sp-bg:#f5f5f5; --sp-surface:#ffffff; --sp-footer:#fbfbfb; --sp-placeholder:#fafafa; --sp-mask:rgba(0,0,0,.4);
+  --sp-arrowBg:rgba(0,0,0,.18); --sp-dotBg:rgba(255,255,255,.4); --sp-dotLine:rgba(137,137,137,.4);
+  --sp-onHeader90:rgba(255,255,255,.9); --sp-onHeader70:rgba(255,255,255,.7); --sp-onHeaderLine:rgba(255,255,255,.22);
+  --sp-sh-btn:0 1px 1px 0 rgba(0,0,0,.09); --sp-sh-light:0 1px 1px 0 rgba(0,0,0,.03); --sp-sh-section:0 1px 1px 0 rgba(0,0,0,.05);
+  --sp-sh-search:0 2px 4px 0 rgba(0,0,0,.09); --sp-sh-hover:0 1px 20px 0 rgba(0,0,0,.05); --sp-sh-cat:0 0 13px 0 rgba(0,0,0,.05);
+  --sp-sh-arrow:0 1px 12px 0 rgba(0,0,0,.12); --sp-sh-pressed:inset 0 2px 1px 0 rgba(0,0,0,.05); --sp-sh-chat:0 4px 20px 0 rgba(28,28,51,.16);
+  --sp-sh-tile:0 1px 1px 0 rgba(0,0,0,.2); --sp-sh-depth9:0 0 9px 0 rgba(0,0,0,.12); --sp-sh-banner:0 1px 8px 0 rgba(0,0,0,.09);
+  --k: 1;
+  --ease: cubic-bezier(.4, 0, .6, 1);
+  --font: "Helvetica Neue", Helvetica, Roboto, "Droid Sans", Arial, sans-serif;
+  --mono: "Roboto Mono", ui-monospace, Menlo, monospace;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--sp-bg); color: var(--sp-text80); font: 400 14px/1.2 var(--font); -webkit-font-smoothing: antialiased; }
+.ms { font-family: "Material Symbols Rounded"; font-weight: normal; font-style: normal; font-size: 24px; line-height: 1; letter-spacing: normal; text-transform: none; display: inline-block; white-space: nowrap; direction: ltr; font-feature-settings: "liga"; -webkit-font-smoothing: antialiased; font-variation-settings: "FILL" 0; user-select: none; }
+.ms.fill { font-variation-settings: "FILL" 1; }
+code, .code { font-family: var(--mono); font-size: 12px; }
+:focus-visible { outline: 2px solid var(--sp-text87); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+/* ---------- vỏ trang ---------- */
+.shell { display: grid; grid-template-columns: 232px minmax(0, 1fr); min-height: 100vh; }
+.side { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 20px 12px; background: var(--sp-surface); border-right: 1px solid var(--sp-line); display: flex; flex-direction: column; gap: 2px; }
+.brand { display: flex; align-items: center; gap: 10px; padding: 4px 12px 16px; }
+.brand-mark { width: 32px; height: 32px; border-radius: calc(2px * var(--k)); background: var(--sp-primary); color: var(--sp-onPrimary); display: grid; place-items: center; }
+.brand b { font-size: 16px; font-weight: 500; display: block; color: var(--sp-text87); }
+.brand small { color: var(--sp-text54); font-size: 12px; }
+.side h6 { margin: 14px 12px 6px; font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--sp-text54); }
+.side a { display: flex; align-items: center; gap: 12px; height: 36px; padding: 0 12px; border-radius: calc(2px * var(--k)); color: var(--sp-text80); text-decoration: none; }
+.side a .ms { font-size: 20px; color: var(--sp-text54); }
+.side a:hover { color: var(--sp-primary); }
+.side a.on { background: var(--sp-pink); color: var(--sp-primary); }
+.side a.on .ms { color: var(--sp-primary); }
+main { padding: 0 32px 96px; min-width: 0; }
+
+.bar { position: sticky; top: 0; z-index: 50; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; padding: 12px 0; background: var(--sp-bg); border-bottom: 1px solid var(--sp-line); }
+.bar .grow { flex: 1; }
+.ctl { display: flex; align-items: center; gap: 8px; }
+.ctl > span { font-size: 12px; color: var(--sp-text54); }
+.swatches { display: flex; gap: 6px; }
+.sw { width: 26px; height: 26px; border-radius: 50%; border: 2px solid transparent; padding: 0; cursor: pointer; background: var(--c); box-shadow: inset 0 0 0 2px var(--sp-surface); }
+.sw[aria-pressed="true"] { border-color: var(--sp-text87); }
+.modenote { font-size: 12px; color: var(--sp-text54); display: inline-flex; align-items: center; gap: 6px; }
+.modenote .ms { font-size: 18px; }
+
+.intro { padding: 36px 0 8px; max-width: 780px; }
+.intro .eyebrow { font-family: var(--mono); font-size: 12px; color: var(--sp-primary); }
+.intro h1 { font-size: 34px; line-height: 42px; font-weight: 500; margin: 8px 0 12px; color: var(--sp-text87); text-wrap: balance; }
+.intro p { font-size: 15px; line-height: 23px; color: var(--sp-text65); margin: 0; max-width: 68ch; }
+.intro .facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.fact { font-family: var(--mono); font-size: 12px; padding: 4px 10px; border-radius: calc(2px * var(--k)); background: var(--sp-surface); color: var(--sp-text65); box-shadow: var(--sp-sh-section); }
+
+section.block { padding-top: 44px; scroll-margin-top: 60px; }
+section.block > header { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+section.block h2 { font-size: 20px; line-height: 24px; font-weight: 500; margin: 0; color: var(--sp-text87); display: flex; align-items: center; }
+section.block h2::before { content: ""; width: 10px; height: 24px; margin-right: 8px; background: var(--sp-primary); }
+section.block > header p { margin: 0; color: var(--sp-text65); max-width: 76ch; line-height: 20px; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+.grid.wide { grid-template-columns: repeat(auto-fill, minmax(460px, 1fr)); }
+.spec { background: var(--sp-surface); border-radius: calc(2px * var(--k)); box-shadow: var(--sp-sh-section); display: flex; flex-direction: column; min-width: 0; }
+.spec.full { grid-column: 1 / -1; }
+.spec-h { display: flex; align-items: center; gap: 8px; padding: 14px 16px 0; flex-wrap: wrap; }
+.spec-h b { font-size: 15px; font-weight: 500; color: var(--sp-text87); }
+.kind { font-family: var(--mono); font-size: 11px; padding: 2px 8px; border-radius: calc(2px * var(--k)); background: var(--sp-pink); color: var(--sp-primary); }
+.spec-h .dp { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--sp-text54); font-variant-numeric: tabular-nums; }
+.stage { padding: 20px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 16px; min-height: 96px; overflow-x: auto; }
+.stage.col { flex-direction: column; align-items: stretch; }
+.stage.start { align-items: flex-start; }
+.stage.bgd { background: var(--sp-bg); margin: 12px 12px 0; }
+.stage.nowrap { flex-wrap: nowrap; justify-content: flex-start; }
+.st { display: inline-flex; flex-direction: column; align-items: center; gap: 8px; flex: none; max-width: 100%; }
+.st.fill { width: 100%; }
+.st > small { font-family: var(--mono); font-size: 11px; color: var(--sp-text54); }
+.spec-f { display: flex; align-items: center; gap: 8px; padding: 8px 12px 12px 16px; margin-top: auto; }
+.spec-f .note { font-size: 12px; line-height: 17px; color: var(--sp-text54); flex: 1; }
+.copy { height: 30px; padding: 0 10px; border-radius: calc(2px * var(--k)); border: none; background: transparent; color: var(--sp-primary); font: 400 13px var(--font); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; white-space: nowrap; }
+.copy:hover { background: var(--sp-pink); }
+.copy .ms { font-size: 18px; }
+
+/* nền tảng */
+.roles { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; }
+.role { border-radius: calc(2px * var(--k)); padding: 12px; min-height: 76px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: inset 0 0 0 1px var(--sp-line); cursor: pointer; border: none; text-align: left; font: inherit; }
+.role b { font-size: 13px; font-weight: 500; }
+.role code { font-size: 11px; opacity: .9; }
+.type-row { display: grid; grid-template-columns: 170px minmax(0, 1fr) 190px; gap: 16px; align-items: baseline; padding: 10px 0; border-bottom: 1px solid var(--sp-line); }
+.type-row:last-child { border-bottom: none; }
+.type-row .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.type-row .meta { font-family: var(--mono); font-size: 11px; color: var(--sp-text54); font-variant-numeric: tabular-nums; }
+.shape-cell { display: flex; flex-direction: column; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px; color: var(--sp-text54); text-align: center; }
+.shape-cell i { display: block; width: 64px; height: 64px; background: var(--sp-pink); box-shadow: inset 0 0 0 1px var(--sp-primary); }
+.shadow-cell { display: flex; flex-direction: column; align-items: center; gap: 10px; font-family: var(--mono); font-size: 11px; color: var(--sp-text54); text-align: center; width: 120px; }
+.shadow-cell i { display: block; width: 88px; height: 56px; background: var(--sp-surface); }
+table.tok { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+table.tok th, table.tok td { text-align: left; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--sp-line); font-size: 13px; vertical-align: top; }
+table.tok th { font-weight: 500; color: var(--sp-text54); font-size: 12px; }
+table.tok td:first-child { font-family: var(--mono); font-size: 12px; }
+
+/* ================= các thành phần sp-* (tái dùng được: chỉ cần token --sp-*, --k, --ease, --font) ================= */
+.sp-ph { background: var(--sp-placeholder); color: var(--sp-text26); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-size: 11px; text-align: center; box-shadow: inset 0 0 0 1px var(--sp-lineSoft); overflow: hidden; }
+.sp-ph .ms { font-size: 22px; }
+
+/* nút: .btn + .btn-solid-primary / .btn-light / .stardust-button */
+.sp-btn { height: 40px; padding: 0 20px; border: 0; border-radius: calc(2px * var(--k)); font: 400 14px/1 var(--font); text-transform: capitalize; text-decoration: none;
+  display: inline-flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: var(--sp-sh-btn); transition: background-color .1s var(--ease); white-space: nowrap; }
+.sp-btn.s { height: 34px; padding: 0 15px; }
+.sp-btn.primary { background: var(--sp-primary); color: var(--sp-onPrimary); }
+.sp-btn.primary:hover, .sp-btn.primary.is-hover { background: var(--sp-primaryHover); }
+.sp-btn.primary:active, .sp-btn.primary.is-active { background: var(--sp-primaryActive); box-shadow: var(--sp-sh-pressed); }
+.sp-btn.primary.is-disabled { background: var(--sp-primaryDisabled); box-shadow: none; cursor: not-allowed; }
+.sp-btn.search { width: 60px; background: var(--sp-search); color: var(--sp-onPrimary); }
+.sp-btn.search .ms { font-size: 18px; }
+.sp-btn.search:hover, .sp-btn.search.is-hover { background: var(--sp-searchHover); }
+.sp-btn.search:active, .sp-btn.search.is-active { background: var(--sp-searchActive); box-shadow: var(--sp-sh-pressed); }
+.sp-btn.light { background: var(--sp-surface); color: var(--sp-title); border: 1px solid var(--sp-line); box-shadow: var(--sp-sh-light); }
+.sp-btn.light.wide { width: 390px; max-width: 100%; }
+.sp-btn.light:hover, .sp-btn.light.is-hover { background: var(--sp-hoverFill); }
+.sp-btn.light:active, .sp-btn.light.is-active { background: var(--sp-hoverFill); box-shadow: var(--sp-sh-pressed); }
+.sp-sbtn { background: var(--sp-surface); border: 1px solid var(--sp-text26); border-radius: calc(4px * var(--k)); color: var(--sp-text87); padding: 8px 10px; font: 400 14px var(--font); cursor: pointer; }
+.sp-sbtn.skip { font-size: 12px; padding: 4px; height: 32px; width: 129px; box-shadow: var(--sp-sh-depth9); }
+.sp-sbtn:hover, .sp-sbtn.is-hover { background: var(--sp-line); }
+.sp-textbtn { background: none; border: 0; padding: 5px 7px; color: var(--sp-primary); font: 300 14px/14px var(--font); text-transform: capitalize; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
+.sp-textbtn .ms { font-size: 14px; }
+.sp-textbtn.link { font-weight: 400; padding: 0; }
+.sp-textbtn.mall { color: var(--sp-mall); gap: 8px; }
+.sp-textbtn.mall i { width: 18px; height: 18px; border-radius: 50%; background: var(--sp-mall); color: var(--sp-onPrimary); display: grid; place-items: center; }
+.sp-textbtn.mall i.l { width: 22px; height: 22px; }
+.sp-textbtn.mall i .ms { font-size: 12px; font-variation-settings: "wght" 700; }
+
+.sp-arrow { width: 50px; height: 50px; border-radius: 50%; border: 0; background: var(--sp-surface); box-shadow: var(--sp-sh-arrow); color: var(--sp-text54); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: all .1s var(--ease); flex: none; }
+.sp-arrow .ms { font-size: 22px; }
+.sp-arrow.hint { width: 25px; height: 25px; }
+.sp-arrow.hint .ms { font-size: 14px; }
+.sp-barrow { width: 35px; height: 60px; background: var(--sp-arrowBg); color: var(--sp-onPrimary); box-shadow: var(--sp-sh-banner); display: inline-flex; align-items: center; justify-content: center; border-radius: calc(2px * var(--k)) 0 0 calc(2px * var(--k)); cursor: pointer; opacity: 0; transition: opacity .3s; }
+.sp-barrow.prev { border-radius: 0 calc(2px * var(--k)) calc(2px * var(--k)) 0; }
+.sp-barrow .ms { font-size: 20px; }
+.sp-banner:hover .sp-barrow, .sp-barrow.is-hover { opacity: 1; }
+.sp-chat { width: 100px; height: 48px; padding: 12px; background: var(--sp-surface); border-radius: calc(4px * var(--k)) calc(4px * var(--k)) 0 0; box-shadow: var(--sp-sh-chat); color: var(--sp-primary); display: inline-flex; align-items: center; gap: 8px; font: 500 18px var(--font); border: 0; cursor: pointer; }
+.sp-chat .ms { font-size: 24px; }
+
+/* header: .shopee-top → .navbar + .header-with-search */
+.sp-top { width: 1440px; background: linear-gradient(-180deg, var(--sp-headerFrom), var(--sp-headerTo)); color: var(--sp-onPrimary); flex: none; }
+.sp-top > * { width: 1200px; margin: 0 auto; }
+.sp-navbar { height: 34px; display: flex; align-items: center; color: var(--sp-onPrimary); }
+.sp-navbar .left { display: flex; align-items: center; }
+.sp-navbar .spacer { flex: 1; }
+.sp-navlink { position: relative; padding: 4px; font: 300 13px/15.6px var(--font); color: var(--sp-onPrimary); text-decoration: none; display: inline-flex; align-items: center; gap: 5px; cursor: pointer; background: none; border: 0; text-transform: capitalize; }
+.sp-navlink:not(:first-child) { margin-left: 10px; }
+.sp-navbar .left .sp-navlink:not(:first-child)::after { content: ""; position: absolute; left: -6px; top: calc(50% - 7px); height: 15px; width: 0; border-left: 1px solid var(--sp-onHeaderLine); border-right: 1px solid var(--sp-onHeaderLine); }
+.sp-navlink:hover, .sp-navlink.is-hover { color: var(--sp-onHeader70); }
+.sp-navlink .ms { font-size: 18px; }
+.sp-navlink.acct { font-weight: 400; font-size: 14px; text-transform: none; }
+.sp-social { width: 16px; height: 16px; border-radius: 1px; display: inline-grid; place-items: center; color: var(--sp-onPrimary); }
+.sp-social .ms { font-size: 16px; }
+.sp-social:focus-visible, .sp-social.is-focus { outline: none; box-shadow: 0 0 0 4px var(--sp-primary), 0 0 0 6px var(--sp-text87); }
+.sp-avatar { width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--sp-line); background: var(--sp-bg); color: var(--sp-onPrimary); display: inline-grid; place-items: center; overflow: hidden; }
+.sp-avatar .ms { font-size: 18px; color: var(--sp-text26); }
+.sp-avatar.l { width: 30px; height: 30px; }
+.sp-nbadge { min-width: 18px; height: 14px; padding: 0 4px; border-radius: 20px; background: var(--sp-surface); color: var(--sp-primary); font: 400 12px/14px var(--font); display: inline-flex; align-items: center; justify-content: center; }
+.sp-navlink .sp-nbadge { position: relative; left: -12px; top: -6px; margin-right: -15px; }
+.sp-cbadge { min-width: 11px; height: 20px; padding: 0 5px; border-radius: 44px; background: var(--sp-surface); border: 2px solid var(--sp-primary); color: var(--sp-primary); font: 400 14px/16px var(--font); text-align: center; display: inline-block; }
+.sp-cart { display: inline-flex; align-items: center; color: var(--sp-onPrimary); text-decoration: none; }
+.sp-cart .ms { font-size: 28px; }
+.sp-cart .sp-cbadge { position: relative; left: -12px; top: -11px; margin-right: -14px; }
+.sp-hws { height: 85px; padding: 16px 0 10px; display: flex; justify-content: space-between; }
+.sp-logo { width: 162px; height: 50px; margin-right: 40px; border: 1px dashed var(--sp-onHeader70); color: var(--sp-onHeader90); display: grid; place-items: center; font-size: 12px; flex: none; }
+.sp-hws .mid { width: 840px; display: flex; flex-direction: column; }
+.sp-search { width: 840px; max-width: 100%; height: 40px; padding: 3px; background: var(--sp-surface); border-radius: calc(2px * var(--k)); box-shadow: var(--sp-sh-search); display: flex; align-items: stretch; justify-content: space-between; }
+.sp-search input { flex: 1; min-width: 0; border: 0; outline: 0; padding: 0 10px; font: 400 14px var(--font); color: var(--sp-text80); background: var(--sp-surface); }
+.sp-search input::placeholder { color: var(--sp-text54); }
+.sp-search:focus-within, .sp-search.is-focus { outline: 2px solid var(--sp-text87); outline-offset: 3px; }
+.sp-hot { display: flex; height: 24px; margin-top: 3px; }
+.sp-hot a { color: var(--sp-onHeader90); font: 300 12px/14px var(--font); height: 14px; margin: 5px 0 5px 13px; white-space: nowrap; text-decoration: none; }
+.sp-hot a:first-child { margin-left: 0; }
+.sp-hws .cartwrap { width: 138px; margin: 0 10px; padding-bottom: 5px; display: flex; align-items: center; justify-content: center; }
+
+/* tiêu đề khối: .shopee-header-section__header */
+.sp-sechead { width: 1200px; max-width: 100%; height: 60px; padding: 0 20px; background: var(--sp-surface); border-bottom: 1px solid var(--sp-lineSoft); display: flex; align-items: center; flex: none; }
+.sp-sechead .title { flex: 1; margin-right: 20px; font: 500 16px/19.2px var(--font); color: var(--sp-text54); text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; }
+.sp-sechead.accent .title { color: var(--sp-primary); }
+.sp-sechead .title .mall { font-size: 17px; line-height: 17px; color: var(--sp-mall); text-decoration: none; }
+.sp-sechead .perks { display: flex; align-items: center; margin-left: 15px; padding-left: 15px; border-left: 1px solid var(--sp-line); text-transform: capitalize; font-weight: 400; }
+.sp-sechead .perks span { display: flex; align-items: center; margin-right: 15px; color: var(--sp-body); }
+.sp-sechead .perks .ms { font-size: 17px; margin-right: 6px; color: var(--sp-mall); }
+.sp-sechead.flash { border-bottom: 0; justify-content: space-between; }
+.sp-sechead.flash .l { display: flex; align-items: center; gap: 12px; }
+.sp-flashmark { width: 129px; height: 40px; font-size: 11px; }
+.sp-timer { display: inline-flex; align-items: center; gap: 4px; }
+.sp-timer b { min-width: 20px; height: 17px; padding: 1px 3px; box-sizing: content-box; border-radius: calc(2px * var(--k)); background: var(--sp-black); color: var(--sp-onPrimary); font: 700 13px/17px var(--font); text-align: center; font-variant-numeric: tabular-nums; }
+.sp-timer i { width: 3px; height: 3px; border-radius: 50%; background: var(--sp-black); box-shadow: 0 6px 0 var(--sp-black); margin-top: -6px; }
+
+/* tab: .stardust-tabs-header */
+.sp-tabs { width: 1200px; max-width: 100%; background: var(--sp-surface); box-shadow: var(--sp-sh-section); border-bottom: 1px solid var(--sp-line); display: flex; flex: none; }
+.sp-tabs .tab { flex: 1; white-space: nowrap; position: relative; padding: 15px 46px; font: 500 16px/19.2px var(--font); color: var(--sp-text80); text-transform: uppercase; text-align: center; cursor: pointer; }
+.sp-tabs .tab.is-on { color: var(--sp-primary); }
+.sp-tabs .tab.is-on::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 4px; background: var(--sp-primary); }
+.sp-dots { display: inline-flex; gap: 8px; }
+.sp-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--sp-dotBg); border: 1px solid var(--sp-dotLine); cursor: pointer; }
+.sp-dot.is-on { background: var(--sp-primary); border-color: var(--sp-primary); }
+
+/* thẻ sản phẩm (Daily Discover): shopee__item-card-centralisation */
+.sp-card { position: relative; width: 190px; height: 298px; flex: none; border: 1px solid var(--sp-line); border-radius: calc(6px * var(--k)); background: var(--sp-surface); color: var(--sp-text80); text-decoration: none; display: block; transition: all .1s var(--ease); cursor: pointer; }
+.sp-card .in { height: 100%; border-radius: calc(6px * var(--k)); overflow: hidden; display: flex; flex-direction: column; background: var(--sp-surface); position: relative; z-index: 1; }
+.sp-card .img { position: relative; width: 188px; height: 188px; flex: none; }
+.sp-card .img .sp-ph { position: absolute; inset: 0; }
+.sp-card .img .vid { position: absolute; right: 4px; bottom: 4px; width: 20px; height: 20px; border-radius: 50%; background: var(--sp-mask); color: var(--sp-onPrimary); display: grid; place-items: center; z-index: 2; }
+.sp-card .img .vid .ms { font-size: 14px; }
+.sp-off { position: absolute; top: 0; right: 0; z-index: 3; padding: 2px 4px; font: 500 12px/14px var(--font); color: var(--sp-primary); background: var(--sp-pink); border-bottom-left-radius: calc(4px * var(--k)); }
+.sp-card .body { flex: 1; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; }
+.sp-card .name { font-size: 14px; line-height: 20px; min-height: 40px; max-height: 40px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; word-break: break-word; }
+.sp-card .name .flag { display: inline-block; height: 14px; padding: 0 4px; margin: 0 2px 2px 0; border-radius: calc(2px * var(--k)); background: var(--sp-primary); color: var(--sp-onPrimary); font: 500 10px/14px var(--font); vertical-align: middle; }
+.sp-card .name .flag.mall { background: var(--sp-mall); }
+.sp-labels { display: flex; align-items: center; gap: 4px; height: 20px; margin-top: 4px; overflow: hidden; font-size: 10px; line-height: 12px; }
+.sp-tag { height: 16px; margin: 1px; padding: 2px 4px; border-radius: calc(2px * var(--k)); box-shadow: 0 0 0 .5px currentColor; color: var(--sp-primary); font: 400 10px/12px var(--font); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sp-tag.caution { color: var(--sp-caution); }
+.sp-hot-label { height: 16px; display: inline-flex; align-items: center; border-radius: calc(2px * var(--k)); overflow: hidden; color: var(--sp-onPrimary); font: 400 10px/12px var(--font); }
+.sp-hot-label i { width: 16px; height: 16px; padding: 1px; background: var(--sp-barFrom); display: grid; place-items: center; }
+.sp-hot-label i .ms { font-size: 12px; }
+.sp-hot-label span { padding: 2px 4px 2px 2px; background: linear-gradient(to right, var(--sp-barFrom), var(--sp-barTo) 0%, color-mix(in srgb, var(--sp-primary) 36%, transparent) 0%); }
+.sp-card .row { display: flex; align-items: center; height: 20px; }
+.sp-price { color: var(--sp-primary); font-weight: 500; display: inline-flex; align-items: baseline; margin-right: 2px; }
+.sp-price b { font: 500 16px/20px var(--font); }
+.sp-price small { font: 500 12px/14px var(--font); text-decoration: underline; }
+.sp-card .row .vch { font-size: 16px; color: var(--sp-primary); margin-left: 2px; }
+.sp-card .sold { margin-left: auto; font-size: 12px; line-height: 16px; color: var(--sp-text87); white-space: nowrap; }
+.sp-card .similar { position: absolute; z-index: 0; top: calc(100% - 6px); left: -1px; width: 100%; box-sizing: content-box; height: 30px; padding-top: 6px; background: var(--sp-primary); border: 1px solid var(--sp-primary); border-radius: 0 0 calc(2px * var(--k)) calc(2px * var(--k)); color: var(--sp-onPrimary); text-align: center; font-size: 14px; line-height: 30px; opacity: 0; transition: opacity .1s var(--ease); }
+.sp-card:hover, .sp-card.is-hover { border-color: var(--sp-primary); box-shadow: var(--sp-sh-hover); transform: translateY(-1px); z-index: 10; }
+.sp-card:hover .similar, .sp-card.is-hover .similar { opacity: 1; }
+.sp-card:active, .sp-card.is-active { transform: translateY(0); }
+.sp-cardgrid { display: grid; grid-template-columns: repeat(6, 190px); gap: 10px; padding: 5px; }
+
+/* ô flash sale */
+.sp-flash { width: 200px; height: 248px; flex: none; padding: 0 15px; background: var(--sp-surface); display: flex; flex-direction: column; text-decoration: none; }
+.sp-flash .img { position: relative; width: 170px; height: 170px; }
+.sp-flash .img .sp-ph { position: absolute; inset: 0; }
+.sp-flashoff { position: absolute; top: 0; right: 0; z-index: 3; height: 16px; padding: 0 2.5px 0 10px; display: inline-flex; align-items: center; font: 500 14px var(--font); color: var(--sp-flashText); background: var(--sp-flashBg); border-radius: calc(2px * var(--k)) 0 0 0; }
+.sp-flashoff .ms { position: absolute; left: -5px; font-size: 16px; color: var(--sp-flashText); }
+.sp-flash .info { padding: 15px 0; display: flex; flex-direction: column; }
+.sp-flash .price { height: 27px; margin-bottom: 5px; display: flex; align-items: center; justify-content: center; font: 500 18px/21.6px var(--font); color: var(--sp-primary); }
+.sp-flash .price small { font-size: 18px; margin-left: 2px; text-decoration: underline; }
+.sp-sold { position: relative; width: 150px; height: 16px; margin: 0 10px; border-radius: calc(8px * var(--k)); background: var(--sp-barTrack); overflow: hidden; }
+.sp-sold i { position: absolute; inset: 0 auto 0 0; width: var(--v, 12%); background: linear-gradient(270deg, var(--sp-barTo) 0%, var(--sp-barFrom) 100%); border-radius: calc(8px * var(--k)) 0 0 calc(8px * var(--k)); }
+.sp-sold span { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font: 700 12px/14.4px var(--font); color: var(--sp-onPrimary); text-transform: uppercase; }
+
+/* ô danh mục, lối tắt, mall, top sản phẩm, banner */
+.sp-cat { position: relative; width: 120px; height: 151px; flex: none; background: var(--sp-surface); border-right: 1px solid var(--sp-lineSoft); border-bottom: 1px solid var(--sp-lineSoft); color: var(--sp-text87); text-align: center; text-decoration: none; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: transform .1s var(--ease), box-shadow .1s var(--ease); }
+.sp-cat .sp-ph { width: 84px; height: 84px; border-radius: 50%; margin-bottom: 8px; }
+.sp-cat > span { font-size: 14px; line-height: 20px; height: 40px; padding: 0 6px; }
+.sp-cat:hover, .sp-cat.is-hover { z-index: 1; border-color: var(--sp-line); box-shadow: var(--sp-sh-cat); }
+.sp-quick { width: 150px; height: 108px; flex: none; display: flex; flex-direction: column; align-items: center; text-align: center; text-decoration: none; background: var(--sp-surface); }
+.sp-quick .sp-ph { width: 45px; height: 45px; margin: 18px 0 8px; border-radius: calc(12px * var(--k)); }
+.sp-quick > span { font-size: 13px; line-height: 14px; color: var(--sp-label); }
+.sp-malltile { position: relative; width: 200px; height: 236px; flex: none; padding: 10px; background: var(--sp-surface); text-decoration: none; }
+.sp-malltile .sp-ph { width: 180px; height: 216px; padding-bottom: 50px; }
+.sp-malltile > span { position: absolute; left: 14px; bottom: 18px; width: 172px; height: 27px; font-size: 18px; line-height: 27px; color: var(--sp-mall); text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.sp-toptile { width: 200px; flex: none; padding: 20px 10px; background: var(--sp-surface); text-decoration: none; }
+.sp-toptile .img { position: relative; width: 180px; height: 180px; }
+.sp-toptile .img .sp-ph { position: absolute; inset: 0; }
+.sp-toptile .img .rank { position: absolute; top: 0; left: 0; z-index: 1; width: 32px; height: 40px; background: var(--sp-primary); color: var(--sp-onPrimary); font: 700 11px/1 var(--font); display: grid; place-items: center; clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 82%, 0 100%); }
+.sp-toptile .img .sales { position: absolute; left: 0; bottom: 0; width: 100%; height: 25px; line-height: 25px; font-weight: 500; color: var(--sp-onPrimary); background: var(--sp-text26); text-align: center; }
+.sp-toptile .name { margin-top: 20px; font: 500 18px/25px var(--font); color: var(--sp-title); text-transform: capitalize; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.sp-toptile:focus-visible { outline: 2px solid var(--sp-text87); outline-offset: -2px; }
+.sp-hero { display: flex; gap: 5px; width: 1200px; flex: none; }
+.sp-banner { position: relative; width: 797px; height: 235px; box-shadow: var(--sp-sh-section); flex: none; }
+.sp-banner > .sp-ph { position: absolute; inset: 0; border-radius: calc(2px * var(--k)); }
+.sp-banner .sp-barrow { position: absolute; top: 50%; margin-top: -30px; }
+.sp-banner .sp-barrow.prev { left: 0; }
+.sp-banner .sp-barrow.next { right: 0; }
+.sp-banner .sp-dots { position: absolute; left: 50%; bottom: 16px; transform: translateX(-50%); }
+.sp-hero .sidecol { display: flex; flex-direction: column; gap: 5px; flex: 1; }
+.sp-hero .sidecol .sp-ph { height: 115px; border-radius: calc(2px * var(--k)); }
+.sp-mallbanner { width: 400px; height: 472px; padding: 10px 0 10px 10px; background: var(--sp-surface); flex: none; }
+.sp-mallbanner .sp-ph { width: 390px; height: 452px; }
+
+/* chân trang */
+.sp-foot { width: 1200px; max-width: 100%; color: var(--sp-text54); }
+.sp-foot h3, .sp-foothead { font: 700 14px/1.7 var(--font); color: var(--sp-text54); margin: 0; text-transform: uppercase; }
+.sp-foot p, .sp-foot li { font-size: 12px; line-height: 1.4; margin: 10px 0 0; }
+.sp-foot ul { margin: 0; padding-left: 40px; }
+.sp-foot a { color: var(--sp-text54); text-decoration: underline; }
+.sp-foot a.b { font-weight: 700; }
+.sp-foot a.k { color: var(--sp-black); }
+.sp-foot a:hover, .sp-foot a.is-hover { color: var(--sp-primary); }
+.sp-foot ul.sp-trend, .sp-trend { display: flex; flex-wrap: wrap; font-size: 12px; line-height: 24px; color: var(--sp-text54); list-style: none; padding: 0; margin: 0; }
+.sp-trend li { margin: 0; }
+.sp-trend li:not(:last-child)::after { content: "|"; margin: 0 6px; }
+.sp-trend a { color: var(--sp-text54); text-decoration: none; }
+.sp-sitemap { width: 232px; font-size: 12px; line-height: 18px; color: var(--sp-text54); }
+.sp-sitemap .hd { display: block; font-weight: 700; text-transform: uppercase; color: var(--sp-text54); text-decoration: none; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
+.sp-sitemap .hd:hover, .sp-sitemap .hd.is-hover { color: var(--sp-primary); }
+.sp-sitemap a:not(.hd) { color: var(--sp-text54); text-decoration: none; }
+.sp-footcols { display: flex; align-items: flex-start; background: var(--sp-footer); padding: 5px; width: 1210px; flex: none; }
+.sp-footcol { width: 250px; padding: 5px; }
+.sp-footcol h4 { margin: 40px 0 20px; font: 700 12px/14.4px var(--font); color: var(--sp-text87); text-transform: uppercase; }
+.sp-footcol ul { list-style: none; margin: 0 0 16px; padding: 0; color: var(--sp-text65); }
+.sp-footcol li { margin-bottom: 12px; font-size: 12px; line-height: 14.4px; }
+.sp-footcol a { color: var(--sp-text65); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+.sp-footcol a:hover, .sp-footcol a.is-hover { color: var(--sp-primary); }
+.sp-footcol a .sp-ph { width: 16px; height: 16px; border-radius: 50%; }
+.sp-logogrid { display: flex; flex-wrap: wrap; gap: 8px; width: 204px; list-style: none; padding: 0; margin: 0; }
+.sp-logotile { text-decoration: none; width: 60px; height: 30px; padding: 4px; background: var(--sp-surface); border-radius: calc(2px * var(--k)); box-shadow: var(--sp-sh-tile); display: flex; align-items: center; justify-content: center; }
+.sp-logotile .sp-ph { width: 43px; height: 17px; font-size: 9px; }
+.sp-logotile.app { width: 76px; height: 24px; }
+.sp-logotile.qr { width: 96px; height: 96px; }
+.sp-logotile.qr .sp-ph { width: 84px; height: 84px; }
+.sp-copyrow { width: 1200px; max-width: 100%; padding: 40px 0; border-top: 1px solid var(--sp-line); display: flex; justify-content: space-between; gap: 25px; font-size: 14px; line-height: 18px; color: var(--sp-text54); flex: none; }
+.sp-copyrow .regions { display: flex; flex-wrap: wrap; }
+.sp-copyrow .regions a { padding: 0 5px; color: var(--sp-text54); text-decoration: none; border-right: 1px solid var(--sp-lineFooter); }
+.sp-copyrow .regions a:last-child { border-right: 0; }
+.sp-policy { width: 1200px; max-width: 100%; padding: 42px 0 37px; background: var(--sp-bg); font-size: 12px; line-height: 14.4px; color: var(--sp-text65); text-align: center; flex: none; }
+.sp-policy .links { display: flex; justify-content: center; margin-bottom: 40px; }
+.sp-policy .links a { padding: 0 25px; text-transform: uppercase; color: var(--sp-text54); text-decoration: none; border-right: 1px solid var(--sp-line); }
+.sp-policy .links a:last-child { border-right: 0; }
+.sp-policy .cert { width: 120px; height: 45px; margin: 0 auto; }
+.sp-policy p { margin: 8px 0 0; }
+.sp-focusring { position: relative; }
+.sp-focusring.is-focus::before, .sp-focusring:focus-visible::before { content: ""; position: absolute; inset: -4px; outline: 2px solid var(--sp-text87); border-radius: calc(2px * var(--k)); }
+.sp-focusring:focus-visible { outline: none; }
+.ua-focus { outline: auto 1px Highlight; outline: auto 1px -webkit-focus-ring-color; }
+
+/* màn desktop: viewport 1440, container 1200 */
+.desk-wrap { overflow-x: auto; padding: 8px 0; }
+.desk { width: 1440px; height: 1960px; background: var(--sp-bg); overflow: hidden; margin: 10px; zoom: .55; box-shadow: 0 0 0 10px var(--sp-text87); border-radius: 12px; position: relative; }
+.desk .c { width: 1200px; margin: 0 auto; }
+.desk .white { background: var(--sp-surface); box-shadow: var(--sp-sh-section); padding: 30px 0 0; }
+.desk .quickrow { display: flex; justify-content: space-around; margin-top: 10px; background: var(--sp-surface); }
+.desk .sec { margin-top: 20px; }
+.desk .catgrid { display: grid; grid-template-columns: repeat(10, 120px); background: var(--sp-surface); position: relative; }
+.desk .flashrow, .desk .toprow { display: flex; background: var(--sp-surface); position: relative; }
+.desk .edge { position: absolute; right: -12px; top: 50%; margin-top: -12px; z-index: 2; }
+.desk .sp-chat { position: absolute; right: 8px; bottom: 0; }
+.desk .sp-tabs { margin-top: 20px; }
+.desk-cap { font-family: var(--mono); font-size: 12px; line-height: 18px; color: var(--sp-text54); margin: 8px 10px 0; }
+
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; transition: all .25s var(--ease); z-index: 60; background: var(--sp-text87); color: var(--sp-onPrimary); padding: 12px 16px; border-radius: calc(2px * var(--k)); font-size: 14px; }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; }
+  .side { display: none; }
+  main { padding: 0 16px 80px; }
+  .grid, .grid.wide { grid-template-columns: 1fr; }
+  .intro h1 { font-size: 28px; line-height: 34px; }
+  .type-row { grid-template-columns: 1fr; gap: 2px; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <nav class="side" aria-label="Mục lục">
+    <div class="brand"><div class="brand-mark"><span class="ms fill">shopping_bag</span></div><div><b>Shopee UI Kit</b><small>trang chủ desktop</small></div></div>
+    <h6>Nền tảng</h6>
+    <a href="#color"><span class="ms">palette</span>Màu</a>
+    <a href="#type"><span class="ms">text_fields</span>Chữ</a>
+    <a href="#shape"><span class="ms">rounded_corner</span>Hình khối &amp; bóng</a>
+    <a href="#layout"><span class="ms">straighten</span>Bố cục &amp; kích thước</a>
+    <h6>Thành phần</h6>
+    <a href="#actions"><span class="ms">touch_app</span>Hành động</a>
+    <a href="#navigation"><span class="ms">explore</span>Điều hướng</a>
+    <a href="#containment"><span class="ms">web_asset</span>Thẻ &amp; ô nội dung</a>
+    <a href="#inputs"><span class="ms">search</span>Nhập liệu</a>
+    <a href="#feedback"><span class="ms">sell</span>Nhãn &amp; phản hồi</a>
+    <a href="#footer"><span class="ms">bottom_navigation</span>Chân trang</a>
+    <a href="#states"><span class="ms">center_focus_weak</span>Focus</a>
+    <h6>Mẫu</h6>
+    <a href="#screens"><span class="ms">desktop_windows</span>Màn hình mẫu</a>
+  </nav>
+
+  <main>
+    <div class="bar" role="toolbar" aria-label="Chủ đề">
+      <div class="ctl"><span>Palette</span><div class="swatches" id="swatches"></div></div>
+      <span class="modenote"><span class="ms">light_mode</span>Chỉ có giao diện sáng (site không có dark mode, không có thang shape)</span>
+      <div class="grow"></div>
+      <button class="copy" id="copy-tokens"><span class="ms">data_object</span>Copy CSS token</button>
+    </div>
+
+    <div class="intro">
+      <div class="eyebrow">shopee.vn (bản user tự lưu · :root --nc-* / --nt-* + class shopee-* + getComputedStyle) → docs/shopee-ui-kit.html</div>
+      <h1>Bộ thành phần của trang chủ Shopee (desktop)</h1>
+      <p>Chép lại hệ thiết kế đang chạy trên trang chủ shopee.vn, đo từ bản lưu offline với JS tắt. Màu lấy từ khối <code>:root</code> và các class Tailwind <code>shopee-*</code> trong CSS đã lưu; kích thước đo bằng <code>getComputedStyle</code> trên DOM thật. Logo, ảnh sản phẩm, banner và tên tài khoản được thay bằng khối giữ chỗ và nội dung mẫu. Dán khối <code>--sp-*</code> cùng CSS <code>.sp-*</code> là dùng lại được ở dự án khác.</p>
+      <div class="facts"><span class="fact">viewport 1440 · container 1200</span><span class="fact">header 119 = navbar 34 + search 85</span><span class="fact">thẻ sản phẩm 190 × 298 · 6 cột</span><span class="fact">bo 2 / 4 / 6</span><span class="fact">.1s cubic-bezier(.4, 0, .6, 1)</span></div>
+    </div>
+
+    <!-- ================= NỀN TẢNG ================= -->
+    <section class="block" id="color">
+      <header><h2>Màu</h2><p>Các vai trò màu trang chủ đang dùng. Tên trong ngoặc là tên gốc trong CSS của site. Bấm một ô để copy giá trị. Palette "Shopee Mall" là <code>.theme--ofs</code>: site chỉ đổi <code>--brand-primary-color</code> và nền nhạt, các vai trò khác giữ nguyên.</p></header>
+      <div class="roles" id="roles"></div>
+    </section>
+
+    <section class="block" id="type">
+      <header><h2>Chữ</h2><p>Site khai <code>--font: "Roboto", "Droid Sans", Arial</code> và chồng <code>-apple-system, Helvetica Neue, Helvetica, Roboto</code>; line-height gốc 1.2. Phần trên là các kiểu chữ đo được trên trang chủ, phần dưới là thang <code>--nt-size-*</code> khai trong <code>:root</code>.</p></header>
+      <div class="spec"><div class="stage col" id="typescale"></div></div>
+    </section>
+
+    <section class="block" id="shape">
+      <header><h2>Hình khối &amp; bóng</h2><p>Bo góc rất nhỏ: <code>--nr-normal</code> 2px cho nút, ô tìm kiếm, nhãn; <code>--nr-overlay</code> 4px cho lớp nổi; 6px cho thẻ sản phẩm. Bóng đều mờ, tối đa 20px.</p></header>
+      <div class="grid wide">
+        <div class="spec"><div class="stage" id="shapes" style="gap:24px"></div></div>
+        <div class="spec"><div class="stage bgd" id="shadows" style="gap:20px"></div><div class="spec-f"><span class="note">Tên bóng do kit đặt theo nơi dùng; giá trị đo từ site.</span></div></div>
+      </div>
+    </section>
+
+    <section class="block" id="layout">
+      <header><h2>Bố cục &amp; kích thước</h2><p>Số đo px trên viewport 1440. Trang chủ desktop cố định <code>.container</code> 1200px (<code>min-width: 1200px</code>), không co theo màn hình.</p></header>
+      <div class="grid wide">
+        <div class="spec"><div class="stage col">
+          <table class="tok"><thead><tr><th>Khối</th><th>px</th><th>Ghi chú</th></tr></thead><tbody>
+            <tr><td>.container</td><td>1200</td><td>căn giữa, lề 120 ở 1440</td></tr>
+            <tr><td>.shopee-top</td><td>1440 × 119</td><td>fixed, gradient −180° · navbar 34 + header-with-search 85</td></tr>
+            <tr><td>.shopee-searchbar</td><td>840 × 40</td><td>padding 3 · nút tìm 60 × 34</td></tr>
+            <tr><td>banner chính</td><td>797 × 235</td><td>2 banner phụ 398 × 115, khe 5</td></tr>
+            <tr><td>hàng lối tắt</td><td>1200 × 108</td><td>ô 150, icon 45</td></tr>
+            <tr><td>.shopee-header-section__header</td><td>1200 × 60</td><td>padding 0 20 · viền dưới 1</td></tr>
+            <tr><td>khoảng cách giữa các khối</td><td>20</td><td>margin-top</td></tr>
+            <tr><td>footer</td><td>viền trên 4</td><td>màu primary</td></tr></tbody></table>
+        </div></div>
+        <div class="spec"><div class="stage col">
+          <table class="tok"><thead><tr><th>Ô / thẻ</th><th>rộng × cao</th><th>ảnh</th><th>lưới</th></tr></thead><tbody>
+            <tr><td>ô danh mục</td><td>120 × 151</td><td>tròn 84</td><td>10 cột × 2 hàng</td></tr>
+            <tr><td>ô flash sale</td><td>200 × 248</td><td>170</td><td>6 ô / hàng</td></tr>
+            <tr><td>ô mall</td><td>200 × 236</td><td>180 × 216</td><td>4 × 2, cạnh banner 400 × 472</td></tr>
+            <tr><td>ô top sản phẩm</td><td>200 × 290</td><td>180</td><td>6 ô / hàng</td></tr>
+            <tr><td>thẻ sản phẩm</td><td>190 × 298</td><td>188</td><td>6 cột, lề 5 mỗi bên</td></tr>
+            <tr><td>mũi tên carousel</td><td>25 (hint) · 50</td><td>icon 10</td><td>lệch ra mép 12.5</td></tr>
+            <tr><td>--ns-a … --ns-g</td><td colspan="3">4 · 8 · 12 · 16 · 20 · 24 · 40 (thang khoảng cách khai trong :root)</td></tr></tbody></table>
+        </div><div class="spec-f"><span class="note">Ảnh tròn 84 của ô danh mục là ước lượng từ bố cục (ảnh không tải được khi đo offline).</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= HÀNH ĐỘNG ================= -->
+    <section class="block" id="actions">
+      <header><h2>Hành động</h2></header>
+      <div class="grid">
+        <div class="spec full" data-sig="8f0c848fb7" data-sig-state="8f0c848fb7:hover 8f0c848fb7:active"><div class="spec-h"><b>Nút chính</b><span class="kind">.btn.btn-solid-primary · .btn--s</span><span class="dp">h 34 / 40 · r 2 · padX 15 / 20</span></div>
+          <div class="stage">
+            <div class="st"><button class="sp-btn primary">Mua ngay</button><small>nghỉ</small></div>
+            <div class="st"><button class="sp-btn primary is-hover">Mua ngay</button><small>hover</small></div>
+            <div class="st"><button class="sp-btn primary is-active">Mua ngay</button><small>active</small></div>
+            <div class="st"><button class="sp-btn primary is-disabled" disabled>Mua ngay</button><small>disabled</small></div>
+            <div class="st"><button class="sp-btn s search" aria-label="Tìm kiếm"><span class="ms">search</span></button><small>tìm · nghỉ</small></div>
+            <div class="st"><button class="sp-btn s search is-hover" aria-label="Tìm kiếm"><span class="ms">search</span></button><small>tìm · hover</small></div>
+            <div class="st"><button class="sp-btn s search is-active" aria-label="Tìm kiếm"><span class="ms">search</span></button><small>tìm · active</small></div>
+          </div><div class="spec-f"><span class="note">Nút tìm trong ô tìm kiếm dùng cam sáng hơn (#fb5533, đo được); nút chính chung dùng primary. Trạng thái disabled lấy từ rule CSS, trang chủ không có nút nào đang disabled.</span></div></div>
+
+        <div class="spec" data-sig="c701459122" data-sig-state="c701459122:hover c701459122:active"><div class="spec-h"><b>Nút nhạt "Xem thêm"</b><span class="kind">.btn.btn-light.btn--m</span><span class="dp">390 × 40 · viền 1</span></div>
+          <div class="stage col" style="align-items:center">
+            <div class="st fill"><a class="sp-btn light wide" href="#actions">Xem thêm</a><small>nghỉ</small></div>
+            <div class="st fill"><a class="sp-btn light wide is-hover" href="#actions">Xem thêm</a><small>hover</small></div>
+            <div class="st fill"><a class="sp-btn light wide is-active" href="#actions">Xem thêm</a><small>active</small></div>
+          </div></div>
+
+        <div class="spec" data-sig="19ffc93918" data-sig-state="19ffc93918:hover"><div class="spec-h"><b>Nút viền Stardust</b><span class="kind">.stardust-button</span><span class="dp">r 4 · pad 8 10</span></div>
+          <div class="stage">
+            <div class="st"><button class="sp-sbtn">Tuỳ chọn</button><small>nghỉ</small></div>
+            <div class="st"><button class="sp-sbtn is-hover">Tuỳ chọn</button><small>hover</small></div>
+            <div class="st"><button class="sp-sbtn skip">Tới nội dung chính</button><small>skip link 129 × 32</small></div>
+            <div class="st"><button class="sp-sbtn skip is-hover">Tới nội dung chính</button><small>hover</small></div>
+          </div><div class="spec-f"><span class="note">Trên trang chủ nút này chỉ xuất hiện dưới dạng skip link (chữ 12, bóng depth9).</span></div></div>
+
+        <div class="spec" data-sig="707cc1d930 97e8cc8c39 6c464006dd a5cc37b742 41a7796b0f 8fb1acc604"><div class="spec-h"><b>Nút chữ "Xem tất cả"</b><span class="kind">.shopee-button-no-outline</span><span class="dp">14 / 300 · pad 5 7</span></div>
+          <div class="stage">
+            <button class="sp-textbtn">Xem tất cả<span class="ms">chevron_right</span></button>
+            <a class="sp-textbtn link" href="#actions">Xem tất cả<span class="ms">chevron_right</span></a>
+            <a class="sp-textbtn mall" href="#actions">Xem tất cả<i><span class="ms">chevron_right</span></i></a>
+            <a class="sp-textbtn mall" href="#actions" aria-label="Xem thêm"><i class="l"><span class="ms">chevron_right</span></i></a>
+          </div><div class="spec-f"><span class="note">Bản Mall dùng đỏ #d0011b và mũi tên trong nút tròn 18 (tiêu đề) hoặc 22 (cuối carousel). Hover không đổi màu (đã đo).</span></div></div>
+
+        <div class="spec" data-sig="7753cb63bd db39ab2273"><div class="spec-h"><b>Mũi tên carousel</b><span class="kind">.carousel-arrow · --hint</span><span class="dp">25 / 50 · tròn</span></div>
+          <div class="stage bgd">
+            <div class="st"><button class="sp-arrow hint" aria-label="Trước"><span class="ms">chevron_left</span></button><small>hint 25</small></div>
+            <div class="st"><button class="sp-arrow hint" aria-label="Sau"><span class="ms">chevron_right</span></button><small>hint 25</small></div>
+            <div class="st"><button class="sp-arrow" aria-label="Sau"><span class="ms">chevron_right</span></button><small>đầy đủ 50</small></div>
+            <div class="st"><span class="sp-barrow prev is-hover"><span class="ms">chevron_left</span></span><small>banner 35 × 60</small></div>
+            <div class="st"><span class="sp-barrow next is-hover"><span class="ms">chevron_right</span></span><small>banner 35 × 60</small></div>
+          </div><div class="spec-f"><span class="note">Trên site, mũi tên lớn lên 50 nhờ JS khi rê chuột vào carousel: kit lấy cỡ 50 từ rule <code>.carousel-arrow</code>, không đo được lúc chuyển. Mũi tên banner ẩn (opacity 0), hiện khi hover banner (đã đo).</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Nút chat nổi</b><span class="kind">chat mini (fixed, right 8, bottom 0)</span><span class="dp">100 × 48 · r 4 4 0 0</span></div>
+          <div class="stage bgd"><button class="sp-chat"><span class="ms fill">forum</span>Chat</button></div>
+          <div class="spec-f"><span class="note">Chữ "Chat" trên site là hình SVG; kit dùng chữ thường cỡ ước lượng.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= ĐIỀU HƯỚNG ================= -->
+    <section class="block" id="navigation">
+      <header><h2>Điều hướng</h2></header>
+      <div class="grid">
+        <div class="spec full" data-sig="fea92b0ac9 de0cf171c9 28973a0775 a61b8df620 662c1ceb36 8664bda8d8 5512d15dc9 85eb275e96 1d9ed6967d 9f4ac7b662 45f86685d9 c158fd82f6 e8d84b0a46 c8312b8ea3" data-sig-state="a61b8df620:hover 85eb275e96:focus"><div class="spec-h"><b>Header</b><span class="kind">.shopee-top › .navbar + .header-with-search</span><span class="dp">1440 × 119 · gradient #f53d2d → #ff6633</span></div>
+          <div class="stage nowrap" style="padding:20px 0">
+            <header class="sp-top">
+              <nav class="sp-navbar" aria-label="Thanh trên">
+                <div class="left"><a class="sp-navlink" href="#navigation">Kênh người bán</a><a class="sp-navlink" href="#navigation">Tải ứng dụng</a><span class="sp-navlink">Kết nối<a class="sp-social" href="#navigation" aria-label="Mạng xã hội 1"><span class="ms">public</span></a><a class="sp-social" href="#navigation" aria-label="Mạng xã hội 2"><span class="ms">photo_camera</span></a></span></div>
+                <div class="spacer"></div>
+                <a class="sp-navlink" href="#navigation"><span class="ms">notifications</span><span class="sp-nbadge">8</span>Thông báo</a>
+                <a class="sp-navlink" href="#navigation"><span class="ms">help</span>Hỗ trợ</a>
+                <button class="sp-navlink acct"><span class="ms">language</span>Tiếng Việt<span class="ms">expand_more</span></button>
+                <button class="sp-navlink acct"><span class="sp-avatar"><span class="ms fill">person</span></span>ten_nguoi_dung</button>
+              </nav>
+              <div class="sp-hws">
+                <div class="sp-logo">logo site (không nhúng)</div>
+                <div class="mid">
+                  <form class="sp-search" onsubmit="return false"><input type="text" placeholder="Tìm sản phẩm, thương hiệu và tên shop" aria-label="Tìm kiếm"><button class="sp-btn s search" aria-label="Tìm kiếm"><span class="ms">search</span></button></form>
+                  <div class="sp-hot"><a href="#navigation">Áo mưa</a><a href="#navigation">Bàn phím cơ</a><a href="#navigation">Sạc dự phòng</a><a href="#navigation">Kê tay bàn phím</a><a href="#navigation">Túi đựng bút</a><a href="#navigation">Bình giữ nhiệt</a></div>
+                </div>
+                <div class="cartwrap"><a class="sp-cart" href="#navigation" aria-label="Giỏ hàng, 12 sản phẩm"><span class="ms">shopping_cart</span><span class="sp-cbadge">12</span></a></div>
+              </div>
+            </header>
+          </div><div class="spec-f"><span class="note">Link thanh trên 13 / 300, hover mờ còn 70% (đã đo). Icon là Material Symbols thay cho SVG của site; logo là khối giữ chỗ 162 × 50.</span></div></div>
+
+        <div class="spec" data-sig-state="a61b8df620:hover"><div class="spec-h"><b>Link thanh trên · trạng thái</b><span class="kind">.navbar__link--hoverable</span><span class="dp">13 / 15.6 · 300</span></div>
+          <div class="stage" style="background:linear-gradient(-180deg,var(--sp-headerFrom),var(--sp-headerTo));margin:12px 12px 0">
+            <div class="st"><a class="sp-navlink" href="#navigation">Kênh người bán</a><small style="color:var(--sp-onHeader90)">nghỉ</small></div>
+            <div class="st"><a class="sp-navlink is-hover" href="#navigation">Kênh người bán</a><small style="color:var(--sp-onHeader90)">hover</small></div>
+            <div class="st"><a class="sp-social is-focus" href="#navigation" aria-label="Mạng xã hội"><span class="ms">public</span></a><small style="color:var(--sp-onHeader90)">icon · focus</small></div>
+          </div><div class="spec-f"><span class="note">Icon mạng xã hội có vòng focus riêng của site: primary 4px + đen 87% 6px.</span></div></div>
+
+        <div class="spec" data-sig="1d9ed6967d c158fd82f6 9f4ac7b662 45f86685d9"><div class="spec-h"><b>Huy hiệu số &amp; avatar</b><span class="kind">.shopee-cart-number-badge · .shopee-avatar</span><span class="dp">h 14 / 20 · 22</span></div>
+          <div class="stage" style="background:var(--sp-primary);margin:12px 12px 0">
+            <span class="sp-nbadge">8</span><span class="sp-cbadge">12</span><span class="sp-cbadge">192</span>
+            <span class="sp-avatar"><span class="ms fill">person</span></span><span class="sp-avatar l"><span class="ms fill">person</span></span>
+          </div><div class="spec-f"><span class="note">Huy hiệu giỏ: viền 2 primary, bo 44. Avatar mặc định: nền #f5f5f5, viền 1.</span></div></div>
+
+        <div class="spec full" data-sig="e4898923db af4a020374 7283005a3d c8aae15b07 dcc0def9ff 4e48db6995"><div class="spec-h"><b>Tiêu đề khối</b><span class="kind">.shopee-header-section__header</span><span class="dp">1200 × 60 · 16 / 500 hoa</span></div>
+          <div class="stage col bgd" style="overflow-x:auto">
+            <div class="sp-sechead"><div class="title">Danh mục</div></div>
+            <div class="sp-sechead accent"><div class="title">Tìm kiếm hàng đầu</div><a class="sp-textbtn link" href="#navigation">Xem tất cả<span class="ms">chevron_right</span></a></div>
+            <div class="sp-sechead"><div class="title"><a class="mall" href="#navigation">Shopee Mall</a><div class="perks"><span><span class="ms fill">assignment_return</span>Trả hàng miễn phí 15 ngày</span><span><span class="ms fill">verified_user</span>Hàng chính hãng 100%</span><span><span class="ms fill">local_shipping</span>Miễn phí vận chuyển</span></div></div><a class="sp-textbtn mall" href="#navigation">Xem tất cả<i><span class="ms">chevron_right</span></i></a></div>
+            <div class="sp-sechead flash"><div class="l"><div class="sp-ph sp-flashmark">ảnh chữ "Flash Sale"</div><div class="sp-timer" aria-label="Còn 01 giờ 06 phút 12 giây"><b>01</b><i></i><b>06</b><i></i><b>12</b></div></div><a class="sp-textbtn link" href="#navigation">Xem tất cả<span class="ms">chevron_right</span></a></div>
+          </div><div class="spec-f"><span class="note">4 biến thể trên trang chủ: thường (chữ 54%), nhấn (primary), Mall (đỏ + 3 cam kết), Flash Sale (ảnh chữ + đồng hồ). Số đồng hồ trên site là SVG cuộn; kit dùng chữ số.</span></div></div>
+
+        <div class="spec full" data-sig="2efe03204d"><div class="spec-h"><b>Tab</b><span class="kind">.stardust-tabs-header__tab--active</span><span class="dp">h 61 · gạch 4</span></div>
+          <div class="stage bgd"><div class="sp-tabs" role="tablist"><div class="tab is-on" role="tab" aria-selected="true">Gợi ý hôm nay</div><div class="tab" role="tab" aria-selected="false">Siêu sale</div></div></div>
+          <div class="spec-f"><span class="note">Trang chủ chỉ có một tab đang chọn; tab chưa chọn dựng từ màu chữ gốc, không đo.</span></div></div>
+
+        <div class="spec" data-sig="4dbde6b63a 4cd1a2aa71"><div class="spec-h"><b>Chấm carousel</b><span class="kind">.stardust-carousel__dot · --active</span><span class="dp">10 · khe 8</span></div>
+          <div class="stage" style="background:var(--sp-text26);margin:12px 12px 0"><div class="sp-dots"><span class="sp-dot"></span><span class="sp-dot"></span><span class="sp-dot is-on"></span><span class="sp-dot"></span><span class="sp-dot"></span></div></div></div>
+      </div>
+    </section>
+
+    <!-- ================= THẺ & Ô NỘI DUNG ================= -->
+    <section class="block" id="containment">
+      <header><h2>Thẻ &amp; ô nội dung</h2><p>Mọi ảnh là khối giữ chỗ. Tên và giá là dữ liệu mẫu.</p></header>
+      <div class="grid">
+        <div class="spec full" data-sig="634fb5599e 5f18b609a6 4facb9c065 845ae52b57 f2f2688a71 ca18aadb7e ba6a8cfdeb"><div class="spec-h"><b>Thẻ sản phẩm</b><span class="kind">role="group" aria-label="Product card"</span><span class="dp">190 × 298 · ảnh 188 · r 6 · pad 8</span></div>
+          <div class="stage bgd start" style="padding-bottom:56px">
+            <div class="st"><a class="sp-card" href="#containment"><div class="in"><div class="img"><div class="sp-ph"><span class="ms">image</span>ảnh sản phẩm</div><span class="sp-off">-29%</span></div><div class="body"><div class="name"><span class="flag">Yêu thích</span>Chuột không dây 3 chế độ, pin 500 mAh</div><div class="row"><span class="sp-price"><small>đ</small><b>499.000</b></span><span class="sold">Đã bán 63</span></div></div></div><span class="similar">Tìm sản phẩm tương tự</span></a><small>nghỉ</small></div>
+            <div class="st"><a class="sp-card is-hover" href="#containment"><div class="in"><div class="img"><div class="sp-ph"><span class="ms">image</span>ảnh sản phẩm</div><span class="sp-off">-50%</span><span class="vid"><span class="ms fill">play_arrow</span></span></div><div class="body"><div><div class="name"><span class="flag mall">Mall</span>Áo mưa phản quang đi xe máy 1 người</div><div class="sp-labels"><span class="sp-hot-label"><i><span class="ms fill">alarm</span></i><span>Đang bán chạy</span></span></div></div><div class="row"><span class="sp-price"><small>đ</small><b>75.000</b></span><span class="sold">Đã bán 800k+</span></div></div></div><span class="similar">Tìm sản phẩm tương tự</span></a><small>hover</small></div>
+            <div class="st"><a class="sp-card" href="#containment"><div class="in"><div class="img"><div class="sp-ph"><span class="ms">image</span>ảnh sản phẩm</div></div><div class="body"><div><div class="name">Muối chấm trái cây hũ 500 g, vị cay vừa</div><div class="sp-labels"><span class="sp-tag">Rẻ vô địch</span><span class="sp-tag caution">#ShopThinhHanh</span></div></div><div class="row"><span class="sp-price"><small>đ</small><b>58.000</b></span><span class="ms vch fill">confirmation_number</span><span class="sold">Đã bán 10k+</span></div></div></div><span class="similar">Tìm sản phẩm tương tự</span></a><small>có nhãn + voucher</small></div>
+          </div><div class="spec-f"><span class="note">Hover (đo bằng chuột thật): viền primary, bóng 0 1px 20px 5%, nhấc lên 1px, hiện dải "Tìm sản phẩm tương tự" cao 30 dưới thẻ. Active trả về translateY(0) theo class <code>active:translate-y-0</code>.</span></div></div>
+
+        <div class="spec" data-sig="2bdc2f494e 03aa495db8 a85031a100 e9ab5b9349 7f9649d300"><div class="spec-h"><b>Ô flash sale</b><span class="kind">flash sale item</span><span class="dp">200 × 248 · ảnh 170</span></div>
+          <div class="stage bgd nowrap">
+            <a class="sp-flash" href="#containment"><div class="img"><div class="sp-ph"><span class="ms">image</span>ảnh sản phẩm</div><span class="sp-flashoff"><span class="ms fill">bolt</span>-46%</span></div><div class="info"><div class="price">109.000<small>đ</small></div><div class="sp-sold" style="--v:12%"><i></i><span>Đã bán 49</span></div></div></a>
+            <a class="sp-flash" href="#containment"><div class="img"><div class="sp-ph"><span class="ms">image</span>ảnh sản phẩm</div><span class="sp-flashoff"><span class="ms fill">bolt</span>-25%</span></div><div class="info"><div class="price">449.000<small>đ</small></div><div class="sp-sold" style="--v:60%"><i></i><span>Đang bán chạy</span></div></div></a>
+          </div><div class="spec-f"><span class="note">Giá 18 / 500 primary, căn giữa. Hover không đổi (đã đo).</span></div></div>
+
+        <div class="spec" data-sig="fc99e16c38 8b79379143" data-sig-state="fc99e16c38:hover"><div class="spec-h"><b>Ô danh mục</b><span class="kind">.home-category-list__category-grid</span><span class="dp">120 × 151 · viền 1 5%</span></div>
+          <div class="stage bgd">
+            <div class="st"><a class="sp-cat" href="#containment"><div class="sp-ph"><span class="ms">image</span></div><span>Thời trang nam</span></a><small>nghỉ</small></div>
+            <div class="st"><a class="sp-cat is-hover" href="#containment"><div class="sp-ph"><span class="ms">image</span></div><span>Điện thoại &amp; phụ kiện</span></a><small>hover</small></div>
+          </div><div class="spec-f"><span class="note">Hover: viền 12% và bóng 0 0 13px 5%.</span></div></div>
+
+        <div class="spec" data-sig="bc78ab020c 9ab26aa11b"><div class="spec-h"><b>Lối tắt dưới banner</b><span class="kind">home squares</span><span class="dp">150 × 108 · icon 45</span></div>
+          <div class="stage nowrap"><a class="sp-quick" href="#containment"><div class="sp-ph"><span class="ms">image</span></div><span>Hàng siêu rẻ</span></a><a class="sp-quick" href="#containment"><div class="sp-ph"><span class="ms">image</span></div><span>Mã giảm giá</span></a><a class="sp-quick" href="#containment"><div class="sp-ph"><span class="ms">image</span></div><span>Nạp thẻ &amp; hoá đơn</span></a></div>
+          <div class="spec-f"><span class="note">Nhãn 13 / 14, màu #222. Bo góc của icon là hình trong ảnh gốc, kit chỉ giữ chỗ.</span></div></div>
+
+        <div class="spec" data-sig="792de3149e 0853bd20eb"><div class="spec-h"><b>Ô Shopee Mall</b><span class="kind">.ofs-carousel__item</span><span class="dp">200 × 236 · chữ 18 / 27</span></div>
+          <div class="stage bgd nowrap"><a class="sp-malltile" href="#containment"><div class="sp-ph"><span class="ms">image</span>ảnh thương hiệu</div><span>Ưu đãi đến 50%</span></a><a class="sp-malltile" href="#containment"><div class="sp-ph"><span class="ms">image</span>ảnh thương hiệu</div><span>Mua 1 tặng 1</span></a></div>
+          <div class="spec-f"><span class="note">Đứng cạnh một banner 400 × 472 (xem màn mẫu). Chữ đỏ Mall, đè lên đáy ảnh.</span></div></div>
+
+        <div class="spec" data-sig="4b3b7bfefb b62b70d275"><div class="spec-h"><b>Ô top sản phẩm</b><span class="kind">top products item</span><span class="dp">200 × 290 · ảnh 180</span></div>
+          <div class="stage bgd nowrap"><a class="sp-toptile" href="#containment"><div class="img"><div class="sp-ph"><span class="ms">image</span>ảnh sản phẩm</div><span class="rank">TOP</span><div class="sales">Bán 18k+ / tháng</div></div><div class="name">Bàn phím giả cơ</div></a><a class="sp-toptile" href="#containment"><div class="img"><div class="sp-ph"><span class="ms">image</span>ảnh sản phẩm</div><span class="rank">TOP</span><div class="sales">Bán 9k+ / tháng</div></div><div class="name">Kẹp giấy dễ thương</div></a></div>
+          <div class="spec-f"><span class="note">Dải doanh số: nền đen 26%, chữ trắng 500, cao 25. Nhãn TOP trên site là ảnh; kit vẽ lại bằng CSS.</span></div></div>
+
+        <div class="spec full" data-sig="80cb392bd9 18dce8e92a f404f3e578 b099ea794b 5d45f14013 6fd134280c 787cc3e966"><div class="spec-h"><b>Banner carousel</b><span class="kind">.stardust-carousel</span><span class="dp">797 × 235 + 2 × (398 × 115) · khe 5</span></div>
+          <div class="stage nowrap">
+            <div class="sp-hero"><div class="sp-banner"><div class="sp-ph"><span class="ms">image</span>banner chính 797 × 235</div><span class="sp-barrow prev"><span class="ms">chevron_left</span></span><span class="sp-barrow next"><span class="ms">chevron_right</span></span><div class="sp-dots"><span class="sp-dot"></span><span class="sp-dot is-on"></span><span class="sp-dot"></span><span class="sp-dot"></span></div></div><div class="sidecol"><div class="sp-ph">banner phụ 398 × 115</div><div class="sp-ph">banner phụ 398 × 115</div></div></div>
+          </div><div class="spec-f"><span class="note">Rê chuột vào banner để thấy mũi tên. Ảnh bo 2.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= NHẬP LIỆU ================= -->
+    <section class="block" id="inputs">
+      <header><h2>Nhập liệu</h2><p>Trang chủ chỉ có một ô nhập: ô tìm kiếm.</p></header>
+      <div class="grid wide">
+        <div class="spec full" data-sig="3588f4c900"><div class="spec-h"><b>Ô tìm kiếm</b><span class="kind">.shopee-searchbar › .shopee-searchbar-input__input</span><span class="dp">840 × 40 · pad 3 · input 14</span></div>
+          <div class="stage col" style="background:var(--sp-primary);margin:12px 12px 0">
+            <form class="sp-search" onsubmit="return false"><input type="text" placeholder="Tìm sản phẩm, thương hiệu và tên shop" aria-label="Tìm kiếm"><button class="sp-btn s search" aria-label="Tìm kiếm"><span class="ms">search</span></button></form>
+            <form class="sp-search is-focus" onsubmit="return false" style="margin-top:12px"><input type="text" value="bàn phím cơ" aria-label="Tìm kiếm, đang focus"><button class="sp-btn s search" aria-label="Tìm kiếm"><span class="ms">search</span></button></form>
+          </div><div class="spec-f"><span class="note">Placeholder đen 54%. Hàng dưới là focus: site vẽ viền <code>--focus-indicator</code> 2px đen 87% quanh ô (rule <code>.shopee-searchbar-input:before</code>); kit vẽ quanh cả thanh, vị trí viền là gần đúng.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= NHÃN & PHẢN HỒI ================= -->
+    <section class="block" id="feedback">
+      <header><h2>Nhãn &amp; phản hồi</h2></header>
+      <div class="grid">
+        <div class="spec" data-sig="5f18b609a6 03aa495db8"><div class="spec-h"><b>Nhãn giảm giá</b><span class="kind">.bg-shopee-pink.text-shopee-primary</span><span class="dp">12 / 14 · 500</span></div>
+          <div class="stage"><span class="sp-off" style="position:static">-29%</span><span class="sp-off" style="position:static">-50%</span><span class="sp-flashoff" style="position:relative;margin-left:8px"><span class="ms fill">bolt</span>-46%</span></div>
+          <div class="spec-f"><span class="note">Thẻ thường: nền hồng, bo góc dưới trái 4. Flash sale: nền vàng #ffe97a, chữ #ec3814.</span></div></div>
+
+        <div class="spec" data-sig="ca18aadb7e ba6a8cfdeb f2f2688a71"><div class="spec-h"><b>Nhãn khuyến mãi</b><span class="kind">promotion label</span><span class="dp">h 16 · 10 / 12 · r 2</span></div>
+          <div class="stage"><span class="sp-tag">Rẻ vô địch</span><span class="sp-tag caution">#ShopThinhHanh</span><span class="sp-hot-label"><i><span class="ms fill">alarm</span></i><span>Đang bán chạy</span></span></div>
+          <div class="spec-f"><span class="note">Nhãn viền dùng box-shadow 0.5px cùng màu chữ (primary hoặc #f69113).</span></div></div>
+
+        <div class="spec" data-sig="a85031a100"><div class="spec-h"><b>Thanh đã bán</b><span class="kind">flash sale progress</span><span class="dp">150 × 16 · r 8</span></div>
+          <div class="stage col" style="align-items:flex-start"><div class="sp-sold" style="--v:12%;margin:0"><i></i><span>Đã bán 49</span></div><div class="sp-sold" style="--v:55%;margin:0"><i></i><span>Đang bán chạy</span></div><div class="sp-sold" style="--v:92%;margin:0"><i></i><span>Sắp cháy hàng</span></div></div>
+          <div class="spec-f"><span class="note">Nền #ffbda6, phần đã bán gradient #eb1717 → #ffb000, chữ 12 / 700 hoa trắng.</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Đồng hồ đếm ngược</b><span class="kind">.shopee-countdown-timer__number</span><span class="dp">ô 26 × 19 · r 2</span></div>
+          <div class="stage"><div class="sp-timer" aria-label="Còn 01 giờ 06 phút 12 giây"><b>01</b><i></i><b>06</b><i></i><b>12</b></div></div>
+          <div class="spec-f"><span class="note">Site thu đồng hồ bằng <code>scale(.81)</code> và cuộn chữ số SVG; kit giữ kích thước gốc, không có hiệu ứng cuộn.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= CHÂN TRANG ================= -->
+    <section class="block" id="footer">
+      <header><h2>Chân trang</h2><p>Chân trang dài hơn 3300px, gồm bài giới thiệu, danh bạ danh mục và các cột liên kết. Nội dung dưới đây là mẫu.</p></header>
+      <div class="grid">
+        <div class="spec full" data-sig="d398784e12 1c17a02499 c8e27a91a7 8d14a6866c fb056c799f 5852964f7a 6ba7c817f9 275f89681d ef9dbd2088 988a997639 b262357a6b ebc5a2c282 ca45fedde2"><div class="spec-h"><b>Bài giới thiệu &amp; từ khoá</b><span class="kind">.shopee-footer-section__heading · __content</span><span class="dp">tiêu đề 14 / 700 · chữ 12 / 1.4</span></div>
+          <div class="stage col" style="border-top:4px solid var(--sp-primary);margin-top:12px">
+            <div class="sp-foot"><h3>Mua sắm trực tuyến đơn giản</h3><p>Đoạn văn giới thiệu dài, chữ 12 đen 54%, có link thường <a href="#footer">điện thoại</a>, link đậm <a class="b" href="#footer">trang ưu đãi</a>, link đen đậm <a class="b k" href="#footer">đơn vị vận chuyển</a> và link đen thường <a class="k" href="#footer">Singapore</a> nằm lẫn trong câu.</p><ul><li>Dòng gạch đầu dòng thứ nhất, cùng cỡ chữ với đoạn văn.</li><li>Dòng thứ hai có <a class="b k" href="#footer">link đậm</a> ở giữa.</li></ul>
+              <h3 style="margin-top:20px;text-transform:none">Trang thịnh hành</h3><ul class="sp-trend"><li><a href="#footer">ốp lưng điện thoại</a></li><li><a href="#footer">bàn phím cơ</a></li><li><a href="#footer">bảng viết bút lông</a></li><li><a href="#footer">khoá tay gạt</a></li><li><a href="#footer">cáp chuyển đổi</a></li></ul></div>
+          </div><div class="spec-f"><span class="note">Viền trên 4px primary là mép trên của <code>footer</code>. Các link trong bài gạch chân sẵn, 4 kiểu đậm nhạt khác nhau.</span></div></div>
+
+        <div class="spec" data-sig="3c480f7a7d 7c48603305" data-sig-state="7c48603305:hover"><div class="spec-h"><b>Danh bạ danh mục</b><span class="kind">category site map</span><span class="dp">cột 232 · 12 / 700 hoa</span></div>
+          <div class="stage start">
+            <div class="sp-sitemap"><a class="hd" href="#footer">Thời trang nam</a><a href="#footer">Áo khoác</a> | <a href="#footer">Quần jeans</a> | <a href="#footer">Áo thun</a> | <a href="#footer">Đồ lót</a> | <a href="#footer">Thắt lưng</a></div>
+            <div class="sp-sitemap"><a class="hd is-hover" href="#footer">Thiết bị điện tử</a><a href="#footer">Tai nghe</a> | <a href="#footer">Loa</a> | <a href="#footer">Máy chơi game</a> | <a href="#footer">Phụ kiện tivi</a></div>
+          </div><div class="spec-f"><span class="note">Cột phải: tiêu đề nhóm ở trạng thái hover (đổi sang primary).</span></div></div>
+
+        <div class="spec" data-sig="df3de83326 b797fd4297 d0503308a5 546e8b4f32 4c66c8d956 441692c6f4 0c79bcb431"><div class="spec-h"><b>Ô logo</b><span class="kind">thanh toán · vận chuyển · tải app</span><span class="dp">60 × 30 · 76 × 24 · r 2</span></div>
+          <div class="stage bgd start">
+            <ul class="sp-logogrid"><li class="sp-logotile"><div class="sp-ph">logo</div></li><li class="sp-logotile"><div class="sp-ph">logo</div></li><li class="sp-logotile"><div class="sp-ph">logo</div></li><li class="sp-logotile"><div class="sp-ph">logo</div></li><li class="sp-logotile"><div class="sp-ph">logo</div></li><li class="sp-logotile"><div class="sp-ph">logo</div></li></ul>
+            <div class="sp-logotile qr"><div class="sp-ph">mã QR</div></div>
+            <div style="display:flex;flex-direction:column;gap:8px"><a class="sp-logotile app" href="#footer" aria-label="Kho ứng dụng 1"><div class="sp-ph">app</div></a><a class="sp-logotile app" href="#footer" aria-label="Kho ứng dụng 2"><div class="sp-ph">app</div></a></div>
+          </div><div class="spec-f"><span class="note">Ô trắng, bóng 0 1px 1px 20%. Logo đối tác không nhúng.</span></div></div>
+
+        <div class="spec full" data-sig="de43584303 10d8a7c53c 89b7acb3da" data-sig-state="89b7acb3da:hover"><div class="spec-h"><b>Cột liên kết</b><span class="kind">footer columns</span><span class="dp">5 cột × 250 · tiêu đề 12 / 700 · link 12 / 65%</span></div>
+          <div class="stage nowrap start" style="padding:0 16px 8px">
+            <div class="sp-footcols"><div class="sp-footcol"><h4>Chăm sóc khách hàng</h4><ul><li><a href="#footer">Trung tâm trợ giúp</a></li><li><a class="is-hover" href="#footer">Hướng dẫn mua hàng (hover)</a></li><li><a href="#footer">Thanh toán</a></li><li><a href="#footer">Vận chuyển</a></li><li><a href="#footer">Trả hàng &amp; hoàn tiền</a></li></ul></div>
+              <div class="sp-footcol"><h4>Về chúng tôi</h4><ul><li><a href="#footer">Giới thiệu</a></li><li><a href="#footer">Tuyển dụng</a></li><li><a href="#footer">Điều khoản</a></li><li><a href="#footer">Chính sách bảo mật</a></li></ul></div>
+              <div class="sp-footcol"><h4>Thanh toán</h4><ul class="sp-logogrid"><li class="sp-logotile"><div class="sp-ph">logo</div></li><li class="sp-logotile"><div class="sp-ph">logo</div></li><li class="sp-logotile"><div class="sp-ph">logo</div></li></ul></div>
+              <div class="sp-footcol"><h4>Theo dõi chúng tôi</h4><ul><li><a href="#footer"><span class="sp-ph"></span>Mạng xã hội 1</a></li><li><a href="#footer"><span class="sp-ph"></span>Mạng xã hội 2</a></li><li><a href="#footer"><span class="sp-ph"></span>Mạng xã hội 3</a></li></ul></div>
+              <div class="sp-footcol"><h4>Tải ứng dụng</h4><div style="display:flex;gap:12px"><div class="sp-logotile qr"><div class="sp-ph">mã QR</div></div><div style="display:flex;flex-direction:column;gap:8px"><span class="sp-logotile app"><div class="sp-ph">app</div></span><span class="sp-logotile app"><div class="sp-ph">app</div></span><span class="sp-logotile app"><div class="sp-ph">app</div></span></div></div></div></div>
+          </div></div>
+
+        <div class="spec full" data-sig="d4879aff54 98fb640186 3b01e4ce1d"><div class="spec-h"><b>Dòng bản quyền &amp; chính sách</b><span class="kind">footer bottom</span><span class="dp">pad 40 0 · nền #f5f5f5</span></div>
+          <div class="stage col" style="align-items:flex-start">
+            <div class="sp-copyrow"><div>© 2026 Tên công ty. Tất cả các quyền được bảo lưu.</div><div class="regions"><span style="padding-right:5px">Quốc gia &amp; khu vực:</span><a href="#footer">Singapore</a><a href="#footer">Indonesia</a><a href="#footer">Thái Lan</a><a href="#footer">Malaysia</a><a href="#footer">Việt Nam</a></div></div>
+            <div class="sp-policy"><div class="links"><a href="#footer">Chính sách bảo mật</a><a href="#footer">Quy chế hoạt động</a><a href="#footer">Chính sách vận chuyển</a><a href="#footer">Chính sách trả hàng</a></div><div class="sp-ph cert">ảnh chứng nhận</div><p>Tên công ty</p><p>Địa chỉ và thông tin đăng ký kinh doanh (mẫu)</p></div>
+          </div></div>
+      </div>
+    </section>
+
+    <!-- ================= FOCUS ================= -->
+    <section class="block" id="states">
+      <header><h2>Focus</h2><p>Site có 2 kiểu focus tự vẽ và phần còn lại dùng viền mặc định của trình duyệt.</p></header>
+      <div class="grid">
+        <div class="spec" data-sig-state="85eb275e96:focus"><div class="spec-h"><b>Focus của site</b><span class="kind">--focus-indicator-*</span><span class="dp">2px · đen 87% · cách 1–4 · r 2</span></div>
+          <div class="stage">
+            <div class="st"><button class="sp-btn primary sp-focusring is-focus">Mua ngay</button><small>viền ::before</small></div>
+            <div class="st" style="background:var(--sp-primary);padding:12px"><a class="sp-social is-focus" href="#states" aria-label="Mạng xã hội"><span class="ms">public</span></a><small style="color:var(--sp-onPrimary)">vòng đôi</small></div>
+          </div><div class="spec-f"><span class="note">Nút và ô tìm kiếm vẽ viền bằng <code>::before</code> với 4 biến <code>--focus-indicator-color / stroke-width / spacing / border-radius</code>. Icon thanh trên dùng box-shadow 2 lớp.</span></div></div>
+        <div class="spec" data-sig-state="df3de83326:focus 8664bda8d8:focus 5512d15dc9:focus fc99e16c38:focus e9ab5b9349:focus 7f9649d300:focus 3c480f7a7d:focus 5852964f7a:focus 546e8b4f32:focus 7c48603305:focus 89b7acb3da:focus 787cc3e966:focus 6ba7c817f9:focus 275f89681d:focus ef9dbd2088:focus 988a997639:focus 3b01e4ce1d:focus b262357a6b:focus 662c1ceb36:focus 6c464006dd:focus dcc0def9ff:focus a5cc37b742:focus ebc5a2c282:focus"><div class="spec-h"><b>Focus mặc định trình duyệt</b><span class="kind">outline: auto</span><span class="dp">23 pattern</span></div>
+          <div class="stage">
+            <a class="sp-textbtn link ua-focus" href="#states">Xem tất cả<span class="ms">chevron_right</span></a>
+            <a class="sp-cat ua-focus" href="#states" style="height:100px"><span>Ô danh mục</span></a>
+            <span class="sp-foot"><a class="ua-focus" href="#states">link chân trang</a></span>
+          </div><div class="spec-f"><span class="note">Focus mặc định trình duyệt, site không style riêng: link chân trang, ô danh mục, ô flash sale, nút ngôn ngữ / tài khoản, "Xem tất cả", ô logo.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= MÀN MẪU ================= -->
+    <section class="block" id="screens">
+      <header><h2>Màn hình mẫu</h2><p>Trang chủ desktop ghép từ các class ở trên, đúng thứ tự khối của site. Không có màn mobile: bản lưu là giao diện desktop cố định 1200px, site mobile là ứng dụng khác chưa được lưu.</p></header>
+      <div class="spec"><div class="desk-wrap">
+        <div class="desk">
+          <header class="sp-top">
+            <nav class="sp-navbar" aria-label="Thanh trên mẫu"><div class="left"><a class="sp-navlink" href="#screens">Kênh người bán</a><a class="sp-navlink" href="#screens">Tải ứng dụng</a><span class="sp-navlink">Kết nối</span></div><div class="spacer"></div><a class="sp-navlink" href="#screens"><span class="ms">notifications</span><span class="sp-nbadge">8</span>Thông báo</a><a class="sp-navlink" href="#screens"><span class="ms">help</span>Hỗ trợ</a><button class="sp-navlink acct"><span class="sp-avatar"><span class="ms fill">person</span></span>ten_nguoi_dung</button></nav>
+            <div class="sp-hws"><div class="sp-logo">logo site</div><div class="mid"><form class="sp-search" onsubmit="return false"><input type="text" placeholder="Tìm sản phẩm, thương hiệu và tên shop" aria-label="Tìm kiếm mẫu"><button class="sp-btn s search" aria-label="Tìm kiếm"><span class="ms">search</span></button></form><div class="sp-hot"><a href="#screens">Áo mưa</a><a href="#screens">Bàn phím cơ</a><a href="#screens">Sạc dự phòng</a><a href="#screens">Bình giữ nhiệt</a></div></div><div class="cartwrap"><a class="sp-cart" href="#screens" aria-label="Giỏ hàng"><span class="ms">shopping_cart</span><span class="sp-cbadge">12</span></a></div></div>
+          </header>
+          <div class="white"><div class="c">
+            <div class="sp-hero"><div class="sp-banner"><div class="sp-ph"><span class="ms">image</span>banner</div><div class="sp-dots"><span class="sp-dot"></span><span class="sp-dot is-on"></span><span class="sp-dot"></span></div></div><div class="sidecol"><div class="sp-ph">banner phụ</div><div class="sp-ph">banner phụ</div></div></div>
+            <div class="quickrow"><a class="sp-quick" href="#screens"><div class="sp-ph"></div><span>Hàng siêu rẻ</span></a><a class="sp-quick" href="#screens"><div class="sp-ph"></div><span>Giao nhanh</span></a><a class="sp-quick" href="#screens"><div class="sp-ph"></div><span>Nhà cửa</span></a><a class="sp-quick" href="#screens"><div class="sp-ph"></div><span>Điểm thưởng</span></a><a class="sp-quick" href="#screens"><div class="sp-ph"></div><span>Mã giảm giá</span></a><a class="sp-quick" href="#screens"><div class="sp-ph"></div><span>Nạp thẻ &amp; hoá đơn</span></a></div>
+          </div></div>
+          <div class="c">
+            <div class="sec"><div class="sp-sechead"><div class="title">Danh mục</div></div><div class="catgrid" id="demo-cats"><button class="sp-arrow hint edge" aria-label="Sau"><span class="ms">chevron_right</span></button></div></div>
+            <div class="sec"><div class="sp-sechead flash"><div class="l"><div class="sp-ph sp-flashmark">Flash Sale</div><div class="sp-timer"><b>01</b><i></i><b>06</b><i></i><b>12</b></div></div><a class="sp-textbtn link" href="#screens">Xem tất cả<span class="ms">chevron_right</span></a></div><div class="flashrow" id="demo-flash"><button class="sp-arrow hint edge" aria-label="Sau"><span class="ms">chevron_right</span></button></div></div>
+            <div class="sp-tabs"><div class="tab is-on">Gợi ý hôm nay</div></div>
+            <div class="sp-cardgrid" id="demo-cards"></div>
+          </div>
+          <button class="sp-chat"><span class="ms fill">forum</span>Chat</button>
+        </div>
+      </div>
+      <div class="desk-cap" style="padding-bottom:14px">desktop 1440 (container 1200) · dùng: sp-top · sp-navbar · sp-search · sp-hero / sp-banner · sp-quick · sp-sechead · sp-cat · sp-flash · sp-timer · sp-tabs · sp-card · sp-arrow · sp-chat</div></div>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status"><span id="toast-t">Đã copy</span></div>
+
+<script>
+/* token của site: [vai trò, tên gốc trong CSS của site]. Giá trị parse từ CSS đã lưu + getComputedStyle. */
+const ROLES=[["primary","--nc-primary · shopee-primary"],["onPrimary","trắng"],["primaryHover",".btn-solid-primary:hover"],["primaryActive",".btn-solid-primary:active"],["primaryDisabled","--disabled"],
+["search","nút tìm (đo)"],["searchHover","nút tìm :hover"],["searchActive","nút tìm :active"],["headerFrom",".shopee-top"],["headerTo",".shopee-top"],
+["primaryBg","--nc-primary-bg"],["pink","shopee-pink"],["mall","shopee-deep-red · ofs"],["blue","shopee-blue"],["link","--nc-text-link"],["green","shopee-green"],
+["success","--nc-success"],["error","--nc-error"],["caution","--nc-caution"],["flashBg","nhãn flash sale"],["flashText","nhãn flash sale"],
+["barFrom","thanh đã bán"],["barTo","thanh đã bán"],["barTrack","thanh đã bán"],["black","đồng hồ"],
+["text87","shopee-black87"],["text80","chữ thân trang"],["text65","shopee-black65"],["text54","shopee-black54"],["text26","shopee-black26"],
+["title","#555"],["label","#222"],["body","#333"],["line","--nc-util-line"],["lineSoft","viền 5%"],["lineFooter","vạch ngăn chân trang"],["hoverFill","btn-light :hover"],
+["bg","--nc-util-bg"],["surface","trắng"],["footer","nền chân trang"],["placeholder","--nc-util-placeholder"],["mask","--nc-util-mask"],
+["arrowBg","mũi tên banner"],["dotBg","chấm carousel"],["dotLine","chấm carousel"],["onHeader90","từ khoá nóng"],["onHeader70","link :hover"],["onHeaderLine","vạch ngăn navbar"]];
+const BASE=["#ee4d2d","#ffffff","#f05d40","#e2492b","#facac0","#fb5533","#fb6445","#ee5130","#f53d2d","#ff6633","#fef6f5","#feeeea","#d0011b","#066bc8","#0088ff","#26aa99","#30b566","#ee2c4a","#f69113","#ffe97a","#ec3814","#eb1717","#ffb000","#ffbda6","#000000",
+"rgba(0,0,0,.87)","rgba(0,0,0,.8)","rgba(0,0,0,.65)","rgba(0,0,0,.54)","rgba(0,0,0,.26)","#555555","#222222","#333333","rgba(0,0,0,.09)","rgba(0,0,0,.05)","rgba(0,0,0,.2)","rgba(0,0,0,.02)",
+"#f5f5f5","#ffffff","#fbfbfb","#fafafa","rgba(0,0,0,.4)","rgba(0,0,0,.18)","rgba(255,255,255,.4)","rgba(137,137,137,.4)","rgba(255,255,255,.9)","rgba(255,255,255,.7)","rgba(255,255,255,.22)"];
+/* theme--ofs: site chỉ khai --brand-primary-color:#d0011b và --brand-primary-light-color:rgba(208,1,27,.08) */
+const PALETTES={shopee:{label:"Shopee",light:BASE},mall:{label:"Shopee Mall (theme--ofs)",light:BASE.map((v,i)=>i===0?"#d0011b":i===10?"rgba(208,1,27,.08)":v)}};
+const SHADOWS=[["sh-btn","0 1px 1px 0 rgba(0,0,0,.09)","nút"],["sh-light","0 1px 1px 0 rgba(0,0,0,.03)","nút nhạt"],["sh-section","0 1px 1px 0 rgba(0,0,0,.05)","khối"],["sh-search","0 2px 4px 0 rgba(0,0,0,.09)","ô tìm kiếm"],["sh-hover","0 1px 20px 0 rgba(0,0,0,.05)","thẻ hover"],["sh-cat","0 0 13px 0 rgba(0,0,0,.05)","danh mục hover"],["sh-arrow","0 1px 12px 0 rgba(0,0,0,.12)","mũi tên"],["sh-pressed","inset 0 2px 1px 0 rgba(0,0,0,.05)","nút nhấn"],["sh-chat","0 4px 20px 0 rgba(28,28,51,.16)","chat"],["sh-tile","0 1px 1px 0 rgba(0,0,0,.2)","ô logo"],["sh-depth9","0 0 9px 0 rgba(0,0,0,.12)","--ne-depth9"],["sh-banner","0 1px 8px 0 rgba(0,0,0,.09)","mũi tên banner"]];
+(function () {
+  const root = document.documentElement;
+  const state = { pal: "shopee" };
+  try { Object.assign(state, JSON.parse(localStorage.getItem("shopee-kit") || "{}")); } catch (e) {}
+  if (!PALETTES[state.pal]) state.pal = "shopee";
+
+  const toast = (t) => {
+    const el = document.getElementById("toast");
+    document.getElementById("toast-t").textContent = t;
+    el.classList.add("show");
+    clearTimeout(toast.t);
+    toast.t = setTimeout(() => el.classList.remove("show"), 1600);
+  };
+  const copy = async (text, msg) => {
+    try { await navigator.clipboard.writeText(text); toast(msg); }
+    catch (e) { toast("Trình duyệt chặn clipboard, hãy copy tay"); }
+  };
+
+  function apply() {
+    const vals = PALETTES[state.pal].light;
+    ROLES.forEach(([r], i) => root.style.setProperty("--sp-" + r, vals[i]));
+    document.querySelectorAll("#swatches .sw").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === state.pal));
+    renderRoles(vals);
+    try { localStorage.setItem("shopee-kit", JSON.stringify(state)); } catch (e) {}
+  }
+
+  const sw = document.getElementById("swatches");
+  Object.entries(PALETTES).forEach(([key, p]) => {
+    const b = document.createElement("button");
+    b.className = "sw"; b.dataset.v = key; b.title = p.label; b.setAttribute("aria-label", p.label);
+    b.style.setProperty("--c", p.light[0]);
+    b.onclick = () => { state.pal = key; apply(); };
+    sw.appendChild(b);
+  });
+
+  /* ô màu: chữ trắng trên nền đậm, chữ đen 87% trên nền nhạt hoặc nền có alpha */
+  const LIGHT_FG = new Set(["primary","primaryHover","primaryActive","search","searchHover","searchActive","headerFrom","headerTo","mall","blue","link","green","success","error","caution","flashText","barFrom","black","title","label","body","text87","text80","text65","text54","mask"]);
+  function renderRoles(vals) {
+    const box = document.getElementById("roles");
+    box.innerHTML = "";
+    ROLES.forEach(([r, src], i) => {
+      const b = document.createElement("button");
+      b.className = "role"; b.style.background = vals[i]; b.style.color = LIGHT_FG.has(r) ? "#ffffff" : "rgba(0,0,0,.87)";
+      if (/^(onHeader|dot)/.test(r)) { b.style.background = "linear-gradient(" + vals[i] + "," + vals[i] + "), " + vals[0]; b.style.color = "#ffffff"; }
+      b.innerHTML = "<b>" + r + "</b><code>" + vals[i] + "<br>" + src + "</code>";
+      b.onclick = () => copy(vals[i], "Đã copy " + r + " " + vals[i]);
+      box.appendChild(b);
+    });
+  }
+
+  /* kiểu chữ đo được trên trang chủ: [tên, size, line-height, weight, vai trò màu, transform] + thang --nt-size-* */
+  const TYPE = [["Tên top sản phẩm", 18, 25, 500, "title", "capitalize"], ["Giá flash sale", 18, 21.6, 500, "primary", ""], ["Chữ ô Mall", 18, 27, 400, "mall", ""], ["Tiêu đề Mall", 17, 17, 500, "mall", "uppercase"],
+    ["Tiêu đề khối / tab", 16, 19.2, 500, "text54", "uppercase"], ["Giá thẻ sản phẩm", 16, 20, 500, "primary", ""], ["Tên sản phẩm", 14, 20, 400, "text80", ""], ["Thân trang / nút", 14, 16.8, 400, "text80", ""],
+    ["Tiêu đề chân trang", 14, 23.8, 700, "text54", "uppercase"], ["Link thanh trên", 13, 15.6, 300, "text80", ""], ["Nhãn lối tắt", 13, 14, 400, "label", ""], ["Đã bán", 12, 16, 400, "text87", ""],
+    ["Nhãn giảm giá", 12, 14, 500, "primary", ""], ["Từ khoá nóng", 12, 14, 300, "text54", ""], ["Link chân trang", 12, 14.4, 400, "text65", ""], ["Nhãn khuyến mãi", 10, 12, 400, "primary", ""],
+    ["--nt-size-title", 20, 24, 400, "text87", ""], ["--nt-size-large", 16, 20, 400, "text87", ""], ["--nt-size-normal", 14, 16, 400, "text87", ""], ["--nt-size-small", 12, 14, 400, "text87", ""], ["--nt-size-foot", 10, 12, 400, "text87", ""]];
+  const ts = document.getElementById("typescale");
+  TYPE.forEach(([name, size, lh, w, role, tt]) => {
+    const row = document.createElement("div");
+    row.className = "type-row";
+    row.innerHTML = '<span class="meta">' + name + '</span><span class="t" style="font-size:' + size + "px;line-height:" + lh + "px;font-weight:" + w + ";color:var(--sp-" + role + ");text-transform:" + (tt || "none") + '">Bàn phím cơ 87 phím 499.000đ</span><span class="meta">' + size + " / " + lh + " · " + w + " · " + role + (tt ? " · " + tt : "") + "</span>";
+    ts.appendChild(row);
+  });
+
+  /* bo góc và bóng */
+  const sh = document.getElementById("shapes");
+  [["--nr-normal", "2px", "nút · ô tìm · nhãn"], ["--nr-overlay", "4px", "lớp nổi · chat"], ["thẻ sản phẩm", "6px", "rounded-[6px]"], ["thanh đã bán", "8px", ""], ["huy hiệu", "44px", "giỏ hàng"], ["tròn", "50%", "mũi tên · chấm"]].forEach(([n, r, u]) => {
+    const c = document.createElement("div");
+    c.className = "shape-cell";
+    c.innerHTML = '<i style="border-radius:' + (r === "50%" ? r : "calc(" + r + " * var(--k))") + '"></i>' + n + "<br>" + r + (u ? "<br>" + u : "");
+    sh.appendChild(c);
+  });
+  const sd = document.getElementById("shadows");
+  SHADOWS.forEach(([n, v, u]) => {
+    const c = document.createElement("div");
+    c.className = "shadow-cell";
+    c.innerHTML = '<i style="box-shadow:var(--sp-' + n + ')"></i>' + n + "<br>" + u;
+    sd.appendChild(c);
+  });
+
+  /* dữ liệu mẫu cho màn hình mẫu */
+  const ph = '<div class="sp-ph"><span class="ms">image</span></div>';
+  const cats = ["Thời trang nam", "Điện thoại", "Thiết bị điện tử", "Máy tính", "Máy ảnh", "Đồng hồ", "Giày dép nam", "Gia dụng", "Thể thao", "Ô tô xe máy", "Thời trang nữ", "Mẹ & bé", "Nhà cửa", "Sắc đẹp", "Sức khoẻ", "Giày dép nữ", "Túi ví nữ", "Phụ kiện", "Bách hoá", "Nhà sách"];
+  document.getElementById("demo-cats").insertAdjacentHTML("afterbegin", cats.map((c) => '<a class="sp-cat" href="#screens">' + ph + "<span>" + c + "</span></a>").join(""));
+  const flash = [["-46%", "109.000", 12, "Đã bán 49"], ["-25%", "449.000", 40, "Đang bán chạy"], ["-49%", "229.000", 70, "Đang bán chạy"], ["-29%", "214.000", 35, "Đang bán chạy"], ["-26%", "189.000", 30, "Đang bán chạy"], ["-59%", "29.000", 85, "Sắp cháy hàng"]];
+  document.getElementById("demo-flash").insertAdjacentHTML("afterbegin", flash.map(([o, p, v, s]) => '<a class="sp-flash" href="#screens"><div class="img">' + ph + '<span class="sp-flashoff"><span class="ms fill">bolt</span>' + o + '</span></div><div class="info"><div class="price">' + p + '<small>đ</small></div><div class="sp-sold" style="--v:' + v + '%"><i></i><span>' + s + "</span></div></div></a>").join(""));
+  const items = [["Chuột không dây 3 chế độ", "499.000", "63", "-29%"], ["Túi thẻ đa năng 12 trong 1", "138.700", "88", "-2%"], ["Dao xếp đa năng", "1.630.000", "8", "-22%"], ["Chổi cọ bát inox", "17.000", "20k+", "-50%"], ["Cháo sườn rau củ 365 g", "174.000", "7k+", ""], ["Áo mưa phản quang", "75.000", "800k+", "-50%"],
+    ["Máy đọc sách 3,7 inch", "1.397.000", "49", ""], ["Túi chống sốc laptop 14 inch", "1.857.000", "141", "-2%"], ["Bộ 20 dây quấn cáp", "15.800", "40k+", "-25%"], ["Máy quay cầm tay", "10.250.000", "2k+", "-40%"], ["Hộp ổ cứng M.2", "1.141.482", "877", "-3%"], ["Kê tay bàn phím", "800.000", "986", ""]];
+  document.getElementById("demo-cards").innerHTML = items.map(([n, p, s, o], i) => '<a class="sp-card" href="#screens"><div class="in"><div class="img">' + ph + (o ? '<span class="sp-off">' + o + "</span>" : "") + '</div><div class="body"><div><div class="name">' + n + "</div>" + (i % 3 === 0 ? '<div class="sp-labels"><span class="sp-tag">Rẻ vô địch</span></div>' : "") + '</div><div class="row"><span class="sp-price"><small>đ</small><b>' + p + '</b></span><span class="sold">Đã bán ' + s + '</span></div></div></div><span class="similar">Tìm sản phẩm tương tự</span></a>').join("");
+
+  /* mỗi thẻ thành phần có nút copy HTML của phần trình diễn */
+  document.querySelectorAll(".spec").forEach((spec) => {
+    const stage = spec.querySelector(".stage");
+    if (!stage || !spec.querySelector(".spec-h")) return;
+    let foot = spec.querySelector(".spec-f");
+    if (!foot) { foot = document.createElement("div"); foot.className = "spec-f"; foot.innerHTML = '<span class="note"></span>'; spec.appendChild(foot); }
+    const b = document.createElement("button");
+    b.className = "copy"; b.innerHTML = '<span class="ms">content_copy</span>HTML';
+    b.onclick = () => copy(stage.innerHTML.trim().replace(/\n\s+/g, "\n"), "Đã copy HTML của " + spec.querySelector(".spec-h b").textContent);
+    foot.appendChild(b);
+  });
+
+  /* token hiện tại dưới dạng khối :root để dán vào dự án khác */
+  document.getElementById("copy-tokens").onclick = () => {
+    const vals = PALETTES[state.pal].light;
+    const lines = ROLES.map(([r], i) => "  --sp-" + r + ": " + vals[i] + ";").concat(SHADOWS.map(([n, v]) => "  --sp-" + n + ": " + v + ";"));
+    copy(":root {\n" + lines.join("\n") + '\n  --k: 1;\n  --ease: cubic-bezier(.4, 0, .6, 1);\n  --font: "Helvetica Neue", Helvetica, Roboto, "Droid Sans", Arial, sans-serif;\n}', "Đã copy token " + PALETTES[state.pal].label);
+  };
+
+  /* làm nổi mục đang xem trong mục lục */
+  const links = [...document.querySelectorAll(".side a")];
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (e.isIntersecting) links.forEach((a) => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id));
+  }), { rootMargin: "-30% 0px -60% 0px" });
+  document.querySelectorAll("section.block").forEach((s) => io.observe(s));
+
+  apply();
+})();
+</script>
+</body>
+</html>

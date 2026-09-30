@@ -1,0 +1,984 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta name="ui-kit-id" content="vercel-com">
+<!-- UI kit rút từ trang Vercel dashboard do user tự lưu (Vercel.html + Vercel_files, 28/09/2026), nhánh B05 của ui-kit-from-code:
+     phục vụ qua 127.0.0.1, chặn mọi request ra ngoài, tắt JS. Token --ds-* đọc bằng Playwright từ CSS đã lưu (lab() → hex qua canvas).
+     Mọi tên người, tên dự án, repo, commit, ảnh đại diện đều đã thay bằng dữ liệu mẫu. -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="ui-kit-skip" content="">
+<title>Geist Dashboard UI Kit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+/* Kit mặc chính token của dashboard: mọi màu là một biến --ds-<thang>-<bậc> đúng tên Vercel dùng
+   (background-100/200, gray-100…1000, gray-alpha-*, blue/red/amber/green/teal/purple/pink-*), mọi bóng là --ds-shadow-*.
+   Mặc định là tối như trang đã lưu; script bên dưới đổi sáng/tối bằng bộ giá trị đọc từ .light-theme của cùng CSS. */
+:root {
+  --ds-background-100:#0a0a0a; --ds-background-200:#000000; --ds-gray-100:#1a1a1a; --ds-gray-200:#1f1f1f; --ds-gray-300:#292929; --ds-gray-400:#2e2e2e; --ds-gray-500:#454545; --ds-gray-600:#878787; --ds-gray-700:#8f8f8f; --ds-gray-800:#7d7d7d; --ds-gray-900:#a1a1a1; --ds-gray-1000:#ededed; --ds-gray-alpha-100:#ffffff0f; --ds-gray-alpha-200:#ffffff17; --ds-gray-alpha-300:#ffffff21; --ds-gray-alpha-400:#ffffff24; --ds-gray-alpha-500:#ffffff3d; --ds-gray-alpha-600:#ffffff82; --ds-gray-alpha-700:#ffffff8a; --ds-gray-alpha-800:#ffffff78; --ds-gray-alpha-900:#ffffff9c; --ds-gray-alpha-1000:#ffffffeb; --ds-blue-100:#0f1c2e; --ds-blue-200:#10233d; --ds-blue-300:#0f2f57; --ds-blue-400:#0d3868; --ds-blue-500:#0a4380; --ds-blue-600:#0091ff; --ds-blue-700:#0072f5; --ds-blue-800:#0062d1; --ds-blue-900:#52a8ff; --ds-blue-1000:#ebf6ff; --ds-red-100:#2a1314; --ds-red-200:#3c1618; --ds-red-300:#561a1e; --ds-red-400:#671e21; --ds-red-500:#832126; --ds-red-600:#e5484d; --ds-red-700:#e5484d; --ds-red-800:#d93036; --ds-red-900:#ff6166; --ds-red-1000:#feecee; --ds-amber-100:#291800; --ds-amber-200:#331b00; --ds-amber-300:#4d2a00; --ds-amber-400:#573300; --ds-amber-500:#6b4105; --ds-amber-600:#e79d13; --ds-amber-700:#ffb224; --ds-amber-800:#ff990a; --ds-amber-900:#f2a20d; --ds-amber-1000:#fef3dc; --ds-green-100:#0b2212; --ds-green-200:#0f2e18; --ds-green-300:#12361b; --ds-green-400:#0c451b; --ds-green-500:#126426; --ds-green-600:#1a9338; --ds-green-700:#45a557; --ds-green-800:#398e4a; --ds-green-900:#62c073; --ds-green-1000:#e5fbea; --ds-teal-100:#04201b; --ds-teal-200:#062822; --ds-teal-300:#083a33; --ds-teal-400:#053d35; --ds-teal-500:#085e53; --ds-teal-600:#0c9784; --ds-teal-700:#12a594; --ds-teal-800:#0d8c7d; --ds-teal-900:#0ac7b4; --ds-teal-1000:#e0faf4; --ds-purple-100:#231528; --ds-purple-200:#2e1938; --ds-purple-300:#422154; --ds-purple-400:#4f2768; --ds-purple-500:#5f2e85; --ds-purple-600:#8e4ec6; --ds-purple-700:#8e4ec6; --ds-purple-800:#763da9; --ds-purple-900:#bf7af0; --ds-purple-1000:#f8edfc; --ds-pink-100:#28151d; --ds-pink-200:#3a1726; --ds-pink-300:#4f1c31; --ds-pink-400:#551b33; --ds-pink-500:#6c1e3e; --ds-pink-600:#b31a57; --ds-pink-700:#ea3e83; --ds-pink-800:#df2670; --ds-pink-900:#f75f8f; --ds-pink-1000:#feecf4; --ds-focus-color:#52a8ff;
+  --ds-shadow-border-base:0 0 0 1px #ffffff25;
+  --ds-shadow-border:0 0 0 1px #ffffff25, 0 0 0 1px hsla(0, 0%, 0%, 1);
+  --ds-shadow-small:0px 1px 2px #00000029;
+  --ds-shadow-medium:0px 2px 2px #00000052, 0px 8px 8px -8px #00000029;
+  --ds-shadow-large:0px 2px 2px #0000000a, 0px 8px 16px -4px #0000000a;
+  --ds-shadow-border-small:0 0 0 1px #ffffff25, 0px 1px 2px #00000029, 0 0 0 1px hsla(0, 0%, 0%, 1);
+  --ds-shadow-border-medium:0 0 0 1px #ffffff25, 0px 2px 2px #00000052, 0px 8px 8px -8px #00000029, 0 0 0 1px hsla(0, 0%, 0%, 1);
+  --ds-shadow-border-large:0 0 0 1px #ffffff25, 0px 2px 2px #0000000a, 0px 8px 16px -4px #0000000a, 0 0 0 1px hsla(0, 0%, 0%, 1);
+  --ds-shadow-menu:0 0 0 1px #ffffff25, 0px 1px 1px #00000005, 0px 4px 8px -4px #0000000a, 0px 16px 24px -8px #0000000f, 0 0 0 1px hsla(0, 0%, 0%, 1);
+  --ds-shadow-tooltip:0 0 0 1px #ffffff25, 0px 1px 1px #00000005, 0px 4px 8px #0000000a, 0 0 0 1px hsla(0, 0%, 0%, 1);
+  --ds-shadow-modal:0 0 0 1px #ffffff25, 0px 1px 1px #00000005, 0px 8px 16px -4px #0000000a, 0px 24px 32px -8px #0000000f, 0 0 0 1px hsla(0, 0%, 0%, 1);
+  --ds-focus-ring:0 0 0 2px hsla(0, 0%, 4%, 1), 0 0 0 4px hsla(210, 100%, 66%, 1);
+  --ds-focus-border:0 0 0 1px #ffffff82, 0px 0px 0px 4px #ffffff3d;
+  --font: Geist, "GeistSans", system-ui, sans-serif;
+  --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+  --ease: cubic-bezier(.175, .885, .32, 1.1);
+  --r: 6px;
+  color-scheme: dark;
+}
+:root[data-mode="light"] { color-scheme: light; }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--ds-background-200); color: var(--ds-gray-1000); font: 400 14px/20px var(--font); -webkit-font-smoothing: antialiased; }
+svg.i { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+code, .code { font-family: var(--mono); font-size: 12px; }
+:focus-visible { outline: 2px solid var(--ds-focus-color); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+/* ---------- vỏ trang ---------- */
+.shell { display: grid; grid-template-columns: 232px minmax(0, 1fr); min-height: 100vh; }
+.side { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 16px 8px; background: var(--ds-background-200); box-shadow: 1px 0 0 var(--ds-gray-alpha-400); display: flex; flex-direction: column; gap: 2px; }
+.brand { display: flex; align-items: center; gap: 10px; padding: 4px 10px 14px; }
+.brand-mark { width: 28px; height: 28px; border-radius: 50%; background: var(--ds-gray-1000); color: var(--ds-background-100); display: grid; place-items: center; font: 600 13px var(--font); }
+.brand b { font-size: 14px; font-weight: 600; display: block; }
+.brand small { color: var(--ds-gray-900); font-size: 12px; }
+.side h6 { margin: 14px 10px 6px; font: 500 12px/16px var(--font); color: var(--ds-gray-900); }
+.side a { display: flex; align-items: center; gap: 10px; height: 36px; padding: 0 10px; border-radius: 6px; color: var(--ds-gray-900); text-decoration: none; font-weight: 500; }
+.side a:hover { background: var(--ds-gray-100); color: var(--ds-gray-1000); }
+.side a.on { background: var(--ds-gray-200); color: var(--ds-gray-1000); }
+main { padding: 0 32px 96px; min-width: 0; }
+
+.bar { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; padding: 12px 0; background: var(--ds-background-200); box-shadow: 0 1px 0 var(--ds-gray-alpha-400); }
+.bar .grow { flex: 1; }
+.ctl { display: flex; align-items: center; gap: 8px; }
+.ctl > span { font-size: 12px; font-weight: 500; color: var(--ds-gray-900); }
+.seg { display: inline-flex; padding: 2px; gap: 2px; border-radius: 8px; box-shadow: inset 0 0 0 1px var(--ds-gray-alpha-400); }
+.seg button { height: 28px; padding: 0 10px; border: 0; border-radius: 6px; background: transparent; color: var(--ds-gray-900); font: 500 13px var(--font); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ds-gray-200); color: var(--ds-gray-1000); }
+.copy { height: 32px; padding: 0 10px; border-radius: 6px; border: 0; background: transparent; color: var(--ds-gray-1000); font: 500 13px var(--font); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; box-shadow: inset 0 0 0 1px var(--ds-gray-alpha-400); }
+.copy:hover { background: var(--ds-gray-100); }
+
+.intro { padding: 40px 0 8px; max-width: 780px; }
+.intro .eyebrow { font-family: var(--mono); font-size: 12px; color: var(--ds-blue-900); }
+.intro h1 { font: 600 40px/48px var(--font); letter-spacing: -2.4px; margin: 8px 0 12px; text-wrap: balance; }
+.intro p { font-size: 16px; line-height: 24px; color: var(--ds-gray-900); margin: 0; max-width: 66ch; }
+.intro .facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.fact { font-family: var(--mono); font-size: 12px; padding: 2px 8px; border-radius: 6px; background: var(--ds-background-100); color: var(--ds-gray-900); box-shadow: inset 0 0 0 1px var(--ds-gray-alpha-400); }
+
+section.block { padding-top: 48px; scroll-margin-top: 64px; }
+section.block > header { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+section.block h2 { font: 600 24px/32px var(--font); letter-spacing: -.96px; margin: 0; }
+section.block h3 { font: 600 16px/24px var(--font); letter-spacing: -.32px; margin: 24px 0 10px; }
+section.block > header p { margin: 0; color: var(--ds-gray-900); max-width: 72ch; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+.grid.wide { grid-template-columns: repeat(auto-fill, minmax(460px, 1fr)); }
+.spec { background: var(--ds-background-100); border-radius: 8px; box-shadow: var(--ds-shadow-border-small); display: flex; flex-direction: column; min-width: 0; }
+.spec.full { grid-column: 1 / -1; }
+.spec-h { display: flex; align-items: center; gap: 8px; padding: 14px 16px 0; flex-wrap: wrap; }
+.spec-h b { font-size: 14px; font-weight: 600; }
+.kind { font-family: var(--mono); font-size: 11px; padding: 1px 6px; border-radius: 4px; background: var(--ds-blue-200); color: var(--ds-blue-900); }
+.spec-h .dp { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--ds-gray-900); font-variant-numeric: tabular-nums; }
+.stage { padding: 20px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; min-height: 96px; overflow-x: auto; }
+.stage.col { flex-direction: column; align-items: stretch; }
+.stage.center { justify-content: center; }
+.stage.page { background: var(--ds-background-200); margin: 12px 12px 0; border-radius: 6px; }
+.lab { font: 400 11px/16px var(--mono); color: var(--ds-gray-900); display: block; margin-bottom: 4px; }
+.cell { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.spec-f { display: flex; align-items: center; gap: 8px; padding: 8px 12px 12px 16px; margin-top: auto; }
+.spec-f .note { font-size: 12px; line-height: 16px; color: var(--ds-gray-900); flex: 1; }
+
+/* nền tảng */
+.roles { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 4px; }
+.roles .row-h { grid-column: 1 / -1; font: 500 12px var(--mono); color: var(--ds-gray-900); margin: 10px 0 2px; }
+.role { border-radius: 6px; padding: 8px; min-height: 64px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: inset 0 0 0 1px var(--ds-gray-alpha-300); cursor: pointer; border: none; text-align: left; font: inherit; min-width: 0; }
+.role b { font: 500 12px var(--font); }
+.role code { font-size: 10px; opacity: .85; overflow: hidden; text-overflow: ellipsis; }
+.bgs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; }
+.type-row { display: grid; grid-template-columns: 170px minmax(0, 1fr) 140px; gap: 16px; align-items: baseline; padding: 10px 0; box-shadow: 0 1px 0 var(--ds-gray-alpha-300); }
+.type-row:last-child { box-shadow: none; }
+.type-row .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.type-row .meta { font-family: var(--mono); font-size: 11px; color: var(--ds-gray-900); font-variant-numeric: tabular-nums; }
+.shape-cell { display: flex; flex-direction: column; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; color: var(--ds-gray-900); text-align: center; }
+.shape-cell i { display: block; width: 72px; height: 56px; background: var(--ds-background-100); box-shadow: 0 0 0 1px var(--ds-gray-alpha-400); }
+.shadow-cell i { width: 120px; height: 72px; border-radius: 6px; background: var(--ds-background-100); }
+table.tok { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+table.tok th, table.tok td { text-align: left; padding: 8px 12px 8px 0; box-shadow: 0 1px 0 var(--ds-gray-alpha-300); font-size: 13px; }
+table.tok th { font-weight: 500; color: var(--ds-gray-900); font-size: 12px; }
+table.tok td:first-child { font-family: var(--mono); font-size: 12px; }
+.scroll { overflow-x: auto; }
+
+/* ================= các thành phần vc-* (tái dùng được: chỉ cần token --ds-*) ================= */
+/* Button · Geist: nền gray-1000 chữ background-100 (primary), nền background-100 viền gray-400 (secondary) */
+.vc-btn { --h: 32px; height: var(--h); padding: 0 12px; gap: 4px; border: 0; border-radius: 6px; font: 500 14px/20px var(--font);
+  display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; cursor: pointer; text-decoration: none;
+  transition: background .15s ease, box-shadow .15s ease, color .15s ease; }
+.vc-btn.h24 { --h: 24px; padding: 0 8px; }
+.vc-btn.h36 { --h: 36px; padding: 0 16px; }
+.vc-btn.primary { background: var(--ds-gray-1000); color: var(--ds-background-100); }
+.vc-btn.secondary { background: var(--ds-background-100); color: var(--ds-gray-1000); box-shadow: 0 0 0 1px var(--ds-gray-400); }
+.vc-btn.ghost { background: transparent; color: var(--ds-gray-1000); }
+.vc-btn.ghost:hover, .vc-btn.ghost.is-hover { background: var(--ds-gray-100); }
+.vc-btn.icon { width: var(--h); padding: 0; }
+.vc-btn.round { border-radius: 9999px; }
+.vc-btn.r4 { border-radius: 4px; }
+.vc-btn.wide { width: 100%; }
+.vc-btn.split { padding-right: 10px; gap: 8px; }
+.vc-btn .muted { color: var(--ds-gray-900); }
+.vc-btn.ghost:hover .muted, .vc-btn.ghost.is-hover .muted { color: var(--ds-gray-1000); }
+
+/* ba kiểu focus đo được */
+.is-focus.f-ring { outline: 2px solid var(--ds-focus-color); outline-offset: 0; }
+.is-focus.f-ua { outline: 1px auto; outline-offset: 0; }
+.is-focus.f-shadow { box-shadow: var(--ds-focus-ring); outline: none; }
+
+/* kbd: phím tắt "/" và "F" */
+.vc-kbd { min-width: 20px; height: 20px; padding: 0 4px; border-radius: 4px; background: var(--ds-background-100); color: var(--ds-gray-1000); box-shadow: 0 0 0 1px var(--ds-gray-alpha-400); font: 400 12px/20px var(--font); display: inline-grid; place-items: center; }
+
+/* pill / badge */
+.vc-pill { height: 20px; padding: 2px 8px; border-radius: 9999px; font: 500 11px/16px var(--font); display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; background: var(--ds-gray-200); color: var(--ds-gray-1000); }
+.vc-pill.amber { background: var(--ds-amber-200); color: var(--ds-amber-900); }
+.vc-chip { height: 24px; padding: 2px 10px 2px 8px; border-radius: 9999px; background: var(--ds-background-200); color: var(--ds-gray-1000); box-shadow: inset 0 0 0 1px var(--ds-gray-alpha-400);
+  font: 500 12px/20px var(--font); display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; text-decoration: none; }
+.vc-chip.mono { font-family: var(--mono); padding-left: 12px; }
+.vc-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ds-teal-700); flex: none; }
+.vc-dot.blue { background: var(--ds-blue-700); }
+.vc-dot.red { background: var(--ds-red-700); }
+.vc-dot.amber { background: var(--ds-amber-700); }
+.vc-dot.gray { background: var(--ds-gray-700); }
+
+/* avatar: ảnh thật thay bằng khối giữ chỗ */
+.vc-av { --s: 20px; width: var(--s); height: var(--s); border-radius: 50%; flex: none; display: inline-block;
+  background: linear-gradient(135deg, var(--ds-blue-600), var(--ds-purple-600)); }
+.vc-av.s14 { --s: 14px; }
+.vc-av.s18 { --s: 18px; }
+.vc-av.s32 { --s: 32px; }
+.vc-av.sq { border-radius: 6px; }
+.vc-av.g2 { background: linear-gradient(135deg, var(--ds-teal-600), var(--ds-green-700)); }
+.vc-av.g3 { background: linear-gradient(135deg, var(--ds-amber-600), var(--ds-pink-600)); }
+.vc-avstack { display: inline-flex; }
+.vc-avstack > * + * { margin-left: -4px; box-shadow: 0 0 0 2px var(--ds-background-100); }
+.vc-fav { width: 32px; height: 32px; border-radius: 50%; flex: none; background: var(--ds-gray-100); box-shadow: 0 0 0 1px var(--ds-gray-alpha-400); display: grid; place-items: center; color: var(--ds-gray-700); font: 500 9px var(--mono); }
+.vc-lang { width: 18px; height: 18px; border-radius: 50%; background: var(--ds-background-100); box-shadow: 0 0 0 1px var(--ds-background-100); display: grid; place-items: center; font: 600 8px var(--mono); color: var(--ds-amber-900); flex: none; }
+
+/* close ✕ 24 và nút thông báo 24 */
+.vc-close { width: 24px; height: 24px; border-radius: 9999px; background: var(--ds-background-100); color: var(--ds-gray-900); box-shadow: 0 0 0 1px var(--ds-gray-alpha-400); display: inline-grid; place-items: center; border: 0; cursor: pointer; }
+.vc-close svg.i { width: 12px; height: 12px; stroke-width: 2; }
+.vc-bell { position: relative; width: 24px; height: 24px; border-radius: 40px; background: var(--ds-background-100); box-shadow: 0 0 0 1px var(--ds-gray-alpha-400); color: var(--ds-gray-900); display: inline-grid; place-items: center; border: 0; }
+.vc-bell svg.i { width: 12px; height: 12px; }
+.vc-bell::after { content: ""; position: absolute; top: -2px; right: -2px; width: 8px; height: 8px; border-radius: 50%; background: var(--ds-blue-700); box-shadow: 0 0 0 2px var(--ds-background-200); }
+
+/* vòng tiến độ nhỏ (usage) và vòng trạng thái 30 (project) */
+.vc-ring { width: 16px; height: 16px; flex: none; transform: rotate(-90deg); }
+.vc-ring circle { fill: none; stroke-width: 2; }
+.vc-ring .tr { stroke: var(--ds-gray-alpha-400); }
+.vc-ring .ar { stroke: var(--ds-blue-700); stroke-linecap: round; }
+.vc-status { width: 30px; height: 30px; position: relative; display: inline-grid; place-items: center; color: var(--ds-gray-1000); flex: none; }
+.vc-status svg.ring { position: absolute; inset: 0; width: 30px; height: 30px; transform: rotate(-90deg); }
+.vc-status svg.ring circle { fill: none; stroke-width: 2; }
+.vc-status .tr { stroke: var(--ds-gray-alpha-500); }
+.vc-status .ar { stroke: var(--ds-blue-900); }
+.vc-status svg.i { width: 14px; height: 14px; }
+
+/* project menu (avatar 32 bấm mở menu dự án) */
+.vc-pmenu { width: 32px; height: 32px; border-radius: 9999px; border: 0; padding: 0; background: transparent; display: inline-grid; place-items: center; cursor: pointer; }
+.vc-pmenu .vc-fav { background: var(--ds-gray-100); transition: background .15s; }
+.vc-pmenu:hover .vc-fav, .vc-pmenu.is-hover .vc-fav { background: var(--ds-gray-200); }
+
+/* sidebar */
+.vc-side { width: 256px; background: var(--ds-background-200); display: flex; flex-direction: column; padding: 4px 8px 8px; gap: 2px; }
+.vc-team { height: 36px; display: flex; align-items: center; gap: 8px; padding: 0 4px 0 10px; font-weight: 500; color: var(--ds-gray-1000); text-decoration: none; min-width: 0; }
+.vc-team .t { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vc-scope { height: 32px; min-width: 28px; padding: 8px 0; border-radius: 6px; border: 0; background: transparent; color: var(--ds-gray-900); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+.vc-scope:hover, .vc-scope.is-hover { background: var(--ds-gray-100); color: var(--ds-gray-1000); }
+.vc-scope svg.i { width: 14px; height: 14px; }
+.vc-find { height: 36px; width: 100%; display: flex; align-items: center; gap: 8px; padding: 0 8px 0 10px; border-radius: 6px; border: 0; background: var(--ds-background-100); color: var(--ds-gray-900); box-shadow: 0 0 0 1px var(--ds-gray-alpha-400); font: 400 14px var(--font); cursor: pointer; }
+.vc-find .t { flex: 1; text-align: left; }
+.vc-nav { display: flex; flex-direction: column; gap: 2px; padding-top: 10px; }
+.vc-nav hr { border: 0; height: 1px; background: var(--ds-gray-alpha-400); margin: 6px 0; }
+.vc-item { height: 36px; display: flex; align-items: center; padding-left: 2px; border-radius: 6px; color: var(--ds-gray-900); text-decoration: none; font: 500 14px/20px var(--font); letter-spacing: -.28px; transition: background .15s, color .15s; }
+.vc-item .ic { width: 36px; height: 36px; display: grid; place-items: center; flex: none; }
+.vc-item .t { flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px; }
+.vc-item .chev { width: 32px; display: grid; place-items: center; }
+.vc-item:hover, .vc-item.is-hover { background: var(--ds-gray-100); color: var(--ds-gray-1000); }
+.vc-item.on { background: var(--ds-gray-200); color: var(--ds-gray-1000); }
+.vc-item.on:active, .vc-item.on.is-active { background: var(--ds-gray-300); }
+.vc-user { height: 36px; display: flex; align-items: center; gap: 8px; padding: 0 8px 0 10px; border-radius: 9999px; color: var(--ds-gray-1000); }
+.vc-user .t { flex: 1; min-width: 0; }
+.vc-user .more { width: 24px; height: 24px; border-radius: 9999px; display: grid; place-items: center; background: var(--ds-background-100); color: var(--ds-gray-900); box-shadow: 0 0 0 1px var(--ds-gray-alpha-400); transition: background .15s, color .15s; }
+.vc-user:hover .more, .vc-user.is-hover .more { background: var(--ds-gray-300); color: var(--ds-gray-1000); }
+
+/* thanh trên cùng 56 */
+.vc-top { height: 56px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 0 12px 0 20px; background: var(--ds-background-200); box-shadow: 0 1px 0 var(--ds-gray-alpha-400); min-width: 0; }
+.vc-top .l { display: flex; align-items: center; gap: 2px; }
+.vc-top .r { display: flex; justify-content: flex-end; }
+.vc-scopebtn { height: 36px; padding: 8px 2px 8px 12px; border-radius: 6px; border: 0; background: transparent; color: var(--ds-gray-1000); font: 500 14px var(--font); display: inline-flex; align-items: center; cursor: pointer; }
+.vc-scopebtn .muted { color: var(--ds-gray-900); padding: 0 6px; display: grid; }
+.vc-scopebtn:hover, .vc-scopebtn.is-hover { background: var(--ds-gray-100); }
+.vc-scopebtn:hover .muted, .vc-scopebtn.is-hover .muted { color: var(--ds-gray-1000); }
+.vc-crumb { display: flex; align-items: center; gap: 6px; font: 500 14px/20px var(--font); letter-spacing: -.28px; color: var(--ds-gray-1000); }
+.vc-crumb .sep { color: var(--ds-gray-alpha-500); }
+.vc-crumb a { color: inherit; text-decoration: none; }
+
+/* thanh tìm + lọc + đổi kiểu xem */
+.vc-toolbar { display: flex; gap: 8px; align-items: center; }
+.vc-search { flex: 1; min-width: 0; height: 36px; display: flex; align-items: center; gap: 8px; padding: 0 8px 0 12px; border-radius: 6px; background: var(--ds-background-100); color: var(--ds-gray-900); box-shadow: 0 0 0 1px var(--ds-gray-alpha-400); }
+.vc-search input { flex: 1; min-width: 0; border: 0; background: transparent; color: var(--ds-gray-1000); font: 400 14px/20px var(--font); outline: none; padding: 0; }
+.vc-search input::placeholder { color: var(--ds-gray-900); }
+.vc-search:focus-within, .vc-search.is-focus { outline: 1px auto; }
+.vc-views { height: 36px; display: inline-flex; align-items: center; gap: 2px; padding: 0 2px; border-radius: 6px; background: var(--ds-background-100); box-shadow: 0 0 0 1px var(--ds-gray-alpha-400); }
+.vc-views span { width: 32px; height: 28px; display: grid; place-items: center; border-radius: 4px; color: var(--ds-gray-900); }
+.vc-views span.on { background: var(--ds-gray-100); color: var(--ds-gray-1000); }
+
+/* thẻ (card) nền background-100 + viền alpha 400 + shadow-small */
+.vc-card { background: var(--ds-background-100); border-radius: 6px; box-shadow: 0 0 0 1px var(--ds-gray-alpha-400), var(--ds-shadow-small); color: var(--ds-gray-1000); min-width: 0; }
+.vc-h { height: 32px; display: flex; align-items: center; padding: 0 6px; font: 500 14px/20px var(--font); }
+.vc-project { width: 342px; max-width: 100%; min-height: 122px; padding: 16px; display: flex; flex-direction: column; gap: 12px; position: relative; }
+.vc-project .head { display: flex; align-items: center; gap: 12px; margin-top: -4px; }
+.vc-project .names { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.vc-project .names b { font-weight: 500; }
+.vc-project .names small { font-size: 14px; color: var(--ds-gray-900); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vc-project .commit { display: flex; align-items: center; gap: 6px; overflow: hidden; white-space: nowrap; }
+.vc-project .commit span { overflow: hidden; text-overflow: ellipsis; }
+.vc-project .meta { display: flex; align-items: center; gap: 6px; color: var(--ds-gray-900); white-space: nowrap; overflow: hidden; }
+.vc-project .meta span { overflow: hidden; text-overflow: ellipsis; }
+.vc-link { color: var(--ds-blue-900); text-decoration: none; cursor: pointer; }
+.vc-link:hover, .vc-link.is-hover { text-decoration: underline; }
+
+.vc-usage { width: 406px; max-width: 100%; padding: 16px 0 8px; position: relative; }
+.vc-usage .top { display: flex; align-items: center; justify-content: space-between; padding: 0 16px 8px; }
+.vc-usage ul { list-style: none; margin: 0; padding: 0 8px; }
+.vc-usage li { border-radius: 4px; }
+.vc-usage li:nth-child(odd) { background: var(--ds-background-200); }
+.vc-urow { height: 32px; padding: 8px; display: flex; align-items: center; gap: 6px; color: var(--ds-gray-1000); text-decoration: none; }
+.vc-urow .t { flex: 1; min-width: 0; font: 400 14px/16px var(--font); display: flex; align-items: center; gap: 4px; }
+.vc-urow .t svg.i { width: 12px; height: 12px; color: var(--ds-gray-700); }
+.vc-urow .v { font: 400 12px/16px var(--font); color: var(--ds-gray-900); font-variant-numeric: tabular-nums; }
+.vc-usage .more { position: absolute; left: 50%; bottom: -12px; transform: translateX(-50%); }
+
+.vc-empty { width: 406px; max-width: 100%; padding: 32px 24px; display: flex; flex-direction: column; align-items: center; gap: 24px; text-align: center; }
+.vc-empty .tx { display: flex; flex-direction: column; gap: 6px; }
+.vc-empty .tx b { font-weight: 500; }
+.vc-empty .tx span { color: var(--ds-gray-900); text-wrap: balance; }
+
+.vc-preview { width: 406px; max-width: 100%; padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+.vc-preview .row1 { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.vc-preview .row1 b { font-weight: 500; }
+.vc-preview .row1 .msg { flex: 1; min-width: 0; color: var(--ds-gray-900); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vc-preview .row2 { display: flex; gap: 4px; flex-wrap: wrap; }
+
+.vc-newrepo { width: 342px; max-width: 100%; padding: 6px; border-radius: 6px; background: var(--ds-background-100); box-shadow: 0 0 0 1px var(--ds-gray-alpha-400); position: relative; }
+.vc-newrepo .in { border: 1px dashed var(--ds-gray-alpha-400); padding: 10px; display: flex; flex-direction: column; gap: 12px; }
+.vc-newrepo .head { display: flex; align-items: center; gap: 12px; padding: 4px 6px 0; }
+.vc-newrepo .head div { display: flex; flex-direction: column; min-width: 0; }
+.vc-newrepo .head small { font-size: 14px; color: var(--ds-gray-900); display: flex; align-items: center; gap: 4px; }
+.vc-newrepo .vc-close { position: absolute; top: -10px; right: -10px; }
+
+.vc-menu { width: 220px; padding: 6px; border-radius: 12px; background: var(--ds-background-100); box-shadow: var(--ds-shadow-menu); }
+.vc-menu div { height: 36px; padding: 0 8px; border-radius: 6px; display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--ds-gray-1000); }
+.vc-menu div.on { background: var(--ds-gray-100); }
+.vc-menu div .k { margin-left: auto; color: var(--ds-gray-900); font-size: 12px; }
+.vc-menu hr { border: 0; height: 1px; background: var(--ds-gray-alpha-400); margin: 4px -6px; }
+
+/* mobile: tab ba mục trong thẻ và thanh Find nổi ở đáy */
+.vc-tabs3 { display: flex; padding: 2px; border-radius: 6px; box-shadow: inset 0 0 0 1px var(--ds-gray-alpha-400); }
+.vc-tabs3 span { flex: 1; height: 28px; border-radius: 4px; display: grid; place-items: center; font-size: 14px; color: var(--ds-gray-900); }
+.vc-tabs3 span.on { background: var(--ds-gray-100); color: var(--ds-gray-1000); }
+.vc-dock { height: 44px; display: inline-flex; align-items: center; gap: 12px; padding: 0 12px 0 16px; border-radius: 9999px; background: var(--ds-gray-100); box-shadow: var(--ds-shadow-border-medium); color: var(--ds-gray-1000); }
+.vc-dock .sep { width: 1px; height: 20px; background: var(--ds-gray-alpha-400); }
+.vc-tab { font: 500 14px/20px var(--font); letter-spacing: -.28px; color: var(--ds-gray-1000); text-decoration: none; }
+
+/* màn mẫu */
+.screen-wrap { overflow-x: auto; padding: 8px 0; }
+.screens { display: flex; gap: 32px; width: max-content; align-items: flex-start; }
+.phone { width: 390px; height: 844px; border-radius: 44px; box-shadow: 0 0 0 10px var(--ds-gray-300); background: var(--ds-background-200); position: relative; overflow: hidden; margin: 10px; zoom: .7; }
+.phone .m-top { height: 56px; display: flex; align-items: center; justify-content: center; position: relative; box-shadow: 0 1px 0 var(--ds-gray-alpha-400); gap: 8px; font-weight: 500; }
+.phone .m-top .r { position: absolute; right: 12px; }
+.phone .m-body { padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+.phone .vc-dock { position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); }
+.desk { width: 1440px; height: 900px; border-radius: 12px; box-shadow: 0 0 0 10px var(--ds-gray-300); background: var(--ds-background-200); overflow: hidden; margin: 10px; zoom: .76; display: flex; }
+.desk .vc-side { flex: none; box-shadow: 1px 0 0 var(--ds-gray-alpha-400); }
+.desk .main { flex: 1; min-width: 0; }
+.desk .content { padding: 24px; display: flex; flex-direction: column; gap: 24px; }
+.desk .cols { display: grid; grid-template-columns: 406px 1fr; gap: 24px; }
+.desk .col { display: flex; flex-direction: column; gap: 8px; }
+.desk .col .vc-h + * { margin-bottom: 24px; }
+.desk .pgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.cap { font-family: var(--mono); font-size: 12px; color: var(--ds-gray-900); margin: 4px 10px 0; max-width: 300px; }
+.desk + .cap { max-width: none; }
+
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; transition: all .25s ease; z-index: 20;
+  min-height: 44px; padding: 0 16px; border-radius: 8px; background: var(--ds-gray-1000); color: var(--ds-background-100); display: flex; align-items: center; box-shadow: var(--ds-shadow-menu); font-size: 14px; }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; }
+  .side { display: none; }
+  main { padding: 0 16px 80px; }
+  .grid, .grid.wide { grid-template-columns: 1fr; }
+  .intro h1 { font-size: 32px; line-height: 40px; letter-spacing: -1.28px; }
+  .type-row { grid-template-columns: 1fr; gap: 2px; }
+  .roles { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .bgs { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-grid" viewBox="0 0 16 16"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></symbol>
+  <symbol id="i-box" viewBox="0 0 16 16"><path d="M8 1.5 14 4.75v6.5L8 14.5 2 11.25v-6.5z"/><path d="M2 4.75 8 8l6-3.25M8 8v6.5"/></symbol>
+  <symbol id="i-list" viewBox="0 0 16 16"><path d="M5.5 4h8.5M5.5 8h8.5M5.5 12h8.5M2 4h.5M2 8h.5M2 12h.5"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 16 16"><path d="M2 2v12h12"/><path d="m4.5 10 3-3.5 2.5 2 4-5"/></symbol>
+  <symbol id="i-gauge" viewBox="0 0 16 16"><path d="M2.5 11a6 6 0 1 1 11 0"/><path d="m8 9 3-3"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 16 16"><path d="M1.5 8S4 3.5 8 3.5 14.5 8 14.5 8 12 12.5 8 12.5 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 16 16"><path d="M8 1.5 13.5 3.5v4c0 3.5-2.5 5.8-5.5 7-3-1.2-5.5-3.5-5.5-7v-4z"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.25"/><path d="M1.75 8h12.5M8 1.75c2 2 2 10.5 0 12.5M8 1.75c-2 2-2 10.5 0 12.5"/></symbol>
+  <symbol id="i-key" viewBox="0 0 16 16"><circle cx="5" cy="11" r="3"/><path d="m7.2 8.8 6.3-6.3M11 5l2 2"/></symbol>
+  <symbol id="i-link" viewBox="0 0 16 16"><path d="M6.5 9.5a3 3 0 0 0 4.25 0l2-2a3 3 0 0 0-4.25-4.25l-.75.75"/><path d="M9.5 6.5a3 3 0 0 0-4.25 0l-2 2a3 3 0 0 0 4.25 4.25l.75-.75"/></symbol>
+  <symbol id="i-plug" viewBox="0 0 16 16"><path d="M5 1.5v3M11 1.5v3M3.5 4.5h9v3a4.5 4.5 0 0 1-9 0zM8 12v2.5"/></symbol>
+  <symbol id="i-db" viewBox="0 0 16 16"><ellipse cx="8" cy="3.5" rx="5.5" ry="2"/><path d="M2.5 3.5v9c0 1.1 2.5 2 5.5 2s5.5-.9 5.5-2v-9M2.5 8c0 1.1 2.5 2 5.5 2s5.5-.9 5.5-2"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 16 16"><path d="M3 14.5V2M3 2.5h9l-2 3 2 3H3"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 16 16"><path d="M8 1.5v3M8 11.5v3M1.5 8h3M11.5 8h3M3.4 3.4l2.1 2.1M10.5 10.5l2.1 2.1M3.4 12.6l2.1-2.1M10.5 5.5l2.1-2.1"/></symbol>
+  <symbol id="i-route" viewBox="0 0 16 16"><circle cx="3.5" cy="3.5" r="1.75"/><circle cx="12.5" cy="12.5" r="1.75"/><path d="M5.25 3.5H11a2 2 0 0 1 0 4H5a2 2 0 0 0 0 4h5.75"/></symbol>
+  <symbol id="i-image" viewBox="0 0 16 16"><rect x="1.75" y="2.75" width="12.5" height="10.5" rx="1.5"/><circle cx="5.5" cy="6.25" r="1.25"/><path d="m14.25 10.5-3.5-3.5-7 6.25"/></symbol>
+  <symbol id="i-search" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.75"/><path d="m10.5 10.5 3.5 3.5"/></symbol>
+  <symbol id="i-updown" viewBox="0 0 16 16"><path d="m5 6 3-3 3 3M5 10l3 3 3-3"/></symbol>
+  <symbol id="i-right" viewBox="0 0 16 16"><path d="m6 3.5 4.5 4.5L6 12.5"/></symbol>
+  <symbol id="i-down" viewBox="0 0 16 16"><path d="M3.5 6 8 10.5 12.5 6"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 16 16"><path d="M8 2.5v11M2.5 8h11"/></symbol>
+  <symbol id="i-filter" viewBox="0 0 16 16"><path d="M2 4h12M4.5 8h7M7 12h2"/></symbol>
+  <symbol id="i-more" viewBox="0 0 16 16"><circle cx="3.5" cy="8" r=".6"/><circle cx="8" cy="8" r=".6"/><circle cx="12.5" cy="8" r=".6"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 16 16"><path d="M4 11V7a4 4 0 0 1 8 0v4l1.5 1.5h-11zM6.5 14h3"/></symbol>
+  <symbol id="i-x" viewBox="0 0 16 16"><path d="m3.5 3.5 9 9M12.5 3.5l-9 9"/></symbol>
+  <symbol id="i-commit" viewBox="0 0 16 16"><circle cx="8" cy="8" r="2.5"/><path d="M1 8h4.5M10.5 8H15"/></symbol>
+  <symbol id="i-repo" viewBox="0 0 16 16"><path d="M3 13V3a1.5 1.5 0 0 1 1.5-1.5H13v10H4.5A1.5 1.5 0 0 0 3 13a1.5 1.5 0 0 0 1.5 1.5H13"/></symbol>
+  <symbol id="i-check2" viewBox="0 0 16 16"><path d="m1.5 8.5 3 3 5-6.5M7.5 11.5l1 1 6-7.5"/></symbol>
+  <symbol id="i-info" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.25"/><path d="M8 7.25V11M8 5v.25"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 16 16"><path d="M2.5 5.5h11M2.5 10.5h11"/></symbol>
+</svg>
+
+<div class="shell">
+  <nav class="side" aria-label="Mục lục">
+    <div class="brand"><div class="brand-mark">G</div><div><b>Geist Dashboard Kit</b><small>rút từ Vercel dashboard đã lưu</small></div></div>
+    <h6>Nền tảng</h6>
+    <a href="#color"><svg class="i"><use href="#i-grid"/></svg>Màu</a>
+    <a href="#type"><svg class="i"><use href="#i-list"/></svg>Chữ</a>
+    <a href="#shape"><svg class="i"><use href="#i-box"/></svg>Bo góc &amp; bóng</a>
+    <a href="#layout"><svg class="i"><use href="#i-gauge"/></svg>Bố cục &amp; kích thước</a>
+    <h6>Thành phần</h6>
+    <a href="#actions"><svg class="i"><use href="#i-plus"/></svg>Hành động</a>
+    <a href="#navigation"><svg class="i"><use href="#i-route"/></svg>Điều hướng</a>
+    <a href="#containment"><svg class="i"><use href="#i-db"/></svg>Chứa nội dung</a>
+    <a href="#inputs"><svg class="i"><use href="#i-search"/></svg>Nhập liệu</a>
+    <a href="#feedback"><svg class="i"><use href="#i-bell"/></svg>Phản hồi &amp; trạng thái</a>
+    <h6>Mẫu</h6>
+    <a href="#screens"><svg class="i"><use href="#i-image"/></svg>Màn hình mẫu</a>
+  </nav>
+
+  <main>
+    <div class="bar" role="toolbar" aria-label="Chủ đề">
+      <div class="ctl"><span>Chế độ</span><div class="seg" id="mode">
+        <button data-v="light" aria-pressed="false">Sáng</button>
+        <button data-v="dark" aria-pressed="true">Tối</button></div></div>
+      <div class="grow"></div>
+      <button class="copy" id="copy-tokens"><svg class="i"><use href="#i-grid"/></svg>Copy CSS token</button>
+    </div>
+
+    <div class="intro">
+      <div class="eyebrow">Vercel.html + Vercel_files/33h_2svpqtbbs.css → docs/vercel-ui-kit.html</div>
+      <h1>Bộ thành phần của Vercel dashboard</h1>
+      <p>Trang tổng quan dự án của Vercel (hệ Geist), dựng lại bằng HTML/CSS thuần từ bản trang user tự lưu. Màu và bóng đọc bằng Playwright từ CSS gốc, cho cả <code>.light-theme</code> lẫn <code>.dark-theme</code>. Số đo lấy từ <code>getComputedStyle</code> trên phần tử thật. Mỗi thẻ ghi tên lớp hoặc phần tử trong mã Vercel và có nút copy HTML. Muốn dùng lại ở dự án khác thì dán khối <code>--ds-*</code> cùng CSS <code>.vc-*</code> và sprite icon <code>&lt;symbol&gt;</code> ở đầu trang.</p>
+      <div class="facts"><span class="fact">sidebar 256 · topbar 56</span><span class="fact">lề trang 24 · cột trái 406 · gap 24</span><span class="fact">project card 342 × 122 · p 16</span><span class="fact">radius 6 · row 36 · Geist 14/20</span><span class="fact">ease cubic-bezier(.175,.885,.32,1.1)</span></div>
+    </div>
+
+    <!-- ================= NỀN TẢNG ================= -->
+    <section class="block" id="color">
+      <header><h2>Màu</h2><p>93 biến màu của Geist theo chế độ đang chọn: 2 nền, 10 bậc gray, 10 bậc gray-alpha và 7 thang màu 10 bậc. Bấm một ô để copy mã hex. Quy ước của Vercel: bậc 100–300 làm nền, 400–600 làm viền, 700–800 làm nền đặc, 900–1000 làm chữ.</p></header>
+      <div id="roles"></div>
+    </section>
+
+    <section class="block" id="type">
+      <header><h2>Chữ</h2><p>Các lớp chữ <code>.text-*</code> có trong CSS đã lưu, chạy trên Geist và Geist Mono. Heading dùng độ đậm 600 và letter-spacing âm. Dashboard dùng nhiều nhất <code>text-label-14</code>, <code>text-heading-14</code> và <code>text-button-14</code>.</p></header>
+      <div class="spec"><div class="stage col" id="typescale"></div></div>
+    </section>
+
+    <section class="block" id="shape">
+      <header><h2>Bo góc &amp; bóng</h2><p>Geist dùng rất ít mức bo góc: 4 cho kbd, dòng usage và nút xem, 6 (<code>--geist-radius</code>) cho nút, ô nhập và thẻ, 12 cho menu, và full cho pill, avatar và nút tròn. Viền không dùng <code>border</code> mà vẽ bằng <code>box-shadow 0 0 0 1px</code> nên không làm lệch kích thước.</p></header>
+      <div class="spec"><div class="stage" id="shapes" style="gap:28px"></div></div>
+      <div class="spec" style="margin-top:16px"><div class="stage" id="shadows" style="gap:28px;padding:28px 20px"></div></div>
+    </section>
+
+    <section class="block" id="layout">
+      <header><h2>Bố cục &amp; kích thước</h2><p>Các con số dưới đây đo trên trang đã lưu ở khổ 1440 × 900, và thêm một lần ở 390 × 844 cho bố cục mobile.</p></header>
+      <div class="grid wide">
+        <div class="spec"><div class="stage col scroll"><table class="tok">
+          <tr><th>Điều khiển</th><th>Cao</th><th>Ngang / đệm</th><th>Bo</th></tr>
+          <tr><td>vc-btn.h24 (Upgrade)</td><td>24</td><td>đệm 0 8</td><td>6</td></tr>
+          <tr><td>vc-btn (Import, Upgrade to Pro, Agent)</td><td>32</td><td>đệm 0 6 + nhãn 0 6</td><td>6</td></tr>
+          <tr><td>vc-btn.h36 (Add New, Show More)</td><td>36</td><td>đệm 0 10 + nhãn</td><td>6</td></tr>
+          <tr><td>vc-item (dòng sidebar)</td><td>36</td><td>ô icon 36 · rộng 239</td><td>6</td></tr>
+          <tr><td>vc-search / vc-find</td><td>36</td><td>đệm 0 12</td><td>6</td></tr>
+          <tr><td>vc-urow (dòng usage)</td><td>32</td><td>đệm 8 · gap 6</td><td>4</td></tr>
+          <tr><td>vc-chip (Preview, Source)</td><td>24</td><td>đệm 2 10 2 8 · gap 5</td><td>full</td></tr>
+          <tr><td>vc-pill (Hobby, 7)</td><td>20</td><td>đệm 2 8 · chữ 11</td><td>full</td></tr>
+          <tr><td>vc-kbd (/ , F)</td><td>20</td><td>đệm 0 4 · chữ 12</td><td>4</td></tr>
+          <tr><td>--geist-form-*</td><td>32 · 36 · 40</td><td>small · mặc định · large</td><td>6</td></tr>
+        </table></div></div>
+        <div class="spec"><div class="stage col scroll"><table class="tok">
+          <tr><th>Hằng số</th><th>Giá trị</th><th>Nguồn</th></tr>
+          <tr><td>--raw-sidebar-width</td><td>256</td><td>style của &lt;html&gt;</td></tr>
+          <tr><td>thanh trên cùng</td><td>56</td><td>đo, lưới 3 cột</td></tr>
+          <tr><td>--geist-page-margin</td><td>24</td><td>CSS</td></tr>
+          <tr><td>--geist-gap / half / quarter</td><td>24 / 12 / 8</td><td>CSS</td></tr>
+          <tr><td>--geist-space (bước)</td><td>4 · 8 · 12 · 16 · 24 · 32 · 40 · 64</td><td>CSS</td></tr>
+          <tr><td>cột trái (Usage, Alerts…)</td><td>406</td><td>đo</td></tr>
+          <tr><td>lưới dự án</td><td>2 × 342 · gap 24</td><td>đo</td></tr>
+          <tr><td>--ds-page-width</td><td>1400</td><td>CSS</td></tr>
+          <tr><td>--ds-popover-row-height · padding</td><td>36 · 6</td><td>CSS</td></tr>
+          <tr><td>--ds-motion-popover-duration</td><td>.2s · overlay .3s · scale .96</td><td>CSS</td></tr>
+        </table></div></div>
+      </div>
+    </section>
+
+    <!-- ================= HÀNH ĐỘNG ================= -->
+    <section class="block" id="actions">
+      <header><h2>Hành động</h2></header>
+      <div class="grid wide">
+        <div class="spec full" data-sig="07daba3aca 4aa345976e ba14cf53cb 2adc80c278 045df617e6">
+          <div class="spec-h"><b>Button</b><span class="kind">Button · type primary | secondary</span><span class="dp">h 24 · 32 · 36 · r 6</span></div>
+          <div class="stage">
+            <div class="cell"><span class="lab">primary 24</span><button class="vc-btn h24 primary">Upgrade</button></div>
+            <div class="cell"><span class="lab">primary 32</span><button class="vc-btn primary" style="width:200px">Import</button></div>
+            <div class="cell"><span class="lab">primary 36 + menu</span><button class="vc-btn h36 primary split">Add New<svg class="i"><use href="#i-down"/></svg></button></div>
+            <div class="cell"><span class="lab">secondary 32</span><button class="vc-btn secondary">Upgrade to Pro</button></div>
+            <div class="cell"><span class="lab">secondary 36</span><button class="vc-btn h36 secondary" style="width:220px">Show More</button></div>
+          </div>
+          <div class="stage" style="padding-top:0">
+            <div class="cell"><span class="lab">focus</span><button class="vc-btn h24 primary is-focus f-ua" data-sig-state="07daba3aca:focus">Upgrade</button></div>
+            <div class="cell"><span class="lab">focus</span><button class="vc-btn primary is-focus f-ua" style="width:200px" data-sig-state="4aa345976e:focus">Import</button></div>
+            <div class="cell"><span class="lab">focus</span><button class="vc-btn h36 primary split is-focus f-ua" data-sig-state="ba14cf53cb:focus">Add New<svg class="i"><use href="#i-down"/></svg></button></div>
+            <div class="cell"><span class="lab">focus</span><button class="vc-btn secondary is-focus f-ua" data-sig-state="2adc80c278:focus">Upgrade to Pro</button></div>
+            <div class="cell"><span class="lab">focus</span><button class="vc-btn h36 secondary is-focus f-ua" style="width:220px" data-sig-state="045df617e6:focus">Show More</button></div>
+          </div>
+          <div class="spec-f"><span class="note">Primary: nền gray-1000, chữ background-100. Secondary: nền background-100, viền 1px gray-400. Chữ 14/20, độ đậm 500. Khi tắt JS, focus rơi về viền mặc định của trình duyệt; bản chạy JS dùng <code>data-[focus]:shadow-[var(--ds-focus-ring)]</code> (xem thẻ Focus). Không đo được hover của primary/secondary vì hover do JS gắn.</span></div>
+        </div>
+
+        <div class="spec" data-sig="7eb5003dea 9a853c88a0 f54fa734ba 3ef6ef3313">
+          <div class="spec-h"><b>Icon button &amp; ghost</b><span class="kind">Button · svgOnly · type tertiary</span><span class="dp">24 · 32 · 36</span></div>
+          <div class="stage">
+            <div class="cell"><span class="lab">tròn 24</span><button class="vc-btn h24 icon round secondary" aria-label="Xem thêm usage"><svg class="i"><use href="#i-down"/></svg></button></div>
+            <div class="cell"><span class="lab">lọc 36</span><button class="vc-btn h36 icon secondary" aria-label="Lọc"><svg class="i"><use href="#i-filter"/></svg></button></div>
+            <div class="cell"><span class="lab">thêm 24 · r4</span><button class="vc-btn h24 icon ghost r4" aria-label="Thêm"><svg class="i"><use href="#i-more"/></svg></button></div>
+            <div class="cell"><span class="lab">ghost 32</span><button class="vc-btn ghost"><svg class="i"><use href="#i-spark"/></svg>Agent</button></div>
+          </div>
+          <div class="stage" style="padding-top:0">
+            <div class="cell"><span class="lab">focus</span><button class="vc-btn h24 icon round secondary is-focus f-ua" aria-label="Xem thêm usage" data-sig-state="7eb5003dea:focus"><svg class="i"><use href="#i-down"/></svg></button></div>
+            <div class="cell"><span class="lab">focus</span><button class="vc-btn h36 icon secondary is-focus f-ua" aria-label="Lọc" data-sig-state="9a853c88a0:focus"><svg class="i"><use href="#i-filter"/></svg></button></div>
+            <div class="cell"><span class="lab">focus</span><button class="vc-btn h24 icon ghost r4 is-focus f-ua" aria-label="Thêm" data-sig-state="f54fa734ba:focus"><svg class="i"><use href="#i-more"/></svg></button></div>
+            <div class="cell"><span class="lab">focus</span><button class="vc-btn ghost is-focus f-ua" data-sig-state="3ef6ef3313:focus"><svg class="i"><use href="#i-spark"/></svg>Agent</button></div>
+          </div>
+          <div class="spec-f"><span class="note">Nút "Agent" ở góc phải thanh trên: ghost 32, đệm 0 6. Icon là bản vẽ lại đơn giản, không phải bộ icon Geist.</span></div>
+        </div>
+
+        <div class="spec" data-sig="31976fbada 368afa0f1e">
+          <div class="spec-h"><b>Scope button</b><span class="kind">group/scope-button</span><span class="dp">36 · chevron 28 × 32</span></div>
+          <div class="stage">
+            <div class="cell"><span class="lab">nghỉ</span><button class="vc-scopebtn">All Projects<span class="muted"><svg class="i"><use href="#i-updown"/></svg></span></button></div>
+            <div class="cell"><span class="lab">hover</span><button class="vc-scopebtn is-hover" data-sig-state="368afa0f1e:hover">All Projects<span class="muted"><svg class="i"><use href="#i-updown"/></svg></span></button></div>
+            <div class="cell"><span class="lab">focus</span><button class="vc-scopebtn is-hover is-focus f-ua" data-sig-state="368afa0f1e:focus">All Projects<span class="muted"><svg class="i"><use href="#i-updown"/></svg></span></button></div>
+          </div>
+          <div class="stage" style="padding-top:0">
+            <div class="cell"><span class="lab">chevron nghỉ</span><button class="vc-scope" aria-label="Đổi team"><svg class="i"><use href="#i-updown"/></svg></button></div>
+            <div class="cell"><span class="lab">hover</span><button class="vc-scope is-hover" aria-label="Đổi team" data-sig-state="31976fbada:hover"><svg class="i"><use href="#i-updown"/></svg></button></div>
+            <div class="cell"><span class="lab">focus</span><button class="vc-scope is-hover is-focus f-ua" aria-label="Đổi team" data-sig-state="31976fbada:focus"><svg class="i"><use href="#i-updown"/></svg></button></div>
+          </div>
+          <div class="spec-f"><span class="note">Hover: nền trong suốt sang gray-100, chevron từ gray-900 sang gray-1000 (đo). Khi focus, nền cũng lên gray-100.</span></div>
+        </div>
+
+        <div class="spec" data-sig="9c330ec8ef 39ce1680d3">
+          <div class="spec-h"><b>Close &amp; thông báo</b><span class="kind">close · AXcxMG_btn</span><span class="dp">24 · r full / 40</span></div>
+          <div class="stage center" style="gap:32px">
+            <div class="cell"><span class="lab">đóng thẻ</span><button class="vc-close" aria-label="Đóng"><svg class="i"><use href="#i-x"/></svg></button></div>
+            <div class="cell"><span class="lab">chuông + chấm chưa đọc</span><button class="vc-bell" aria-label="Thông báo chưa đọc"><svg class="i"><use href="#i-bell"/></svg></button></div>
+          </div>
+          <div class="spec-f"><span class="note">Cả hai: nền background-100, viền 1px gray-alpha-400. Chấm xanh blue-700 kèm vòng 2px màu nền.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= ĐIỀU HƯỚNG ================= -->
+    <section class="block" id="navigation">
+      <header><h2>Điều hướng</h2></header>
+      <div class="grid wide">
+        <div class="spec" data-sig="b7493bae63 e6613c1b80">
+          <div class="spec-h"><b>Dòng sidebar</b><span class="kind">a · text-heading-14</span><span class="dp">239 × 36 · icon 36 · r 6</span></div>
+          <div class="stage col page" style="max-width:280px">
+            <span class="lab">nghỉ · hover · focus · đang chọn · nhấn giữ</span>
+            <a class="vc-item" href="#navigation"><span class="ic"><svg class="i"><use href="#i-box"/></svg></span><span class="t">Deployments</span></a>
+            <a class="vc-item is-hover" href="#navigation" data-sig-state="b7493bae63:hover"><span class="ic"><svg class="i"><use href="#i-box"/></svg></span><span class="t">Deployments</span></a>
+            <a class="vc-item is-hover is-focus f-ring" href="#navigation" data-sig-state="b7493bae63:focus"><span class="ic"><svg class="i"><use href="#i-box"/></svg></span><span class="t">Deployments</span></a>
+            <a class="vc-item on" href="#navigation"><span class="ic"><svg class="i"><use href="#i-grid"/></svg></span><span class="t">Projects</span></a>
+            <a class="vc-item on is-active" href="#navigation" data-sig-state="e6613c1b80:active"><span class="ic"><svg class="i"><use href="#i-grid"/></svg></span><span class="t">Projects</span></a>
+            <a class="vc-item on is-focus f-ring" href="#navigation" data-sig-state="e6613c1b80:focus"><span class="ic"><svg class="i"><use href="#i-grid"/></svg></span><span class="t">Projects</span></a>
+            <a class="vc-item" href="#navigation"><span class="ic"><svg class="i"><use href="#i-list"/></svg></span><span class="t">Logs</span><span class="chev"><svg class="i"><use href="#i-right"/></svg></span></a>
+            <a class="vc-item" href="#navigation"><span class="ic"><svg class="i"><use href="#i-key"/></svg></span><span class="t">Environment Variables <span class="vc-pill amber">7</span></span></a>
+          </div>
+          <div class="spec-f"><span class="note">Nghỉ: chữ gray-900. Hover: nền gray-100, chữ gray-1000. Đang chọn: nền gray-200, nhấn giữ lên gray-300. Focus: viền 2px focus-color (site tự style).</span></div>
+        </div>
+
+        <div class="spec" data-sig="6bc6e69ddd 79e4c121c0 28aea283ad d9bfcceeee 0335437a5b">
+          <div class="spec-h"><b>Đầu sidebar</b><span class="kind">header · team switcher + Find</span><span class="dp">255 × 92</span></div>
+          <div class="stage col page" style="max-width:280px">
+            <div style="display:flex;align-items:center"><a class="vc-team" href="#navigation" style="flex:1"><span class="vc-av"></span><span class="t">acme's projects</span><span class="vc-pill">Hobby</span></a><button class="vc-scope" aria-label="Đổi team"><svg class="i"><use href="#i-updown"/></svg></button></div>
+            <button class="vc-find"><svg class="i"><use href="#i-search"/></svg><span class="t">Find</span><span class="vc-kbd">F</span></button>
+            <span class="lab" style="margin-top:8px">focus</span>
+            <a class="vc-team is-focus f-ring" href="#navigation" data-sig-state="79e4c121c0:focus"><span class="vc-av"></span><span class="t">acme's projects</span><span class="vc-pill">Hobby</span></a>
+            <button class="vc-find is-focus f-ring" data-sig-state="d9bfcceeee:focus"><svg class="i"><use href="#i-search"/></svg><span class="t">Find</span><span class="vc-kbd">F</span></button>
+          </div>
+          <div class="spec-f"><span class="note">Avatar team 20 là khối giữ chỗ (ảnh gốc là ảnh đại diện). Pill "Hobby" chữ 11/500; nền gray-200 lấy theo ảnh chụp vì computed style trả về trong suốt.</span></div>
+        </div>
+
+        <div class="spec" data-sig="1c5cbe185c c999db09db">
+          <div class="spec-h"><b>Dòng tài khoản</b><span class="kind">group/row · aria-haspopup=dialog</span><span class="dp">207 × 36</span></div>
+          <div class="stage col page" style="max-width:280px">
+            <div style="display:flex;align-items:center;gap:8px"><div class="vc-user" style="flex:1"><span class="vc-av g2"></span><span class="t">acme</span><span class="more"><svg class="i" style="width:12px;height:12px"><use href="#i-more"/></svg></span></div><button class="vc-bell" aria-label="Thông báo chưa đọc"><svg class="i"><use href="#i-bell"/></svg></button></div>
+            <div class="vc-user is-hover" data-sig-state="1c5cbe185c:hover"><span class="vc-av g2"></span><span class="t">acme</span><span class="more"><svg class="i" style="width:12px;height:12px"><use href="#i-more"/></svg></span></div>
+            <div class="vc-user is-focus f-ring" tabindex="-1" data-sig-state="1c5cbe185c:focus"><span class="vc-av g2"></span><span class="t">acme</span><span class="more"><svg class="i" style="width:12px;height:12px"><use href="#i-more"/></svg></span></div>
+          </div>
+          <div class="spec-f"><span class="note">Hover (đo): nút "…" đổi nền background-100 sang gray-300 và chữ gray-900 sang gray-1000.</span></div>
+        </div>
+
+        <div class="spec" data-sig="57314142b9">
+          <div class="spec-h"><b>Sidebar đầy đủ</b><span class="kind">nav · overflow-y-auto</span><span class="dp">255 × 756 · pt 10</span></div>
+          <div class="stage page" style="justify-content:center">
+            <div class="vc-side" style="height:auto;padding-bottom:12px">
+              <div class="vc-nav">
+                <a class="vc-item on" href="#navigation"><span class="ic"><svg class="i"><use href="#i-grid"/></svg></span><span class="t">Projects</span></a>
+                <a class="vc-item" href="#navigation"><span class="ic"><svg class="i"><use href="#i-box"/></svg></span><span class="t">Deployments</span></a>
+                <a class="vc-item" href="#navigation"><span class="ic"><svg class="i"><use href="#i-list"/></svg></span><span class="t">Logs</span><span class="chev"><svg class="i"><use href="#i-right"/></svg></span></a>
+                <a class="vc-item" href="#navigation"><span class="ic"><svg class="i"><use href="#i-chart"/></svg></span><span class="t">Analytics</span></a>
+                <a class="vc-item" href="#navigation"><span class="ic"><svg class="i"><use href="#i-gauge"/></svg></span><span class="t">Speed Insights</span></a>
+                <a class="vc-item" href="#navigation"><span class="ic"><svg class="i"><use href="#i-eye"/></svg></span><span class="t">Observability</span><span class="chev"><svg class="i"><use href="#i-right"/></svg></span></a>
+                <a class="vc-item" href="#navigation"><span class="ic"><svg class="i"><use href="#i-shield"/></svg></span><span class="t">Firewall</span><span class="chev"><svg class="i"><use href="#i-right"/></svg></span></a>
+                <hr>
+                <a class="vc-item" href="#navigation"><span class="ic"><svg class="i"><use href="#i-key"/></svg></span><span class="t">Environment Variables <span class="vc-pill amber">7</span></span></a>
+                <a class="vc-item" href="#navigation"><span class="ic"><svg class="i"><use href="#i-globe"/></svg></span><span class="t">Domains</span></a>
+                <a class="vc-item" href="#navigation"><span class="ic"><svg class="i"><use href="#i-db"/></svg></span><span class="t">Storage</span></a>
+              </div>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Nhóm mục cách nhau bằng đường 1px gray-alpha-400. Mục có trang con mang chevron bên phải. Đã rút gọn, bản gốc có 21 mục.</span></div>
+        </div>
+
+        <div class="spec full" data-sig="3768ac05f0 a2a7b517ef 1007c67943">
+          <div class="spec-h"><b>Thanh trên cùng</b><span class="kind">grid 3 cột · breadcrumb</span><span class="dp">h 56</span></div>
+          <div class="stage col page" style="padding:0;overflow:hidden">
+            <div class="vc-top"><div class="l"><button class="vc-scopebtn">All Projects<span class="muted"><svg class="i"><use href="#i-updown"/></svg></span></button></div><nav class="vc-crumb" aria-label="Breadcrumb"><a class="vc-tab" href="#navigation">Overview</a></nav><div class="r"><button class="vc-btn ghost"><svg class="i"><use href="#i-spark"/></svg>Agent</button></div></div>
+          </div>
+          <div class="stage" style="padding-top:12px">
+            <div class="cell"><span class="lab">tab Overview · focus</span><a class="vc-tab is-focus f-ua" href="#navigation" data-sig-state="1007c67943:focus">Overview</a></div>
+          </div>
+          <div class="spec-f"><span class="note">Tiêu đề trang ở giữa là <code>text-label-14</code> đậm 500, letter-spacing -0.28. Trái là scope button, phải là nút Agent.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CHỨA NỘI DUNG ================= -->
+    <section class="block" id="containment">
+      <header><h2>Chứa nội dung</h2><p>Thẻ của dashboard: nền background-100, viền 1px gray-alpha-400 cộng <code>--ds-shadow-small</code>, bo 6, nằm trên nền trang background-200.</p></header>
+      <div class="grid wide">
+        <div class="spec" data-sig="0e7944b420 a6e5c71ba7 71217b2831">
+          <div class="spec-h"><b>Project card</b><span class="kind">li.projectCard</span><span class="dp">342 × 122 · p 16 · gap 12</span></div>
+          <div class="stage col page">
+            <div class="vc-card vc-project">
+              <div class="head"><button class="vc-pmenu" aria-label="Menu dự án"><span class="vc-fav" title="ảnh favicon dự án">ảnh</span></button><div class="names"><b>docs-site</b><small>docs.example.com</small></div><span class="vc-status" aria-label="Deploy xong"><svg class="ring" viewBox="0 0 30 30"><circle class="tr" cx="15" cy="15" r="13"/><circle class="ar" cx="15" cy="15" r="13" stroke-dasharray="54 82"/></svg><svg class="i"><use href="#i-check2"/></svg></span></div>
+              <div class="commit"><svg class="i"><use href="#i-commit"/></svg><span>feat: add search to the docs sidebar</span></div>
+              <div class="meta"><svg class="i"><use href="#i-repo"/></svg><span>acme/docs-site</span>· 4h ago</div>
+            </div>
+            <div class="vc-card vc-project">
+              <div class="head"><button class="vc-pmenu" aria-label="Menu dự án"><span class="vc-fav" title="ảnh favicon dự án">ảnh</span></button><div class="names"><b>marketing</b><small>marketing.vercel.app</small></div><span class="vc-status" aria-label="Deploy xong"><svg class="ring" viewBox="0 0 30 30"><circle class="tr" cx="15" cy="15" r="13"/></svg><svg class="i"><use href="#i-check2"/></svg></span></div>
+              <a class="vc-link" href="#containment">Connect Git Repository</a>
+              <div class="meta">Sep 5</div>
+            </div>
+          </div>
+          <div class="stage" style="padding-top:0">
+            <div class="cell"><span class="lab">menu dự án · hover</span><button class="vc-pmenu is-hover" aria-label="Menu dự án" data-sig-state="a6e5c71ba7:hover"><span class="vc-fav">ảnh</span></button></div>
+            <div class="cell"><span class="lab">focus (focus-ring)</span><button class="vc-pmenu is-focus f-shadow" aria-label="Menu dự án" data-sig-state="a6e5c71ba7:focus"><span class="vc-fav">ảnh</span></button></div>
+            <div class="cell"><span class="lab">link · hover</span><a class="vc-link is-hover" href="#containment" data-sig-state="71217b2831:hover">Connect Git Repository</a></div>
+            <div class="cell"><span class="lab">link · focus</span><a class="vc-link is-focus f-ring" href="#containment" data-sig-state="71217b2831:focus">Connect Git Repository</a></div>
+          </div>
+          <div class="spec-f"><span class="note">Hai biến thể: đã nối Git (dòng commit và repo) và chưa nối (link blue-900 "Connect Git Repository", hover gạch chân). Favicon 32 là khối giữ chỗ. Vòng trạng thái 30 vẽ lại theo ảnh, không phải SVG gốc.</span></div>
+        </div>
+
+        <div class="spec" data-sig="16d35c5a99 8086bae867 ea2f371f63 07daba3aca">
+          <div class="spec-h"><b>Usage card</b><span class="kind">ul · li:nth-child(odd) bg-background-200</span><span class="dp">406 · dòng 32 · r 4</span></div>
+          <div class="stage col page" style="padding-bottom:28px">
+            <div class="vc-card vc-usage">
+              <div class="top"><span>Last 30 days</span><button class="vc-btn h24 primary">Upgrade</button></div>
+              <ul>
+                <li><a class="vc-urow" href="#containment"><svg class="vc-ring" viewBox="0 0 16 16"><circle class="tr" cx="8" cy="8" r="6"/><circle class="ar" cx="8" cy="8" r="6" stroke-dasharray="4 38"/></svg><span class="t">Fast Origin Transfer <svg class="i"><use href="#i-info"/></svg></span><span class="v">1.03 GB / 10 GB</span></a></li>
+                <li><a class="vc-urow" href="#containment"><svg class="vc-ring" viewBox="0 0 16 16"><circle class="tr" cx="8" cy="8" r="6"/><circle class="ar" cx="8" cy="8" r="6" stroke-dasharray="3 38"/></svg><span class="t">Deployment Storage <svg class="i"><use href="#i-info"/></svg></span><span class="v">762.41 MB / 10 GB</span></a></li>
+                <li><a class="vc-urow" href="#containment"><svg class="vc-ring" viewBox="0 0 16 16"><circle class="tr" cx="8" cy="8" r="6"/><circle class="ar" cx="8" cy="8" r="6" stroke-dasharray="1 38"/></svg><span class="t">Edge Requests <svg class="i"><use href="#i-info"/></svg></span><span class="v">19K / 1M</span></a></li>
+                <li><a class="vc-urow is-focus f-ring" href="#containment" data-sig-state="ea2f371f63:focus"><svg class="vc-ring" viewBox="0 0 16 16"><circle class="tr" cx="8" cy="8" r="6"/><circle class="ar" cx="8" cy="8" r="6" stroke-dasharray="1 38"/></svg><span class="t">Fluid Active CPU <svg class="i"><use href="#i-info"/></svg></span><span class="v">4m 10s / 4h</span></a></li>
+              </ul>
+              <button class="vc-btn h24 icon round secondary more" aria-label="Xem thêm usage"><svg class="i"><use href="#i-down"/></svg></button>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Dòng lẻ nền background-200, dòng chẵn trong suốt. Dòng cuối đang ở trạng thái focus (viền 2px focus-color). Số liệu là số mẫu.</span></div>
+        </div>
+
+        <div class="spec" data-sig="ca3fa93334">
+          <div class="spec-h"><b>Empty state · Alerts</b><span class="kind">flex-col gap-1.5 text-center</span><span class="dp">406 · gap 6 / 24</span></div>
+          <div class="stage col page">
+            <div class="vc-card vc-empty"><div class="tx"><b>Get alerted for anomalies</b><span>Automatically monitor your projects for anomalies and get notified.</span></div><button class="vc-btn secondary">Upgrade to Pro</button></div>
+          </div>
+          <div class="spec-f"><span class="note">Tiêu đề <code>text-label-14</code> 500, mô tả gray-900 <code>text-balance</code>.</span></div>
+        </div>
+
+        <div class="spec" data-sig="ee485d9148 e29adcb208 2d940cb328 aee67c6143 4c4b15deb4">
+          <div class="spec-h"><b>Recent Previews</b><span class="kind">list · deployment row</span><span class="dp">406 × 89 · chip 24</span></div>
+          <div class="stage col page">
+            <div class="vc-card vc-preview">
+              <div class="row1"><span class="vc-avstack"><span class="vc-av g2"></span><span class="vc-av g3"></span></span><b>main</b><span class="msg">fix: retry the upload when the network drops</span><button class="vc-btn h24 icon ghost r4" aria-label="Thêm"><svg class="i"><use href="#i-more"/></svg></button></div>
+              <div class="row2"><a class="vc-chip" href="#containment"><svg class="i" style="width:14px;height:14px"><use href="#i-eye"/></svg>Preview</a><a class="vc-chip" href="#containment"><svg class="i" style="width:14px;height:14px"><use href="#i-repo"/></svg>Source</a><a class="vc-chip mono" href="#containment"><span class="vc-dot"></span>8fQ2xLmPa</a></div>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Avatar chồng 20 (vòng 2px màu nền) và avatar 14 là khối giữ chỗ. Chấm 8 màu teal-700 là trạng thái Ready. Mã commit dùng Geist Mono 12/500.</span></div>
+        </div>
+
+        <div class="spec" data-sig="e6341e1b83 ac697ddf10 1829414c99">
+          <div class="spec-h"><b>New repository</b><span class="kind">li · border-dashed</span><span class="dp">342 × 122 · p 6 / 10</span></div>
+          <div class="stage col page" style="padding-top:28px">
+            <div class="vc-newrepo">
+              <div class="in">
+                <div class="head"><span class="vc-lang" title="ảnh logo ngôn ngữ">py</span><div><span>New repository detected</span><small><svg class="i" style="width:14px;height:14px"><use href="#i-repo"/></svg>acme/api-worker</small></div></div>
+                <button class="vc-btn primary wide">Import</button>
+              </div>
+              <button class="vc-close" aria-label="Đóng"><svg class="i"><use href="#i-x"/></svg></button>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Khung ngoài viền liền gray-alpha-400, khung trong viền đứt nét cùng màu. Logo ngôn ngữ 18 là khối giữ chỗ.</span></div>
+        </div>
+
+        <div class="spec" data-sig="0f98159bdd">
+          <div class="spec-h"><b>Lưới dự án</b><span class="kind">ul · grid 2 cột</span><span class="dp">708 · 2 × 342 · gap 24</span></div>
+          <div class="stage page scroll" style="display:block">
+            <div style="display:grid;grid-template-columns:repeat(2,160px);gap:12px">
+              <div class="vc-card" style="height:60px"></div><div class="vc-card" style="height:60px"></div><div class="vc-card" style="height:60px"></div><div class="vc-card" style="height:60px"></div>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Sơ đồ thu nhỏ; lưới thật xem ở màn desktop. Dưới lưới là nút secondary 36 "Show More" rộng hết cột.</span></div>
+        </div>
+
+        <div class="spec">
+          <div class="spec-h"><b>Menu</b><span class="kind">popover · --ds-shadow-menu</span><span class="dp">row 36 · p 6 · r 12</span></div>
+          <div class="stage center page">
+            <div class="vc-menu"><div class="on"><svg class="i"><use href="#i-grid"/></svg>Project</div><div><svg class="i"><use href="#i-globe"/></svg>Domain</div><div><svg class="i"><use href="#i-db"/></svg>Store</div><hr><div>Team<span class="k">⌘ T</span></div></div>
+          </div>
+          <div class="spec-f"><span class="note">Dựng từ token (<code>--ds-popover-*</code>, <code>--ds-shadow-menu</code>), không đo: menu chỉ mở khi có JS mà trang được quét với JS tắt.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= NHẬP LIỆU ================= -->
+    <section class="block" id="inputs">
+      <header><h2>Nhập liệu</h2></header>
+      <div class="grid wide">
+        <div class="spec full" data-sig="d32101b026 64a96763b0">
+          <div class="spec-h"><b>Thanh tìm dự án</b><span class="kind">input · fieldset · kbd</span><span class="dp">h 36 · đệm 0 12 · nút xem 32 × 28</span></div>
+          <div class="stage col page">
+            <div class="vc-toolbar"><label class="vc-search"><svg class="i"><use href="#i-search"/></svg><input placeholder="Search Projects" aria-label="Tìm dự án"><span class="vc-kbd">/</span></label><button class="vc-btn h36 icon secondary" aria-label="Lọc"><svg class="i"><use href="#i-filter"/></svg></button><span class="vc-views" role="group" aria-label="Kiểu xem"><span class="on"><svg class="i"><use href="#i-grid"/></svg></span><span><svg class="i"><use href="#i-list"/></svg></span></span><button class="vc-btn h36 primary split">Add New<svg class="i"><use href="#i-down"/></svg></button></div>
+            <span class="lab" style="margin-top:12px">focus</span>
+            <div class="vc-toolbar"><label class="vc-search is-focus" data-sig-state="d32101b026:focus"><svg class="i"><use href="#i-search"/></svg><input placeholder="Search Projects" aria-label="Tìm dự án (mẫu focus)"><span class="vc-kbd">/</span></label></div>
+          </div>
+          <div class="spec-f"><span class="note">Ô nhập nền background-100, viền 1px gray-alpha-400; focus khi tắt JS là viền mặc định của trình duyệt. Nút xem đang chọn nền gray-100 bo 4. Gõ thử được.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= PHẢN HỒI ================= -->
+    <section class="block" id="feedback">
+      <header><h2>Phản hồi &amp; trạng thái</h2></header>
+      <div class="grid wide">
+        <div class="spec" data-sig="a3ca0db47d">
+          <div class="spec-h"><b>Pill, chip, kbd, chấm</b><span class="kind">Badge · Pill · Kbd</span><span class="dp">20 · 24 · 8</span></div>
+          <div class="stage">
+            <span class="vc-pill">Hobby</span><span class="vc-pill amber">7</span><span class="vc-pill" style="background:var(--ds-blue-200);color:var(--ds-blue-900)">Pro</span>
+            <a class="vc-chip" href="#feedback">Preview</a><a class="vc-chip mono" href="#feedback"><span class="vc-dot"></span>8fQ2xLmPa</a>
+            <span class="vc-kbd">/</span><span class="vc-kbd">F</span>
+          </div>
+          <div class="stage" style="padding-top:0">
+            <span class="cell"><span class="lab">Ready</span><span class="vc-dot"></span></span><span class="cell"><span class="lab">Building</span><span class="vc-dot amber"></span></span><span class="cell"><span class="lab">Error</span><span class="vc-dot red"></span></span><span class="cell"><span class="lab">Queued</span><span class="vc-dot gray"></span></span>
+            <span class="cell"><span class="lab">avatar 20 · r 6</span><span class="vc-av sq"></span></span>
+          </div>
+          <div class="spec-f"><span class="note">Chỉ "Ready" (teal) đo được trên trang; màu Building/Error/Queued lấy theo quy ước bậc 700 của Geist, không đo. Pill "Pro" là ví dụ ghép token.</span></div>
+        </div>
+
+        <div class="spec">
+          <div class="spec-h"><b>Vòng tiến độ</b><span class="kind">usage ring · status ring</span><span class="dp">16 · 30</span></div>
+          <div class="stage center" style="gap:32px">
+            <svg class="vc-ring" viewBox="0 0 16 16" role="img" aria-label="10%"><circle class="tr" cx="8" cy="8" r="6"/><circle class="ar" cx="8" cy="8" r="6" stroke-dasharray="4 38"/></svg>
+            <svg class="vc-ring" viewBox="0 0 16 16" role="img" aria-label="60%" style="width:32px;height:32px"><circle class="tr" cx="8" cy="8" r="6"/><circle class="ar" cx="8" cy="8" r="6" stroke-dasharray="23 38"/></svg>
+            <span class="vc-status" aria-label="Deploy xong"><svg class="ring" viewBox="0 0 30 30"><circle class="tr" cx="15" cy="15" r="13"/><circle class="ar" cx="15" cy="15" r="13" stroke-dasharray="54 82"/></svg><svg class="i"><use href="#i-check2"/></svg></span>
+          </div>
+          <div class="spec-f"><span class="note">Vẽ lại theo ảnh: vệt xanh blue-700/900 trên nền gray-alpha. SVG gốc có thêm animation khi JS chạy.</span></div>
+        </div>
+
+        <div class="spec full">
+          <div class="spec-h"><b>Focus · 3 kiểu</b><span class="kind">focus-visible</span><span class="dp">21 phần tử đo</span></div>
+          <div class="stage" style="gap:28px">
+            <div class="cell"><span class="lab">1 · viền 2px --ds-focus-color (site style)</span><a class="vc-item is-focus f-ring" href="#feedback" style="width:220px"><span class="ic"><svg class="i"><use href="#i-box"/></svg></span><span class="t">Deployments</span></a></div>
+            <div class="cell"><span class="lab">2 · --ds-focus-ring (bóng 2 + 4px)</span><button class="vc-pmenu is-focus f-shadow" aria-label="Menu dự án"><span class="vc-fav">ảnh</span></button></div>
+            <div class="cell"><span class="lab">3 · mặc định trình duyệt (outline auto)</span><button class="vc-btn primary is-focus f-ua">Import</button></div>
+          </div>
+          <div class="spec-f"><span class="note">Kiểu 1 dùng cho link: sidebar, Find, team, dòng usage, dòng tài khoản. Kiểu 2 dùng cho menu dự án. Kiểu 3 xuất hiện ở 13/21 phần tử (nút, ô nhập, tab) vì trang quét với JS tắt; lớp <code>js-focus-visible</code> của Vercel không chạy nên site không style riêng, còn khi có JS thì nút dùng kiểu 2.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= MÀN MẪU ================= -->
+    <section class="block" id="screens">
+      <header><h2>Màn hình mẫu</h2><p>Trang Overview của team ở hai khổ. Desktop 1440: sidebar 256 bên trái, thanh trên 56, dưới là thanh tìm; cột trái 406 chứa Usage, Alerts, Recent Previews, cột phải là lưới dự án 2 cột. Mobile 390: bỏ sidebar, tiêu đề team ở giữa thanh trên, Usage/Alerts/Recents gom vào một thẻ có tab, Find chuyển xuống thanh nổi ở đáy.</p></header>
+      <div class="screen-wrap"><div class="screens">
+        <div>
+          <div class="phone">
+            <div class="m-top"><span class="vc-av"></span>acme's projects<svg class="i" style="color:var(--ds-gray-900)"><use href="#i-updown"/></svg><button class="vc-btn ghost icon r" aria-label="Agent"><svg class="i"><use href="#i-spark"/></svg></button></div>
+            <div class="m-body">
+              <div class="vc-toolbar"><label class="vc-search"><svg class="i"><use href="#i-search"/></svg><input placeholder="Search Projects" aria-label="Tìm dự án (mobile)"><span class="vc-kbd">/</span></label><button class="vc-btn h36 icon secondary" aria-label="Lọc"><svg class="i"><use href="#i-filter"/></svg></button><button class="vc-btn h36 icon primary" aria-label="Thêm mới"><svg class="i"><use href="#i-plus"/></svg></button></div>
+              <div class="vc-card vc-preview" style="width:100%;gap:12px">
+                <div class="vc-tabs3"><span class="on">Recents</span><span>Usage</span><span>Alerts</span></div>
+                <div class="row1"><span class="vc-avstack"><span class="vc-av g2"></span><span class="vc-av g3"></span></span><b>main</b><span class="msg">fix: retry the upload when…</span><svg class="i"><use href="#i-more"/></svg></div>
+                <div class="row2"><span class="vc-chip">Preview</span><span class="vc-chip">Source</span><span class="vc-chip mono"><span class="vc-dot"></span>8fQ2xLmPa</span></div>
+              </div>
+              <div class="vc-h" style="padding:0">Projects</div>
+              <div class="vc-card vc-project" style="width:100%">
+                <div class="head"><span class="vc-fav">ảnh</span><div class="names"><b>docs-site</b><small>docs.example.com</small></div><span class="vc-status"><svg class="ring" viewBox="0 0 30 30"><circle class="tr" cx="15" cy="15" r="13"/><circle class="ar" cx="15" cy="15" r="13" stroke-dasharray="54 82"/></svg><svg class="i"><use href="#i-check2"/></svg></span></div>
+                <div class="commit"><svg class="i"><use href="#i-commit"/></svg><span>feat: add search to the docs sidebar</span></div>
+                <div class="meta"><svg class="i"><use href="#i-repo"/></svg><span>acme/docs-site</span>· 4h ago</div>
+              </div>
+              <div class="vc-card vc-project" style="width:100%">
+                <div class="head"><span class="vc-fav">ảnh</span><div class="names"><b>web</b><small>web-app.vercel.app</small></div><span class="vc-status"><svg class="ring" viewBox="0 0 30 30"><circle class="tr" cx="15" cy="15" r="13"/></svg><svg class="i"><use href="#i-check2"/></svg></span></div>
+                <a class="vc-link" href="#screens">Connect Git Repository</a>
+                <div class="meta">Sep 18</div>
+              </div>
+            </div>
+            <div class="vc-dock"><svg class="i"><use href="#i-search"/></svg>Find<span class="sep"></span><svg class="i"><use href="#i-menu"/></svg></div>
+          </div>
+          <div class="cap">mobile 390 × 844 · toolbar + thẻ tab + project card × 2 + dock</div>
+        </div>
+      </div></div>
+      <div class="screen-wrap" style="margin-top:24px"><div>
+        <div>
+          <div class="desk">
+            <div class="vc-side">
+              <div style="display:flex;align-items:center;padding-top:4px"><a class="vc-team" href="#screens" style="flex:1"><span class="vc-av"></span><span class="t">acme's projects</span><span class="vc-pill">Hobby</span></a><button class="vc-scope" aria-label="Đổi team"><svg class="i"><use href="#i-updown"/></svg></button></div>
+              <button class="vc-find" style="margin-top:4px"><svg class="i"><use href="#i-search"/></svg><span class="t">Find</span><span class="vc-kbd">F</span></button>
+              <div class="vc-nav">
+                <a class="vc-item on" href="#screens"><span class="ic"><svg class="i"><use href="#i-grid"/></svg></span><span class="t">Projects</span></a>
+                <a class="vc-item" href="#screens"><span class="ic"><svg class="i"><use href="#i-box"/></svg></span><span class="t">Deployments</span></a>
+                <a class="vc-item" href="#screens"><span class="ic"><svg class="i"><use href="#i-list"/></svg></span><span class="t">Logs</span><span class="chev"><svg class="i"><use href="#i-right"/></svg></span></a>
+                <a class="vc-item" href="#screens"><span class="ic"><svg class="i"><use href="#i-chart"/></svg></span><span class="t">Analytics</span></a>
+                <a class="vc-item" href="#screens"><span class="ic"><svg class="i"><use href="#i-gauge"/></svg></span><span class="t">Speed Insights</span></a>
+                <a class="vc-item" href="#screens"><span class="ic"><svg class="i"><use href="#i-eye"/></svg></span><span class="t">Observability</span><span class="chev"><svg class="i"><use href="#i-right"/></svg></span></a>
+                <a class="vc-item" href="#screens"><span class="ic"><svg class="i"><use href="#i-shield"/></svg></span><span class="t">Firewall</span><span class="chev"><svg class="i"><use href="#i-right"/></svg></span></a>
+                <a class="vc-item" href="#screens"><span class="ic"><svg class="i"><use href="#i-globe"/></svg></span><span class="t">CDN</span></a>
+                <hr>
+                <a class="vc-item" href="#screens"><span class="ic"><svg class="i"><use href="#i-key"/></svg></span><span class="t">Environment Variables <span class="vc-pill amber">7</span></span></a>
+                <a class="vc-item" href="#screens"><span class="ic"><svg class="i"><use href="#i-link"/></svg></span><span class="t">Domains</span></a>
+                <a class="vc-item" href="#screens"><span class="ic"><svg class="i"><use href="#i-plug"/></svg></span><span class="t">Integrations</span></a>
+                <a class="vc-item" href="#screens"><span class="ic"><svg class="i"><use href="#i-db"/></svg></span><span class="t">Storage</span></a>
+                <a class="vc-item" href="#screens"><span class="ic"><svg class="i"><use href="#i-flag"/></svg></span><span class="t">Flags</span></a>
+                <a class="vc-item" href="#screens"><span class="ic"><svg class="i"><use href="#i-spark"/></svg></span><span class="t">Agent</span><span class="chev"><svg class="i"><use href="#i-right"/></svg></span></a>
+                <a class="vc-item" href="#screens"><span class="ic"><svg class="i"><use href="#i-route"/></svg></span><span class="t">AI Gateway</span><span class="chev"><svg class="i"><use href="#i-right"/></svg></span></a>
+                <a class="vc-item" href="#screens"><span class="ic"><svg class="i"><use href="#i-image"/></svg></span><span class="t">Images</span></a>
+              </div>
+              <div style="margin-top:auto;display:flex;align-items:center;gap:8px;padding-top:8px;box-shadow:0 -1px 0 var(--ds-gray-alpha-400)"><div class="vc-user" style="flex:1"><span class="vc-av g2"></span><span class="t">acme</span><span class="more"><svg class="i" style="width:12px;height:12px"><use href="#i-more"/></svg></span></div><button class="vc-bell" aria-label="Thông báo chưa đọc"><svg class="i"><use href="#i-bell"/></svg></button></div>
+            </div>
+            <div class="main">
+              <div class="vc-top"><div class="l"><button class="vc-scopebtn">All Projects<span class="muted"><svg class="i"><use href="#i-updown"/></svg></span></button></div><span class="vc-tab">Overview</span><div class="r"><button class="vc-btn ghost"><svg class="i"><use href="#i-spark"/></svg>Agent</button></div></div>
+              <div class="content">
+                <div class="vc-toolbar"><label class="vc-search"><svg class="i"><use href="#i-search"/></svg><input placeholder="Search Projects" aria-label="Tìm dự án (desktop)"><span class="vc-kbd">/</span></label><button class="vc-btn h36 icon secondary" aria-label="Lọc"><svg class="i"><use href="#i-filter"/></svg></button><span class="vc-views"><span class="on"><svg class="i"><use href="#i-grid"/></svg></span><span><svg class="i"><use href="#i-list"/></svg></span></span><button class="vc-btn h36 primary split">Add New<svg class="i"><use href="#i-down"/></svg></button></div>
+                <div class="cols">
+                  <div class="col">
+                    <div class="vc-h">Usage</div>
+                    <div class="vc-card vc-usage">
+                      <div class="top"><span>Last 30 days</span><button class="vc-btn h24 primary">Upgrade</button></div>
+                      <ul>
+                        <li><span class="vc-urow"><svg class="vc-ring" viewBox="0 0 16 16"><circle class="tr" cx="8" cy="8" r="6"/><circle class="ar" cx="8" cy="8" r="6" stroke-dasharray="4 38"/></svg><span class="t">Fast Origin Transfer</span><span class="v">1.03 GB / 10 GB</span></span></li>
+                        <li><span class="vc-urow"><svg class="vc-ring" viewBox="0 0 16 16"><circle class="tr" cx="8" cy="8" r="6"/><circle class="ar" cx="8" cy="8" r="6" stroke-dasharray="3 38"/></svg><span class="t">Deployment Storage</span><span class="v">762.41 MB / 10 GB</span></span></li>
+                        <li><span class="vc-urow"><svg class="vc-ring" viewBox="0 0 16 16"><circle class="tr" cx="8" cy="8" r="6"/><circle class="ar" cx="8" cy="8" r="6" stroke-dasharray="1 38"/></svg><span class="t">Edge Requests</span><span class="v">19K / 1M</span></span></li>
+                        <li><span class="vc-urow"><svg class="vc-ring" viewBox="0 0 16 16"><circle class="tr" cx="8" cy="8" r="6"/><circle class="ar" cx="8" cy="8" r="6" stroke-dasharray="1 38"/></svg><span class="t">Fluid Active CPU</span><span class="v">4m 10s / 4h</span></span></li>
+                      </ul>
+                      <button class="vc-btn h24 icon round secondary more" aria-label="Xem thêm usage"><svg class="i"><use href="#i-down"/></svg></button>
+                    </div>
+                    <div class="vc-h" style="margin-top:16px">Alerts</div>
+                    <div class="vc-card vc-empty"><div class="tx"><b>Get alerted for anomalies</b><span>Automatically monitor your projects for anomalies and get notified.</span></div><button class="vc-btn secondary">Upgrade to Pro</button></div>
+                    <div class="vc-h">Recent Previews</div>
+                    <div class="vc-card vc-preview">
+                      <div class="row1"><span class="vc-avstack"><span class="vc-av g2"></span><span class="vc-av g3"></span></span><b>main</b><span class="msg">fix: retry the upload when the network drops</span><svg class="i"><use href="#i-more"/></svg></div>
+                      <div class="row2"><span class="vc-chip">Preview</span><span class="vc-chip">Source</span><span class="vc-chip mono"><span class="vc-dot"></span>8fQ2xLmPa</span></div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="vc-h">Projects</div>
+                    <div class="pgrid">
+                      <div class="vc-newrepo" style="margin:0"><div class="in"><div class="head"><span class="vc-lang">py</span><div><span>New repository detected</span><small>acme/api-worker</small></div></div><button class="vc-btn primary wide">Import</button></div><button class="vc-close" aria-label="Đóng"><svg class="i"><use href="#i-x"/></svg></button></div>
+                      <div class="vc-card vc-project"><div class="head"><span class="vc-fav">ảnh</span><div class="names"><b>docs-site</b><small>docs.example.com</small></div><span class="vc-status"><svg class="ring" viewBox="0 0 30 30"><circle class="tr" cx="15" cy="15" r="13"/><circle class="ar" cx="15" cy="15" r="13" stroke-dasharray="54 82"/></svg><svg class="i"><use href="#i-check2"/></svg></span></div><div class="commit"><svg class="i"><use href="#i-commit"/></svg><span>feat: add search to the docs sidebar</span></div><div class="meta"><svg class="i"><use href="#i-repo"/></svg><span>acme/docs-site</span>· 4h ago</div></div>
+                      <div class="vc-card vc-project"><div class="head"><span class="vc-fav">ảnh</span><div class="names"><b>web</b><small>web-app.vercel.app</small></div><span class="vc-status"><svg class="ring" viewBox="0 0 30 30"><circle class="tr" cx="15" cy="15" r="13"/><circle class="ar" cx="15" cy="15" r="13" stroke-dasharray="30 82"/></svg><svg class="i"><use href="#i-check2"/></svg></span></div><div class="commit"><svg class="i"><use href="#i-commit"/></svg><span>fix: retry the upload when the network drops</span></div><div class="meta"><svg class="i"><use href="#i-repo"/></svg><span>acme/web</span>· Sep 18</div></div>
+                      <div class="vc-card vc-project"><div class="head"><span class="vc-fav">ảnh</span><div class="names"><b>marketing</b><small>marketing.vercel.app</small></div><span class="vc-status"><svg class="ring" viewBox="0 0 30 30"><circle class="tr" cx="15" cy="15" r="13"/></svg><svg class="i"><use href="#i-check2"/></svg></span></div><span class="vc-link">Connect Git Repository</span><div class="meta">Sep 5</div></div>
+                      <div class="vc-card vc-project"><div class="head"><span class="vc-fav">ảnh</span><div class="names"><b>dashboard</b><small>dashboard.vercel.app</small></div><span class="vc-status"><svg class="ring" viewBox="0 0 30 30"><circle class="tr" cx="15" cy="15" r="13"/></svg><svg class="i"><use href="#i-check2"/></svg></span></div><span class="vc-link">Connect Git Repository</span><div class="meta">Jun 11</div></div>
+                      <div class="vc-card vc-project"><div class="head"><span class="vc-fav">ảnh</span><div class="names"><b>blog</b><small>blog.example.com</small></div><span class="vc-status"><svg class="ring" viewBox="0 0 30 30"><circle class="tr" cx="15" cy="15" r="13"/><circle class="ar" cx="15" cy="15" r="13" stroke-dasharray="70 82"/></svg><svg class="i"><use href="#i-check2"/></svg></span></div><div class="commit"><svg class="i"><use href="#i-commit"/></svg><span>feat(cache): add stale-while-revalidate</span></div><div class="meta"><svg class="i"><use href="#i-repo"/></svg><span>acme/blog</span>· Mar 31</div></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="cap">desktop 1440 × 900 · sidebar 256 + topbar 56 + toolbar + cột 406 / lưới 2 × 342</div>
+        </div>
+      </div></div>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status"><span id="toast-t">Đã copy</span></div>
+
+<script>
+/* Token Geist đọc từ CSS đã lưu (33h_2svpqtbbs.css) bằng Playwright: :root/.light-theme và .dark-theme, lab() → hex */
+const ROLES=["background-100","background-200","gray-100","gray-200","gray-300","gray-400","gray-500","gray-600","gray-700","gray-800","gray-900","gray-1000","gray-alpha-100","gray-alpha-200","gray-alpha-300","gray-alpha-400","gray-alpha-500","gray-alpha-600","gray-alpha-700","gray-alpha-800","gray-alpha-900","gray-alpha-1000","blue-100","blue-200","blue-300","blue-400","blue-500","blue-600","blue-700","blue-800","blue-900","blue-1000","red-100","red-200","red-300","red-400","red-500","red-600","red-700","red-800","red-900","red-1000","amber-100","amber-200","amber-300","amber-400","amber-500","amber-600","amber-700","amber-800","amber-900","amber-1000","green-100","green-200","green-300","green-400","green-500","green-600","green-700","green-800","green-900","green-1000","teal-100","teal-200","teal-300","teal-400","teal-500","teal-600","teal-700","teal-800","teal-900","teal-1000","purple-100","purple-200","purple-300","purple-400","purple-500","purple-600","purple-700","purple-800","purple-900","purple-1000","pink-100","pink-200","pink-300","pink-400","pink-500","pink-600","pink-700","pink-800","pink-900","pink-1000","focus-color"];
+const PALETTES={"vercel":{"label":"Geist","light":["#ffffff","#fafafa","#f2f2f2","#ebebeb","#e6e6e6","#ebebeb","#c9c9c9","#a8a8a8","#8f8f8f","#7d7d7d","#4d4d4d","#171717","#0000000d","#00000014","#0000001a","#00000014","#00000036","#00000057","#00000070","#00000082","#000000b3","#000000e8","#f0f7ff","#ebf5ff","#e0f0ff","#cce6ff","#99ceff","#52aeff","#0072f5","#0062d1","#0068d6","#00254d","#fff0f0","#ffebeb","#ffe6e6","#fdd8d8","#f8b9b9","#f87275","#e5484d","#da2f35","#cb2a2f","#391417","#fff6e6","#fff4d6","#fef0cd","#ffdd8f","#ffc96b","#f5b047","#ffb224","#ff990a","#a35200","#4e2009","#effbef","#ebfaeb","#daf6da","#c6f1c7","#99e69e","#6cda75","#45a557","#398e4a","#297a3a","#1b311e","#eefcf9","#e5faf6","#d4f7f0","#bef4eb","#86ead9","#45dec5","#12a594","#0d8c7d","#067a6e","#073c34","#f9f0ff","#f9f1fe","#f4e8fc","#eddcf9","#d5b1f1","#bf89ec","#8e4ec6","#763da9","#7820bc","#2e004d","#ffebf5","#feecf2","#fce3ec","#f9d7e2","#f5b8cc","#ee87a7","#ea3e83","#df2670","#bd2864","#430a23","#0072f5"],"dark":["#0a0a0a","#000000","#1a1a1a","#1f1f1f","#292929","#2e2e2e","#454545","#878787","#8f8f8f","#7d7d7d","#a1a1a1","#ededed","#ffffff0f","#ffffff17","#ffffff21","#ffffff24","#ffffff3d","#ffffff82","#ffffff8a","#ffffff78","#ffffff9c","#ffffffeb","#0f1c2e","#10233d","#0f2f57","#0d3868","#0a4380","#0091ff","#0072f5","#0062d1","#52a8ff","#ebf6ff","#2a1314","#3c1618","#561a1e","#671e21","#832126","#e5484d","#e5484d","#d93036","#ff6166","#feecee","#291800","#331b00","#4d2a00","#573300","#6b4105","#e79d13","#ffb224","#ff990a","#f2a20d","#fef3dc","#0b2212","#0f2e18","#12361b","#0c451b","#126426","#1a9338","#45a557","#398e4a","#62c073","#e5fbea","#04201b","#062822","#083a33","#053d35","#085e53","#0c9784","#12a594","#0d8c7d","#0ac7b4","#e0faf4","#231528","#2e1938","#422154","#4f2768","#5f2e85","#8e4ec6","#8e4ec6","#763da9","#bf7af0","#f8edfc","#28151d","#3a1726","#4f1c31","#551b33","#6c1e3e","#b31a57","#ea3e83","#df2670","#f75f8f","#feecf4","#52a8ff"]}};
+const SHADOW_KEYS=["shadow-border-base","shadow-border","shadow-small","shadow-medium","shadow-large","shadow-border-small","shadow-border-medium","shadow-border-large","shadow-menu","shadow-tooltip","shadow-modal","focus-ring","focus-border"];
+const SHADOWS={"light":["0 0 0 1px #00000014","0 0 0 1px #00000014, 0 0 0 1px hsla(0, 0%, 98%, 1)","0px 2px 2px #0000000a","0px 2px 2px #0000000a, 0px 8px 8px -8px #0000000a","0px 2px 2px #0000000a, 0px 8px 16px -4px #0000000a","0 0 0 1px #00000014, 0px 2px 2px #0000000a, 0 0 0 1px hsla(0, 0%, 98%, 1)","0 0 0 1px #00000014, 0px 2px 2px #0000000a, 0px 8px 8px -8px #0000000a, 0 0 0 1px hsla(0, 0%, 98%, 1)","0 0 0 1px #00000014, 0px 2px 2px #0000000a, 0px 8px 16px -4px #0000000a, 0 0 0 1px hsla(0, 0%, 98%, 1)","0 0 0 1px #00000014, 0px 1px 1px #00000005, 0px 4px 8px -4px #0000000a, 0px 16px 24px -8px #0000000f, 0 0 0 1px hsla(0, 0%, 98%, 1)","0 0 0 1px #00000014, 0px 1px 1px #00000005, 0px 4px 8px #0000000a, 0 0 0 1px hsla(0, 0%, 98%, 1)","0 0 0 1px #00000014, 0px 1px 1px #00000005, 0px 8px 16px -4px #0000000a, 0px 24px 32px -8px #0000000f, 0 0 0 1px hsla(0, 0%, 98%, 1)","0 0 0 2px hsla(0, 0%, 100%, 1), 0 0 0 4px hsla(212, 100%, 48%, 1)","0 0 0 1px #00000057, 0px 0px 0px 4px #00000029"],"dark":["0 0 0 1px #ffffff25","0 0 0 1px #ffffff25, 0 0 0 1px hsla(0, 0%, 0%, 1)","0px 1px 2px #00000029","0px 2px 2px #00000052, 0px 8px 8px -8px #00000029","0px 2px 2px #0000000a, 0px 8px 16px -4px #0000000a","0 0 0 1px #ffffff25, 0px 1px 2px #00000029, 0 0 0 1px hsla(0, 0%, 0%, 1)","0 0 0 1px #ffffff25, 0px 2px 2px #00000052, 0px 8px 8px -8px #00000029, 0 0 0 1px hsla(0, 0%, 0%, 1)","0 0 0 1px #ffffff25, 0px 2px 2px #0000000a, 0px 8px 16px -4px #0000000a, 0 0 0 1px hsla(0, 0%, 0%, 1)","0 0 0 1px #ffffff25, 0px 1px 1px #00000005, 0px 4px 8px -4px #0000000a, 0px 16px 24px -8px #0000000f, 0 0 0 1px hsla(0, 0%, 0%, 1)","0 0 0 1px #ffffff25, 0px 1px 1px #00000005, 0px 4px 8px #0000000a, 0 0 0 1px hsla(0, 0%, 0%, 1)","0 0 0 1px #ffffff25, 0px 1px 1px #00000005, 0px 8px 16px -4px #0000000a, 0px 24px 32px -8px #0000000f, 0 0 0 1px hsla(0, 0%, 0%, 1)","0 0 0 2px hsla(0, 0%, 4%, 1), 0 0 0 4px hsla(210, 100%, 66%, 1)","0 0 0 1px #ffffff82, 0px 0px 0px 4px #ffffff3d"]};
+(function () {
+  const root = document.documentElement;
+  /* lần đầu theo chế độ của máy; sau đó nhớ lựa chọn của người xem */
+  const state = { mode: matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark" };
+  try { Object.assign(state, JSON.parse(localStorage.getItem("geist-kit") || "{}")); } catch (e) {}
+
+  const toast = (t) => {
+    const el = document.getElementById("toast");
+    document.getElementById("toast-t").textContent = t;
+    el.classList.add("show");
+    clearTimeout(toast.t);
+    toast.t = setTimeout(() => el.classList.remove("show"), 1600);
+  };
+  const copy = async (text, msg) => {
+    try { await navigator.clipboard.writeText(text); toast(msg); }
+    catch (e) { toast("Trình duyệt chặn clipboard, hãy copy tay"); }
+  };
+
+  function apply() {
+    const vals = PALETTES.vercel[state.mode];
+    ROLES.forEach((r, i) => root.style.setProperty("--ds-" + r, vals[i]));
+    SHADOW_KEYS.forEach((k, i) => root.style.setProperty("--ds-" + k, SHADOWS[state.mode][i]));
+    root.dataset.mode = state.mode;
+    document.querySelectorAll("#mode button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === state.mode));
+    renderRoles(vals);
+    try { localStorage.setItem("geist-kit", JSON.stringify(state)); } catch (e) {}
+  }
+  document.querySelectorAll("#mode button").forEach((b) => (b.onclick = () => { state.mode = b.dataset.v; apply(); }));
+
+  /* ô màu: bậc 100–600 chữ gray-1000, bậc 700–1000 chữ tương phản theo độ sáng */
+  const lum = (hex) => { const n = parseInt(hex.slice(1, 7), 16); return (0.299 * (n >> 16) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255)) / 255; };
+  function renderRoles(vals) {
+    const box = document.getElementById("roles");
+    box.innerHTML = "";
+    const at = (r) => vals[ROLES.indexOf(r)];
+    const cell = (r, host) => {
+      const v = at(r), b = document.createElement("button");
+      const alpha = v.length > 7;
+      b.className = "role";
+      b.style.background = alpha ? "linear-gradient(" + v + "," + v + ")," + at("background-100") : v;
+      b.style.color = alpha ? (parseInt(v.slice(7), 16) > 128 ? at("background-100") : at("gray-1000")) : (lum(v) > 0.55 ? "#000" : "#fff");
+      b.innerHTML = "<b>" + r + "</b><code>" + v + "</code>";
+      b.onclick = () => copy(v, "Đã copy --ds-" + r + " " + v);
+      host.appendChild(b);
+    };
+    const bg = document.createElement("div"); bg.className = "bgs";
+    ["background-100", "background-200", "focus-color"].forEach((r) => cell(r, bg));
+    box.appendChild(bg);
+    const grid = document.createElement("div"); grid.className = "roles";
+    ["gray", "gray-alpha", "blue", "red", "amber", "green", "teal", "purple", "pink"].forEach((s) => {
+      const h = document.createElement("div"); h.className = "row-h"; h.textContent = "--ds-" + s + "-*"; grid.appendChild(h);
+      for (let i = 1; i <= 10; i++) cell(s + "-" + i * 100, grid);
+    });
+    box.appendChild(grid);
+  }
+
+  /* thang chữ: các lớp .text-* trong CSS đã lưu */
+  const TYPE = [["text-heading-64", 64, 64, 600, -3.84], ["text-heading-48", 48, 56, 600, -2.88], ["text-heading-40", 40, 48, 600, -2.4], ["text-heading-32", 32, 40, 600, -1.28],
+    ["text-heading-24", 24, 32, 600, -0.96], ["text-heading-20", 20, 26, 600, -0.4], ["text-heading-16", 16, 24, 600, -0.32], ["text-heading-14", 14, 20, 600, -0.28],
+    ["text-button-14", 14, 20, 500, 0], ["text-button-12", 12, 16, 500, 0],
+    ["text-label-20", 20, 32, 400, 0], ["text-label-18", 18, 20, 400, 0], ["text-label-16", 16, 20, 400, 0], ["text-label-14", 14, 20, 400, 0], ["text-label-13", 13, 16, 400, 0], ["text-label-12", 12, 16, 400, 0],
+    ["text-label-14-mono", 14, 20, 400, 0, 1], ["text-label-13-mono", 13, 20, 400, 0, 1], ["text-label-12-mono", 12, 16, 400, 0, 1],
+    ["text-copy-24", 24, 36, 400, 0], ["text-copy-20", 20, 36, 400, 0], ["text-copy-18", 18, 28, 400, 0], ["text-copy-16", 16, 24, 400, 0], ["text-copy-14", 14, 20, 400, 0], ["text-copy-13", 13, 18, 400, 0],
+    ["text-copy-14-mono", 14, 20, 400, 0, 1], ["text-copy-13-mono", 13, 18, 400, 0, 1]];
+  const ts = document.getElementById("typescale");
+  TYPE.forEach(([name, size, lh, w, ls, mono]) => {
+    const row = document.createElement("div");
+    row.className = "type-row";
+    row.innerHTML = '<span class="meta">.' + name + '</span><span class="t" style="font-size:' + size + "px;line-height:" + lh + "px;font-weight:" + w + ";letter-spacing:" + ls + "px" + (mono ? ";font-family:var(--mono)" : "") + '">Deploy to the edge in seconds</span><span class="meta">' + size + " / " + lh + " · " + w + (ls ? " · " + ls : "") + "</span>";
+    ts.appendChild(row);
+  });
+
+  /* thang bo góc và bóng */
+  const sh = document.getElementById("shapes");
+  [["0", "0"], ["4 · kbd, dòng", "4px"], ["6 · --geist-radius", "6px"], ["8 · marketing", "8px"], ["12 · menu", "12px"], ["full · pill", "9999px"]].forEach(([n, r]) => {
+    const c = document.createElement("div");
+    c.className = "shape-cell";
+    c.innerHTML = '<i style="border-radius:' + r + '"></i>' + n;
+    sh.appendChild(c);
+  });
+  const sd = document.getElementById("shadows");
+  ["shadow-border", "shadow-border-small", "shadow-border-medium", "shadow-border-large", "shadow-menu", "shadow-tooltip", "shadow-modal", "focus-ring"].forEach((k) => {
+    const c = document.createElement("div");
+    c.className = "shape-cell shadow-cell";
+    c.innerHTML = '<i style="box-shadow:var(--ds-' + k + ')"></i>--ds-' + k;
+    sd.appendChild(c);
+  });
+
+  /* mỗi thẻ thành phần có nút copy HTML của phần trình diễn */
+  document.querySelectorAll(".spec").forEach((spec) => {
+    const stage = spec.querySelector(".stage");
+    if (!stage || !spec.querySelector(".spec-h")) return;
+    let foot = spec.querySelector(".spec-f");
+    if (!foot) { foot = document.createElement("div"); foot.className = "spec-f"; foot.innerHTML = '<span class="note"></span>'; spec.appendChild(foot); }
+    const b = document.createElement("button");
+    b.className = "copy"; b.textContent = "Copy HTML";
+    b.onclick = () => copy(stage.innerHTML.trim().replace(/\n\s+/g, "\n"), "Đã copy HTML của " + spec.querySelector(".spec-h b").textContent);
+    foot.appendChild(b);
+  });
+
+  /* token hiện tại dưới dạng khối :root để dán vào dự án khác */
+  document.getElementById("copy-tokens").onclick = () => {
+    const vals = PALETTES.vercel[state.mode];
+    const lines = ROLES.map((r, i) => "  --ds-" + r + ": " + vals[i] + ";").concat(SHADOW_KEYS.map((k, i) => "  --ds-" + k + ": " + SHADOWS[state.mode][i] + ";"));
+    copy(":root {\n" + lines.join("\n") + "\n}", "Đã copy token Geist " + (state.mode === "dark" ? "tối" : "sáng"));
+  };
+
+  /* làm nổi mục đang xem trong mục lục */
+  const links = [...document.querySelectorAll(".side a")];
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (e.isIntersecting) links.forEach((a) => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id));
+  }), { rootMargin: "-30% 0px -60% 0px" });
+  document.querySelectorAll("section.block").forEach((s) => io.observe(s));
+
+  /* link mẫu không nhảy trang */
+  document.querySelectorAll("main a[href^='#']:not(.side a)").forEach((a) => { if (a.closest(".spec, .phone, .desk")) a.addEventListener("click", (e) => e.preventDefault()); });
+
+  apply();
+})();
+</script>
+</body>
+</html>

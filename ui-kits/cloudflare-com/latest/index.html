@@ -1,0 +1,1172 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta name="ui-kit-id" content="cloudflare-com">
+<!-- UI kit rút từ www.cloudflare.com (quét 32 trang, 28/09/2026) bằng skill ui-kit-from-code.
+     Màu = CSS var thật của site (:root / html.dark / [data-mode=dark]) đọc bằng Playwright; số đo = getComputedStyle.
+     Ba họ thiết kế: www (FT Kunst Grotesk) · CMS cũ (system/Inter) · microsite Connect 2026 (STK Bureau Sans). -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cloudflare UI Kit</title>
+<meta name="ui-kit-skip" content="10de9285a4:ảnh/logo/ảnh chân dung của site (RULE-09) thay bằng khối giữ chỗ;6704308311:ảnh/logo/ảnh chân dung của site (RULE-09) thay bằng khối giữ chỗ;cdc26a7211:ảnh/logo/ảnh chân dung của site (RULE-09) thay bằng khối giữ chỗ;3bc0ce5086:ảnh/logo/ảnh chân dung của site (RULE-09) thay bằng khối giữ chỗ;4bfd77ab81:ảnh/logo/ảnh chân dung của site (RULE-09) thay bằng khối giữ chỗ;66c4ea07dc:ảnh/logo/ảnh chân dung của site (RULE-09) thay bằng khối giữ chỗ;7d762e0c83:ảnh/logo/ảnh chân dung của site (RULE-09) thay bằng khối giữ chỗ;a558b205f1:trang chặn bot của Cloudflare (/learning) không phải UI;1581977cc2:khung bố cục trong suốt không nền không viền riêng;2523b274c6:khung bố cục trong suốt không nền không viền riêng;b920c2f08a:khung bố cục trong suốt không nền không viền riêng;08ac5309b8:khung bố cục trong suốt không nền không viền riêng;c8b71a55b0:khung bố cục trong suốt không nền không viền riêng;6625ea8630:khung bố cục trong suốt không nền không viền riêng;9ef9a9ab38:khung bố cục trong suốt không nền không viền riêng;be00940bb5:khung bố cục trong suốt không nền không viền riêng;7d6adc77e0:khung bố cục trong suốt không nền không viền riêng;ea6f12e54a:khung bố cục trong suốt không nền không viền riêng;1059f6c8f5:khung bố cục trong suốt không nền không viền riêng;13276706e4:khung bố cục trong suốt không nền không viền riêng;6268654c9a:khung bố cục trong suốt không nền không viền riêng;3de82ae23f:khung bố cục trong suốt không nền không viền riêng;7d6fc36cab:khung bố cục trong suốt không nền không viền riêng;f694f05b58:khung bố cục trong suốt không nền không viền riêng;bf603e1315:khung bố cục trong suốt không nền không viền riêng;6f89928fc4:khung bố cục trong suốt không nền không viền riêng;27d14e1777:khung bố cục trong suốt không nền không viền riêng;059600bf5c:khung bố cục trong suốt không nền không viền riêng;778a136561:khung bố cục trong suốt không nền không viền riêng;00d2cadecb:khung bố cục trong suốt không nền không viền riêng;5c51e4b523:khung bố cục trong suốt không nền không viền riêng;1d6c0aedf2:trang chặn bot của Cloudflare (/learning) không phải UI;53bdb68f87:khung bố cục trong suốt không nền không viền riêng;03a7f38d24:trang chặn bot của Cloudflare (/learning) không phải UI;75255fb680:trang chặn bot của Cloudflare (/learning) không phải UI;f886392e1f:trang chặn bot của Cloudflare (/learning) không phải UI;729369eed1:ảnh/logo/ảnh chân dung của site (RULE-09) thay bằng khối giữ chỗ;c1eace3f97:ảnh/logo/ảnh chân dung của site (RULE-09) thay bằng khối giữ chỗ;2b5d4f1ec5:ảnh/logo/ảnh chân dung của site (RULE-09) thay bằng khối giữ chỗ;d51053712a:ảnh/logo/ảnh chân dung của site (RULE-09) thay bằng khối giữ chỗ;3fbb57eed4:ảnh/logo/ảnh chân dung của site (RULE-09) thay bằng khối giữ chỗ;7e44960749:ảnh/logo/ảnh chân dung của site (RULE-09) thay bằng khối giữ chỗ;be664efc11:ảnh/logo/ảnh chân dung của site (RULE-09) thay bằng khối giữ chỗ;1e7e3222f6:ảnh/logo/ảnh chân dung của site (RULE-09) thay bằng khối giữ chỗ;9af65c1bdd:ảnh/logo/ảnh chân dung của site (RULE-09) thay bằng khối giữ chỗ;fa8459b1b2:ảnh/logo/ảnh chân dung của site (RULE-09) thay bằng khối giữ chỗ;d3b754ccd0:ảnh/logo/ảnh chân dung của site (RULE-09) thay bằng khối giữ chỗ;541f09cba8:ảnh/logo/ảnh chân dung của site (RULE-09) thay bằng khối giữ chỗ;a2c2f1de4b:ảnh/logo/ảnh chân dung của site (RULE-09) thay bằng khối giữ chỗ;644df17e33:ảnh/logo/ảnh chân dung của site (RULE-09) thay bằng khối giữ chỗ;4ac5ab5746:trang chặn bot của Cloudflare (/learning) không phải UI">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=Inter:wght@400;500;600;700&family=Instrument+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..24,300,0,0&display=block">
+<style>
+/* Token: tên biến giữ nguyên tên trên site, thêm tiền tố --cf- (vd --color-accent-100 → --cf-accent-100).
+   Nhóm www đổi theo sáng/tối (script ghi đè từ bảng ROLES). Nhóm --lg-* (CMS cũ) và --cn-* (Connect)
+   là hằng: các trang đó không có chế độ tối. */
+:root {
+  --cf-accent-100:#ff5e1f; --cf-accent-200:#ff7038; --cf-accent-muted:#bf4c14; --cf-dark-accent:#d63c01; --cf-on-accent:#1f1f1f; --cf-light-foreground:#ffffff; --cf-selection-bg:#ffe9e0; --cf-selection-text:#c33d08; --cf-background-100:#ffffff; --cf-background-200:#fdfdfc; --cf-background-300:#f9f7f6; --cf-background-content:#ffffff; --cf-foreground-100:#262626; --cf-text-secondary:#707070; --cf-text-tertiary:#727272; --cf-border-100:#f0f0f0; --cf-border-200:#cccccc; --cf-decor-dots-100:#ebebeb; --cf-ring:#171717; --cf-compute-100:#0a95ff; --cf-compute-200:#0a95ff1a; --cf-storage-100:#ee0ddb; --cf-storage-200:#ee0ddb1a; --cf-ai-100:#00bd7d; --cf-ai-200:#00bd7d1a; --cf-media-100:#9616ff; --cf-media-200:#f8ebee; --cf-security-100:#b52831; --cf-security-200:#b528311a; --cf-sase-100:#0d9488; --cf-sase-200:#0d94881a; --cf-node-bg:#fffbf5; --cf-node-border:#e9d1bb; --cf-node-accent:#ff5315; --cf-multiplayer-orange:#ff5010; --cf-multiplayer-orange-bg:#ffebe2; --cf-multiplayer-yellow:#ffb10a; --cf-multiplayer-yellow-bg:#fff5e2; --cf-kumo-brand:#ff5e1f; --cf-kumo-info:#2b7fff; --cf-kumo-success:#009966; --cf-kumo-warning:#fa8900; --cf-kumo-danger:#fb2c36; --cf-kumo-info-tint:#dcebff73; --cf-kumo-success-tint:#dcfbe691; --cf-kumo-warning-tint:#ffe69633; --cf-kumo-danger-tint:#ffe2e26b; --cf-kumo-text-info:#193cb8; --cf-kumo-text-success:#006045; --cf-kumo-text-warning:#bd6500; --cf-kumo-text-danger:#c10007; --cf-kumo-text-link:#193cb8; --cf-kumo-text-default:#171717; --cf-kumo-text-subtle:#737373; --cf-kumo-base:#ffffff; --cf-kumo-elevated:#f8f8f8; --cf-kumo-recessed:#f3f3f3; --cf-kumo-line:#0a0a0a1a; --cf-kumo-hairline:#e9e9e9; --cf-kumo-focus:#0b0b0b; --cf-kumo-badge-red:#e7000b; --cf-kumo-badge-green:#009966; --cf-kumo-badge-orange:#ffac00; --cf-kumo-badge-purple:#9810fa; --cf-kumo-badge-teal:#058378; --cf-kumo-badge-blue:#155dfc; --cf-kumo-badge-neutral:#737373;
+  --lg-orange:#ff6633; --lg-orange-2:#f6821f; --lg-navy:#070033; --lg-navy-hover:#080133; --lg-ink:#222222; --lg-black:#000000; --lg-panel:#f8f8fb; --lg-link:#0051c3; --lg-link-hover:#0045a6; --lg-field:#c6c6c6; --lg-field-hover:#5e5e5e; --lg-line:#e1e1e1; --lg-outline-hover:#ffe0d6; --lg-white-hover:#ffc2ad; --lg-pressed:#fab479; --lg-pressed-ink:#993d1f; --lg-focus-bg:#f06033; --lg-ua:#005fcc; --lg-ring-ua:#6ecce5; --lg-case-line:#00000033; --cn-ink:#030101; --cn-orange:#f46021; --cn-accent:#ff5e1f; --cn-accent-2:#ff7038; --cn-cream:#fffbf5; --cn-line:#f4f4f4; --cn-card:#fdfdfd; --cn-sponsor:#fafafa; --cn-sponsor-line:#e8e9eb;
+  --font: "Inter Tight", system-ui, sans-serif;           /* thay FT Kunst Grotesk (font thương mại) */
+  --mono: "JetBrains Mono", ui-monospace, Menlo, monospace; /* thay Apercu Mono Pro */
+  --font-lg: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif; /* CMS cũ: đúng stack của site */
+  --font-cn: "Instrument Sans", system-ui, sans-serif;     /* thay STK Bureau Sans */
+  --ease: cubic-bezier(.4, 0, .2, 1);
+  color-scheme: light;
+}
+:root[data-mode="dark"] { color-scheme: dark; }
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--cf-background-100); color: var(--cf-foreground-100); font: 400 16px/24px var(--font); -webkit-font-smoothing: antialiased; }
+::selection { background: var(--cf-selection-bg); color: var(--cf-selection-text); }
+.ms { font-family: "Material Symbols Outlined"; font-weight: 300; font-style: normal; font-size: 20px; line-height: 1; display: inline-block; white-space: nowrap; direction: ltr; font-feature-settings: "liga"; user-select: none; vertical-align: middle; }
+code, .code { font-family: var(--mono); font-size: 12px; }
+:focus-visible { outline: 2px solid var(--cf-accent-100); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+/* ---------- vỏ trang (mặc token www) ---------- */
+.shell { display: grid; grid-template-columns: 236px minmax(0, 1fr); min-height: 100vh; }
+.side { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 20px 12px; background: var(--cf-background-200); border-right: 1px solid var(--cf-border-100); display: flex; flex-direction: column; gap: 2px; }
+.brand { display: flex; align-items: center; gap: 10px; padding: 4px 10px 16px; }
+.brand-mark { width: 32px; height: 32px; border-radius: 8px; background: var(--cf-accent-100); color: var(--cf-light-foreground); display: grid; place-items: center; }
+.brand b { font-size: 16px; font-weight: 500; display: block; letter-spacing: -.02em; }
+.brand small { color: var(--cf-text-secondary); font-size: 12px; }
+.side h6 { margin: 14px 10px 6px; font: 500 11px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--cf-text-tertiary); }
+.side a { display: flex; align-items: center; gap: 10px; height: 36px; padding: 0 10px; border-radius: 6px; color: var(--cf-text-secondary); text-decoration: none; font-weight: 500; font-size: 15px; }
+.side a:hover { background: color-mix(in srgb, var(--cf-foreground-100) 5%, transparent); color: var(--cf-foreground-100); }
+.side a.on { background: color-mix(in srgb, var(--cf-accent-100) 10%, transparent); color: var(--cf-accent-100); }
+main { padding: 0 32px 96px; min-width: 0; }
+.bar { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; padding: 14px 0; background: var(--cf-background-100); border-bottom: 1px dashed var(--cf-border-100); }
+.bar .grow { flex: 1; }
+.ctl { display: flex; align-items: center; gap: 8px; }
+.ctl > span { font: 500 12px var(--mono); text-transform: uppercase; letter-spacing: .04em; color: var(--cf-text-tertiary); }
+.seg { display: inline-flex; gap: 4px; }
+.seg button { height: 34px; padding: 0 14px; border-radius: 9999px; border: 1px solid var(--cf-border-100); background: transparent; color: var(--cf-foreground-100); font: 500 14px var(--font); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.seg button[aria-pressed="true"] { background: var(--cf-accent-100); border-color: var(--cf-accent-100); color: var(--cf-light-foreground); }
+.copy { height: 32px; padding: 0 12px; border-radius: 9999px; border: 1px solid var(--cf-border-100); background: transparent; color: var(--cf-foreground-100); font: 500 13px var(--font); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.copy:hover { color: var(--cf-accent-100); border-color: var(--cf-accent-100); background: color-mix(in srgb, var(--cf-accent-100) 5%, transparent); }
+.intro { padding: 44px 0 8px; max-width: 800px; }
+.intro .eyebrow { font: 500 12px var(--mono); color: var(--cf-accent-100); letter-spacing: .02em; }
+.intro h1 { font-size: 48px; line-height: 48px; letter-spacing: -.025em; font-weight: 500; margin: 12px 0 14px; text-wrap: balance; }
+.intro p { font-size: 17px; line-height: 25px; color: var(--cf-text-secondary); margin: 0 0 10px; max-width: 70ch; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.fact { font: 12px var(--mono); padding: 4px 10px; border-radius: 9999px; border: 1px solid var(--cf-border-100); color: var(--cf-text-secondary); }
+section.block { padding-top: 56px; scroll-margin-top: 64px; }
+section.block > header { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+section.block h2 { font-size: 32px; line-height: 32px; letter-spacing: -.025em; font-weight: 500; margin: 0; }
+section.block > header p { margin: 0; color: var(--cf-text-secondary); max-width: 74ch; }
+.fam { display: inline-flex; align-self: flex-start; font: 500 11px var(--mono); text-transform: uppercase; letter-spacing: .05em; padding: 3px 8px; border: 1px dashed var(--cf-border-200); color: var(--cf-text-secondary); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 16px; }
+.spec { background: var(--cf-background-200); border: 1px solid var(--cf-border-100); border-radius: 12px; display: flex; flex-direction: column; min-width: 0; }
+.spec.full { grid-column: 1 / -1; }
+.spec-h { display: flex; align-items: center; gap: 8px; padding: 14px 16px 0; flex-wrap: wrap; }
+.spec-h b { font-size: 16px; font-weight: 500; letter-spacing: -.01em; }
+.kind { font: 11px var(--mono); padding: 2px 8px; border-radius: 9999px; background: color-mix(in srgb, var(--cf-accent-100) 10%, transparent); color: var(--cf-selection-text); }
+.spec-h .dp { margin-left: auto; font: 11px var(--mono); color: var(--cf-text-tertiary); font-variant-numeric: tabular-nums; }
+.stage { padding: 20px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; min-height: 96px; overflow-x: auto; }
+.stage.col { flex-direction: column; flex-wrap: nowrap; align-items: stretch; }
+.stage.surface { background: var(--cf-background-100); margin: 12px 12px 0; border-radius: 8px; border: 1px solid var(--cf-border-100); }
+.stage.orange { background: var(--cf-accent-100); margin: 12px 12px 0; border-radius: 8px; }
+.stage.light { background: #fff; color: #222; margin: 12px 12px 0; border-radius: 8px; color-scheme: light; }
+.spec-f { display: flex; align-items: center; gap: 8px; padding: 8px 12px 12px 16px; margin-top: auto; }
+.spec-f .note { font-size: 13px; line-height: 18px; color: var(--cf-text-secondary); flex: 1; }
+.states { display: flex; flex-wrap: wrap; gap: 14px 18px; align-items: flex-end; }
+.states > figure { margin: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+.states figcaption { font: 10.5px var(--mono); color: var(--cf-text-tertiary); text-transform: uppercase; letter-spacing: .04em; }
+.stage.light .states figcaption, .stage.orange .states figcaption { color: inherit; opacity: .6; }
+/* nền tảng */
+.role-group { margin: 18px 0 8px; font: 500 12px var(--mono); text-transform: uppercase; letter-spacing: .05em; color: var(--cf-text-tertiary); }
+.roles { display: grid; grid-template-columns: repeat(auto-fill, minmax(176px, 1fr)); gap: 8px; }
+.role { border-radius: 8px; padding: 12px; min-height: 78px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: inset 0 0 0 1px var(--cf-border-100); cursor: pointer; border: none; text-align: left; font: inherit; }
+.role b { font-size: 13px; font-weight: 500; }
+.role code { font-size: 11px; opacity: .85; }
+.type-row { display: grid; grid-template-columns: 170px minmax(0, 1fr) 190px; gap: 16px; align-items: baseline; padding: 12px 0; border-bottom: 1px solid var(--cf-border-100); }
+.type-row:last-child { border-bottom: none; }
+.type-row .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.type-row .meta { font: 11px var(--mono); color: var(--cf-text-tertiary); font-variant-numeric: tabular-nums; }
+.shape-cell { display: flex; flex-direction: column; align-items: center; gap: 6px; font: 11px var(--mono); color: var(--cf-text-tertiary); text-align: center; max-width: 92px; }
+.shape-cell i { display: block; width: 64px; height: 64px; background: color-mix(in srgb, var(--cf-accent-100) 14%, var(--cf-background-100)); border: 1px solid var(--cf-accent-100); }
+.tbl-wrap { overflow-x: auto; }
+table.tok { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+table.tok th, table.tok td { text-align: left; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--cf-border-100); font-size: 13px; vertical-align: top; }
+table.tok th { font: 500 11px var(--mono); text-transform: uppercase; letter-spacing: .04em; color: var(--cf-text-tertiary); }
+table.tok td:first-child { font-family: var(--mono); font-size: 12px; white-space: nowrap; }
+
+/* ================= www: thành phần cf-* (chỉ dùng --cf-*) ================= */
+.cf-logo-ph { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 8px; border: 1px dashed currentColor; border-radius: 4px; font: 500 11px var(--mono); text-transform: uppercase; opacity: .7; white-space: nowrap; }
+.cf-img-ph { display: grid; place-items: center; background: repeating-linear-gradient(135deg, var(--cf-background-300) 0 10px, var(--cf-background-200) 10px 20px); color: var(--cf-text-tertiary); font: 11px var(--mono); border: 1px dashed var(--cf-border-200); text-align: center; padding: 6px; }
+/* Button: pill h38 (pad 6/12, 16/24 500) · CTA h50 (pad 12/24) · mobile h66 r12 (pad 20/24) */
+.cf-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 6px 12px; border-radius: 9999px; border: 1px solid var(--cf-border-100); background: transparent; color: var(--cf-foreground-100); font: 500 16px/24px var(--font); white-space: nowrap; cursor: pointer; text-decoration: none; transition: background-color .15s var(--ease), color .15s var(--ease), border-color .15s var(--ease), opacity .15s, transform .1s; }
+.cf-btn .ms { font-size: 18px; }
+.cf-btn:hover, .cf-btn.is-hover { opacity: .95; }
+.cf-btn:active, .cf-btn.is-active { transform: translateY(1px) scale(.98); opacity: .95; }
+.cf-btn:focus-visible, .cf-btn.is-focus { outline: none; border-color: var(--cf-ring); box-shadow: 0 0 0 3px color-mix(in srgb, var(--cf-ring) 50%, transparent); }
+.cf-btn.lg { padding: 12px 24px; }
+.cf-btn.block { width: 100%; border-radius: 12px; padding: 20px 24px; }
+.cf-btn.sm { font-size: 14px; line-height: 21px; padding: 8px 12px; font-weight: 600; }
+.cf-btn.v-fill:hover, .cf-btn.v-fill.is-hover, .cf-btn.v-fill:active, .cf-btn.v-fill.is-active { background: var(--cf-accent-100); border-color: var(--cf-accent-100); color: var(--cf-light-foreground); opacity: 1; }
+.cf-btn.v-soft:hover, .cf-btn.v-soft.is-hover { background: color-mix(in srgb, var(--cf-accent-100) 5%, transparent); border-color: var(--cf-accent-100); color: var(--cf-accent-100); opacity: 1; }
+.cf-btn.v-warn:hover, .cf-btn.v-warn.is-hover, .cf-btn.v-warn:active, .cf-btn.v-warn.is-active { border-color: color-mix(in srgb, var(--cf-accent-100) 40%, transparent); }
+.cf-btn.v-filter { border-color: transparent; color: color-mix(in srgb, var(--cf-foreground-100) 70%, transparent); }
+.cf-btn.v-filter:hover, .cf-btn.v-filter.is-hover, .cf-btn.v-filter:active, .cf-btn.v-filter.is-active { background: color-mix(in srgb, var(--cf-foreground-100) 5%, transparent); color: var(--cf-foreground-100); }
+.cf-btn.v-accent { background: var(--cf-accent-100); border-color: var(--cf-accent-100); color: var(--cf-light-foreground); }
+.cf-btn.v-accent:hover, .cf-btn.v-accent.is-hover, .cf-btn.v-accent:active, .cf-btn.v-accent.is-active { border-color: var(--cf-light-foreground); }
+.cf-btn.v-accent2 { background: var(--cf-accent-200); border-color: color-mix(in srgb, var(--cf-light-foreground) 10%, transparent); color: var(--cf-light-foreground); }
+.cf-btn.v-white { background: #fff; border-color: #fff; color: var(--cf-on-accent); }
+.cf-btn.v-white:hover, .cf-btn.v-white.is-hover, .cf-btn.v-white:active, .cf-btn.v-white.is-active { background: transparent; color: var(--cf-light-foreground); }
+.cf-btn.v-danger { border-color: color-mix(in srgb, var(--cf-security-100) 40%, transparent); color: var(--cf-security-100); font-weight: 400; }
+.cf-enter { display: inline-flex; align-items: center; gap: 8px; padding: 6px 6px 6px 12px; border-radius: 8px; border: 1px solid color-mix(in srgb, #fff 10%, transparent); background: var(--cf-accent-100); color: #fff; font: 400 16px/24px var(--font); cursor: pointer; }
+.cf-enter kbd { display: inline-grid; place-items: center; width: 22px; height: 20px; border-radius: 4px; background: color-mix(in srgb, #fff 20%, transparent); font: 12px var(--mono); }
+.cf-icon-btn { width: 38px; height: 38px; border-radius: 9999px; border: 1px solid var(--cf-border-100); background: transparent; color: var(--cf-foreground-100); display: inline-grid; place-items: center; cursor: pointer; padding: 0; }
+.cf-icon-btn.sq { width: 42px; height: 40px; border-radius: 12px; border: none; background: var(--cf-background-100); }
+.cf-quiet { display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--cf-border-100); background: var(--cf-background-100); color: var(--cf-foreground-100); font: 500 13px var(--font); cursor: pointer; }
+.cf-quiet:hover, .cf-quiet.is-hover { border-color: color-mix(in srgb, var(--cf-foreground-100) 30%, transparent); background: color-mix(in srgb, var(--cf-foreground-100) 5%, transparent); }
+.cf-link { color: var(--cf-foreground-100); text-decoration: none; font: 500 16px/19px var(--font); display: inline-flex; align-items: center; gap: 4px; cursor: pointer; border-radius: 2px; }
+.cf-link .ms { font-size: 18px; }
+.cf-link:hover, .cf-link.is-hover, .cf-link:active, .cf-link.is-active { color: var(--cf-accent-100); text-decoration: underline; }
+.cf-link:focus-visible, .cf-link.is-focus { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--cf-ring) 50%, transparent); }
+.cf-link.muted { color: color-mix(in srgb, var(--cf-foreground-100) 70%, transparent); font-weight: 400; font-size: 14px; }
+.cf-link.muted:hover, .cf-link.muted.is-hover { color: var(--cf-foreground-100); text-decoration: none; }
+/* điều hướng */
+.cf-navlink { display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; border-radius: 6px; font: 500 16px/24px var(--font); color: var(--cf-foreground-100); text-decoration: none; cursor: pointer; border: none; background: transparent; }
+.cf-navlink .ms { font-size: 16px; color: var(--cf-text-tertiary); }
+.cf-navlink.is-open { box-shadow: inset 0 0 0 1px var(--cf-border-100); }
+.cf-navlink.danger { color: var(--cf-security-100); font-weight: 400; padding: 6px 10px; }
+.cf-navlink.danger:hover, .cf-navlink.danger.is-hover { background: color-mix(in srgb, var(--cf-security-100) 10%, transparent); }
+.cf-header { display: flex; align-items: center; gap: 16px; height: 72px; padding: 0 20px; border-bottom: 1px dashed var(--cf-border-100); background: var(--cf-background-100); min-width: 1000px; }
+.cf-header nav { flex: 1; display: flex; justify-content: center; gap: 4px; }
+.cf-header .act { display: flex; align-items: center; gap: 4px; }
+.cf-header.mob { height: 54px; min-width: 0; padding: 0 8px 0 12px; }
+.cf-header.mob nav { justify-content: flex-end; }
+.cf-mega { background: var(--cf-background-100); border: 1px solid var(--cf-border-100); border-radius: 12px; overflow: hidden; min-width: 980px; }
+.cf-mega .cols { display: grid; grid-template-columns: repeat(6, 1fr); }
+.cf-mega .col { padding: 20px 12px; border-right: 1px solid var(--cf-border-100); display: flex; flex-direction: column; gap: 4px; }
+.cf-mega .col:last-child { border-right: none; }
+.cf-mega h6 { margin: 0 12px 12px; font: 400 13px/16px var(--font); color: var(--cf-text-secondary); }
+.cf-mega-item { display: block; padding: 8px 12px; border-radius: 6px; border: 1px solid transparent; text-decoration: none; color: var(--cf-text-tertiary); font-size: 14px; line-height: 20px; }
+.cf-mega-item b { display: block; font-weight: 500; color: var(--cf-foreground-100); }
+.cf-mega-item:hover, .cf-mega-item.is-hover { background: var(--cf-background-200); border-color: var(--cf-border-100); }
+.cf-mega-item:hover b, .cf-mega-item.is-hover b { color: var(--cf-accent-100); }
+.cf-mega-item:focus-visible, .cf-mega-item.is-focus { background: var(--cf-background-300); border-color: var(--cf-border-100); outline: 1px auto -webkit-focus-ring-color; }
+.cf-mega .foot { display: flex; align-items: center; gap: 28px; padding: 14px 20px; border-top: 1px solid var(--cf-border-100); font-size: 13px; }
+.cf-mega .foot .grow { flex: 1; }
+.cf-mega .foot a { color: var(--cf-text-secondary); text-decoration: none; font-weight: 500; }
+.cf-mega .foot a.acc { color: var(--cf-accent-100); }
+.cf-mmenu { display: flex; flex-direction: column; background: var(--cf-background-100); padding: 8px 16px 16px; }
+.cf-mmenu .row { display: flex; align-items: center; justify-content: space-between; height: 66px; border-bottom: 1px solid var(--cf-border-100); font-size: 20px; }
+.cf-mmenu .row:last-of-type { border-bottom: none; }
+.cf-mmenu .row .ms { color: var(--cf-text-tertiary); }
+.cf-mmenu .btns { display: flex; flex-direction: column; gap: 12px; margin-top: 24px; }
+.cf-seg { display: inline-flex; gap: 6px; flex-wrap: wrap; }
+.cf-tab { display: inline-flex; align-items: center; gap: 6px; padding: 6px 20px; border-radius: 9999px; border: 1px solid var(--cf-border-100); background: var(--cf-background-100); color: var(--cf-foreground-100); font: 500 14px/21px var(--font); cursor: pointer; transition: all .15s var(--ease); }
+.cf-tab .ms { font-size: 16px; }
+.cf-tab.dashed { border-style: dashed; background: transparent; padding: 6px 14px; }
+.cf-tab.soft { border-color: color-mix(in srgb, var(--cf-accent-100) 30%, transparent); padding: 6px 14px; }
+.cf-tab:hover, .cf-tab.is-hover, .cf-tab.is-on, .cf-tab[aria-selected="true"] { background: var(--cf-accent-100); border-color: var(--cf-accent-100); color: var(--cf-light-foreground); }
+.cf-tab:focus-visible, .cf-tab.is-focus { outline: none; border-color: var(--cf-ring); box-shadow: 0 0 0 3px color-mix(in srgb, var(--cf-ring) 50%, transparent); }
+.cf-tab.pause { padding: 3px 10px; font-size: 16px; background: color-mix(in srgb, var(--cf-background-100) 90%, transparent); }
+.cf-tab.pause:hover, .cf-tab.pause.is-hover, .cf-tab.pause.is-active { background: color-mix(in srgb, var(--cf-accent-200) 5%, transparent); color: var(--cf-accent-100); border-color: var(--cf-accent-100); }
+.cf-tab.pause.is-active { transform: translateY(1px) scale(.98); }
+.cf-subtab { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 4px; font: 500 13px/20px var(--font); color: var(--cf-text-secondary); background: transparent; border: none; cursor: pointer; }
+.cf-subtab.is-on, .cf-subtab[aria-selected="true"] { background: color-mix(in srgb, var(--cf-foreground-100) 12%, transparent); color: var(--cf-foreground-100); }
+.cf-subtab.lg { font-size: 14px; font-weight: 400; }
+.cf-logotab { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; min-width: 150px; height: 76px; padding: 16px 12px; color: var(--cf-text-secondary); border: none; background: transparent; cursor: pointer; font: 400 16px var(--font); }
+.cf-logotab:hover, .cf-logotab.is-hover { color: color-mix(in srgb, var(--cf-foreground-100) 80%, transparent); }
+.cf-logotab:hover .cf-logo-ph, .cf-logotab.is-hover .cf-logo-ph { background: var(--cf-background-100); }
+.cf-logotab.is-on { color: var(--cf-foreground-100); box-shadow: inset 0 -2px 0 var(--cf-accent-100); }
+.cf-footer { padding: 32px 32px 0; background: var(--cf-background-100); min-width: 900px; }
+.cf-footer .cols { display: grid; grid-template-columns: 140px repeat(4, 1fr); gap: 24px; }
+.cf-footer h6 { margin: 0 0 12px; font: 500 13px/13px var(--font); color: var(--cf-text-tertiary); }
+.cf-footer a { display: block; padding: 8px 0; font: 400 16px/16px var(--font); color: var(--cf-foreground-100); text-decoration: none; }
+.cf-footer .legal { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 32px; padding: 16px 0; border-top: 1px dashed var(--cf-border-100); font-size: 14px; line-height: 17.5px; color: var(--cf-text-tertiary); }
+.cf-footer .legal .grow { flex: 1; }
+.cf-footer .legal a { display: inline; padding: 0; font-size: 14px; color: var(--cf-text-tertiary); }
+.cf-footer .legal a.strong { color: var(--cf-foreground-100); font-weight: 500; }
+/* chứa nội dung */
+.cf-dots { background-image: radial-gradient(color-mix(in srgb, var(--cf-light-foreground) 22%, transparent) 1px, transparent 1.4px); background-size: 6px 6px; }
+.cf-hero { position: relative; border-radius: 16px; background: var(--cf-accent-100); color: var(--cf-light-foreground); overflow: hidden; padding: 64px 32px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 24px; }
+.cf-hero::after { content: ""; position: absolute; left: 20%; right: 20%; bottom: -120px; height: 220px; background: radial-gradient(closest-side, #fff6d6, color-mix(in srgb, #ffdd99 60%, transparent) 55%, transparent); pointer-events: none; }
+.cf-hero h1 { margin: 0; font: 500 56px/55.44px var(--font); letter-spacing: -1.4px; max-width: 18ch; text-wrap: balance; position: relative; }
+.cf-hero p { margin: 0; font: 400 19.2px/23.04px var(--font); letter-spacing: -.48px; max-width: 42ch; position: relative; }
+.cf-hero.mob { border-radius: 12px; padding: 24px 16px; gap: 20px; }
+.cf-hero.mob h1 { font-size: 40px; line-height: 39.6px; font-weight: 600; letter-spacing: -1px; }
+.cf-hero.mob p { font-size: 20.8px; line-height: 24.96px; letter-spacing: -.52px; }
+.cf-announce { display: inline-flex; align-items: center; gap: 12px; padding: 6px 6px 6px 16px; border-radius: 9999px; border: 1px solid color-mix(in srgb, #fff 50%, transparent); background: var(--cf-accent-100); color: #fff; font: 400 16px/24px var(--font); text-decoration: none; position: relative; cursor: pointer; }
+.cf-announce i { width: 28px; height: 28px; border-radius: 50%; background: #fff; color: var(--cf-accent-100); display: grid; place-items: center; font-style: normal; }
+.cf-announce:hover, .cf-announce.is-hover { border-color: color-mix(in srgb, #fff 70%, transparent); }
+.cf-announce.light { background: var(--cf-background-100); color: var(--cf-foreground-100); border-color: var(--cf-border-100); }
+.cf-announce.light:hover, .cf-announce.light.is-hover { background: color-mix(in srgb, var(--cf-accent-100) 5%, transparent); border-color: color-mix(in srgb, var(--cf-accent-100) 40%, transparent); }
+.cf-announce.light.is-active { background: color-mix(in srgb, var(--cf-foreground-100) 2%, transparent); }
+.cf-announce.light:focus-visible, .cf-announce.light.is-focus { outline: 1px auto -webkit-focus-ring-color; }
+.cf-frame { position: relative; border: 1px solid var(--cf-border-100); display: grid; grid-template-columns: repeat(3, 1fr); }
+.cf-frame::before, .cf-frame::after { content: ""; position: absolute; width: 7px; height: 7px; border: 1px solid var(--cf-border-200); border-radius: 50%; background: var(--cf-background-100); top: -4px; left: -4px; }
+.cf-frame::after { left: auto; right: -4px; }
+.cf-cell { padding: 32px; background: var(--cf-background-100); border-right: 1px solid var(--cf-border-100); display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.cf-cell:last-child { border-right: none; }
+.cf-cell .ms { font-size: 24px; margin-bottom: 18px; }
+.cf-cell h3 { margin: 0; padding: 8px 0 4px; font: 500 18px/21.6px var(--font); letter-spacing: -.45px; }
+.cf-cell p { margin: 0; font: 400 16px/19.2px var(--font); letter-spacing: -.04px; color: color-mix(in srgb, var(--cf-foreground-100) 70%, transparent); }
+.cf-bento { background: var(--cf-background-100); border: 1px solid var(--cf-border-100); border-radius: 4px; padding: 0 32px 32px; display: flex; flex-direction: column; justify-content: flex-end; min-height: 260px; gap: 6px; }
+.cf-bento h3 { margin: 0; font: 500 18px/21.6px var(--font); letter-spacing: -.45px; }
+.cf-bento p { margin: 0; color: color-mix(in srgb, var(--cf-foreground-100) 70%, transparent); line-height: 19.2px; }
+.cf-bento.orange { background: var(--cf-accent-100); border-color: var(--cf-accent-100); color: var(--cf-light-foreground); padding: 32px; justify-content: flex-start; }
+.cf-bento.orange p { color: var(--cf-light-foreground); }
+.cf-panel { background: var(--cf-background-200); border: 1px solid var(--cf-border-100); border-radius: 12px; padding: 32px 28px; }
+.cf-panel.round24 { border: none; border-radius: 24px; padding: 24px; }
+.cf-tier { display: grid; grid-template-columns: repeat(4, minmax(180px, 1fr)); border: 1px solid var(--cf-border-100); background: var(--cf-background-100); min-width: 760px; }
+.cf-tier > div { padding: 32px; border-right: 1px solid var(--cf-border-100); display: flex; flex-direction: column; gap: 4px; }
+.cf-tier > div:last-child { border-right: none; }
+.cf-tier h5 { margin: 0; font: 500 18px/21.6px var(--font); letter-spacing: -.45px; }
+.cf-tier .sub { color: var(--cf-text-secondary); font-size: 16px; line-height: 19px; }
+.cf-price { display: flex; align-items: baseline; gap: 6px; margin: 22px 0 2px; }
+.cf-price b { font: 500 32px/32px var(--font); letter-spacing: -.8px; }
+.cf-price span { font-size: 14px; color: var(--cf-text-secondary); }
+.cf-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 16px 0 24px; }
+.cf-chip { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 9999px; border: 1px solid var(--cf-border-100); font-size: 14px; line-height: 20px; color: var(--cf-text-secondary); }
+.cf-product { background: var(--cf-background-100); border-radius: 8px; box-shadow: 0 0 0 1px var(--cf-border-100); padding: 24px 32px; min-width: 520px; }
+.cf-product header { display: flex; align-items: flex-start; justify-content: space-between; }
+.cf-product h3 { margin: 0; font: 500 24px/28px var(--font); letter-spacing: -.6px; }
+.cf-product .sub { color: var(--cf-text-secondary); font-size: 14px; margin-top: 4px; }
+.cf-product table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; }
+.cf-product th { text-align: left; font-weight: 400; font-size: 13px; color: var(--cf-text-secondary); padding: 8px 0; border-bottom: 1px solid var(--cf-border-100); }
+.cf-product td { padding: 10px 0; border-bottom: 1px solid var(--cf-border-100); }
+.cf-product td:first-child::before { content: ""; display: inline-block; width: 10px; height: 10px; border: 1px dashed var(--cf-text-tertiary); border-radius: 50%; margin-right: 10px; vertical-align: -1px; }
+.cf-card-link { display: flex; flex-direction: column; gap: 8px; padding: 24px; border-radius: 12px; border: 1px solid var(--cf-border-100); background: var(--cf-background-100); color: var(--cf-foreground-100); text-decoration: none; transition: border-color .15s, box-shadow .15s; width: 280px; }
+.cf-card-link small { color: color-mix(in srgb, var(--cf-foreground-100) 70%, transparent); }
+.cf-card-link .more { color: var(--cf-accent-100); font-weight: 500; margin-top: 8px; }
+.cf-card-link:hover, .cf-card-link.is-hover { border-color: color-mix(in srgb, var(--cf-foreground-100) 20%, transparent); box-shadow: 0 4px 6px -1px rgb(0 0 0 / .1), 0 2px 4px -2px rgb(0 0 0 / .1); }
+.cf-card-link.plain { border-radius: 0; padding: 12px 16px; width: auto; }
+.cf-card-link.plain:hover, .cf-card-link.plain.is-hover, .cf-card-link.plain.is-active { border-color: var(--cf-foreground-100); box-shadow: none; }
+.cf-card-link.plain:focus-visible, .cf-card-link.plain.is-focus { outline: none; border-color: var(--cf-ring); box-shadow: 0 0 0 3px color-mix(in srgb, var(--cf-ring) 50%, transparent); }
+.cf-event { border: 1px solid var(--cf-border-100); border-radius: 8px; padding: 16px; background: var(--cf-background-100); width: 260px; display: flex; flex-direction: column; gap: 4px; }
+.cf-event small { color: var(--cf-text-secondary); }
+.cf-quote { font: 500 32px/32px var(--font); letter-spacing: -.8px; margin: 0; max-width: 24ch; }
+.cf-quote::before { content: "\201C"; display: block; color: var(--cf-accent-100); font-size: 56px; line-height: 40px; }
+.cf-stats { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--cf-border-100); min-width: 620px; }
+.cf-stats > div { padding: 24px; border-right: 1px solid var(--cf-border-100); }
+.cf-stats > div:last-child { border-right: none; }
+.cf-stats b { display: block; font: 500 32px/32px var(--font); letter-spacing: -.8px; }
+.cf-stats span { color: var(--cf-text-secondary); font-size: 14px; }
+.cf-region { display: inline-flex; align-items: center; justify-content: space-between; gap: 12px; min-width: 220px; padding: 10px 12px; border-radius: 8px; border: none; background: transparent; color: var(--cf-foreground-100); font: 400 16px var(--font); cursor: pointer; }
+.cf-region:hover, .cf-region.is-hover { background: color-mix(in srgb, var(--cf-foreground-100) 3%, transparent); }
+.cf-cta { position: relative; border-radius: 16px; background: var(--cf-accent-100); color: var(--cf-light-foreground); overflow: hidden; text-align: center; padding: 56px 24px 0; }
+.cf-cta h2 { margin: 0 0 16px; font: 500 48px/48px var(--font); letter-spacing: -1.2px; position: relative; }
+.cf-cta p { margin: 0 auto 28px; max-width: 56ch; position: relative; font-size: 17px; line-height: 21px; }
+.cf-cta .btns { display: flex; gap: 8px; justify-content: center; position: relative; margin-bottom: 44px; flex-wrap: wrap; }
+.cf-ticker { display: flex; gap: 40px; white-space: nowrap; padding: 14px 0; border-top: 1px solid color-mix(in srgb, #ffdd99 50%, transparent); font: 400 16px/16px var(--font); overflow: hidden; position: relative; }
+.cf-ticker span { display: inline-flex; align-items: center; gap: 8px; animation: tick 18s linear infinite; }
+@keyframes tick { to { transform: translateX(-50%); } }
+.cf-terminal { background: var(--cf-background-100); border: 1px solid color-mix(in srgb, var(--cf-foreground-100) 10%, transparent); border-radius: 10px; padding: 14px 16px; font: 13px/22px var(--mono); color: var(--cf-text-secondary); width: 100%; max-width: 440px; }
+.cf-terminal .hd { color: var(--cf-foreground-100); font-family: var(--font); font-size: 14px; margin-bottom: 6px; }
+.cf-terminal .ag { display: inline-block; padding: 0 6px; border-radius: 3px; background: var(--cf-multiplayer-orange-bg); color: var(--cf-foreground-100); }
+.cf-terminal .live { color: var(--cf-accent-100); font-family: var(--font); }
+.cf-terminal .live::before { content: "●"; margin-right: 6px; }
+.cf-terminal .prompt { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--cf-border-100); }
+.cf-sticky { display: inline-flex; flex-direction: column; gap: 2px; padding: 8px 12px; border-radius: 8px; background: var(--cf-background-200); border: 1px dashed var(--cf-border-100); font-size: 13px; line-height: 17px; max-width: 250px; color: var(--cf-text-secondary); }
+.cf-toast { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 12px; border: 1px solid color-mix(in srgb, #fff 20%, transparent); background: color-mix(in srgb, #010000 50%, transparent); color: #fff; font-size: 14px; }
+.cf-diagram { display: flex; flex-wrap: wrap; gap: 8px; align-items: stretch; }
+.cf-node { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; min-width: 80px; height: 62px; border-radius: 3px; background: color-mix(in srgb, #f2f2f2 15%, transparent); border: 1px dashed var(--cf-border-100); font-size: 13px; color: var(--cf-text-secondary); }
+.cf-node.hot { border-style: solid; border-color: color-mix(in srgb, var(--cf-accent-100) 50%, transparent); background: color-mix(in srgb, #010000 5%, transparent); }
+.cf-node.dash { border-color: color-mix(in srgb, var(--cf-accent-100) 50%, transparent); }
+.cf-meter { flex: 1 1 100%; display: flex; flex-direction: column; gap: 6px; padding: 16px; border: 1px dashed color-mix(in srgb, var(--cf-accent-100) 30%, transparent); border-radius: 4px; background: color-mix(in srgb, #010000 5%, transparent); font-size: 14px; }
+.cf-meter .bar { height: 8px; border-radius: 1px; background: color-mix(in srgb, #010000 15%, transparent); border: 1px dashed var(--cf-border-100); position: relative; overflow: hidden; }
+.cf-meter .bar i { position: absolute; inset: 0 60% 0 0; background: var(--cf-accent-200); }
+.cf-faq { width: 100%; border: 1px solid var(--cf-border-100); border-radius: 8px; background: var(--cf-background-100); }
+.cf-faq .q { display: grid; grid-template-columns: 1fr 1.3fr; gap: 24px; padding: 20px 24px; border-bottom: 1px solid var(--cf-border-100); }
+.cf-faq .q:last-child { border-bottom: none; }
+.cf-faq .q b { font-weight: 500; }
+.cf-faq .q span { color: var(--cf-text-secondary); font-size: 14px; line-height: 19px; }
+.cf-disc { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 12px 16px; border: none; background: transparent; color: var(--cf-foreground-100); font: 500 16px var(--font); cursor: pointer; }
+.cf-disc:hover, .cf-disc.is-hover { background: color-mix(in srgb, var(--cf-foreground-100) 2%, transparent); }
+.cf-disc-link { font: 400 14px var(--font); color: var(--cf-accent-100); text-decoration: none; border: 1px solid transparent; padding: 4px 8px; border-radius: 6px; }
+.cf-disc-link:hover, .cf-disc-link.is-hover, .cf-disc-link.is-active { text-decoration: underline; }
+.cf-disc-link:focus-visible, .cf-disc-link.is-focus { outline: none; border-color: var(--cf-ring); box-shadow: 0 0 0 3px color-mix(in srgb, var(--cf-ring) 50%, transparent); }
+.cf-modal { width: 420px; max-width: 100%; background: var(--cf-background-100); border-radius: 12px; box-shadow: 0 16px 40px -12px rgb(0 0 0 / .35), 0 0 0 1px var(--cf-border-100); padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.cf-modal header { display: flex; justify-content: space-between; align-items: center; font-weight: 500; }
+.cf-modal .empty { font-size: 13px; color: var(--cf-text-secondary); }
+.cf-scrim { background: color-mix(in srgb, #010000 95%, transparent); padding: 24px; border-radius: 8px; display: grid; place-items: center; width: 100%; }
+/* nhập liệu */
+.cf-field { display: flex; flex-direction: column; gap: 6px; min-width: 220px; flex: 1; }
+.cf-field label { font: 400 13px var(--font); color: var(--cf-text-secondary); }
+.cf-field label em { color: var(--cf-security-100); font-style: normal; }
+.cf-input { height: 40px; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--cf-border-100); background: var(--cf-background-100); color: var(--cf-foreground-100); font: 400 14px var(--font); width: 100%; transition: border-color .15s, box-shadow .15s; }
+textarea.cf-input { height: 96px; resize: vertical; }
+.cf-input::placeholder { color: var(--cf-text-tertiary); }
+.cf-input:focus, .cf-input.is-focus { outline: none; border-color: var(--cf-accent-100); box-shadow: 0 0 0 3px color-mix(in srgb, var(--cf-accent-100) 35%, transparent); }
+.cf-input.filter { border-radius: 6px; border-color: var(--cf-ring); font-size: 16px; padding-left: 34px; background: var(--cf-background-100) no-repeat 10px 50%; }
+.cf-input.filter:focus, .cf-input.filter.is-focus { box-shadow: 0 0 0 1px color-mix(in srgb, var(--cf-accent-100) 30%, transparent); }
+.cf-select { position: relative; }
+.cf-select::after { content: "expand_more"; font-family: "Material Symbols Outlined"; position: absolute; right: 10px; top: 50%; translate: 0 -50%; color: var(--cf-text-tertiary); pointer-events: none; }
+.cf-check { display: flex; align-items: center; gap: 10px; padding: 12px; border: 1px solid var(--cf-border-100); border-radius: 4px; background: var(--cf-background-200); font-size: 14px; }
+.cf-check i { width: 22px; height: 22px; border: 2px solid var(--cf-border-200); border-radius: 3px; background: var(--cf-background-100); }
+.cf-search { display: flex; align-items: center; gap: 8px; padding: 6px; border-radius: 14px; border: 1px solid var(--cf-border-100); background: var(--cf-background-100); width: 100%; max-width: 560px; box-shadow: 0 1px 2px rgb(0 0 0 / .04); }
+.cf-search input { flex: 1; min-width: 0; border: none; background: transparent; font: 400 14px var(--font); color: var(--cf-foreground-100); padding: 8px 10px; }
+.cf-search input:focus { outline: none; }
+.cf-search:focus-within, .cf-search.is-focus { box-shadow: 0 0 0 1px color-mix(in srgb, var(--cf-foreground-100) 50%, transparent); }
+.cf-code-chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 9999px; border: 1px solid var(--cf-border-100); background: color-mix(in srgb, #010000 50%, transparent); color: #fff; font: 500 14px var(--mono); letter-spacing: .02em; }
+/* phản hồi */
+.cf-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 22px; height: 22px; padding: 0 8px; border-radius: 9999px; font: 500 12px var(--font); background: color-mix(in srgb, #000 8%, transparent); color: var(--cf-foreground-100); }
+.cf-badge.p0 { background: color-mix(in srgb, #ed1641 10%, transparent); color: #ed1641; font-size: 14px; font-weight: 400; }
+.cf-badge.dot { min-width: 10px; width: 10px; height: 10px; padding: 0; background: var(--cf-accent-100); }
+.cf-badge.ring { min-width: 12px; width: 12px; height: 12px; padding: 0; background: #fff; border: 1px solid var(--cf-border-100); }
+.cf-eyebrow { display: inline-flex; align-items: center; padding: 1px 6px; background: var(--cf-accent-100); color: #fff; font: 400 11px/14px var(--mono); text-transform: uppercase; letter-spacing: .04em; }
+.cf-eyebrow.inv { background: #fff; color: var(--cf-accent-100); font-size: 10px; }
+.cf-status { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; font: 400 12px var(--mono); text-transform: uppercase; color: var(--cf-text-secondary); border: 1px dashed var(--cf-border-100); background: var(--cf-background-100); }
+.cf-status .ms { color: var(--cf-multiplayer-yellow); font-size: 16px; }
+.cf-banner { display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; border-radius: 8px; font-size: 14px; line-height: 20px; width: 100%; }
+.cf-banner .ms { font-size: 18px; }
+.cf-banner.info { background: var(--cf-kumo-info-tint); color: var(--cf-kumo-text-info); }
+.cf-banner.success { background: var(--cf-kumo-success-tint); color: var(--cf-kumo-text-success); }
+.cf-banner.warning { background: var(--cf-kumo-warning-tint); color: var(--cf-kumo-text-warning); }
+.cf-banner.danger { background: var(--cf-kumo-danger-tint); color: var(--cf-kumo-text-danger); }
+.cf-kbadge { display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 9999px; color: #fff; font: 500 12px var(--font); }
+.cf-cat { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px; font: 500 13px var(--font); }
+/* focus mặc định của trình duyệt (outline:auto) */
+.ua-focus { outline: 1px auto -webkit-focus-ring-color; outline: 1px auto Highlight; outline-offset: 0; }
+
+/* ================= CMS cũ: lg-* (chỉ dùng --lg-*) ================= */
+.lg { font-family: var(--font-lg); color: var(--lg-ink); color-scheme: light; }
+.lg-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 40px; padding: 0 16px; border-radius: 8px; border: 1px solid transparent; font: 400 16px var(--font-lg); cursor: pointer; text-decoration: none; transition: background-color .15s, color .15s, border-color .15s; }
+.lg-btn.sm { height: 34px; font-size: 14px; font-weight: 500; padding: 0 12px; }
+.lg-btn.filled { background: var(--lg-orange); color: var(--lg-ink); border-color: var(--lg-ink); }
+.lg-btn.filled.plain { border-color: transparent; }
+.lg-btn.filled:hover, .lg-btn.filled.is-hover { background: var(--lg-navy-hover); color: #fefefe; border-color: #fefefe; }
+.lg-btn.filled:active, .lg-btn.filled.is-active { background: var(--lg-navy); color: #fff; border-color: #fff; }
+.lg-btn.filled:focus-visible, .lg-btn.filled.is-focus { background: var(--lg-focus-bg); outline: 1px auto var(--lg-ua); }
+.lg-btn.outline { background: transparent; color: var(--lg-ink); border-color: var(--lg-orange); }
+.lg-btn.outline:hover, .lg-btn.outline.is-hover, .lg-btn.outline:active, .lg-btn.outline.is-active { border-color: var(--lg-navy-hover); }
+.lg-btn.outline:focus-visible, .lg-btn.outline.is-focus { border-color: var(--lg-focus-bg); outline: 1px auto var(--lg-ua); }
+.lg-btn.white { background: #fff; color: var(--lg-black); border-color: var(--lg-black); }
+.lg-btn.white:hover, .lg-btn.white.is-hover { background: var(--lg-navy-hover); color: #fcfcfc; border-color: #fcfcfc; }
+.lg-btn.white:active, .lg-btn.white.is-active { background: var(--lg-navy); color: #fff; }
+.lg-btn.white:focus-visible, .lg-btn.white.is-focus { background: #f4f3f6; outline: 1px auto var(--lg-ua); }
+/* biến thể Galileo/Athenian: hover cam nhạt, nhấn có viền trong 3px, focus vòng 8px */
+.lg-btn.gl.filled { border-color: transparent; }
+.lg-btn.gl.filled:hover, .lg-btn.gl.filled.is-hover { background: var(--lg-orange-2); color: var(--lg-ink); border-color: transparent; }
+.lg-btn.gl.filled:active, .lg-btn.gl.filled.is-active { background: color-mix(in srgb, var(--lg-orange-2) 10%, transparent); color: var(--lg-ink); box-shadow: inset 0 0 0 3px rgb(255 255 255 / .3); }
+.lg-btn.gl:focus-visible, .lg-btn.gl.is-focus { background: var(--lg-orange); box-shadow: 0 0 0 8px color-mix(in srgb, var(--lg-orange) 30%, transparent), inset 0 0 0 3px rgb(255 255 255 / .3); outline: 1px auto var(--lg-ring-ua); }
+.lg-btn.gl.outline:hover, .lg-btn.gl.outline.is-hover { background: var(--lg-outline-hover); border-color: var(--lg-orange); }
+.lg-btn.gl.outline:active, .lg-btn.gl.outline.is-active { background: var(--lg-outline-hover); box-shadow: inset 0 0 0 3px var(--lg-orange); border-color: var(--lg-orange); }
+.lg-btn.gl.outline:focus-visible, .lg-btn.gl.outline.is-focus { background: transparent; }
+.lg-btn.gl.white { border-color: transparent; color: var(--lg-ink); font-size: 14px; font-weight: 500; }
+.lg-btn.gl.white:hover, .lg-btn.gl.white.is-hover { background: var(--lg-white-hover); color: var(--lg-ink); }
+.lg-btn.gl.white:active, .lg-btn.gl.white.is-active { background: var(--lg-white-hover); color: var(--lg-ink); box-shadow: inset 0 0 0 3px var(--lg-orange); }
+.lg-btn.gl.white:focus-visible, .lg-btn.gl.white.is-focus { background: #fff; box-shadow: 0 0 0 8px rgb(0 0 0 / .2), inset 0 0 0 3px rgb(255 255 255 / .3); }
+.lg-link { color: var(--lg-link); text-decoration: none; font: 400 16px var(--font-lg); cursor: pointer; display: inline-flex; align-items: center; gap: 4px; }
+.lg-link:hover, .lg-link.is-hover { color: var(--lg-link-hover); }
+.lg-link.arrow { color: var(--lg-ink); font-size: 14px; }
+.lg-link.arrow::after { content: "›"; color: var(--lg-orange); font-size: 18px; }
+.lg-link.under { color: var(--lg-black); padding-bottom: 2px; border-bottom: 1px solid currentColor; }
+.lg-link.under:active, .lg-link.under.is-active { color: var(--lg-field-hover); }
+.lg-link.pill { color: var(--lg-ink); padding: 6px 10px; border-radius: 6px; font-size: 14px; font-weight: 500; }
+.lg-link.pill:hover, .lg-link.pill.is-hover { background: var(--lg-panel); color: var(--lg-ink); }
+.lg-link.press { color: var(--lg-pressed-ink); font-size: 14px; }
+.lg-link.press:active, .lg-link.press.is-active { background: var(--lg-pressed); }
+.lg-header { background: #fff; border-bottom: 1px solid var(--lg-line); min-width: 900px; }
+.lg-header .util { display: flex; justify-content: flex-end; gap: 18px; padding: 6px 20px 0; font-size: 12px; }
+.lg-header .main { display: flex; align-items: center; gap: 22px; height: 56px; padding: 0 20px; font-size: 14px; }
+.lg-header .main .grow { flex: 1; }
+.lg-header .navi { padding: 6px 8px; border-radius: 4px; color: var(--lg-ink); text-decoration: none; font-weight: 500; }
+.lg-header .navi:hover, .lg-header .navi.is-hover { background: #fff; box-shadow: inset 0 -2px 0 var(--lg-orange); }
+.lg-header .navi.is-focus { outline: 3px solid var(--lg-black); }
+.lg-subnav { display: flex; gap: 22px; align-items: center; padding: 10px 0; font-size: 13px; border-bottom: 1px solid var(--lg-line); }
+.lg-subnav a { color: var(--lg-ink); text-decoration: none; padding-bottom: 8px; margin-bottom: -11px; border-bottom: 2px solid transparent; }
+.lg-subnav a.is-on { border-color: var(--lg-orange); font-weight: 600; }
+.lg-subnav b { padding-right: 18px; border-right: 1px solid var(--lg-line); }
+.lg-card { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgb(0 0 0 / .08), 0 0 0 1px rgb(0 0 0 / .04); overflow: hidden; width: 230px; display: flex; flex-direction: column; }
+.lg-card .img { height: 120px; }
+.lg-card .bd { padding: 16px 16px 20px; display: flex; flex-direction: column; gap: 6px; font-size: 14px; }
+.lg-card .bd b { font-size: 16px; font-weight: 600; }
+.lg-card:focus-visible, .lg-card.is-focus { outline: 1px auto var(--lg-ua); }
+.lg-case { border: 1px solid var(--lg-case-line); border-radius: 8px; padding: 20px; width: 230px; font-size: 14px; line-height: 20px; display: flex; flex-direction: column; gap: 8px; background: #fff; }
+.lg-case b { font-size: 16px; font-weight: 600; }
+.lg-stat { background: var(--lg-panel); border-radius: 8px; padding: 20px; width: 230px; }
+.lg-stat b { display: block; font: 700 48px/1 var(--font-lg); color: var(--lg-orange); }
+.lg-stat span { font-weight: 600; font-size: 14px; }
+.lg-panel { background: var(--lg-panel); border-radius: 0 0 8px 8px; padding: 24px; min-width: 260px; font-size: 14px; display: flex; flex-direction: column; gap: 6px; }
+.lg-panel h6 { margin: 0 0 6px; font: 600 12px var(--font-lg); text-transform: uppercase; letter-spacing: .06em; color: #555; }
+.lg-acc { width: 100%; background: #fff; }
+.lg-acc button { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 16px 12px; border: none; border-bottom: 1px solid var(--lg-line); background: transparent; font: 400 16px var(--font-lg); color: var(--lg-ink); cursor: pointer; text-align: left; }
+.lg-acc button:hover, .lg-acc button.is-hover { background: var(--lg-panel); }
+.lg-input { height: 40px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--lg-field); background: #fff; font: 400 14px var(--font-lg); color: var(--lg-black); width: 100%; }
+.lg-input:hover, .lg-input.is-hover { border-color: var(--lg-field-hover); }
+.lg-input:focus, .lg-input.is-focus { outline: 1px auto var(--lg-ua); box-shadow: 0 0 0 4px color-mix(in srgb, var(--lg-orange-2) 30%, transparent); }
+.lg-tag { display: inline-flex; align-items: center; padding: 2px 8px; border: 1px solid #747474; font: 400 14px var(--font-lg); }
+.lg-footer { background: var(--lg-navy); color: #fff; padding: 28px; min-width: 760px; }
+.lg-footer .cols { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.lg-footer h6 { margin: 0 0 10px; font: 500 14px var(--font-lg); text-transform: uppercase; letter-spacing: .04em; }
+.lg-footer a { display: block; color: #fff; text-decoration: none; font-size: 14px; padding: 3px 0; opacity: .9; }
+.lg-footer .legal { display: flex; gap: 16px; margin-top: 24px; padding-top: 14px; border-top: 1px solid rgb(255 255 255 / .15); font-size: 12px; }
+.lg-skip { display: inline-block; padding: 6px 10px; border: 1px solid var(--lg-black); background: #fff; color: var(--lg-link); font: 400 14px var(--font-lg); }
+.lg-skip:hover, .lg-skip.is-hover, .lg-skip.is-active { color: var(--lg-link-hover); }
+.lg-hero { background: linear-gradient(120deg, #3b0a45, #c0392b 60%, #ff6633); color: #fff; padding: 36px 32px; border-radius: 0; }
+.lg-hero h3 { margin: 0 0 8px; font: 600 32px/1.15 var(--font-lg); max-width: 18ch; }
+
+/* ================= Connect 2026: cn-* (chỉ dùng --cn-*) ================= */
+.cn { font-family: var(--font-cn); color: var(--cn-ink); color-scheme: light; }
+.cn-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 36px; padding: 0 16px; border-radius: 9999px; border: 1px solid transparent; font: 400 14px var(--font-cn); cursor: pointer; text-decoration: none; }
+.cn-btn.ink { background: var(--cn-ink); color: #fff; }
+.cn-btn.orange { background: var(--cn-orange); color: #fff; }
+.cn-btn.accent { background: var(--cn-accent); color: #fff; border-color: color-mix(in srgb, var(--cn-cream) 25%, transparent); }
+.cn-btn.accent2 { background: var(--cn-accent-2); color: #fff; border-color: color-mix(in srgb, var(--cn-cream) 10%, transparent); }
+.cn-btn.team { border-radius: 8px; background: var(--cn-accent); color: #fff; font-weight: 300; border-color: color-mix(in srgb, var(--cn-cream) 25%, transparent); }
+.cn-btn.ghost { background: #fff; color: var(--cn-ink); border-color: var(--cn-line); }
+.cn-nav { display: flex; align-items: center; gap: 22px; height: 60px; padding: 0 20px; background: var(--cn-accent); color: #fff; font-size: 14px; min-width: 820px; }
+.cn-nav .grow { flex: 1; }
+.cn-nav a { color: #fff; text-decoration: none; }
+.cn-pillnav { display: inline-flex; align-items: center; gap: 4px; padding: 4px 12px; border-radius: 9999px; border: 1px solid color-mix(in srgb, #fff 40%, transparent); font-size: 14px; }
+.cn-feature { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--cn-line); background: var(--cn-card); min-width: 640px; }
+.cn-feature > div { padding: 24px; display: flex; flex-direction: column; gap: 8px; font-size: 14px; line-height: 19px; color: #555; }
+.cn-feature b { color: var(--cn-ink); font-weight: 500; font-size: 15px; }
+.cn-feature .ms { color: var(--cn-accent); }
+.cn-speaker { width: 180px; display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: #555; }
+.cn-speaker .img { height: 180px; }
+.cn-speaker b { color: var(--cn-ink); font-weight: 500; font-size: 15px; }
+.cn-stat b { display: block; font: 400 40px/1 var(--font-cn); color: var(--cn-accent); }
+.cn-stat span { font: 400 11px var(--mono); text-transform: uppercase; letter-spacing: .06em; color: #555; }
+.cn-pass { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--cn-line); background: #fff; min-width: 720px; }
+.cn-pass > div { padding: 24px; display: flex; flex-direction: column; gap: 10px; font-size: 14px; border-right: 1px solid var(--cn-line); }
+.cn-pass > div:last-child { border-right: none; }
+.cn-pass .lbl { font: 400 11px var(--mono); text-transform: uppercase; letter-spacing: .06em; opacity: .7; }
+.cn-pass b { font: 400 40px/1 var(--font-cn); }
+.cn-pass .hot { background: var(--cn-accent); color: #fff; }
+.cn-agenda { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; min-width: 700px; }
+.cn-agenda h5 { margin: 0 0 8px; font: 400 26px var(--font-cn); color: var(--cn-accent); }
+.cn-agenda li { list-style: none; padding: 8px 0; border-top: 1px solid var(--cn-line); font-size: 14px; }
+.cn-agenda ul { margin: 0; padding: 0; }
+.cn-agenda time { display: block; font: 400 11px var(--mono); color: #777; }
+.cn-agenda time::before { content: "●"; color: var(--cn-accent); margin-right: 6px; }
+.cn-chip { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 9999px; border: 1px solid var(--cn-line); font-size: 12px; color: var(--cn-accent); background: #fff; }
+.cn-sponsor { background: var(--cn-sponsor); border: 1px solid var(--cn-sponsor-line); border-radius: 10px; padding: 20px; min-width: 260px; }
+
+/* ================= màn mẫu ================= */
+.screens-wrap { overflow-x: auto; padding: 8px 0 4px; }
+.screens { display: flex; gap: 32px; width: max-content; align-items: flex-start; }
+.phone { width: 390px; height: 844px; border-radius: 44px; box-shadow: 0 0 0 10px var(--cf-foreground-100); background: var(--cf-background-100); position: relative; overflow: hidden; margin: 12px; zoom: .62; display: flex; flex-direction: column; }
+.phone .scroll { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+.phone .pad { padding: 0 4px; }
+.desk { width: 1440px; height: 900px; border-radius: 14px; box-shadow: 0 0 0 10px var(--cf-foreground-100); background: var(--cf-background-100); overflow: hidden; margin: 12px; zoom: .5; position: relative; }
+.desk .cf-header { min-width: 0; }
+.desk .megawrap { position: absolute; left: 44px; right: 44px; top: 64px; z-index: 2; }
+.cap { font: 12px var(--mono); color: var(--cf-text-secondary); margin: 6px 12px 0; max-width: 262px; }
+.desk + .cap { max-width: 740px; }
+
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; transition: all .25s var(--ease); z-index: 20; padding: 10px 16px; border-radius: 9999px; background: var(--cf-foreground-100); color: var(--cf-background-100); font-size: 14px; }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; }
+  .side { display: none; }
+  main { padding: 0 16px 80px; }
+  .grid { grid-template-columns: 1fr; }
+  .intro h1 { font-size: 36px; line-height: 38px; }
+  .type-row { grid-template-columns: 1fr; gap: 2px; }
+  .cf-frame { grid-template-columns: 1fr; }
+  .cf-cell { border-right: none; border-bottom: 1px solid var(--cf-border-100); }
+  .cf-faq .q { grid-template-columns: 1fr; gap: 6px; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <nav class="side" aria-label="Mục lục">
+    <div class="brand"><div class="brand-mark"><span class="ms">cloud</span></div><div><b>Cloudflare UI Kit</b><small>www · CMS cũ · Connect</small></div></div>
+    <h6>Nền tảng</h6>
+    <a href="#color"><span class="ms">palette</span>Màu</a>
+    <a href="#type"><span class="ms">text_fields</span>Chữ</a>
+    <a href="#shape"><span class="ms">rounded_corner</span>Bo góc</a>
+    <a href="#layout"><span class="ms">straighten</span>Bố cục &amp; kích thước</a>
+    <h6>Thành phần · www</h6>
+    <a href="#actions"><span class="ms">touch_app</span>Hành động</a>
+    <a href="#navigation"><span class="ms">explore</span>Điều hướng</a>
+    <a href="#containment"><span class="ms">web_asset</span>Chứa nội dung</a>
+    <a href="#inputs"><span class="ms">input</span>Nhập liệu</a>
+    <a href="#feedback"><span class="ms">notifications</span>Phản hồi</a>
+    <h6>Họ khác</h6>
+    <a href="#legacy"><span class="ms">history</span>CMS cũ</a>
+    <a href="#connect"><span class="ms">event</span>Connect 2026</a>
+    <h6>Mẫu</h6>
+    <a href="#screens"><span class="ms">devices</span>Màn hình mẫu</a>
+  </nav>
+
+  <main>
+    <div class="bar" role="toolbar" aria-label="Chủ đề">
+      <div class="ctl"><span>Chế độ</span><div class="seg" id="mode">
+        <button data-v="light" aria-pressed="true"><span class="ms">light_mode</span>Sáng</button>
+        <button data-v="dark" aria-pressed="false"><span class="ms">dark_mode</span>Tối</button></div></div>
+      <div class="grow"></div>
+      <button class="copy" id="copy-tokens"><span class="ms">data_object</span>Copy CSS token</button>
+    </div>
+
+    <div class="intro">
+      <div class="eyebrow">www.cloudflare.com :root · html.dark · [data-mode=dark] → docs/cloudflare-ui-kit.html</div>
+      <h1>Hệ giao diện của cloudflare.com</h1>
+      <p>Màu lấy từ CSS var thật của site. Script Playwright đọc cả khối <code>:root</code>, <code>html.dark</code> và bộ Kumo <code>[data-mode="dark"]</code>, rồi đổi <code>oklch()</code>/<code>oklab()</code> sang hex. Số đo lấy từ <code>getComputedStyle</code>. Danh mục thành phần đến từ vòng quét 32 trang, gom được 559 pattern và 266 trạng thái hover/focus/active/selected ép qua CDP.</p>
+      <p>Site đang chạy ba họ thiết kế: trang <b>www</b> mới (FT Kunst Grotesk, cam <code>#ff5e1f</code>, nút pill), các trang <b>CMS cũ</b> (font hệ thống, nút <code>#ff6633</code> bo 8, footer navy), và microsite <b>Connect 2026</b>. Muốn dùng lại thì dán khối token (nút Copy CSS token) cùng CSS <code>.cf-*</code> là chạy được.</p>
+      <div class="facts"><span class="fact">header 72 · mobile 54</span><span class="fact">container 1200</span><span class="fact">hero inset 8 · r 16 · h 760</span><span class="fact">mobile hero inset 4 · r 12</span><span class="fact">cell pad 32</span><span class="fact">tracking −0.025em</span><span class="fact">pill r 9999 · h 38 / 50 / 66</span></div>
+    </div>
+
+    <!-- ================= NỀN TẢNG ================= -->
+    <section class="block" id="color">
+      <header><h2>Màu</h2><p>Mỗi vai trò giữ đúng tên biến trên site. Bấm một ô để copy hex; ô đổi theo nút Sáng/Tối. Nhóm Kumo là design system dùng chung của Cloudflare, nạp trên www (<code>--color-kumo-brand</code> bị www ghi đè thành cam). Nhóm CMS cũ và Connect là hằng số đo từ phần tử, vì hai họ này không có token.</p></header>
+      <div id="roles"></div>
+    </section>
+
+    <section class="block" id="type">
+      <header><h2>Chữ</h2><p>Thang <code>--type-*</code> khai trong <code>:root</code> của site (cỡ mobile → <code>md</code>). Chữ thật là FT Kunst Grotesk và Apercu Mono Pro, hai font thương mại nên kit thay bằng Inter Tight và JetBrains Mono. Bảng thứ hai là mọi kiểu chữ vòng quét đo được trên từng họ.</p></header>
+      <div class="spec"><div class="stage col" id="typescale"></div></div>
+      <div class="role-group">Chữ thực dùng · www</div>
+      <div class="spec"><div class="stage col"><div class="type-row" data-sig="e83b71247c"><span class="meta">heading ×1</span><span class="t" style="font-family:var(--font);font-size:72px;font-weight:500;letter-spacing:-5.184px;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">115px · 500 · ls -5.184px · FT Kunst Grotesk</span></div>
+<div class="type-row" data-sig="73e3f507bd"><span class="meta">heading ×1</span><span class="t" style="font-family:var(--font);font-size:56px;font-weight:600;letter-spacing:-1.4px;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">56px · 600 · ls -1.4px · FT Kunst Grotesk</span></div>
+<div class="type-row" data-sig="1bc8a9caef f8a17a21c1"><span class="meta">heading ×2</span><span class="t" style="font-family:var(--font);font-size:56px;font-weight:500;letter-spacing:-1.4px;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">56px · 500 · ls -1.4px · FT Kunst Grotesk</span></div>
+<div class="type-row" data-sig="faa246513a a9ff55e99a"><span class="meta">heading ×2</span><span class="t" style="font-family:var(--font);font-size:48px;font-weight:500;letter-spacing:-1.2px;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">48px · 500 · ls -1.2px · FT Kunst Grotesk</span></div>
+<div class="type-row" data-sig="8a79b63bf0 72ab47e4b8"><span class="meta">heading ×2</span><span class="t" style="font-family:var(--font);font-size:32px;font-weight:500;letter-spacing:-0.8px;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">32px · 500 · ls -0.8px · FT Kunst Grotesk</span></div>
+<div class="type-row" data-sig="c1994dc93f"><span class="meta">heading ×1</span><span class="t" style="font-family:var(--font);font-size:29px;font-weight:500;letter-spacing:-0.736px;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">29px · 500 · ls -0.736px · FT Kunst Grotesk</span></div>
+<div class="type-row" data-sig="b22279775b a5f6b57997 8a2656b22f 81ff380052 856f6de62b 18ba4ba4d7"><span class="meta">heading · text ×6</span><span class="t" style="font-family:var(--font);font-size:19px;font-weight:400;letter-spacing:-0.48px;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">19px · 400 · ls -0.48px · FT Kunst Grotesk</span></div>
+<div class="type-row" data-sig="bc2de2cd8e"><span class="meta">heading ×1</span><span class="t" style="font-family:var(--font);font-size:18px;font-weight:600;letter-spacing:-0.45px;text-transform:uppercase">Kết nối nhanh và an toàn</span><span class="meta">18px · 600 · ls -0.45px · uppercase · FT Kunst Grotesk</span></div>
+<div class="type-row" data-sig="a6a36549fd 3f8bb7ff44 2eaacaf6b7 2055062198"><span class="meta">heading · text ×4</span><span class="t" style="font-family:var(--font);font-size:18px;font-weight:500;letter-spacing:-0.45px;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">18px · 500 · ls -0.45px · FT Kunst Grotesk</span></div>
+<div class="type-row" data-sig="e4263bb95d"><span class="meta">text ×1</span><span class="t" style="font-family:var(--font);font-size:18px;font-weight:400;letter-spacing:-0.045px;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">18px · 400 · ls -0.045px · FT Kunst Grotesk</span></div>
+<div class="type-row" data-sig="a2eea756c9"><span class="meta">quote ×1</span><span class="t" style="font-family:var(--font);font-size:16px;font-weight:400;letter-spacing:normal;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">16px · 400 · ls normal · FT Kunst Grotesk</span></div>
+<div class="type-row" data-sig="40ec04b6f3 12bca4638b 1e249d81ff affcb102e8 1915329bb9 e38fb48792"><span class="meta">text ×6</span><span class="t" style="font-family:var(--font);font-size:16px;font-weight:400;letter-spacing:-0.04px;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">16px · 400 · ls -0.04px · FT Kunst Grotesk</span></div></div></div>
+      <div class="role-group">Chữ thực dùng · CMS cũ (font hệ thống / Inter)</div>
+      <div class="spec"><div class="stage col lg"><div class="type-row" data-sig="c565390448"><span class="meta">heading ×1</span><span class="t" style="font-family:var(--font-lg);font-size:60px;font-weight:600;letter-spacing:normal;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">60px · 600 · ls normal · Inter</span></div>
+<div class="type-row" data-sig="9f66702f16"><span class="meta">text ×1</span><span class="t" style="font-family:var(--font-lg);font-size:48px;font-weight:700;letter-spacing:normal;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">48px · 700 · ls normal · Inter</span></div>
+<div class="type-row" data-sig="67c79c2470 8438490fcf"><span class="meta">heading ×2</span><span class="t" style="font-family:var(--font-lg);font-size:48px;font-weight:600;letter-spacing:normal;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">48px · 600 · ls normal · Inter</span></div>
+<div class="type-row" data-sig="1e4b536e83 184a0f8474 4a2ae7c06f"><span class="meta">heading ×3</span><span class="t" style="font-family:var(--font-lg);font-size:48px;font-weight:600;letter-spacing:normal;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">48px · 600 · ls normal · -apple-system</span></div>
+<div class="type-row" data-sig="a1d31bc3bb"><span class="meta">heading ×1</span><span class="t" style="font-family:var(--font-lg);font-size:40px;font-weight:600;letter-spacing:normal;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">40px · 600 · ls normal · -apple-system</span></div>
+<div class="type-row" data-sig="a2eca6f6f9"><span class="meta">heading ×1</span><span class="t" style="font-family:var(--font-lg);font-size:36px;font-weight:600;letter-spacing:normal;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">36px · 600 · ls normal · Inter</span></div>
+<div class="type-row" data-sig="417eef4706 4337fb3f4f 13b1b37d08"><span class="meta">heading · text ×3</span><span class="t" style="font-family:var(--font-lg);font-size:32px;font-weight:600;letter-spacing:normal;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">32px · 600 · ls normal · -apple-system</span></div>
+<div class="type-row" data-sig="92b46f8e0d"><span class="meta">heading ×1</span><span class="t" style="font-family:var(--font-lg);font-size:24px;font-weight:600;letter-spacing:normal;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">24px · 600 · ls normal · -apple-system</span></div>
+<div class="type-row" data-sig="097d1a8cb3"><span class="meta">heading ×1</span><span class="t" style="font-family:var(--font-lg);font-size:24px;font-weight:600;letter-spacing:normal;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">24px · 600 · ls normal · Inter</span></div>
+<div class="type-row" data-sig="c036312bf2"><span class="meta">heading ×1</span><span class="t" style="font-family:var(--font-lg);font-size:24px;font-weight:400;letter-spacing:normal;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">24px · 400 · ls normal · -apple-system</span></div>
+<div class="type-row" data-sig="c76c27d631 03020d6d16"><span class="meta">heading ×2</span><span class="t" style="font-family:var(--font-lg);font-size:18px;font-weight:600;letter-spacing:normal;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">18px · 600 · ls normal · -apple-system</span></div>
+<div class="type-row" data-sig="19dc45b4e9"><span class="meta">heading ×1</span><span class="t" style="font-family:var(--font-lg);font-size:18px;font-weight:600;letter-spacing:normal;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">18px · 600 · ls normal · Inter</span></div>
+<div class="type-row" data-sig="35554f6f20"><span class="meta">text ×1</span><span class="t" style="font-family:var(--font-lg);font-size:18px;font-weight:400;letter-spacing:normal;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">18px · 400 · ls normal · -apple-system</span></div>
+<div class="type-row" data-sig="9ab310803a"><span class="meta">text ×1</span><span class="t" style="font-family:var(--font-lg);font-size:16px;font-weight:600;letter-spacing:normal;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">16px · 600 · ls normal · Inter</span></div>
+<div class="type-row" data-sig="ff3f7cdfcc"><span class="meta">heading ×1</span><span class="t" style="font-family:var(--font-lg);font-size:16px;font-weight:510;letter-spacing:normal;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">16px · 510 · ls normal · Inter</span></div>
+<div class="type-row" data-sig="a6bc1d0e53"><span class="meta">text ×1</span><span class="t" style="font-family:var(--font-lg);font-size:16px;font-weight:500;letter-spacing:normal;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">16px · 500 · ls normal · -apple-system</span></div>
+<div class="type-row" data-sig="7f9e88a92c 6875e12976 e4be8db7b1"><span class="meta">heading · text ×3</span><span class="t" style="font-family:var(--font-lg);font-size:16px;font-weight:400;letter-spacing:normal;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">16px · 400 · ls normal · Inter</span></div>
+<div class="type-row" data-sig="041ddaa768 c1ca0f8619 7af135a2a1"><span class="meta">text ×3</span><span class="t" style="font-family:var(--font-lg);font-size:16px;font-weight:400;letter-spacing:normal;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">16px · 400 · ls normal · -apple-system</span></div>
+<div class="type-row" data-sig="2044637623 94ace712d3"><span class="meta">text ×2</span><span class="t" style="font-family:var(--font-lg);font-size:14px;font-weight:600;letter-spacing:normal;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">14px · 600 · ls normal · ui-sans-serif</span></div>
+<div class="type-row" data-sig="726808c648"><span class="meta">text ×1</span><span class="t" style="font-family:var(--font-lg);font-size:14px;font-weight:500;letter-spacing:normal;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">14px · 500 · ls normal · -apple-system</span></div>
+<div class="type-row" data-sig="4b2980b26e"><span class="meta">text ×1</span><span class="t" style="font-family:var(--font-lg);font-size:14px;font-weight:400;letter-spacing:normal;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">14px · 400 · ls normal · -apple-system</span></div>
+<div class="type-row" data-sig="0fb4c7219b"><span class="meta">text ×1</span><span class="t" style="font-family:var(--font-lg);font-size:12px;font-weight:400;letter-spacing:normal;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">12px · 400 · ls normal · -apple-system</span></div></div></div>
+      <div class="role-group">Chữ thực dùng · Connect 2026 (STK Bureau Sans → Instrument Sans)</div>
+      <div class="spec"><div class="stage col cn"><div class="type-row" data-sig="c26398afc5"><span class="meta">heading ×1</span><span class="t" style="font-family:var(--font-cn);font-size:72px;font-weight:400;letter-spacing:-2.496px;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">96px · 400 · ls -2.496px · Connect 2026 STK Bureau Sans</span></div>
+<div class="type-row" data-sig="a16d70df15"><span class="meta">heading ×1</span><span class="t" style="font-family:var(--font-cn);font-size:56px;font-weight:400;letter-spacing:-1.4px;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">56px · 400 · ls -1.4px · Connect 2026 STK Bureau Sans</span></div>
+<div class="type-row" data-sig="59d9262ffc"><span class="meta">heading ×1</span><span class="t" style="font-family:var(--font-cn);font-size:44px;font-weight:400;letter-spacing:-1.1px;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">44px · 400 · ls -1.1px · Connect 2026 STK Bureau Sans</span></div>
+<div class="type-row" data-sig="b3d9a6b80e"><span class="meta">text ×1</span><span class="t" style="font-family:var(--font-cn);font-size:17px;font-weight:300;letter-spacing:normal;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">17px · 300 · ls normal · Connect 2026 STK Bureau Sans</span></div>
+<div class="type-row" data-sig="87de962d3c"><span class="meta">heading ×1</span><span class="t" style="font-family:var(--font-cn);font-size:16px;font-weight:400;letter-spacing:-0.08px;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">16px · 400 · ls -0.08px · Connect 2026 STK Bureau Sans</span></div>
+<div class="type-row" data-sig="53d7a261a2"><span class="meta">heading ×1</span><span class="t" style="font-family:var(--font-cn);font-size:16px;font-weight:400;letter-spacing:normal;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">16px · 400 · ls normal · Connect 2026 STK Bureau Sans</span></div>
+<div class="type-row" data-sig="ded7cd1e85 ba6a649d7f 7223414b47 e12c10d6a1"><span class="meta">heading · text ×4</span><span class="t" style="font-family:var(--font-cn);font-size:16px;font-weight:300;letter-spacing:normal;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">16px · 300 · ls normal · Connect 2026 STK Bureau Sans</span></div>
+<div class="type-row" data-sig="60acbd4b3c"><span class="meta">text ×1</span><span class="t" style="font-family:var(--font-cn);font-size:15px;font-weight:300;letter-spacing:normal;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">15px · 300 · ls normal · Connect 2026 STK Bureau Sans</span></div>
+<div class="type-row" data-sig="5348e52974"><span class="meta">text ×1</span><span class="t" style="font-family:var(--font-cn);font-size:14px;font-weight:600;letter-spacing:1.12px;text-transform:uppercase">Kết nối nhanh và an toàn</span><span class="meta">14px · 600 · ls 1.12px · uppercase · Paper Mono</span></div>
+<div class="type-row" data-sig="6631b71581"><span class="meta">heading ×1</span><span class="t" style="font-family:var(--font-cn);font-size:14px;font-weight:400;letter-spacing:normal;text-transform:none">Kết nối nhanh và an toàn</span><span class="meta">14px · 400 · ls normal · Connect 2026 STK Bureau Sans</span></div>
+<div class="type-row" data-sig="190db9134d 5c3a368007"><span class="meta">heading ×2</span><span class="t" style="font-family:var(--font-cn);font-size:12px;font-weight:500;letter-spacing:normal;text-transform:uppercase">Kết nối nhanh và an toàn</span><span class="meta">12px · 500 · ls normal · uppercase · Paper Mono</span></div></div></div>
+    </section>
+
+    <section class="block" id="shape">
+      <header><h2>Bo góc</h2><p>Site không có thang shape đặt tên: mỗi thành phần dùng một bán kính cố định. Dưới đây là mọi bán kính đo được, kèm nơi dùng.</p></header>
+      <div class="spec"><div class="stage" id="shapes" style="gap:22px"></div></div>
+    </section>
+
+    <section class="block" id="layout">
+      <header><h2>Bố cục &amp; kích thước</h2><p>Số đo ở viewport 1440 × 900 và 390 × 844.</p></header>
+      <div class="grid">
+        <div class="spec"><div class="stage col"><div class="tbl-wrap"><table class="tok"><thead><tr><th>Nút</th><th>h</th><th>padding</th><th>r</th><th>chữ</th></tr></thead><tbody>
+          <tr><td>pill (Login, See plan)</td><td>38</td><td>6 / 12</td><td>9999</td><td>16/24 500</td></tr>
+          <tr><td>CTA (Start building)</td><td>50</td><td>12 / 24</td><td>9999</td><td>16/24 500</td></tr>
+          <tr><td>mobile CTA</td><td>66</td><td>20 / 24</td><td>12</td><td>16/24 500</td></tr>
+          <tr><td>mobile Login</td><td>39</td><td>8 / 12</td><td>9999</td><td>14/21 600</td></tr>
+          <tr><td>tab pill</td><td>34</td><td>6 / 20</td><td>9999</td><td>14/21 500</td></tr>
+          <tr><td>Enter</td><td>34</td><td>6 6 6 12</td><td>8</td><td>16/24 400</td></tr>
+          <tr><td>icon (search)</td><td>38 · mob 42×40</td><td>10</td><td>9999 · 12</td><td>—</td></tr>
+          <tr><td>nav link</td><td>36</td><td>6 / 12</td><td>6</td><td>16/24 500</td></tr>
+        </tbody></table></div></div></div>
+        <div class="spec"><div class="stage col"><div class="tbl-wrap"><table class="tok"><thead><tr><th>Khung</th><th>px</th><th>Dùng cho</th></tr></thead><tbody>
+          <tr><td>header</td><td>72 · 54</td><td>desktop · mobile, gạch đứt dưới</td></tr>
+          <tr><td>container</td><td>1200</td><td>lưới, bảng giá, footer</td></tr>
+          <tr><td>hero</td><td>1424 × 760</td><td>inset 8, r 16, pad 64 / 32</td></tr>
+          <tr><td>hero mobile</td><td>382 × 680</td><td>inset 4, r 12, pad 24 / 16</td></tr>
+          <tr><td>ô lưới</td><td>399 · pad 32</td><td>3 cột, viền 1 #f0f0f0</td></tr>
+          <tr><td>bento</td><td>797 / 395 × 373</td><td>r 4, pad 0 32 32</td></tr>
+          <tr><td>bảng giá</td><td>4 × 300 · pad 32</td><td>cột giá, h4 32/32</td></tr>
+          <tr><td>mega menu</td><td>1352 × 686</td><td>6 cột, dòng chân 54</td></tr>
+          <tr><td>footer link</td><td>32 · mob 24</td><td>pad 8/0 · 4/0, chữ 16/16</td></tr>
+        </tbody></table></div></div></div>
+      </div>
+    </section>
+
+    <!-- ================= HÀNH ĐỘNG ================= -->
+    <section class="block" id="actions">
+      <header><span class="fam">www</span><h2>Hành động</h2><p>Mọi nút www đều là pill viền <code>border-100</code>. Nhấn thì co <code>scale(.98)</code> và lún 1px. Focus là viền <code>ring</code> kèm vòng 3px ở 50%. Mỗi thẻ có dải trạng thái bày đúng rule đo được.</p></header>
+      <div class="grid">
+        <div class="spec full" data-g="w-btn-pill" data-sig="5d86e8cee9 5ce45eda09 1866ae90b8 04a3dbd395 063071fd63 712f31688e ebe3137243"><div class="spec-h"><b>Nút pill</b><span class="kind">a.button · rounded-full</span><span class="dp">h 38 · pad 6/12 · r 9999</span></div>
+          <div class="stage surface"><div class="states">
+            <figure><button class="cf-btn">Login</button><figcaption>nghỉ</figcaption></figure>
+            <figure><button class="cf-btn is-hover" data-st="w-btn-pill:hover" data-sig-state="5d86e8cee9:hover 04a3dbd395:hover ebe3137243:hover">Login</button><figcaption>hover · opacity .95</figcaption></figure>
+            <figure><button class="cf-btn is-active" data-st="w-btn-pill:active" data-sig-state="5d86e8cee9:active 5ce45eda09:active 1866ae90b8:active 04a3dbd395:active 063071fd63:active 712f31688e:active ebe3137243:active">Login</button><figcaption>active · scale .98</figcaption></figure>
+            <figure><button class="cf-btn is-focus" data-st="w-btn-pill:focus" data-sig-state="5d86e8cee9:focus 5ce45eda09:focus 1866ae90b8:focus 04a3dbd395:focus 063071fd63:focus 712f31688e:focus ebe3137243:focus">Login</button><figcaption>focus · ring 3px</figcaption></figure>
+            <figure><button class="cf-btn v-fill">Get started</button><figcaption>v-fill nghỉ</figcaption></figure>
+            <figure><button class="cf-btn v-fill is-hover" data-st="w-btn-pill:hover" data-sig-state="5ce45eda09:hover 063071fd63:hover">Get started</button><figcaption>hover · nền cam</figcaption></figure>
+            <figure><button class="cf-btn v-soft">See Pro plan</button><figcaption>v-soft nghỉ</figcaption></figure>
+            <figure><button class="cf-btn v-soft is-hover" data-st="w-btn-pill:hover" data-sig-state="1866ae90b8:hover 712f31688e:hover">See Pro plan</button><figcaption>hover · cam 5%</figcaption></figure>
+            <figure><button class="cf-btn v-warn is-hover">Try again</button><figcaption>v-warn hover · viền cam 40%</figcaption></figure>
+            <figure><button class="cf-btn v-filter">EMEA</button><figcaption>v-filter nghỉ</figcaption></figure>
+            <figure><button class="cf-btn v-filter is-hover">EMEA</button><figcaption>hover · nền chữ 5%</figcaption></figure>
+          </div></div><div class="spec-f"><span class="note">Ba biến thể hover đo được: Login chỉ mờ còn .95, Get started lấp cam chữ trắng, See plan viền và chữ cam trên nền cam 5%. EMEA (lọc vùng) không viền, chữ 70%.</span></div></div>
+
+        <div class="spec" data-g="w-btn-accent" data-sig="a22abb4000 577ea0b3bb 17eec06127 3c7f509aff 5d3f63f802"><div class="spec-h"><b>Nút cam</b><span class="kind">bg-accent-100 · accent-200</span><span class="dp">h 38–50</span></div>
+          <div class="stage surface"><div class="states">
+            <figure><button class="cf-btn v-accent lg">Get help</button><figcaption>nghỉ</figcaption></figure>
+            <figure><button class="cf-btn v-accent lg is-hover" data-st="w-btn-accent:hover" data-sig-state="577ea0b3bb:hover 17eec06127:hover 3c7f509aff:hover 5d3f63f802:hover">Get help</button><figcaption>hover · viền trắng</figcaption></figure>
+            <figure><button class="cf-btn v-accent lg is-active" data-st="w-btn-accent:active" data-sig-state="577ea0b3bb:active 17eec06127:active 3c7f509aff:active 5d3f63f802:active">Get help</button><figcaption>active</figcaption></figure>
+            <figure><button class="cf-btn v-accent lg is-focus" data-st="w-btn-accent:focus" data-sig-state="577ea0b3bb:focus 17eec06127:focus 3c7f509aff:focus 5d3f63f802:focus">Get help</button><figcaption>focus</figcaption></figure>
+            <figure><button class="cf-btn v-accent2 lg">View docs</button><figcaption>accent-200</figcaption></figure>
+          </div></div></div>
+
+        <div class="spec" data-g="w-btn-white" data-sig="9d2c56e6e6 b9d431fef3"><div class="spec-h"><b>Nút trắng trên nền cam</b><span class="kind">CTA · bg-white</span><span class="dp">h 50 · pad 12/24</span></div>
+          <div class="stage orange"><div class="states">
+            <figure><button class="cf-btn v-white lg">Start building for free</button><figcaption>nghỉ</figcaption></figure>
+            <figure><button class="cf-btn v-white lg is-hover" data-st="w-btn-white:hover" data-sig-state="9d2c56e6e6:hover b9d431fef3:hover">Start building for free</button><figcaption>hover · nền trong suốt</figcaption></figure>
+            <figure><button class="cf-btn v-white lg is-active" data-st="w-btn-white:active" data-sig-state="9d2c56e6e6:active b9d431fef3:active">Start building for free</button><figcaption>active</figcaption></figure>
+            <figure><button class="cf-btn v-white lg is-focus" data-st="w-btn-white:focus" data-sig-state="9d2c56e6e6:focus b9d431fef3:focus">Start building for free</button><figcaption>focus</figcaption></figure>
+          </div></div></div>
+
+        <div class="spec" data-g="w-btn-enter" data-sig="d434dd6f9b"><div class="spec-h"><b>Nút Enter (ô lệnh)</b><span class="kind">button · rounded-lg</span><span class="dp">h 34 · r 8</span></div>
+          <div class="stage surface"><button class="cf-enter">Enter <kbd>↵</kbd></button><button class="cf-icon-btn" aria-label="Tìm kiếm"><span class="ms">search</span></button><button class="cf-icon-btn sq" aria-label="Mở menu"><span class="ms">menu</span></button></div>
+          <div class="spec-f"><span class="note">Nút icon tìm kiếm 38 tròn (desktop). Trên mobile là 42 × 40, bo 12, không viền.</span></div></div>
+
+        <div class="spec" data-g="w-btn-quiet" data-sig="d67bf9cf16 0aaa0f9ffe"><div class="spec-h"><b>Nút phụ bo 8</b><span class="kind">Load More · All Industries</span><span class="dp">r 8 · 13 500</span></div>
+          <div class="stage surface"><div class="states">
+            <figure><button class="cf-quiet">Load More</button><figcaption>nghỉ</figcaption></figure>
+            <figure><button class="cf-quiet is-hover" data-st="w-btn-quiet:hover" data-sig-state="d67bf9cf16:hover 0aaa0f9ffe:hover">Load More</button><figcaption>hover · viền 30% · nền 5%</figcaption></figure>
+            <figure><button class="cf-quiet">All Industries <span class="ms">expand_more</span></button><figcaption>dropdown</figcaption></figure>
+          </div></div></div>
+
+        <div class="spec full" data-g="w-link" data-sig="f730f2ee95 9363091d50 fb9c44395e 642de386d3 90d66fcdc8 13f900856a 1976d81de1 82e11a20be fde1ed9ee1 fd188d8729 d065ce6007 5858fc90e7 65147c2cae bce5b8fff5 f873d452a1 14e9da8d6e 1e8298783c 2d7412293a 5d857f1468"><div class="spec-h"><b>Liên kết chữ</b><span class="kind">a · button link</span><span class="dp">16/19 500</span></div>
+          <div class="stage surface"><div class="states">
+            <figure><a class="cf-link">See solution <span class="ms">arrow_forward</span></a><figcaption>nghỉ</figcaption></figure>
+            <figure><a class="cf-link is-hover" data-st="w-link:hover" data-sig-state="f730f2ee95:hover 9363091d50:hover 90d66fcdc8:hover 13f900856a:hover 1976d81de1:hover 5858fc90e7:hover 14e9da8d6e:hover 1e8298783c:hover 5d857f1468:hover">See solution <span class="ms">arrow_forward</span></a><figcaption>hover · cam + gạch chân</figcaption></figure>
+            <figure><a class="cf-link is-active" data-st="w-link:active" data-sig-state="f730f2ee95:active 90d66fcdc8:active">Activate</a><figcaption>active</figcaption></figure>
+            <figure><a class="cf-link is-focus" data-st="w-link:focus" data-sig-state="f730f2ee95:focus 90d66fcdc8:focus">See solution</a><figcaption>focus · ring</figcaption></figure>
+            <figure><a class="cf-link muted">Collapse all</a><figcaption>muted 70%</figcaption></figure>
+            <figure><a class="cf-link muted is-hover">Collapse all</a><figcaption>hover · 100%</figcaption></figure>
+            <figure><a class="cf-link" style="color:var(--cf-accent-100)">+65 3158 3954</a><figcaption>số điện thoại cam</figcaption></figure>
+            <figure><a class="cf-link is-hover" style="color:var(--cf-foreground-100);text-decoration:none">+65 3158 3954</a><figcaption>hover · về chữ thường</figcaption></figure>
+          </div></div><div class="spec-f"><span class="note">Link email/press chỉ thêm gạch chân khi hover. "View recent news" có mũi tên hiện ra khi hover (opacity 0 → 1).</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= ĐIỀU HƯỚNG ================= -->
+    <section class="block" id="navigation">
+      <header><span class="fam">www</span><h2>Điều hướng</h2></header>
+      <div class="grid">
+        <div class="spec full" data-g="w-header" data-sig="2765f380bd d350b1a3d8 cf24f89dcc ebb50d9e92 b0737e822d 2b218a669b 7d75f54482 6231fe4a73"><div class="spec-h"><b>Header desktop</b><span class="kind">header · nav</span><span class="dp">h 72 · link r 6</span></div>
+          <div class="stage surface" style="padding:0;display:block"><div class="cf-header">
+            <span class="cf-logo-ph"><span class="ms">cloud</span>logo</span>
+            <nav><a class="cf-navlink is-open">Products <span class="ms">unfold_more</span></a><a class="cf-navlink">Solutions <span class="ms">unfold_more</span></a><a class="cf-navlink">Resources <span class="ms">unfold_more</span></a><a class="cf-navlink">Pricing</a></nav>
+            <div class="act"><a class="cf-navlink danger"><span class="ms">gpp_maybe</span>Under attack?</a><a class="cf-navlink danger is-hover" data-st="w-header:hover" data-sig-state="2765f380bd:hover cf24f89dcc:hover"><span class="ms">gpp_maybe</span>hover</a><button class="cf-btn">Login</button><button class="cf-btn">Contact sales</button><button class="cf-icon-btn" aria-label="Tìm kiếm"><span class="ms">search</span></button></div>
+          </div></div>
+          <div class="stage surface"><div class="states">
+            <figure><a class="cf-navlink ua-focus" data-st="w-header:focus" data-sig-state="2765f380bd:focus">Products <span class="ms">unfold_more</span></a><figcaption>focus · outline trình duyệt</figcaption></figure>
+            <figure><a class="cf-navlink is-open">Products <span class="ms">unfold_more</span></a><figcaption>đang mở · viền 1</figcaption></figure>
+          </div></div>
+          <div class="spec-f"><span class="note">"Under attack?" chữ security-100, hover nền 10% cùng màu. Logo là khối giữ chỗ (không nhúng logo của Cloudflare).</span></div></div>
+
+        <div class="spec full" data-g="w-mega" data-sig="e6e4bfb9dc"><div class="spec-h"><b>Mega menu Products</b><span class="kind">menu · 6 cột</span><span class="dp">1352 × 686 · item pad 8/12 r 6</span></div>
+          <div class="stage surface" style="display:block"><div class="cf-mega"><div class="cols">
+            <div class="col"><h6>Compute</h6><a class="cf-mega-item"><b>Workers</b>Global serverless functions</a><a class="cf-mega-item is-hover" data-st="w-mega:hover" data-sig-state="e6e4bfb9dc:hover"><b>Containers</b>hover · tiêu đề cam</a><a class="cf-mega-item is-focus" data-st="w-mega:focus" data-sig-state="e6e4bfb9dc:focus"><b>Sandboxes</b>focus</a></div>
+            <div class="col"><h6>Storage</h6><a class="cf-mega-item"><b>R2</b>Egress-free storage</a><a class="cf-mega-item"><b>D1</b>Serverless SQL</a></div>
+            <div class="col"><h6>AI</h6><a class="cf-mega-item"><b>AI Gateway</b>AI observability</a><a class="cf-mega-item"><b>Vectorize</b>Vector database</a></div>
+            <div class="col"><h6>SASE / Zero Trust</h6><a class="cf-mega-item"><b>Access</b>Zero trust access</a><a class="cf-mega-item"><b>Gateway</b>Web filtering</a></div>
+            <div class="col"><h6>Security</h6><a class="cf-mega-item"><b>WAF</b>Web Application Firewall</a><a class="cf-mega-item"><b>Turnstile</b>CAPTCHA replacement</a></div>
+            <div class="col"><h6>Network &amp; Content Delivery</h6><a class="cf-mega-item"><b>CDN</b>Faster delivery</a><a class="cf-mega-item"><b>DNS</b>Fast DNS</a></div>
+          </div><div class="foot"><a class="acc">See all products →</a><span class="grow"></span><a>Enterprise</a><a>Global Network</a><a>Domain Registration</a></div></div></div>
+          <div class="spec-f"><span class="note">Item hover: nền background-200 + viền border-100, tiêu đề chuyển cam. Focus nền background-300.</span></div></div>
+
+        <div class="spec" data-g="w-seg" data-sig="2c80efb1a1 b332bea051 743267f135 ba5bf4e054 d7d14c5b6d"><div class="spec-h"><b>Tab pill (segmented)</b><span class="kind">tabs · rounded-full</span><span class="dp">h 34 · pad 6/20 · 14 500</span></div>
+          <div class="stage surface"><div class="states">
+            <figure><div class="cf-seg" role="tablist"><button class="cf-tab">Network &amp; CDN</button><button class="cf-tab">SASE</button><button class="cf-tab is-on" aria-selected="true" data-st="w-seg:selected" data-sig-state="b332bea051:selected">Compute</button></div><figcaption>selected · nền cam</figcaption></figure>
+            <figure><button class="cf-tab is-hover" data-st="w-seg:hover" data-sig-state="b332bea051:hover 743267f135:hover d7d14c5b6d:hover">SASE</button><figcaption>hover</figcaption></figure>
+            <figure><button class="cf-tab is-focus" data-st="w-seg:focus" data-sig-state="743267f135:focus">SASE</button><figcaption>focus</figcaption></figure>
+            <figure><button class="cf-tab dashed"><span class="ms">database</span>Storage &amp; Data</button><figcaption>dashed (plans)</figcaption></figure>
+            <figure><button class="cf-tab soft">Compute</button><figcaption>soft · viền cam 30%</figcaption></figure>
+            <figure><button class="cf-tab pause"><span class="ms">pause</span></button><figcaption>pause</figcaption></figure>
+            <figure><button class="cf-tab pause is-hover"><span class="ms">pause</span></button><figcaption>hover</figcaption></figure>
+            <figure><button class="cf-tab pause is-active" data-st="w-seg:active" data-sig-state="743267f135:active"><span class="ms">pause</span></button><figcaption>active</figcaption></figure>
+          </div></div></div>
+
+        <div class="spec" data-g="w-subtabs" data-sig="49543f4159 d45b0ac97b 2d15f45254 b2d53e0abf b2bfd017cc e8b36eb6a7 083b389122 b089860c5d"><div class="spec-h"><b>Tab phụ &amp; tab logo</b><span class="kind">tabs · rounded</span><span class="dp">r 4 · 13 500</span></div>
+          <div class="stage surface col">
+            <div class="states"><figure><div class="cf-seg"><button class="cf-subtab is-on" data-st="w-subtabs:selected" data-sig-state="b2bfd017cc:selected b2bfd017cc:selected">Durable Objects</button><button class="cf-subtab">Workers</button><button class="cf-subtab">KV</button></div><figcaption>selected · nền chữ 12%</figcaption></figure>
+            <figure><div class="cf-seg"><button class="cf-subtab lg is-on">All Products</button><button class="cf-subtab lg">Network</button></div><figcaption>trang Products · 14 400</figcaption></figure></div>
+            <div class="states"><figure><button class="cf-logotab"><span class="cf-logo-ph">logo</span></button><figcaption>logo · nghỉ</figcaption></figure>
+            <figure><button class="cf-logotab is-hover" data-st="w-subtabs:hover" data-sig-state="d45b0ac97b:hover"><span class="cf-logo-ph">logo</span></button><figcaption>hover · chữ 80%</figcaption></figure>
+            <figure><button class="cf-logotab is-on"><span class="cf-logo-ph">logo</span></button><figcaption>đang xem</figcaption></figure></div>
+          </div></div>
+
+        <div class="spec" data-g="w-region" data-sig="ddc275fd73 b285ba22f6 7973f357bb 019f6171d2"><div class="spec-h"><b>Nút vùng (Network)</b><span class="kind">button · rounded-lg</span><span class="dp">r 8</span></div>
+          <div class="stage surface col">
+            <button class="cf-region">North America <span class="cf-badge">54</span></button>
+            <button class="cf-region is-hover" data-st="w-region:hover" data-sig-state="ddc275fd73:hover">Europe <span class="cf-badge">112</span></button>
+            <div class="cf-stats" style="min-width:0;grid-template-columns:1fr 1fr"><div><b>334+</b><span>Cities</span></div><div><b>125+</b><span>Countries</span></div></div>
+          </div><div class="spec-f"><span class="note">Hover nền chữ 3%. Ô số liệu nằm trong khung viền 1.</span></div></div>
+
+        <div class="spec" data-g="w-card-link" data-sig="4ad30e5cb6 fcd72a59bf 83bc1848a9"><div class="spec-h"><b>Thẻ liên kết</b><span class="kind">a.card · rounded-xl</span><span class="dp">r 12 · pad 24</span></div>
+          <div class="stage surface"><div class="states">
+            <figure><a class="cf-card-link"><small>Case study</small><b>Tăng tốc hỗ trợ khách hàng</b><span class="more">Read →</span></a><figcaption>nghỉ</figcaption></figure>
+            <figure><a class="cf-card-link is-hover" data-st="w-card-link:hover" data-sig-state="4ad30e5cb6:hover fcd72a59bf:hover 83bc1848a9:hover"><small>Case study</small><b>Tăng tốc hỗ trợ khách hàng</b><span class="more">Read →</span></a><figcaption>hover · viền 20% + bóng md</figcaption></figure>
+            <figure><a class="cf-card-link plain is-active" data-st="w-card-link:active" data-sig-state="fcd72a59bf:active">See supported extensions</a><figcaption>khối vuông · active</figcaption></figure>
+            <figure><a class="cf-card-link plain is-focus" data-st="w-card-link:focus" data-sig-state="fcd72a59bf:focus">See supported extensions</a><figcaption>focus</figcaption></figure>
+          </div></div></div>
+
+        <div class="spec full" data-g="w-footer" data-sig="9dff508f93 4aabb8e42c cf6693955a 4d7b97a554 212bd97c21 0d57ddbaec 1328ea3a6b"><div class="spec-h"><b>Footer</b><span class="kind">footer</span><span class="dp">link 16/16 pad 8/0 · head 13 500</span></div>
+          <div class="stage surface" style="display:block;padding:0"><div class="cf-footer">
+            <div class="cols"><div><span class="cf-logo-ph">wordmark</span></div>
+              <div><h6>Getting started</h6><a>Plans</a><a>Contact sales</a><a>Partners</a></div>
+              <div><h6>Public interest</h6><a>Project Galileo</a><a>Athenian Project</a></div>
+              <div><h6>Resources</h6><a>Case studies</a><a>Status</a><a>Blog</a></div>
+              <div><h6>Solutions</h6><a>SASE and SSE</a><a>AI Security</a></div></div>
+            <div class="legal"><span>© 2026 Cloudflare, Inc.</span><span class="grow"></span><a class="strong">Privacy policy</a>|<a>Report security issues</a>|<a>Terms of use</a></div>
+          </div></div></div>
+      </div>
+    </section>
+
+    <!-- ================= CHỨA NỘI DUNG ================= -->
+    <section class="block" id="containment">
+      <header><span class="fam">www</span><h2>Chứa nội dung</h2><p>www xếp nội dung bằng khung kẻ mảnh <code>border-100</code>, chấm tròn ở góc, lưới 3 cột pad 32. Chỉ hai khối được tô cam: hero và band CTA.</p></header>
+      <div class="grid">
+        <div class="spec full" data-g="w-section" data-sig="3d6855a0cc 7f460baabe 9fa6511b7c 58e2d4f317 fbaaf69c9a 60ddd5b9fe faf8bce9f0 eecf5b34f7"><div class="spec-h"><b>Hero &amp; band CTA</b><span class="kind">section · rounded-2xl</span><span class="dp">inset 8 · r 16 · pad 64/32</span></div>
+          <div class="stage surface col">
+            <div class="cf-hero cf-dots">
+              <a class="cf-announce">Connect 2026 · The Agentic Conference · Oct 19–21 <i class="ms">arrow_forward</i></a>
+              <h1>Mọi thứ mạng lưới học được, thành mặc định của bạn</h1>
+              <p>Một nền tảng cho ứng dụng, agent và đội ngũ. Dựng, bảo vệ và mở rộng mà không phải quản hạ tầng.</p>
+              <button class="cf-btn v-white lg">Start building for free</button>
+            </div>
+            <div class="cf-cta cf-dots"><h2>Build without boundaries</h2><p>Câu dẫn hai dòng, căn giữa, 17/21.</p>
+              <div class="btns"><button class="cf-btn v-white lg">Start building for free</button><button class="cf-btn v-accent2 lg">View docs</button></div>
+              <div class="cf-ticker"><span><b class="ms">public</b>Deploy to 330+ cities &nbsp;·&nbsp; <b class="ms">shield</b>Defend against DDoS &nbsp;·&nbsp; <b class="ms">sell</b>Predictable pricing &nbsp;·&nbsp; <b class="ms">public</b>Deploy to 330+ cities &nbsp;·&nbsp; <b class="ms">shield</b>Defend against DDoS &nbsp;·&nbsp; <b class="ms">sell</b>Predictable pricing</span></div></div>
+          </div><div class="spec-f"><span class="note">Nền chấm và quầng sáng dưới hero vẽ theo mắt (site dùng ảnh/canvas). Ticker chạy ngang: dải chữ trắng 16/16, viền trên màu #ffdd99 ở 50%.</span></div></div>
+
+        <div class="spec" data-g="w-announce" data-sig="a0f1f99eb3 03b3404995 22b7da5c7c"><div class="spec-h"><b>Pill thông báo</b><span class="kind">a · rounded-full</span><span class="dp">h 42 · pad 6 6 6 16</span></div>
+          <div class="stage orange"><div class="states">
+            <figure><a class="cf-announce">Connect 2026 · Oct 19–21 <i class="ms">arrow_forward</i></a><figcaption>nghỉ · viền trắng 50%</figcaption></figure>
+            <figure><a class="cf-announce is-hover" data-st="w-announce:hover" data-sig-state="a0f1f99eb3:hover 22b7da5c7c:hover">Connect 2026 · Oct 19–21 <i class="ms">arrow_forward</i></a><figcaption>hover · 70%</figcaption></figure>
+          </div></div>
+          <div class="stage surface"><div class="states">
+            <figure><a class="cf-announce light">Cloudflare Connect · Register now</a><figcaption>nền sáng</figcaption></figure>
+            <figure><a class="cf-announce light is-hover" data-st="w-announce:hover" data-sig-state="03b3404995:hover">San Francisco, CA</a><figcaption>hover · cam 5%</figcaption></figure>
+            <figure><a class="cf-announce light is-active" data-st="w-announce:active" data-sig-state="22b7da5c7c:active">Cloudflare Connect</a><figcaption>active</figcaption></figure>
+            <figure><a class="cf-announce light is-focus" data-st="w-announce:focus" data-sig-state="22b7da5c7c:focus">Cloudflare Connect</a><figcaption>focus</figcaption></figure>
+          </div></div></div>
+
+        <div class="spec" data-g="w-card-orange" data-sig="ab17d034df 1b59e5f6fa d71e5a719a 55e8c613fb 8fb9a09eba"><div class="spec-h"><b>Khối cam</b><span class="kind">card · bg-accent-100</span><span class="dp">r 4 · pad 32</span></div>
+          <div class="stage surface"><div class="cf-bento orange" style="width:100%;min-height:200px"><span class="ms">public</span><h3>Một mạng cho người dùng, ứng dụng và dữ liệu</h3><p>Chữ trắng trên accent-100, dùng cho ô nhấn trong bento và band "Shipping with Cloudflare".</p><span class="cf-toast"><span class="ms">check</span>Pushed 57 new updates today</span></div></div></div>
+
+        <div class="spec full" data-g="w-cell" data-sig="679eb9fe84 ec62ee99c7 9cdc6b963d c0b193556e 2bb74fcd2e 83b85c2634 6aaa7cc8f2 5ba153bc61 9ad2e23392 2f054b261d cc52fee89d 91ecce3416 84076fbebd 5e4241a3a3 29c1ed2086 2bbacbae09 dcc149a494 b287868c33 e85068f8c8 ca996e2de9 31fef565e2 081128c243 dd9998b096 d9afbc3b2f 9f5babd284 5990a1afbc 86ba91f2a3"><div class="spec-h"><b>Lưới đặc điểm</b><span class="kind">grid · 3 cột · border</span><span class="dp">ô 399 · pad 32 · h3 18/21.6</span></div>
+          <div class="stage surface" style="display:block"><div class="cf-frame">
+            <div class="cf-cell"><span class="ms">public</span><h3>Run everywhere</h3><p>Chạy ở hơn 335 thành phố, cách 95% dân số dưới 50 ms.</p></div>
+            <div class="cf-cell"><span class="ms">location_on</span><h3>Run anywhere</h3><p>Mạng nằm gần người dùng, ứng dụng và site của bạn.</p></div>
+            <div class="cf-cell"><span class="ms">open_in_full</span><h3>Run at massive scale</h3><p>Khỏi phải lên kế hoạch dung lượng.</p></div>
+          </div></div><div class="spec-f"><span class="note">Chữ mô tả = foreground-100 ở 70%. Chấm tròn 7px ở góc khung (decor). Cùng khuôn này còn dùng cho thẻ giải pháp, văn phòng, hotline theo nước, nguyên tắc tuyển dụng.</span></div></div>
+
+        <div class="spec" data-g="w-bento" data-sig="8ed33ac1f7 efab9d4c56 34c0f6fd64 1310c18545 6d146b51e3 4180a903b0 8bd2a27154"><div class="spec-h"><b>Bento</b><span class="kind">card · rounded</span><span class="dp">r 4 · pad 0 32 32</span></div>
+          <div class="stage surface"><div class="cf-bento" style="width:100%"><div class="cf-img-ph" style="height:110px;margin:24px 0 auto">minh hoạ</div><h3>Fits into your existing workflows</h3><p>Git, GitHub Actions, VS Code và mọi framework.</p></div></div></div>
+
+        <div class="spec full" data-g="w-plans" data-sig="e8e66da468 9bf6926088 fada4b0f07 d3a6008df1 8eb5ceba92 a0ecd38160 dce6cd303a 1fe76a66e4 bad4f7a623 0f2223b2a2 82f08fa176 c31d77f1c7 894d1392db 64433f4d76"><div class="spec-h"><b>Bảng giá theo gói</b><span class="kind">pricing · 4 cột</span><span class="dp">cột pad 32 · giá 32/32 −0.8</span></div>
+          <div class="stage surface" style="display:block;overflow-x:auto"><div class="cf-tier">
+            <div><h5>Free</h5><span class="sub">for hobby projects</span><div class="cf-price"><b>$0</b><span>/month</span></div><div class="cf-chips"><span class="cf-chip">Unmetered DDoS</span><span class="cf-chip">Universal SSL</span></div><button class="cf-btn v-soft" style="align-self:flex-start">See Free plan</button></div>
+            <div><h5>Pro</h5><span class="sub">for pro websites</span><div class="cf-price"><b>$20</b><span>/mo billed annually</span></div><div class="cf-chips"><span class="cf-chip">Image optimization</span><span class="cf-chip">Bot protection</span></div><button class="cf-btn v-soft is-hover" style="align-self:flex-start">See Pro plan</button></div>
+            <div><h5>Business</h5><span class="sub">for small business</span><div class="cf-price"><b>$200</b><span>/mo</span></div><div class="cf-chips"><span class="cf-chip">PCI DSS 4.0</span><span class="cf-chip">100% uptime SLA</span></div><button class="cf-btn v-soft" style="align-self:flex-start">See Business plan</button></div>
+            <div><h5>Contract</h5><span class="sub">for mission-critical</span><div class="cf-price"><b>Custom</b></div><div class="cf-chips"><span class="cf-chip">24/7 support</span></div><button class="cf-btn v-soft" style="align-self:flex-start">See Contract plan</button></div>
+          </div></div>
+          <div class="stage surface" style="display:block;overflow-x:auto"><div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap">
+            <div class="cf-panel" style="width:280px"><span class="cf-eyebrow">Tier 3</span><div class="cf-price"><b>$10k</b></div><p style="margin:0;color:var(--cf-text-secondary)">Gói tín dụng startup, khung r 12 viền mảnh.</p></div>
+            <div class="cf-panel round24" style="width:280px"><b>What you get</b><p style="margin:6px 0 0;color:var(--cf-text-secondary)">Khối nền background-200 bo 24 (Community).</p></div>
+          </div></div></div>
+
+        <div class="spec full" data-g="w-price-table" data-sig="43f28aedc1"><div class="spec-h"><b>Thẻ giá theo sản phẩm</b><span class="kind">table · Component / Free / Paid</span><span class="dp">r 8 · pad 24/32</span></div>
+          <div class="stage surface" style="display:block;overflow-x:auto"><div class="cf-product"><header><div><h3>Workers</h3><div class="sub">Serverless functions that run everywhere, instantly</div></div><span class="ms">north_east</span></header>
+            <table><thead><tr><th>Component</th><th>Free</th><th>Paid</th></tr></thead><tbody><tr><td>Requests</td><td>100k / day</td><td>$0.30 / million requests</td></tr><tr><td>CPU Time</td><td>10 ms / request</td><td>$0.02 / million CPU ms</td></tr></tbody></table></div></div></div>
+
+        <div class="spec" data-g="w-panel" data-sig="f35a81355b 0d0ad888d3 5b951e13a5 ecddc9d33f d206a67aa1 78fb8c8df0 0ab2cfef1d 64bda3f804 c825cbbb41 1033e2f651 1aa3bd1dcf e725ddcd1c b4d6190418 d30f5ae419 e017aae42e 36eb32b032 4bc271fa0d e989c1f8d7 c4448d6afa"><div class="spec-h"><b>Panel viền r 12</b><span class="kind">card · rounded-xl</span><span class="dp">bg-200 · r 12</span></div>
+          <div class="stage surface col"><div class="cf-panel"><p class="cf-quote">Sự hợp tác đưa hạ tầng lên một tầm mới.</p><div style="margin-top:16px;display:flex;gap:10px;align-items:center"><span class="cf-img-ph" style="width:36px;height:36px;padding:0">ảnh</span><small style="color:var(--cf-text-secondary)">Tên · Chức danh</small></div></div></div>
+          <div class="spec-f"><span class="note">Panel lớn chứa tường logo, trích dẫn đối tác, sự kiện theo vùng, danh sách việc làm. Trích dẫn dùng chữ 32/32 500.</span></div></div>
+
+        <div class="spec" data-g="w-event-card" data-sig="a6507c57ee"><div class="spec-h"><b>Thẻ sự kiện</b><span class="kind">card · rounded-lg</span><span class="dp">r 8 · pad 16</span></div>
+          <div class="stage surface"><div class="cf-event"><small>Orlando, FL</small><b>Hội nghị bảo mật</b><small>Oct 12–14</small></div></div></div>
+
+        <div class="spec" data-g="w-logo-tile" data-sig="46885f31bf 2fc4546b56 e6e66f48c2 930e721b46 d4bbe3cc8f ee2b6747e7"><div class="spec-h"><b>Ô logo</b><span class="kind">card · bg/30%</span><span class="dp">240 × 240 · pad 20</span></div>
+          <div class="stage surface"><div class="states">
+            <figure><div class="cf-img-ph" style="width:120px;height:120px;background:color-mix(in srgb,var(--cf-background-200) 30%,transparent)">logo đối tác</div><figcaption>nghỉ</figcaption></figure>
+            <figure><div class="cf-img-ph" style="width:92px;height:92px;border-radius:12px;border-style:solid">logo</div><figcaption>r 12 (partners)</figcaption></figure>
+            <figure><div class="cf-img-ph" style="width:80px;height:56px;background:#262626;color:#fff">logo</div><figcaption>nền tối</figcaption></figure>
+          </div></div><div class="spec-f"><span class="note">Chỉ giữ chỗ: ảnh và logo của Cloudflare/đối tác không nhúng vào kit.</span></div></div>
+
+        <div class="spec full" data-g="w-diagram" data-sig="b258311d5e 8fb58df8f0 92a2f603a9 cd831978bb 5b5d145c8d 8117557b08 3262257b8d 4e36723fd6 f614aeaa8c fa9ec9be1a 1e76918b88 5f2653af09 fcdfc9eb02 3ca8a90979 864cfc1cc8"><div class="spec-h"><b>Sơ đồ &amp; đồng hồ giá</b><span class="kind">diagram · node · meter</span><span class="dp">ô 89 × 62 · r 3</span></div>
+          <div class="stage surface col">
+            <div class="cf-diagram"><span style="font-size:13px;color:var(--cf-text-secondary);align-self:center">Visitor traffic →</span><div class="cf-node"><span class="ms">public</span>CDN</div><div class="cf-node"><span class="ms">shield</span>DDoS</div><div class="cf-node"><span class="ms">lock</span>SSL</div><div class="cf-node hot"><span class="ms">bolt</span>WAF</div><div class="cf-node dash"><span class="ms">swap_horiz</span>Bot</div><span style="font-size:13px;color:var(--cf-accent-100);align-self:center">Your site</span></div>
+            <div class="cf-meter"><div style="display:flex;justify-content:space-between"><span>Requests</span><b>$0.30 / million</b></div><div class="bar"><i></i></div><small style="color:var(--cf-text-secondary)">100,000 / daily requests free</small></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="cf-badge dot"></span><span class="cf-badge ring"></span><span class="cf-node dash" style="height:auto;padding:4px 8px;min-width:0">free</span></div>
+          </div><div class="spec-f"><span class="note">Nút sơ đồ và đồng hồ giá có viền đứt cam 30–50%, nền đen 5%. Đây là minh hoạ động trên site, kit chỉ bày trạng thái tĩnh.</span></div></div>
+
+        <div class="spec" data-g="w-terminal" data-sig="92aad3bc72 d53a5e7f8d 197faeb66e bc54f15ad2 56ea585011 8c4d299e82 b45314836a 36b11d107c bdfa468ab7"><div class="spec-h"><b>Ô lệnh &amp; ghi chú nổi</b><span class="kind">terminal · rounded-[10px]</span><span class="dp">r 10</span></div>
+          <div class="stage surface col">
+            <div class="cf-terminal"><div class="hd">Launching agents to analyze repository…</div><div class="live">3 background agents launched</div>
+              <div><span class="ag">review-agent</span> → scanning PRs · 179.4k tokens</div><div><span class="ag">test-agent</span> → running checks</div>
+              <div class="prompt"><span>&gt;_</span><button class="cf-enter">Enter <kbd>↵</kbd></button></div></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="cf-sticky">"Egress costs just doubled this week…"</span><span class="cf-status"><span class="ms">warning</span>Status: unresolved</span></div>
+          </div></div>
+
+        <div class="spec" data-g="w-faq" data-sig="6114c23629 eab9cbce4c"><div class="spec-h"><b>FAQ &amp; mục mở</b><span class="kind">disclosure</span><span class="dp">r 8 · 2 cột</span></div>
+          <div class="stage surface col">
+            <div class="cf-faq"><div class="q"><b>What is Cloudflare Registrar?</b><span>Đăng ký, gia hạn và quản lý tên miền với giá gốc.</span></div><div class="q"><b>How is pricing set?</b><span>Không cộng lãi trên phí registry.</span></div></div>
+            <div class="states">
+              <figure><button class="cf-disc">Core Features <span class="ms">expand_more</span></button><figcaption>nghỉ</figcaption></figure>
+              <figure><button class="cf-disc is-hover" data-st="w-faq:hover" data-sig-state="6114c23629:hover">Core Features <span class="ms">expand_more</span></button><figcaption>hover · nền 2%</figcaption></figure>
+              <figure><a class="cf-disc-link is-hover" data-st="w-faq:hover" data-sig-state="eab9cbce4c:hover">See supported extensions</a><figcaption>hover · gạch chân</figcaption></figure>
+              <figure><a class="cf-disc-link is-active" data-st="w-faq:active" data-sig-state="eab9cbce4c:active">See supported extensions</a><figcaption>active</figcaption></figure>
+              <figure><a class="cf-disc-link is-focus" data-st="w-faq:focus" data-sig-state="eab9cbce4c:focus">See supported extensions</a><figcaption>focus</figcaption></figure>
+            </div></div></div>
+
+        <div class="spec" data-g="w-modal" data-sig="5d66367c47"><div class="spec-h"><b>Hộp thoại</b><span class="kind">dialog · nav</span><span class="dp">r 12 · scrim 95%</span></div>
+          <div class="stage surface"><div class="cf-scrim"><div class="cf-modal"><header>Supported Domain Extensions <button class="cf-icon-btn" style="width:28px;height:28px;border:none" aria-label="Đóng"><span class="ms">close</span></button></header>
+            <input class="cf-input filter" placeholder="Filter extensions" aria-label="Lọc">
+            <span class="empty">We couldn't load the extensions. Try again.</span><button class="cf-btn v-warn" style="align-self:flex-start">Try again</button></div></div></div></div>
+      </div>
+    </section>
+
+    <!-- ================= NHẬP LIỆU ================= -->
+    <section class="block" id="inputs">
+      <header><span class="fam">www</span><h2>Nhập liệu</h2><p>Ô nhập bo 8, viền <code>border-100</code>. Khi focus viền chuyển cam kèm vòng 3px cam 35%. Form hotline có trường bắt buộc đánh dấu sao đỏ.</p></header>
+      <div class="grid">
+        <div class="spec full" data-g="w-input" data-sig="8e846bf293 d32da94dde 3a4d9c1973"><div class="spec-h"><b>Trường form</b><span class="kind">input · select · textarea</span><span class="dp">h 40 · r 8 · 14</span></div>
+          <div class="stage surface"><div class="states" style="width:100%">
+            <figure style="flex:1"><div class="cf-field"><label>First Name <em>*</em></label><input class="cf-input" placeholder="Ada"></div><figcaption>nghỉ</figcaption></figure>
+            <figure style="flex:1"><div class="cf-field"><label>Contact Email <em>*</em></label><input class="cf-input is-focus" data-st="w-input:focus" data-sig-state="8e846bf293:focus d32da94dde:focus 3a4d9c1973:focus" value="ada@example.com"></div><figcaption>focus · cam + ring 35%</figcaption></figure>
+            <figure style="flex:1"><div class="cf-field"><label>Country <em>*</em></label><div class="cf-select"><select class="cf-input" aria-label="Country"><option>Vietnam</option></select></div></div><figcaption>select</figcaption></figure>
+          </div></div>
+          <div class="stage surface col"><div class="cf-field"><label>Mô tả triệu chứng tấn công <em>*</em></label><textarea class="cf-input" placeholder="…"></textarea></div>
+            <div class="cf-check"><i></i>Verify you are human <span style="margin-left:auto" class="cf-logo-ph">widget Turnstile</span></div>
+            <button class="cf-btn v-accent block" style="opacity:.5">Get help</button></div>
+          <div class="spec-f"><span class="note">Ô xác minh là widget Turnstile (iframe bên thứ ba), kit chỉ giữ chỗ. Nút gửi mờ 50% khi form chưa hợp lệ.</span></div></div>
+
+        <div class="spec full" data-g="w-domain-search" data-sig="60812f0ca1 3dd7821313 962782c590 e30f6e61fe"><div class="spec-h"><b>Ô tìm tên miền</b><span class="kind">search · rounded-[14px]</span><span class="dp">r 14 · lọc r 6</span></div>
+          <div class="stage surface col">
+            <div class="cf-search"><span class="ms" style="margin-left:8px;color:var(--cf-text-tertiary)">search</span><input placeholder="Enter a name, domain, or keyword" aria-label="Tên miền"><button class="cf-btn v-accent">Search</button></div>
+            <div class="cf-search is-focus" data-st="w-domain-search:focus" data-sig-state="962782c590:focus"><span class="ms" style="margin-left:8px;color:var(--cf-text-tertiary)">search</span><input value="example.dev" aria-label="Tên miền (focus)"><button class="cf-btn v-accent">Search</button></div>
+            <input class="cf-input filter" placeholder="Filter extensions" aria-label="Lọc đuôi">
+          </div><div class="spec-f"><span class="note">Focus chỉ thêm viền 1px màu chữ 50% quanh khung (box-shadow, không outline).</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= PHẢN HỒI ================= -->
+    <section class="block" id="feedback">
+      <header><span class="fam">www · Kumo</span><h2>Phản hồi</h2></header>
+      <div class="grid">
+        <div class="spec" data-g="w-badge" data-sig="515fe566a5 ba02ed7b6b d79ddc98fe 40ceccd97d 5163f5ca3c"><div class="spec-h"><b>Badge</b><span class="kind">badge · rounded-full</span><span class="dp">h 22 · 12 500</span></div>
+          <div class="stage surface"><span class="cf-badge">54</span><span class="cf-badge p0">P0</span><span class="cf-badge dot"></span><span class="cf-badge ring"></span><span class="cf-toast"><span class="ms">check</span>Pushed 57 new updates today</span></div>
+          <div class="spec-f"><span class="note">P0: #ed1641 trên nền 10% cùng màu. Số đếm: nền đen 8%.</span></div></div>
+
+        <div class="spec" data-g="w-eyebrow w-code-chip" data-sig="69a515699f 2737a9ad62 ce7da535dd"><div class="spec-h"><b>Nhãn mục &amp; chip mã</b><span class="kind">tag · code</span><span class="dp">mono 11 · pill</span></div>
+          <div class="stage surface"><span class="cf-eyebrow">How it works</span><span class="cf-eyebrow">FAQ</span><span class="cf-eyebrow inv">FAQ</span><span class="cf-code-chip">CLOUDFLARE REGISTRAR</span></div></div>
+
+        <div class="spec full"><div class="spec-h"><b>Banner trạng thái (Kumo)</b><span class="kind">--color-kumo-*-tint</span><span class="dp">r 8</span></div>
+          <div class="stage surface col">
+            <div class="cf-banner info"><span class="ms">info</span>Thông tin: token kumo-info-tint + text-kumo-info.</div>
+            <div class="cf-banner success"><span class="ms">check_circle</span>Thành công: kumo-success-tint.</div>
+            <div class="cf-banner warning"><span class="ms">warning</span>Cảnh báo: kumo-warning-tint.</div>
+            <div class="cf-banner danger"><span class="ms">error</span>Lỗi: kumo-danger-tint.</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap"><span class="cf-kbadge" style="background:var(--cf-kumo-badge-red)">red</span><span class="cf-kbadge" style="background:var(--cf-kumo-badge-green)">green</span><span class="cf-kbadge" style="background:var(--cf-kumo-badge-orange)">orange</span><span class="cf-kbadge" style="background:var(--cf-kumo-badge-purple)">purple</span><span class="cf-kbadge" style="background:var(--cf-kumo-badge-teal)">teal</span><span class="cf-kbadge" style="background:var(--cf-kumo-badge-blue)">blue</span><span class="cf-kbadge" style="background:var(--cf-kumo-badge-neutral)">neutral</span></div>
+          </div><div class="spec-f"><span class="note">Dựng từ token Kumo có trên trang (đo cả sáng lẫn tối). Vòng quét www không gặp banner nào hiển thị, nên hình dáng vẽ theo spec.</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Màu nhóm sản phẩm</b><span class="kind">--color-{compute…}-100/200</span></div>
+          <div class="stage surface">
+            <span class="cf-cat" style="background:var(--cf-compute-200);color:var(--cf-compute-100)">Compute</span><span class="cf-cat" style="background:var(--cf-storage-200);color:var(--cf-storage-100)">Storage</span><span class="cf-cat" style="background:var(--cf-ai-200);color:var(--cf-ai-100)">AI</span><span class="cf-cat" style="background:var(--cf-media-200);color:var(--cf-media-100)">Media</span><span class="cf-cat" style="background:var(--cf-security-200);color:var(--cf-security-100)">Security</span><span class="cf-cat" style="background:var(--cf-sase-200);color:var(--cf-sase-100)">SASE</span>
+          </div><div class="spec-f"><span class="note">Mỗi nhóm có cặp chữ 100 / nền 200 (200 là cùng màu ở 10%, tối 20%).</span></div></div>
+
+        <div class="spec" data-g="focus-www" data-sig=""><div class="spec-h"><b>Focus · 2 kiểu</b><span class="kind">:focus-visible</span></div>
+          <div class="stage surface"><div class="states">
+            <figure><button class="cf-btn is-focus">Ring riêng của site</button><figcaption>viền ring + 3px 50%</figcaption></figure>
+            <figure><button class="cf-btn ua-focus" data-st="focus-www:ua" data-sig-state="9363091d50:focus fb9c44395e:focus ddc275fd73:focus d67bf9cf16:focus 13f900856a:focus 1976d81de1:focus 0aaa0f9ffe:focus 2fc4546b56:focus 930e721b46:focus 4ad30e5cb6:focus a0f1f99eb3:focus 83bc1848a9:focus 03b3404995:focus 6114c23629:focus 3dd7821313:focus d350b1a3d8:focus d065ce6007:focus 5858fc90e7:focus 65147c2cae:focus bce5b8fff5:focus f873d452a1:focus cf24f89dcc:focus 14e9da8d6e:focus 1e8298783c:focus 2d7412293a:focus 5d857f1468:focus b332bea051:focus d45b0ac97b:focus d7d14c5b6d:focus" style="box-shadow:none">Mặc định</button><figcaption>outline trình duyệt</figcaption></figure>
+          </div></div><div class="spec-f"><span class="note">29 phần tử www (link chữ, tab logo, ô logo, nút vùng) chỉ có focus mặc định của trình duyệt (<code>outline: auto</code>): site không style riêng cho chúng.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= CMS CŨ ================= -->
+    <section class="block" id="legacy">
+      <header><span class="fam">CMS cũ · galileo · campaigns · press-kit · impact · trust-hub</span><h2>CMS cũ</h2><p>Các trang chưa chuyển sang www mới. Font hệ thống (-apple-system) hoặc Inter, cam <code>#ff6633</code>, nút bo 8, footer navy <code>#070033</code>. Nút có hai kiểu trạng thái: kiểu CMS (hover chuyển navy) và kiểu Galileo/Athenian (hover cam nhạt, nhấn có viền trong 3px). Họ này không có chế độ tối, nên khối luôn sáng.</p></header>
+      <div class="grid">
+        <div class="spec full" data-g="l-btn-filled" data-sig="65bf9b200a b3ff3b5ea3 b26d70f231 a70029031a 3702e7e250 c6dcbdfc37 6541f04ce3 6709b2339a d3d26cb9a4 dcbcbdd18c 6c7e695d21 55f66f675b fae741d5d6"><div class="spec-h"><b>Nút cam bo 8</b><span class="kind">button · ff6633</span><span class="dp">h 40 · r 8 · 16 400</span></div>
+          <div class="stage light lg"><div class="states">
+            <figure><button class="lg-btn filled">Request a demo</button><figcaption>CMS · nghỉ</figcaption></figure>
+            <figure><button class="lg-btn filled is-hover" data-st="l-btn-filled:hover" data-sig-state="65bf9b200a:hover b26d70f231:hover 3702e7e250:hover 6541f04ce3:hover d3d26cb9a4:hover 6c7e695d21:hover fae741d5d6:hover">Request a demo</button><figcaption>hover · navy</figcaption></figure>
+            <figure><button class="lg-btn filled is-active" data-st="l-btn-filled:active" data-sig-state="65bf9b200a:active b26d70f231:active 3702e7e250:active 6541f04ce3:active dcbcbdd18c:active 55f66f675b:active">Request a demo</button><figcaption>active · 070033</figcaption></figure>
+            <figure><button class="lg-btn filled is-focus" data-st="l-btn-filled:focus" data-sig-state="65bf9b200a:focus b26d70f231:focus 3702e7e250:focus 6541f04ce3:focus d3d26cb9a4:focus 6c7e695d21:focus fae741d5d6:focus">Request a demo</button><figcaption>focus · f06033 + outline</figcaption></figure>
+          </div></div>
+          <div class="stage light lg"><div class="states">
+            <figure><button class="lg-btn filled gl sm">Contact sales</button><figcaption>Galileo · nghỉ</figcaption></figure>
+            <figure><button class="lg-btn filled gl sm is-hover" data-st="l-btn-filled:hover" data-sig-state="b3ff3b5ea3:hover a70029031a:hover c6dcbdfc37:hover 6709b2339a:hover dcbcbdd18c:hover 55f66f675b:hover">Contact sales</button><figcaption>hover · f6821f</figcaption></figure>
+            <figure><button class="lg-btn filled gl sm is-active" data-st="l-btn-filled:active" data-sig-state="b3ff3b5ea3:active a70029031a:active c6dcbdfc37:active 6709b2339a:active 6c7e695d21:active fae741d5d6:active">Contact sales</button><figcaption>active · viền trong</figcaption></figure>
+            <figure><button class="lg-btn filled gl sm is-focus" data-st="l-btn-filled:focus" data-sig-state="b3ff3b5ea3:focus a70029031a:focus c6dcbdfc37:focus 6709b2339a:focus dcbcbdd18c:focus 55f66f675b:focus">Contact sales</button><figcaption>focus · vòng 8px</figcaption></figure>
+          </div></div></div>
+
+        <div class="spec" data-g="l-btn-outline" data-sig="ce8413716c 41fab29762 3b21f0a448 a514e3bdf7 7e174d3c76"><div class="spec-h"><b>Nút viền cam</b><span class="kind">Log in · Sign up</span><span class="dp">r 8 · viền 1</span></div>
+          <div class="stage light lg"><div class="states">
+            <figure><button class="lg-btn outline sm">Log in</button><figcaption>nghỉ</figcaption></figure>
+            <figure><button class="lg-btn outline sm is-hover" data-st="l-btn-outline:hover" data-sig-state="ce8413716c:hover 3b21f0a448:hover 7e174d3c76:hover">Log in</button><figcaption>CMS hover</figcaption></figure>
+            <figure><button class="lg-btn outline sm is-active" data-st="l-btn-outline:active" data-sig-state="ce8413716c:active 3b21f0a448:active 7e174d3c76:active">Log in</button><figcaption>active</figcaption></figure>
+            <figure><button class="lg-btn outline sm is-focus" data-st="l-btn-outline:focus" data-sig-state="ce8413716c:focus 41fab29762:focus 3b21f0a448:focus a514e3bdf7:focus 7e174d3c76:focus">Log in</button><figcaption>focus</figcaption></figure>
+            <figure><button class="lg-btn outline gl sm is-hover" data-st="l-btn-outline:hover" data-sig-state="41fab29762:hover a514e3bdf7:hover">Log in</button><figcaption>Galileo hover · ffe0d6</figcaption></figure>
+            <figure><button class="lg-btn outline gl sm is-active" data-st="l-btn-outline:active" data-sig-state="41fab29762:active a514e3bdf7:active">Log in</button><figcaption>Galileo active</figcaption></figure>
+          </div></div></div>
+
+        <div class="spec" data-g="l-btn-white" data-sig="9a89670038 6b9ddf6ff2"><div class="spec-h"><b>Nút trắng</b><span class="kind">Learn More · Sign up</span><span class="dp">r 8</span></div>
+          <div class="stage light lg"><div class="states">
+            <figure><button class="lg-btn white">Sign up</button><figcaption>nghỉ</figcaption></figure>
+            <figure><button class="lg-btn white is-hover" data-st="l-btn-white:hover" data-sig-state="9a89670038:hover">Sign up</button><figcaption>hover · navy</figcaption></figure>
+            <figure><button class="lg-btn white is-active" data-st="l-btn-white:active" data-sig-state="9a89670038:active">Sign up</button><figcaption>active</figcaption></figure>
+            <figure><button class="lg-btn white is-focus" data-st="l-btn-white:focus" data-sig-state="9a89670038:focus">Sign up</button><figcaption>focus</figcaption></figure>
+            <figure><button class="lg-btn white gl is-hover" data-st="l-btn-white:hover" data-sig-state="6b9ddf6ff2:hover">Learn More</button><figcaption>Athenian hover · ffc2ad</figcaption></figure>
+            <figure><button class="lg-btn white gl is-active" data-st="l-btn-white:active" data-sig-state="6b9ddf6ff2:active">Learn More</button><figcaption>active</figcaption></figure>
+            <figure><button class="lg-btn white gl is-focus" data-st="l-btn-white:focus" data-sig-state="6b9ddf6ff2:focus">Learn More</button><figcaption>focus · vòng 8px đen 20%</figcaption></figure>
+          </div></div></div>
+
+        <div class="spec full" data-g="l-link" data-sig="b2892b887b 5e1c15f686 7c3a125de0 9206db540b b12ecd94f6 13d48a0521 58051a99c0 24af86bb92 dbf73af1b5 66cbf9a3d2 aa06aaf2c1 97818ed2c3 d4278f2f9c fcf81347df bb78aa7cae 9055422a93 cce9c1ae7d 7f1b2a67c8 a220e469af b12a92e980 761a9a511c 1e79ba288c ddebbd5178 c8a5a2843b 7b23498d67 2b23c6de97"><div class="spec-h"><b>Liên kết</b><span class="kind">a · button link</span><span class="dp">16 · 14</span></div>
+          <div class="stage light lg"><div class="states">
+            <figure><a class="lg-link">Learn More</a><figcaption>xanh 0051c3</figcaption></figure>
+            <figure><a class="lg-link is-hover" data-st="l-link:hover" data-sig-state="761a9a511c:hover ddebbd5178:hover">Learn More</a><figcaption>hover · 0045a6</figcaption></figure>
+            <figure><a class="lg-link arrow">Download images</a><figcaption>mũi tên cam</figcaption></figure>
+            <figure><a class="lg-link under">Read case study</a><figcaption>gạch 1 · pad 2</figcaption></figure>
+            <figure><a class="lg-link under is-active" data-st="l-link:active" data-sig-state="b2892b887b:active 9206db540b:active aa06aaf2c1:active 9055422a93:active">Read case study</a><figcaption>active · 5e5e5e</figcaption></figure>
+            <figure><a class="lg-link pill">Modernize applications</a><figcaption>mục menu</figcaption></figure>
+            <figure><a class="lg-link pill is-hover" data-st="l-link:hover" data-sig-state="1e79ba288c:hover 2b23c6de97:hover">Modernize applications</a><figcaption>hover · f8f8fb</figcaption></figure>
+            <figure><a class="lg-link press is-active" data-st="l-link:active" data-sig-state="5e1c15f686:active b12ecd94f6:active 97818ed2c3:active cce9c1ae7d:active">Business plan</a><figcaption>active · fab479</figcaption></figure>
+          </div></div></div>
+
+        <div class="spec full" data-g="l-header" data-sig="4afd5230e2 8386fc987e f19bfd1d77 4f0574bc44 179679c485 605bb58032 f648aa7a6e 32513a860d 0557973b11 86505f190d 01c34d9169 ead76d3451 6daa048b1b 16d823f2ba 491b6fcdb7 4b46472d12"><div class="spec-h"><b>Header CMS</b><span class="kind">nav · 2 tầng</span><span class="dp">util 12 · main 56</span></div>
+          <div class="stage light lg" style="display:block;padding:0"><div class="lg-header">
+            <div class="util"><a class="lg-link is-hover" data-st="l-header:hover" data-sig-state="179679c485:hover 0557973b11:hover" style="font-size:12px">Sales: +00 000 0000</a><a class="lg-link" style="font-size:12px;color:#222">Support ▾</a><span class="ms" style="font-size:16px">language</span></div>
+            <div class="main"><span class="cf-logo-ph" style="color:#222">logo</span><a class="navi">Platform</a><a class="navi is-hover" data-st="l-header:hover" data-sig-state="32513a860d:hover 86505f190d:hover">Products</a><a class="navi is-focus" data-st="l-header:focus" data-sig-state="f19bfd1d77:focus">Developers</a><a class="navi">Partners</a><a class="navi">Resources</a><span class="grow"></span><span class="ms">search</span><a class="lg-link" style="color:#222;font-size:14px">Sign up</a><button class="lg-btn outline sm">Log in</button><button class="lg-btn filled plain sm">Contact sales</button></div>
+          </div></div>
+          <div class="stage light lg"><div class="lg-subnav" style="width:100%"><b>Newsroom</b><a>Overview</a><a>Recent news</a><a>Press releases</a><a>Awards</a><a class="is-on">Press kit</a></div></div></div>
+
+        <div class="spec" data-g="l-subnav" data-sig="62f8e0be69 361766331b 4103317409"><div class="spec-h"><b>Tab trang</b><span class="kind">tabs</span><span class="dp">14 600 · gạch cam 2</span></div>
+          <div class="stage light lg"><div class="lg-subnav" style="width:100%"><a class="is-on">Compliance resources</a><a>Privacy &amp; data protection</a><a>Responsible AI</a></div></div>
+          <div class="spec-f"><span class="note">Focus các tab này là outline trình duyệt (xem thẻ Focus CMS).</span></div></div>
+
+        <div class="spec" data-g="l-accordion" data-sig="4c8404de61 72af0e153f 7ae6287e4c e56b9f86ad c963ddfe0a"><div class="spec-h"><b>Accordion</b><span class="kind">disclosure</span><span class="dp">pad 16/12 · viền e1e1e1</span></div>
+          <div class="stage light lg col"><div class="lg-acc"><button>What personal data do we collect? <span class="ms">expand_more</span></button><button class="is-hover" data-st="l-accordion:hover" data-sig-state="4c8404de61:hover 72af0e153f:hover">Platform · Connectivity cloud <span class="ms">expand_more</span></button></div></div></div>
+
+        <div class="spec full" data-g="l-card l-case l-stat" data-sig="f9bb0afd5d 0a0e02e11d abe9efa724 168c9408da d53992501d 0332d415de a044cc6346 e4fe0229ce 2ac7f0691b 126df90a4d 8fa6e4a539 a3c8446c08 76fbfae4ad eee75681aa bd574fd2b5 e1be64e815 ac8ea8bfdc 64a6531ff8 990de69ca1 cefe357ff4 d206a17946 4c9a6883be 197253f245 6b2a4e21b6 7a9d2f3647 1a6af1fb86 59bc98f893 d95fc0762b 6eab41e65a d4a5db929c 4998cc3875 505590e2ae 5b2e5744d9 fe2cae27d8 de9aa27d9d 5d239ba9a7 eb610cc860 dae4c261f1 9287f91d0b 2f44b8cd3e 24e2a23735 aca6baf93e df5cfafb87 a8c771129a 8f3bf49e79 bed8d51e87 0c7acae627 fe2f4f19b7 f40766f87d c3d1e4373e 68465f03b9 0644544ae5 85cc4f5247 ff845b02f9 79cd798460 b0cb1b99ef"><div class="spec-h"><b>Thẻ tải xuống · case study · số liệu</b><span class="kind">card</span><span class="dp">r 8 · pad 16–20</span></div>
+          <div class="stage light lg"><div class="states">
+            <figure><div class="lg-card"><div class="img cf-img-ph">ảnh press kit</div><div class="bd"><b>Company logos</b>Logo trên nền trong và trắng<a class="lg-link arrow">Download images</a></div></div><figcaption>thẻ tải xuống</figcaption></figure>
+            <figure><div class="lg-card is-focus" data-st="l-card:focus"><div class="img cf-img-ph">ảnh video</div><div class="bd"><b>Network map motion</b><a class="lg-link arrow">Download video</a></div></div><figcaption>thẻ bấm được · focus</figcaption></figure>
+            <figure><div class="lg-case"><span class="ms" style="color:#0051c3">apartment</span><b>Tổ chức phi lợi nhuận</b>Viền đen 20%, bo 8, chữ 14/20.</div><figcaption>case study</figcaption></figure>
+            <figure><div class="lg-stat"><b>20%</b><span>số liệu nổi bật</span></div><figcaption>số liệu · f8f8fb</figcaption></figure>
+          </div></div></div>
+
+        <div class="spec" data-g="l-panel l-section" data-sig="de3221e397 8f4ff33f02 d086afe054 57a40d97c2 1dd513d605 903cd85bea bbbf1982aa eb5e7dd791 db37747b5c 95fb905663 5d76931495 850586cbbd 6d8c456ab2 bfb0546288 479902ab77 8e323883dd 2ab1191e08 e34e30a1c9 3ca32c73f4 241d2c3358 b5bf3acada 6f6726c6e7 4dc4fa5c00 affae35edc cd039bfbef"><div class="spec-h"><b>Panel xám &amp; hero CMS</b><span class="kind">section</span><span class="dp">f8f8fb · r 0 0 8 8</span></div>
+          <div class="stage light lg col"><div class="lg-hero"><h3>Bảo vệ an ninh mạng cho site cộng đồng</h3><button class="lg-btn filled gl sm">Apply now</button></div>
+            <div class="lg-panel"><h6>Industries</h6><a class="lg-link arrow">Healthcare</a><a class="lg-link arrow">Public sector</a></div></div>
+          <div class="spec-f"><span class="note">Nền hero là ảnh minh hoạ trên site. Kit thay bằng gradient giữ chỗ (vẽ theo mắt).</span></div></div>
+
+        <div class="spec" data-g="l-input l-tag" data-sig="20c1d62bff f9f0ee5d49 38309990e9 b5b7f13ded"><div class="spec-h"><b>Ô nhập CMS</b><span class="kind">input · select</span><span class="dp">h 40 · r 8 · viền c6c6c6</span></div>
+          <div class="stage light lg"><div class="states" style="width:100%">
+            <figure style="flex:1"><input class="lg-input" placeholder="Email" aria-label="Email"><figcaption>nghỉ</figcaption></figure>
+            <figure style="flex:1"><input class="lg-input is-hover" data-st="l-input:hover" data-sig-state="20c1d62bff:hover f9f0ee5d49:hover 38309990e9:hover" placeholder="Email" aria-label="Email hover"><figcaption>hover · 5e5e5e</figcaption></figure>
+            <figure style="flex:1"><input class="lg-input is-focus" data-st="l-input:focus" data-sig-state="20c1d62bff:focus f9f0ee5d49:focus" value="ada@example.com" aria-label="Email focus"><figcaption>focus · vòng 4px</figcaption></figure>
+            <figure><span class="lg-tag">Yes</span><figcaption>tag viền 747474</figcaption></figure>
+          </div></div></div>
+
+        <div class="spec full" data-g="l-footer" data-sig="564f7ca63d 186e793fc4 188e8eb63b 5e29e9df40 c6d8a50c0b 947c80fe24 bb34976db5 3c116ee56f faff485248 57267e6199 e96d415428 b130137ade ebfa3f960d cf84c4c5f1 4ff0093373 9b0bc92ade 414f5796c0 5eb3c6fce0 dbfec025fd 13ea9ab13b cd249700ab 020ca1fa0f"><div class="spec-h"><b>Footer navy</b><span class="kind">footer · 070033</span><span class="dp">4 cột · link 14</span></div>
+          <div class="stage light lg" style="display:block;padding:0;overflow-x:auto"><div class="lg-footer">
+            <div class="cols"><div><h6>Getting started</h6><a>Free plans</a><a>Small business plans</a></div><div><h6>Resources</h6><a>Documentation</a><a>Learning center</a></div><div><h6>Community</h6><a>Community hub</a><a>Project Galileo</a></div><div><h6>Company</h6><a>About</a><a>Careers</a></div></div>
+            <div class="legal"><a>Privacy Policy</a><a>Terms of Use</a><a>Cookie Preferences</a></div></div></div>
+          <div class="stage light lg"><div class="states">
+            <figure><a class="lg-skip">SKIP TO CONTENT</a><figcaption>skip link</figcaption></figure>
+            <figure><a class="lg-skip is-hover" data-st="l-footer:hover" data-sig-state="188e8eb63b:hover">SKIP TO CONTENT</a><figcaption>hover · 0045a6</figcaption></figure>
+            <figure><a class="lg-skip is-active" data-st="l-footer:active" data-sig-state="188e8eb63b:active">SKIP TO CONTENT</a><figcaption>active</figcaption></figure>
+            <figure><a class="lg-skip ua-focus" data-st="l-footer:focus" data-sig-state="188e8eb63b:focus">SKIP TO CONTENT</a><figcaption>focus · trượt vào (translateY −240 → 0)</figcaption></figure>
+            <figure><a class="lg-link press is-active" data-st="l-footer:active" data-sig-state="5e29e9df40:active">Privacy Policy</a><figcaption>active · fab479</figcaption></figure>
+          </div></div></div>
+
+        <div class="spec" data-g="focus-legacy" data-sig=""><div class="spec-h"><b>Focus CMS</b><span class="kind">:focus</span></div>
+          <div class="stage light lg"><div class="states">
+            <figure><a class="lg-link ua-focus" data-st="focus-legacy:ua" data-sig-state="b2892b887b:focus f9bb0afd5d:focus 5e1c15f686:focus 8386fc987e:focus 7c3a125de0:focus 9206db540b:focus b12ecd94f6:focus 13d48a0521:focus 0a0e02e11d:focus abe9efa724:focus 24af86bb92:focus 186e793fc4:focus 168c9408da:focus dbf73af1b5:focus d53992501d:focus 0332d415de:focus a044cc6346:focus 179679c485:focus aa06aaf2c1:focus e4fe0229ce:focus 2ac7f0691b:focus 97818ed2c3:focus 126df90a4d:focus 8fa6e4a539:focus d4278f2f9c:focus a3c8446c08:focus 76fbfae4ad:focus eee75681aa:focus bd574fd2b5:focus e1be64e815:focus 5e29e9df40:focus ac8ea8bfdc:focus 64a6531ff8:focus fcf81347df:focus bb78aa7cae:focus 990de69ca1:focus cefe357ff4:focus 9055422a93:focus cce9c1ae7d:focus 4c8404de61:focus 72af0e153f:focus 7ae6287e4c:focus e56b9f86ad:focus c963ddfe0a:focus 605bb58032:focus 7f1b2a67c8:focus f648aa7a6e:focus a220e469af:focus b12a92e980:focus 761a9a511c:focus 32513a860d:focus 1e79ba288c:focus 0557973b11:focus ddebbd5178:focus 4ff0093373:focus 86505f190d:focus c8a5a2843b:focus 7b23498d67:focus 2b23c6de97:focus 62f8e0be69:focus 361766331b:focus 4103317409:focus">Mặc định</a><figcaption>outline trình duyệt</figcaption></figure>
+            <figure><button class="lg-btn filled gl sm is-focus">Vòng 8px</button><figcaption>riêng của Galileo</figcaption></figure>
+          </div></div><div class="spec-f"><span class="note">62 phần tử CMS chỉ có focus mặc định của trình duyệt (<code>outline: auto</code> #005fcc).</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= CONNECT ================= -->
+    <section class="block" id="connect">
+      <header><span class="fam">microsite · /connect</span><h2>Connect 2026</h2><p>Microsite hội nghị: font STK Bureau Sans (kit thay bằng Instrument Sans), mono Paper Mono, nút pill đen <code>#030101</code> và cam <code>#f46021</code>. Trang chạm trần 120 giây nên vòng quét không đo được trạng thái nào. Kit chỉ bày trạng thái nghỉ.</p></header>
+      <div class="grid">
+        <div class="spec full" data-g="c-nav" data-sig="d98442a6c2 fa9b99bce5 b8afe4d23a b44f53183d f7ac471c33 754ad5a549 aec4531022 4bd428b44f f0163957d8 05865e187d fb620a4b1d 78231e43a7"><div class="spec-h"><b>Thanh điều hướng &amp; chân trang</b><span class="kind">nav · footer</span><span class="dp">nền cam · pill 9999</span></div>
+          <div class="stage light cn" style="display:block;padding:0;overflow-x:auto"><div class="cn-nav"><span class="cf-logo-ph" style="color:#fff">logo Connect</span><a>Speakers</a><a>Sessions</a><span class="cn-pillnav">Party <span class="ms" style="font-size:16px">expand_more</span></span><a>University</a><a>Partner Summit</a><span class="grow"></span><button class="cn-btn ghost">Register</button></div></div>
+          <div class="stage light cn"><span style="font-size:13px;color:#777">© 2026 · Privacy Policy · FAQs · Convince your boss</span><span class="cn-chip">Party</span><span class="cn-chip" style="font-size:14px">Speakers</span></div></div>
+
+        <div class="spec" data-g="c-btn" data-sig="66acd019cc 11676d8255 973034c8d1 11c34cf37a 662bd6b374 e19b78553e 1e9c482ee3 6b74b38b2d 1a47733e1f a78dda757a 8b9ea42f40"><div class="spec-h"><b>Nút Connect</b><span class="kind">button · rounded-full</span><span class="dp">h 36 · 14 400</span></div>
+          <div class="stage light cn"><button class="cn-btn ink">Register Now</button><button class="cn-btn orange">Browse all sessions</button><button class="cn-btn accent">Browse sessions</button><button class="cn-btn accent2">Browse sessions</button><button class="cn-btn team">Bring your team · Save 20%</button></div></div>
+
+        <div class="spec full" data-g="c-pass" data-sig="e49d1d7714 9f48b618d9 ebb9b16cb0 933f77956e"><div class="spec-h"><b>Vé tham dự</b><span class="kind">pricing · 3 cột</span></div>
+          <div class="stage light cn" style="display:block;overflow-x:auto"><div class="cn-pass">
+            <div class="hot"><span class="lbl">Conference pass</span><b>$595</b><span>Vào toàn bộ keynote, breakout, triển lãm.</span><button class="cn-btn ghost" style="align-self:flex-start">Register now</button></div>
+            <div><span class="lbl">Cloudflare University</span><b>+$495</b><span>Hai ngày đào tạo kỹ thuật.</span><button class="cn-btn ghost" style="align-self:flex-start">Add university pass</button></div>
+            <div><span class="lbl">Group pass</span><b>$495</b><span>Mỗi người khi nhóm từ 6.</span><button class="cn-btn ghost" style="align-self:flex-start">Start a group</button></div>
+          </div></div></div>
+
+        <div class="spec full" data-g="c-feature" data-sig="812742088e 144b186eb8 e2a639f9d6 86c651686d bb313e315d 9a670348d7 a50c2f4798 cd5cae408b 58cd215f8d 69df7ad7c3 50c2ef412b bdedace3c3 2c02077114 cc6d506bf7 69c8b40d3d e315e19974"><div class="spec-h"><b>Lưới đặc điểm · diễn giả · số liệu</b><span class="kind">grid · card</span><span class="dp">viền f4f4f4</span></div>
+          <div class="stage light cn col">
+            <div style="overflow-x:auto"><div class="cn-feature"><div><span class="ms">bolt</span><b>What to expect</b>Keynotes, 100+ breakout, theatre.</div><div><span class="ms">school</span><b>What you'll learn</b>Từ cơ bản tới production.</div><div><span class="ms">groups</span><b>Who you'll meet</b>5,000+ kỹ sư và lãnh đạo.</div></div></div>
+            <div style="display:flex;gap:16px;flex-wrap:wrap"><div class="cn-speaker"><div class="img cf-img-ph">ảnh diễn giả</div><b>Tên diễn giả</b>Chức danh · Công ty</div><div class="cn-stat"><b>0k+</b><span>Devs &amp; security leaders</span></div><div class="cn-sponsor"><b>Sponsors</b><p style="margin:6px 0 0;font-size:13px;color:#555">Khối fafafa, viền e8e9eb, r 10.</p></div></div>
+          </div></div>
+
+        <div class="spec full" data-g="c-agenda" data-sig="7bd90ce900 77576b856e 454e27d041 2559040ef3 ef577e8899 f50fbc141a 2453936a8b"><div class="spec-h"><b>Lịch trình</b><span class="kind">list · 3 cột ngày</span></div>
+          <div class="stage light cn" style="display:block;overflow-x:auto"><div class="cn-agenda">
+            <div><h5>Mon Oct 19</h5><ul><li><time>8AM – 7PM</time>Registration</li><li><time>9AM – 10AM</time>Breakfast</li></ul></div>
+            <div><h5>Tue Oct 20</h5><ul><li><time>7AM – 7PM</time>Expo Hall</li><li><time>9AM – 11AM</time>Opening keynote</li></ul></div>
+            <div><h5>Wed Oct 21</h5><ul><li><time>7AM – 7PM</time>Registration</li><li><time>10AM</time>General session</li></ul></div>
+          </div><div style="display:flex;gap:6px;margin-top:14px;flex-wrap:wrap"><span class="cn-chip"><span class="ms" style="font-size:14px">restaurant</span>Meals</span><span class="cn-chip">Exclusive event swag</span><span class="cn-chip">Evening party</span></div></div></div>
+      </div>
+    </section>
+
+    <!-- ================= MÀN MẪU ================= -->
+    <section class="block" id="screens">
+      <header><h2>Màn hình mẫu</h2><p>Ghép từ chính các class <code>.cf-*</code> ở trên, đúng khung đo được: mobile 390 × 844 (header 54, hero cách mép 4 bo 12, CTA bo 12 cao 66), desktop 1440 × 900 (header 72, hero cách mép 8 bo 16). Trên desktop, mega menu Products được mở đè lên hero, như khi hover thật.</p></header>
+      <div class="screens-wrap"><div class="screens">
+        <div>
+          <div class="phone"><div class="cf-header mob"><span class="cf-logo-ph"><span class="ms">cloud</span></span><nav><button class="cf-btn sm">Login</button><button class="cf-icon-btn sq" aria-label="Tìm kiếm"><span class="ms">search</span></button><button class="cf-icon-btn sq" aria-label="Mở menu"><span class="ms">menu</span></button></nav></div>
+            <div class="scroll"><div class="pad"><div class="cf-hero mob cf-dots" style="height:680px;justify-content:center">
+              <a class="cf-announce" style="font-size:14px">Connect 2026 · Oct 19–21 <i class="ms">arrow_forward</i></a>
+              <h1>Mọi thứ mạng lưới học được, thành mặc định của bạn</h1>
+              <p>Một nền tảng cho ứng dụng, agent và đội ngũ.</p>
+              <button class="cf-btn v-white block">Start building for free</button></div></div>
+              <div style="padding:40px 16px 0;text-align:center"><h2 style="margin:0;font:500 32px/32px var(--font);letter-spacing:-.8px">Region: Earth</h2><p style="color:color-mix(in srgb,var(--cf-foreground-100) 70%,transparent);font-size:20.8px;line-height:25px">Một mạng thông minh cho workload và bảo mật.</p></div>
+              <div class="cf-frame" style="grid-template-columns:1fr;margin:0 16px"><div class="cf-cell" style="border-right:none"><span class="ms">public</span><h3>Run everywhere</h3><p>Chạy ở hơn 335 thành phố.</p></div></div>
+            </div></div>
+          <div class="cap">mobile 390 × 844 · cf-header.mob · cf-hero.mob · cf-announce · cf-btn.v-white.block · cf-frame · cf-cell</div>
+        </div>
+        <div>
+          <div class="phone"><div class="cf-header mob"><span class="cf-logo-ph"><span class="ms">cloud</span></span><nav><button class="cf-icon-btn sq" aria-label="Đóng menu"><span class="ms">close</span></button></nav></div>
+            <div class="cf-mmenu" style="flex:1"><div class="row">Products <span class="ms">chevron_right</span></div><div class="row">Solutions <span class="ms">chevron_right</span></div><div class="row">Resources <span class="ms">chevron_right</span></div><div class="row">Pricing</div>
+              <div style="flex:1"></div>
+              <div class="btns"><button class="cf-btn block v-danger"><span class="ms">gpp_maybe</span>Under attack?</button><button class="cf-btn block">Contact sales</button><button class="cf-btn block">Login</button><button class="cf-btn block v-accent">Start building</button></div></div></div>
+          <div class="cap">menu mobile · cf-mmenu · cf-btn.block (r 12, h 66) · v-danger · v-accent</div>
+        </div>
+        <div>
+          <div class="desk"><div class="cf-header">
+              <span class="cf-logo-ph"><span class="ms">cloud</span>logo</span>
+              <nav><a class="cf-navlink is-open">Products <span class="ms">unfold_more</span></a><a class="cf-navlink">Solutions <span class="ms">unfold_more</span></a><a class="cf-navlink">Resources <span class="ms">unfold_more</span></a><a class="cf-navlink">Pricing</a></nav>
+              <div class="act"><a class="cf-navlink danger"><span class="ms">gpp_maybe</span>Under attack?</a><button class="cf-btn">Login</button><button class="cf-btn">Contact sales</button><button class="cf-icon-btn" aria-label="Tìm kiếm"><span class="ms">search</span></button></div></div>
+            <div style="padding:8px 8px 0"><div class="cf-hero cf-dots" style="height:760px;justify-content:center">
+              <a class="cf-announce">Connect 2026 · The Agentic Conference of the Year · Oct 19–21 <i class="ms">arrow_forward</i></a>
+              <h1>Mọi thứ mạng lưới học được, thành mặc định của bạn</h1>
+              <p>Một nền tảng cho ứng dụng, agent và đội ngũ. Dựng, bảo vệ và mở rộng mà không phải quản hạ tầng.</p>
+              <button class="cf-btn v-white lg">Start building for free</button></div></div>
+            <div class="megawrap"><div class="cf-mega" style="min-width:0;box-shadow:0 16px 40px -12px rgb(0 0 0 / .25)"><div class="cols">
+              <div class="col"><h6>Compute</h6><a class="cf-mega-item"><b>Browser Run</b>Automated browsers</a><a class="cf-mega-item is-hover"><b>Containers</b>Any language, anywhere</a><a class="cf-mega-item"><b>Durable Objects</b>Stateful compute</a><a class="cf-mega-item"><b>Workers</b>Global serverless functions</a></div>
+              <div class="col"><h6>Storage</h6><a class="cf-mega-item"><b>Artifacts</b>Versioned storage</a><a class="cf-mega-item"><b>D1</b>Serverless SQL</a><a class="cf-mega-item"><b>Queues</b>Message processing</a><a class="cf-mega-item"><b>R2</b>Egress-free storage</a></div>
+              <div class="col"><h6>AI</h6><a class="cf-mega-item"><b>Agents</b>Build stateful AI agents</a><a class="cf-mega-item"><b>AI Gateway</b>AI observability</a><a class="cf-mega-item"><b>Vectorize</b>Vector database</a></div>
+              <div class="col"><h6>SASE / Zero Trust</h6><a class="cf-mega-item"><b>SASE</b>SASE platform</a><a class="cf-mega-item"><b>Access</b>Zero trust access</a><a class="cf-mega-item"><b>CASB</b>SaaS posture</a></div>
+              <div class="col"><h6>Security</h6><a class="cf-mega-item"><b>DDoS Protection</b>Mitigation</a><a class="cf-mega-item"><b>Rate Limiting</b>Abuse prevention</a><a class="cf-mega-item"><b>WAF</b>Web Application Firewall</a></div>
+              <div class="col"><h6>Network &amp; Content Delivery</h6><a class="cf-mega-item"><b>CDN</b>Faster delivery &amp; caching</a><a class="cf-mega-item"><b>DNS</b>Fast DNS</a><a class="cf-mega-item"><b>Load Balancing</b>Zero downtime</a></div>
+            </div><div class="foot"><a class="acc">See all products →</a><span class="grow"></span><a>Enterprise</a><a>Global Network</a><a>Domain Registration</a><a>1.1.1.1</a></div></div></div>
+          </div>
+          <div class="cap">desktop 1440 × 900 · cf-header · cf-navlink.is-open · cf-hero (inset 8, r 16, h 760) · cf-mega (6 cột, item hover) · cf-btn.v-white.lg</div>
+        </div>
+      </div></div>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status"><span id="toast-t">Đã copy</span></div>
+
+<script>
+/* bảng token sinh từ dump Playwright (colors: :root / html.dark của www + Kumo [data-mode=dark]) */
+const ROLES=[["accent-100","Thương hiệu"],["accent-200","Thương hiệu"],["accent-muted","Thương hiệu"],["dark-accent","Thương hiệu"],["on-accent","Thương hiệu"],["light-foreground","Thương hiệu"],["selection-bg","Thương hiệu"],["selection-text","Thương hiệu"],["background-100","Nền & chữ"],["background-200","Nền & chữ"],["background-300","Nền & chữ"],["background-content","Nền & chữ"],["foreground-100","Nền & chữ"],["text-secondary","Nền & chữ"],["text-tertiary","Nền & chữ"],["border-100","Viền & focus"],["border-200","Viền & focus"],["decor-dots-100","Viền & focus"],["ring","Viền & focus"],["compute-100","Nhóm sản phẩm"],["compute-200","Nhóm sản phẩm"],["storage-100","Nhóm sản phẩm"],["storage-200","Nhóm sản phẩm"],["ai-100","Nhóm sản phẩm"],["ai-200","Nhóm sản phẩm"],["media-100","Nhóm sản phẩm"],["media-200","Nhóm sản phẩm"],["security-100","Nhóm sản phẩm"],["security-200","Nhóm sản phẩm"],["sase-100","Nhóm sản phẩm"],["sase-200","Nhóm sản phẩm"],["node-bg","Sơ đồ & multiplayer"],["node-border","Sơ đồ & multiplayer"],["node-accent","Sơ đồ & multiplayer"],["multiplayer-orange","Sơ đồ & multiplayer"],["multiplayer-orange-bg","Sơ đồ & multiplayer"],["multiplayer-yellow","Sơ đồ & multiplayer"],["multiplayer-yellow-bg","Sơ đồ & multiplayer"],["kumo-brand","Kumo (design system)"],["kumo-info","Kumo (design system)"],["kumo-success","Kumo (design system)"],["kumo-warning","Kumo (design system)"],["kumo-danger","Kumo (design system)"],["kumo-info-tint","Kumo (design system)"],["kumo-success-tint","Kumo (design system)"],["kumo-warning-tint","Kumo (design system)"],["kumo-danger-tint","Kumo (design system)"],["kumo-text-info","Kumo (design system)"],["kumo-text-success","Kumo (design system)"],["kumo-text-warning","Kumo (design system)"],["kumo-text-danger","Kumo (design system)"],["kumo-text-link","Kumo (design system)"],["kumo-text-default","Kumo (design system)"],["kumo-text-subtle","Kumo (design system)"],["kumo-base","Kumo (design system)"],["kumo-elevated","Kumo (design system)"],["kumo-recessed","Kumo (design system)"],["kumo-line","Kumo (design system)"],["kumo-hairline","Kumo (design system)"],["kumo-focus","Kumo (design system)"],["kumo-badge-red","Kumo (design system)"],["kumo-badge-green","Kumo (design system)"],["kumo-badge-orange","Kumo (design system)"],["kumo-badge-purple","Kumo (design system)"],["kumo-badge-teal","Kumo (design system)"],["kumo-badge-blue","Kumo (design system)"],["kumo-badge-neutral","Kumo (design system)"]];
+const VALUES={"light":["#ff5e1f","#ff7038","#bf4c14","#d63c01","#1f1f1f","#ffffff","#ffe9e0","#c33d08","#ffffff","#fdfdfc","#f9f7f6","#ffffff","#262626","#707070","#727272","#f0f0f0","#cccccc","#ebebeb","#171717","#0a95ff","#0a95ff1a","#ee0ddb","#ee0ddb1a","#00bd7d","#00bd7d1a","#9616ff","#f8ebee","#b52831","#b528311a","#0d9488","#0d94881a","#fffbf5","#e9d1bb","#ff5315","#ff5010","#ffebe2","#ffb10a","#fff5e2","#ff5e1f","#2b7fff","#009966","#fa8900","#fb2c36","#dcebff73","#dcfbe691","#ffe69633","#ffe2e26b","#193cb8","#006045","#bd6500","#c10007","#193cb8","#171717","#737373","#ffffff","#f8f8f8","#f3f3f3","#0a0a0a1a","#e9e9e9","#0b0b0b","#e7000b","#009966","#ffac00","#9810fa","#058378","#155dfc","#737373"],"dark":["#ff5e1f","#ff7038","#ff5e1f","#d63c01","#1f1f1f","#fffbf5","#3d1f0f","#ff7038","#151414","#191817","#2a2927","#1a1a1a","#f0e3de","#9a9390","#9a9390","#f0e3de20","#f0e3de","#f0e3de20","#d4d4d4","#4db8ff","#0a95ff33","#ff5ef0","#ee0ddb33","#00bd7d","#00bd7d1a","#b866ff","#2d1f3d","#ff5b66","#b5283133","#2dd4bf","#0d948833","#1a1209","#3d2e1f","#ff7038","#ff7038","#3d1f0f","#ffc84d","#3d2f0f","#ff5e1f","#2b7fff","#00d492","#db6809","#e7000b","#1b3b8d38","#0a552d33","#5731005e","#9a00002b","#50a2ff","#a4f4cf","#ff8904","#ff6467","#50a2ff","#f5f5f5","#a1a1a1","#0f0f0f","#060606","#0b0b0b","#333333","#262626","#e9e9e9","#c10007","#007a55","#ffac00","#8200db","#00786f","#1447e6","#525252"]};
+const CONST={"CMS cũ (hằng, đo từ phần tử)":[["lg-orange","#ff6633"],["lg-orange-2","#f6821f"],["lg-navy","#070033"],["lg-navy-hover","#080133"],["lg-ink","#222222"],["lg-black","#000000"],["lg-panel","#f8f8fb"],["lg-link","#0051c3"],["lg-link-hover","#0045a6"],["lg-field","#c6c6c6"],["lg-field-hover","#5e5e5e"],["lg-line","#e1e1e1"],["lg-outline-hover","#ffe0d6"],["lg-white-hover","#ffc2ad"],["lg-pressed","#fab479"],["lg-pressed-ink","#993d1f"],["lg-focus-bg","#f06033"],["lg-ua","#005fcc"],["lg-ring-ua","#6ecce5"],["lg-case-line","#00000033"]],"Connect 2026 (hằng, đo từ phần tử)":[["cn-ink","#030101"],["cn-orange","#f46021"],["cn-accent","#ff5e1f"],["cn-accent-2","#ff7038"],["cn-cream","#fffbf5"],["cn-line","#f4f4f4"],["cn-card","#fdfdfd"],["cn-sponsor","#fafafa"],["cn-sponsor-line","#e8e9eb"]]};
+const TYPE=[["h1","2.5rem","3.5rem",".99","-.025em","500"],["h2","2rem","3.5rem","1","-.025em","500"],["h3","2rem","3rem","1","-.025em","500"],["h4","2rem","2rem","1","-.025em","500"],["h5","1.3rem","1.2rem","1.2","-.025em","400"],["h6","1.125rem","1.125rem","1.2","-.025em","500"],["p","1rem","1rem","1.2","-.0025em","400"],["small",".875rem",".875rem","1.15","-.01em","400"],["code",".85em",".85em","1.3","0","500"]];
+const RADII=[["0","lưới, ô, section"],["3","ô sơ đồ"],["4","bento, tab phụ"],["6","nav link, ô lọc"],["8","Enter, input, thẻ giá, nút CMS"],["10","ô lệnh, sponsor"],["12","panel, nút mobile, hero mobile"],["14","ô tìm tên miền"],["16","hero, band CTA"],["24","khối Community"],["pill","nút, tab, badge"]];
+(function () {
+  const root = document.documentElement;
+  const state = { mode: matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light" };
+  try { Object.assign(state, JSON.parse(localStorage.getItem("cf-kit") || "{}")); } catch (e) {}
+  const toast = (t) => { const el = document.getElementById("toast"); document.getElementById("toast-t").textContent = t; el.classList.add("show"); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove("show"), 1600); };
+  const copy = async (text, msg) => { try { await navigator.clipboard.writeText(text); toast(msg); } catch (e) { toast("Trình duyệt chặn clipboard, hãy copy tay"); } };
+  const lum = (hex) => { const h = hex.replace("#", "").slice(0, 6); const [r, g, b] = [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16) / 255).map((c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4)); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
+  function apply() {
+    ROLES.forEach((r, i) => root.style.setProperty("--cf-" + r[0], VALUES[state.mode][i]));
+    root.dataset.mode = state.mode;
+    document.querySelectorAll("#mode button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === state.mode));
+    renderRoles();
+    try { localStorage.setItem("cf-kit", JSON.stringify(state)); } catch (e) {}
+  }
+  document.querySelectorAll("#mode button").forEach((b) => (b.onclick = () => { state.mode = b.dataset.v; apply(); }));
+  /* ô màu: chữ trắng trên nền cam (đúng site), còn lại chọn foreground/background theo độ sáng */
+  function renderRoles() {
+    const box = document.getElementById("roles"); box.innerHTML = "";
+    const vals = VALUES[state.mode]; const fg = vals[ROLES.findIndex((r) => r[0] === "foreground-100")], bg = vals[ROLES.findIndex((r) => r[0] === "background-100")];
+    const groups = [...new Set(ROLES.map((r) => r[1]))].concat(Object.keys(CONST));
+    groups.forEach((g) => {
+      const h = document.createElement("div"); h.className = "role-group"; h.textContent = g; box.appendChild(h);
+      const grid = document.createElement("div"); grid.className = "roles"; box.appendChild(grid);
+      const items = CONST[g] ? CONST[g].map(([n, v]) => [n, v, "--" + n]) : ROLES.map((r, i) => [r[0], vals[i], "--cf-" + r[0], r[1]]).filter((x) => x[3] === g);
+      items.forEach(([name, v, varName]) => {
+        const b = document.createElement("button"); b.className = "role"; b.style.background = v;
+        const solid = v.length <= 7 || /ff$/i.test(v);
+        b.style.color = /accent|orange/.test(name) && solid ? "#fff" : solid ? (lum(v) > 0.35 ? "#262626" : "#fff") : fg;
+        b.innerHTML = "<b>" + name + "</b><code>" + v + "</code>";
+        b.onclick = () => copy(v, "Đã copy " + varName + " " + v);
+        grid.appendChild(b);
+      });
+    });
+  }
+  /* thang chữ --type-* của site (mobile → md) */
+  const ts = document.getElementById("typescale");
+  TYPE.forEach(([name, size, md, lh, ls, w]) => {
+    const row = document.createElement("div"); row.className = "type-row";
+    row.innerHTML = '<span class="meta">--type-' + name + '</span><span class="t" style="font-size:' + md + ';line-height:' + lh + ';letter-spacing:' + ls + ';font-weight:' + w + '">Kết nối nhanh và an toàn</span><span class="meta">' + size + " → md " + md + " · lh " + lh + " · " + ls + " · " + w + "</span>";
+    ts.appendChild(row);
+  });
+  /* mọi bán kính đo được */
+  const sh = document.getElementById("shapes");
+  RADII.forEach(([r, use]) => { const c = document.createElement("div"); c.className = "shape-cell"; c.innerHTML = '<i style="border-radius:' + (r === "pill" ? "9999px" : r + "px") + '"></i><b>' + r + "</b>" + use; sh.appendChild(c); });
+  /* nút copy HTML cho mỗi thẻ thành phần */
+  document.querySelectorAll(".spec").forEach((spec) => {
+    const stage = spec.querySelector(".stage"); if (!stage || !spec.querySelector(".spec-h")) return;
+    let foot = spec.querySelector(".spec-f");
+    if (!foot) { foot = document.createElement("div"); foot.className = "spec-f"; foot.innerHTML = '<span class="note"></span>'; spec.appendChild(foot); }
+    const b = document.createElement("button"); b.className = "copy"; b.innerHTML = '<span class="ms">content_copy</span>HTML';
+    b.onclick = () => copy([...spec.querySelectorAll(".stage")].map((s) => s.innerHTML.trim()).join("\n").replace(/\s(data-st|data-sig-state)="[^"]*"/g, "").replace(/\n\s+/g, "\n"), "Đã copy HTML của " + spec.querySelector(".spec-h b").textContent);
+    foot.appendChild(b);
+  });
+  document.getElementById("copy-tokens").onclick = () => {
+    const vals = VALUES[state.mode];
+    const lines = ROLES.map((r, i) => "  --cf-" + r[0] + ": " + vals[i] + ";").concat(Object.values(CONST).flat().map(([n, v]) => "  --" + n + ": " + v + ";"));
+    copy(":root {\n" + lines.join("\n") + "\n}", "Đã copy token " + (state.mode === "dark" ? "tối" : "sáng"));
+  };
+  const links = [...document.querySelectorAll(".side a")];
+  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) links.forEach((a) => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id)); }), { rootMargin: "-30% 0px -60% 0px" });
+  document.querySelectorAll("section.block").forEach((s) => io.observe(s));
+  apply();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1236 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta name="ui-kit-id" content="awwwards-com">
+<!-- UI kit rút từ awwwards.com (trang công khai, chưa đăng nhập) ngày 29/09/2026, theo skill ui-kit-from-code, nhánh B04 (URL, không có code).
+     robots.txt cho phép "/" với User-agent: *; mọi đường Disallow (/websites/?, /gallery/, /elements/*, /vote/ …) được đưa vào --exclude của discover.mjs.
+     Màu, chữ, số đo đọc bằng Playwright: biến CSS trên :root / body.dark / body.header-dark #header / .style-1..6 / .sticker-svg, cộng getComputedStyle của phần tử thật.
+     Không nhúng ảnh chụp site, logo "W.", sticker SVG, avatar hay nội dung của Awwwards (RULE-09): ảnh là khối giữ chỗ, tên site/tác giả là chữ mẫu. -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="ui-kit-skip" content="bfefcbbbec:microsite Annual Awards (aa-*) có hệ riêng nền đen ngoài hệ chính;071f5efd87:footer của microsite Annual Awards;cee07fd8b7:header của microsite Annual Awards;f9512cd605:logo của microsite Annual Awards;f472cd5e4f:link của microsite Annual Awards;6cc8e83097:trang lỗi 502 Bad Gateway (market/pro/hồ sơ trả 502 lúc quét);d04f060c0f:tiêu đề trang lỗi 502 của site">
+<title>Awwwards UI Kit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@100..900&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..24,300..500,0..1,0&display=block">
+<style>
+/* Kit mặc token thật của awwwards.com. Tên biến giữ nguyên tên gốc của site, thêm tiền tố --aw-:
+   --color-primary → --aw-color-primary, --bg-primary → --aw-bg-primary …
+   Sáng = :root của site. Tối = body.dark (--color-primary #eee, --bg-primary #121212) + body.header-dark #header
+   (--bg-primary #222, --sf-bg #383838, --button-bg = color-primary, --button-color #222); các vai trò còn lại ở chế độ tối do kit dựng (xem ghi chú ô màu).
+   Font Inter Tight chính là font của site (Google Fonts). Icon SVG của site thay bằng Material Symbols Rounded. */
+:root {
+  --aw-color-primary:#222; --aw-color-link:#222; --aw-color-white:#fff; --aw-bg-primary:#F8F8F8; --aw-bg-secondary:#222; --aw-bg-3rd:#ededed; --aw-bg-4rd:#f8f8f8; --aw-bg-white:#fff; --aw-border-gray:#ededed; --aw-ch-bg:#E9E9E9; --aw-sf-bg:#ededed; --aw-nf-bg-1:#ededed; --aw-nf-bg-2:#f8f8f8; --aw-nf-bg-3:#fff; --aw-bg-input:#fff; --aw-bg-input-hover:#f8f8f8; --aw-border-input:#ededed; --aw-color-input:#222; --aw-button-bg:#222; --aw-button-color:#fff; --aw-button-hover:#383838; --aw-button-gray:#dedede; --aw-tag-border:#a7a7a7; --aw-muted:rgba(34,34,34,.3); --aw-check-bg:#dedede; --aw-check-bg-checked:#222; --aw-check-ball:#fff; --aw-overlay:rgba(34,34,34,.7); --aw-float-bg:rgba(34,34,34,.8); --aw-float-ink:#dedede; --aw-float-line:#525252; --aw-inverse-bg:#222; --aw-inverse-ink:#fff; --aw-img:#dcdcdc; --aw-img-ink:#8a8a8a; --aw-card:#fff; --aw-checker:rgba(0,0,0,.06);
+  --aw-color-orange:#FA5D29; --aw-color-blue:#49B3FC; --aw-color-featured:#f8f0ee; --aw-alert-green:#e0f4d9; --aw-alert-yellow:#FFF083; --aw-nf-bg-count:#FF9667;
+  --aw-tag-dev:#8eabc6; --aw-tag-sotd:#ce6644; --aw-tag-hm:#726996;
+  --aw-color-inspire:#AAEEC4; --aw-color-inspire-2:#C8E4D3; --aw-color-inspire-3:#E2F4E9; --aw-color-learn:#FFF083; --aw-color-learn-2:#FFF9D0; --aw-color-learn-3:#fffbe2; --aw-color-connect:#FF602C; --aw-color-connect-2:#FFAE94; --aw-color-connect-3:#FFC5B1; --aw-color-read:#c0ab3c; --aw-color-read-2:#CDC38B; --aw-color-read-3:#DBD6C0; --aw-color-awards:#502bd8; --aw-color-awards-2:#6749d1; --aw-color-awards-3:#917eda; --aw-color-jobs:#74bcff; --aw-color-jobs-2:#99ccfc; --aw-color-jobs-3:#b4d7f8;
+  --aw-sticker-1:#ec6237; --aw-sticker-2:#e5d8ca; --aw-sticker-3:#AAEEC4; --aw-sticker-4:#502BD8; --aw-sticker-5:#222; --aw-sticker-6:#502BD8; --aw-sticker-7:#FCB6F2;
+  --aw-menu-color-1:#AAEEC4; --aw-menu-color-2:#C8E4D3; --aw-menu-color-3:#E2F4E9;   /* .style-N gán --menu-color-1..3 = --color-<mục>, -2, -3 */
+  --aw-font: "Inter Tight", Helvetica, Arial, sans-serif;                            /* --font-1 */
+  --aw-mono: ui-monospace, Menlo, "Courier New", monospace;
+  --aw-fw-light:300; --aw-fw-normal:400; --aw-fw-medium:500; --aw-fw-bold:600; --aw-fw-extrabold:700; --aw-fw-black:800;
+  --aw-text-small:11px; --aw-text-primary:14px; --aw-text-medium:18px; --aw-text-large:20px;
+  --aw-rounded-small:4px; --aw-rounded-normal:8px; --aw-rounded-large:8px; --aw-button-rounded:8px; --aw-button-rounded-full:72px; --aw-r-float:12px; --aw-r-figure-lg:14px;
+  --aw-button-height:48px; --aw-button-pad:24px; --aw-height-input:48px; --aw-pad-input:16px; --aw-sf-height:42px; --aw-nf-height:54px; --aw-nf-container-pad:6px;
+  --aw-gutter:20px; --aw-pad-inner:16px; --aw-header-height:71px; --aw-border-thin:.5px;
+  --aw-check-w:80px; --aw-check-h:40px;
+  --aw-float-content:#3e3e3e; --aw-float-line-2:#4e4e4e; --aw-float-hover-line:#a7a7a7; --aw-cookie-btn-hover:#7a7a7a; --aw-plan-right:#2c2c2c; --aw-plan-label:rgba(56,56,56,.5); --aw-line-10:rgba(0,0,0,.1); --aw-promo-bg:#efe8de; --aw-blog-bg:#f3f3f3; --aw-scrim:rgba(0,0,0,.5); --aw-scrim-0:rgba(0,0,0,0); --aw-bullet:rgba(255,255,255,.2); --aw-ua-focus:#005fcc;
+  --aw-cert-1:#e3c352; --aw-cert-2:#80a8ba; --aw-cert-3:#a69382; --aw-cert-4:#adaf40; --aw-cert-5:#ffa41b; --aw-cert-6:#b97e7e;
+  --aw-color-underlined:34, 34, 34; --aw-color-white-rgb:255, 255, 255; --aw-color-red-rgb:250, 93, 41;                                                   /* rgb bộ ba, như --color-underlined của site */
+  --aw-fluid-20: clamp(18px, 16.5915px + 0.28169vw, 22px);                            /* clamp site dùng cho link/tiêu đề thẻ, = 20.65 ở 1440 */
+  color-scheme: light;
+}
+:root[data-mode="dark"] { color-scheme: dark; }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--aw-bg-primary); color: var(--aw-color-primary); font: 300 14px/28px var(--aw-font); -webkit-font-smoothing: antialiased; }
+.ms { font-family: "Material Symbols Rounded"; font-weight: 300; font-style: normal; font-size: 20px; line-height: 1; letter-spacing: normal; text-transform: none; display: inline-block; white-space: nowrap; direction: ltr; font-feature-settings: "liga"; -webkit-font-smoothing: antialiased; user-select: none; }
+code, .code { font-family: var(--aw-mono); font-size: 12px; }
+:focus-visible { outline: 2px solid var(--aw-color-blue); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+/* ---------- vỏ trang (kit) ---------- */
+.shell { display: grid; grid-template-columns: 232px minmax(0, 1fr); min-height: 100vh; }
+.side { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 16px 12px; background: var(--aw-bg-primary); border-right: 1px solid var(--aw-border-gray); display: flex; flex-direction: column; gap: 2px; }
+.brand { display: flex; align-items: center; gap: 10px; padding: 4px 8px 16px; }
+.brand-mark { width: 32px; height: 32px; border-radius: var(--aw-rounded-normal); background: var(--aw-button-bg); color: var(--aw-button-color); display: grid; place-items: center; font: 800 14px/1 var(--aw-font); }
+.brand b { font-size: 15px; font-weight: 600; display: block; line-height: 20px; }
+.brand small { color: var(--aw-img-ink); font-size: 12px; line-height: 16px; }
+.side h6 { margin: 16px 8px 6px; font-size: 11px; font-weight: 600; color: var(--aw-img-ink); text-transform: uppercase; letter-spacing: .04em; }
+.side a { display: flex; align-items: center; gap: 10px; height: 36px; padding: 0 8px; border-radius: var(--aw-rounded-normal); color: var(--aw-color-primary); text-decoration: none; font-size: 14px; font-weight: 400; }
+.side a .ms { font-size: 20px; }
+.side a:hover { background: var(--aw-bg-3rd); }
+.side a.on { background: var(--aw-bg-white); font-weight: 600; }
+main { padding: 0 32px 96px; min-width: 0; }
+
+.bar { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; padding: 12px 0; background: var(--aw-bg-primary); border-bottom: 1px solid var(--aw-border-gray); }
+.bar .grow { flex: 1; }
+.ctl { display: flex; align-items: center; gap: 8px; }
+.ctl > span { font-size: 12px; font-weight: 600; color: var(--aw-img-ink); }
+.seg { display: inline-flex; padding: 3px; border-radius: var(--aw-rounded-normal); background: var(--aw-bg-3rd); }
+.seg button { height: 32px; padding: 0 12px; border: none; border-radius: 6px; background: transparent; color: var(--aw-color-primary); font: 500 13px var(--aw-font); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.seg button[aria-pressed="true"] { background: var(--aw-bg-white); font-weight: 600; }
+.seg .ms { font-size: 16px; }
+.swatches { display: flex; gap: 6px; }
+.sw { width: 26px; height: 26px; border-radius: 50%; border: 2px solid transparent; padding: 0; cursor: pointer; background: var(--c); box-shadow: inset 0 0 0 1px var(--aw-muted); }
+.sw[aria-pressed="true"] { border-color: var(--aw-color-primary); }
+
+.intro { padding: 40px 0 8px; max-width: 820px; }
+.intro .eyebrow { font-family: var(--aw-mono); font-size: 12px; line-height: 18px; color: var(--aw-img-ink); }
+.intro h1 { font: 600 44px/44px var(--aw-font); text-transform: uppercase; margin: 12px 0 16px; text-wrap: balance; }
+.intro p { font-size: 15px; line-height: 24px; margin: 0 0 10px; max-width: 72ch; font-weight: 300; }
+.intro .facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.fact { font-family: var(--aw-mono); font-size: 12px; line-height: 18px; padding: 3px 8px; border-radius: var(--aw-rounded-small); border: 1px solid var(--aw-muted); }
+
+section.block { padding-top: 56px; scroll-margin-top: 64px; }
+section.block > header { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+section.block h2 { font: 600 28px/32px var(--aw-font); margin: 0; }
+section.block > header p { margin: 0; max-width: 78ch; font-size: 14px; line-height: 22px; font-weight: 300; }
+h3.sub { font: 600 16px/24px var(--aw-font); margin: 28px 0 10px; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+.spec { background: var(--aw-card); border: 1px solid var(--aw-border-gray); border-radius: var(--aw-rounded-normal); display: flex; flex-direction: column; min-width: 0; }
+.spec.full { grid-column: 1 / -1; }
+.spec-h { display: flex; align-items: center; gap: 8px; padding: 14px 16px 0; flex-wrap: wrap; line-height: 20px; }
+.spec-h b { font-size: 15px; font-weight: 600; }
+.kind { font-family: var(--aw-mono); font-size: 11px; line-height: 16px; padding: 1px 6px; border-radius: var(--aw-rounded-small); border: 1px solid var(--aw-muted); }
+.spec-h .dp { margin-left: auto; font-family: var(--aw-mono); font-size: 11px; color: var(--aw-img-ink); font-variant-numeric: tabular-nums; }
+.stage { padding: 20px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 14px; min-height: 96px; overflow-x: auto; }
+.stage.col { flex-direction: column; align-items: stretch; }
+.stage.surface { background: var(--aw-bg-primary); margin: 12px 12px 0; border-radius: var(--aw-rounded-normal); }
+.stage.inverse { background: var(--aw-inverse-bg); color: var(--aw-inverse-ink); margin: 12px 12px 0; border-radius: var(--aw-rounded-normal); }
+.cap { font-family: var(--aw-mono); font-size: 10px; line-height: 14px; color: var(--aw-img-ink); display: block; margin-top: 6px; text-align: center; }
+.fig { display: flex; flex-direction: column; align-items: center; }
+.spec-f { display: flex; align-items: center; gap: 8px; padding: 8px 12px 12px 16px; margin-top: auto; }
+.spec-f .note { font-size: 12px; line-height: 17px; color: var(--aw-img-ink); flex: 1; font-weight: 400; }
+.copy { height: 30px; padding: 0 12px; border-radius: var(--aw-rounded-normal); border: 1px solid var(--aw-border-gray); background: transparent; color: var(--aw-color-primary); font: 500 12px var(--aw-font); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; flex: none; }
+.copy:hover { background: var(--aw-bg-3rd); }
+.copy .ms { font-size: 16px; }
+
+/* nền tảng */
+.roles { display: grid; grid-template-columns: repeat(auto-fill, minmax(176px, 1fr)); gap: 8px; }
+.role { border-radius: var(--aw-rounded-normal); padding: 10px 12px; min-height: 76px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: inset 0 0 0 1px var(--aw-border-gray); cursor: pointer; border: none; text-align: left; font: inherit; line-height: 16px; position: relative; overflow: hidden; }
+.role::before { content: ""; position: absolute; inset: 0; background: repeating-conic-gradient(var(--aw-checker) 0 25%, transparent 0 50%) 0 0 / 12px 12px; z-index: 0; }
+.role > i { position: absolute; inset: 0; z-index: 1; }
+.role b, .role code { position: relative; z-index: 2; }
+.role b { font-size: 12px; font-weight: 600; word-break: break-all; }
+.role code { font-size: 11px; opacity: .9; }
+.type-row { display: grid; grid-template-columns: 230px minmax(0, 1fr) 150px; gap: 16px; align-items: baseline; padding: 10px 0; border-bottom: 1px solid var(--aw-border-gray); }
+.type-row:last-child { border-bottom: none; }
+.type-row .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.type-row .meta { font-family: var(--aw-mono); font-size: 11px; line-height: 16px; color: var(--aw-img-ink); font-variant-numeric: tabular-nums; }
+.shapes { display: flex; flex-wrap: wrap; gap: 20px; }
+.shape-cell { display: flex; flex-direction: column; align-items: center; gap: 6px; font-family: var(--aw-mono); font-size: 11px; line-height: 15px; color: var(--aw-img-ink); text-align: center; }
+.shape-cell i { display: block; width: 64px; height: 64px; background: var(--aw-bg-3rd); border: 1px solid var(--aw-muted); }
+.scroll-x { overflow-x: auto; }
+table.tok { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+table.tok th, table.tok td { text-align: left; padding: 7px 12px 7px 0; border-bottom: 1px solid var(--aw-border-gray); font-size: 13px; line-height: 20px; vertical-align: top; font-weight: 300; }
+table.tok th { font-size: 11px; font-weight: 600; color: var(--aw-img-ink); }
+table.tok td:first-child { font-family: var(--aw-mono); font-size: 12px; white-space: nowrap; }
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 24px; }
+
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 16px); opacity: 0; pointer-events: none; background: var(--aw-inverse-bg); color: var(--aw-inverse-ink); padding: 10px 16px; border-radius: var(--aw-rounded-normal); font-size: 13px; line-height: 20px; transition: opacity .2s, transform .2s; z-index: 50; display: flex; gap: 8px; align-items: center; }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+.toast .ms { font-size: 18px; }
+
+/* ================= THÀNH PHẦN (.aw-*) — chỉ dùng biến ================= */
+.aw-ph { background: var(--aw-img); color: var(--aw-img-ink); display: grid; place-items: center; font: 500 11px/14px var(--aw-font); text-align: center; overflow: hidden; }
+.aw-logo { display: inline-grid; place-items: center; width: 30px; height: 16px; border: 1px dashed currentColor; border-radius: 2px; font: 600 7px/1 var(--aw-font); color: inherit; opacity: .7; text-decoration: none; }
+.aw-logo.is-focus, .aw-logo:focus-visible, .is-ua-focus { outline: 1px auto var(--aw-ua-focus); outline-offset: 1px; }
+
+/* nút: .button — height var(--button-height) · pad 0 var(--button-pad) · nền var(--button-bg) · r --button-rounded */
+.aw-btn { --b-bg: var(--aw-button-bg); --b-ink: var(--aw-button-color); --b-bd: var(--aw-button-bg); position: relative; display: inline-flex; justify-content: center; align-items: center; gap: .5em; height: var(--aw-button-height); padding: 0 var(--aw-button-pad); background: var(--b-bg); color: var(--b-ink); border: none; border-radius: var(--aw-button-rounded); font: 300 var(--aw-text-primary)/1 var(--aw-font); white-space: nowrap; text-decoration: none; cursor: pointer; transition: color .3s, background .3s, border .3s, opacity .3s; }
+.aw-btn .ms { font-size: 1.15em; }
+.aw-btn:focus { outline: none; }                                                /* .button:focus { outline: none } */
+.aw-btn:hover, .aw-btn.is-hover { --b-bg: var(--aw-button-hover); --b-ink: var(--aw-color-white); } /* .button:hover */
+.aw-btn--small { min-width: 42px; height: 42px; padding: 0 20px; font-weight: 500; }
+.aw-btn--medium { min-width: 60px; height: 60px; padding: 0 1.2em; font-size: 16px; }
+.aw-btn--large { min-width: 72px; height: 72px; padding: 0 1.6em; font-size: 18px; font-weight: 400; }
+.aw-btn--x-small { min-width: 32px; height: 32px; padding: 0 12px; font-size: 13px; }
+.aw-btn--extra-pad { padding: 0 3em; }
+.aw-btn--full { width: 100%; }
+.aw-btn--circle { padding: 0; aspect-ratio: 1; border-radius: 50%; min-width: 48px; }
+.aw-btn--outline { --b-bg: transparent; --b-ink: var(--aw-color-primary); border: var(--aw-border-thin) solid var(--b-bd); --b-bd: var(--aw-color-primary); }
+.aw-btn--outline:hover, .aw-btn--outline.is-hover { --b-bg: var(--aw-button-hover); --b-ink: var(--aw-color-white); }
+.aw-btn--outline-white { --b-bg: transparent; --b-ink: var(--aw-color-white); border: var(--aw-border-thin) solid var(--aw-color-white); }
+.aw-btn--outline-white:hover, .aw-btn--outline-white.is-hover { --b-bg: var(--aw-color-white); --b-ink: var(--aw-inverse-bg); }
+.aw-btn--white { --b-bg: var(--aw-color-white); --b-ink: var(--aw-inverse-bg); }
+.aw-btn--gray { --b-bg: var(--aw-button-gray); --b-ink: var(--aw-color-primary); }
+.aw-btn--red { --b-bg: var(--aw-color-orange); --b-ink: var(--aw-color-white); }
+.aw-btn--blue { --b-bg: var(--aw-color-blue); --b-ink: var(--aw-color-white); }
+.aw-btn--ch { --b-bg: var(--aw-ch-bg); --b-ink: var(--aw-inverse-bg); font-size: 13px; font-weight: 600; }
+.aw-btn--inspire { --b-bg: var(--aw-color-inspire); --b-ink: var(--aw-inverse-bg); font-size: 13px; font-weight: 600; }
+.aw-btn--ch:hover, .aw-btn--ch.is-hover { --b-bg: var(--aw-ch-bg); --b-ink: var(--aw-inverse-bg); opacity: .8; }
+.aw-btn--inspire:hover, .aw-btn--inspire.is-hover { --b-bg: var(--aw-color-inspire); --b-ink: var(--aw-inverse-bg); opacity: .8; }
+.aw-btn--tag { --b-bg: transparent; --b-ink: var(--aw-color-primary); height: 48px; padding: 0 24px; border: var(--aw-border-thin) solid var(--aw-tag-border); border-radius: var(--aw-button-rounded-full); font-size: var(--aw-text-medium); font-weight: 600; }
+.aw-btn--tag:hover, .aw-btn--tag.is-hover { --b-bg: transparent; --b-ink: var(--aw-color-primary); border-color: var(--aw-color-primary); }
+.aw-btn .spin { display: inline-block; width: 1em; height: 1em; border-radius: 50%; border: 2px solid currentColor; border-right-color: transparent; }
+.aw-btn.is-active .spin, .aw-btn.is-hover .spin, .aw-btn.is-focus .spin { transform: rotate(40deg); }
+.aw-cookie .aw-btn:hover, .aw-cookie .aw-btn.is-hover { --b-bg: var(--aw-cookie-btn-hover); --b-ink: var(--aw-inverse-bg); }
+/* nút khuyến mãi Academy: .promo-offer__button — 72 cao, pad 0 60, 22/400, hover nền #222 */
+.aw-promo-btn { display: inline-flex; align-items: center; gap: 12px; height: 72px; padding: 0 60px; border: none; border-radius: var(--aw-rounded-normal); background: var(--aw-color-orange); color: var(--aw-color-white); font: 400 22px/1 var(--aw-font); cursor: pointer; transition: background .3s; text-decoration: none; }
+.aw-promo-btn:hover, .aw-promo-btn.is-hover { background: var(--aw-bg-secondary); }
+.aw-promo-btn:focus-visible, .aw-promo-btn.is-focus { outline: 1px auto var(--aw-ua-focus); }
+
+/* link: .link-underlined — ::before 2px dưới chân chữ, gradient 45% đậm / 55% alpha .3, hover trượt về 0% */
+.aw-lu { --u: var(--aw-color-underlined); position: relative; display: inline-block; line-height: 100%; color: rgb(var(--u)); font-weight: 600; text-decoration: none; cursor: pointer; }
+.aw-lu::before { content: ""; position: absolute; bottom: -.2em; left: 0; width: 100%; height: 2px; background: linear-gradient(to right, rgb(var(--u)) 45%, rgba(var(--u), .3) 55%) 100% 50% / 220% 100% no-repeat; transition: background-position .3s; }
+.aw-lu:hover::before, .aw-lu.is-hover::before { background-position: 0% 50%; }
+.aw-lu--white { --u: var(--aw-color-white-rgb); }
+.aw-lu--red { --u: var(--aw-color-red-rgb); }
+.aw-lu.is-light { font-weight: 300; }
+.aw-lu:focus-visible, .aw-lu.is-focus, .aw-a:focus-visible, .aw-a.is-focus, .aw-ico-left:focus-visible, .aw-ico-left.is-focus, .aw-av:focus-visible, .aw-av.is-focus { outline: 1px auto var(--aw-ua-focus); outline-offset: 1px; }
+.aw-a { color: inherit; text-decoration: none; }
+.aw-a--menu { font: 600 14px/14px var(--aw-font); transition: opacity .3s; }
+.aw-a--menu:hover, .aw-a--menu.is-hover { opacity: .75; }
+.aw-ico-left { display: inline-flex; align-items: center; gap: 8px; color: inherit; text-decoration: none; font-weight: 300; line-height: 1; }
+.aw-ico-left .ms { font-size: 1.1em; }
+
+/* budget-tag: 22 cao, pad-inline 4, 11/18 500, r4, viền .5px rgba(primary,.3) */
+.aw-tag { display: inline-flex; align-items: center; justify-content: center; height: 22px; padding-inline: 4px; font: 500 11px/18px var(--aw-font); text-align: center; border-radius: var(--aw-rounded-small); border: var(--aw-border-thin) solid var(--aw-muted); color: var(--aw-color-primary); white-space: nowrap; }
+.aw-tag--small { min-width: 16px; height: 16px; font-size: 10px; line-height: 17px; }
+.aw-tag--medium { height: 23px; padding: 2px 8px 1px; font-size: 14px; }
+.aw-tag--big { height: 30px; padding-inline: 8px; font-size: 16px; line-height: 16px; }
+.aw-tag--bold { font-size: 13px; font-weight: 600; }                         /* .card-academy__row .budget-tag */
+.aw-tag--sotd { border-color: var(--aw-tag-sotd); color: var(--aw-tag-sotd); }
+.aw-tag--dev { border-color: var(--aw-tag-dev); color: var(--aw-tag-dev); }
+.aw-tag--hm { border-color: var(--aw-tag-hm); color: var(--aw-tag-hm); }
+.aw-tag--white { border-color: var(--aw-color-white); color: var(--aw-color-white); }
+.aw-tag--red { border-color: var(--aw-color-orange); color: var(--aw-color-orange); }
+.aw-tag--solid-black { border: none; background: var(--aw-inverse-bg); color: var(--aw-inverse-ink); }
+.aw-tag--solid-yellow { border: none; background: var(--aw-alert-yellow); color: var(--aw-inverse-bg); font-weight: 600; }
+.aw-tag--solid-green { border: none; background: var(--aw-color-inspire); color: var(--aw-inverse-bg); }
+.aw-count { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: var(--aw-rounded-normal); background: var(--aw-nf-bg-count); color: var(--aw-color-white); font: 500 11px/1 var(--aw-font); }
+.aw-count--blue { background: var(--aw-color-blue); }
+.aw-sup { font-size: .5em; font-weight: 500; vertical-align: text-top; margin-left: .2em; }
+
+/* header: .header-main__container 54 cao, pad 0 6, r8, nền --ch-bg khi có content header */
+.aw-header { display: flex; align-items: center; gap: 20px; height: var(--aw-nf-height); padding: 0 var(--aw-nf-container-pad); background: var(--aw-ch-bg); border-radius: var(--aw-rounded-normal); width: 100%; color: var(--aw-color-primary); }
+.aw-header.is-plain { background: transparent; }
+.aw-header.is-open { border-radius: var(--aw-rounded-normal) var(--aw-rounded-normal) 0 0; background: var(--aw-nf-bg-1); }
+.aw-header .aw-logo { margin: 0 20px 0 10px; }
+.aw-hnav { display: flex; align-items: center; gap: 20px; font: 500 14px/28px var(--aw-font); }
+.aw-hnav > a, .aw-hnav > span { color: inherit; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
+.aw-hnav .ms { font-size: 16px; }
+.aw-hauth { display: flex; align-items: center; gap: 16px; font: 600 14px/28px var(--aw-font); }
+.aw-hauth a { color: inherit; text-decoration: none; }
+.aw-header .grow { flex: 1; }
+.aw-search { position: relative; flex: 1; min-width: 160px; height: var(--aw-sf-height); border-radius: var(--aw-rounded-normal); background: var(--aw-sf-bg); display: flex; align-items: center; }
+.aw-header.is-open .aw-search { background: var(--aw-nf-bg-3); }
+.aw-search button { position: absolute; left: 14px; width: 14px; height: 42px; padding: 0; border: none; background: transparent; color: var(--aw-color-primary); display: grid; place-items: center; cursor: pointer; }
+.aw-search button .ms { font-size: 18px; }
+.aw-search input { width: 100%; height: 42px; border: none; background: transparent; padding: 0 12px 0 38px; color: var(--aw-color-input); font: 400 13.3px/1 var(--aw-font); outline: none; }
+.aw-search input::placeholder { color: var(--aw-color-primary); }
+.aw-search:focus-within { box-shadow: inset 0 0 0 1px var(--aw-color-primary); }
+
+/* mega menu Explore: .nav-header-main__dropdown nền --nf-bg-1, r 0 0 8 8; mục 40 cao r8, hover/chọn nền --nf-bg-3 */
+.aw-mega { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 28px; padding: 6px 6px 40px 60px; background: var(--aw-nf-bg-1); border-radius: 0 0 var(--aw-rounded-normal) var(--aw-rounded-normal); width: 100%; }
+.aw-mega ul { list-style: none; margin: 0; padding: 0; }
+.aw-msec { position: relative; display: flex; align-items: center; height: 40px; padding-inline: 38px 16px; border-radius: var(--aw-rounded-normal); cursor: pointer; transition: .3s; font: 400 14px/1 var(--aw-font); }
+.aw-msec .ms { position: absolute; left: 12px; font-size: 18px; }
+.aw-msec:hover, .aw-msec.is-hover, .aw-msec.is-on { background: var(--aw-nf-bg-3); }
+.aw-msec.is-on { font-weight: 600; }
+.aw-mitem { display: flex; align-items: center; justify-content: space-between; height: 40px; padding-inline: 8px; border-radius: var(--aw-rounded-normal); transition: .3s; font: 400 14px/normal var(--aw-font); color: inherit; text-decoration: none; max-width: 640px; }
+.aw-mitem:hover, .aw-mitem.is-hover { background: var(--aw-nf-bg-3); }
+.aw-mitem > span { flex: 1; display: flex; align-items: center; gap: 4px; }
+.aw-mitem[data-count]::after { content: attr(data-count); margin-left: 4px; font-size: 14px; line-height: 10px; }
+.stage > .aw-header, .stage > .aw-filters, .aw-scrim { min-width: 1000px; }
+.aw-scrim { background: var(--aw-overlay); padding: 8px; border-radius: var(--aw-rounded-normal); }
+
+/* marquee: .marquee-top--gray 50 cao, nền --sf-bg; mục pad 0 12, 14/28 300 */
+.aw-marquee { display: flex; align-items: center; height: 50px; overflow: hidden; background: var(--aw-sf-bg); color: var(--aw-color-primary); width: 100%; white-space: nowrap; font: 300 14px/28px var(--aw-font); }
+.aw-marquee span { padding: 0 12px; display: inline-flex; align-items: center; gap: 8px; }
+.aw-marquee b { font-weight: 600; }
+.aw-marquee .ms { font-size: 20px; }
+
+/* thanh lọc: .nav-filters__container 54, nền --nf-bg-1, pad 6, gap 8, r8; item 42, pad-inline 24, nền --nf-bg-2 → hover --nf-bg-3 */
+.aw-filters { display: flex; align-items: center; gap: 8px; height: var(--aw-nf-height); padding: var(--aw-nf-container-pad); background: var(--aw-nf-bg-1); border-radius: var(--aw-rounded-normal); width: 100%; overflow-x: auto; }
+.aw-filters .grow { flex: 1; }
+.aw-filter { display: flex; align-items: center; min-width: 48px; max-width: 220px; height: 42px; padding-inline: 24px; background: var(--aw-nf-bg-2); border: none; border-radius: var(--aw-rounded-normal); color: var(--aw-color-primary); font: 500 13.3px/28px var(--aw-font); cursor: pointer; transition: .3s; white-space: nowrap; flex: none; }
+.aw-filter .ms { margin-left: 6px; font-size: 16px; }
+.aw-filter:hover, .aw-filter.is-hover { background: var(--aw-nf-bg-3); }
+.aw-filter:focus-visible, .aw-filter.is-focus { outline: 1px auto var(--aw-ua-focus); }
+.aw-filter.has-count { padding: 0; width: 48px; justify-content: center; }
+.aw-palette-dots { display: inline-flex; gap: 2px; margin-left: 6px; }
+.aw-palette-dots i { width: 4px; height: 14px; border-radius: 2px; background: var(--c); }
+
+/* breadcrumb: .breadcrumb-filters 14/18.2, tiêu đề 600, đếm là budget-tag */
+.aw-crumb { display: flex; align-items: center; gap: 12px; font: 300 14px/18.2px var(--aw-font); flex-wrap: wrap; }
+.aw-crumb h1 { margin: 0; font: 600 14px/18.2px var(--aw-font); display: inline-flex; gap: 4px; align-items: center; }
+.aw-heading-hr { margin: 0; padding-bottom: 24px; font: 600 14px/18px var(--aw-font); border-bottom: 1px solid var(--aw-border-gray); width: 100%; }
+
+/* menu nổi: .menu-float__wrapper nền rgba(34,34,34,.8), r12, pad 6; content nền #3e3e3e r8 60 cao; item 48 cao pad 0 12, viền 1px, 13/400 #dedede */
+.aw-float { display: inline-flex; align-items: center; gap: 6px; padding: 6px; border-radius: var(--aw-r-float); background: var(--aw-float-bg); color: var(--aw-float-ink); font: 300 13px/28px var(--aw-font); }
+.aw-float__logo { width: 60px; height: 60px; border-radius: var(--aw-rounded-normal); background: var(--aw-bg-secondary); display: grid; place-items: center; color: var(--aw-color-white); }
+.aw-float__content { display: flex; align-items: center; gap: 8px; height: 60px; padding: 0 6px; border-radius: var(--aw-rounded-normal); background: var(--aw-float-content); }
+.aw-float__nav { display: flex; gap: 6px; list-style: none; margin: 0; padding: 0; }
+.aw-float__item { display: inline-flex; align-items: center; height: 48px; padding: 0 12px; border-radius: var(--aw-rounded-normal); border: 1px solid var(--aw-float-line); color: var(--aw-float-ink); font: 400 13px/28px var(--aw-font); text-decoration: none; transition: .3s; background: transparent; cursor: pointer; }
+.aw-float__item.is-on { border-color: var(--aw-float-ink); }
+.aw-float__item--anchor:hover, .aw-float__item--anchor.is-hover { opacity: .8; }
+.aw-float__item--link { border-color: var(--aw-float-line-2); }
+.aw-float__item--link:hover, .aw-float__item--link.is-hover { border-color: var(--aw-float-hover-line); }
+.aw-float__item:focus-visible, .aw-float__item.is-focus { outline: 1px auto var(--aw-ua-focus); }
+.aw-float__sel { display: inline-flex; align-items: center; gap: 4px; padding: 0 10px; height: 48px; font: 400 14px/1 var(--aw-font); color: var(--aw-float-ink); }
+.aw-float__sel + .aw-float__sel { border-left: 1px solid var(--aw-float-line); }
+.aw-float__sel.is-title { font-weight: 600; }
+
+/* phân trang: .pagination__item min 32, r8, 12/28 600; hiện tại & hover nền --bg-secondary chữ trắng */
+.aw-pagination { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.aw-page { display: flex; justify-content: center; min-width: 32px; height: 28px; border-radius: var(--aw-rounded-normal); font: 600 12px/28px var(--aw-font); color: var(--aw-color-primary); text-decoration: none; transition: .3s; }
+.aw-page.is-current, .aw-page:hover, .aw-page.is-hover { background: var(--aw-bg-secondary); color: var(--aw-color-white); }
+.aw-bullets { display: flex; gap: 8px; }
+.aw-bullets i { width: 8px; height: 8px; border-radius: 50%; background: var(--aw-bullet); }
+.aw-bullets i.is-on { background: var(--aw-color-white); }
+
+/* avatar-name: flex gap .5em, ảnh tròn grayscale, tên line-height 100%, sup PRO .5em 500 */
+.aw-av { display: inline-flex; align-items: center; gap: .5em; color: var(--aw-color-primary); text-decoration: none; min-width: fit-content; line-height: 100%; }
+.aw-av__img { flex: none; width: var(--s, 20px); height: var(--s, 20px); border-radius: 50%; background: var(--aw-img); display: grid; place-items: center; color: var(--aw-img-ink); font: 600 calc(var(--s, 20px) * .36)/1 var(--aw-font); }
+.aw-av__title { margin: 0; font-size: 1em; font-weight: 600; display: inline-block; }
+.aw-av sup { margin-bottom: auto; margin-left: .2em; font-size: .5em; font-weight: 500; }
+.aw-credits { display: flex; gap: 4px; list-style: none; margin: 0; padding: 0; align-items: center; }
+.aw-circle { display: flex; }
+.aw-circle .aw-av__img { border: 2px solid var(--aw-bg-primary); box-sizing: content-box; }
+.aw-circle .aw-av__img + .aw-av__img { margin-left: -10px; }
+
+/* ảnh + lớp hover: .figure-rollover; __hover gradient 0deg rgba(0,0,0,.5)→0, opacity 0 → 1 (.3s), pad 1.6em 1.6em 1.5em */
+.aw-fig { position: relative; display: block; overflow: hidden; border-radius: var(--aw-rounded-small); font-size: 15px; color: var(--aw-color-white); }
+.aw-fig.is-large { border-radius: var(--aw-r-figure-lg); font-size: var(--aw-fluid-20); }
+.aw-fig.is-lg-r { border-radius: var(--aw-r-figure-lg); }
+.aw-fig .aw-ph { aspect-ratio: 16 / 12; width: 100%; }
+.aw-fig__hover { position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: space-between; padding: 1.6em 1.6em 1.5em; opacity: 0; visibility: hidden; background: linear-gradient(0deg, var(--aw-scrim) 0%, var(--aw-scrim-0) 100%); transition: .3s; }
+.aw-fig:hover .aw-fig__hover, .aw-fig.is-hover .aw-fig__hover { opacity: 1; visibility: visible; }
+.aw-fig__center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.aw-fig__center .aw-btn { height: auto; padding: .7em 1.4em; font-size: 14px; line-height: 28px; }
+.aw-fig__row { margin-bottom: .2em; line-height: 120%; text-align: left; }
+.aw-fig__row small { font-size: .666em; font-weight: 300; }
+.aw-fig__row h3 { margin: 0; font-size: 1em; font-weight: 500; }
+.aw-fig__bts { display: flex; gap: 1em; margin-bottom: .3em; }
+.aw-fig__bts .ms { font-size: 1em; }
+.aw-fig__fixed { position: absolute; top: 1.6em; left: 1.6em; display: flex; gap: 8px; }
+.aw-box-figure { padding: 57.6px; background: var(--aw-bg-secondary); border-radius: var(--aw-r-figure-lg); }
+
+/* thẻ site ở trang danh sách: .card-site; ảnh r4, tỉ lệ 16/12; info pad-top 16 */
+.aw-card-site { width: 100%; max-width: 432px; font: 300 15px/28px var(--aw-font); }
+.aw-card-site__info { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding-top: 16px; }
+.aw-card-site__info .grow { flex: 1; }
+/* thẻ slide ở trang chủ: .card-slide; ảnh r8, dòng dưới tiêu đề fluid 600 */
+.aw-card-slide { width: 100%; max-width: 658px; }
+.aw-card-slide__foot { display: flex; align-items: center; gap: 10px; padding-top: 16px; font: 300 14px/28px var(--aw-font); flex-wrap: wrap; }
+.aw-card-slide__title { margin: 0; font: 600 var(--aw-fluid-20)/28px var(--aw-font); }
+.aw-card-slide__title a { color: inherit; text-decoration: none; }
+
+/* danh sách site thắng giải: .list-sites__item pad 24 14.4, thumb 80×60 r4, nhãn 14, tiêu đề 19/700 */
+.aw-list-site { display: flex; align-items: center; gap: 16px; padding: 24px 14.4px; border-bottom: 1px solid var(--aw-border-gray); width: 100%; }
+.aw-list-site .aw-ph { width: 80px; height: 60px; border-radius: var(--aw-rounded-small); flex: none; }
+.aw-list-site__label { font: 300 14px/20px var(--aw-font); }
+.aw-list-site__title { margin: 2px 0 0; font: 700 19px/23px var(--aw-font); }
+.aw-list-site__title a { color: inherit; text-decoration: none; }
+
+/* thẻ trắng dùng chung: .card-directory / .card-jury / .card-job / .card-academy; hàng pad 26 30 hoặc 16 30, gạch trên --border-gray */
+.aw-card { width: 100%; max-width: 432px; background: var(--aw-bg-white); color: var(--aw-color-primary); border-radius: var(--aw-rounded-normal); overflow: hidden; font: 300 14px/28px var(--aw-font); }
+.aw-card.is-r14 { border-radius: var(--aw-r-figure-lg); }
+.aw-card__cover .aw-ph { aspect-ratio: 4 / 3; border-radius: var(--aw-rounded-normal); }
+.aw-card__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 30px; }
+.aw-card__head.is-dir { padding: 26px 30px; font: 600 21px/1 var(--aw-font); }
+.aw-card__list { list-style: none; margin: 0; padding: 0; }
+.aw-card__list li { display: flex; gap: 20px; align-items: flex-start; padding: 26px 30px; border-top: 1px solid var(--aw-border-gray); font: 300 14px/16.8px var(--aw-font); }
+.aw-card__list.is-tight li { padding: 16px 30px; justify-content: space-between; align-items: center; }
+.aw-card__list li > strong { width: 149px; flex: none; font-weight: 600; }
+.aw-card__list li > .end { margin-left: auto; }
+.aw-card__foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 30px; border-top: 1px solid var(--aw-border-gray); }
+.aw-card__foot .ms { font-size: 24px; }
+.aw-card__social { display: flex; gap: 20px; font: 700 22px/1 var(--aw-font); }
+.aw-card__content { padding: 30px; font: 300 14px/21px var(--aw-font); }
+.aw-card__content h3 { margin: 0 0 12px; font: 600 19.32px/25.12px var(--aw-font); }
+.aw-card__content h3 a { color: inherit; text-decoration: none; }
+.aw-card__content p { margin: 0; display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* bảng thống kê: .tb-stats viền 1px --border-table, góc r8; th 11 500 uppercase 120%; td fluid 120% */
+.aw-stats { border-collapse: separate; border-spacing: 0; margin: 0; font-variant-numeric: tabular-nums; }
+.aw-stats th, .aw-stats td { border-right: 1px solid var(--aw-color-primary); border-bottom: 1px solid var(--aw-color-primary); text-align: center; }
+.aw-stats th:first-child, .aw-stats td:first-child { border-left: 1px solid var(--aw-color-primary); }
+.aw-stats th { padding: clamp(8px, 2vw, 16px); border-top: 1px solid var(--aw-color-primary); font: 500 var(--aw-text-small)/120% var(--aw-font); text-transform: uppercase; }
+.aw-stats td { padding: clamp(8px, 2vw, 20px) clamp(8px, 2vw, 16px); font: 600 var(--aw-fluid-20)/120% var(--aw-font); }
+.aw-stats tr:first-child th:first-child { border-top-left-radius: var(--aw-rounded-normal); }
+.aw-stats tr:first-child th:last-child { border-top-right-radius: var(--aw-rounded-normal); }
+.aw-stats tr:last-child td:first-child { border-bottom-left-radius: var(--aw-rounded-normal); }
+.aw-stats tr:last-child td:last-child { border-bottom-right-radius: var(--aw-rounded-normal); }
+.aw-stats.is-mini th { padding: 6px 8px; font-size: 8px; }
+.aw-stats.is-mini td { padding: 6px 8px; font-size: 12px; }
+
+/* Academy: .card-academy nền rgba(255,255,255,.9) r14; ảnh 179; hàng pad 30 / 20 30; giá .box-price */
+.aw-academy { width: 100%; max-width: 319px; background: var(--aw-bg-white); border-radius: var(--aw-r-figure-lg); overflow: hidden; }
+.aw-academy__fig { position: relative; }
+.aw-academy__fig .aw-ph { height: 179px; }
+.aw-academy__fig .aw-tag { position: absolute; top: 12px; right: 12px; }
+.aw-academy__row { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; padding: 30px; }
+.aw-academy__row + .aw-academy__row { border-top: 1px solid var(--aw-border-gray); }
+.aw-academy__row.is-score { padding: 20px 30px; align-items: center; }
+.aw-academy__title { margin: 0; font: 600 var(--aw-fluid-20)/1.2 var(--aw-font); }
+.aw-by small { font: 300 11.67px/16.8px var(--aw-font); }
+.aw-by strong { font: 600 14px/16.8px var(--aw-font); }
+.aw-price { display: flex; align-items: center; gap: 8px; }
+.aw-price__meta { display: flex; flex-direction: column; font: 600 12px/14px var(--aw-font); }
+.aw-price__strike { color: var(--aw-color-orange); font-weight: 300; text-decoration: line-through; }
+.aw-price__num { font: 600 32px/32px var(--aw-font); }
+.aw-price__num sup { font: 400 12px/12px var(--aw-font); vertical-align: top; margin-left: 2px; }
+.aw-score { font: 300 14px/1 var(--aw-font); }
+.aw-score b { font-weight: 600; }
+.aw-score i { display: block; width: 98px; height: 4px; margin-top: 10px; background: var(--aw-alert-yellow); }
+
+/* Directory nổi bật: .card-directory-sp nền --bg-secondary r8 pad 43.2, tiêu đề 41.9/46 600 */
+.aw-dir-sp { width: 100%; max-width: 658px; padding: 43.2px; border-radius: var(--aw-rounded-normal); background: var(--aw-bg-secondary); color: var(--aw-color-white); font: 300 15px/28px var(--aw-font); }
+.aw-dir-sp__head { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 16px; }
+.aw-dir-sp__slides { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.aw-dir-sp__slides .aw-ph { width: 278px; max-width: 100%; aspect-ratio: 278 / 209; }
+.aw-dir-sp__title { margin: 0; font: 600 41.9px/46px var(--aw-font); }
+.aw-dir-sp__row { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+.aw-works { display: inline-flex; flex-direction: column; align-items: center; padding: 4px 8px; border: 1px solid var(--aw-float-line); border-radius: var(--aw-rounded-small); font: 300 9px/12px var(--aw-font); }
+.aw-works b { font: 600 14px/16px var(--aw-font); }
+
+/* chứng nhận Honors: .card-certificate nền --nf-bg-1, viền trên 10px màu hạng mục, pad 31.2; data 9/9 300 */
+.aw-cert { width: 100%; max-width: 436px; padding: 31.2px; background: var(--aw-nf-bg-1); border-top: 10px solid var(--c, var(--aw-cert-1)); color: var(--aw-inverse-bg); font: 300 14px/28px var(--aw-font); }
+.aw-cert__head { display: flex; align-items: center; gap: 24px; height: 20px; }
+.aw-cert__data { flex: 1; display: flex; justify-content: flex-end; gap: 20%; font: 300 9px/9px var(--aw-font); }
+.aw-cert__title { margin-top: 20px; padding: 22.4px 0; border-top: 1px solid var(--aw-line-10); border-bottom: 1px solid var(--aw-line-10); font: 600 19.32px/23.19px var(--aw-font); }
+.aw-cert__by { padding: 11.2px 0; border-bottom: 1px solid var(--aw-line-10); font: 300 15.32px/18.39px var(--aw-font); }
+.aw-cert__cover { margin: 20px 0; aspect-ratio: 1; }
+.aw-cert__foot { font: 300 9px/1 var(--aw-font); display: flex; gap: 4px; align-items: center; }
+
+/* bài blog nổi bật: .card-blog-special nền #f3f3f3 pad 100 (kit thu pad 40) */
+.aw-blog { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; padding: 40px; background: var(--aw-blog-bg); width: 100%; font: 300 14px/28px var(--aw-font); align-items: center; }
+.aw-blog h3 { margin: 4px 0 12px; font: 600 var(--aw-h5)/1.2 var(--aw-font); }
+.aw-blog p { margin: 0; }
+.aw-blog__ex { margin-top: 12px !important; font: 400 22px/1.4 var(--aw-font); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.aw-blog .aw-ph { aspect-ratio: 16 / 12; border-radius: var(--aw-rounded-normal); }
+.aw-blog-title { margin: 0; font: 600 37px/44px var(--aw-font); }
+
+/* gói nộp site: .plan r14; tiêu đề 29.3/38.1 600; giá 59.9/700 + sup 18/500; .list-checks li 14/22 300 pad-left 32 */
+.aw-plan { width: 100%; max-width: 432px; border-radius: var(--aw-r-figure-lg); background: var(--aw-bg-white); color: var(--aw-color-primary); overflow: hidden; }
+.aw-plan.is-dark { max-width: 884px; display: grid; grid-template-columns: minmax(0, 371fr) minmax(0, 513fr); background: var(--aw-bg-secondary); color: var(--aw-color-white); }
+.aw-plan__inner { padding: 40px 43px; display: flex; flex-direction: column; gap: 24px; }
+.aw-plan__title { font: 600 29.3px/38.1px var(--aw-font); }
+.aw-plan__amount { display: flex; align-items: baseline; gap: 6px; font: 300 20px/20px var(--aw-font); }
+.aw-plan__amount strong { font: 700 59.9px/1 var(--aw-font); }
+.aw-plan__amount sup { font: 500 18px/1 var(--aw-font); }
+.aw-plan__right { background: var(--aw-plan-right); padding: 40px 43px; display: flex; flex-direction: column; gap: 24px; }
+.aw-plan__label { padding: 43.2px 20px; border-radius: var(--aw-rounded-normal); background: var(--aw-plan-label); font: 300 20px/28px var(--aw-font); text-align: center; }
+.aw-checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; font: 300 14px/22px var(--aw-font); }
+.aw-checks.is-2col { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px 20px; }
+.aw-checks li { position: relative; padding-left: 32px; }
+.aw-checks li .ms { position: absolute; left: 0; top: 1px; font-size: 20px; }
+.aw-compare { border-collapse: separate; border-spacing: 0; width: 100%; font: 300 21px/26px var(--aw-font); }
+.aw-compare td { padding: 20px 16px; border: 1px solid var(--aw-border-gray); border-width: 0 1px 1px 0; }
+.aw-compare td:first-child { border-left-width: 1px; }
+.aw-compare tr:first-child td { border-top-width: 1px; }
+.aw-compare tr:last-child td:first-child { border-bottom-left-radius: var(--aw-rounded-normal); }
+.aw-compare tr:last-child td:last-child { border-bottom-right-radius: var(--aw-rounded-normal); }
+
+/* khối quảng bá Academy: .promo-heading nền #efe8de r14 pad 72 0 */
+.aw-promo { width: 100%; padding: 56px 24px; border-radius: var(--aw-r-figure-lg); background: var(--aw-promo-bg); color: var(--aw-inverse-bg); text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.aw-promo h2 { margin: 0; font: 400 14px/28px var(--aw-font); }
+.aw-promo h1 { margin: 0; font: 600 var(--aw-h3)/1 var(--aw-font); }
+.aw-promo__prices { display: flex; align-items: baseline; gap: 8px; font: 600 22px/1 var(--aw-font); }
+.aw-promo__prices s { font-weight: 600; }
+.aw-promo__prices .now { color: var(--aw-color-orange); }
+.aw-promo__prices small { font: 300 12px/1 var(--aw-font); color: var(--aw-color-orange); }
+
+/* post-it: .postit 260, pad 20, r8(large) — đo được r14 và 14/19.6 400; nền --ch-bg (hoặc --color-learn-2) */
+.aw-postit { width: 260px; padding: 20px; border-radius: var(--aw-r-figure-lg); background: var(--aw-nf-bg-1); color: var(--aw-inverse-bg); font: 400 14px/140% var(--aw-font); }
+.aw-postit.is-white { background: var(--aw-nf-bg-3); }
+.aw-postit p { margin: 0 0 12px; }
+.aw-postit p:last-child { margin: 0; }
+.aw-red { color: var(--aw-color-orange); font-weight: 600; }
+.aw-blue { color: var(--aw-color-blue); font-weight: 600; }
+
+/* chatbox trên trang hồ sơ: .chatbox 350 nền trắng r8 pad 16; __msg nền --bg-primary r8 pad 6 10, 13/300 */
+.aw-chat { position: relative; width: 350px; max-width: 100%; display: flex; gap: 12px; padding: 16px; border-radius: var(--aw-rounded-normal); background: var(--aw-bg-white); color: var(--aw-color-primary); font: 300 13px/1.45 var(--aw-font); }
+.aw-chat__right { display: flex; flex-direction: column; gap: 6px; }
+.aw-chat__msg { padding: 6px 10px; border-radius: var(--aw-rounded-normal); background: var(--aw-bg-primary); max-width: 230px; }
+.aw-chat__close { position: absolute; top: 8px; right: 8px; width: 24px; height: 24px; padding: 0; border: none; background: transparent; color: inherit; cursor: pointer; display: grid; place-items: center; }
+.aw-chat__close .ms { font-size: 16px; }
+
+/* cookie: .cookies-popup 400, pad clamp(20,5vw,30), nền --bg-secondary, chữ trắng, r8 */
+.aw-cookie { width: 400px; max-width: 100%; padding: clamp(20px, 5vw, 30px); background: var(--aw-bg-secondary); color: var(--aw-color-white); border-radius: var(--aw-rounded-normal); font: 300 14px/28px var(--aw-font); }
+.aw-cookie p { margin: 0 0 16px; }
+
+/* đầu trang SOTD */
+.aw-sotd { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; width: 100%; }
+.aw-sotd__sub { display: flex; align-items: center; gap: 12px; font: 400 14px/28px var(--aw-font); margin: 0; flex-wrap: wrap; justify-content: center; }
+.aw-box-score small { font-size: 10px; }
+.aw-h1 { margin: 0; font: 600 var(--aw-h1)/1 var(--aw-font); text-transform: uppercase; text-wrap: balance; }
+.aw-sticker { display: inline-block; width: .5em; height: .5em; border-radius: 50%; background: var(--aw-sticker-1); border: .06em solid var(--aw-sticker-5); vertical-align: .25em; margin-left: .1em; }
+.aw-sotd__img .aw-ph { width: 100%; aspect-ratio: 4 / 3; border-radius: var(--aw-rounded-normal); }
+
+/* tiêu đề trang (profile, section) */
+.aw-head-pro { margin: 0; font: 600 var(--aw-pro)/0.9 var(--aw-font); text-transform: uppercase; text-align: center; }
+.aw-t { margin: 0; }
+
+/* footer: 4 cột .footer__menu 14/14 600; .footer__bottom pad-top 43.2, gạch 10% --color-primary; nav 14/28 400 */
+.aw-footer { width: 100%; padding: 40px 0 24px; font: 300 14px/28px var(--aw-font); color: var(--aw-color-primary); }
+.aw-footer__top { display: grid; grid-template-columns: 120px repeat(4, minmax(0, 1fr)); gap: 20px; }
+.aw-footer__menu { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 20px; }
+.aw-footer__bottom { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 40px; padding-top: 43.2px; background: linear-gradient(to right, var(--aw-color-primary) 0, var(--aw-color-primary) 10%, transparent 10%) 0 0 / 100% 1px no-repeat; font-weight: 400; }
+.aw-footer__nav { display: flex; gap: 24px; list-style: none; margin: 0; padding: 0; flex-wrap: wrap; }
+.aw-footer__nav a { color: inherit; text-decoration: none; }
+
+/* trạng thái */
+.focus-demo { display: flex; flex-wrap: wrap; gap: 20px 28px; align-items: center; }
+
+/* ---------- màn mẫu ---------- */
+.screens { display: flex; gap: 32px; align-items: flex-start; overflow-x: auto; padding-bottom: 8px; }
+.screen-fig { flex: none; }
+.phone { width: 390px; height: 844px; zoom: .7; border-radius: 40px; border: 10px solid var(--aw-bg-secondary); overflow: hidden; background: var(--aw-bg-primary); position: relative; display: flex; flex-direction: column; }
+.desk { width: 1440px; height: 900px; zoom: .5; border-radius: 14px; border: 2px solid var(--aw-bg-secondary); overflow: hidden; background: var(--aw-bg-primary); position: relative; }
+.screen-cap { font-size: 12px; line-height: 17px; color: var(--aw-img-ink); margin-top: 10px; max-width: 520px; font-weight: 400; }
+.m-head { display: flex; align-items: center; justify-content: space-between; height: 54px; padding: 0 16px; flex: none; }
+.m-body { flex: 1; overflow: hidden; padding: 0 16px; display: flex; flex-direction: column; gap: 20px; }
+.m-float { position: absolute; left: 50%; bottom: 20px; transform: translateX(-50%); }
+.d-inner { padding: 0 52px; display: flex; flex-direction: column; gap: 24px; }
+.d-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 30px 20px; }
+
+:root { --aw-h1: 126.7px; --aw-h2: 111px; --aw-h3: 74px; --aw-h5: 41.9px; --aw-pro: 192px; }
+
+@media (max-width: 899px) {
+  .shell { grid-template-columns: minmax(0, 1fr); }
+  .side { display: none; }
+  main { padding: 0 16px 80px; }
+  .grid { grid-template-columns: minmax(0, 1fr); }
+  .two { grid-template-columns: minmax(0, 1fr); }
+  .type-row { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .intro h1 { font-size: 32px; line-height: 32px; }
+  .aw-plan.is-dark, .aw-blog { grid-template-columns: minmax(0, 1fr); }
+  .aw-footer__top { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .aw-checks.is-2col { grid-template-columns: minmax(0, 1fr); }
+  .aw-dir-sp__title { font-size: 30px; line-height: 34px; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <nav class="side" aria-label="Mục lục">
+    <div class="brand"><div class="brand-mark" aria-hidden="true">W</div><div><b>Awwwards</b><small>UI kit tham chiếu</small></div></div>
+    <h6>Nền tảng</h6>
+    <a href="#color"><span class="ms">palette</span>Màu</a>
+    <a href="#type"><span class="ms">text_fields</span>Chữ</a>
+    <a href="#shape"><span class="ms">rounded_corner</span>Bo góc &amp; viền</a>
+    <a href="#layout"><span class="ms">straighten</span>Bố cục &amp; kích thước</a>
+    <h6>Thành phần</h6>
+    <a href="#navigation"><span class="ms">menu</span>Điều hướng</a>
+    <a href="#actions"><span class="ms">touch_app</span>Nút &amp; link</a>
+    <a href="#labels"><span class="ms">sell</span>Nhãn &amp; số liệu</a>
+    <a href="#people"><span class="ms">group</span>Người dùng</a>
+    <a href="#showcase"><span class="ms">grid_view</span>Ảnh &amp; thẻ site</a>
+    <a href="#cards"><span class="ms">dashboard</span>Thẻ nội dung</a>
+    <a href="#commerce"><span class="ms">sell</span>Gói &amp; quảng bá</a>
+    <a href="#feedback"><span class="ms">chat_bubble</span>Thông báo nổi</a>
+    <a href="#footer"><span class="ms">bottom_navigation</span>Footer</a>
+    <a href="#states"><span class="ms">ads_click</span>Trạng thái</a>
+    <h6>Mẫu</h6>
+    <a href="#screens"><span class="ms">devices</span>Màn hình mẫu</a>
+  </nav>
+
+  <main>
+    <div class="bar" role="toolbar" aria-label="Chủ đề">
+      <div class="ctl"><span>Chế độ</span><div class="seg" id="mode">
+        <button data-v="light" aria-pressed="true"><span class="ms">light_mode</span>Sáng · site</button>
+        <button data-v="dark" aria-pressed="false"><span class="ms">dark_mode</span>Tối · body.dark</button></div></div>
+      <div class="ctl"><span>Màu chuyên mục</span><div class="swatches" id="swatches"></div></div>
+      <div class="grow"></div>
+      <button class="copy" id="copy-tokens"><span class="ms">data_object</span>Copy CSS token</button>
+    </div>
+
+    <div class="intro">
+      <div class="eyebrow">awwwards.com (CSS vars + getComputedStyle, 28 trang công khai) → docs/awwwards-ui-kit.html</div>
+      <h1>Bộ thành phần của Awwwards</h1>
+      <p>Hệ thiết kế của awwwards.com chép lại bằng HTML/CSS thuần. Site khai 98 biến trên <code>:root</code>: màu lõi <code>#222</code> trên nền <code>#F8F8F8</code>, một họ chữ duy nhất là Inter Tight (300 cho chữ thường, 600 cho nhấn), 18 màu cho 6 chuyên mục (Inspire, Learn, Connect, Read, Awards, Jobs) và bộ biến riêng cho nút, ô nhập, thanh lọc. Chế độ tối lấy từ <code>body.dark</code> và <code>body.header-dark #header</code>; site chỉ khai vài biến cho hai lớp này nên phần còn lại do kit dựng, có ghi chú trên từng ô màu.</p>
+      <p>Danh mục thành phần do <code>discover.mjs</code> gom qua hai vòng quét: 164 pattern, 39 trạng thái hover/focus/active ép qua CDP. Mỗi thẻ dưới đây ghi tên class gốc của site. Muốn dùng lại thì dán khối <code>--aw-*</code> (nút Copy CSS token) cùng phần CSS <code>.aw-*</code>. Ảnh chụp website, logo "W.", sticker, avatar và nội dung của Awwwards không được chép: ảnh là khối giữ chỗ, tên người và site là chữ mẫu.</p>
+      <div class="facts"><span class="fact">desktop 1440 · lề 52 · nội dung 1336</span><span class="fact">header 54 · pad 6 · r8</span><span class="fact">lưới 3 cột · gap 30/20</span><span class="fact">thẻ 432 · ảnh 16:12</span><span class="fact">nút 42 / 48 / 60 / 72</span><span class="fact">ô tìm 42 · ô nhập 48</span><span class="fact">base 14/28 · 300</span><span class="fact">bo 4 / 8 / 14 / 72</span></div>
+    </div>
+
+    <!-- ================= NỀN TẢNG ================= -->
+    <section class="block" id="color">
+      <header><h2>Màu</h2><p>Nhóm "Lõi", "Nhập liệu &amp; nút" và "Bề mặt đậm" đổi theo chế độ. Giá trị sáng là <code>:root</code> của site. Ở chế độ tối, ô nào có nguồn trong CSS thì ghi "đo", ô nào kit tự dựng thì ghi "dựng". Nhóm "Ngữ nghĩa", "Chuyên mục", "Chứng nhận" và "Sticker" là hằng số, site không đổi theo chế độ. Bấm một ô để copy giá trị.</p></header>
+      <div id="roles-groups"></div>
+    </section>
+
+    <section class="block" id="type">
+      <header><h2>Chữ</h2><p>Chỉ một họ chữ: <code>--font-1: Inter Tight</code> (Google Fonts, kit tải đúng font này). Site khai 4 cỡ cố định (<code>--text-size-small/primary/medium/large</code> = 11 / 14 / 18 / 20) và 6 mức đậm; các tiêu đề lớn co giãn theo viewport. Bảng dưới đo bằng <code>getComputedStyle</code> ở khung 1440, cột cuối ghi cỡ ở khung 390 nếu khác.</p></header>
+      <div id="typescale"></div>
+      <h3 class="sub">Tiêu đề &amp; đoạn thực dùng</h3>
+      <div class="grid">
+        <div class="spec full" data-sig="aed8b48d97 14aa43d02a eacb428956 971bc24b64 0b937057fe 33142e7549 1969e7c555 49493f69ff 35806c19da e9f8c41ff5 1ca051e6fb">
+          <div class="spec-h"><b>Tiêu đề trang</b><span class="kind">.heading-1 / -2 / -3 / -5 / -6 · .head-user-pro__title</span><span class="dp">127 / 111 / 74 / 42 / 38 · 192</span></div>
+          <div class="stage col" style="gap:18px">
+            <h1 class="aw-h1" style="--aw-h1:72px">Tiêu đề site<span class="aw-sticker" aria-hidden="true"></span></h1>
+            <h2 class="aw-h1" style="--aw-h1:56px">Heading 2 hoa</h2>
+            <h2 class="aw-h1" style="--aw-h1:44px">Academy</h2>
+            <h2 class="aw-t" style="font:600 var(--aw-h5)/1.2 var(--aw-font)">Typography</h2>
+            <p class="aw-t" style="font:300 38px/1.3 var(--aw-font)">Studio thiết kế theo concept, dự án thương hiệu và web.</p>
+            <div><h2 class="aw-head-pro" style="--aw-pro:88px;text-align:left">Studio</h2><p class="aw-t" style="font:300 var(--aw-fluid-20)/28px var(--aw-font)">Quốc gia</p></div>
+            <p class="aw-t" style="font:400 22px/1.45 var(--aw-font);max-width:60ch">Đoạn giới thiệu bộ sưu tập, cỡ 22/400 (.text-large).</p>
+            <p class="aw-t" style="font:300 22px/28px var(--aw-font)">Mô tả giữa trang, 22/300 (.text-sd).</p>
+            <p class="aw-t">Đoạn thường 14/28/300 (.text-default).</p>
+          </div>
+          <div class="spec-f"><span class="note">Stage thu nhỏ cỡ tiêu đề cho vừa khung; cỡ thật ở bảng trên. <code>.heading-1</code> ở trang SOTD có sticker SVG gắn cuối chữ, kit thay bằng chấm tròn màu <code>--sticker-1</code>.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="shape">
+      <header><h2>Bo góc &amp; viền</h2><p>Site khai <code>--rounded-small / normal / large</code> = 4 / 8 / 8 và <code>--button-rounded / -full</code> = 8 / 72. Ảnh lớn, thẻ Academy, Jobs, gói nộp site và post-it bo 14 (đo, không có biến). Viền mảnh dùng <code>--border-thin: .5px</code>. Site không có hệ số nhân bo góc và không đổ bóng nên kit không có điều khiển shape.</p></header>
+      <div class="shapes" id="shapes"></div>
+    </section>
+
+    <section class="block" id="layout">
+      <header><h2>Bố cục &amp; kích thước</h2><p>Các hằng số lấy từ biến <code>:root</code> và <code>getComputedStyle</code> ở 1440 × 900.</p></header>
+      <div class="two">
+        <div class="scroll-x"><table class="tok">
+          <thead><tr><th>Nút (.button)</th><th>Cao</th><th>Pad ngang</th><th>Chữ</th></tr></thead>
+          <tbody>
+            <tr><td>--x-small</td><td>32</td><td>12</td><td>13</td></tr>
+            <tr><td>--small</td><td>42</td><td>20</td><td>14 / 500</td></tr>
+            <tr><td>(mặc định)</td><td>48 · --button-height</td><td>24 · --button-pad</td><td>14 / 300</td></tr>
+            <tr><td>--medium</td><td>60</td><td>1.2em</td><td>16</td></tr>
+            <tr><td>--large</td><td>72</td><td>1.6em</td><td>18 / 400</td></tr>
+            <tr><td>--extra-pad</td><td>theo cỡ</td><td>3em</td><td>—</td></tr>
+            <tr><td>--tag</td><td>48 (đo)</td><td>24</td><td>18 / 600 · r72</td></tr>
+          </tbody></table></div>
+        <div class="scroll-x"><table class="tok">
+          <thead><tr><th>Hằng số</th><th>Giá trị</th><th>Nguồn</th></tr></thead>
+          <tbody>
+            <tr><td>--nf-height</td><td>54</td><td>header, thanh lọc</td></tr>
+            <tr><td>--nf-container-pad</td><td>6</td><td>đệm trong header, thanh lọc</td></tr>
+            <tr><td>--sf-height</td><td>42</td><td>ô tìm kiếm</td></tr>
+            <tr><td>--height-input / --pad-input</td><td>48 / 16</td><td>ô nhập form</td></tr>
+            <tr><td>--gutter / --pad-inner</td><td>20 / 16</td><td>lưới, lề mobile</td></tr>
+            <tr><td>.grid-cards gap</td><td>30 / 20</td><td>đo</td></tr>
+            <tr><td>--minthumb</td><td>350 · 444 (3 cột) · 594 (2 cột)</td><td>.grid-cards[data-cols]</td></tr>
+            <tr><td>.inner--sm / lg / xl</td><td>931 / 1216 / 1386</td><td>--innerWidth</td></tr>
+            <tr><td>--img-resizing-site</td><td>16 / 12</td><td>tỉ lệ ảnh site</td></tr>
+            <tr><td>--check-toggle</td><td>80 × 40</td><td>công tắc</td></tr>
+            <tr><td>.menu-float__wrapper</td><td>72 cao · pad 6 · r12</td><td>đo</td></tr>
+            <tr><td>.marquee-top</td><td>50</td><td>đo</td></tr>
+          </tbody></table></div>
+      </div>
+    </section>
+
+    <!-- ================= THÀNH PHẦN ================= -->
+    <section class="block" id="navigation">
+      <header><h2>Điều hướng</h2></header>
+      <div class="grid">
+        <div class="spec full" data-sig="476a4bbf06 2598d5faed 57527f15b4 1898069302 625367ab84 e89dfe9f5c">
+          <div class="spec-h"><b>Header</b><span class="kind">#header .header-main__container</span><span class="dp">54 · pad 0 6 · r8 · ô tìm 42</span></div>
+          <div class="stage col surface">
+            <div class="aw-header">
+              <a class="aw-logo" href="#navigation" aria-label="Logo Awwwards (giữ chỗ)">logo</a>
+              <nav class="aw-hnav" aria-label="Menu chính mẫu"><span>Explore<span class="ms">expand_more</span></span><a href="#navigation">Directory</a><a href="#navigation">Academy <span class="aw-tag aw-tag--small aw-tag--solid-black">New</span></a><a href="#navigation">Jobs</a><a href="#navigation">Market</a></nav>
+              <label class="aw-search"><button type="button" aria-label="Tìm"><span class="ms">search</span></button><input type="text" placeholder="Search by Inspiration" aria-label="Tìm kiếm"></label>
+              <div class="aw-hauth"><a href="#navigation">Log in</a><a href="#navigation">Sign Up</a></div>
+              <a class="aw-btn aw-btn--small" href="#navigation">Be Pro</a>
+              <a class="aw-btn aw-btn--small aw-btn--outline" href="#navigation">Submit Website</a>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Link menu 14/28 500, gap 20; link đăng nhập 14/28 600. Ô tìm nền <code>--sf-bg</code>, chữ 13.3/400, pad trái 38. Trang có content header dùng nền <code>--ch-bg</code>; trang danh sách để header trong suốt.</span></div>
+        </div>
+
+        <div class="spec full">
+          <div class="spec-h"><b>Mega menu Explore</b><span class="kind">.nav-header-main__dropdown .search-inspiration</span><span class="dp">mục 40 · r8 · hover --nf-bg-3</span></div>
+          <div class="stage col"><div class="aw-scrim">
+            <div class="aw-header is-open"><a class="aw-logo" href="#navigation" aria-label="Logo (giữ chỗ)">logo</a><label class="aw-search"><button type="button" aria-label="Tìm"><span class="ms">search</span></button><input type="text" placeholder="Search by Inspiration" aria-label="Tìm kiếm"></label></div>
+            <div class="aw-mega">
+              <ul>
+                <li><span class="aw-msec is-on"><span class="ms">military_tech</span>Awards</span></li>
+                <li><span class="aw-msec is-hover"><span class="ms">category</span>By Category</span></li>
+                <li><span class="aw-msec"><span class="ms">code</span>By Technology</span></li>
+                <li><span class="aw-msec"><span class="ms">circle</span>Collections</span></li>
+                <li><span class="aw-msec"><span class="ms">article</span>Blog</span></li>
+              </ul>
+              <ul>
+                <li><a class="aw-mitem" href="#navigation" data-count="25K"><span>Honor Mentions</span></a></li>
+                <li><a class="aw-mitem is-hover" href="#navigation" data-count="48K"><span>Nominees</span></a></li>
+                <li><a class="aw-mitem" href="#navigation" data-count="6483"><span>Sites of the Day</span></a></li>
+                <li><a class="aw-mitem" href="#navigation"><span>Honors <span class="aw-tag aw-tag--solid-black">New</span></span></a></li>
+                <li><a class="aw-mitem" href="#navigation"><span>Most Awarded Profiles</span></a></li>
+              </ul>
+            </div>
+          </div></div>
+          <div class="spec-f"><span class="note">Mở bằng click; nền trang phủ tối. Mục thứ hai ở mỗi cột đang ở trạng thái hover (đọc từ rule <code>:hover</code>, không ép CDP vì menu chỉ hiện khi JS mở). Số đếm là <code>::after { content: attr(data-count) }</code>.</span></div>
+        </div>
+
+        <div class="spec full" data-sig="85cf0059b2 121a0937f9 ce88ee748d 40fd36a023" data-sig-state="121a0937f9:hover 121a0937f9:focus">
+          <div class="spec-h"><b>Thanh lọc</b><span class="kind">.nav-filters__container .nav-filters__item</span><span class="dp">54 · pad 6 · item 42 · pad 24</span></div>
+          <div class="stage col surface">
+            <div class="aw-filters">
+              <button class="aw-filter">Awards<span class="ms">expand_more</span></button>
+              <button class="aw-filter is-hover">Category<span class="ms">expand_more</span></button>
+              <button class="aw-filter">Technology<span class="ms">expand_more</span></button>
+              <button class="aw-filter">Color<span class="ms">expand_more</span><span class="aw-palette-dots" aria-hidden="true"><i style="--c:var(--aw-color-awards-3)"></i><i style="--c:var(--aw-color-awards-2)"></i><i style="--c:var(--aw-color-jobs)"></i></span></button>
+              <span class="grow"></span>
+              <span class="aw-filter has-count"><span class="aw-count">0</span></span>
+              <button class="aw-filter is-focus">Reset filters<span class="ms">restart_alt</span></button>
+            </div>
+            <div style="display:flex;gap:12px;align-items:center"><span class="aw-count">3</span><span class="aw-count aw-count--blue">0</span><span class="cap" style="margin:0">.nav-filters__count · cam --nf-bg-count · xanh --color-blue</span></div>
+          </div>
+          <div class="spec-f"><span class="note">"Category" đang hover (nền <code>--nf-bg-2</code> → <code>--nf-bg-3</code>, .3s). "Reset filters" đang focus: chỉ là viền mặc định của trình duyệt, site không style riêng.</span></div>
+        </div>
+
+        <div class="spec" data-sig="fc11e4fdd2">
+          <div class="spec-h"><b>Dải chạy</b><span class="kind">.marquee-top--gray</span><span class="dp">50 · mục pad 0 12</span></div>
+          <div class="stage" style="padding:20px 0"><div class="aw-marquee"><span><b>The Creative Pass</b></span><span class="ms" aria-hidden="true">sentiment_satisfied</span><span>Watch all courses for just €11.50/month</span><span><b>The Creative Pass</b></span></div></div>
+          <div class="spec-f"><span class="note">Trên site dải chạy ngang liên tục; kit để tĩnh. Biến thể <code>--awwwards</code> / <code>--dmk</code> đổi nền sang màu giải / <code>#f02d00</code>.</span></div>
+        </div>
+
+        <div class="spec" data-sig="030b384813 4578a9f43d">
+          <div class="spec-h"><b>Breadcrumb &amp; tiêu đề mục</b><span class="kind">.breadcrumb-filters · .heading-hr</span><span class="dp">14/18.2 · pad-b 24</span></div>
+          <div class="stage col">
+            <div class="aw-crumb"><h1>Winning websites. Web Design Inspiration <span class="aw-tag aw-tag--bold">10336</span></h1></div>
+            <h2 class="aw-heading-hr">Last winners</h2>
+          </div>
+        </div>
+
+        <div class="spec full" data-sig="6d99ed6763 3d57048c65 0720229d19 0de3987c2e 463980bdfb 3040819ac0 725a376e0d 2a9d940832 fa30ec19ae 939d3a8137 1d56efcf63 687af3b4cf" data-sig-state="463980bdfb:hover 463980bdfb:focus 3040819ac0:hover 3040819ac0:focus 725a376e0d:hover 725a376e0d:focus 2a9d940832:hover fa30ec19ae:hover 687af3b4cf:focus">
+          <div class="spec-h"><b>Menu nổi đáy trang</b><span class="kind">.menu-float__wrapper · __content · __item</span><span class="dp">72 · pad 6 · r12 · item 48</span></div>
+          <div class="stage col surface" style="align-items:flex-start;gap:16px">
+            <div class="aw-float">
+              <span class="aw-float__logo"><span class="aw-logo">logo</span></span>
+              <ul class="aw-float__nav"><li><a class="aw-float__item aw-float__item--anchor is-on" href="#navigation">Nominees</a></li><li><a class="aw-float__item aw-float__item--anchor is-hover" href="#navigation">Winners</a></li></ul>
+              <a class="aw-btn aw-btn--medium aw-btn--ch" href="#navigation">Visit Sotd.</a>
+            </div>
+            <div class="aw-float">
+              <div class="aw-float__content"><a class="aw-av is-focus" href="#navigation" style="color:var(--aw-float-ink);font:600 13px/1 var(--aw-font)"><span class="aw-av__img" style="--s:32px">ảnh</span><span class="aw-lu aw-lu--white">Tên studio</span></a>
+                <a class="aw-float__item aw-float__item--link" href="#navigation">Profile</a><a class="aw-float__item aw-float__item--link is-hover" href="#navigation">Hover</a></div>
+              <a class="aw-btn aw-btn--medium aw-btn--inspire" href="#navigation">Visit us</a>
+            </div>
+            <div class="aw-float">
+              <div class="aw-float__content"><span class="aw-float__sel is-title">Filters</span><span class="aw-float__sel">Category <span class="ms">expand_more</span></span><span class="aw-float__sel">Tag <span class="ms">expand_more</span></span></div>
+            </div>
+            <div class="aw-float"><ul class="aw-float__nav"><li><a class="aw-float__item aw-float__item--anchor is-focus" href="#navigation">Focus</a></li><li><a class="aw-float__item aw-float__item--link is-focus" href="#navigation">Focus</a></li></ul><a class="aw-btn aw-btn--medium aw-btn--ch is-hover" href="#navigation">Hover .8</a><a class="aw-btn aw-btn--medium aw-btn--inspire is-hover" href="#navigation">Hover .8</a></div>
+          </div>
+          <div class="spec-f"><span class="note">Hai kiểu item: neo trong trang (<code>js-menu-anchor</code>, hover opacity .8) và link (viền <code>#4e4e4e</code> → <code>#a7a7a7</code>). Nút "Visit" hover opacity .8; nút xanh là <code>--color-inspire</code>. Focus của item là viền mặc định của trình duyệt.</span></div>
+        </div>
+
+        <div class="spec" data-sig="c2c5bb9d70 ccffefb13f 05b286d74c" data-sig-state="05b286d74c:hover 05b286d74c:active 05b286d74c:focus">
+          <div class="spec-h"><b>Phân trang &amp; tải thêm</b><span class="kind">.pagination__item · .pagination__next</span><span class="dp">32 × 28 · r8 · nút 60</span></div>
+          <div class="stage col" style="align-items:flex-start">
+            <nav class="aw-pagination" aria-label="Phân trang mẫu"><a class="aw-page is-current" href="#navigation" aria-current="page">1</a><a class="aw-page" href="#navigation">2</a><a class="aw-page is-hover" href="#navigation">3</a><a class="aw-page" href="#navigation">4</a><a class="aw-lu" href="#navigation" style="font-size:14px">Next</a></nav>
+            <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="aw-btn aw-btn--medium aw-btn--extra-pad"><span class="spin" aria-hidden="true"></span>Loading...</button><button class="aw-btn aw-btn--medium aw-btn--extra-pad is-hover"><span class="spin" aria-hidden="true"></span>hover</button><button class="aw-btn aw-btn--medium aw-btn--extra-pad is-active"><span class="spin" aria-hidden="true"></span>active</button><button class="aw-btn aw-btn--medium aw-btn--extra-pad is-focus"><span class="spin" aria-hidden="true"></span>focus</button></div>
+          </div>
+          <div class="spec-f"><span class="note">Hover/active nút: nền <code>#383838</code>. Khác biệt đo được ở focus chỉ là vòng spinner đang quay (<code>.button:focus { outline: none }</code>), kit vẽ spinner xoay 40°.</span></div>
+        </div>
+
+        <div class="spec" data-sig="5b4aaaf32d 026c182b6a">
+          <div class="spec-h"><b>Chấm slider</b><span class="kind">.swiper-pagination-bullet</span><span class="dp">8 × 8 · gap 8</span></div>
+          <div class="stage inverse"><div class="aw-bullets" aria-hidden="true"><i class="is-on"></i><i></i><i></i><i></i></div></div>
+          <div class="spec-f"><span class="note">Chấm thường <code>rgba(255,255,255,.2)</code>, chấm đang xem trắng.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="actions">
+      <header><h2>Nút &amp; link</h2><p>Một class <code>.button</code> với các hậu tố trong tên (<code>--small--outline--rounded</code>…). Mọi nút đọc 3 biến <code>--button-bg / -color / -border-color</code>; <code>.button:hover</code> đổi chung sang nền <code>#383838</code> chữ trắng, trừ vài biến thể tự khai hover riêng.</p></header>
+      <div class="grid">
+        <div class="spec full" data-sig="2a73a0e48c c897fe125c c32bf95173 f097e89b05 2ac2849f67 6327a3cffe 1acc6b52fe b669bfd325" data-sig-state="2a73a0e48c:hover c897fe125c:hover f097e89b05:hover 2ac2849f67:hover 6327a3cffe:hover 1acc6b52fe:hover b669bfd325:hover">
+          <div class="spec-h"><b>Nút</b><span class="kind">.button[class*="--…"]</span><span class="dp">42 / 48 / 60 / 72 · r8 · viền .5px</span></div>
+          <div class="stage">
+            <div class="fig"><a class="aw-btn aw-btn--small" href="#actions">Be Pro</a><span class="cap">--small--rounded</span></div>
+            <div class="fig"><a class="aw-btn aw-btn--small is-hover" href="#actions">Be Pro</a><span class="cap">hover</span></div>
+            <div class="fig"><a class="aw-btn aw-btn--small aw-btn--outline" href="#actions">Submit Website</a><span class="cap">--small--outline</span></div>
+            <div class="fig"><a class="aw-btn aw-btn--small aw-btn--outline is-hover" href="#actions">Submit Website</a><span class="cap">hover</span></div>
+            <div class="fig"><a class="aw-btn aw-btn--small aw-btn--blue" href="#actions">Post a Job</a><span class="cap">--small--blue</span></div>
+            <div class="fig"><button class="aw-btn aw-btn--small aw-btn--red">Nút cam</button><span class="cap">--red</span></div>
+            <div class="fig"><button class="aw-btn aw-btn--small aw-btn--gray">Nút xám</button><span class="cap">--gray</span></div>
+            <div class="fig"><button class="aw-btn aw-btn--circle aw-btn--outline" aria-label="Facebook"><span class="ms">public</span></button><span class="cap">--circle--outline 48</span></div>
+            <div class="fig"><button class="aw-btn aw-btn--circle aw-btn--outline is-hover" aria-label="Facebook (hover)"><span class="ms">public</span></button><span class="cap">hover</span></div>
+          </div>
+          <div class="stage">
+            <div class="fig"><a class="aw-btn aw-btn--large aw-btn--outline" href="#actions">View all Articles</a><span class="cap">--large--outline 72</span></div>
+            <div class="fig"><a class="aw-btn aw-btn--large aw-btn--outline is-hover" href="#actions">Know More About this SOTD</a><span class="cap">hover</span></div>
+            <div class="fig"><span class="aw-btn aw-btn--tag">Web Design</span><span class="cap">--tag · r72</span></div>
+            <div class="fig"><span class="aw-btn aw-btn--tag is-hover">Web Design</span><span class="cap">hover: viền → primary</span></div>
+          </div>
+          <div class="stage inverse">
+            <div class="fig"><a class="aw-btn aw-btn--medium aw-btn--outline-white" href="#actions">Submit Website</a><span class="cap">--medium--outline--dark</span></div>
+            <div class="fig"><a class="aw-btn aw-btn--medium aw-btn--outline-white is-hover" href="#actions">Submit Website</a><span class="cap">hover: nền trắng</span></div>
+            <div class="fig"><a class="aw-btn aw-btn--white aw-btn--small" href="#actions">Nút trắng</a><span class="cap">--white</span></div>
+          </div>
+          <div class="spec-f"><span class="note">Cỡ chữ: small 14/500, mặc định 14/300, medium 16, large 18/400, tag 18/600. <code>:focus</code> của nút bị tắt (<code>outline: none</code>), nên nút không có trạng thái focus riêng.</span></div>
+        </div>
+
+        <div class="spec" data-sig="d80359bead" data-sig-state="d80359bead:hover d80359bead:focus">
+          <div class="spec-h"><b>Nút khuyến mãi</b><span class="kind">.promo-offer__button</span><span class="dp">72 · pad 0 60 · 22/400</span></div>
+          <div class="stage col" style="align-items:flex-start"><a class="aw-promo-btn" href="#actions">Start Learning!<span class="ms">confirmation_number</span></a><a class="aw-promo-btn is-hover" href="#actions">hover</a><a class="aw-promo-btn is-focus" href="#actions">focus</a></div>
+          <div class="spec-f"><span class="note">Hover nền cam → <code>#222</code>. Icon Lordicon động của site thay bằng icon tĩnh. Focus là viền mặc định của trình duyệt.</span></div>
+        </div>
+
+        <div class="spec" data-sig="4c7ee78e03 a30e27b45d 24103b025a" data-sig-state="4c7ee78e03:focus a30e27b45d:focus">
+          <div class="spec-h"><b>Link gạch chân</b><span class="kind">.link-underlined</span><span class="dp">::before 2px · bottom −.2em</span></div>
+          <div class="stage col" style="align-items:flex-start;gap:18px">
+            <a class="aw-lu" href="#actions" style="font-size:15px">Tên tác giả</a>
+            <a class="aw-lu is-hover" href="#actions" style="font-size:15px">Hover: vạch đậm trượt hết</a>
+            <a class="aw-lu aw-lu--red" href="#actions" style="font-size:15px">--red (lỗi form)</a>
+            <a class="aw-lu is-focus" href="#actions" style="font-size:15px">focus</a>
+          </div>
+          <div class="stage inverse" style="display:block;font:300 14px/28px var(--aw-font)">Đoạn chữ trắng có link <a class="aw-lu aw-lu--white is-light" href="#actions">Cookies Policy</a> <a class="aw-lu aw-lu--white is-light is-focus" href="#actions">focus</a></div>
+          <div class="spec-f"><span class="note">Vạch là gradient 45% màu đậm / 55% alpha .3, kích thước 220%; hover dời <code>background-position</code> về 0%. Màu đọc từ bộ ba <code>--color-underlined</code>.</span></div>
+        </div>
+
+        <div class="spec" data-sig="8e72578021 deaee2ce47 9d38952df6 f14199b9f0 12ef3bc552 0efd5876fc 01b2c2e6bd 0d5b891f0a" data-sig-state="8e72578021:hover 8e72578021:focus deaee2ce47:focus 9d38952df6:focus f14199b9f0:focus 12ef3bc552:focus 0efd5876fc:focus 01b2c2e6bd:focus 0d5b891f0a:focus">
+          <div class="spec-h"><b>Link chữ &amp; link mũi tên</b><span class="kind">a · .bt-ico-left</span><span class="dp">16–19/300 · 14–21/600</span></div>
+          <div class="stage col" style="align-items:flex-start;gap:14px">
+            <div style="display:flex;gap:18px;flex-wrap:wrap"><a class="aw-a aw-a--menu" href="#actions">Websites</a><a class="aw-a aw-a--menu is-hover" href="#actions">hover .75</a><a class="aw-a aw-a--menu is-focus" href="#actions">focus</a></div>
+            <div style="display:flex;gap:18px;flex-wrap:wrap"><a class="aw-ico-left" href="#actions" style="font-size:16px"><span class="ms">arrow_back</span><span class="aw-lu is-light">View Nominees</span></a><a class="aw-ico-left is-focus" href="#actions" style="font-size:19px"><span class="ms">arrow_forward</span>Read Article</a></div>
+            <div style="display:flex;gap:18px;flex-wrap:wrap;align-items:baseline"><a class="aw-a is-focus" href="#actions" style="font:600 var(--aw-fluid-20)/1.2 var(--aw-font)">Tiêu đề site</a><a class="aw-a is-focus" href="#actions" style="font:700 19px/1.2 var(--aw-font)">Tên site 19/700</a><a class="aw-a is-focus" href="#actions" style="font:600 19.3px/1.3 var(--aw-font)">Vị trí tuyển 19/600</a></div>
+            <div style="display:flex;gap:18px;flex-wrap:wrap"><a class="aw-a is-focus" href="#actions" style="font:300 15px/1 var(--aw-font)">studio.example</a><span class="stage inverse" style="min-height:0;padding:6px 10px;margin:0"><a class="aw-a is-focus" href="#actions" style="font:300 15px/1 var(--aw-font)">studio.example</a></span></div>
+          </div>
+          <div class="spec-f"><span class="note">Chỉ link menu footer có hover đo được (opacity .75). Hàng 3–4 bày link ở trạng thái focus: toàn bộ là viền mặc định của trình duyệt.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="labels">
+      <header><h2>Nhãn &amp; số liệu</h2></header>
+      <div class="grid">
+        <div class="spec" data-sig="42bda14686 b0b347c9e0 537f17a4f3 93b0b4668c 93dc4059f2 b88a03dcd6">
+          <div class="spec-h"><b>Nhãn</b><span class="kind">.budget-tag[class*="--…"]</span><span class="dp">22 · pad 4 · 11/18 500 · r4</span></div>
+          <div class="stage"><span class="aw-tag">REMOTE</span><span class="aw-tag aw-tag--dev">DEV</span><span class="aw-tag aw-tag--sotd">SOTD</span><span class="aw-tag aw-tag--hm">HM</span><span class="aw-tag aw-tag--red">RED</span><span class="aw-tag aw-tag--small aw-tag--solid-black">New</span><span class="aw-tag aw-tag--solid-black">New</span><span class="aw-tag aw-tag--solid-yellow">Special offer</span><span class="aw-tag aw-tag--solid-green">Green</span><span class="aw-tag aw-tag--medium">Sep 29, 2026</span><span class="aw-tag aw-tag--big">Big</span></div>
+          <div class="stage inverse"><span class="aw-tag aw-tag--white">HM</span><span class="aw-tag aw-tag--white">SOTD</span></div>
+          <div class="spec-f"><span class="note">Màu giải: DEV <code>#8eabc6</code>, SOTD <code>#ce6644</code>, HM <code>#726996</code>. Nhãn "New" trên menu có tia sáng chạy (<code>anim-shiny</code>, 6s), kit bỏ animation.</span></div>
+        </div>
+
+        <div class="spec" data-sig="b7acf1ec00 5c00fec8ce">
+          <div class="spec-h"><b>Điểm &amp; bảng thống kê</b><span class="kind">.box-score · .tb-stats</span><span class="dp">th 11/500 hoa · td fluid 600 · r8</span></div>
+          <div class="stage col">
+            <p class="aw-sotd__sub"><span>Site of the Day</span><span class="aw-tag aw-tag--medium">Sep 29, 2026</span><span class="aw-box-score">Score 7.73 <small>of</small> 10</span></p>
+            <table class="aw-stats"><tr><th>Works</th><th>SOTM</th><th>SOTD</th><th>HM</th></tr><tr><td>44</td><td>2</td><td>33</td><td>42</td></tr></table>
+          </div>
+        </div>
+
+        <div class="spec" data-sig="023d4f7333">
+          <div class="spec-h"><b>Giá khoá học</b><span class="kind">.box-price</span><span class="dp">32/600 · % 12/600 · gạch 12/300</span></div>
+          <div class="stage"><div class="aw-by"><small>By</small> <strong>Tên giảng viên</strong></div><div class="aw-price"><span class="aw-price__meta"><span>91% off</span><span class="aw-price__strike">/$100</span></span><span class="aw-price__num">9.99<sup>USD</sup></span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="people">
+      <header><h2>Người dùng</h2><p>Avatar luôn tròn và lọc <code>grayscale(1)</code>. Tên có thể là chữ thường hoặc <code>.link-underlined</code>, kèm <code>sup PRO</code> cỡ .5em. Cỡ chữ của khối theo ngữ cảnh (13 → 22), ảnh 20 / 32 / 52 / 60.</p></header>
+      <div class="grid">
+        <div class="spec full" data-sig="e380e44f9e 22329e4f2c dcf0c656cf 12e7ba7913 1c44165940 d5460a1b88 3b2860d463 96c0752d4b 050ec246eb f96359d82f 50ce777fff b0ecfd2621 dc653bbfe1 d0464d5608 b27b2a81f1" data-sig-state="050ec246eb:focus f96359d82f:focus b27b2a81f1:focus">
+          <div class="spec-h"><b>Tên kèm avatar</b><span class="kind">.avatar-name · .users-credits</span><span class="dp">gap .5em · ảnh 20 / 32 / 60</span></div>
+          <div class="stage" style="align-items:flex-end">
+            <div class="fig"><a class="aw-av" href="#people" style="font-size:15px"><span class="aw-av__img" style="--s:20px"></span><h3 class="aw-av__title">Tên tác giả</h3><sup>PRO</sup></a><span class="cap">thẻ site · 20 · 15/600</span></div>
+            <div class="fig"><a class="aw-av" href="#people" style="font-size:14px;font-weight:300"><span class="aw-av__img" style="--s:32px"></span><span>Studio</span><sup>PRO</sup></a><span class="cap">credits · 32 · 14/300</span></div>
+            <div class="fig"><a class="aw-av" href="#people" style="font-size:19.3px"><span class="aw-av__img" style="--s:32px"></span><span class="aw-lu">Tên tác giả</span><sup>PRO</sup></a><span class="cap">SOTD · 32 · 19.3</span></div>
+            <div class="fig"><a class="aw-av" href="#people" style="font-size:21px;font-weight:600"><span class="aw-av__img" style="--s:60px"></span><span>Studio</span><sup>PRO</sup></a><span class="cap">directory · 60 · 21/600</span></div>
+            <div class="fig"><a class="aw-av is-focus" href="#people" style="font-size:19.3px"><span class="aw-av__img" style="--s:32px"></span><span class="aw-lu">focus</span></a><span class="cap">focus mặc định</span></div>
+            <div class="fig"><a class="aw-av is-focus" href="#people" style="font-size:14px;font-weight:300"><span class="aw-av__img" style="--s:32px"></span><span>focus</span></a><span class="cap">focus mặc định</span></div>
+            <div class="fig"><a class="aw-av is-focus" href="#people" style="font-size:22px;font-weight:600"><span class="aw-av__img" style="--s:32px"></span><span class="aw-lu">Công ty</span></a><span class="cap">jury · 22/600 · focus</span></div>
+          </div>
+        </div>
+        <div class="spec" data-sig="2e46e83e03 3b93613d31 7ba9417697">
+          <div class="spec-h"><b>Avatar tròn chồng</b><span class="kind">.circle-avatar</span><span class="dp">32 viền 2 --bg-primary · 52</span></div>
+          <div class="stage"><div class="aw-circle"><span class="aw-av__img" style="--s:32px"></span><span class="aw-av__img" style="--s:32px"></span><span class="aw-av__img" style="--s:32px"></span></div><span class="aw-av__img" style="--s:52px">52</span></div>
+          <div class="spec-f"><span class="note">Mức chồng −10px là kit dựng theo ảnh; site chỉ đo được viền 2px màu nền.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="showcase">
+      <header><h2>Ảnh &amp; thẻ site</h2><p>Mọi ảnh site nằm trong <code>.figure-rollover</code>: ảnh tỉ lệ 16/12, hover hiện lớp gradient đen 50% từ đáy, nút "Vote Now" trắng ở giữa, tên site bên trái và hai icon bên phải.</p></header>
+      <div class="grid">
+        <div class="spec" data-sig="cbe55e3e07 58bb46dd5e b0b347c9e0 537f17a4f3">
+          <div class="spec-h"><b>Thẻ site (danh sách)</b><span class="kind">.card-site</span><span class="dp">432 · ảnh r4 · info pad-top 16</span></div>
+          <div class="stage"><div class="aw-card-site">
+            <a class="aw-fig is-hover" href="#showcase"><div class="aw-ph">ảnh chụp website</div>
+              <div class="aw-fig__hover"><div class="aw-fig__center"><span class="aw-btn aw-btn--white">Vote Now</span></div><div><div class="aw-fig__row"><small>WEBSITE</small></div><div class="aw-fig__row"><h3>Tên site</h3></div></div><div class="aw-fig__bts"><span class="ms">open_in_new</span><span class="ms">bookmark</span></div></div></a>
+            <div class="aw-card-site__info"><a class="aw-av" href="#showcase" style="font-size:15px"><span class="aw-av__img"></span><h3 class="aw-av__title">Tên tác giả</h3><sup>PRO</sup></a><span class="grow"></span><span class="aw-tag aw-tag--dev">DEV</span><span class="aw-tag aw-tag--sotd">SOTD</span></div>
+          </div></div>
+          <div class="spec-f"><span class="note">Ảnh đang ở trạng thái hover (lớp <code>__hover</code> opacity 0 → 1, .3s).</span></div>
+        </div>
+
+        <div class="spec" data-sig="d224ac5fe2 d6c365b238 db661da6c2 baa421a5c6 dd7fa9826d 350cbc15d5">
+          <div class="spec-h"><b>Thẻ slide (trang chủ)</b><span class="kind">.grid-cards .card-slide</span><span class="dp">658 · ảnh r14 · gap 30/20</span></div>
+          <div class="stage"><div class="aw-card-slide">
+            <a class="aw-fig is-large" href="#showcase"><div class="aw-ph">ảnh chụp website</div></a>
+            <div class="aw-card-slide__foot"><h3 class="aw-card-slide__title"><a href="#showcase">Tên site</a></h3><span>by</span><a class="aw-av" href="#showcase" style="font-size:14px"><span class="aw-av__img"></span><span>Studio</span><sup>PRO</sup></a></div>
+          </div></div>
+          <div class="spec-f"><span class="note">Ảnh lớn trong collection/lưới 2 cột cũng bo 14 (<code>--img-resizing-site</code> 16/12).</span></div>
+        </div>
+
+        <div class="spec" data-sig="f9710f0295">
+          <div class="spec-h"><b>Khung ảnh tối</b><span class="kind">.box-figure</span><span class="dp">pad 57.6 · r14 · --bg-secondary</span></div>
+          <div class="stage"><div class="aw-box-figure" style="width:100%"><a class="aw-fig is-large" href="#showcase"><div class="aw-ph">ảnh chụp website</div></a></div></div>
+        </div>
+
+        <div class="spec" data-sig="e8986eb8bf 8e4ebc4e86 717c6086dc">
+          <div class="spec-h"><b>Dòng site thắng giải</b><span class="kind">.list-sites__item</span><span class="dp">pad 24 14.4 · thumb 80×60 r4</span></div>
+          <div class="stage col"><div class="aw-list-site"><div class="aw-ph">ảnh</div><div><div class="aw-list-site__label">August 26</div><h3 class="aw-list-site__title"><a href="#showcase">Tên site</a></h3></div></div><div class="aw-list-site"><div class="aw-ph">ảnh</div><div><div class="aw-list-site__label">August 25</div><h3 class="aw-list-site__title"><a href="#showcase">Tên site khác</a></h3></div></div></div>
+        </div>
+
+        <div class="spec full" data-sig="0f4cfe60cd 705bd8d9c7 6327a3cffe">
+          <div class="spec-h"><b>Khối Site of the Day</b><span class="kind">.c-sotd-new</span><span class="dp">h1 127 (390: 42) · ảnh 1420 r8</span></div>
+          <div class="stage col"><div class="aw-sotd">
+            <p class="aw-sotd__sub"><span>Site of the Day</span><span class="aw-tag aw-tag--medium">Sep 29, 2026</span><span class="aw-box-score">Score 7.73 <small>of</small> 10</span></p>
+            <h1 class="aw-h1" style="--aw-h1:64px">Tên site</h1>
+            <a class="aw-av" href="#showcase" style="font-size:19.3px"><span class="aw-av__img" style="--s:32px"></span><span class="aw-lu">Tên tác giả</span><sup>PRO</sup></a>
+            <div class="aw-sotd__img" style="width:100%"><div class="aw-ph">ảnh chụp website SOTD</div></div>
+            <a class="aw-btn aw-btn--large aw-btn--outline" href="#showcase">Know More About this SOTD</a>
+          </div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="cards">
+      <header><h2>Thẻ nội dung</h2><p>Directory, Jury, Jobs và Academy dùng chung một khuôn: thẻ nền trắng, các hàng cách nhau bởi gạch <code>--border-gray</code>, hàng pad 26 30 (hoặc 16 30). Chữ trong hàng là 14/16.8.</p></header>
+      <div class="grid">
+        <div class="spec" data-sig="1067596245 3d42524ec8 7105286cdc e351bdda49 4025bcf3a1 7f97d059fb ffd2b1509c d7caa90bb9 abbf5036c2 70ec1d4342">
+          <div class="spec-h"><b>Thẻ agency</b><span class="kind">.card-directory</span><span class="dp">432 · r8 · ảnh 4:3 r8 · hàng pad 26 30</span></div>
+          <div class="stage surface"><div class="aw-card">
+            <div class="aw-card__cover"><div class="aw-ph">ảnh portfolio</div></div>
+            <div class="aw-card__head is-dir"><a class="aw-av" href="#cards"><span class="aw-av__img" style="--s:60px"></span><span>Agency</span><sup>PRO</sup></a></div>
+            <ul class="aw-card__list"><li><strong>Location</strong><span>Quốc gia</span></li><li><strong>Website</strong><a class="aw-a" href="#cards">agency.example</a></li><li><strong>Awards</strong><table class="aw-stats is-mini"><tr><th>HM</th><th>SOTD</th><th>SOTM</th><th>SOTY</th></tr><tr><td>132</td><td>92</td><td>4</td><td>1</td></tr></table></li></ul>
+          </div></div>
+          <div class="spec-f"><span class="note">Trang Directory dùng chữ 15, trang Jury 14; cấu trúc giống nhau.</span></div>
+        </div>
+
+        <div class="spec" data-sig="e35d90f413 b3dd914ea4">
+          <div class="spec-h"><b>Thẻ giám khảo</b><span class="kind">.card-jury</span><span class="dp">432 · r8 · footer pad 30</span></div>
+          <div class="stage surface"><div class="aw-card">
+            <div class="aw-card__cover"><div class="aw-ph" style="aspect-ratio:1">ảnh chân dung</div></div>
+            <div class="aw-card__head" style="padding:26px 30px"><a class="aw-av" href="#cards" style="font-size:14px;font-weight:600"><span class="aw-av__img"></span><span>Tên giám khảo</span><sup>PRO</sup></a></div>
+            <ul class="aw-card__list is-tight"><li><strong>Location</strong><span class="end">Quốc gia</span></li><li><strong>Role</strong><span class="end">Creative Developer</span></li></ul>
+            <div class="aw-card__foot"><span class="aw-card__social"><span>in</span><span>X</span></span><span class="ms">arrow_forward</span></div>
+          </div></div>
+        </div>
+
+        <div class="spec" data-sig="24775e7cf0 3bc419feef dae60a306b 0495940837 8b8c4862c5 08985be624 56bb196386 9da272f10b">
+          <div class="spec-h"><b>Thẻ việc làm</b><span class="kind">.card-job</span><span class="dp">432 · r14 · nội dung 14/21 · hàng pad 16 30</span></div>
+          <div class="stage surface"><div class="aw-card is-r14">
+            <div class="aw-card__head"><a class="aw-av" href="#cards" style="font-size:21px;font-weight:600"><span class="aw-av__img" style="--s:32px"></span><span class="aw-lu">Công ty</span></a><span class="aw-tag">REMOTE</span></div>
+            <div class="aw-card__content"><h3><a href="#cards">Junior UI/UX Designer</a></h3><p>Đoạn mô tả vị trí tuyển dụng, tối đa vài dòng rồi cắt. Chữ 14/21 300, lề 30 như thẻ gốc.</p></div>
+            <ul class="aw-card__list is-tight"><li><strong>Location</strong><span class="end">Quốc gia</span></li><li><strong>Website</strong><span class="end">company.example</span></li><li><span style="display:inline-flex;gap:6px;align-items:center"><span class="ms" style="font-size:18px">schedule</span>1 day ago</span><span class="ms end">arrow_forward</span></li></ul>
+          </div></div>
+        </div>
+
+        <div class="spec" data-sig="5211719d6f 4166d81f9f">
+          <div class="spec-h"><b>Thẻ khoá học</b><span class="kind">.card-academy</span><span class="dp">319 · r14 · ảnh 179 · hàng pad 30</span></div>
+          <div class="stage surface"><div class="aw-academy">
+            <div class="aw-academy__fig"><div class="aw-ph">ảnh khoá học</div><span class="aw-tag aw-tag--solid-yellow">Special offer</span></div>
+            <div class="aw-academy__row"><h3 class="aw-academy__title">Tên khoá học hai dòng</h3><span class="aw-tag aw-tag--bold">Offer</span></div>
+            <div class="aw-academy__row" style="align-items:center"><div class="aw-by"><small>By</small> <strong>Giảng viên</strong></div><div class="aw-price"><span class="aw-price__meta"><span>91% off</span><span class="aw-price__strike">/$100</span></span><span class="aw-price__num">9.99<sup>USD</sup></span></div></div>
+            <div class="aw-academy__row is-score"><div class="aw-score"><b>Score</b> 4.9/5<i></i></div><span class="ms">arrow_forward</span></div>
+          </div></div>
+          <div class="spec-f"><span class="note">Nền thẻ gốc là <code>rgba(255,255,255,.9)</code>; kit dùng <code>--bg-white</code> để chế độ tối đổi được.</span></div>
+        </div>
+
+        <div class="spec" data-sig="def028bd5b aedd55c12e 71003e16fd 74b4f9e991">
+          <div class="spec-h"><b>Agency nổi bật</b><span class="kind">.card-directory-sp</span><span class="dp">658 · pad 43.2 · r8 · tiêu đề 41.9</span></div>
+          <div class="stage"><div class="aw-dir-sp">
+            <div class="aw-dir-sp__head"><span class="aw-av__img" style="--s:52px"></span><div class="aw-dir-sp__slides"><div class="aw-ph">ảnh portfolio</div><div class="aw-bullets" aria-hidden="true"><i class="is-on"></i><i></i><i></i></div></div></div>
+            <p style="margin:24px 0 0">International</p>
+            <div class="aw-dir-sp__row"><h3 class="aw-dir-sp__title">Agency</h3><span class="aw-works">Works<b>10</b></span></div>
+            <div class="aw-dir-sp__row" style="margin-top:16px"><a class="aw-a" href="#cards">agency.example</a><span>9 awards</span></div>
+          </div></div>
+        </div>
+
+        <div class="spec" data-sig="987083bba1 392512e8b5 8020c0ce73 c6b72350bd 0b94797cde 75e5b6ef91 bd5df3a91a">
+          <div class="spec-h"><b>Chứng nhận Honors</b><span class="kind">.card-certificate</span><span class="dp">436 · viền trên 10 · pad 31.2</span></div>
+          <div class="stage surface"><div class="aw-cert" id="cert">
+            <div class="aw-cert__head"><span class="aw-logo">logo</span><div class="aw-cert__data"><div>Typography<br>Honors</div><div>Aug<br>26</div></div></div>
+            <div class="aw-cert__title">Tên site</div>
+            <div class="aw-cert__by">By Studio</div>
+            <div class="aw-cert__cover aw-ph">hình minh hoạ giải</div>
+            <div class="aw-cert__foot"><span class="aw-logo">logo</span>winners</div>
+          </div></div>
+          <div class="stage" id="cert-colors" style="padding-top:0"></div>
+          <div class="spec-f"><span class="note">6 màu viền trên đo được trên trang Honors (mỗi hạng mục một màu); chỉ biết chắc màu vàng là "Typography Honors". Bấm ô màu để đổi viền thẻ mẫu.</span></div>
+        </div>
+
+        <div class="spec full" data-sig="b7c6f0091b c7eff66533">
+          <div class="spec-h"><b>Bài blog nổi bật</b><span class="kind">.card-blog-special · .card-blog__title</span><span class="dp">nền #f3f3f3 · pad 100 (kit 40) · tiêu đề 41.9 / 37</span></div>
+          <div class="stage"><div class="aw-blog">
+            <div><p>Aug 31, 2026</p><h3>Tiêu đề bài viết nổi bật.</h3><div style="display:flex;gap:6px;align-items:center">by <a class="aw-av" href="#cards" style="font-size:14px"><span class="aw-av__img" style="--s:32px"></span><strong class="aw-lu">Tác giả</strong></a></div><p class="aw-blog__ex">Đoạn trích dẫn của bài, cỡ 22 (.text-large), cắt sau ba dòng.</p><p style="margin-top:12px"><a class="aw-ico-left" href="#cards"><span class="ms">arrow_forward</span>Read Article</a></p></div>
+            <div class="aw-ph">ảnh bài viết</div>
+          </div></div>
+          <div class="stage col" style="padding-top:0"><h3 class="aw-blog-title">Tiêu đề bài blog thường · 37/600</h3></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="commerce">
+      <header><h2>Gói &amp; quảng bá</h2></header>
+      <div class="grid">
+        <div class="spec" data-sig="42bda9d046">
+          <div class="spec-h"><b>Gói nộp site</b><span class="kind">.plan.plan--standard</span><span class="dp">432 · r14 · tiêu đề 29.3 · giá 59.9</span></div>
+          <div class="stage surface"><div class="aw-plan"><div class="aw-plan__inner">
+            <div class="aw-plan__title">Standard<br>Submission</div>
+            <div class="aw-plan__amount"><strong>65</strong><sup>$</sup><span>/ 1 website</span></div>
+            <a class="aw-btn aw-btn--large aw-btn--outline" href="#commerce" style="align-self:flex-start">Buy Standard</a>
+            <ul class="aw-checks"><li><span class="ms">check_circle</span>Quyền lợi thứ nhất của gói</li><li><span class="ms">check_circle</span>Quyền lợi thứ hai, có thể dài hai dòng khi chữ nhiều</li><li><span class="ms">check_circle</span>Quyền lợi thứ ba</li></ul>
+          </div></div></div>
+        </div>
+
+        <div class="spec full" data-sig="264dcfb441 3f8446dad4 24b09a151c cc904eb81d">
+          <div class="spec-h"><b>Gói Pro (hai cột)</b><span class="kind">.plan.plan--pro.is-dark.is-double</span><span class="dp">884 · trái #222 · phải #2c2c2c</span></div>
+          <div class="stage"><div class="aw-plan is-dark">
+            <div class="aw-plan__inner"><div class="aw-plan__title">Gói kèm<br>tài khoản Pro</div><div class="aw-plan__amount"><strong>165</strong><sup>$</sup><span>/ 1 year</span></div><a class="aw-btn aw-btn--medium aw-btn--outline-white" href="#commerce" style="align-self:flex-start">Be Pro</a><p style="margin:0;font-size:14px">Chọn 1 trong 3 gói, <a class="aw-lu aw-lu--white" href="#commerce">see all plans</a></p></div>
+            <div class="aw-plan__right"><div class="aw-plan__label">All <strong>Professional Plan</strong> Benefits +</div><ul class="aw-checks is-2col"><li><span class="ms">check_circle</span>Mọi quyền lợi cơ bản</li><li><span class="ms">check_circle</span>1 lượt nộp miễn phí/năm</li><li><span class="ms">check_circle</span>Giảm 30% phí nộp</li><li><span class="ms">check_circle</span>Xuất hiện ở 3 hạng mục</li><li><span class="ms">check_circle</span>Giảm 75% khoá học</li><li><span class="ms">check_circle</span>Video giới thiệu trên hồ sơ</li></ul></div>
+          </div></div>
+        </div>
+
+        <div class="spec" data-sig="f098e44bf6 96579b0d9d b50ab9f5aa">
+          <div class="spec-h"><b>Bảng so sánh gói</b><span class="kind">table td</span><span class="dp">pad 20 16 · 21/300 · góc đáy r8</span></div>
+          <div class="stage"><div class="scroll-x" style="width:100%"><table class="aw-compare"><tr><td><strong>PROFESSIONAL</strong></td><td>Giá trị</td></tr><tr><td>Ngôn ngữ</td><td>Hình thức</td></tr></table></div></div>
+          <div class="spec-f"><span class="note">Màu viền ô là kit dựng (<code>--border-gray</code>); ảnh crop chỉ cho thấy khung ô và bo góc.</span></div>
+        </div>
+
+        <div class="spec full" data-sig="773b531e40">
+          <div class="spec-h"><b>Khối quảng bá Academy</b><span class="kind">.promo-heading</span><span class="dp">nền #efe8de · r14 · heading-3 74</span></div>
+          <div class="stage"><div class="aw-promo">
+            <h2>Learn from the Best</h2><h1 style="--aw-h3:44px">Hơn 100 khoá học<br>cho người làm sáng tạo</h1><span>3+ khoá mới mỗi tháng.</span>
+            <div class="aw-promo__prices"><s>$25</s><span class="now">$12</span><small>/month</small></div>
+            <a class="aw-promo-btn" href="#commerce">Start Learning!<span class="ms">confirmation_number</span></a>
+          </div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="feedback">
+      <header><h2>Thông báo nổi</h2></header>
+      <div class="grid">
+        <div class="spec" data-sig="289e161a74">
+          <div class="spec-h"><b>Popup cookie</b><span class="kind">.cookies-popup</span><span class="dp">400 · pad 30 · r8 · nút small trắng</span></div>
+          <div class="stage surface"><div class="aw-cookie"><p>Trang này dùng cookie để bạn có trải nghiệm tốt nhất. <a class="aw-lu aw-lu--white is-light" href="#feedback">Cookies Policy</a></p><button class="aw-btn aw-btn--small aw-btn--white" style="font-weight:300">GOT IT</button> <button class="aw-btn aw-btn--small aw-btn--white is-hover" style="font-weight:300">hover</button></div></div>
+          <div class="spec-f"><span class="note">Cố định góc phải dưới (right 30, bottom 30). Hover nút <code>#7a7a7a</code>.</span></div>
+        </div>
+
+        <div class="spec" data-sig="fc0d1c1da9 45329e6c3f cf0969e0d1">
+          <div class="spec-h"><b>Post-it</b><span class="kind">.postit</span><span class="dp">260 · pad 20 · r14 · 14/140% 400</span></div>
+          <div class="stage surface"><div class="aw-postit"><p>Mở khoá tiềm năng sáng tạo.<br>100+ khoá học chỉ <strong class="aw-red">€11.50</strong></p><p><strong><a class="aw-lu" href="#feedback">Discover more here</a></strong></p></div><div class="aw-postit is-white"><p>Đăng một tin $90 hoặc mua gói <strong class="aw-blue">3 tin $180</strong>.</p></div></div>
+          <div class="spec-f"><span class="note">Nền <code>--ch-bg</code> (dự phòng <code>--color-learn-2</code>). Rule CSS khai r8 nhưng phần tử đo được r14; kit theo số đo.</span></div>
+        </div>
+
+        <div class="spec" data-sig="bc41b4d8a3 7b328878bf">
+          <div class="spec-h"><b>Chatbox hồ sơ</b><span class="kind">.chatbox</span><span class="dp">350 · pad 16 · r8 · tin 13/300</span></div>
+          <div class="stage surface"><div class="aw-chat"><span class="aw-av__img" style="--s:40px"></span><div class="aw-chat__right"><div class="aw-chat__msg">Chào, mình là <strong>Studio</strong>.<br>Mình đang tìm việc freelance hoặc toàn thời gian.</div><div class="aw-chat__msg">Liên hệ mình <strong><a class="aw-lu" href="#feedback">ở đây</a></strong>.</div></div><button class="aw-chat__close" aria-label="Đóng"><span class="ms">close</span></button></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="footer">
+      <header><h2>Footer</h2></header>
+      <div class="grid">
+        <div class="spec full" data-sig="d4cfc6fd1e 73425eedf7 c9dd7cefed e90e1ff26d">
+          <div class="spec-h"><b>Footer</b><span class="kind">footer#footer .footer__top / __bottom</span><span class="dp">407 · menu 14/14 600 · nav 14/28 400</span></div>
+          <div class="stage" style="padding:0 16px"><footer class="aw-footer">
+            <div class="aw-footer__top"><span class="aw-logo">logo</span>
+              <ul class="aw-footer__menu"><li><a class="aw-a aw-a--menu" href="#footer">Websites</a></li><li><a class="aw-a aw-a--menu" href="#footer">Collections</a></li><li><a class="aw-a aw-a--menu" href="#footer">Elements</a></li></ul>
+              <ul class="aw-footer__menu"><li><a class="aw-a aw-a--menu" href="#footer">Academy</a></li><li><a class="aw-a aw-a--menu" href="#footer">Jobs</a></li><li><a class="aw-a aw-a--menu" href="#footer">Market</a></li></ul>
+              <ul class="aw-footer__menu"><li><a class="aw-a aw-a--menu" href="#footer">Directory</a></li><li><a class="aw-a aw-a--menu" href="#footer">Conferences</a></li></ul>
+              <ul class="aw-footer__menu"><li><a class="aw-a aw-a--menu" href="#footer">FAQs</a></li><li><a class="aw-a aw-a--menu" href="#footer">About Us</a></li><li><a class="aw-a aw-a--menu" href="#footer">Contact Us</a></li></ul>
+            </div>
+            <div class="aw-footer__bottom"><ul class="aw-footer__nav"><li><a href="#footer">Cookies Policy</a></li><li><a href="#footer">Legal Terms</a></li><li><a href="#footer">Privacy Policy</a></li></ul><ul class="aw-footer__nav"><li>Connect:</li><li><a href="#footer">Instagram</a></li><li><a href="#footer">LinkedIn</a></li></ul></div>
+          </footer></div>
+          <div class="spec-f"><span class="note">Gạch trên của <code>__bottom</code> chỉ dài 10% (gradient), không phải viền cả dòng.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="states">
+      <header><h2>Trạng thái</h2><p>Ép <code>:hover</code> / <code>:focus-visible</code> / <code>:active</code> qua CDP trên 164 pattern được 15 hover, 21 focus, 1 active, 0 cặp selected. Mọi biến thể đã bày trong thẻ ở trên. Về focus: 20/21 là viền mặc định của trình duyệt (<code>outline: auto</code>, xanh <code>#005fcc</code>), site không style riêng; nút còn tắt hẳn <code>:focus</code>. Bảng dưới gom kiểu hover.</p></header>
+      <div class="scroll-x"><table class="tok">
+        <thead><tr><th>Thành phần</th><th>Hover</th><th>Nguồn</th></tr></thead>
+        <tbody>
+          <tr><td>.button (mặc định, outline, circle, large)</td><td>nền #383838, chữ trắng</td><td>.button:hover</td></tr>
+          <tr><td>.button--outline--dark / --white</td><td>nền trắng, chữ #222</td><td>rule riêng</td></tr>
+          <tr><td>.button--tag</td><td>viền #a7a7a7 → #222</td><td>rule riêng</td></tr>
+          <tr><td>.button.is-ch, nút xanh "Visit us", menu-float neo</td><td>opacity .8</td><td>đo CDP</td></tr>
+          <tr><td>.menu-float__item (link)</td><td>viền #4e4e4e → #a7a7a7</td><td>đo CDP</td></tr>
+          <tr><td>.nav-filters__item, mục mega menu</td><td>nền --nf-bg-3</td><td>rule :hover</td></tr>
+          <tr><td>.pagination__item</td><td>nền #222, chữ trắng</td><td>rule :hover</td></tr>
+          <tr><td>.promo-offer__button</td><td>nền cam → #222</td><td>đo CDP</td></tr>
+          <tr><td>link menu footer</td><td>opacity .75</td><td>đo CDP</td></tr>
+          <tr><td>.link-underlined</td><td>vạch đậm trượt hết chiều dài</td><td>rule :hover (CDP không bắt được vì nằm ở ::before)</td></tr>
+          <tr><td>.figure-rollover</td><td>hiện lớp gradient + Vote Now</td><td>rule :hover (lớp con)</td></tr>
+        </tbody></table></div>
+      <h3 class="sub">Focus</h3>
+      <div class="focus-demo">
+        <div class="fig"><a class="aw-logo is-focus" href="#states" style="color:var(--aw-color-primary)" data-sig-state="1898069302:focus">logo</a><span class="cap">logo header</span></div>
+        <div class="fig"><a class="aw-a is-focus" href="#states" style="font:300 15px/1 var(--aw-font)" data-sig-state="01b2c2e6bd:focus">studio.example</a><span class="cap">link thường</span></div>
+        <div class="fig"><button class="aw-btn aw-btn--small">Nút</button><span class="cap">nút · không có focus</span></div>
+      </div>
+    </section>
+
+    <!-- ================= MÀN MẪU ================= -->
+    <section class="block" id="screens">
+      <header><h2>Màn hình mẫu</h2><p>Ghép từ đúng các class ở trên theo bố cục của site. Mobile 390 × 844: header rút gọn (logo + nút hamburger), khối SOTD với tiêu đề 42, thẻ site một cột và menu nổi đáy trang. Desktop 1440 × 900: trang Websites với dải chạy, header, thanh lọc, breadcrumb và lưới 3 cột thẻ site. Mọi ảnh là khối giữ chỗ.</p></header>
+      <div class="screens">
+        <div class="screen-fig">
+          <div class="phone">
+            <div class="m-head"><span class="aw-logo">logo</span><div style="display:flex;gap:8px;align-items:center"><a class="aw-btn aw-btn--small" href="#screens">Be Pro</a><button class="aw-btn aw-btn--small aw-btn--outline" aria-label="Menu"><span class="ms">menu</span></button></div></div>
+            <div class="m-body">
+              <div class="aw-sotd" style="padding-top:16px"><p class="aw-sotd__sub"><span>Site of the Day</span><span class="aw-tag aw-tag--medium">Sep 29</span></p><h1 class="aw-h1" style="--aw-h1:42px">Tên site</h1><a class="aw-av" href="#screens" style="font-size:18px"><span class="aw-av__img" style="--s:32px"></span><span class="aw-lu">Tác giả</span><sup>PRO</sup></a></div>
+              <div class="aw-sotd__img"><div class="aw-ph">ảnh SOTD</div></div>
+              <h2 class="aw-heading-hr">Latest</h2>
+              <div class="aw-card-site"><a class="aw-fig" href="#screens"><div class="aw-ph">ảnh chụp website</div></a><div class="aw-card-site__info"><a class="aw-av" href="#screens" style="font-size:15px"><span class="aw-av__img"></span><h3 class="aw-av__title">Tác giả</h3></a><span class="grow"></span><span class="aw-tag aw-tag--dev">DEV</span><span class="aw-tag aw-tag--sotd">SOTD</span></div></div>
+            </div>
+            <div class="m-float"><div class="aw-float"><span class="aw-float__logo"><span class="aw-logo">logo</span></span><ul class="aw-float__nav"><li><a class="aw-float__item aw-float__item--anchor is-on" href="#screens">Nominees</a></li></ul><a class="aw-btn aw-btn--medium aw-btn--ch" href="#screens">Visit Sotd.</a></div></div>
+          </div>
+          <p class="screen-cap" style="max-width:273px">Mobile 390 × 844 · aw-btn, aw-sotd, aw-h1, aw-av, aw-heading-hr, aw-card-site, aw-float.</p>
+        </div>
+        <div class="screen-fig">
+          <div class="desk" data-sig="7c1c68de96">
+            <div class="aw-marquee"><span><b>The Creative Pass</b></span><span class="ms">sentiment_satisfied</span><span>Watch all courses for just €11.50/month</span><span><b>The Creative Pass</b></span><span class="ms">sentiment_satisfied</span><span>Watch all courses for just €11.50/month</span><span><b>The Creative Pass</b></span></div>
+            <div class="d-inner" style="padding-top:8px">
+              <div class="aw-header is-plain"><span class="aw-logo">logo</span><nav class="aw-hnav" aria-label="Menu mẫu"><span>Explore<span class="ms">expand_more</span></span><a href="#screens">Directory</a><a href="#screens">Academy <span class="aw-tag aw-tag--small aw-tag--solid-black">New</span></a><a href="#screens">Jobs</a><a href="#screens">Market</a></nav><label class="aw-search"><button type="button" aria-label="Tìm"><span class="ms">search</span></button><input type="text" placeholder="Search by Websites" aria-label="Tìm kiếm"></label><div class="aw-hauth"><a href="#screens">Log in</a><a href="#screens">Sign Up</a></div><a class="aw-btn aw-btn--small" href="#screens">Be Pro</a><a class="aw-btn aw-btn--small aw-btn--outline" href="#screens">Submit Website</a></div>
+              <div class="aw-filters"><button class="aw-filter">Awards<span class="ms">expand_more</span></button><button class="aw-filter">Category<span class="ms">expand_more</span></button><button class="aw-filter">Tag<span class="ms">expand_more</span></button><button class="aw-filter">Technology<span class="ms">expand_more</span></button><button class="aw-filter">Country<span class="ms">expand_more</span></button><span class="grow"></span><span class="aw-filter has-count"><span class="aw-count">0</span></span><button class="aw-filter">Reset filters<span class="ms">restart_alt</span></button></div>
+              <div class="aw-crumb" style="margin-top:20px"><h1>Winning websites. Web Design Inspiration <span class="aw-tag aw-tag--bold">10336</span></h1></div>
+              <div class="d-grid" id="desk-grid"></div>
+            </div>
+          </div>
+          <p class="screen-cap" style="max-width:724px">Desktop 1440 × 900 · aw-marquee, aw-header, aw-search, aw-btn, aw-filters, aw-count, aw-crumb, lưới 3 cột aw-card-site (aw-fig, aw-av, aw-tag).</p>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"><span class="ms">check_circle</span><span id="toast-t"></span></div>
+<script>
+/* Sáng = :root của awwwards.com (Playwright, duyệt document.styleSheets). Tối = body.dark + body.header-dark #header; ô không có nguồn là kit dựng (NOTES). */
+const GROUPS=[
+ ["Lõi (đổi theo chế độ)",["color-primary","color-link","color-white","bg-primary","bg-secondary","bg-3rd","bg-4rd","bg-white","border-gray","ch-bg","sf-bg","nf-bg-1","nf-bg-2","nf-bg-3"]],
+ ["Nhập liệu & nút",["bg-input","bg-input-hover","border-input","color-input","button-bg","button-color","button-hover","button-gray","tag-border","muted","check-bg","check-bg-checked","check-ball"]],
+ ["Bề mặt đậm & phủ",["overlay","float-bg","float-content","float-ink","float-line","float-line-2","inverse-bg","inverse-ink","plan-right","plan-label","promo-bg","blog-bg","img","img-ink","card","checker"]]
+];
+const ROLES=GROUPS.flatMap(g=>g[1]);
+const V={
+ light:{"color-primary":"#222","color-link":"#222","color-white":"#fff","bg-primary":"#F8F8F8","bg-secondary":"#222","bg-3rd":"#ededed","bg-4rd":"#f8f8f8","bg-white":"#fff","border-gray":"#ededed","ch-bg":"#E9E9E9","sf-bg":"#ededed","nf-bg-1":"#ededed","nf-bg-2":"#f8f8f8","nf-bg-3":"#fff","bg-input":"#fff","bg-input-hover":"#f8f8f8","border-input":"#ededed","color-input":"#222","button-bg":"#222","button-color":"#fff","button-hover":"#383838","button-gray":"#dedede","tag-border":"#a7a7a7","muted":"rgba(34,34,34,.3)","check-bg":"#dedede","check-bg-checked":"#222","check-ball":"#fff","overlay":"rgba(34,34,34,.7)","float-bg":"rgba(34,34,34,.8)","float-content":"#3e3e3e","float-ink":"#dedede","float-line":"#525252","float-line-2":"#4e4e4e","inverse-bg":"#222","inverse-ink":"#fff","plan-right":"#2c2c2c","plan-label":"rgba(56,56,56,.5)","promo-bg":"#efe8de","blog-bg":"#f3f3f3","img":"#dcdcdc","img-ink":"#8a8a8a","card":"#fff","checker":"rgba(0,0,0,.06)"},
+ dark:{"color-primary":"#eee","color-link":"#eee","color-white":"#fff","bg-primary":"#121212","bg-secondary":"#222","bg-3rd":"#383838","bg-4rd":"#1a1a1a","bg-white":"#1c1c1c","border-gray":"#2e2e2e","ch-bg":"#222","sf-bg":"#383838","nf-bg-1":"#222","nf-bg-2":"#2a2a2a","nf-bg-3":"#383838","bg-input":"#1c1c1c","bg-input-hover":"#222","border-input":"#383838","color-input":"#eee","button-bg":"#fff","button-color":"#222","button-hover":"#383838","button-gray":"#383838","tag-border":"#5a5a5a","muted":"rgba(238,238,238,.3)","check-bg":"#383838","check-bg-checked":"#eee","check-ball":"#121212","overlay":"rgba(0,0,0,.7)","float-bg":"rgba(34,34,34,.8)","float-content":"#3e3e3e","float-ink":"#dedede","float-line":"#525252","float-line-2":"#4e4e4e","inverse-bg":"#2a2a2a","inverse-ink":"#fff","plan-right":"#2c2c2c","plan-label":"rgba(56,56,56,.5)","promo-bg":"#2a2520","blog-bg":"#1a1a1a","img":"#2a2a2a","img-ink":"#8a8a8a","card":"#181818","checker":"rgba(255,255,255,.06)"}
+};
+const NOTES={"color-primary":"đo · body.dark","color-link":"dựng = color-primary","bg-primary":"đo · body.dark","bg-3rd":"dựng = sf-bg header-dark","ch-bg":"đo · header-dark --bg-primary","sf-bg":"đo · header-dark","button-bg":"đo · header-dark = color-primary","button-color":"đo · header-dark","nf-bg-3":"dựng = sf-bg tối","bg-secondary":"giữ (site không đổi)","color-white":"hằng số","float-bg":"hằng số","float-content":"hằng số","float-ink":"hằng số","float-line":"hằng số","float-line-2":"hằng số","plan-right":"hằng số","plan-label":"hằng số","button-hover":"giữ (#383838)","card":"vỏ kit","checker":"vỏ kit","img":"vỏ kit · ảnh giữ chỗ","img-ink":"vỏ kit"};
+/* hằng số: không đổi theo chế độ */
+const CONST_GROUPS=[
+ ["Ngữ nghĩa",{"color-orange":"#FA5D29","color-blue":"#49B3FC","color-featured":"#f8f0ee","alert-green":"#e0f4d9","alert-yellow":"#FFF083","nf-bg-count":"#FF9667","tag-dev":"#8eabc6","tag-sotd":"#ce6644","tag-hm":"#726996","cookie-btn-hover":"#7a7a7a","float-hover-line":"#a7a7a7","ua-focus":"#005fcc"}],
+ ["Chuyên mục (.style-1…6 → --menu-color-1..3)",{"color-inspire":"#AAEEC4","color-inspire-2":"#C8E4D3","color-inspire-3":"#E2F4E9","color-learn":"#FFF083","color-learn-2":"#FFF9D0","color-learn-3":"#fffbe2","color-connect":"#FF602C","color-connect-2":"#FFAE94","color-connect-3":"#FFC5B1","color-read":"#c0ab3c","color-read-2":"#CDC38B","color-read-3":"#DBD6C0","color-awards":"#502bd8","color-awards-2":"#6749d1","color-awards-3":"#917eda","color-jobs":"#74bcff","color-jobs-2":"#99ccfc","color-jobs-3":"#b4d7f8"}],
+ ["Chứng nhận Honors (viền trên, đo)",{"cert-1":"#e3c352","cert-2":"#80a8ba","cert-3":"#a69382","cert-4":"#adaf40","cert-5":"#ffa41b","cert-6":"#b97e7e"}],
+ ["Sticker (.sticker-svg --color-1..7)",{"sticker-1":"#ec6237","sticker-2":"#e5d8ca","sticker-3":"#AAEEC4","sticker-4":"#502BD8","sticker-5":"#222","sticker-6":"#502BD8","sticker-7":"#FCB6F2"}]
+];
+const SECTIONS=[["inspire","Inspire · style-1"],["learn","Learn · style-2"],["connect","Connect · style-3"],["read","Read · style-4"],["awards","Awards · style-5"],["jobs","Jobs · style-6"]];
+/* [tên, cỡ 1440, line-height, weight, biến đổi, cỡ 390] đo getComputedStyle */
+const TYPE=[["heading-1 · tiêu đề SOTD","126.7","126.7","600","uppercase","42"],["head-user-pro__title · tên hồ sơ","192","173","600","uppercase",""],["heading-2","111","111","600","uppercase",""],["heading-3 · Academy","74","74","600","",""],["heading-5 · card-about, card-directory-sp","41.9","50.3","600","",""],["heading-6 · mô tả hồ sơ","38","49","300","",""],["card-blog__title","37","44","600","",""],["plan__title","29.3","38.1","600","",""],["text-large · đoạn giới thiệu","22","32","400","",""],["card-slide__title · fluid clamp(18,…,22)","20.65","28","600","","18"],["--text-size-large","20","28","300","",""],["card-job__title","19.3","25.1","600","",""],["list-sites__title","19","23","700","",""],["--text-size-medium · button--tag","18","28","600","",""],["avatar-name__title","15","15","600","",""],["--text-size-primary · body","14","28","300","",""],["menu header","14","28","500","",""],["link menu, footer__menu","14","14","600","",""],["search-form__input","13.3","normal","400","",""],["budget-tag--bold","13","18","600","",""],["box-price__percent","12","14","600","",""],["--text-size-small · budget-tag","11","18","500","",""],["budget-tag--small","10","17","500","",""],["card-certificate__data","9","9","300","",""]];
+const CONST_LINES=["--aw-font: \"Inter Tight\", Helvetica, Arial, sans-serif;","--aw-fw-light:300; --aw-fw-normal:400; --aw-fw-medium:500; --aw-fw-bold:600; --aw-fw-extrabold:700; --aw-fw-black:800;","--aw-text-small:11px; --aw-text-primary:14px; --aw-text-medium:18px; --aw-text-large:20px;","--aw-rounded-small:4px; --aw-rounded-normal:8px; --aw-rounded-large:8px; --aw-button-rounded:8px; --aw-button-rounded-full:72px; --aw-r-float:12px; --aw-r-figure-lg:14px;","--aw-button-height:48px; --aw-button-pad:24px; --aw-height-input:48px; --aw-pad-input:16px; --aw-sf-height:42px; --aw-nf-height:54px; --aw-nf-container-pad:6px;","--aw-gutter:20px; --aw-pad-inner:16px; --aw-border-thin:.5px;","--aw-color-underlined:34, 34, 34; --aw-color-white-rgb:255, 255, 255; --aw-color-red-rgb:250, 93, 41;","--aw-fluid-20: clamp(18px, 16.5915px + 0.28169vw, 22px);","--aw-scrim:rgba(0,0,0,.5); --aw-scrim-0:rgba(0,0,0,0); --aw-bullet:rgba(255,255,255,.2); --aw-line-10:rgba(0,0,0,.1);"];
+(function () {
+  const root = document.documentElement;
+  let dark0 = false; try { dark0 = matchMedia("(prefers-color-scheme: dark)").matches; } catch (e) {}
+  const state = { mode: dark0 ? "dark" : "light", sec: 0 };
+  try { Object.assign(state, JSON.parse(localStorage.getItem("aw-kit") || "{}")); } catch (e) {}
+  if (!["dark", "light"].includes(state.mode)) state.mode = "light";
+  if (!(state.sec >= 0 && state.sec < SECTIONS.length)) state.sec = 0;
+
+  const toast = (t) => { const el = document.getElementById("toast"); document.getElementById("toast-t").textContent = t; el.classList.add("show"); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove("show"), 1600); };
+  const copy = async (text, msg) => { try { await navigator.clipboard.writeText(text); toast(msg); } catch (e) { toast("Trình duyệt chặn clipboard, hãy copy tay"); } };
+  const constVal = (k) => { for (const g of CONST_GROUPS) if (g[1][k]) return g[1][k]; };
+
+  function apply() {
+    const v = V[state.mode];
+    ROLES.forEach((r) => root.style.setProperty("--aw-" + r, v[r]));
+    root.style.setProperty("--aw-color-underlined", state.mode === "dark" ? "238, 238, 238" : "34, 34, 34");
+    const s = SECTIONS[state.sec][0];
+    ["", "-2", "-3"].forEach((x, i) => root.style.setProperty("--aw-menu-color-" + (i + 1), constVal("color-" + s + x)));
+    root.dataset.mode = state.mode;
+    document.querySelectorAll("#mode button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === state.mode));
+    document.querySelectorAll("#swatches .sw").forEach((b) => b.setAttribute("aria-pressed", +b.dataset.v === state.sec));
+    renderRoles();
+    try { localStorage.setItem("aw-kit", JSON.stringify(state)); } catch (e) {}
+  }
+
+  const sw = document.getElementById("swatches");
+  SECTIONS.forEach(([k, label], i) => {
+    const b = document.createElement("button");
+    b.className = "sw"; b.dataset.v = i; b.title = label; b.setAttribute("aria-label", "Màu chuyên mục " + label);
+    b.style.setProperty("--c", constVal("color-" + k));
+    b.onclick = () => { state.sec = i; apply(); };
+    sw.appendChild(b);
+  });
+  document.querySelectorAll("#mode button").forEach((b) => (b.onclick = () => { state.mode = b.dataset.v; apply(); }));
+
+  const parse = (v) => {
+    if (v[0] === "#") { let h = v.slice(1); if (h.length <= 4) h = h.replace(/./g, "$&$&"); const n = [0, 2, 4, 6].map((i) => parseInt(h.slice(i, i + 2) || "ff", 16)); return [n[0], n[1], n[2], n[3] / 255]; }
+    const m = (v.match(/[\d.]+/g) || []).map(Number); return [m[0], m[1], m[2], m[3] === undefined ? 1 : m[3]];
+  };
+  const onColor = (v) => {
+    const [r, g, b, a] = parse(v); const base = state.mode === "dark" ? 18 : 248; const mix = (c) => c * a + base * (1 - a);
+    return (0.299 * mix(r) + 0.587 * mix(g) + 0.114 * mix(b)) / 255 > 0.55 ? "#222" : "#fff";
+  };
+  const cell = (box, name, v, note) => {
+    const b = document.createElement("button");
+    b.className = "role"; b.style.color = onColor(v);
+    b.innerHTML = '<i style="background:' + v + '"></i><b>' + name + "</b><code>" + v + (note ? " · " + note : "") + "</code>";
+    b.onclick = () => copy(v, "Đã copy " + name + " " + v);
+    box.appendChild(b);
+  };
+  function renderRoles() {
+    const box = document.getElementById("roles-groups"); box.innerHTML = "";
+    const group = (title, items) => {
+      const h = document.createElement("h3"); h.className = "sub"; h.textContent = title; box.appendChild(h);
+      const g = document.createElement("div"); g.className = "roles"; box.appendChild(g);
+      items.forEach((x) => cell(g, x[0], x[1], x[2]));
+    };
+    GROUPS.forEach(([t, rs]) => group(t, rs.map((r) => ["--aw-" + r, V[state.mode][r], state.mode === "dark" ? (NOTES[r] || "dựng") : ""])));
+    CONST_GROUPS.forEach(([t, o]) => group(t + " — hằng số", Object.entries(o).map(([k, v]) => ["--aw-" + k, v])));
+  }
+
+  const ts = document.getElementById("typescale");
+  TYPE.forEach(([name, size, lh, w, tt, m]) => {
+    const r = document.createElement("div"); r.className = "type-row";
+    const shown = Math.min(parseFloat(size), 72);
+    r.innerHTML = '<span class="meta">' + name + '</span><span class="t" style="font-size:' + shown + "px;line-height:1.15;font-weight:" + w + ";text-transform:" + (tt || "none") + '">Thiết kế đoạt giải</span><span class="meta">' + size + " / " + lh + " · " + w + (m ? " · 390: " + m : "") + (shown < parseFloat(size) ? " · hiện " + shown : "") + "</span>";
+    ts.appendChild(r);
+  });
+
+  const sh = document.getElementById("shapes");
+  [["0", "ảnh site trong card-site (lớp ngoài r4)"], [".5px", "--border-thin · viền nút/nhãn", 1], ["4", "--rounded-small · nhãn, ảnh site"], ["8", "--rounded-normal/large · nút, header, thẻ"], ["12", "menu nổi"], ["14", "ảnh lớn, thẻ Academy/Jobs, plan, post-it"], ["50%", "avatar, chấm"], ["72", "--button-rounded-full · nút tag"]].forEach(([r, use, thin]) => {
+    const c = document.createElement("div"); c.className = "shape-cell";
+    const rad = thin ? "0" : r.includes("%") ? r : r + "px";
+    c.innerHTML = '<i style="border-radius:' + rad + (thin ? ";border-width:.5px" : "") + (r === "72" ? ";width:96px;height:48px" : "") + '"></i>' + r + "<br>" + use; sh.appendChild(c);
+  });
+
+  /* ô màu chứng nhận: đổi viền thẻ mẫu */
+  const cc = document.getElementById("cert-colors"), cert = document.getElementById("cert");
+  [1, 2, 3, 4, 5, 6].forEach((n) => { const b = document.createElement("button"); b.className = "sw"; b.style.setProperty("--c", "var(--aw-cert-" + n + ")"); b.setAttribute("aria-label", "Màu chứng nhận " + n); b.onclick = () => cert.style.setProperty("--c", "var(--aw-cert-" + n + ")"); cc.appendChild(b); });
+
+  /* lưới desktop */
+  document.getElementById("desk-grid").innerHTML = [1, 2, 3, 4, 5, 6].map((n) => '<div class="aw-card-site" style="max-width:none"><a class="aw-fig" href="#screens"><div class="aw-ph">ảnh chụp website</div></a><div class="aw-card-site__info"><a class="aw-av" href="#screens" style="font-size:15px"><span class="aw-av__img"></span><h3 class="aw-av__title">Tác giả ' + n + '</h3><sup>PRO</sup></a><span class="grow"></span><span class="aw-tag aw-tag--dev">DEV</span>' + (n % 2 ? '<span class="aw-tag aw-tag--sotd">SOTD</span>' : '<span class="aw-tag aw-tag--hm">HM</span>') + "</div></div>").join("");
+
+  /* nút Copy HTML cho mỗi thẻ */
+  document.querySelectorAll(".spec").forEach((spec) => {
+    const stage = spec.querySelector(".stage"); if (!stage || !spec.querySelector(".spec-h")) return;
+    let foot = spec.querySelector(".spec-f");
+    if (!foot) { foot = document.createElement("div"); foot.className = "spec-f"; foot.innerHTML = '<span class="note"></span>'; spec.appendChild(foot); }
+    const name = spec.querySelector(".spec-h b").textContent;
+    const b = document.createElement("button"); b.className = "copy"; b.innerHTML = '<span class="ms">content_copy</span>HTML'; b.setAttribute("aria-label", "Copy HTML của " + name);
+    b.onclick = () => copy([...spec.querySelectorAll(".stage")].map((s) => s.innerHTML.trim()).join("\n").replace(/\n\s+/g, "\n"), "Đã copy HTML của " + name);
+    foot.appendChild(b);
+  });
+
+  document.getElementById("copy-tokens").onclick = () => {
+    const v = V[state.mode]; const lines = ROLES.map((r) => "  --aw-" + r + ": " + v[r] + ";");
+    CONST_GROUPS.forEach(([, o]) => Object.entries(o).forEach(([k, val]) => lines.push("  --aw-" + k + ": " + val + ";")));
+    ["1", "2", "3"].forEach((n) => lines.push("  --aw-menu-color-" + n + ": " + getComputedStyle(root).getPropertyValue("--aw-menu-color-" + n).trim() + ";"));
+    lines.push("  --aw-color-underlined: " + getComputedStyle(root).getPropertyValue("--aw-color-underlined").trim() + ";");
+    CONST_LINES.forEach((l) => lines.push("  " + l));
+    copy(":root {\n" + lines.join("\n") + "\n}", "Đã copy token " + (state.mode === "dark" ? "tối" : "sáng"));
+  };
+
+  const links = [...document.querySelectorAll(".side a")];
+  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) links.forEach((a) => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id)); }), { rootMargin: "-30% 0px -60% 0px" });
+  document.querySelectorAll("section.block").forEach((s) => io.observe(s));
+
+  apply();
+})();
+</script>
+
+</body>
+</html>

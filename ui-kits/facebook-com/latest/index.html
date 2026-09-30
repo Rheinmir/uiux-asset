@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta name="ui-kit-id" content="facebook-com">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Facebook FDS UI Kit</title>
+<meta name="ui-kit-skip" content="cf28cddf95:ảnh, avatar hoặc video của người dùng/nhà quảng cáo (RULE-09, dữ liệu cá nhân);7044e339f9:ảnh, avatar hoặc video của người dùng/nhà quảng cáo (RULE-09, dữ liệu cá nhân);78a16d2fb2:ảnh, avatar hoặc video của người dùng/nhà quảng cáo (RULE-09, dữ liệu cá nhân);6ccd23bc3a:ảnh, avatar hoặc video của người dùng/nhà quảng cáo (RULE-09, dữ liệu cá nhân);151465895f:ảnh, avatar hoặc video của người dùng/nhà quảng cáo (RULE-09, dữ liệu cá nhân);dc0dece580:ảnh, avatar hoặc video của người dùng/nhà quảng cáo (RULE-09, dữ liệu cá nhân);91998991bb:ảnh, avatar hoặc video của người dùng/nhà quảng cáo (RULE-09, dữ liệu cá nhân);5866269618:ảnh, avatar hoặc video của người dùng/nhà quảng cáo (RULE-09, dữ liệu cá nhân);1b438dd242:ảnh, avatar hoặc video của người dùng/nhà quảng cáo (RULE-09, dữ liệu cá nhân);a80b7d8447:ảnh, avatar hoặc video của người dùng/nhà quảng cáo (RULE-09, dữ liệu cá nhân);d26ce0f406:ảnh, avatar hoặc video của người dùng/nhà quảng cáo (RULE-09, dữ liệu cá nhân);c853c2ffe0:ảnh đính kèm trong bình luận;0529d07701:ảnh đính kèm;c7851fbc4c:ảnh đính kèm;d975e60975:ảnh chụp màn hình trong bài;30ef14a015:ảnh đính kèm;81c828647d:khung bài ảnh (nội dung người dùng);3fefe39e6a:thumbnail video tin nhắn (nội dung người dùng);91db114ec8:thumbnail video tin nhắn;8faa94ded5:mảnh chỉ số trang carousel, không rõ vai trò độc lập;b19f593ad1:dải ảnh thu nhỏ của nội dung;ba103cbc9e:khối xanh 24×32 không xác định được vai trò từ trang tĩnh;700caa3975:wordmark Facebook (thương hiệu, RULE-09);c96f970751:avatar người dùng;5926b2f687:avatar người dùng;d0395d5964:logo Facebook (thương hiệu, RULE-09);91db114ec8:focus:thumbnail video đã bỏ (nội dung người dùng)">
+<!-- Sinh bởi skill ui-kit-from-code (28/09/2026) từ MỘT trang News Feed do người dùng tự lưu
+     (Facebook.html, "Webpage, Complete"). facebook.com cấm thu thập tự động (robots.txt) nên không
+     crawler nào chạm tới site: trang lưu được phục vụ qua 127.0.0.1, chặn mọi request ra ngoài, tắt JS.
+     Token: 579 biến FDS ở `:root, .__fb-light-mode` và `.__fb-dark-mode` (cả hai bản có sẵn trong CSS đã lưu).
+     Không có ảnh, avatar, tên hay nội dung thật của người dùng; không có logo/wordmark của Meta. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Mặc định là FDS sáng; script ghi đè --fb-* theo chế độ đang chọn. --k nhân bán kính để xem thử. */
+:root {
+  --fb-web-wash:#F2F4F7; --fb-surface-background:#FFFFFF; --fb-card-background:#FFFFFF; --fb-comment-background:#F0F2F5;
+  --fb-primary-text:#080809; --fb-secondary-text:#65686C; --fb-primary-icon:#080809; --fb-secondary-icon:#65686C;
+  --fb-divider:#D0D3D7; --fb-accent:#0866FF; --fb-hover-overlay:#0000000D; --fb-press-overlay:#0000001A;
+  --fb-secondary-button-background:#E2E5E9; --fb-primary-button-background:#0866FF; --fb-primary-button-text:#FFFFFF;
+  --k: 1;
+  --r-button: calc(8px * var(--k)); --r-card: calc(12px * var(--k)); --r-media: calc(12px * var(--k)); --r-popover: calc(16px * var(--k)); --r-input: calc(12px * var(--k)); --r-tooltip: calc(8px * var(--k)); --r-chip: 255px; --r-bubble: calc(18px * var(--k)); --r-list: calc(8px * var(--k));
+  --sys: system-ui, -apple-system, BlinkMacSystemFont, ".SFNSText-Regular", "Segoe UI Historic", "Segoe UI", Helvetica, Arial, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --fds-soft: cubic-bezier(.08,.52,.52,1); --fds-fast: .1s; --fds-short: .2s; --fds-medium: .4s;
+  --shadow-base: 0 1px 2px rgba(0,0,0,.2); --shadow-emphasis: 0 2px 12px rgba(0,0,0,.2); --shadow-elevated: 0 8px 20px 0 rgba(0,0,0,.2), 0 2px 4px 0 rgba(0,0,0,.1);
+  --card-box-shadow: 0 12px 28px 0 rgba(0,0,0,.2), 0 2px 4px 0 rgba(0,0,0,.1);
+  --focus-ring: 0 0 0 2px #FFFFFF, 0 0 0 4px var(--fb-focus-ring-blue, #0866FF);
+  color-scheme: light;
+}
+:root[data-mode="dark"] { color-scheme: dark; --shadow-base: 0 1px 2px rgba(0,0,0,.4); }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--fb-web-wash); color: var(--fb-primary-text); font: 400 15px/1.34 var(--sys); -webkit-font-smoothing: antialiased; }
+code { font-family: var(--mono); font-size: 12px; }
+svg.i { width: 20px; height: 20px; fill: currentColor; flex: none; }
+svg.o { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+/* ---------- vỏ trang (mặc token FDS) ---------- */
+.shell { display: grid; grid-template-columns: 248px minmax(0, 1fr); min-height: 100vh; }
+.side { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 16px 8px; background: var(--fb-surface-background); border-right: 1px solid var(--fb-divider); display: flex; flex-direction: column; gap: 2px; }
+.brand { padding: 4px 12px 14px; }
+.brand b { font-size: 20px; font-weight: 700; display: block; color: var(--fb-primary-text); }
+.brand small { color: var(--fb-secondary-text); font-size: 12px; }
+.side h6 { margin: 12px 12px 4px; font-size: 13px; font-weight: 600; color: var(--fb-secondary-text); }
+.side a { display: flex; align-items: center; height: 36px; padding: 0 12px; border-radius: var(--r-list); color: var(--fb-primary-text); text-decoration: none; font-weight: 500; position: relative; }
+.side a:hover { background: var(--fb-hover-overlay); }
+.side a.on { background: var(--fb-hosted-view-selected-state, #EBF5FF); color: var(--fb-toggle-active-text, #0064D1); font-weight: 600; }
+main { padding: 0 32px 96px; min-width: 0; }
+.bar { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; padding: 10px 0; background: var(--fb-web-wash); border-bottom: 1px solid var(--fb-divider); }
+.bar .grow { flex: 1; }
+.ctl { display: flex; align-items: center; gap: 8px; }
+.ctl > span { font-size: 12px; font-weight: 600; color: var(--fb-secondary-text); }
+.note-pal { font-size: 12px; color: var(--fb-secondary-text); display: inline-flex; gap: 8px; align-items: center; }
+.note-pal i { width: 16px; height: 16px; border-radius: 50%; background: var(--fb-accent); }
+.seg { display: inline-flex; background: var(--fb-secondary-button-background); border-radius: var(--r-button); padding: 2px; gap: 2px; }
+.seg button { height: 28px; padding: 0 12px; border: none; border-radius: calc(6px * var(--k)); background: transparent; color: var(--fb-secondary-text); font: 600 13px var(--sys); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--fb-surface-background); color: var(--fb-primary-text); box-shadow: var(--shadow-base); }
+.copy { height: 32px; padding: 0 12px; border-radius: var(--r-button); border: none; background: transparent; color: var(--fb-blue-link, #0064D1); font: 600 13px var(--sys); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.copy:hover { background: var(--fb-hover-overlay); }
+
+.intro { padding: 36px 0 4px; max-width: 800px; }
+.intro .eyebrow { font-family: var(--mono); font-size: 12px; color: var(--fb-secondary-text); }
+.intro h1 { font-size: 40px; line-height: 1.15; font-weight: 700; margin: 10px 0 12px; letter-spacing: -.01em; text-wrap: balance; }
+.intro p { font-size: 16px; line-height: 1.5; color: var(--fb-secondary-text); margin: 0; max-width: 66ch; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.fact { font-family: var(--mono); font-size: 11.5px; padding: 4px 10px; border-radius: var(--r-chip); background: var(--fb-surface-background); color: var(--fb-secondary-text); box-shadow: var(--shadow-base); }
+
+section.block { padding-top: 48px; scroll-margin-top: 60px; }
+section.block > header { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+section.block h2 { font-size: 24px; line-height: 1.25; font-weight: 700; margin: 0; }
+section.block > header p { margin: 0; color: var(--fb-secondary-text); max-width: 72ch; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+.grid.wide { grid-template-columns: repeat(auto-fill, minmax(460px, 1fr)); }
+.spec { background: var(--fb-card-background); border-radius: var(--r-card); box-shadow: var(--shadow-base); display: flex; flex-direction: column; min-width: 0; }
+.spec.full { grid-column: 1 / -1; }
+.spec-h { display: flex; align-items: center; gap: 8px; padding: 14px 16px 0; flex-wrap: wrap; }
+.spec-h b { font-size: 15px; font-weight: 600; }
+.kind { font-family: var(--mono); font-size: 11px; padding: 2px 8px; border-radius: 6px; background: var(--fb-comment-background); color: var(--fb-secondary-text); }
+.spec-h .dp { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--fb-secondary-text); }
+.stage { padding: 20px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; min-height: 90px; overflow-x: auto; }
+.stage.col { flex-direction: column; align-items: stretch; }
+.stage.center { justify-content: center; }
+.stage.wash { background: var(--fb-web-wash); margin: 12px 12px 0; border-radius: var(--r-list); }
+.spec-f { display: flex; align-items: center; gap: 8px; padding: 8px 12px 12px 16px; margin-top: auto; }
+.spec-f .note { font-size: 12px; line-height: 1.45; color: var(--fb-secondary-text); flex: 1; }
+.states { display: flex; flex-wrap: wrap; gap: 14px 18px; align-items: flex-end; padding: 14px 16px; margin: 0 12px 4px; border-top: 1px dashed var(--fb-divider); }
+.states > figure { margin: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+.states figcaption { font: 500 10.5px var(--mono); color: var(--fb-secondary-text); }
+.states figcaption b { color: var(--fb-primary-text); }
+
+.roles-h { font-size: 13px; font-weight: 600; color: var(--fb-secondary-text); margin: 18px 0 8px; }
+.roles { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 8px; }
+.role { border-radius: var(--r-list); padding: 10px 12px; min-height: 70px; display: flex; flex-direction: column; justify-content: space-between; border: none; box-shadow: inset 0 0 0 1px rgba(128,128,128,.25); cursor: pointer; text-align: left; font: inherit; }
+.role b { font-size: 12px; font-weight: 600; }
+.role code { font-size: 11px; opacity: .85; }
+.type-row { display: grid; grid-template-columns: 170px minmax(0, 1fr) 170px; gap: 16px; align-items: baseline; padding: 10px 0; border-bottom: 1px solid var(--fb-divider); }
+.type-row:last-child { border-bottom: none; }
+.type-row .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.type-row .meta { font-family: var(--mono); font-size: 11px; color: var(--fb-secondary-text); }
+.shape-cell { display: flex; flex-direction: column; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px; color: var(--fb-secondary-text); text-align: center; }
+.shape-cell i { display: block; width: 60px; height: 60px; background: var(--fb-accent); }
+table.tok { border-collapse: collapse; width: 100%; }
+table.tok th, table.tok td { text-align: left; padding: 7px 12px 7px 0; border-bottom: 1px solid var(--fb-divider); font-size: 13px; }
+table.tok th { font-weight: 600; color: var(--fb-secondary-text); font-size: 12px; }
+table.tok td:first-child { font-family: var(--mono); font-size: 12px; }
+
+/* ================= component .fb-* (chỉ dựa vào --fb-* và --r-*) ================= */
+/* lớp phủ hover/pressed của FDS: trên site do JS React gắn; ở đây dựng lại bằng :hover/:active + token */
+.fb-press { position: relative; overflow: hidden; }
+.fb-press::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: transparent; pointer-events: none; transition: background var(--fds-fast) var(--fds-soft); }
+.fb-press:hover::after, .fb-press.is-hover::after { background: var(--fb-hover-overlay); }
+.fb-press:active::after, .fb-press.is-active::after { background: var(--fb-press-overlay); }
+.fb-press:active, .fb-press.is-active { transform: scale(.96); }
+
+.fb-circle { width: 40px; height: 40px; border-radius: 50%; border: none; background: var(--fb-secondary-button-background); color: var(--fb-primary-icon); display: inline-grid; place-items: center; cursor: pointer; flex: none; transition: transform var(--fds-short) var(--fds-soft); }
+.fb-circle.s36 { width: 36px; height: 36px; background: transparent; }
+.fb-circle.s28 { width: 28px; height: 28px; background: transparent; }
+.fb-circle.white { background: var(--fb-secondary-button-background-floating); color: var(--fb-secondary-icon); box-shadow: var(--shadow-emphasis); }
+.fb-circle.w48 { width: 48px; height: 48px; }
+.fb-circle.on-media { background: rgba(255,255,255,.3); color: #fff; box-shadow: var(--shadow-base); }
+.fb-circle.accent { color: var(--fb-accent); }
+.fb-circle .dot { position: absolute; right: -2px; bottom: -2px; width: 14px; height: 14px; border-radius: 50%; background: var(--fb-secondary-button-background); box-shadow: 0 0 0 2px var(--fb-surface-background); display: grid; place-items: center; }
+.fb-circle .dot svg { width: 10px; height: 10px; }
+.fb-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--fb-divider), var(--fb-comment-background)); display: inline-grid; place-items: center; color: var(--fb-secondary-text); font: 600 14px var(--sys); flex: none; position: relative; }
+.fb-avatar.s32 { width: 32px; height: 32px; font-size: 12px; }
+.fb-avatar.s36 { width: 36px; height: 36px; }
+.fb-avatar .online { position: absolute; right: 0; bottom: 0; width: 10px; height: 10px; border-radius: 50%; background: var(--fb-positive, #31A24C); box-shadow: 0 0 0 2px var(--fb-surface-background); }
+.fb-avatar.ring { box-shadow: 0 0 0 3px var(--fb-story-unseen), 0 0 0 5px var(--fb-surface-background); }
+.fb-avatar.seen { box-shadow: 0 0 0 2px var(--fb-story-seen), 0 0 0 4px var(--fb-surface-background); }
+
+.fb-btn { height: 36px; padding: 0 12px; gap: 6px; border-radius: var(--r-button); border: none; font: 600 15px var(--sys); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; white-space: nowrap; }
+.fb-btn.lg { height: 40px; padding: 0 16px; }
+.fb-btn.primary { background: var(--fb-primary-button-background); color: var(--fb-primary-button-text); }
+.fb-btn.deemph { background: var(--fb-primary-deemphasized-button-background); color: var(--fb-primary-deemphasized-button-text); }
+.fb-btn.secondary { background: var(--fb-secondary-button-background); color: var(--fb-secondary-button-text); }
+.fb-btn.disabled, .fb-btn[disabled] { background: var(--fb-disabled-button-background); color: var(--fb-disabled-button-text); cursor: not-allowed; }
+.fb-btn.ghost { background: transparent; color: var(--fb-secondary-text); }
+.fb-btn.block { width: 100%; }
+
+.fb-icon-row { height: 40px; padding: 8px; border-radius: var(--r-button); display: inline-flex; align-items: center; gap: 8px; border: none; background: transparent; cursor: pointer; font: 600 15px var(--sys); color: var(--fb-secondary-text); }
+.fb-glyph { width: 24px; height: 24px; border-radius: 6px; display: inline-grid; place-items: center; color: #fff; font: 700 11px var(--sys); flex: none; }
+
+.fb-fab { width: 48px; height: 48px; border-radius: 50%; border: none; background: var(--fb-secondary-button-background-floating); color: var(--fb-primary-icon); box-shadow: 0 2px 4px rgba(0,0,0,.1), 0 12px 28px rgba(0,0,0,.2); display: inline-grid; place-items: center; cursor: pointer; transition: box-shadow var(--fds-short) var(--fds-soft); }
+.fb-fab:hover, .fb-fab.is-hover { box-shadow: 0 4px 4px rgba(0,0,0,.1), 0 16px 28px rgba(0,0,0,.2); } /* đo: bóng lớn lên khi hover */
+
+/* thanh điều hướng trên cùng */
+.fb-topbar { width: 100%; height: 56px; background: var(--fb-nav-bar-background); box-shadow: var(--shadow-base); display: grid; grid-template-columns: minmax(220px, 1fr) auto minmax(220px, 1fr); align-items: center; padding: 0 16px; gap: 8px; }
+.fb-topbar .left, .fb-topbar .right { display: flex; align-items: center; gap: 8px; }
+.fb-topbar .right { justify-content: flex-end; }
+.fb-logo { width: 40px; height: 40px; border-radius: 50%; border: 2px dashed var(--fb-divider); display: grid; place-items: center; font: 500 9px var(--mono); color: var(--fb-secondary-text); flex: none; }
+.fb-search { height: 40px; width: 240px; border-radius: 50px; background: var(--fb-comment-background); display: flex; align-items: center; gap: 8px; padding: 0 12px; color: var(--fb-placeholder-text); font-size: 15px; }
+.fb-search input { border: none; background: transparent; font: inherit; color: var(--fb-primary-text); outline: none; width: 100%; }
+.fb-search input::placeholder { color: var(--fb-placeholder-text); }
+.fb-tabs { display: flex; height: 56px; }
+.fb-tab { width: 112px; height: 56px; display: grid; place-items: center; color: var(--fb-secondary-icon); position: relative; border: none; background: transparent; cursor: pointer; }
+.fb-tab span { width: 100%; height: 48px; margin-top: 4px; display: grid; place-items: center; border-radius: var(--r-button); }
+.fb-tab:hover span, .fb-tab.is-hover span { background: var(--fb-hover-overlay); }
+.fb-tab.on { color: var(--fb-accent); }
+.fb-tab.on span { background: none; }
+.fb-tab.on::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: var(--fb-accent); }
+
+/* cột điều hướng trái */
+.fb-navlist { width: 348px; max-width: 100%; display: flex; flex-direction: column; }
+.fb-navrow { height: 52px; padding: 0 8px; border-radius: var(--r-list); display: flex; align-items: center; gap: 12px; color: var(--fb-primary-text); text-decoration: none; font: 500 15px var(--sys); }
+.fb-navrow .ic { width: 36px; height: 36px; display: grid; place-items: center; color: var(--fb-accent); flex: none; }
+.fb-navrow .more { width: 36px; height: 36px; border-radius: 50%; background: var(--fb-secondary-button-background); display: grid; place-items: center; color: var(--fb-primary-icon); flex: none; }
+.fb-navrow:hover, .fb-navrow.is-hover { background: var(--fb-hover-overlay); }
+.fb-section-h { margin: 8px 8px 4px; padding-top: 12px; border-top: 1px solid var(--fb-divider); font: 600 17px var(--sys); color: var(--fb-secondary-text); }
+.fb-footer { font: 400 13px/1.4 var(--sys); color: var(--fb-secondary-text); max-width: 316px; padding: 0 8px; }
+.fb-footer a { color: inherit; text-decoration: none; font-weight: 600; }
+.fb-footer a:hover, .fb-footer a.is-hover { text-decoration: underline; } /* đo: hover gạch chân */
+
+/* ô soạn bài */
+.fb-card { width: 680px; max-width: 100%; background: var(--fb-card-background); border-radius: max(0px, min(var(--r-card), (100vw - 4px - 100%) * 9999)); box-shadow: var(--shadow-base); }
+.fb-composer { display: flex; align-items: center; gap: 8px; padding: 12px 16px; }
+.fb-pill { flex: 1; height: 40px; border-radius: 20px; background: var(--fb-comment-background); border: none; text-align: left; padding: 8px 12px; font: 400 17px var(--sys); color: var(--fb-placeholder-text); cursor: pointer; }
+.fb-pill:hover, .fb-pill.is-hover { background: color-mix(in srgb, var(--fb-comment-background), #000 4%); }
+
+/* thẻ tin */
+.fb-stories { display: flex; gap: 8px; }
+.fb-story { width: 112px; height: 200px; border-radius: calc(10px * var(--k)); overflow: hidden; position: relative; box-shadow: var(--shadow-base); background: linear-gradient(160deg, #6B7C93, #2A3342); color: #fff; cursor: pointer; transition: transform var(--fds-fast) var(--fds-soft); flex: none; }
+.fb-story::after { content: ""; position: absolute; inset: 0; background: linear-gradient(transparent 55%, rgba(0,0,0,.45)); }
+.fb-story .fb-avatar { position: absolute; top: 10px; left: 10px; width: 36px; height: 36px; z-index: 1; }
+.fb-story .name { position: absolute; left: 10px; right: 10px; bottom: 10px; font: 600 13px/1.25 var(--sys); z-index: 1; text-shadow: 0 1px 2px rgba(0,0,0,.6); }
+.fb-story:active, .fb-story.is-active { transform: scale(.98); } /* đo: nhấn lún scale(0.98) */
+.fb-story.create { background: var(--fb-card-background); color: var(--fb-primary-text); }
+.fb-story.create::after { display: none; }
+.fb-story.create .img { height: 148px; background: linear-gradient(160deg, var(--fb-divider), var(--fb-comment-background)); }
+.fb-story.create .plus { position: absolute; left: 50%; top: 132px; transform: translateX(-50%); width: 32px; height: 32px; border-radius: 50%; background: var(--fb-accent); color: #fff; display: grid; place-items: center; box-shadow: 0 0 0 4px var(--fb-card-background); }
+.fb-story.create .name { color: var(--fb-primary-text); text-shadow: none; text-align: center; bottom: 12px; }
+.fb-story .kebab { position: absolute; top: 8px; right: 6px; z-index: 1; color: #fff; }
+
+/* bài viết */
+.fb-post-h { display: flex; align-items: center; gap: 8px; padding: 12px 16px 0; }
+.fb-post-h .who { flex: 1; min-width: 0; }
+.fb-post-h .who a { font: 600 15px var(--sys); color: var(--fb-primary-text); text-decoration: none; }
+.fb-post-h .who a:hover, .fb-post-h .who a.is-hover { text-decoration: underline; } /* đo: hover gạch chân */
+.fb-post-h .meta { font: 400 13px var(--sys); color: var(--fb-secondary-text); display: flex; align-items: center; gap: 4px; }
+.fb-post-body { padding: 4px 16px 12px; font: 400 15px/1.34 var(--sys); }
+.fb-textbg { height: 300px; margin-top: 12px; display: grid; place-items: center; padding: 24px; text-align: center; font: 700 30px/1.25 var(--sys); color: #4B3F9E; background: #DFD6F7; }
+.fb-counts { display: flex; justify-content: space-between; padding: 10px 16px; font: 400 15px var(--sys); color: var(--fb-secondary-text); }
+.fb-reacts { display: inline-flex; align-items: center; gap: 6px; }
+.fb-reacts i { width: 18px; height: 18px; border-radius: 50%; display: inline-grid; place-items: center; box-shadow: 0 0 0 2px var(--fb-card-background); }
+.fb-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin: 0 12px; padding: 4px 0; border-top: 1px solid var(--fb-divider); }
+.fb-actions button { height: 36px; border: none; background: transparent; border-radius: var(--r-button); display: inline-flex; align-items: center; justify-content: center; gap: 8px; font: 600 15px var(--sys); color: var(--fb-secondary-text); cursor: pointer; }
+.fb-actions button:hover, .fb-actions button.is-hover { background: var(--fb-hover-overlay); }
+.fb-actions button.liked { color: var(--fb-reaction-like); }
+
+/* quảng cáo */
+.fb-sponsored { display: flex; gap: 12px; align-items: center; padding: 8px; border-radius: var(--r-list); width: 344px; max-width: 100%; text-decoration: none; color: var(--fb-primary-text); }
+.fb-sponsored:hover, .fb-sponsored.is-hover { background: var(--fb-hover-overlay); }
+.fb-sponsored .img { width: 132px; height: 132px; border-radius: var(--r-list); flex: none; background: repeating-linear-gradient(135deg, var(--fb-comment-background) 0 6px, var(--fb-divider) 6px 12px); display: grid; place-items: center; font: 500 10px var(--mono); color: var(--fb-secondary-text); }
+.fb-sponsored b { font: 500 15px/1.33 var(--sys); display: block; }
+.fb-sponsored small { font-size: 13px; color: var(--fb-secondary-text); }
+.fb-adbar { width: 680px; max-width: 100%; display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: var(--fb-comment-background); }
+.fb-adbar .t { flex: 1; min-width: 0; }
+.fb-adbar small { font: 400 13px var(--sys); color: var(--fb-secondary-text); text-transform: uppercase; }
+.fb-adbar b { display: block; font: 600 17px var(--sys); }
+.fb-adbar span { font-size: 15px; color: var(--fb-secondary-text); }
+.is-focus-ua { outline: 1px auto -webkit-focus-ring-color; outline: 1px auto Highlight; }
+
+/* chat */
+.fb-chat { width: 328px; height: 455px; border-radius: calc(8px * var(--k)) calc(8px * var(--k)) 0 0; background: var(--fb-surface-background); box-shadow: var(--card-box-shadow); display: flex; flex-direction: column; overflow: hidden; }
+.fb-chat-h { height: 48px; padding: 8px; display: flex; align-items: center; gap: 8px; box-shadow: 0 1px 0 var(--fb-divider); }
+.fb-chat-h .who { flex: 1; display: flex; align-items: center; gap: 4px; font: 600 15px var(--sys); color: var(--fb-primary-text); }
+.fb-chat-h .theme { color: #A033FF; } /* màu chủ đề cuộc trò chuyện (người dùng chọn), không phải token */
+.fb-chat-body { flex: 1; padding: 12px; display: flex; flex-direction: column; gap: 6px; overflow: hidden; }
+.fb-time { align-self: center; font: 400 12px var(--sys); color: var(--fb-secondary-text); margin: 6px 0; }
+.fb-bubble { max-width: 70%; padding: 8px 12px; border-radius: var(--r-bubble); font: 400 15px/1.34 var(--sys); }
+.fb-bubble.in { align-self: flex-start; background: var(--fb-chat-incoming-message-bubble-background-color); color: var(--fb-primary-text); }
+.fb-bubble.out { align-self: flex-end; background: #A033FF; color: #fff; }
+.fb-chat-in { display: flex; align-items: center; gap: 2px; padding: 8px; }
+.fb-chat-in .fb-circle { color: #A033FF; }
+.fb-chat-in .field { flex: 1; height: 36px; border-radius: 18px; background: var(--fb-comment-background); display: flex; align-items: center; justify-content: space-between; padding: 0 4px 0 12px; font-size: 15px; color: var(--fb-placeholder-text); }
+.fb-spinner { width: 20px; height: 20px; border-radius: 50%; border: 2px solid transparent; border-top-color: var(--fb-secondary-icon); animation: spin .8s linear infinite; align-self: center; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* phản hồi */
+.fb-tooltip { background: var(--fb-tooltip-background-dark, rgba(11,11,11,.8)); color: #fff; border-radius: var(--r-tooltip); padding: 12px; font: 400 13px/1.35 var(--sys); max-width: 240px; box-shadow: 0 2px 4px rgba(0,0,0,.5); }
+.fb-glimmer { border-radius: 10px; background: var(--fb-placeholder-image); opacity: .3; animation: glimmer 1s ease-in-out infinite alternate; }
+@keyframes glimmer { from { opacity: .15; } to { opacity: .5; } }
+.fb-badge { min-width: 19px; height: 19px; padding: 0 5px; border-radius: 255px; background: var(--fb-notification-badge); color: #fff; font: 600 12px/19px var(--sys); text-align: center; }
+.fb-textbadge { display: inline-flex; align-items: center; height: 20px; padding: 0 6px; border-radius: 4px; color: #fff; font: 600 12px var(--sys); }
+.fb-stack { display: inline-flex; }
+.fb-stack .fb-avatar { width: 22px; height: 22px; box-shadow: 0 0 0 2px var(--fb-surface-background); font-size: 9px; }
+.fb-stack .fb-avatar + .fb-avatar { margin-left: -6px; }
+.fb-switch { width: 40px; height: 24px; border-radius: 12px; background: var(--fb-switch-inactive); position: relative; border: none; cursor: pointer; }
+.fb-switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: 50%; background: #fff; box-shadow: var(--shadow-base); transition: left var(--fds-short) var(--fds-soft); }
+.fb-switch[aria-checked="true"] { background: var(--fb-switch-active); }
+.fb-switch[aria-checked="true"]::after { left: 18px; }
+.fb-radio { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--fb-secondary-icon); display: inline-grid; place-items: center; }
+.fb-radio.on { border-color: var(--fb-accent); }
+.fb-radio.on::after { content: ""; width: 12px; height: 12px; border-radius: 50%; background: var(--fb-accent); }
+.fb-check { width: 20px; height: 20px; border-radius: 4px; border: 2px solid var(--fb-secondary-icon); display: inline-grid; place-items: center; }
+.fb-check.on { background: var(--fb-accent); border-color: var(--fb-accent); color: #fff; }
+.fb-field { width: 330px; max-width: 100%; border-radius: var(--r-input); border: 1px solid var(--fb-input-border-color); background: var(--fb-input-background); padding: 8px 12px; }
+.fb-field label { display: block; font-size: 12.75px; color: var(--fb-secondary-text); }
+.fb-field input { border: none; outline: none; background: transparent; width: 100%; font: 500 16px/1.29 var(--sys); color: var(--fb-primary-text); padding: 0; }
+.fb-field.focused { border-color: var(--fb-accent); box-shadow: 0 0 0 1px var(--fb-accent); background: color-mix(in srgb, var(--fb-accent) 5%, var(--fb-input-background)); }
+.fb-field.focused label { color: var(--fb-input-label-color-highlighted); }
+.fb-field.error { border-color: var(--fb-negative); box-shadow: 0 0 0 1px var(--fb-negative); }
+.fb-field.error label { color: var(--fb-negative); }
+
+/* màn mẫu */
+.screens { overflow-x: auto; padding: 8px 0; }
+.screens-row { display: flex; gap: 32px; width: max-content; align-items: flex-start; }
+.screens-row > div { width: min-content; }
+.desk { width: 1440px; height: 900px; border-radius: 12px; box-shadow: 0 0 0 10px #1C1C1D; background: var(--fb-web-wash); overflow: hidden; margin: 10px; zoom: .5; position: relative; }
+.desk .cols { display: grid; grid-template-columns: 360px 1fr 360px; gap: 16px; padding: 16px 16px 0 8px; }
+.desk .feed { display: flex; flex-direction: column; gap: 16px; align-items: center; }
+.phone { width: 390px; height: 844px; border-radius: 44px; box-shadow: 0 0 0 10px #1C1C1D; background: var(--fb-web-wash); overflow: hidden; margin: 10px; zoom: .62; position: relative; }
+.screen-cap { font-family: var(--mono); font-size: 12px; color: var(--fb-secondary-text); margin: 6px 10px 0; }
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; transition: all .25s var(--fds-soft); z-index: 20; background: var(--fb-toast-background); color: var(--fb-primary-text); padding: 12px 16px; border-radius: 8px; box-shadow: var(--card-box-shadow); font-size: 14px; }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; }
+  .side { display: none; }
+  main { padding: 0 16px 80px; }
+  .grid, .grid.wide { grid-template-columns: 1fr; }
+  .type-row { grid-template-columns: 1fr; gap: 2px; }
+  .intro h1 { font-size: 30px; }
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="home" viewBox="0 0 24 24"><path d="M12 3 3 10.5V21h6v-6h6v6h6V10.5z"/></symbol>
+  <symbol id="video" viewBox="0 0 24 24"><path d="M3 6h12a2 2 0 0 1 2 2v1.5l4-2.5v10l-4-2.5V16a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/></symbol>
+  <symbol id="people" viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M1 20c0-4 3.5-6 8-6s8 2 8 6z"/><circle cx="18" cy="9" r="3"/><path d="M18 14c3 0 5 1.5 5 5h-4c0-2-.6-3.7-1-5z"/></symbol>
+  <symbol id="shop" viewBox="0 0 24 24"><path d="M3 9l2-5h14l2 5v1a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0z"/><path d="M5 13v8h14v-8"/></symbol>
+  <symbol id="game" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="#fff"/></symbol>
+  <symbol id="grid9" viewBox="0 0 24 24"><g><circle cx="5" cy="5" r="2.2"/><circle cx="12" cy="5" r="2.2"/><circle cx="19" cy="5" r="2.2"/><circle cx="5" cy="12" r="2.2"/><circle cx="12" cy="12" r="2.2"/><circle cx="19" cy="12" r="2.2"/><circle cx="5" cy="19" r="2.2"/><circle cx="12" cy="19" r="2.2"/><circle cx="19" cy="19" r="2.2"/></g></symbol>
+  <symbol id="chat" viewBox="0 0 24 24"><path d="M12 2C6.4 2 2 6.1 2 11.5c0 2.9 1.3 5.4 3.4 7.1V22l3.1-1.7c1.1.3 2.3.5 3.5.5 5.6 0 10-4.1 10-9.5S17.6 2 12 2zm1 12.3-2.5-2.7-5 2.7 5.5-5.8 2.6 2.7 4.9-2.7z"/></symbol>
+  <symbol id="bell" viewBox="0 0 24 24"><path d="M12 22a2.5 2.5 0 0 0 2.5-2.5h-5A2.5 2.5 0 0 0 12 22zm7-6V11a7 7 0 0 0-5-6.7V3.5a2 2 0 0 0-4 0v.8A7 7 0 0 0 5 11v5l-2 2v1h18v-1z"/></symbol>
+  <symbol id="search" viewBox="0 0 24 24"><path d="M10 3a7 7 0 1 0 4.2 12.6l5.1 5.1 1.4-1.4-5.1-5.1A7 7 0 0 0 10 3zm0 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10z"/></symbol>
+  <symbol id="chev" viewBox="0 0 24 24"><path d="M6.7 8.3 12 13.6l5.3-5.3 1.4 1.4L12 16.4 5.3 9.7z"/></symbol>
+  <symbol id="right" viewBox="0 0 24 24"><path d="m9.3 5.3 6.7 6.7-6.7 6.7-1.4-1.4 5.3-5.3-5.3-5.3z"/></symbol>
+  <symbol id="plus" viewBox="0 0 24 24"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6z"/></symbol>
+  <symbol id="x" viewBox="0 0 24 24"><path d="m6.4 5 5.6 5.6L17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6L6.4 19 5 17.6l5.6-5.6L5 6.4z"/></symbol>
+  <symbol id="dots" viewBox="0 0 24 24"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></symbol>
+  <symbol id="vdots" viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></symbol>
+  <symbol id="minus" viewBox="0 0 24 24"><path d="M5 11h14v2H5z"/></symbol>
+  <symbol id="edit" viewBox="0 0 24 24"><path d="M4 20h4l10.5-10.5-4-4L4 16zm12-16 4 4 1.4-1.4a1 1 0 0 0 0-1.4L18.8 2.6a1 1 0 0 0-1.4 0z"/></symbol>
+  <symbol id="like" viewBox="0 0 24 24"><path d="M2 21h4V9H2zM22 10a2 2 0 0 0-2-2h-6.3l1-4.6v-.3a1.5 1.5 0 0 0-.4-1.1L13.2 1 6.6 7.6A2 2 0 0 0 6 9v10a2 2 0 0 0 2 2h9a2 2 0 0 0 1.8-1.2l3-7.1c.1-.2.2-.5.2-.7z"/></symbol>
+  <symbol id="comment" viewBox="0 0 24 24"><path d="M12 3C6.5 3 2 6.6 2 11c0 2.4 1.3 4.5 3.3 6L4 21l4.6-2.3c1.1.2 2.2.3 3.4.3 5.5 0 10-3.6 10-8s-4.5-8-10-8z"/></symbol>
+  <symbol id="share" viewBox="0 0 24 24"><path d="M14 4v4C7 9 4 14 3 19c2.5-3.5 6-5.1 11-5.1V18l7-7z"/></symbol>
+  <symbol id="globe" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm6.9 6h-3a15.6 15.6 0 0 0-1.4-3.6A8 8 0 0 1 18.9 8zM12 4c.8 1.2 1.5 2.5 1.9 4h-3.8c.4-1.5 1.1-2.8 1.9-4zM4.3 14a8.2 8.2 0 0 1 0-4h3.4a16.5 16.5 0 0 0 0 4zm.8 2h3a15.6 15.6 0 0 0 1.4 3.6A8 8 0 0 1 5.1 16zm3-8h-3a8 8 0 0 1 4.4-3.6C8.9 5.5 8.4 6.7 8.1 8zM12 20c-.8-1.2-1.5-2.5-1.9-4h3.8c-.4 1.5-1.1 2.8-1.9 4zm2.3-6H9.7a14.7 14.7 0 0 1 0-4h4.6a14.7 14.7 0 0 1 0 4zm.3 5.6c.6-1.1 1.1-2.3 1.4-3.6h3a8 8 0 0 1-4.4 3.6zM16.3 14a16.5 16.5 0 0 0 0-4h3.4a8.2 8.2 0 0 1 0 4z"/></symbol>
+  <symbol id="mic" viewBox="0 0 24 24"><path d="M12 15a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v7a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.9V22h2v-3.1a7 7 0 0 0 6-6.9z"/></symbol>
+  <symbol id="image" viewBox="0 0 24 24"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm0 12 4-4 3 3 5-6 4 5V6H4z"/></symbol>
+  <symbol id="smile" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-3.5 6a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm7 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zM12 18a6 6 0 0 1-5.3-3.2h10.6A6 6 0 0 1 12 18z"/></symbol>
+  <symbol id="sticker" viewBox="0 0 24 24"><path d="M5 3h14a2 2 0 0 1 2 2v9l-7 7H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm8 16v-3a3 3 0 0 1 3-3h3z"/></symbol>
+  <symbol id="copy" viewBox="0 0 24 24"><path d="M8 8h12v12H8zM4 4h12v2H6v10H4z"/></symbol>
+</svg>
+
+<div class="shell">
+  <nav class="side" aria-label="Mục lục">
+    <div class="brand"><b>FDS UI Kit</b><small>rút từ News Feed đã lưu</small></div>
+    <h6>Nền tảng</h6>
+    <a href="#color">Màu</a><a href="#type">Chữ</a><a href="#shape">Bo góc, bóng &amp; motion</a><a href="#layout">Bố cục &amp; kích thước</a>
+    <h6>Thành phần</h6>
+    <a href="#actions">Hành động</a><a href="#navigation">Điều hướng</a><a href="#containment">Chứa nội dung</a><a href="#chat">Chat</a><a href="#inputs">Nhập liệu</a><a href="#feedback">Phản hồi &amp; trạng thái</a>
+    <h6>Mẫu</h6>
+    <a href="#screens">Màn hình mẫu</a>
+  </nav>
+
+  <main>
+    <div class="bar" role="toolbar" aria-label="Chủ đề">
+      <div class="ctl"><span>Palette</span><span class="note-pal"><i></i>FDS · 1 palette</span></div>
+      <div class="ctl"><span>Chế độ</span><div class="seg" id="mode"><button data-v="light" aria-pressed="true">Sáng</button><button data-v="dark" aria-pressed="false">Tối</button></div></div>
+      <div class="ctl"><span>Bo góc</span><div class="seg" id="shape"><button data-v="0.5" aria-pressed="false">× 0.5</button><button data-v="1" aria-pressed="true">FDS</button><button data-v="1.5" aria-pressed="false">× 1.5</button></div></div>
+      <div class="grow"></div>
+      <button class="copy" id="copy-tokens"><svg class="i" style="width:16px;height:16px"><use href="#copy"/></svg>Copy CSS token</button>
+    </div>
+
+    <div class="intro">
+      <div class="eyebrow">Facebook.html (lưu tay) · :root / .__fb-light-mode / .__fb-dark-mode → facebook.html</div>
+      <h1>Hệ giao diện FDS của Facebook</h1>
+      <p>Token và component của News Feed Facebook, dựng lại bằng HTML/CSS thuần. Nguồn là một trang bạn tự lưu: facebook.com cấm thu thập tự động, nên không có crawler nào chạm vào site. Toàn bộ 66 vai trò màu đều lấy thẳng từ biến CSS của FDS, cả sáng lẫn tối (bản tối có sẵn trong CSS đã lưu). Chữ dùng font hệ thống, đúng như Facebook làm. Kit không có ảnh, avatar, tên hay nội dung thật của người dùng.</p>
+      <div class="facts"><span class="fact">header 56</span><span class="fact">feed 680 · cột 360</span><span class="fact">button 36/40 · r 8</span><span class="fact">card r 12 → 0 khi màn hẹp</span><span class="fact">hover-overlay 5% · press-overlay 10%</span><span class="fact">motion fds-soft .08,.52,.52,1</span></div>
+    </div>
+
+    <!-- ================= NỀN TẢNG ================= -->
+    <section class="block" id="color">
+      <header><h2>Màu</h2><p>66 vai trò FDS chia 6 nhóm, sáng và tối lấy thẳng từ CSS của trang. Bấm một ô để copy mã màu. Mã có 8 chữ số là màu có độ trong suốt, ví dụ lớp phủ hover 5%.</p></header>
+      <div id="roles"></div>
+    </section>
+
+    <section class="block" id="type">
+      <header><h2>Chữ</h2><p>Facebook không tải webfont. Chữ đi theo font hệ thống (<code>--font-family-apple</code> trên macOS, Segoe UI trên Windows), nên kit cũng dùng <code>system-ui</code>. Bảng dưới sinh bằng máy từ inventory: mỗi dòng là một kiểu chữ thực dùng, câu mẫu thay cho tên thật.</p></header>
+      <div class="spec"><div class="stage col">
+<div class="type-row" data-sig="771cd96ade"><span class="meta">heading · ×2</span><span class="t" style="font-size:17px;font-weight:600;color:#080809">Tiêu đề mẫu · 17px</span><span class="meta">17 · 600 · #080809</span></div>
+<div class="type-row" data-sig="2c22c1ec44"><span class="meta">heading · ×1</span><span class="t" style="font-size:15px;font-weight:400;color:#1C1E21">Tiêu đề mẫu · 15px</span><span class="meta">15 · 400 · #1C1E21</span></div>
+<div class="type-row" data-sig="963ce9d554"><span class="meta">heading · ×1</span><span class="t" style="font-size:15px;font-weight:400;color:#385898">Tiêu đề mẫu · 15px</span><span class="meta">15 · 400 · #385898</span></div>
+<div class="type-row" data-sig="c1b16091be"><span class="meta">heading · ×2</span><span class="t" style="font-size:15px;font-weight:400;color:#65686C">Tiêu đề mẫu · 15px</span><span class="meta">15 · 400 · #65686C</span></div>
+<div class="type-row" data-sig="c523c61de4"><span class="meta">link · ×2</span><span class="t" style="font-size:15px;font-weight:600;color:#080809">Liên kết mẫu · 15px</span><span class="meta">15 · 600 · #080809</span></div>
+<div class="type-row" data-sig="4f84a407df"><span class="meta">link · ×7</span><span class="t" style="font-size:13px;font-weight:600;color:#65686C">Liên kết mẫu · 13px</span><span class="meta">13 · 600 · #65686C</span></div>
+      </div></div>
+    </section>
+
+    <section class="block" id="shape">
+      <header><h2>Bo góc, bóng &amp; motion</h2><p>FDS đặt bán kính riêng cho từng loại component thay vì một thang chung. Bóng và thời lượng motion cũng là token.</p></header>
+      <div class="spec"><div class="stage" style="gap:26px">
+        <div class="shape-cell"><i style="border-radius:var(--r-button)"></i>button 8</div>
+        <div class="shape-cell"><i style="border-radius:var(--r-card)"></i>card · input 12</div>
+        <div class="shape-cell"><i style="border-radius:var(--r-popover)"></i>popover 16</div>
+        <div class="shape-cell"><i style="border-radius:var(--r-bubble)"></i>chat bubble 18</div>
+        <div class="shape-cell"><i style="border-radius:255px"></i>chip · badge 255</div>
+      </div>
+      <div class="stage" style="gap:26px;padding-top:0">
+        <div class="shape-cell"><i style="background:var(--fb-card-background);border-radius:var(--r-card);box-shadow:var(--shadow-base)"></i>shadow-base</div>
+        <div class="shape-cell"><i style="background:var(--fb-card-background);border-radius:var(--r-card);box-shadow:var(--shadow-emphasis)"></i>shadow-emphasis</div>
+        <div class="shape-cell"><i style="background:var(--fb-card-background);border-radius:var(--r-card);box-shadow:var(--shadow-elevated)"></i>shadow-elevated</div>
+        <div class="shape-cell"><i style="background:var(--fb-card-background);border-radius:var(--r-card);box-shadow:var(--card-box-shadow)"></i>card-box-shadow</div>
+      </div>
+      <div class="stage col" style="padding-top:0"><table class="tok"><thead><tr><th>Motion</th><th>vào</th><th>ra</th></tr></thead><tbody>
+        <tr><td>--fds-duration-extra-extra-short</td><td>.1s</td><td>.1s</td></tr><tr><td>--fds-duration-extra-short</td><td>.2s</td><td>.15s</td></tr><tr><td>--fds-duration-short</td><td>.28s</td><td>.2s</td></tr><tr><td>--fds-duration-medium</td><td>.4s</td><td>.35s</td></tr><tr><td>--fds-duration-long</td><td>.5s</td><td>.35s</td></tr><tr><td>--fds-soft (easing)</td><td colspan="2">cubic-bezier(.08,.52,.52,1)</td></tr></tbody></table></div></div>
+    </section>
+
+    <section class="block" id="layout">
+      <header><h2>Bố cục &amp; kích thước</h2><p>Token kích thước của FDS, cộng số đo từ trang đã lưu (viewport 1440 × 900).</p></header>
+      <div class="grid wide">
+        <div class="spec"><div class="stage col"><table class="tok"><thead><tr><th>Token</th><th>px</th></tr></thead><tbody>
+          <tr><td>--header-height</td><td>56</td></tr><tr><td>--button-height-medium / large</td><td>36 / 40</td></tr><tr><td>--button-padding-horizontal</td><td>16</td></tr><tr><td>--list-cell-min-height</td><td>44</td></tr><tr><td>--tab-height · underline</td><td>60 · 3</td></tr><tr><td>--chat-bubble-padding</td><td>8 / 12</td></tr><tr><td>--toaster-view-max-width</td><td>328</td></tr><tr><td>--radio-size-medium · large</td><td>20 · 24</td></tr></tbody></table></div></div>
+        <div class="spec"><div class="stage col"><table class="tok"><thead><tr><th>Đo trên trang</th><th>px</th></tr></thead><tbody>
+          <tr><td>cột trái · danh sách</td><td>360 · 348</td></tr><tr><td>cột feed · thẻ</td><td>680</td></tr><tr><td>hàng điều hướng trái</td><td>52</td></tr><tr><td>tab giữa thanh trên</td><td>112–130 × 56</td></tr><tr><td>ô tìm kiếm</td><td>40 · r 50</td></tr><tr><td>thẻ tin</td><td>112 × 200 · r 10</td></tr><tr><td>cửa sổ chat</td><td>328 × 455 · r 8 trên</td></tr><tr><td>nút tròn</td><td>28 · 36 · 40 · 48</td></tr></tbody></table></div></div>
+      </div>
+    </section>
+
+    <!-- ================= HÀNH ĐỘNG ================= -->
+    <section class="block" id="actions">
+      <header><h2>Hành động</h2><p>Trên site, hover và nhấn của nút FDS do JS React gắn lớp phủ (<code>--hover-overlay</code> 5%, <code>--press-overlay</code> 10%) và thu nhỏ nút lại. Trang lưu chạy không JS nên không đo trực tiếp được. Kit dựng lại đúng hai trạng thái đó bằng token, bạn rê chuột và nhấn giữ để thử.</p></header>
+      <div class="grid">
+        <div class="spec full"><div class="spec-h"><b>Nút chữ FDS</b><span class="kind">--button-height-medium · --button-corner-radius</span><span class="dp">36 / 40 · r 8</span></div>
+          <div class="stage">
+            <button class="fb-btn primary fb-press">Primary</button>
+            <button class="fb-btn deemph fb-press">Deemphasized</button>
+            <button class="fb-btn secondary fb-press" data-sig="233eaa5b6a">Tìm hiểu thêm</button>
+            <button class="fb-btn ghost fb-press">Ghost</button>
+            <button class="fb-btn disabled" disabled>Disabled</button>
+            <button class="fb-btn primary lg fb-press">Large 40</button>
+          </div>
+          <div class="states"><figure><figcaption><b>hover</b> · phủ 5%</figcaption><button class="fb-btn secondary fb-press is-hover">Tìm hiểu thêm</button></figure><figure><figcaption><b>pressed</b> · phủ 10% + scale .96</figcaption><button class="fb-btn primary fb-press is-active">Primary</button></figure></div>
+          <div class="spec-f"><span class="note">Trang đã lưu chỉ có nút secondary "Tìm hiểu thêm" (trong quảng cáo). Primary, deemphasized và disabled dựng từ token màu cùng tên (<code>--primary-button-background</code>…), không đo được hình dạng trên trang này.</span></div></div>
+
+        <div class="spec" data-sig="0a356fa6a3 fa481abbba 6593b77112 6672334ba9 94453f919d 71437e3e40 27946efca1"><div class="spec-h"><b>Nút icon tròn</b><span class="kind">rounded-full · --secondary-button-background</span><span class="dp">28 · 36 · 40</span></div>
+          <div class="stage">
+            <button class="fb-circle fb-press" aria-label="Menu"><svg class="i"><use href="#grid9"/></svg></button>
+            <button class="fb-circle fb-press" aria-label="Messenger"><svg class="i"><use href="#chat"/></svg></button>
+            <button class="fb-circle fb-press" aria-label="Thông báo" style="position:relative"><svg class="i"><use href="#bell"/></svg><span class="fb-badge" style="position:absolute;top:-4px;right:-6px">3</span></button>
+            <button class="fb-circle fb-press" aria-label="Tài khoản" style="position:relative;background:transparent"><span class="fb-avatar">A</span><span class="dot"><svg class="i"><use href="#chev"/></svg></span></button>
+            <button class="fb-circle s36 accent fb-press" aria-label="Nhãn dán"><svg class="i"><use href="#sticker"/></svg></button>
+            <button class="fb-circle s36 accent fb-press" aria-label="Biểu tượng cảm xúc"><svg class="i"><use href="#smile"/></svg></button>
+            <button class="fb-circle s28 fb-press" aria-label="Thu nhỏ" style="color:#A033FF"><svg class="i"><use href="#minus"/></svg></button>
+          </div><div class="spec-f"><span class="note">Nút tài khoản có một chevron 12px nằm ở góc dưới (badge 6593b77112).</span></div></div>
+
+        <div class="spec" data-sig="bdcee28252"><div class="spec-h"><b>Nút nổi · tin nhắn mới</b><span class="kind">rounded-full bg floating · 2 lớp bóng</span><span class="dp">48</span></div>
+          <div class="stage wash center"><button class="fb-fab" aria-label="Tin nhắn mới"><svg class="i"><use href="#edit"/></svg></button></div>
+          <div class="states" data-sig-state="bdcee28252:hover"><figure><figcaption>mặc định · 0 2 4 / 0 12 28</figcaption><button class="fb-fab" aria-label="Tin nhắn mới"><svg class="i"><use href="#edit"/></svg></button></figure><figure><figcaption><b>hover</b> · 0 4 4 / 0 16 28 (đo được)</figcaption><button class="fb-fab is-hover" aria-label="Tin nhắn mới"><svg class="i"><use href="#edit"/></svg></button></figure></div></div>
+
+        <div class="spec" data-sig="97704e430f 90cfb2ebcf ef12f6af6a cd3f02a729 5d522f1523"><div class="spec-h"><b>Nút chuyển carousel</b><span class="kind">floating trắng · trên ảnh: trắng 30%</span><span class="dp">40 · 48</span></div>
+          <div class="stage wash"><button class="fb-circle white fb-press" aria-label="Tiếp"><svg class="i"><use href="#right"/></svg></button><button class="fb-circle white w48 fb-press" aria-label="Tiếp"><svg class="i"><use href="#right"/></svg></button><span style="display:inline-grid;place-items:center;width:120px;height:60px;border-radius:8px;background:linear-gradient(135deg,#6B7C93,#2A3342)"><button class="fb-circle on-media" aria-label="Tiếp"><svg class="i"><use href="#right"/></svg></button></span></div></div>
+
+        <div class="spec" data-sig="29170ed51a"><div class="spec-h"><b>Nút hành động ô soạn bài</b><span class="kind">p-2 rounded-lg · icon màu</span><span class="dp">40 · r 8</span></div>
+          <div class="stage"><button class="fb-icon-row fb-press"><span class="fb-glyph" style="background:#F02849"><svg class="i" style="width:16px;height:16px"><use href="#video"/></svg></span></button><button class="fb-icon-row fb-press"><span class="fb-glyph" style="background:#45BD62"><svg class="i" style="width:16px;height:16px"><use href="#image"/></svg></span></button><button class="fb-icon-row fb-press"><span class="fb-glyph" style="background:#F7B928"><svg class="i" style="width:16px;height:16px"><use href="#smile"/></svg></span></button><button class="fb-icon-row fb-press"><span class="fb-glyph" style="background:#F02849"><svg class="i" style="width:16px;height:16px"><use href="#video"/></svg></span>Video trực tiếp</button></div>
+          <div class="spec-f"><span class="note">Ba icon đỏ, xanh lá, vàng là icon minh hoạ riêng của Facebook, không phải token. Kit vẽ lại bằng khối màu gần đúng.</span></div></div>
+
+        <div class="spec" data-sig="d3b09f58f1 7262af11f2 b687e6ab28 1147f24ec2 ad45d02e7a 012e6ae110"><div class="spec-h"><b>Nút icon nhỏ</b><span class="kind">… · × · ⋮ · like</span><span class="dp">20 · 36</span></div>
+          <div class="stage"><button class="fb-circle s36 fb-press" aria-label="Thêm" style="color:var(--fb-secondary-icon)"><svg class="i"><use href="#dots"/></svg></button><button class="fb-circle s36 fb-press" aria-label="Ẩn" style="color:var(--fb-secondary-icon)"><svg class="i"><use href="#x"/></svg></button><span style="display:inline-grid;place-items:center;width:40px;height:40px;border-radius:8px;background:#2A3342;color:#fff"><svg class="i"><use href="#vdots"/></svg></span><svg class="i" style="color:var(--fb-secondary-icon);width:14px;height:14px" aria-label="Công khai"><use href="#globe"/></svg><button class="fb-circle s36 accent fb-press" aria-label="Thích"><svg class="i"><use href="#like"/></svg></button></div></div>
+      </div>
+    </section>
+
+    <!-- ================= ĐIỀU HƯỚNG ================= -->
+    <section class="block" id="navigation">
+      <header><h2>Điều hướng</h2></header>
+      <div class="grid wide">
+        <div class="spec full" data-sig="35fabe40f7 4a79a6f606 c3d127ce13 fdb37e8349"><div class="spec-h"><b>Thanh điều hướng trên cùng</b><span class="kind">--header-height · --nav-bar-background · tab underline 3</span><span class="dp">h 56</span></div>
+          <div class="stage wash" style="padding:0;overflow:hidden"><div class="fb-topbar">
+            <div class="left"><span class="fb-logo">logo</span><label class="fb-search"><svg class="i" style="width:16px;height:16px"><use href="#search"/></svg><input placeholder="Tìm kiếm trên Facebook" aria-label="Tìm kiếm"></label></div>
+            <div class="fb-tabs" role="tablist"><button class="fb-tab on" aria-selected="true" aria-label="Trang chủ"><span><svg class="i" style="width:26px;height:26px"><use href="#home"/></svg></span></button><button class="fb-tab" aria-label="Video"><span><svg class="i" style="width:26px;height:26px"><use href="#video"/></svg></span></button><button class="fb-tab" aria-label="Bạn bè"><span><svg class="i" style="width:26px;height:26px"><use href="#people"/></svg></span></button><button class="fb-tab" aria-label="Marketplace"><span><svg class="i" style="width:26px;height:26px"><use href="#shop"/></svg></span></button></div>
+            <div class="right"><button class="fb-circle fb-press" aria-label="Menu"><svg class="i"><use href="#grid9"/></svg></button><button class="fb-circle fb-press" aria-label="Messenger"><svg class="i"><use href="#chat"/></svg></button><button class="fb-circle fb-press" aria-label="Thông báo"><svg class="i"><use href="#bell"/></svg></button><span class="fb-avatar">A</span></div>
+          </div></div>
+          <div class="states"><figure><figcaption>tab thường · icon secondary</figcaption><button class="fb-tab" aria-label="Video"><span><svg class="i" style="width:26px;height:26px"><use href="#video"/></svg></span></button></figure><figure><figcaption><b>hover</b> · phủ 5% bo 8</figcaption><button class="fb-tab is-hover" aria-label="Video"><span><svg class="i" style="width:26px;height:26px"><use href="#video"/></svg></span></button></figure><figure><figcaption><b>selected</b> · accent + gạch 3px</figcaption><button class="fb-tab on" aria-label="Trang chủ"><span><svg class="i" style="width:26px;height:26px"><use href="#home"/></svg></span></button></figure></div>
+          <div class="spec-f"><span class="note">Logo Facebook là thương hiệu nên kit để khung giữ chỗ. Tab hover và selected dựng từ token: trang lưu không có JS nên bộ đo không bắt được cặp selected.</span></div></div>
+
+        <div class="spec" data-sig="f3bf9fbaab 2a12211bd0 771cd96ade"><div class="spec-h"><b>Danh sách điều hướng trái</b><span class="kind">--nav-list-cell-corner-radius 8</span><span class="dp">hàng 52</span></div>
+          <div class="stage"><div class="fb-navlist">
+            <a class="fb-navrow" href="#navigation"><span class="fb-avatar s36">A</span>Tên người dùng</a>
+            <a class="fb-navrow" href="#navigation"><span class="ic"><svg class="i" style="width:28px;height:28px"><use href="#people"/></svg></span>Bạn bè</a>
+            <a class="fb-navrow is-hover" href="#navigation"><span class="ic"><svg class="i" style="width:28px;height:28px"><use href="#shop"/></svg></span>Marketplace <small style="margin-left:auto;font:500 10.5px var(--mono);color:var(--fb-secondary-text)">hover</small></a>
+            <a class="fb-navrow" href="#navigation"><span class="more"><svg class="i"><use href="#chev"/></svg></span>Xem thêm</a>
+            <div class="fb-section-h">Lối tắt của bạn</div>
+          </div></div></div>
+
+        <div class="spec" data-sig="19515ec858 c3379c75ce 4f84a407df 36143486d2"><div class="spec-h"><b>Footer · link nhỏ</b><span class="kind">13px · secondary-text · font-weight 600 cho link</span><span class="dp">13</span></div>
+          <div class="stage"><p class="fb-footer"><a href="#navigation">Quyền riêng tư</a> · <a href="#navigation">Điều khoản</a> · <a href="#navigation">Quảng cáo</a> · <a href="#navigation">Cookie</a> · <a href="#navigation">Xem thêm</a> · Meta © 2026</p></div>
+          <div class="states" data-sig-state="4f84a407df:hover"><figure><figcaption><b>hover</b> · gạch chân (đo được)</figcaption><p class="fb-footer" style="margin:0"><a class="is-hover" href="#navigation">Quyền riêng tư</a></p></figure></div></div>
+      </div>
+    </section>
+
+    <!-- ================= CHỨA NỘI DUNG ================= -->
+    <section class="block" id="containment">
+      <header><h2>Chứa nội dung</h2></header>
+      <div class="grid wide">
+        <div class="spec full" data-sig="d46690ab72 2e6ac47327"><div class="spec-h"><b>Ô soạn bài</b><span class="kind">card r 12 · pill bo 20 · --comment-background</span><span class="dp">680 × 62</span></div>
+          <div class="stage wash"><div class="fb-card"><div class="fb-composer"><span class="fb-avatar">A</span><button class="fb-pill">Bạn đang nghĩ gì thế?</button><button class="fb-icon-row fb-press" aria-label="Video"><span class="fb-glyph" style="background:#F02849"><svg class="i" style="width:16px;height:16px"><use href="#video"/></svg></span></button><button class="fb-icon-row fb-press" aria-label="Ảnh"><span class="fb-glyph" style="background:#45BD62"><svg class="i" style="width:16px;height:16px"><use href="#image"/></svg></span></button><button class="fb-icon-row fb-press" aria-label="Cảm xúc"><span class="fb-glyph" style="background:#F7B928"><svg class="i" style="width:16px;height:16px"><use href="#smile"/></svg></span></button></div></div></div>
+          <div class="spec-f"><span class="note">Bán kính thẻ là <code>max(0px, min(12px, …))</code>: 12px trên màn rộng, tự về 0 khi thẻ chạm mép màn hẹp, nên trên mobile thẻ tràn sát mép. Kit giữ nguyên kỹ thuật đó.</span></div></div>
+
+        <div class="spec" data-sig="af452e2aa9 e2f5e466a0 b687e6ab28"><div class="spec-h"><b>Thẻ tin (story)</b><span class="kind">r 10 · vòng xanh story-unseen</span><span class="dp">112 × 200</span></div>
+          <div class="stage wash"><div class="fb-stories">
+            <div class="fb-story create"><div class="img"></div><span class="plus"><svg class="i"><use href="#plus"/></svg></span><span class="name">Tạo tin</span></div>
+            <div class="fb-story"><span class="fb-avatar ring">B</span><span class="name">Tên bạn bè</span></div>
+            <div class="fb-story"><span class="fb-avatar seen">C</span><span class="kebab"><svg class="i"><use href="#vdots"/></svg></span><span class="name">Đã xem</span></div>
+          </div></div>
+          <div class="states" data-sig-state="af452e2aa9:active"><figure><figcaption><b>active</b> · scale(0.98) (đo được)</figcaption><div class="fb-story is-active"><span class="fb-avatar ring">B</span><span class="name">Nhấn giữ</span></div></figure></div>
+          <div class="spec-f"><span class="note">Ảnh tin của người dùng thay bằng dải màu. Vòng quanh avatar: xanh <code>--story-unseen</code> khi chưa xem, xám <code>--story-seen</code> khi đã xem.</span></div></div>
+
+        <div class="spec" data-sig="c523c61de4 c1b16091be 0f5d5f58c7 cce0539b5f"><div class="spec-h"><b>Bài viết</b><span class="kind">header · nền chữ màu · đếm reaction · hàng hành động</span><span class="dp">680</span></div>
+          <div class="stage wash"><div class="fb-card" style="width:100%">
+            <div class="fb-post-h"><span class="fb-avatar">D<span class="online"></span></span><div class="who"><a href="#containment">Tên người đăng</a><div class="meta">5 phút · <svg class="i" style="width:12px;height:12px"><use href="#globe"/></svg></div></div><button class="fb-circle s36 fb-press" aria-label="Thêm" style="color:var(--fb-secondary-icon)"><svg class="i"><use href="#dots"/></svg></button><button class="fb-circle s36 fb-press" aria-label="Ẩn" style="color:var(--fb-secondary-icon)"><svg class="i"><use href="#x"/></svg></button></div>
+            <div class="fb-textbg">Bài đăng chữ trên nền màu</div>
+            <div class="fb-counts"><span class="fb-reacts"><i style="background:var(--fb-reaction-like);color:#fff"><svg class="i" style="width:10px;height:10px"><use href="#like"/></svg></i><i style="background:var(--fb-reaction-love);color:#fff;margin-left:-8px">♥</i>12</span><span>3 bình luận</span></div>
+            <div class="fb-actions"><button class="liked"><svg class="i" style="width:18px;height:18px"><use href="#like"/></svg>Thích</button><button><svg class="i" style="width:18px;height:18px"><use href="#comment"/></svg>Bình luận</button><button><svg class="i" style="width:18px;height:18px"><use href="#share"/></svg>Chia sẻ</button></div>
+          </div></div>
+          <div class="states" data-sig-state="c523c61de4:hover"><figure><figcaption><b>hover</b> tên · gạch chân (đo được)</figcaption><div class="fb-post-h" style="padding:0"><div class="who"><a class="is-hover" href="#containment">Tên người đăng</a></div></div></figure><figure><figcaption><b>hover</b> nút hành động · phủ 5%</figcaption><div class="fb-actions" style="border:none;margin:0;grid-template-columns:auto"><button class="is-hover"><svg class="i" style="width:18px;height:18px"><use href="#comment"/></svg>Bình luận</button></div></figure></div>
+          <div class="spec-f"><span class="note">Nền chữ màu (#DFD6F7) là một trong các nền người dùng chọn khi đăng, không phải token.</span></div></div>
+
+        <div class="spec" data-sig="048c563685 233eaa5b6a"><div class="spec-h"><b>Quảng cáo · mục tài trợ + thanh CTA</b><span class="kind">sponsored · --comment-background</span><span class="dp">ảnh 132 · thanh 680 × 76</span></div>
+          <div class="stage col">
+            <a class="fb-sponsored" href="#containment"><span class="img">ảnh quảng cáo</span><span><b>Tiêu đề quảng cáo mẫu</b><small>vidu.com</small></span></a>
+            <div class="fb-adbar"><div class="t"><small>vidu.com</small><b>Tên nhà quảng cáo</b><span>Dòng mô tả</span></div><button class="fb-btn secondary fb-press">Tìm hiểu thêm</button></div>
+          </div>
+          <div class="states" data-sig-state="048c563685:focus"><figure><figcaption><b>focus</b> · viền mặc định trình duyệt (đo được)</figcaption><div class="fb-adbar is-focus-ua" style="width:320px"><div class="t"><b>Tên nhà quảng cáo</b></div></div></figure><figure><figcaption><b>hover</b> mục tài trợ · phủ 5%</figcaption><a class="fb-sponsored is-hover" href="#containment" style="width:240px"><span class="img" style="width:60px;height:60px"></span><span><b>Tiêu đề</b></span></a></figure></div></div>
+      </div>
+    </section>
+
+    <!-- ================= CHAT ================= -->
+    <section class="block" id="chat">
+      <header><h2>Chat</h2></header>
+      <div class="grid wide">
+        <div class="spec" data-sig="982e3387c5 18e73309ec 6ece18856f 10755cea80 fb24131db5 0c5747ebef"><div class="spec-h"><b>Cửa sổ chat</b><span class="kind">--card-box-shadow · r 8 trên · bubble r 18</span><span class="dp">328 × 455</span></div>
+          <div class="stage wash center"><div class="fb-chat">
+            <div class="fb-chat-h"><span class="fb-avatar s32">E</span><span class="who">Tên người chat<svg class="i theme" style="width:14px;height:14px"><use href="#chev"/></svg></span><button class="fb-circle s28 fb-press theme" aria-label="Thu nhỏ"><svg class="i"><use href="#minus"/></svg></button><button class="fb-circle s28 fb-press theme" aria-label="Đóng"><svg class="i"><use href="#x"/></svg></button></div>
+            <div class="fb-chat-body"><span class="fb-spinner" role="status" aria-label="Đang tải"></span><span class="fb-time">09:00</span><div class="fb-bubble in">Tin nhắn đến</div><div class="fb-bubble out">Tin nhắn đi</div><div class="fb-bubble out">Bong bóng bo 18px</div></div>
+            <div class="fb-chat-in"><button class="fb-circle s36 fb-press" aria-label="Ghi âm"><svg class="i"><use href="#mic"/></svg></button><button class="fb-circle s36 fb-press" aria-label="Ảnh"><svg class="i"><use href="#image"/></svg></button><button class="fb-circle s36 fb-press" aria-label="Nhãn dán"><svg class="i"><use href="#sticker"/></svg></button><div class="field">Aa<svg class="i" style="color:#A033FF"><use href="#smile"/></svg></div><button class="fb-circle s36 fb-press" aria-label="Thích"><svg class="i"><use href="#like"/></svg></button></div>
+          </div></div>
+          <div class="spec-f"><span class="note">Màu tím là màu chủ đề của cuộc trò chuyện mà người dùng tự chọn trong Messenger, không phải token FDS. Mặc định Messenger dùng xanh accent. Bong bóng tin đến dùng <code>--chat-incoming-message-bubble-background-color</code>.</span></div></div>
+
+        <div class="spec" data-sig="0e2c36e0fc"><div class="spec-h"><b>Tooltip</b><span class="kind">rgba(11,11,11,.8) · r 8 · pad 12</span><span class="dp">max 240</span></div>
+          <div class="stage center"><div class="fb-tooltip" role="tooltip">Nhấn Enter để gửi, Shift + Enter để xuống dòng</div></div></div>
+      </div>
+    </section>
+
+    <!-- ================= NHẬP LIỆU ================= -->
+    <section class="block" id="inputs">
+      <header><h2>Nhập liệu</h2><p>Trang feed chỉ có ô tìm kiếm, ô soạn bài và ô chat. Các control dưới đây dựng từ token nhập liệu và điều khiển của FDS (<code>--input-*</code>, <code>--switch-*</code>, <code>--radio-*</code>, <code>--checkbox-corner-radius</code>) để kit đủ bộ. Chúng không đo được hình dạng từ trang đã lưu.</p></header>
+      <div class="grid wide">
+        <div class="spec" data-sig="fdb37e8349"><div class="spec-h"><b>Ô tìm kiếm</b><span class="kind">rounded 50px · --comment-background</span><span class="dp">40</span></div>
+          <div class="stage"><label class="fb-search"><svg class="i" style="width:16px;height:16px"><use href="#search"/></svg><input placeholder="Tìm kiếm trên Facebook" aria-label="Tìm kiếm"></label></div></div>
+        <div class="spec"><div class="spec-h"><b>Trường nhập (token)</b><span class="kind">--input-corner-radius 12 · --input-border-color</span><span class="dp">nhãn 12.75 · giá trị 16/500</span></div>
+          <div class="stage col" style="gap:12px">
+            <div class="fb-field"><label for="k1">Email</label><input id="k1" value="ten@vidu.com"></div>
+            <div class="fb-field focused"><label for="k2">Mật khẩu (focus)</label><input id="k2" type="password" value="secret"></div>
+            <div class="fb-field error"><label for="k3">Số điện thoại (lỗi)</label><input id="k3" value="09"></div>
+          </div></div>
+        <div class="spec"><div class="spec-h"><b>Switch · radio · checkbox (token)</b><span class="kind">--switch-active · --radio-size-medium 20</span><span class="dp">20 · 24</span></div>
+          <div class="stage" style="gap:20px"><button class="fb-switch" role="switch" aria-checked="true" aria-label="Bật"></button><button class="fb-switch" role="switch" aria-checked="false" aria-label="Tắt"></button><span class="fb-radio on"></span><span class="fb-radio"></span><span class="fb-check on"><svg class="o" style="width:14px;height:14px"><path d="M4 12l5 5L20 6"/></svg></span><span class="fb-check"></span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= PHẢN HỒI ================= -->
+    <section class="block" id="feedback">
+      <header><h2>Phản hồi &amp; trạng thái</h2></header>
+      <div class="grid">
+        <div class="spec" data-sig="c72fe0ece5"><div class="spec-h"><b>Glimmer (khung đang tải)</b><span class="kind">--placeholder-image · --glimmer-opacity .15→.5 · 1s</span><span class="dp">r 10</span></div>
+          <div class="stage col" style="gap:8px"><div style="display:flex;gap:8px;align-items:center"><div class="fb-glimmer" style="width:40px;height:40px;border-radius:50%"></div><div style="flex:1;display:flex;flex-direction:column;gap:6px"><div class="fb-glimmer" style="width:60%;height:12px"></div><div class="fb-glimmer" style="width:30%;height:10px"></div></div></div></div></div>
+        <div class="spec" data-sig="20b2b86494"><div class="spec-h"><b>Avatar · chồng · online</b><span class="kind">viền 2px surface · chấm online</span><span class="dp">22 · 36 · 40</span></div>
+          <div class="stage"><span class="fb-stack"><span class="fb-avatar">A</span><span class="fb-avatar">B</span><span class="fb-avatar">C</span></span><span class="fb-avatar">D<span class="online"></span></span><span class="fb-avatar ring">E</span></div>
+          <div class="spec-f"><span class="note">Avatar thật của người dùng thay bằng chữ cái.</span></div></div>
+        <div class="spec"><div class="spec-h"><b>Badge (token)</b><span class="kind">--notification-badge · --text-badge-*</span><span class="dp">r 255 · r 4</span></div>
+          <div class="stage"><span class="fb-badge">3</span><span class="fb-badge">99+</span><span class="fb-textbadge" style="background:var(--fb-text-badge-info-background)">Mới</span><span class="fb-textbadge" style="background:var(--fb-text-badge-success-background)">Đã xong</span><span class="fb-textbadge" style="background:var(--fb-text-badge-attention-background)">Chú ý</span><span class="fb-textbadge" style="background:var(--fb-text-badge-critical-background)">Lỗi</span></div></div>
+        <div class="spec"><div class="spec-h"><b>Focus bàn phím</b><span class="kind">--focus-ring-shadow-default · outline mặc định</span><span class="dp">2 + 4px</span></div>
+          <div class="stage"><button class="fb-btn primary" style="box-shadow:var(--focus-ring)">Vòng FDS</button><div class="fb-adbar is-focus-ua" style="width:180px;padding:8px"><b style="font-size:14px">Viền mặc định</b></div></div>
+          <div class="spec-f"><span class="note">FDS có token vòng focus riêng (2px trắng + 4px <code>--focus-ring-blue</code>), nhưng hai phần tử đo được trên trang đã lưu đều chỉ dùng viền mặc định của trình duyệt. Có thể vòng FDS do JS gắn, nên trang tắt JS không hiện.</span></div></div>
+        <div class="spec"><div class="spec-h"><b>Lớp phủ tương tác</b><span class="kind">--hover-overlay · --press-overlay · --media-hover</span><span class="dp">5% · 10%</span></div>
+          <div class="stage"><div class="fb-sponsored" style="width:auto;padding:14px 18px">mặc định</div><div class="fb-sponsored is-hover" style="width:auto;padding:14px 18px">hover 5%</div><div class="fb-sponsored" style="width:auto;padding:14px 18px;background:var(--fb-press-overlay)">pressed 10%</div></div>
+          <div class="spec-f"><span class="note">Cách FDS tạo hover/pressed cho gần như mọi thứ bấm được: phủ một lớp đen trong suốt (sáng) hoặc trắng trong suốt (tối) lên trên, thay vì đổi màu nền.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= MÀN MẪU ================= -->
+    <section class="block" id="screens">
+      <header><h2>Màn hình mẫu</h2><p>Ghép lại từ các class <code>.fb-*</code> ở trên theo bố cục của News Feed đã lưu: thanh trên 56px, ba cột 360 · 680 · 360, cửa sổ chat ghim góc phải. Bản mobile dựng theo cùng token: thẻ tràn mép vì bán kính tự về 0, và không có cột bên. Trang bạn lưu là bản desktop, nên bản mobile không đo được mà suy từ token.</p></header>
+      <div class="screens"><div class="screens-row">
+        <div>
+          <div class="desk">
+            <div class="fb-topbar"><div class="left"><span class="fb-logo">logo</span><label class="fb-search"><svg class="i" style="width:16px;height:16px"><use href="#search"/></svg><input placeholder="Tìm kiếm trên Facebook" aria-label="Tìm kiếm"></label></div><div class="fb-tabs"><button class="fb-tab on" aria-label="Trang chủ"><span><svg class="i" style="width:26px;height:26px"><use href="#home"/></svg></span></button><button class="fb-tab" aria-label="Video"><span><svg class="i" style="width:26px;height:26px"><use href="#video"/></svg></span></button><button class="fb-tab" aria-label="Bạn bè"><span><svg class="i" style="width:26px;height:26px"><use href="#people"/></svg></span></button><button class="fb-tab" aria-label="Marketplace"><span><svg class="i" style="width:26px;height:26px"><use href="#shop"/></svg></span></button><button class="fb-tab" aria-label="Trò chơi"><span><svg class="i" style="width:26px;height:26px"><use href="#game"/></svg></span></button></div><div class="right"><button class="fb-circle" aria-label="Menu"><svg class="i"><use href="#grid9"/></svg></button><button class="fb-circle" aria-label="Messenger"><svg class="i"><use href="#chat"/></svg></button><button class="fb-circle" aria-label="Thông báo"><svg class="i"><use href="#bell"/></svg></button><span class="fb-avatar">A</span></div></div>
+            <div class="cols">
+              <div class="fb-navlist" style="width:auto"><a class="fb-navrow" href="#screens"><span class="fb-avatar s36">A</span>Tên người dùng</a><a class="fb-navrow" href="#screens"><span class="ic"><svg class="i" style="width:28px;height:28px"><use href="#people"/></svg></span>Bạn bè</a><a class="fb-navrow" href="#screens"><span class="ic"><svg class="i" style="width:28px;height:28px"><use href="#video"/></svg></span>Video</a><a class="fb-navrow" href="#screens"><span class="ic"><svg class="i" style="width:28px;height:28px"><use href="#shop"/></svg></span>Marketplace</a><a class="fb-navrow" href="#screens"><span class="more"><svg class="i"><use href="#chev"/></svg></span>Xem thêm</a><div class="fb-section-h">Lối tắt của bạn</div></div>
+              <div class="feed">
+                <div class="fb-card"><div class="fb-composer"><span class="fb-avatar">A</span><button class="fb-pill">Bạn đang nghĩ gì thế?</button></div></div>
+                <div class="fb-stories" style="width:680px"><div class="fb-story create"><div class="img"></div><span class="plus"><svg class="i"><use href="#plus"/></svg></span><span class="name">Tạo tin</span></div><div class="fb-story"><span class="fb-avatar ring">B</span><span class="name">Bạn bè</span></div><div class="fb-story"><span class="fb-avatar ring">C</span><span class="name">Bạn bè</span></div><div class="fb-story"><span class="fb-avatar seen">D</span><span class="name">Bạn bè</span></div><div class="fb-story"><span class="fb-avatar ring">E</span><span class="name">Bạn bè</span></div></div>
+                <div class="fb-card"><div class="fb-post-h"><span class="fb-avatar">F</span><div class="who"><a href="#screens">Tên người đăng</a><div class="meta">5 phút</div></div></div><div class="fb-textbg">Bài đăng chữ trên nền màu</div></div>
+              </div>
+              <div><div class="fb-section-h" style="border:none;margin-top:0">Được tài trợ</div><a class="fb-sponsored" href="#screens"><span class="img">ảnh quảng cáo</span><span><b>Tiêu đề quảng cáo</b><small>vidu.com</small></span></a></div>
+            </div>
+            <div class="fb-chat" style="position:absolute;right:80px;bottom:0;height:420px"><div class="fb-chat-h"><span class="fb-avatar s32">E</span><span class="who">Tên người chat</span><button class="fb-circle s28 theme" aria-label="Thu nhỏ"><svg class="i"><use href="#minus"/></svg></button><button class="fb-circle s28 theme" aria-label="Đóng"><svg class="i"><use href="#x"/></svg></button></div><div class="fb-chat-body"><span class="fb-time">09:00</span><div class="fb-bubble in">Tin nhắn đến</div><div class="fb-bubble out">Tin nhắn đi</div></div><div class="fb-chat-in"><div class="field">Aa</div></div></div>
+            <button class="fb-fab" style="position:absolute;right:20px;bottom:20px" aria-label="Tin nhắn mới"><svg class="i"><use href="#edit"/></svg></button>
+          </div>
+          <div class="screen-cap">News Feed desktop · 1440 × 900 · thanh trên + 3 cột + chat ghim + nút nổi</div>
+        </div>
+        <div>
+          <div class="phone">
+            <div style="height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;background:var(--fb-nav-bar-background)"><span class="fb-logo" style="width:auto;height:30px;border-radius:6px;padding:0 10px">wordmark</span><span style="display:flex;gap:8px"><button class="fb-circle" aria-label="Tạo"><svg class="i"><use href="#plus"/></svg></button><button class="fb-circle" aria-label="Tìm"><svg class="i"><use href="#search"/></svg></button><button class="fb-circle" aria-label="Messenger"><svg class="i"><use href="#chat"/></svg></button></span></div>
+            <div class="fb-tabs" style="background:var(--fb-nav-bar-background);height:48px;box-shadow:0 1px 0 var(--fb-divider)"><button class="fb-tab on" style="width:65px;height:48px" aria-label="Trang chủ"><span style="height:40px"><svg class="i"><use href="#home"/></svg></span></button><button class="fb-tab" style="width:65px;height:48px" aria-label="Video"><span style="height:40px"><svg class="i"><use href="#video"/></svg></span></button><button class="fb-tab" style="width:65px;height:48px" aria-label="Bạn bè"><span style="height:40px"><svg class="i"><use href="#people"/></svg></span></button><button class="fb-tab" style="width:65px;height:48px" aria-label="Marketplace"><span style="height:40px"><svg class="i"><use href="#shop"/></svg></span></button><button class="fb-tab" style="width:65px;height:48px" aria-label="Thông báo"><span style="height:40px"><svg class="i"><use href="#bell"/></svg></span></button><button class="fb-tab" style="width:65px;height:48px" aria-label="Menu"><span style="height:40px"><svg class="i"><use href="#grid9"/></svg></span></button></div>
+            <div style="display:flex;flex-direction:column;gap:8px;padding-top:8px">
+              <div class="fb-card" style="border-radius:0;width:390px"><div class="fb-composer"><span class="fb-avatar">A</span><button class="fb-pill">Bạn đang nghĩ gì thế?</button></div></div>
+              <div class="fb-card" style="border-radius:0;width:390px;padding:12px 0"><div class="fb-stories" style="padding-left:12px;overflow:hidden"><div class="fb-story create"><div class="img"></div><span class="plus"><svg class="i"><use href="#plus"/></svg></span><span class="name">Tạo tin</span></div><div class="fb-story"><span class="fb-avatar ring">B</span><span class="name">Bạn bè</span></div><div class="fb-story"><span class="fb-avatar ring">C</span><span class="name">Bạn bè</span></div></div></div>
+              <div class="fb-card" style="border-radius:0;width:390px"><div class="fb-post-h"><span class="fb-avatar">F</span><div class="who"><a href="#screens">Tên người đăng</a><div class="meta">5 phút</div></div></div><div class="fb-textbg" style="height:240px;font-size:24px">Bài đăng chữ trên nền màu</div></div>
+            </div>
+          </div>
+          <div class="screen-cap">mobile · 390 × 844 · suy từ token (thẻ bo 0, tab icon dưới header), không đo từ trang</div>
+        </div>
+      </div></div>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* Token FDS sinh từ CSS của trang đã lưu: `:root, .__fb-light-mode` (light) và `.__fb-dark-mode` (dark). */
+const ROLE_GROUPS = {"surface": ["web-wash", "surface-background", "card-background", "card-background-flat", "comment-background", "nav-bar-background", "popover-background", "input-background", "background-deemphasized", "divider", "wash", "media-inner-border"], "text": ["primary-text", "secondary-text", "placeholder-text", "disabled-text", "section-header-text", "blue-link", "primary-icon", "secondary-icon", "disabled-icon", "accent", "text-highlight", "highlight-bg"], "button": ["primary-button-background", "primary-button-text", "primary-button-pressed", "primary-deemphasized-button-background", "primary-deemphasized-button-text", "secondary-button-background", "secondary-button-text", "secondary-button-background-floating", "disabled-button-background", "disabled-button-text", "hover-overlay", "press-overlay"], "input": ["input-border-color", "border-focused", "input-label-color-highlighted", "input-background-disabled", "text-input-bar-background", "focus-ring-blue", "toggle-active-background", "toggle-active-text", "switch-active", "switch-inactive", "hosted-view-selected-state", "new-notification-background"], "status": ["positive", "positive-background", "negative", "negative-background", "warning", "notification-badge", "text-badge-info-background", "text-badge-success-background", "text-badge-attention-background", "text-badge-critical-background", "story-unseen", "story-seen"], "reaction": ["reaction-like", "reaction-love", "reaction-haha", "reaction-anger", "rating-star-active", "chat-incoming-message-bubble-background-color"]};
+const PALETTES = { fds: { label: "FDS", light: {"web-wash": "#F2F4F7", "surface-background": "#FFFFFF", "card-background": "#FFFFFF", "card-background-flat": "#F8F9FB", "comment-background": "#F0F2F5", "nav-bar-background": "#FFFFFF", "popover-background": "#FFFFFF", "input-background": "#FFFFFF", "background-deemphasized": "#F2F4F7", "divider": "#D0D3D7", "wash": "#C9CCD1", "media-inner-border": "#0000001A", "primary-text": "#080809", "secondary-text": "#65686C", "placeholder-text": "#65686C", "disabled-text": "#B0B3B8", "section-header-text": "#4B4C4F", "blue-link": "#0064D1", "primary-icon": "#080809", "secondary-icon": "#65686C", "disabled-icon": "#B0B3B8", "accent": "#0866FF", "text-highlight": "#0866FF33", "highlight-bg": "#E7F3FF", "primary-button-background": "#0866FF", "primary-button-text": "#FFFFFF", "primary-button-pressed": "#77A7FF", "primary-deemphasized-button-background": "#DDEDFE", "primary-deemphasized-button-text": "#0064D1", "secondary-button-background": "#E2E5E9", "secondary-button-text": "#080809", "secondary-button-background-floating": "#FFFFFF", "disabled-button-background": "#E2E5E9", "disabled-button-text": "#BCC0C4", "hover-overlay": "#0000000D", "press-overlay": "#0000001A", "input-border-color": "#CED0D4", "border-focused": "#65676B", "input-label-color-highlighted": "#0064D1", "input-background-disabled": "#F0F2F5", "text-input-bar-background": "#F0F2F5", "focus-ring-blue": "#0866FF", "toggle-active-background": "#EBF5FF", "toggle-active-text": "#0064D1", "switch-active": "#1876F2", "switch-inactive": "#CED0D4", "hosted-view-selected-state": "#EBF5FF", "new-notification-background": "#E7F3FF", "positive": "#24832C", "positive-background": "#DEEFE1", "negative": "#DD2334", "negative-background": "#FFE3DE", "warning": "#AF8F00", "notification-badge": "#DD2334", "text-badge-info-background": "#1876F2", "text-badge-success-background": "#31A24C", "text-badge-attention-background": "#F2A918", "text-badge-critical-background": "#E41E3F", "story-unseen": "#0866FF", "story-seen": "#84878B", "reaction-like": "#0866FF", "reaction-love": "#DD2334", "reaction-haha": "#887000", "reaction-anger": "#DD2334", "rating-star-active": "#E0761A", "chat-incoming-message-bubble-background-color": "#F0F0F0"}, dark: {"web-wash": "#1C1C1D", "surface-background": "#252728", "card-background": "#252728", "card-background-flat": "#333334", "comment-background": "#333334", "nav-bar-background": "#252728", "popover-background": "#3B3C3E", "input-background": "#242526", "background-deemphasized": "#FFFFFF1A", "divider": "#65686C", "wash": "#1C1C1D", "media-inner-border": "#FFFFFF0D", "primary-text": "#E2E5E9", "secondary-text": "#B0B3B8", "placeholder-text": "#B0B3B8", "disabled-text": "#6F7276", "section-header-text": "#BCC0C4", "blue-link": "#5AA7FF", "primary-icon": "#E2E5E9", "secondary-icon": "#B0B3B8", "disabled-icon": "#6F7276", "accent": "#0866FF", "text-highlight": "#1D85FC73", "highlight-bg": "#1877F24F", "primary-button-background": "#0866FF", "primary-button-text": "#FFFFFF", "primary-button-pressed": "#77A7FF", "primary-deemphasized-button-background": "#1D85FC33", "primary-deemphasized-button-text": "#75B6FF", "secondary-button-background": "#FFFFFF1A", "secondary-button-text": "#E8EAEE", "secondary-button-background-floating": "#46484B", "disabled-button-background": "#FFFFFF1A", "disabled-button-text": "#FFFFFF4C", "hover-overlay": "#FFFFFF1A", "press-overlay": "#FFFFFF33", "input-border-color": "#3E4042", "border-focused": "#8A8D91", "input-label-color-highlighted": "#3E93F8", "input-background-disabled": "#18191A", "text-input-bar-background": "#FFFFFF1A", "focus-ring-blue": "#1D85FC", "toggle-active-background": "#1D85FC", "toggle-active-text": "#FFFFFF", "switch-active": "#2E89FF", "switch-inactive": "#3E4042", "hosted-view-selected-state": "#1D85FC1A", "new-notification-background": "#2D88FF1A", "positive": "#3FBB46", "positive-background": "#1F3520", "negative": "#FF7C74", "negative-background": "#B9182833", "warning": "#AF8F00", "notification-badge": "#DD2334", "text-badge-info-background": "#2E89FF", "text-badge-success-background": "#31A24C", "text-badge-attention-background": "#F2A918", "text-badge-critical-background": "#E41E3F", "story-unseen": "#0866FF", "story-seen": "#84878B", "reaction-like": "#3E93F8", "reaction-love": "#FF5757", "reaction-haha": "#F9CF00", "reaction-anger": "#FF5757", "rating-star-active": "#FF9A42", "chat-incoming-message-bubble-background-color": "#303030"} } };
+
+(function () {
+  const root = document.documentElement;
+  const all = Object.values(ROLE_GROUPS).flat();
+  const GROUP_NAMES = { surface: "Bề mặt", text: "Chữ & icon", button: "Nút & lớp phủ", input: "Nhập liệu & điều khiển", status: "Trạng thái & badge", reaction: "Reaction & chat" };
+  const state = { mode: matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light", k: "1" };
+  try { Object.assign(state, JSON.parse(localStorage.getItem("fb-kit") || "{}")); } catch (e) {}
+  const toast = (t) => { const el = document.getElementById("toast"); el.textContent = t; el.classList.add("show"); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove("show"), 1600); };
+  const copy = async (text, msg) => { try { await navigator.clipboard.writeText(text); toast(msg); } catch (e) { toast("Trình duyệt chặn clipboard, hãy copy tay"); } };
+  const lum = (hex) => { if (!/^#[0-9A-F]{6}/i.test(hex)) return 0.5; const n = parseInt(hex.slice(1, 7), 16); const a = hex.length === 9 ? parseInt(hex.slice(7), 16) / 255 : 1; const L = (0.299 * (n >> 16) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255)) / 255; return a * L + (1 - a) * (state.mode === "dark" ? 0.1 : 0.97); };
+  function renderRoles(vals) {
+    const box = document.getElementById("roles"); box.innerHTML = "";
+    for (const [g, list] of Object.entries(ROLE_GROUPS)) {
+      const h = document.createElement("div"); h.className = "roles-h"; h.textContent = GROUP_NAMES[g] || g; box.appendChild(h);
+      const grid = document.createElement("div"); grid.className = "roles"; box.appendChild(grid);
+      list.forEach((r) => {
+        const b = document.createElement("button"); b.className = "role";
+        b.style.background = vals[r]; b.style.color = lum(vals[r]) > 0.55 ? "#080809" : "#FFFFFF";
+        b.innerHTML = "<b>--" + r + "</b><code>" + vals[r] + "</code>";
+        b.onclick = () => copy(vals[r], "Đã copy --" + r + " " + vals[r]);
+        grid.appendChild(b);
+      });
+    }
+  }
+  function apply() {
+    const vals = PALETTES.fds[state.mode];
+    all.forEach((r) => root.style.setProperty("--fb-" + r, vals[r]));
+    root.style.setProperty("--k", state.k);
+    root.dataset.mode = state.mode;
+    document.querySelectorAll("#mode button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === state.mode));
+    document.querySelectorAll("#shape button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === state.k));
+    renderRoles(vals);
+    try { localStorage.setItem("fb-kit", JSON.stringify(state)); } catch (e) {}
+  }
+  document.querySelectorAll("#mode button").forEach((b) => (b.onclick = () => { state.mode = b.dataset.v; apply(); }));
+  document.querySelectorAll("#shape button").forEach((b) => (b.onclick = () => { state.k = b.dataset.v; apply(); }));
+  document.querySelectorAll(".spec").forEach((spec) => {
+    const stage = spec.querySelector(".stage"); if (!stage || !spec.querySelector(".spec-h")) return;
+    let foot = spec.querySelector(".spec-f"); if (!foot) { foot = document.createElement("div"); foot.className = "spec-f"; foot.innerHTML = '<span class="note"></span>'; spec.appendChild(foot); }
+    const b = document.createElement("button"); b.className = "copy"; b.innerHTML = '<svg class="i" style="width:16px;height:16px"><use href="#copy"/></svg>HTML';
+    b.onclick = () => copy(stage.innerHTML.trim().replace(/\n\s+/g, "\n"), "Đã copy HTML của " + spec.querySelector(".spec-h b").textContent);
+    foot.appendChild(b);
+  });
+  document.getElementById("copy-tokens").onclick = () => {
+    const vals = PALETTES.fds[state.mode];
+    copy(":root {\n" + all.map((r) => "  --fb-" + r + ": " + vals[r] + ";").join("\n") + "\n}", "Đã copy token FDS " + (state.mode === "dark" ? "tối" : "sáng"));
+  };
+  const links = [...document.querySelectorAll(".side a")];
+  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) links.forEach((a) => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id)); }), { rootMargin: "-30% 0px -60% 0px" });
+  document.querySelectorAll("section.block").forEach((s) => io.observe(s));
+  document.addEventListener("click", (e) => { const s = e.target.closest(".fb-switch"); if (s) s.setAttribute("aria-checked", s.getAttribute("aria-checked") !== "true"); });
+  apply();
+})();
+</script>
+</body>
+</html>

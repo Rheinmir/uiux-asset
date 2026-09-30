@@ -1,0 +1,739 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta name="ui-kit-id" content="velora-template-framer-website">
+<!-- UI kit rút từ https://velora-template.framer.website/ (Framer template, 28/09/2026) bằng skill ui-kit-from-code.
+     Số đo đọc bằng Playwright (getComputedStyle + CSS vars --token-* của Framer), không gõ tay.
+     Không nhúng ảnh, logo hay nội dung có bản quyền của site: mọi ảnh là khối giữ chỗ. -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="ui-kit-skip" content="68a73d503e:icon trong widget quảng bá Use Template của người bán template, không thuộc thiết kế trang;933d951671:nút Use Template của widget quảng bá Framer marketplace;f42b1ed1b2:khung widget Limited-Time Free (quảng bá template);622b5ea9f5:thẻ Limited-Time Free (quảng bá template);93047d8b66:ảnh thumbnail trong widget quảng bá;f27a413b45:chữ Inter Tight của nút Use Template (quảng bá)">
+<title>Velora UI Kit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Kit mặc token của Velora: mọi màu là một vai trò --vl-<role>. Site chỉ có một theme sáng;
+   bộ "tối" lấy từ màu thật của footer đen (bg #000, chữ #fff / #e6e6e6 / #aeaeae, vạch trắng 15%),
+   vai trò footer không dùng thì suy ra (đánh dấu "suy" trong phần Màu). */
+:root {
+  --vl-bg:#ffffff; --vl-surface:#fafafa; --vl-surfaceAlt:#f4f4f4; --vl-line:#f4f4f4;
+  --vl-text:#000000; --vl-textStrong:#212121; --vl-textLabel:#595959; --vl-textMuted:#6d6d6d;
+  --vl-textFaint:#999999; --vl-textSubtle:#aeaeae; --vl-accent:#e3caa6; --vl-accentDeep:#9e8867;
+  --vl-scrim:#0000008c; --vl-onScrim:#ffffff; --vl-pager:#00000033; --vl-pagerDot:#ffffff;
+  --vl-inverse:#000000; --vl-onInverse:#ffffff; --vl-inverseSoft:#e6e6e6; --vl-inverseMuted:#aeaeae; --vl-inverseLine:#ffffff26; --vl-focus:#005fcc;
+  --vl-font: Inter, "Inter Placeholder", system-ui, sans-serif;
+  --vl-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --vl-ease: cubic-bezier(0.44, 0, 0.56, 1);
+  --vl-dur: .4s;
+  --vl-shadow-menu: 2px 3px 32px 0 rgba(0,0,0,.25);
+  color-scheme: light;
+}
+:root[data-mode="dark"] { color-scheme: dark; }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--vl-bg); color: var(--vl-text); font: 400 14px/1.45 var(--vl-font); letter-spacing: -.01em; -webkit-font-smoothing: antialiased; }
+code, .code { font-family: var(--vl-mono); font-size: 12px; letter-spacing: 0; }
+:focus-visible { outline: 2px solid var(--vl-accentDeep); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+svg.i { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+/* ---------- vỏ trang ---------- */
+.shell { display: grid; grid-template-columns: 232px minmax(0, 1fr); min-height: 100vh; }
+.side { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 20px 12px; background: var(--vl-surface); border-right: 1px solid var(--vl-line); display: flex; flex-direction: column; gap: 2px; }
+.brand { display: flex; align-items: center; gap: 10px; padding: 4px 12px 16px; }
+.brand-mark { width: 32px; height: 32px; border-radius: 4px; background: var(--vl-text); color: var(--vl-accent); display: grid; place-items: center; font-weight: 600; letter-spacing: -.04em; }
+.brand b { font-size: 16px; font-weight: 600; letter-spacing: -.04em; display: block; }
+.brand small { color: var(--vl-textMuted); font-size: 12px; }
+.side h6 { margin: 14px 12px 6px; font-size: 11px; font-weight: 500; letter-spacing: .04em; text-transform: uppercase; color: var(--vl-textFaint); }
+.side a { display: flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 4px; color: var(--vl-textMuted); text-decoration: none; font-weight: 500; }
+.side a:hover { color: var(--vl-accentDeep); }
+.side a.on { background: var(--vl-surfaceAlt); color: var(--vl-text); }
+main { padding: 0 32px 96px; min-width: 0; }
+
+.bar { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; padding: 14px 0; background: var(--vl-bg); border-bottom: 1px solid var(--vl-line); }
+.bar .grow { flex: 1; }
+.ctl { display: flex; align-items: center; gap: 8px; }
+.ctl > span { font-size: 12px; font-weight: 500; color: var(--vl-textMuted); }
+.seg { display: inline-flex; gap: 2px; padding: 2px; border-radius: 6px; background: var(--vl-surfaceAlt); }
+.seg button { height: 30px; padding: 0 12px; border: none; background: transparent; color: var(--vl-textMuted); font: 500 13px var(--vl-font); cursor: pointer; border-radius: 4px; }
+.seg button[aria-pressed="true"] { background: var(--vl-bg); color: var(--vl-text); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+
+.intro { padding: 40px 0 8px; max-width: 780px; }
+.intro .eyebrow { font-family: var(--vl-mono); font-size: 12px; color: var(--vl-accentDeep); }
+.intro h1 { font-size: 56px; line-height: 1.1; font-weight: 500; letter-spacing: -.06em; margin: 8px 0 14px; text-wrap: balance; }
+.intro p { font-size: 16px; line-height: 1.5; color: var(--vl-textMuted); margin: 0; max-width: 66ch; }
+.intro .facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.fact { font-family: var(--vl-mono); font-size: 12px; padding: 4px 10px; border-radius: 2px; background: var(--vl-surfaceAlt); color: var(--vl-textMuted); }
+
+section.block { padding-top: 56px; scroll-margin-top: 64px; }
+section.block > header { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+section.block h2 { font-size: 30px; line-height: 1.25; font-weight: 500; letter-spacing: -.05em; margin: 0; }
+section.block > header p { margin: 0; color: var(--vl-textMuted); max-width: 72ch; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+.grid.wide { grid-template-columns: repeat(auto-fill, minmax(460px, 1fr)); }
+.spec { background: var(--vl-surface); border: 1px solid var(--vl-line); border-radius: 8px; display: flex; flex-direction: column; min-width: 0; }
+.spec.full { grid-column: 1 / -1; }
+.spec-h { display: flex; align-items: center; gap: 8px; padding: 14px 16px 0; flex-wrap: wrap; }
+.spec-h b { font-size: 15px; font-weight: 500; }
+.kind { font-family: var(--vl-mono); font-size: 11px; padding: 2px 8px; border-radius: 2px; background: var(--vl-text); color: var(--vl-accent); }
+.spec-h .dp { margin-left: auto; font-family: var(--vl-mono); font-size: 11px; color: var(--vl-textMuted); font-variant-numeric: tabular-nums; }
+.stage { padding: 20px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 16px; min-height: 96px; overflow-x: auto; }
+.stage.col { flex-direction: column; align-items: stretch; }
+.stage.surface { background: var(--vl-bg); margin: 12px 12px 0; border-radius: 4px; }
+.stage.ink { background: var(--vl-inverse); color: var(--vl-onInverse); margin: 12px 12px 0; border-radius: 4px; }
+.st { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+.st > i { font-style: normal; font-family: var(--vl-mono); font-size: 10px; color: var(--vl-textFaint); }
+.stage.ink .st > i { color: var(--vl-inverseMuted); }
+.spec-f { display: flex; align-items: center; gap: 8px; padding: 8px 12px 12px 16px; margin-top: auto; }
+.spec-f .note { font-size: 12px; color: var(--vl-textMuted); flex: 1; }
+.copy { height: 30px; padding: 0 12px; border-radius: 4px; border: none; background: transparent; color: var(--vl-text); font: 500 13px var(--vl-font); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.copy:hover { color: var(--vl-accentDeep); background: var(--vl-surfaceAlt); }
+
+/* nền tảng */
+.roles { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; }
+.role { border-radius: 6px; padding: 12px; min-height: 76px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: inset 0 0 0 1px rgba(128,128,128,.25); cursor: pointer; border: none; text-align: left; font: inherit; }
+.role b { font-size: 13px; font-weight: 500; }
+.role code { font-size: 11px; opacity: .85; }
+.role em { font-style: normal; font-size: 10px; font-family: var(--vl-mono); opacity: .8; }
+.ramp { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 6px; margin-top: 16px; }
+.ramp .role { min-height: 64px; }
+.type-row { display: grid; grid-template-columns: 170px minmax(0, 1fr) 190px; gap: 16px; align-items: baseline; padding: 12px 0; border-bottom: 1px solid var(--vl-line); }
+.type-row:last-child { border-bottom: none; }
+.type-row .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.type-row .meta { font-family: var(--vl-mono); font-size: 11px; color: var(--vl-textMuted); font-variant-numeric: tabular-nums; }
+.shape-cell { display: flex; flex-direction: column; align-items: center; gap: 6px; font-family: var(--vl-mono); font-size: 11px; color: var(--vl-textMuted); text-align: center; }
+.shape-cell i { display: block; width: 72px; height: 72px; background: var(--vl-surfaceAlt); }
+table.tok { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+table.tok th, table.tok td { text-align: left; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--vl-line); font-size: 13px; vertical-align: top; }
+table.tok th { font-weight: 500; color: var(--vl-textMuted); font-size: 12px; }
+table.tok td:first-child { font-family: var(--vl-mono); font-size: 12px; white-space: nowrap; }
+
+/* ================= thành phần vl-* (tái dùng được: chỉ cần khối --vl-*) ================= */
+/* thang chữ: mọi preset là Inter 500, line-height 120–140%, letter-spacing âm theo em.
+   Kích thước đổi theo breakpoint qua biến --vl-fs-*; .vl-bp-tablet (810) và .vl-bp-phone (390) ghi đè. */
+.vl-display { font: 500 var(--vl-fs-display, 161px)/1.2 var(--vl-font); letter-spacing: -.06em; color: var(--vl-accent); margin: 0; white-space: nowrap; }
+.vl-h1 { font: 500 var(--vl-fs-h1, 80px)/1.2 var(--vl-font); letter-spacing: -.06em; margin: 0; color: var(--vl-text); }
+.vl-h2 { font: 500 var(--vl-fs-h2, 64px)/1.2 var(--vl-font); letter-spacing: -.06em; margin: 0; color: var(--vl-text); }
+.vl-h3 { font: 500 var(--vl-fs-h3, 48px)/1.2 var(--vl-font); letter-spacing: -.05em; margin: 0; color: var(--vl-text); }
+.vl-h4 { font: 500 var(--vl-fs-h4, 32px)/1.4 var(--vl-font); letter-spacing: -.05em; margin: 0; }
+.vl-lead { font: 500 var(--vl-fs-lead, 28px)/1.4 var(--vl-font); letter-spacing: -.04em; margin: 0; color: var(--vl-textStrong); }
+.vl-label { font: 500 var(--vl-fs-label, 26px)/1.3 var(--vl-font); letter-spacing: -.05em; margin: 0; color: var(--vl-textLabel); }
+.vl-h5 { font: 500 var(--vl-fs-h5, 22px)/1.4 var(--vl-font); letter-spacing: -.05em; margin: 0; color: var(--vl-text); }
+.vl-h6 { font: 500 18px/1.4 var(--vl-font); letter-spacing: -.05em; margin: 0; color: var(--vl-text); }
+.vl-brand { font: 600 18px/1.4 var(--vl-font); letter-spacing: -.04em; margin: 0; color: var(--vl-textStrong); }
+.vl-body { font: 400 16px/1.4 var(--vl-font); letter-spacing: -.04em; margin: 0; color: var(--vl-text); }
+.vl-body.muted { color: var(--vl-textMuted); }
+.vl-body.strong { font-weight: 500; }
+.vl-caption { font: 400 14px/1.4 var(--vl-font); font-variation-settings: "opsz" 32; letter-spacing: -.04em; margin: 0; color: var(--vl-textMuted); }
+.vl-over { font: 500 13px/1.4 var(--vl-font); letter-spacing: -.03em; text-transform: uppercase; margin: 0; color: var(--vl-textFaint); }
+.vl-bp-tablet { --vl-fs-h1: 64px; --vl-fs-h3: 38px; --vl-fs-lead: 22px; --vl-fs-label: 22px; }
+.vl-bp-phone { --vl-fs-h1: 40px; --vl-fs-h2: 40px; --vl-fs-h3: 32px; --vl-fs-lead: 18px; --vl-fs-label: 18px; --vl-fs-h5: 18px; --vl-fs-display: 72px; }
+
+/* link chữ: hover đổi sang accentDeep và gạch chân 1px chạy từ 0 tới hết chiều rộng (transition màu .4s) */
+.vl-link { position: relative; display: inline-flex; align-items: center; gap: 8px; padding: 4px 0; color: var(--vl-text); text-decoration: none; font: 400 16px/1.4 var(--vl-font); letter-spacing: -.04em; cursor: pointer; transition: color var(--vl-dur) var(--vl-ease); }
+.vl-link.strong { font-weight: 500; }
+.vl-link::after { content: ""; position: absolute; left: 0; bottom: 2px; height: 1px; width: 0; background: currentColor; opacity: 0; transition: width var(--vl-dur) var(--vl-ease), opacity var(--vl-dur) var(--vl-ease); }
+.vl-link:hover, .vl-link.is-hover { color: var(--vl-accentDeep); }
+.vl-link:hover::after, .vl-link.is-hover::after { width: 100%; opacity: 1; }
+.vl-link.plain::after { display: none; }
+.vl-link.on-ink { color: var(--vl-onInverse); }
+.vl-link.on-ink:hover, .vl-link.on-ink.is-hover { color: var(--vl-accentDeep); }
+.vl-link.muted { color: var(--vl-textSubtle); }
+.vl-link.cta { font: 500 var(--vl-fs-h4, 32px)/1.4 var(--vl-font); letter-spacing: -.05em; gap: 10px; }
+.vl-link.cta svg.i { width: 24px; height: 24px; }
+.vl-link.cta:hover, .vl-link.cta.is-hover { color: var(--vl-accent); }
+/* focus: site không style riêng, trình duyệt vẽ outline auto 1px #005fcc */
+.is-focus { outline: 2px solid var(--vl-focus); outline-offset: 1px; }
+
+/* thanh điều hướng: 64 cao, nền surface + backdrop blur 8, lề 100 (desktop) / 24 (phone) */
+.vl-nav { height: 64px; display: flex; align-items: center; gap: 20px; padding: 0 var(--vl-gutter, 100px); background: var(--vl-surface); backdrop-filter: blur(8px); width: 100%; }
+.vl-nav.plain { background: var(--vl-bg); }
+.vl-nav .vl-brand { margin-right: auto; padding: 4px; }
+.vl-nav .links { display: flex; gap: 20px; }
+.vl-nav .burger { width: 44px; height: 44px; display: none; place-items: center; background: none; border: none; color: var(--vl-text); cursor: pointer; margin-right: -10px; }
+.vl-nav .burger svg.i { width: 22px; height: 22px; }
+.vl-bp-phone .vl-nav, .vl-nav.compact { --vl-gutter: 24px; }
+.vl-bp-phone .vl-nav .links, .vl-nav.compact .links { display: none; }
+.vl-bp-phone .vl-nav .burger, .vl-nav.compact .burger { display: grid; }
+.vl-menu { background: var(--vl-surface); border-radius: 0 0 4px 4px; box-shadow: var(--vl-shadow-menu); backdrop-filter: blur(8px); width: 390px; max-width: 100%; }
+.vl-menu .items { display: flex; flex-direction: column; gap: 4px; padding: 8px 24px 40px; }
+.vl-menu .vl-link { font-size: 24px; padding: 4px; }
+
+/* pager chấm của slideshow: viên 42 × 22 nền đen 20%, chấm 6 trắng, chấm không chọn opacity .5 */
+.vl-pager { display: inline-flex; align-items: center; height: 22px; padding: 0 6px; border-radius: 50px; background: var(--vl-pager); }
+.vl-pager button { width: 10px; height: 22px; padding: 0 2px; border: none; background: none; display: grid; place-items: center; cursor: pointer; }
+.vl-pager button::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--vl-pagerDot); opacity: .5; }
+.vl-pager button[aria-current="true"]::before { opacity: 1; }
+
+/* thẻ work: nền surface, pad 12, r 6; ảnh 4:3 r 4; hover: ảnh scale 1.1 + lớp scrim 55% blur 5 với mô tả trắng */
+.vl-work { display: flex; flex-direction: column; gap: 10px; padding: 12px; border-radius: 6px; background: var(--vl-surface); text-decoration: none; color: inherit; width: 100%; max-width: 608px; cursor: pointer; }
+.vl-work .media { position: relative; aspect-ratio: 4 / 3; border-radius: 4px; overflow: hidden; }
+.vl-work .media .ph { position: absolute; inset: 0; transition: transform .6s var(--vl-ease); }
+.vl-work .over { position: absolute; inset: 0; background: var(--vl-scrim); backdrop-filter: blur(5px); opacity: 0; display: grid; place-items: center; padding: 24px; transition: opacity var(--vl-dur) var(--vl-ease); }
+.vl-work .over .vl-h6 { color: var(--vl-onScrim); max-width: 500px; text-align: center; }
+.vl-work:hover .ph, .vl-work.is-hover .ph { transform: scale(1.1); }
+.vl-work:hover .over, .vl-work.is-hover .over { opacity: 1; }
+.vl-work .meta { padding: 0 4px 4px; display: flex; flex-direction: column; }
+.vl-bp-phone .vl-work .vl-h5 { font-size: 18px; }
+
+/* ảnh giữ chỗ (RULE-09: không nhúng ảnh của site) */
+.ph { background: repeating-linear-gradient(135deg, var(--vl-surfaceAlt) 0 12px, var(--vl-line) 12px 13px), var(--vl-surfaceAlt); color: var(--vl-textFaint); display: grid; place-items: center; font: 500 12px var(--vl-mono); letter-spacing: 0; border-radius: 4px; }
+.ph.dark { background: repeating-linear-gradient(135deg, var(--vl-inverse) 0 12px, var(--vl-textStrong) 12px 13px); color: var(--vl-textFaint); }
+
+/* dòng dịch vụ: số thứ tự overline, tiêu đề h6 22, mô tả muted, ảnh 456 × 180 r 4, vạch #f4f4f4 */
+.vl-service { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 456px); gap: 32px; padding: 12px 0; border-top: 1px solid var(--vl-line); width: 100%; }
+.vl-service .l { display: flex; flex-direction: column; gap: 24px; }
+.vl-service .row { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 32px; align-items: baseline; }
+.vl-service .ph { height: 180px; }
+.vl-bp-phone .vl-service { grid-template-columns: 1fr; gap: 12px; }
+.vl-bp-phone .vl-service .row { grid-template-columns: 1fr; gap: 12px; }
+
+/* dòng kinh nghiệm (accordion): h6 + công ty muted bên trái, năm muted bên phải, dấu + xoay thành × khi mở */
+.vl-exp { width: 100%; max-width: 550px; }
+.vl-exp .it { border-bottom: 1px solid var(--vl-line); padding: 24px 0; }
+.vl-exp .it:first-child { padding-top: 0; }
+.vl-exp .hd { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 16px; cursor: pointer; }
+.vl-exp .hd .vl-body { text-align: right; }
+.vl-exp .pm { justify-self: end; color: var(--vl-textSubtle); transition: transform var(--vl-dur) var(--vl-ease); }
+.vl-exp .it.open .pm { transform: rotate(45deg); }
+.vl-exp .bd { display: none; margin-top: 16px; max-width: 500px; }
+.vl-exp .it.open .bd { display: block; }
+.vl-bp-phone .vl-exp .hd { grid-template-columns: 1fr auto; }
+
+/* thẻ lời chứng thực: nền surface, r 8, pad 24, cao 360; avatar tròn 46 */
+.vl-testi { width: 100%; max-width: 601px; min-height: 360px; padding: 24px; border-radius: 8px; background: var(--vl-surface); display: flex; flex-direction: column; justify-content: space-between; gap: 24px; }
+.vl-testi .q { font: 500 40px/1 var(--vl-font); color: var(--vl-textSubtle); height: 28px; }
+.vl-testi .who { display: flex; gap: 8px; align-items: center; }
+.vl-avatar { width: 46px; height: 46px; border-radius: 50px; flex: none; }
+.vl-slider { display: flex; gap: 12px; overflow: hidden; width: 100%; }
+.vl-slider .vl-testi { flex: none; }
+
+/* badge / tag: nền surfaceAlt, r 2, pad 4 8, chữ overline 13 muted */
+.vl-tag { display: inline-flex; align-items: center; height: 26px; padding: 4px 8px; border-radius: 2px; background: var(--vl-surfaceAlt); }
+.vl-tag .vl-over { color: var(--vl-textMuted); }
+.vl-metas { display: flex; flex-direction: column; gap: 12px; min-width: 180px; }
+.vl-metas div { display: flex; flex-direction: column; }
+
+/* nhãn section: vạch 56 × 1 muted + tiêu đề label, gap 10 */
+.vl-sec-label { display: flex; align-items: center; gap: 10px; }
+.vl-sec-label::before { content: ""; width: 56px; height: 1px; background: var(--vl-textMuted); flex: none; }
+
+/* media: khung ảnh r 4, tỉ lệ 4:3 */
+.vl-media { aspect-ratio: 4 / 3; border-radius: 4px; width: 100%; }
+
+/* con trỏ tuỳ biến: vòng 32 (pointer-events none); trên thẻ work phình thành đĩa đen 80 có chữ View */
+.vl-cursor { width: 32px; height: 32px; border-radius: 100px; border: 1px solid var(--vl-accent); flex: none; }
+.vl-cursor.view { width: 80px; height: 80px; border: none; background: var(--vl-inverse); color: var(--vl-onInverse); display: grid; place-items: center; font: 500 14px var(--vl-font); letter-spacing: -.04em; }
+
+/* footer: nền đen, tiêu đề display tan vừa khít chiều ngang, CTA, 2 cột, vạch trắng 15% */
+.vl-footer { background: var(--vl-inverse); color: var(--vl-onInverse); padding: 40px var(--vl-gutter, 100px) 40px; display: flex; flex-direction: column; gap: 32px; width: 100%; }
+.vl-footer .cta { display: flex; justify-content: flex-end; }
+.vl-footer .cols { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+.vl-footer .cols > div { display: flex; flex-direction: column; gap: 4px; }
+.vl-footer .vl-brand { color: var(--vl-onInverse); margin-bottom: 12px; }
+.vl-footer .fine { border-top: 1px solid var(--vl-inverseLine); padding-top: 24px; }
+.vl-bp-phone .vl-footer { --vl-gutter: 24px; }
+
+/* hero (trang chủ): nền surface, pad-top 64; cột phải: h3 + đoạn muted + link; cột trái: ảnh 500 × 375 + h1 */
+.vl-hero { background: var(--vl-surface); padding: 64px var(--vl-gutter, 100px) 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; width: 100%; }
+.vl-hero .r { grid-column: 2; padding-top: 40px; display: flex; flex-direction: column; gap: 16px; max-width: 434px; }
+.vl-hero .l { grid-column: 1; grid-row: 2; display: flex; flex-direction: column; gap: 24px; }
+.vl-hero .l .ph { width: 500px; max-width: 100%; aspect-ratio: 4 / 3; }
+.vl-hero .more { grid-column: 2; grid-row: 2; align-self: end; justify-self: end; }
+.vl-bp-phone .vl-hero { grid-template-columns: 1fr; --vl-gutter: 24px; padding-bottom: 48px; }
+.vl-bp-phone .vl-hero .r, .vl-bp-phone .vl-hero .l { grid-column: 1; grid-row: auto; }
+.vl-bp-phone .vl-hero .more { display: none; }
+
+/* đầu trang case study: h2 + tag ngày + mô tả + link ra ngoài; cột meta bên phải */
+.vl-case-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; width: 100%; }
+.vl-case-head .l { display: flex; flex-direction: column; gap: 16px; max-width: 620px; align-items: flex-start; }
+
+/* thẻ "Next work": ảnh 4:3 bên trái + tag + h3 + mô tả */
+.vl-next { display: grid; grid-template-columns: minmax(0, 496px) minmax(0, 1fr); gap: 24px; align-items: center; text-decoration: none; color: inherit; width: 100%; }
+.vl-next .r { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
+
+/* ---------- màn mẫu ---------- */
+.screen-wrap { overflow-x: auto; padding: 8px 0; }
+.screens { display: flex; gap: 32px; width: max-content; align-items: flex-start; }
+.phone { width: 390px; height: 844px; border-radius: 40px; box-shadow: 0 0 0 10px #111; background: var(--vl-bg); position: relative; overflow: hidden; margin: 10px; zoom: .7; }
+.phone .scroll { position: absolute; inset: 0; overflow: hidden; }
+.desk { width: 1440px; height: 900px; border-radius: 12px; box-shadow: 0 0 0 10px #111; background: var(--vl-bg); overflow: hidden; margin: 10px; zoom: .5; position: relative; }
+.pad { padding: 0 var(--vl-gutter, 100px); }
+.vl-bp-phone .pad { --vl-gutter: 24px; }
+.screen-cap { font-family: var(--vl-mono); font-size: 12px; color: var(--vl-textMuted); margin: 4px 10px 0; max-width: 520px; }
+
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; transition: all .25s var(--vl-ease); z-index: 20; background: var(--vl-inverse); color: var(--vl-onInverse); padding: 12px 16px; border-radius: 4px; font-size: 14px; box-shadow: var(--vl-shadow-menu); }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; }
+  .side { display: none; }
+  main { padding: 0 16px 80px; }
+  .grid, .grid.wide { grid-template-columns: 1fr; }
+  .intro h1 { font-size: 38px; }
+  .type-row { grid-template-columns: 1fr; gap: 2px; }
+  .vl-service, .vl-service .row, .vl-next, .vl-case-head { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-down" viewBox="0 0 18 18"><path d="M9 3v12M4 10l5 5 5-5"/></symbol>
+  <symbol id="i-right" viewBox="0 0 18 18"><path d="M3 9h12M10 4l5 5-5 5"/></symbol>
+  <symbol id="i-ne" viewBox="0 0 18 18"><path d="M5 13 13 5M6 5h7v7"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 18 18"><path d="M9 3v12M3 9h12"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 18 18"><path d="M3 5h12M3 9h12M3 13h12"/></symbol>
+  <symbol id="i-close" viewBox="0 0 18 18"><path d="m4 4 10 10M14 4 4 14"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 18 18"><rect x="6" y="6" width="9" height="9" rx="1.5"/><path d="M12 6V4.5A1.5 1.5 0 0 0 10.5 3h-6A1.5 1.5 0 0 0 3 4.5v6A1.5 1.5 0 0 0 4.5 12H6"/></symbol>
+</svg>
+<div class="shell">
+  <nav class="side" aria-label="Mục lục">
+    <div class="brand"><div class="brand-mark">V</div><div><b>Velora UI Kit</b><small>Framer template · 1 theme</small></div></div>
+    <h6>Nền tảng</h6>
+    <a href="#color">Màu</a>
+    <a href="#type">Chữ</a>
+    <a href="#shape">Bo góc &amp; bóng</a>
+    <a href="#layout">Bố cục &amp; kích thước</a>
+    <h6>Thành phần</h6>
+    <a href="#navigation">Điều hướng</a>
+    <a href="#links">Link &amp; con trỏ</a>
+    <a href="#content">Nội dung</a>
+    <a href="#sections">Section</a>
+    <a href="#states">Trạng thái</a>
+    <h6>Mẫu</h6>
+    <a href="#screens">Màn hình mẫu</a>
+  </nav>
+
+  <main>
+    <div class="bar" role="toolbar" aria-label="Chủ đề">
+      <div class="ctl"><span>Chế độ</span><div class="seg" id="mode">
+        <button data-v="light" aria-pressed="true">Sáng</button>
+        <button data-v="dark" aria-pressed="false">Tối (theo footer)</button></div></div>
+      <div class="ctl"><span>Breakpoint chữ</span><div class="seg" id="bp">
+        <button data-v="desktop" aria-pressed="true">1440</button>
+        <button data-v="tablet" aria-pressed="false">810</button>
+        <button data-v="phone" aria-pressed="false">390</button></div></div>
+      <div class="grow"></div>
+      <button class="copy" id="copy-tokens"><svg class="i"><use href="#i-copy"/></svg>Copy CSS token</button>
+    </div>
+
+    <div class="intro">
+      <div class="eyebrow">velora-template.framer.website → docs/velora-ui-kit.html</div>
+      <h1>Hệ thiết kế của Velora</h1>
+      <p>Mọi màu, cỡ chữ và số đo ở đây đọc từ site đang chạy bằng Playwright: CSS var <code>--token-*</code> của Framer, text preset <code>framer-styles-preset-*</code> và <code>getComputedStyle</code> ở 1440, 810 và 390px. Site chỉ có một theme sáng; chế độ tối của kit lấy màu từ footer đen. Dán khối <code>--vl-*</code> cùng CSS <code>.vl-*</code> là dùng lại được ở dự án khác. Ảnh của site không được chép, mọi ảnh là khối giữ chỗ.</p>
+      <div class="facts"><span class="fact">content 1240 · lề 100 / 24</span><span class="fact">nav 64 · blur 8</span><span class="fact">Inter 500 · tracking −0.03…−0.06em</span><span class="fact">ease cubic-bezier(.44,0,.56,1) · .4s</span><span class="fact">breakpoint 1440 · 810 · 390</span></div>
+    </div>
+
+    <!-- ================= NỀN TẢNG ================= -->
+    <section class="block" id="color">
+      <header><h2>Màu</h2><p>Vai trò màu mà các thành phần dùng, theo chế độ đang chọn. Bấm một ô để copy mã hex. Ô ghi "suy" là màu footer không có, được suy từ thang xám gốc. Bên dưới là 18 giá trị khác nhau của 23 token gốc <code>--token-Bên dưới là 19 token gốc của Framer (tên gốc là UUID, ở đây đặt lại theo độ sáng)lt;uuidBên dưới là 19 token gốc của Framer (tên gốc là UUID, ở đây đặt lại theo độ sáng)gt;</code> của Framer, đặt lại tên theo độ sáng.</p></header>
+      <div class="roles" id="roles"></div>
+      <div class="ramp" id="ramp"></div>
+    </section>
+
+    <section class="block" id="type">
+      <header><h2>Chữ</h2><p>Mọi preset là Inter (Google Fonts, trục opsz thay cho Inter Display). Line-height 120–140%, letter-spacing âm theo em. Đổi "Breakpoint chữ" ở thanh trên để xem cỡ ở 810 và 390px. Tiêu đề footer co giãn cho vừa khít chiều ngang, 161px là cỡ đo được ở 1440.</p></header>
+      <div class="spec"><div class="stage col" id="typescale">
+        <div class="type-row" data-sig="50b5c10338"><span class="meta">display · h2 footer</span><span class="t vl-display" style="font-size:64px">Stay connected</span><span class="meta" data-fs="display">161 / 120% · 500 · −.06em</span></div>
+        <div class="type-row" data-sig="4d011f7e69"><span class="meta">h1 · bbsc19</span><span class="t vl-h1">Jane Smith</span><span class="meta" data-fs="h1">80 / 120% · 500 · −.06em</span></div>
+        <div class="type-row" data-sig="9fcc2c7c7b"><span class="meta">h2 · 158xywi</span><span class="t vl-h2">Jane Smith</span><span class="meta" data-fs="h2">64 / 120% · 500 · −.06em</span></div>
+        <div class="type-row" data-sig="dac3ccb90f"><span class="meta">h3 · n11tjt</span><span class="t vl-h3">Welcome.</span><span class="meta" data-fs="h3">48 / 120% · 500 · −.05em</span></div>
+        <div class="type-row" data-sig="1cb8d4aa00"><span class="meta">h4 · 1ivxjgb</span><span class="t vl-h4">Get in touch</span><span class="meta" data-fs="h4">32 / 140% · 500 · −.05em</span></div>
+        <div class="type-row" data-sig="5a26eb77ab"><span class="meta">lead · 7teipb</span><span class="t vl-lead">Discover curated works that inspire</span><span class="meta" data-fs="lead">28 / 140% · 500 · −.04em</span></div>
+        <div class="type-row" data-sig="5af9c86786"><span class="meta">label h2 · 1r3jdao</span><span class="t vl-label">Selected Works</span><span class="meta" data-fs="label">26 / 130% · 500 · −.05em</span></div>
+        <div class="type-row" data-sig="ab5edaf261"><span class="meta">h5 · g6p95f</span><span class="t vl-h5">Korda</span><span class="meta" data-fs="h5">22 / 140% · 500 · −.05em</span></div>
+        <div class="type-row" data-sig="9bcdc3caf3"><span class="meta">h6 · 37kpz3</span><span class="t vl-h6">Senior Product Designer</span><span class="meta">18 / 140% · 500 · −.05em</span></div>
+        <div class="type-row" data-sig="9f896b307c"><span class="meta">brand · 1afntmq</span><span class="t vl-brand">Velora</span><span class="meta">18 / 140% · 600 · −.04em</span></div>
+        <div class="type-row" data-sig="b4e1898005"><span class="meta">body medium · 1r89zjw</span><span class="t vl-body strong">About me</span><span class="meta">16 / 140% · 500 · −.04em</span></div>
+        <div class="type-row" data-sig="3ae82c9f7b"><span class="meta">body · 1ri2zby</span><span class="t vl-body">Works</span><span class="meta">16 / 140% · 400 · −.04em</span></div>
+        <div class="type-row" data-sig="62bdd3b26d"><span class="meta">body muted · 1vlzs9g</span><span class="t vl-body muted">I craft visually stunning and highly functional designs</span><span class="meta">16 / 140% · 400 · #6d6d6d</span></div>
+        <div class="type-row"><span class="meta">caption · g5lj8f</span><span class="t vl-caption">2022-2024</span><span class="meta">14 / 140% · 400 · Inter Display</span></div>
+        <div class="type-row"><span class="meta">overline · 1jakymr</span><span class="t vl-over">01 · Client</span><span class="meta">13 / 140% · 500 · UPPER · #999</span></div>
+      </div></div>
+    </section>
+
+    <section class="block" id="shape">
+      <header><h2>Bo góc &amp; bóng</h2><p>Site không có thang shape; đây là các bán kính thực dùng, đếm trên trang chủ. Kit vì thế không có nút đổi shape.</p></header>
+      <div class="grid wide">
+        <div class="spec"><div class="stage" id="shapes" style="gap:24px"></div></div>
+        <div class="spec"><div class="stage col">
+          <table class="tok"><thead><tr><th>Bóng / hiệu ứng</th><th>Giá trị</th><th>Dùng cho</th></tr></thead><tbody>
+            <tr><td>--vl-shadow-menu</td><td>2px 3px 32px rgba(0,0,0,.25)</td><td>menu thả xuống ở phone</td></tr>
+            <tr><td>backdrop-filter</td><td>blur(8px)</td><td>thanh nav, menu</td></tr>
+            <tr><td>scrim thẻ work</td><td>#0000008c + blur(5px)</td><td>lớp phủ khi hover thẻ work</td></tr>
+            <tr><td>transition</td><td>color .4s cubic-bezier(.44,0,.56,1)</td><td>mọi link chữ</td></tr></tbody></table>
+        </div></div>
+      </div>
+    </section>
+
+    <section class="block" id="layout">
+      <header><h2>Bố cục &amp; kích thước</h2><p>Số đo ở viewport 1440 và 390, lấy bằng <code>getBoundingClientRect</code>.</p></header>
+      <div class="grid wide">
+        <div class="spec"><div class="stage col">
+          <table class="tok"><thead><tr><th>Khung</th><th>1440</th><th>390</th></tr></thead><tbody>
+            <tr><td>lề trang</td><td>100</td><td>24</td></tr>
+            <tr><td>content</td><td>1240</td><td>342</td></tr>
+            <tr><td>nav</td><td>64 · gap 20</td><td>64 · burger 44</td></tr>
+            <tr><td>hero</td><td>900 · pad-top 64</td><td>722</td></tr>
+            <tr><td>ảnh hero</td><td>500 × 375</td><td>342 × 256</td></tr>
+            <tr><td>lưới work</td><td>2 cột 608 · gap 24</td><td>1 cột 342</td></tr>
+            <tr><td>footer</td><td>636 · gap 32</td><td>629</td></tr></tbody></table>
+        </div></div>
+        <div class="spec"><div class="stage col">
+          <table class="tok"><thead><tr><th>Thành phần</th><th>Số đo</th></tr></thead><tbody>
+            <tr><td>thẻ work</td><td>pad 12 · r 6 · gap 10 · ảnh 584 × 438 r 4</td></tr>
+            <tr><td>dòng dịch vụ</td><td>gap 32 · ảnh 456 × 180 r 4 · vạch 1 #f4f4f4</td></tr>
+            <tr><td>dòng kinh nghiệm</td><td>rộng 550 · pad-bottom 24 (390: 20) · gap 16</td></tr>
+            <tr><td>lời chứng thực</td><td>601 × 360 · pad 24 · r 8 · avatar 46</td></tr>
+            <tr><td>pager</td><td>42 × 22 · r 50 · chấm 6 · bước 10</td></tr>
+            <tr><td>tag</td><td>h 26 · pad 4 8 · r 2</td></tr>
+            <tr><td>nhãn section</td><td>vạch 56 × 1 · gap 10</td></tr>
+            <tr><td>con trỏ</td><td>32 (vòng) · 80 (View)</td></tr></tbody></table>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- ================= ĐIỀU HƯỚNG ================= -->
+    <section class="block" id="navigation">
+      <header><h2>Điều hướng</h2></header>
+      <div class="grid">
+        <div class="spec full" data-sig="4735858d80 34bded6cb2"><div class="spec-h"><b>Thanh nav · 2 nền</b><span class="kind">nav</span><span class="dp">h 64 · gap 20 · lề 100 · blur 8</span></div>
+          <div class="stage col" style="padding:12px 0">
+            <div class="vl-nav" style="--vl-gutter:24px"><p class="vl-brand">Velora</p><div class="links"><a class="vl-link plain">Works</a><a class="vl-link plain">Services</a><a class="vl-link plain">About</a><a class="vl-link plain">Reviews</a><a class="vl-link plain">Use Template</a></div><button class="burger" aria-label="Mở menu"><svg class="i"><use href="#i-menu"/></svg></button></div>
+            <div class="vl-nav plain" style="--vl-gutter:24px"><p class="vl-brand">Velora</p><div class="links"><a class="vl-link plain">Works</a><a class="vl-link plain is-hover">Services</a><a class="vl-link plain">About</a><a class="vl-link plain">Reviews</a><a class="vl-link plain">Use Template</a></div><button class="burger" aria-label="Mở menu"><svg class="i"><use href="#i-menu"/></svg></button></div>
+          </div><div class="spec-f"><span class="note">Trang chủ dùng nền surface #fafafa, trang case study nền trắng. Dòng 2 bày "Services" ở trạng thái hover (#9e8867). Link trong nav không có gạch chân.</span></div></div>
+
+        <div class="spec" data-sig="d29334fd63"><div class="spec-h"><b>Link nav</b><span class="kind">link</span><span class="dp">16 · 400 · pad 4</span></div>
+          <div class="stage surface">
+            <div class="st"><i>nghỉ</i><a class="vl-link plain">Works</a></div>
+            <div class="st"><i>hover</i><a class="vl-link plain is-hover">Works</a></div>
+            <div class="st" data-sig-state="d29334fd63:focus"><i>focus (UA)</i><a class="vl-link plain is-focus">Works</a></div>
+            <div class="st" data-sig-state="d29334fd63:active"><i>active</i><a class="vl-link plain">Works</a></div>
+          </div><div class="spec-f"><span class="note">Hover do JS của Framer (không phải :hover CSS), đo bằng Playwright. Active chỉ đổi <code>color</code> mặc định của thẻ &lt;a&gt; sang đỏ; chữ con có màu riêng nên nhìn không đổi.</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Menu phone</b><span class="kind">nav · burger</span><span class="dp">burger 44 · item 24 · r 0 0 4 4</span></div>
+          <div class="stage surface" style="padding:0;overflow:hidden">
+            <div class="vl-menu vl-bp-phone"><div class="vl-nav compact" style="background:transparent;backdrop-filter:none"><p class="vl-brand">Velora</p><button class="burger" aria-label="Đóng menu"><svg class="i"><use href="#i-close"/></svg></button></div>
+              <div class="items"><a class="vl-link plain">Works</a><a class="vl-link plain">Services</a><a class="vl-link plain">About</a><a class="vl-link plain">Reviews</a><a class="vl-link plain">Use Template</a></div></div>
+          </div><div class="spec-f"><span class="note">Ở 390px nav thu thành burger; bấm thì cả thanh phình xuống thành panel có bóng, pad 8 24 40, gap 4, chữ 24 / 400.</span></div></div>
+
+        <div class="spec" data-sig="f9ae48facb 9a697c96a4 d585902398 0ff20f6db3"><div class="spec-h"><b>Pager slideshow</b><span class="kind">badge · button</span><span class="dp">42 × 22 · chấm 6</span></div>
+          <div class="stage surface">
+            <div class="st"><i>trang 1</i><div class="vl-pager"><button aria-label="Trang 1" aria-current="true"></button><button aria-label="Trang 2"></button><button aria-label="Trang 3"></button></div></div>
+            <div class="st"><i>trang 2</i><div class="vl-pager"><button aria-label="Trang 1"></button><button aria-label="Trang 2" aria-current="true"></button><button aria-label="Trang 3"></button></div></div>
+            <div class="st" data-sig-state="9a697c96a4:focus d585902398:focus 0ff20f6db3:focus"><i>focus (UA)</i><div class="vl-pager"><button aria-label="Trang 1" aria-current="true" class="is-focus"></button><button aria-label="Trang 2"></button><button aria-label="Trang 3"></button></div></div>
+          </div><div class="spec-f"><span class="note">Ba nút chấm là <code>button aria-label="Scroll to page N"</code> (pad 8 2 8 8 · 8 2 · 8 8 8 2). Chấm không chọn opacity .5.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= LINK & CON TRỎ ================= -->
+    <section class="block" id="links">
+      <header><h2>Link &amp; con trỏ</h2><p>Site không có nút bấm dạng khối (nút "Use Template" đen là widget quảng bá của người bán template). Mọi hành động là link chữ: hover đổi sang tan đậm và kéo một gạch chân 1px từ trái sang.</p></header>
+      <div class="grid">
+        <div class="spec"><div class="spec-h"><b>Link có mũi tên</b><span class="kind">link · 1r89zjw</span><span class="dp">16 · 500 · gap 8</span></div>
+          <div class="stage surface">
+            <div class="st"><i>nghỉ</i><a class="vl-link strong">About me<svg class="i"><use href="#i-down"/></svg></a></div>
+            <div class="st"><i>hover</i><a class="vl-link strong is-hover">About me<svg class="i"><use href="#i-down"/></svg></a></div>
+            <div class="st"><i>ra ngoài</i><a class="vl-link strong">View Live Site<svg class="i"><use href="#i-ne"/></svg></a></div>
+          </div><div class="spec-f"><span class="note">Hover: chữ và icon sang #9e8867, gạch chân 1px rộng từ 0 tới 94px (hết link).</span></div></div>
+
+        <div class="spec" data-sig="1cb8d4aa00"><div class="spec-h"><b>CTA lớn trên nền đen</b><span class="kind">link · h4</span><span class="dp">32 · 500 · icon 24</span></div>
+          <div class="stage ink">
+            <div class="st"><i>nghỉ</i><a class="vl-link cta on-ink">Get in touch<svg class="i"><use href="#i-right"/></svg></a></div>
+            <div class="st"><i>hover</i><a class="vl-link cta on-ink is-hover">Get in touch<svg class="i"><use href="#i-right"/></svg></a></div>
+          </div><div class="spec-f"><span class="note">Riêng CTA này hover sang tan sáng #e3caa6; gạch chân rộng 197px.</span></div></div>
+
+        <div class="spec" data-sig="d2f960f11c 9f6fb42d19 43c82454ea 6df171def8"><div class="spec-h"><b>Link &amp; chữ footer</b><span class="kind">link · text</span><span class="dp">16 · 400</span></div>
+          <div class="stage ink">
+            <div class="st"><i>nghỉ</i><a class="vl-link on-ink plain">Services</a></div>
+            <div class="st"><i>hover</i><a class="vl-link on-ink plain is-hover">Services</a></div>
+            <div class="st"><i>sđt</i><a class="vl-link plain" style="color:var(--vl-inverseSoft)">123-456-7890</a></div>
+            <div class="st" data-sig-state="9f6fb42d19:focus"><i>focus (UA)</i><a class="vl-link muted plain is-focus">123-456-7890</a></div>
+            <div class="st"><i>địa chỉ</i><span class="vl-body" style="color:var(--vl-inverseMuted)">123 Sakura Street</span></div>
+          </div><div class="spec-f"><span class="note">Link footer hover sang #9e8867 (không phải #e3caa6). Dòng "Created by…" dùng #aeaeae, transition color .4s.</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Con trỏ tuỳ biến</b><span class="kind">cursor</span><span class="dp">32 · 80</span></div>
+          <div class="stage surface">
+            <div class="st"><i>thường</i><span class="vl-cursor"></span></div>
+            <div class="st"><i>trên thẻ work</i><span class="vl-cursor view">View</span></div>
+          </div><div class="spec-f"><span class="note">Phần tử fixed 32 × 32, r 100, pointer-events none. Màu viền và dạng "View" 80px vẽ theo ảnh chụp, không đọc được style (vẽ theo spec).</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= NỘI DUNG ================= -->
+    <section class="block" id="content">
+      <header><h2>Nội dung</h2></header>
+      <div class="grid">
+        <div class="spec" data-sig="30c9b0d64a dae3ecb012 a40763cb40"><div class="spec-h"><b>Thẻ work</b><span class="kind">card · a</span><span class="dp">pad 12 · r 6 · 4:3</span></div>
+          <div class="stage surface" style="align-items:flex-start">
+            <div class="st" style="flex:1 1 220px" data-sig-state="30c9b0d64a:active"><i>nghỉ · active (không đổi hình)</i>
+              <a class="vl-work"><div class="media"><div class="ph">ảnh dự án 4:3</div><div class="over"><h6 class="vl-h6">Minimal, monochromatic template for interior studios.</h6></div></div><div class="meta"><h5 class="vl-h5">Korda</h5><p class="vl-body muted">Creative Agency Site</p></div></a></div>
+            <div class="st" style="flex:1 1 220px"><i>hover</i>
+              <a class="vl-work is-hover"><div class="media"><div class="ph">ảnh dự án 4:3</div><div class="over"><h6 class="vl-h6">Minimal, monochromatic template for interior studios.</h6></div></div><div class="meta"><h5 class="vl-h5">Korda</h5><p class="vl-body muted">Creative Agency Site</p></div></a></div>
+          </div><div class="spec-f"><span class="note">Hover: ảnh scale 1.1, lớp scrim #0000008c + blur 5 hiện (opacity 0→1) cùng mô tả h6 trắng; con trỏ thành đĩa "View". Active chỉ là màu đỏ UA của &lt;a&gt;, không thấy trên hình.</span></div></div>
+
+        <div class="spec" data-sig="a9c6e0dfa6 477e4d5faa 473d4d7a8b"><div class="spec-h"><b>Lời chứng thực</b><span class="kind">card · slideshow</span><span class="dp">601 × 360 · pad 24 · r 8</span></div>
+          <div class="stage surface col">
+            <div class="vl-slider">
+              <div class="vl-testi" style="max-width:320px;min-height:280px"><div class="q">“</div><h5 class="vl-h5" style="font-size:18px">Clean, professional, and easy to use.</h5><div class="who"><span class="vl-avatar ph">46</span><div><p class="vl-body">John Doe</p><p class="vl-body muted">Marketing Specialist</p></div></div></div>
+              <div class="vl-testi" style="max-width:320px;min-height:280px"><div class="q">“</div><h5 class="vl-h5" style="font-size:18px">A perfect fit for our studio.</h5><div class="who"><span class="vl-avatar ph">46</span><div><p class="vl-body">Jane Roe</p><p class="vl-body muted">Founder</p></div></div></div>
+            </div>
+            <div style="display:flex;justify-content:center"><div class="vl-pager"><button aria-label="Trang 1" aria-current="true"></button><button aria-label="Trang 2"></button><button aria-label="Trang 3"></button></div></div>
+          </div><div class="spec-f"><span class="note">Slideshow ngang, thẻ kế lộ một phần. Trích dẫn h5 22 (390: 18). Dấu ngoặc kép vẽ bằng chữ thay cho SVG của site.</span></div></div>
+
+        <div class="spec full" data-sig="8a8581f4a6"><div class="spec-h"><b>Dòng dịch vụ</b><span class="kind">card · list</span><span class="dp">gap 32 · ảnh 456 × 180 · vạch #f4f4f4</span></div>
+          <div class="stage surface col">
+            <div class="vl-service"><div class="l"><p class="vl-over">01</p><div class="row"><h5 class="vl-h5">Graphic Design</h5><p class="vl-body muted">Creating visually compelling designs that elevate your brand.</p></div></div><div class="ph">ảnh dịch vụ 456 × 180</div></div>
+            <div class="vl-service"><div class="l"><p class="vl-over">02</p><div class="row"><h5 class="vl-h5">Lifestyle Photography</h5><p class="vl-body muted">Capturing authentic moments.</p></div></div><div class="ph">ảnh dịch vụ 456 × 180</div></div>
+          </div><div class="spec-f"><span class="note">Không có hover. Ở 390 các cột xếp dọc, gap 12.</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Kinh nghiệm · accordion</b><span class="kind">list · disclosure</span><span class="dp">550 · pad-b 24 · gap 16</span></div>
+          <div class="stage surface">
+            <div class="vl-exp" id="exp">
+              <div class="it"><div class="hd"><h6 class="vl-h6">Senior Product Designer</h6><p class="vl-body muted">2024 - Present</p><p class="vl-body muted">Visionary Labs</p><svg class="i pm"><use href="#i-plus"/></svg></div><p class="bd vl-body muted">Led the design of core product flows.</p></div>
+              <div class="it open"><div class="hd"><h6 class="vl-h6">UI/UX Designer</h6><p class="vl-body muted">2022-2024</p><p class="vl-body muted">Creative Hive Agency</p><svg class="i pm"><use href="#i-plus"/></svg></div><p class="bd vl-body muted">Designed intuitive interfaces across web and mobile platforms.</p></div>
+            </div>
+          </div><div class="spec-f"><span class="note">Bấm dòng để mở (trang cao thêm 128px), dấu + xoay thành ×. Đoạn mở rộng 500 rộng, 16 / 140% muted. Ở 390 năm lên trên tiêu đề, cỡ 14 Inter Display.</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Tag &amp; meta</b><span class="kind">badge · text</span><span class="dp">h 26 · pad 4 8 · r 2</span></div>
+          <div class="stage surface" style="align-items:flex-start">
+            <div class="st"><i>tag</i><span class="vl-tag"><span class="vl-over">Feb 5, 2025</span></span><span class="vl-tag"><span class="vl-over">Next work</span></span></div>
+            <div class="vl-metas"><div><span class="vl-over">Client</span><span class="vl-body">WanderEase</span></div><div><span class="vl-over">Role</span><span class="vl-body">Designer</span></div></div>
+          </div><div class="spec-f"><span class="note">Chữ trong tag là overline 13 / 500 màu #6d6d6d; nhãn meta là overline #999.</span></div></div>
+
+        <div class="spec" data-sig="e2c16e230f 74b82bfc3e"><div class="spec-h"><b>Khung ảnh</b><span class="kind">media · img</span><span class="dp">r 4 · 4:3</span></div>
+          <div class="stage surface">
+            <div class="st" style="flex:1"><i>hero 500 × 375</i><div class="vl-media ph">ảnh chân dung</div></div>
+            <div class="st" style="flex:1"><i>gallery 818 × 614</i><div class="vl-media ph dark">ảnh màn hình dự án</div></div>
+          </div><div class="spec-f"><span class="note">Mọi ảnh bo 4, tỉ lệ 4:3. Ảnh gallery case study rộng 818 (cột phải), có ảnh nền tràn 1364.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= SECTION ================= -->
+    <section class="block" id="sections">
+      <header><h2>Section</h2><p>Khối lớn ghép từ các thành phần trên, theo thứ tự trang chủ và trang case study.</p></header>
+      <div class="grid">
+        <div class="spec" data-sig="5af9c86786"><div class="spec-h"><b>Nhãn section</b><span class="kind">heading · 1r3jdao</span><span class="dp">vạch 56 × 1 · gap 10</span></div>
+          <div class="stage surface col">
+            <div class="vl-sec-label"><h2 class="vl-label">Selected Works</h2></div>
+            <div class="vl-sec-label"><h2 class="vl-label">What People Say</h2></div>
+          </div><div class="spec-f"><span class="note">Mở đầu mọi section. Cột phải thường là một đoạn lead 28 (Discover…, From strategy…).</span></div></div>
+
+        <div class="spec" data-sig="9fcc2c7c7b"><div class="spec-h"><b>About</b><span class="kind">section</span><span class="dp">h2 64 · body 400 rộng</span></div>
+          <div class="stage surface col">
+            <div class="vl-sec-label"><h2 class="vl-label">About Me</h2></div>
+            <h2 class="vl-h2" style="font-size:48px">Jane Smith</h2>
+            <p class="vl-body muted" style="max-width:400px">I specialize in turning complex problems into seamless designs.</p>
+          </div><div class="spec-f"><span class="note">Cột trái 400 rộng; cột phải 550 là accordion kinh nghiệm.</span></div></div>
+
+        <div class="spec full" data-sig="95f02b38e6"><div class="spec-h"><b>Hero trang chủ</b><span class="kind">section</span><span class="dp">900 · pad-top 64 · 2 cột</span></div>
+          <div class="stage surface" style="padding:0;overflow:hidden">
+            <div class="vl-hero" style="--vl-gutter:32px;--vl-fs-h1:56px;--vl-fs-h3:36px">
+              <div class="r"><h3 class="vl-h3">Welcome.</h3><p class="vl-body muted">I craft visually stunning and highly functional designs that elevate brands.</p><a class="vl-link strong">About me<svg class="i"><use href="#i-down"/></svg></a></div>
+              <div class="l"><div class="ph" style="width:320px">ảnh chân dung 500 × 375</div><h1 class="vl-h1">Jane Smith</h1></div>
+              <a class="vl-link strong more">Scroll to see more<svg class="i"><use href="#i-down"/></svg></a>
+            </div>
+          </div><div class="spec-f"><span class="note">Thu nhỏ để vừa thẻ (h1 56 thay cho 80). Cột phải bắt đầu ở x 740.</span></div></div>
+
+        <div class="spec full"><div class="spec-h"><b>Đầu trang case study</b><span class="kind">section</span><span class="dp">h2 64 · meta 180</span></div>
+          <div class="stage surface">
+            <div class="vl-case-head"><div class="l"><h2 class="vl-h2" style="font-size:48px">Korda</h2><span class="vl-tag"><span class="vl-over">Feb 5, 2025</span></span><p class="vl-body muted">Sharp typography, a bold black and white palette, and CMS-powered pages.</p><a class="vl-link strong">View Live Site<svg class="i"><use href="#i-ne"/></svg></a></div>
+              <div class="vl-metas"><div><span class="vl-over">Client</span><span class="vl-body">WanderEase</span></div><div><span class="vl-over">Role</span><span class="vl-body">Designer</span></div><div><span class="vl-over">Service</span><span class="vl-body">UX Design</span></div></div></div>
+          </div></div>
+
+        <div class="spec full"><div class="spec-h"><b>Next work</b><span class="kind">card · a</span><span class="dp">704 × 164 · gap 12 · h3 48</span></div>
+          <div class="stage surface">
+            <a class="vl-next"><div class="vl-media ph dark">ảnh dự án kế</div><div class="r"><span class="vl-tag"><span class="vl-over">Next work</span></span><h3 class="vl-h3">Folira</h3><p class="vl-body muted">Dynamic interactions, expressive layouts, and CMS-powered case study pages.</p></div></a>
+          </div></div>
+
+        <div class="spec full" data-sig="b07afbda0e 1a0c1730ac"><div class="spec-h"><b>Footer</b><span class="kind">footer</span><span class="dp">nền #000 · gap 32 · vạch trắng 15%</span></div>
+          <div class="stage" style="padding:12px">
+            <footer class="vl-footer" style="--vl-gutter:32px">
+              <h2 class="vl-display" style="font-size:clamp(48px, 11vw, 120px)">Stay connected</h2>
+              <div class="cta"><a class="vl-link cta on-ink">Get in touch<svg class="i"><use href="#i-right"/></svg></a></div>
+              <div class="cols"><div><p class="vl-brand">Velora</p><a class="vl-link plain" style="color:var(--vl-inverseSoft)">123-456-7890</a><span class="vl-body" style="color:var(--vl-inverseMuted)">123 Sakura Street, New York City</span></div>
+                <div><a class="vl-link on-ink plain">Works</a><a class="vl-link on-ink plain">Services</a><a class="vl-link on-ink plain">About</a><a class="vl-link on-ink plain">Review</a></div></div>
+              <div class="fine"><a class="vl-link muted plain">Created by Lunis Design</a></div>
+            </footer>
+          </div><div class="spec-f"><span class="note">"Stay connected" co giãn cho vừa khít content (161px ở 1440). Đổi sang chế độ tối: cả kit mặc đúng bộ màu này.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= TRẠNG THÁI ================= -->
+    <section class="block" id="states">
+      <header><h2>Trạng thái</h2><p>Vòng khám phá đo 11 trạng thái; 7 thuộc trang (4 còn lại nằm trong widget quảng bá). Không có :hover CSS nào: hover của Framer chạy bằng JS nên được đo riêng bằng chuột thật và bày ở từng thẻ bên trên.</p></header>
+      <div class="grid">
+        <div class="spec full"><div class="spec-h"><b>Focus · mặc định trình duyệt</b><span class="kind">:focus-visible</span><span class="dp">outline auto 1px #005fcc</span></div>
+          <div class="stage surface">
+            <div class="st"><i>link nav</i><a class="vl-link plain is-focus">Works</a></div>
+            <div class="st"><i>link footer</i><a class="vl-link muted plain is-focus">123-456-7890</a></div>
+            <div class="st"><i>chấm pager</i><div class="vl-pager"><button aria-label="Trang 1" aria-current="true" class="is-focus"></button><button aria-label="Trang 2"></button><button aria-label="Trang 3"></button></div></div>
+          </div><div class="spec-f"><span class="note">Site không style focus riêng: mọi phần tử bấm được chỉ có outline auto của trình duyệt (kit vẽ 2px #005fcc cho dễ thấy). Nếu dùng lại hệ này, nên thêm focus riêng.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= MÀN MẪU ================= -->
+    <section class="block" id="screens">
+      <header><h2>Màn hình mẫu</h2><p>Trang chủ ở hai breakpoint thật của site, ghép từ chính các class <code>.vl-*</code> ở trên, thu nhỏ bằng <code>zoom</code>.</p></header>
+      <div class="screen-wrap"><div class="screens">
+        <div>
+          <div class="phone vl-bp-phone"><div class="scroll">
+            <div class="vl-nav"><p class="vl-brand">Velora</p><div class="links"></div><button class="burger" aria-label="Mở menu"><svg class="i"><use href="#i-menu"/></svg></button></div>
+            <div class="vl-hero">
+              <div class="r" style="padding-top:24px"><h3 class="vl-h3">Welcome.</h3><p class="vl-body muted">I craft visually stunning and highly functional designs that elevate brands and create meaningful digital experiences.</p><a class="vl-link strong">About me<svg class="i"><use href="#i-down"/></svg></a></div>
+              <div class="l"><div class="ph" style="width:342px">ảnh chân dung 342 × 256</div><h1 class="vl-h1">Jane Smith</h1></div>
+            </div>
+            <div class="pad" style="padding-top:64px;display:flex;flex-direction:column;gap:24px">
+              <div class="vl-sec-label"><h2 class="vl-label">Selected Works</h2></div>
+              <p class="vl-lead">Discover curated works that inspire and deliver impact.</p>
+              <a class="vl-work"><div class="media"><div class="ph">ảnh dự án 4:3</div></div><div class="meta"><h5 class="vl-h5">Korda</h5><p class="vl-body muted">Creative Agency Site</p></div></a>
+            </div>
+          </div></div>
+          <p class="screen-cap" style="max-width:280px">Phone 390 × 844 · vl-nav (burger) · vl-hero · vl-sec-label · vl-lead · vl-work</p>
+        </div>
+        <div>
+          <div class="desk">
+            <div class="vl-nav"><p class="vl-brand">Velora</p><div class="links"><a class="vl-link plain">Works</a><a class="vl-link plain">Services</a><a class="vl-link plain">About</a><a class="vl-link plain">Reviews</a><a class="vl-link plain">Use Template</a></div></div>
+            <div class="vl-hero" style="padding-top:24px;height:516px">
+              <div class="r" style="padding-left:40px"><h3 class="vl-h3">Welcome.</h3><p class="vl-body muted">I craft visually stunning and highly functional designs that elevate brands and create meaningful digital experiences.</p><a class="vl-link strong">About me<svg class="i"><use href="#i-down"/></svg></a></div>
+              <div class="l" style="margin-top:-120px"><div class="ph" style="width:300px">ảnh chân dung 500 × 375</div><h1 class="vl-h1">Jane Smith</h1></div>
+              <a class="vl-link strong more">Scroll to see more<svg class="i"><use href="#i-down"/></svg></a>
+            </div>
+            <div class="pad" style="padding-top:56px;display:grid;grid-template-columns:1fr 1fr;gap:24px">
+              <div class="vl-sec-label"><h2 class="vl-label">Selected Works</h2></div>
+              <p class="vl-lead" style="max-width:600px;justify-self:end">Discover curated works that inspire and deliver impact, showcasing creativity and design excellence.</p>
+              <a class="vl-work"><div class="media"><div class="ph">ảnh dự án 4:3</div></div></a>
+              <a class="vl-work is-hover"><div class="media"><div class="ph">ảnh dự án 4:3</div><div class="over"><h6 class="vl-h6">Minimal, monochromatic template for interior studios.</h6></div></div></a>
+            </div>
+          </div>
+          <p class="screen-cap">Desktop 1440 × 900 · vl-nav · vl-hero (2 cột) · vl-sec-label + vl-lead · lưới vl-work 2 cột gap 24 (thẻ phải đang hover)</p>
+        </div>
+      </div></div>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status"><span id="toast-t"></span></div>
+
+<script>
+/* Vai trò màu đọc từ site (Playwright, 28/09/2026). light = trang; dark = màu thật của footer đen.
+   DERIVED: vai trò footer không dùng, suy từ thang xám gốc. */
+const ROLES = ["bg", "surface", "surfaceAlt", "line", "text", "textStrong", "textLabel", "textMuted", "textFaint", "textSubtle", "accent", "accentDeep", "scrim", "onScrim", "pager", "pagerDot", "inverse", "onInverse", "inverseSoft", "inverseMuted", "inverseLine", "focus"];
+const MODES = {
+  light: ["#ffffff", "#fafafa", "#f4f4f4", "#f4f4f4", "#000000", "#212121", "#595959", "#6d6d6d", "#999999", "#aeaeae", "#e3caa6", "#9e8867", "#0000008c", "#ffffff", "#00000033", "#ffffff", "#000000", "#ffffff", "#e6e6e6", "#aeaeae", "#ffffff26", "#005fcc"],
+  dark:  ["#000000", "#212121", "#212121", "#ffffff26", "#ffffff", "#ffffff", "#e6e6e6", "#aeaeae", "#6d6d6d", "#aeaeae", "#e3caa6", "#9e8867", "#0000008c", "#ffffff", "#ffffff33", "#ffffff", "#ffffff", "#000000", "#e6e6e6", "#aeaeae", "#ffffff26", "#005fcc"],
+};
+const DERIVED = { dark: ["surface", "surfaceAlt", "textFaint", "pager", "inverse", "onInverse"] };
+/* 18 giá trị của 23 token gốc của Framer (--token-<uuid>), đặt lại tên theo độ sáng */
+const RAMP = [["white", "#fff"], ["n50", "#fafafa"], ["n100", "#f4f4f4"], ["n150", "#eee"], ["n200", "#e6e6e6"], ["n250", "#dadada"], ["n300", "#ccc"], ["n350", "#bdbdbd"], ["n400", "#aeaeae"], ["n500", "#999"], ["n600", "#6d6d6d"], ["n650", "#605f5f"], ["n700", "#4d4d4d"], ["n900", "#212121"], ["black", "#000"], ["scrim", "#0000008c"], ["tan", "#e3caa6"], ["tanDeep", "#9e8867"]];
+(function () {
+  const root = document.documentElement;
+  const state = { mode: matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light", bp: "desktop" };
+  try { Object.assign(state, JSON.parse(localStorage.getItem("velora-kit") || "{}")); } catch (e) {}
+  if (!MODES[state.mode]) state.mode = "light";
+
+  const toast = (t) => {
+    const el = document.getElementById("toast");
+    document.getElementById("toast-t").textContent = t;
+    el.classList.add("show");
+    clearTimeout(toast.t);
+    toast.t = setTimeout(() => el.classList.remove("show"), 1600);
+  };
+  const copy = async (text, msg) => {
+    try { await navigator.clipboard.writeText(text); toast(msg); }
+    catch (e) { toast("Trình duyệt chặn clipboard, hãy copy tay"); }
+  };
+
+  /* chữ đen hay trắng trên ô màu: theo độ sáng của màu đã trộn alpha lên nền trang */
+  const inkOn = (hex, bg) => {
+    const rgb = (h) => [1, 3, 5].map((k) => parseInt(h.slice(k, k + 2), 16));
+    const a = hex.length === 9 ? parseInt(hex.slice(7), 16) / 255 : 1, c = rgb(hex), b = rgb(bg);
+    const [r, g, bl] = c.map((v, i) => v * a + b[i] * (1 - a));
+    return 0.299 * r + 0.587 * g + 0.114 * bl > 150 ? "#000000" : "#ffffff";
+  };
+  function renderRoles(vals) {
+    const box = document.getElementById("roles");
+    box.innerHTML = "";
+    ROLES.forEach((r, i) => {
+      const fg = inkOn(vals[i], vals[ROLES.indexOf("bg")]);
+      const b = document.createElement("button");
+      b.className = "role"; b.style.background = vals[i]; b.style.color = fg;
+      const d = (DERIVED[state.mode] || []).includes(r) ? "<em>suy</em>" : "";
+      b.innerHTML = "<b>" + r + "</b>" + d + "<code>" + vals[i] + "</code>";
+      b.onclick = () => copy(vals[i], "Đã copy " + r + " " + vals[i]);
+      box.appendChild(b);
+    });
+  }
+  const ramp = document.getElementById("ramp");
+  RAMP.forEach(([n, v]) => {
+    const b = document.createElement("button");
+    const full = v.length === 4 ? "#" + [...v.slice(1)].map((x) => x + x).join("") : v;
+    b.className = "role"; b.style.background = v; b.style.color = inkOn(full, "#ffffff");
+    b.innerHTML = "<b>" + n + "</b><code>" + v + "</code>";
+    b.onclick = () => copy(v, "Đã copy " + n + " " + v);
+    ramp.appendChild(b);
+  });
+
+  const FS = { desktop: { display: 161, h1: 80, h2: 64, h3: 48, h4: 32, lead: 28, label: 26, h5: 22 }, tablet: { display: 161, h1: 64, h2: 64, h3: 38, h4: 32, lead: 22, label: 22, h5: 22 }, phone: { display: 72, h1: 40, h2: 40, h3: 32, h4: 32, lead: 18, label: 18, h5: 18 } };
+  function apply() {
+    const vals = MODES[state.mode];
+    ROLES.forEach((r, i) => root.style.setProperty("--vl-" + r, vals[i]));
+    root.dataset.mode = state.mode;
+    const ts = document.getElementById("typescale");
+    ts.classList.toggle("vl-bp-tablet", state.bp === "tablet");
+    ts.classList.toggle("vl-bp-phone", state.bp === "phone");
+    ts.querySelectorAll("[data-fs]").forEach((m) => { m.textContent = m.textContent.replace(/^[\d.]+/, FS[state.bp][m.dataset.fs]); });
+    document.querySelectorAll("#mode button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === state.mode));
+    document.querySelectorAll("#bp button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === state.bp));
+    renderRoles(vals);
+    try { localStorage.setItem("velora-kit", JSON.stringify(state)); } catch (e) {}
+  }
+  document.querySelectorAll("#mode button").forEach((b) => (b.onclick = () => { state.mode = b.dataset.v; apply(); }));
+  document.querySelectorAll("#bp button").forEach((b) => (b.onclick = () => { state.bp = b.dataset.v; apply(); }));
+
+  /* bán kính thực dùng trên trang chủ (số lần gặp) */
+  const sh = document.getElementById("shapes");
+  [["2", "tag", 2], ["4 ×38", "ảnh", 4], ["6 ×5", "thẻ work", 6], ["8 ×17", "lời chứng thực", 8], ["50 ×37", "pager · avatar", 50]].forEach(([n, u, r]) => {
+    const c = document.createElement("div");
+    c.className = "shape-cell";
+    c.innerHTML = '<i style="border-radius:' + r + 'px"></i>' + n + "<br>" + u;
+    sh.appendChild(c);
+  });
+
+  /* mỗi thẻ thành phần có nút copy HTML của phần trình diễn */
+  document.querySelectorAll(".spec").forEach((spec) => {
+    const stage = spec.querySelector(".stage");
+    if (!stage || !spec.querySelector(".spec-h")) return;
+    let foot = spec.querySelector(".spec-f");
+    if (!foot) { foot = document.createElement("div"); foot.className = "spec-f"; foot.innerHTML = '<span class="note"></span>'; spec.appendChild(foot); }
+    const b = document.createElement("button");
+    b.className = "copy"; b.innerHTML = '<svg class="i"><use href="#i-copy"/></svg>HTML';
+    b.onclick = () => copy(stage.innerHTML.trim().replace(/\n\s+/g, "\n"), "Đã copy HTML của " + spec.querySelector(".spec-h b").textContent);
+    foot.appendChild(b);
+  });
+
+  document.getElementById("copy-tokens").onclick = () => {
+    const vals = MODES[state.mode];
+    const lines = ROLES.map((r, i) => "  --vl-" + r + ": " + vals[i] + ";");
+    copy(":root {\n" + lines.join("\n") + '\n  --vl-font: Inter, system-ui, sans-serif;\n  --vl-ease: cubic-bezier(0.44, 0, 0.56, 1);\n  --vl-dur: .4s;\n  --vl-shadow-menu: 2px 3px 32px 0 rgba(0,0,0,.25);\n}', "Đã copy token " + (state.mode === "dark" ? "tối" : "sáng"));
+  };
+
+  /* accordion kinh nghiệm */
+  document.addEventListener("click", (e) => {
+    const hd = e.target.closest(".vl-exp .hd");
+    if (hd) hd.parentElement.classList.toggle("open");
+  });
+
+  const links = [...document.querySelectorAll(".side a")];
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (e.isIntersecting) links.forEach((a) => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id));
+  }), { rootMargin: "-30% 0px -60% 0px" });
+  document.querySelectorAll("section.block").forEach((s) => io.observe(s));
+
+  apply();
+})();
+</script>
+</body>
+</html>

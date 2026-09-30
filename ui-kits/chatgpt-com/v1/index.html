@@ -1,0 +1,1200 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta name="ui-kit-id" content="chatgpt-com">
+<!-- UI kit rút từ 17 trang ChatGPT user tự lưu (Desktop/chatgpt, 30/09/2026), khung theo references/ui-kit-reference.html của skill ui-kit-from-code.
+     Màu đọc bằng Playwright từ CSS đã lưu (offline, tắt JS); số đo lấy từ getComputedStyle của phần tử thật. Nội dung cá nhân đã thay bằng dữ liệu mẫu. -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ChatGPT UI Kit</title>
+<meta name="ui-kit-skip" content="14c7518896:trang mục lục tạm do agent dựng để discover đi qua 17 file, không thuộc giao diện ChatGPT;7e4d2e69bd:vùng kéo cửa sổ (titlebar drag region) trong suốt 1440×52, không có hình;7e4d2e69bd:focus:vùng kéo không nhận focus khi dùng thật;">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..24,300..500,0..1,0&display=block">
+<style>
+/* Kit mặc chính token của ChatGPT: mỗi màu là một vai trò --cg-<role> (bảng ở phần Màu ghi biến gốc của site),
+   mọi bo góc nhân --k = --corner-radius-scale (web 1 · app desktop 1.25). Mặc định: accent Tím, chế độ tối,
+   đúng như trang đã lưu. Script cuối file đổi accent / sáng-tối / thang bo góc. */
+:root {
+  --cg-surface:#000000;
+  --cg-elevated:#1B1B1B;
+  --cg-elevatedSecondary:#303030;
+  --cg-card:#212121;
+  --cg-editor:#212121;
+  --cg-callout:#414141;
+  --cg-menu:#303030E6;
+  --cg-tooltip:#1B1B1B;
+  --cg-tooltipCompact:#FFFFFF;
+  --cg-onTooltipCompact:#0D0D0D;
+  --cg-text:#EDEDED;
+  --cg-textSecondary:#CDCDCD;
+  --cg-textTertiary:#AFAFAF;
+  --cg-accent:#A67DF2;
+  --cg-accentText:#7849D1;
+  --cg-accentBg:#3B2366;
+  --cg-btnPrimary:#EDEDED;
+  --cg-onBtnPrimary:#0D0D0D;
+  --cg-btnPrimaryHover:#FFFFFFCC;
+  --cg-btnSecondary:#303030;
+  --cg-onBtnSecondary:#EDEDED;
+  --cg-hover:#FFFFFF1A;
+  --cg-pressed:#FFFFFF0D;
+  --cg-menuItemHover:#EBEBEB1A;
+  --cg-border:#FFFFFF26;
+  --cg-borderLight:#FFFFFF0D;
+  --cg-borderHeavy:#FFFFFF33;
+  --cg-focus:#A67DF2;
+  --cg-composerPrimary:#7849D1;
+  --cg-onComposerPrimary:#FFFFFF;
+  --cg-userMessage:#4E2F88;
+  --cg-onUserMessage:#F8F5FD;
+  --cg-inputSoft:#303030;
+  --cg-placeholder:#AFAFAF;
+  --cg-switchTrack:#EBEBEB1A;
+  --cg-switchOn:#A67DF2;
+  --cg-switchThumb:#FFFFFF;
+  --cg-segTrack:#0D0D0D;
+  --cg-segThumb:#303030;
+  --cg-danger:#FF6764;
+  --cg-success:#40C977;
+  --cg-warning:#FF8549;
+  --cg-scrim:#00000080;
+  --cg-selection:#8952EE99;
+  --cg-ring:#A67DF2;
+  --cg-modeTrack:#131313;
+  --cg-modeSelected:#1B1B1B;
+  --cg-seq1:#3F226A;
+  --cg-seq2:#6B3AB4;
+  --cg-seq3:#924FF7;
+  --cg-seq4:#BE95FA;
+  --cg-warnSoft:#F96A1F29;
+  --cg-warnText:#FF8549;
+  --cg-dangerSoft:#F9443E29;
+  --cg-infoSoft:#0083FF21;
+  --cg-infoText:#339CFF;
+  --cg-modeText:#FFFFFF;
+  --cg-modeInactive:#CDCDCD;
+  --cg-upsellBg:#99CEFF26;
+  --cg-upsellText:#E5F3FF;
+  --cg-upsellHover:#99CEFF33;
+  --cg-uaRing:#99C8FF;
+  --k: 1;
+  --ease: cubic-bezier(0, 0, .2, 1);
+  --dur: .15s;
+  --font: -apple-system-body, ui-sans-serif, -apple-system, system-ui, "Segoe UI", "Helvetica", "Apple Color Emoji", "Arial", sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+  --mono: ui-monospace, "SFMono-Regular", "SF Mono", menlo, consolas, "Liberation Mono", monospace;
+  --shadow-sm: 0px 1px 2px -1px #00000014;
+  --shadow-thumb: 0 1px 2px #0003;
+  --tip-shadow: 0 10px 15px -3px #0003, 0 4px 6px -4px #0003;
+  color-scheme: dark;
+}
+:root[data-mode="light"] { color-scheme: light; }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--cg-surface); color: var(--cg-text); font: 400 16px/24px var(--font); -webkit-font-smoothing: antialiased; }
+::selection { background: var(--cg-selection); }
+.ms { font-family: "Material Symbols Rounded"; font-weight: 300; font-style: normal; font-size: 20px; line-height: 1; letter-spacing: normal; text-transform: none; display: inline-block; white-space: nowrap; direction: ltr; font-feature-settings: "liga"; -webkit-font-smoothing: antialiased; font-variation-settings: "FILL" 0, "opsz" 20; user-select: none; flex: none; }
+.ms.fill { font-variation-settings: "FILL" 1, "opsz" 20; }
+.ms.s16 { font-size: 16px; } .ms.s18 { font-size: 18px; } .ms.s24 { font-size: 24px; }
+code, .code { font-family: var(--mono); font-size: 12px; }
+:focus-visible { outline: 2px solid var(--cg-ring); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+/* ---------- vỏ trang kit ---------- */
+.shell { display: grid; grid-template-columns: 240px minmax(0, 1fr); min-height: 100vh; }
+.side { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 16px 6px; border-right: 1px solid var(--cg-border); display: flex; flex-direction: column; gap: 1px; }
+.brand { display: flex; align-items: center; gap: 10px; padding: 4px 10px 14px; }
+.brand-mark { width: 32px; height: 32px; border-radius: calc(8px * var(--k)); background: var(--cg-btnPrimary); color: var(--cg-onBtnPrimary); display: grid; place-items: center; }
+.brand b { font-size: 16px; font-weight: 600; display: block; line-height: 20px; }
+.brand small { color: var(--cg-textTertiary); font-size: 12px; line-height: 16px; }
+.side h6 { margin: 14px 10px 4px; font-size: 14px; line-height: 18px; font-weight: 500; color: var(--cg-textSecondary); }
+.side a { display: flex; align-items: center; gap: 8px; height: 36px; padding: 6px 10px; border-radius: calc(8px * var(--k)); color: var(--cg-text); text-decoration: none; font-size: 14px; line-height: 20px; }
+.side a:hover, .side a.on { background: var(--cg-hover); }
+main { padding: 0 32px 96px; min-width: 0; }
+
+.bar { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 20px; padding: 10px 0; min-height: 52px; background: var(--cg-surface); border-bottom: 1px solid var(--cg-border); }
+.bar .grow { flex: 1; }
+.ctl { display: flex; align-items: center; gap: 8px; }
+.ctl > span { font-size: 12px; line-height: 16px; color: var(--cg-textSecondary); }
+.swatches { display: flex; gap: 6px; }
+.sw { width: 24px; height: 24px; border-radius: 50%; border: 2px solid transparent; padding: 0; cursor: pointer; background: var(--c); box-shadow: inset 0 0 0 1px var(--cg-border); }
+.sw[aria-pressed="true"] { border-color: var(--cg-text); }
+
+.intro { padding: 40px 0 8px; max-width: 768px; }
+.intro .eyebrow { font-family: var(--mono); font-size: 12px; color: var(--cg-accentText); }
+.intro h1 { font-size: 28px; line-height: 34px; font-weight: 400; margin: 8px 0 12px; text-wrap: balance; }
+.intro p { font-size: 14px; line-height: 22px; color: var(--cg-textSecondary); margin: 0 0 8px; max-width: 70ch; }
+.facts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
+.fact { font-family: var(--mono); font-size: 12px; padding: 3px 8px; border-radius: calc(6px * var(--k)); background: var(--cg-elevatedSecondary); color: var(--cg-textSecondary); }
+
+section.block { padding-top: 48px; scroll-margin-top: 60px; }
+section.block > header { display: flex; flex-direction: column; gap: 4px; margin-bottom: 16px; }
+section.block h2 { font-size: 24px; line-height: 28.8px; font-weight: 400; margin: 0; }
+section.block > header p { margin: 0; color: var(--cg-textSecondary); font-size: 14px; line-height: 20px; max-width: 72ch; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 16px; }
+.spec { border: 1px solid var(--cg-border); border-radius: calc(16px * var(--k)); display: flex; flex-direction: column; min-width: 0; }
+.spec.full { grid-column: 1 / -1; }
+.spec-h { display: flex; align-items: center; gap: 8px; padding: 12px 16px 0; flex-wrap: wrap; }
+.spec-h b { font-size: 14px; line-height: 20px; font-weight: 500; }
+.kind { font-family: var(--mono); font-size: 11px; line-height: 16px; padding: 1px 6px; border-radius: calc(4px * var(--k)); background: var(--cg-accentBg); color: var(--cg-accentText); }
+.spec-h .dp { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--cg-textTertiary); font-variant-numeric: tabular-nums; }
+.stage { padding: 20px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; min-height: 88px; overflow-x: auto; }
+.stage.col { flex-direction: column; align-items: stretch; }
+.stage.center { justify-content: center; }
+.states { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; padding: 12px 16px; margin: 0 12px; border-top: 1px dashed var(--cg-border); }
+.states > .lbl { font-family: var(--mono); font-size: 11px; color: var(--cg-textTertiary); width: 100%; }
+.spec-f { display: flex; align-items: center; gap: 8px; padding: 8px 12px 12px 16px; margin-top: auto; }
+.spec-f .note { font-size: 12px; line-height: 16px; color: var(--cg-textSecondary); flex: 1; }
+.copy { height: 28px; padding: 0 10px; border-radius: 9999px; border: 1px solid transparent; background: transparent; color: var(--cg-textSecondary); font: 400 12px var(--font); display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
+.copy:hover { background: var(--cg-hover); color: var(--cg-text); }
+
+/* nền tảng */
+.roles { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; }
+.role { border-radius: calc(12px * var(--k)); padding: 10px 12px; min-height: 84px; display: flex; flex-direction: column; justify-content: space-between; gap: 6px; box-shadow: inset 0 0 0 1px var(--cg-border); cursor: pointer; border: none; text-align: left; font: inherit; }
+.role b { font-size: 13px; line-height: 16px; font-weight: 500; }
+.role code { font-size: 11px; opacity: .85; overflow-wrap: anywhere; }
+.chk { background-image: conic-gradient(#8884 25%, transparent 0 50%, #8884 0 75%, transparent 0); background-size: 12px 12px; }
+.type-row { display: grid; grid-template-columns: 170px minmax(0, 1fr) 150px; gap: 16px; align-items: baseline; padding: 10px 0; border-bottom: 1px solid var(--cg-borderLight); }
+.type-row:last-child { border-bottom: none; }
+.type-row .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.type-row .meta { font-family: var(--mono); font-size: 11px; color: var(--cg-textTertiary); font-variant-numeric: tabular-nums; }
+.shape-cell { display: flex; flex-direction: column; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px; color: var(--cg-textTertiary); }
+.shape-cell i { display: block; width: 64px; height: 64px; background: var(--cg-elevatedSecondary); box-shadow: inset 0 0 0 1px var(--cg-border); }
+table.tok { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+table.tok th, table.tok td { text-align: left; padding: 7px 12px 7px 0; border-bottom: 1px solid var(--cg-borderLight); font-size: 13px; line-height: 18px; }
+table.tok th { font-weight: 500; color: var(--cg-textSecondary); font-size: 12px; }
+table.tok td:first-child { font-family: var(--mono); font-size: 12px; }
+.tbl-wrap { overflow-x: auto; width: 100%; }
+
+/* ================= các thành phần cg-* (tái dùng: chỉ cần khối --cg-* và --k) ================= */
+/* nút viên thuốc: button-toolbar, h 36 · px 12 · gap 4 · 14/18 */
+.cg-btn { height: 36px; padding: 0 12px; gap: 4px; border: 1px solid transparent; border-radius: 9999px; background: transparent; color: var(--cg-text);
+  font: 400 14px/18px var(--font); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; white-space: nowrap; transition: background-color var(--dur) var(--ease); }
+.cg-btn:hover, .cg-btn.is-hover { background: var(--cg-hover); }
+.cg-btn:focus-visible, .cg-btn.is-focus { outline: none; box-shadow: 0 0 0 2px var(--cg-ring); }
+.cg-btn .ms { font-size: 18px; }
+.cg-btn.sm { height: 28px; padding: 0 10px; }
+.cg-btn.v-primary { background: var(--cg-btnPrimary); color: var(--cg-onBtnPrimary); border-color: var(--cg-border); padding: 0 16px; font-weight: 500; line-height: 20px; }
+.cg-btn.v-primary:hover, .cg-btn.v-primary.is-hover { background: var(--cg-btnPrimaryHover); }
+.cg-btn.v-secondary { background: var(--cg-btnSecondary); border-color: var(--cg-border); }
+.cg-btn.v-secondary:hover, .cg-btn.v-secondary.is-hover { background: var(--cg-hover); }
+.cg-btn.v-soft { background: color-mix(in oklab, var(--cg-text) 5%, transparent); }
+.cg-btn.v-soft:hover, .cg-btn.v-soft.is-hover, .cg-btn.v-soft.is-on { background: color-mix(in oklab, var(--cg-text) 10%, transparent); }
+.cg-btn.v-soft.is-on:hover, .cg-btn.v-soft.is-on.is-hover { background: color-mix(in oklab, var(--cg-text) 15%, transparent); }
+.cg-btn.v-outline { border-color: var(--cg-border); }
+.cg-btn.v-surface { background: var(--cg-surface); border-color: var(--cg-border); font-size: 12px; font-weight: 500; }
+.cg-btn.v-surface:hover, .cg-btn.v-surface.is-hover { background: var(--cg-hover); }
+.cg-btn.v-danger { background: color-mix(in oklab, var(--cg-danger) 10%, transparent); color: var(--cg-danger); }
+.cg-btn.v-danger:hover, .cg-btn.v-danger.is-hover { background: color-mix(in oklab, var(--cg-danger) 20%, transparent); }
+.cg-btn.v-upsell { background: var(--cg-upsellBg); color: var(--cg-upsellText); }
+.cg-btn.v-upsell:hover, .cg-btn.v-upsell.is-hover { background: var(--cg-upsellHover); }
+.cg-btn.t2 { color: var(--cg-textSecondary); }
+.cg-btn.t3 { color: var(--cg-textTertiary); }
+.cg-btn.chev { padding-right: 8px; }
+.cg-btn.chev::after { content: "expand_more"; font-family: "Material Symbols Rounded"; font-size: 18px; font-weight: 300; color: var(--cg-textTertiary); }
+
+/* nút icon */
+.cg-icon { width: 36px; height: 36px; padding: 0; border: 1px solid transparent; border-radius: calc(8px * var(--k)); background: transparent; color: var(--cg-textTertiary);
+  display: inline-grid; place-items: center; cursor: pointer; transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease); }
+.cg-icon.pill { border-radius: 9999px; }
+.cg-icon.s32 { width: 32px; height: 32px; }
+.cg-icon.s24 { width: 24px; height: 24px; border-radius: calc(4px * var(--k)); color: var(--cg-textSecondary); border: none; }
+.cg-icon.s20 { width: 20px; height: 20px; border-radius: 9999px; color: var(--cg-textSecondary); border: none; }
+.cg-icon.s24 .ms, .cg-icon.s20 .ms { font-size: 16px; }
+.cg-icon.hv:hover, .cg-icon.hv.is-hover { background: var(--cg-hover); }
+.cg-icon.s24:hover, .cg-icon.s24.is-hover, .cg-icon.s20:hover, .cg-icon.s20.is-hover { color: color-mix(in oklab, var(--cg-text) 85%, transparent); }
+.cg-icon:focus-visible, .cg-icon.is-focus { outline: none; box-shadow: 0 0 0 2px var(--cg-ring); }
+
+/* nút dạng chữ */
+.cg-textbtn { border: none; background: transparent; padding: 0; color: var(--cg-accentText); font: 400 14px/18px var(--font); cursor: pointer; border-radius: 0; }
+.cg-textbtn.xs { font-size: 12px; line-height: 16px; }
+.cg-textbtn:hover, .cg-textbtn.is-hover { background: var(--cg-hover); }
+.cg-textbtn:focus-visible, .cg-textbtn.is-focus { outline: none; box-shadow: 0 0 0 2px var(--cg-ring); }
+.cg-more { border: none; background: transparent; padding: 0; height: 24px; border-radius: calc(6px * var(--k)); color: var(--cg-textTertiary); font: 500 16px/24px var(--font); display: inline-flex; align-items: center; gap: 2px; cursor: pointer; }
+.cg-more:hover, .cg-more.is-hover { color: var(--cg-text); }
+.cg-more:focus-visible, .cg-more.is-focus { outline: none; box-shadow: 0 0 0 2px var(--cg-ring); }
+.cg-handle { border: none; background: transparent; height: 28px; padding: 2px 8px; border-radius: calc(8px * var(--k)); color: var(--cg-textTertiary); font: 400 16px/24px var(--font); cursor: pointer; }
+.cg-handle:hover, .cg-handle.is-hover { background: var(--cg-hover); }
+.cg-handle:focus-visible, .cg-handle.is-focus { outline: 1px solid var(--cg-ring); }
+.cg-value { border-radius: calc(6px * var(--k)); font: 400 14px/20px var(--font); color: var(--cg-text); cursor: default; }
+.cg-value.t3 { color: var(--cg-textTertiary); }
+.cg-value:focus-visible, .cg-value.is-focus { outline: none; box-shadow: 0 0 0 2px var(--cg-ring); }
+.cg-kbd { font-variant-numeric: tabular-nums; }
+
+/* nút gửi của composer: size-token-button-composer 36 · p 2 */
+.cg-send { width: 36px; height: 36px; padding: 2px; border: none; border-radius: 9999px; background: var(--cg-composerPrimary); color: var(--cg-onComposerPrimary); display: grid; place-items: center; cursor: pointer; }
+.cg-send:focus-visible, .cg-send.is-focus { outline: 2px solid var(--cg-composerPrimary); outline-offset: 0; }
+
+/* link */
+.cg-link { color: var(--cg-accentText); text-decoration: none; }
+.cg-link.muted { color: var(--cg-textSecondary); text-decoration: underline; }
+.cg-link.t3 { color: var(--cg-textTertiary); text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
+.cg-link.t3:hover, .cg-link.t3.is-hover { color: var(--cg-textSecondary); }
+.cg-link.plain { color: var(--cg-text); display: inline-flex; align-items: center; gap: 4px; }
+.is-ua { outline: 1px auto var(--cg-uaRing); outline-offset: 1px; }
+
+/* điều hướng: thanh bên 340 */
+.cg-sidebar { width: 340px; max-width: 100%; background: var(--cg-surface); border-right: 1px solid var(--cg-border); display: flex; flex-direction: column; font-size: 14px; line-height: 20px; }
+.cg-sb-head { height: 52px; display: flex; align-items: center; gap: 2px; padding: 0 8px 0 10px; }
+.cg-sb-head .grow { flex: 1; }
+.cg-brand-btn { height: 32px; padding: 0 6px; border: none; border-radius: calc(9.375px * var(--k)); background: transparent; color: var(--cg-text); font: 600 18px/26px var(--font); display: inline-flex; align-items: center; gap: 2px; cursor: pointer; }
+.cg-brand-btn .ms { font-size: 18px; color: var(--cg-textTertiary); }
+.cg-sb-list { padding: 8px 6px 0; display: flex; flex-direction: column; gap: 1px; }
+.cg-nav-row { height: 36px; padding: 6px 10px; gap: 8px; border: none; border-radius: calc(8px * var(--k)); background: transparent; color: var(--cg-text); font: 400 14px/20px var(--font);
+  display: flex; align-items: center; width: 100%; text-align: left; cursor: pointer; text-decoration: none; }
+.cg-nav-row .ms { font-size: 18px; }
+.cg-nav-row .t { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cg-nav-row .end { color: var(--cg-textTertiary); }
+.cg-nav-row:hover, .cg-nav-row.is-hover, .cg-nav-row.is-on { background: var(--cg-hover); }
+.cg-nav-row:focus-visible, .cg-nav-row.is-focus { outline: 2px solid var(--cg-ring); outline-offset: -2px; }
+.cg-sec { height: 36px; padding: 0 6px 0 10px; display: flex; align-items: center; margin-top: 16px; }
+.cg-sec-btn { flex: 1; min-width: 0; height: 36px; padding: 2px 4px; margin-left: -4px; border: none; border-radius: calc(6px * var(--k)); background: transparent; color: var(--cg-textSecondary);
+  font: 500 14px/18px var(--font); display: flex; align-items: center; gap: 4px; cursor: pointer; text-align: left; }
+.cg-sec-btn .ms { font-size: 16px; opacity: 0; transition: opacity var(--dur) var(--ease); }
+.cg-sec-btn:hover .ms, .cg-sec-btn.is-hover .ms, .cg-sec-btn:focus-visible .ms, .cg-sec-btn.is-focus .ms { opacity: 1; }
+.cg-sec-btn:focus-visible, .cg-sec-btn.is-focus { outline: 2px solid var(--cg-ring); outline-offset: 0; }
+.cg-sec.plain { font-size: 16px; line-height: 24px; color: var(--cg-text); justify-content: space-between; }
+.cg-sec.plain:hover .cg-icon, .cg-sec.plain.is-hover .cg-icon { opacity: 1; }
+.cg-sec.plain .cg-icon { opacity: 0; }
+.cg-hist { height: 36px; padding: 0 10px; display: flex; align-items: center; border-radius: calc(8px * var(--k)); color: color-mix(in oklab, var(--cg-text) 85%, transparent); text-decoration: none; font-size: 14px; line-height: 20px; position: relative; }
+.cg-hist:hover, .cg-hist.is-hover { background: var(--cg-hover); }
+.cg-hist span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cg-empty-row { height: 36px; padding: 8px 10px; color: var(--cg-textTertiary); font-size: 14px; line-height: 20px; }
+.cg-sb-foot { margin-top: auto; border-top: 1px solid var(--cg-border); padding: 6px; }
+.cg-user { position: relative; height: 52px; padding: 0 10px; display: flex; align-items: center; gap: 8px; border-radius: calc(8px * var(--k)); }
+.cg-user .who { display: flex; flex-direction: column; min-width: 0; }
+.cg-user .who b { font-weight: 400; font-size: 14px; line-height: 20px; }
+.cg-user .who small { font-size: 12px; line-height: 16px; color: var(--cg-textSecondary); }
+.cg-overlay-btn { position: absolute; inset: 0; border: none; background: transparent; border-radius: calc(8px * var(--k)); cursor: pointer; }
+.cg-overlay-btn:focus-visible, .cg-overlay-btn.is-focus { outline: none; box-shadow: 0 0 0 2px var(--cg-ring); }
+.cg-search { height: 36px; padding: 0 12px; gap: 8px; border-radius: 9999px; background: var(--cg-hover); display: flex; align-items: center; color: var(--cg-textTertiary); }
+.cg-search input { flex: 1; min-width: 0; border: none; background: transparent; color: var(--cg-text); font: 400 14px/18px var(--font); outline: none; padding: 0; }
+.cg-search input::placeholder { color: var(--cg-placeholder); }
+.cg-search:focus-within, .cg-search.is-focus { box-shadow: 0 0 0 1px var(--cg-uaRing); }
+.cg-divider-v { width: 16px; height: 120px; position: relative; cursor: col-resize; }
+.cg-divider-v::after { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 1px; background: var(--cg-border); }
+
+/* chọn chế độ Trò chuyện / Công việc: h 36, rãnh inset 1 */
+.cg-mode { position: relative; isolation: isolate; display: inline-grid; grid-template-columns: 1fr 1fr; height: 36px; border-radius: 9999px; }
+.cg-mode::before { content: ""; position: absolute; inset: 1px; border-radius: 9999px; background: var(--cg-modeTrack); z-index: -1; }
+.cg-mode .thumb { grid-area: 1 / 2; margin: -1px 0; border: 1px solid transparent; border-radius: 9999px; background: var(--cg-modeSelected); z-index: 0; }
+.cg-mode button { grid-row: 1; position: relative; z-index: 1; height: 36px; border: none; background: transparent; border-radius: 9999px; color: var(--cg-modeInactive); font: 500 14px/20px var(--font); cursor: pointer; white-space: nowrap; }
+.cg-mode button:first-of-type { grid-column: 1; padding: 0 6px 0 14px; }
+.cg-mode button:last-of-type { grid-column: 2; padding: 0 14px 0 6px; }
+.cg-mode button.is-on, .cg-mode button:hover, .cg-mode button.is-hover { color: var(--cg-modeText); }
+.cg-mode button:focus-visible, .cg-mode button.is-focus { color: var(--cg-modeText); outline: 1px auto var(--cg-uaRing); }
+
+/* tab */
+.cg-tabs { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
+.cg-pilltab { height: 36px; padding: 0 12px; border: 1px solid transparent; border-radius: 9999px; background: transparent; color: var(--cg-textTertiary); font: 400 14px/18px var(--font); cursor: pointer; }
+.cg-pilltab:hover, .cg-pilltab.is-hover { background: var(--cg-hover); }
+.cg-pilltab.is-on { background: color-mix(in oklab, var(--cg-text) 10%, transparent); color: var(--cg-text); }
+.cg-pilltab.is-on:hover, .cg-pilltab.is-on.is-hover { background: color-mix(in oklab, var(--cg-text) 15%, transparent); }
+.cg-pilltab:focus-visible, .cg-pilltab.is-focus { outline: none; box-shadow: 0 0 0 2px var(--cg-ring); }
+.cg-segtab { height: 28px; padding: 4px 8px; gap: 6px; border: none; border-radius: calc(6px * var(--k)); background: transparent; color: var(--cg-textSecondary); font: 500 14px/20px var(--font); display: inline-flex; align-items: center; cursor: pointer; }
+.cg-segtab .n { color: var(--cg-textTertiary); }
+.cg-segtab.is-on { background: var(--cg-surface); color: var(--cg-text); }
+.cg-segtab:hover, .cg-segtab.is-hover { background: var(--cg-surface); }
+.cg-segtab:focus-visible, .cg-segtab.is-focus { outline: none; box-shadow: 0 0 0 2px var(--cg-ring); }
+.cg-segbar { display: flex; align-items: center; gap: 2px; width: 100%; }
+.cg-texttab { border: none; background: transparent; padding: 0; height: 20px; border-radius: calc(4px * var(--k)); color: color-mix(in oklab, var(--cg-text) 65%, transparent); font: 400 14px/20px var(--font); cursor: pointer; }
+.cg-texttab.is-on { color: var(--cg-text); }
+.cg-texttab:focus-visible, .cg-texttab.is-focus { outline: 2px solid var(--cg-uaRing); }
+.cg-toolbar { height: 52px; display: flex; align-items: center; justify-content: flex-end; gap: 2px; padding: 0 12px; width: 100%; }
+
+/* chứa nội dung: nhóm cài đặt r16 · hàng px 16 py 12 · gạch chia inset 16 */
+.cg-page-title { font-size: 24px; line-height: 28.8px; font-weight: 400; margin: 0; }
+.cg-sec-title { font-size: 16px; line-height: 24px; font-weight: 500; margin: 0; }
+.cg-sec-desc { font-size: 14px; line-height: 20px; color: var(--cg-textSecondary); margin: 2px 0 0; }
+.cg-sub-title { position: sticky; top: 0; padding: 2px 24px; background: var(--cg-surface); color: var(--cg-textSecondary); font-size: 14px; line-height: 24px; font-weight: 500; margin: 0; }
+.cg-group { width: 768px; max-width: 100%; border: 1px solid var(--cg-border); border-radius: calc(16px * var(--k)); background: var(--cg-surface); overflow: hidden; display: flex; flex-direction: column; }
+.cg-group > * { position: relative; }
+.cg-group > :not(:last-child)::after { content: ""; position: absolute; left: 16px; right: 16px; bottom: 0; height: 1px; background: var(--cg-border); pointer-events: none; }
+.cg-row { display: flex; align-items: center; gap: 24px; padding: 12px 16px; min-height: 48px; width: 100%; border: none; background: transparent; color: var(--cg-text); font: inherit; text-align: left; }
+button.cg-row { cursor: pointer; border-radius: inherit; }
+button.cg-row:focus-visible, button.cg-row.is-focus, .cg-row .cg-overlay-btn.is-focus + * { outline: 2px solid var(--cg-ring); outline-offset: -2px; }
+.cg-row .cg-overlay-btn:focus-visible, .cg-row .cg-overlay-btn.is-focus { box-shadow: none; outline: 2px solid var(--cg-ring); outline-offset: -2px; }
+.cg-row .txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.cg-row .txt b { font-size: 14px; line-height: 20px; font-weight: 500; }
+.cg-row .txt small { font-size: 12px; line-height: 16px; color: var(--cg-textSecondary); }
+.cg-row .end { display: flex; align-items: center; gap: 8px; flex: none; color: var(--cg-text); }
+.cg-row .end .ms { color: var(--cg-textTertiary); font-size: 18px; }
+.cg-row.callout { background: var(--cg-elevatedSecondary); }
+.cg-row.center { justify-content: center; color: var(--cg-textSecondary); font-size: 14px; line-height: 20px; min-height: 64px; }
+.cg-radio-row { display: flex; align-items: center; min-height: 76px; width: 768px; max-width: 100%; border-bottom: 1px solid var(--cg-border); position: relative; }
+.cg-radio-row:hover, .cg-radio-row.is-hover, .cg-radio-row:focus-within { background: var(--cg-hover); }
+.cg-radio-row > button { flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px; padding: 12px 16px; border: none; background: transparent; color: var(--cg-text); font: inherit; text-align: left; cursor: pointer; border-radius: inherit; }
+.cg-radio-row > button:focus-visible, .cg-radio-row > button.is-focus { outline: 2px solid var(--cg-ring); outline-offset: -2px; }
+.cg-radio-row .ic { width: 40px; display: grid; place-items: center; flex: none; }
+.cg-radio-row .txt { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.cg-radio-row .txt b { font-size: 14px; line-height: 20px; font-weight: 500; }
+.cg-radio-row .txt small { font-size: 12px; line-height: 16px; color: var(--cg-textSecondary); }
+.cg-radio { width: 20px; height: 20px; display: grid; place-items: center; color: var(--cg-textTertiary); flex: none; }
+.cg-radio i { width: 16px; height: 16px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px currentColor; display: block; }
+.cg-radio.on { color: var(--cg-accentText); }
+.cg-radio.on i { background: currentColor; box-shadow: none; position: relative; }
+.cg-radio.on i::after { content: ""; position: absolute; left: 5px; top: 3.5px; width: 4px; height: 7px; border: solid var(--cg-onComposerPrimary); border-width: 0 1.5px 1.5px 0; transform: rotate(45deg); }
+
+.cg-kbd-list { width: 768px; max-width: 100%; list-style: none; margin: 0; padding: 0 12px; display: flex; flex-direction: column; }
+.cg-kbd-list li { display: flex; align-items: center; gap: 8px; padding: 8px 12px 8px 16px; min-height: 52px; border-bottom: 1px solid var(--cg-borderLight); font-size: 14px; line-height: 20px; }
+.cg-kbd-list li:last-child { border-bottom: none; }
+.cg-kbd-list li .t { flex: 1; }
+.cg-footbar { width: 100%; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; padding: 12px 20px; border-top: 1px solid var(--cg-borderHeavy); background: var(--cg-surface); }
+
+.cg-limit { padding: 12px 16px; display: flex; flex-direction: column; gap: 4px; }
+.cg-limit b { font-size: 14px; line-height: 20px; font-weight: 500; }
+.cg-limit .meta { display: flex; justify-content: space-between; gap: 5px; font-size: 12px; line-height: 16px; color: var(--cg-textSecondary); }
+.cg-progress { height: 6px; border-radius: 9999px; background: var(--cg-border); overflow: hidden; }
+.cg-progress i { display: block; height: 100%; width: var(--v, 100%); border-radius: inherit; background: var(--cg-text); }
+.cg-ring-card { box-shadow: inset 0 0 0 1px var(--cg-borderLight); border: none; }
+
+.cg-table { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 20px; }
+.cg-table th { text-align: left; font-weight: 500; color: var(--cg-textSecondary); padding: 8px 12px; font-size: 12px; }
+.cg-table td { padding: 8px 12px; color: var(--cg-textSecondary); border-top: 1px solid var(--cg-border); white-space: nowrap; }
+.cg-table td.num { text-align: right; color: var(--cg-text); }
+.cg-table td.c { text-align: center; }
+.cg-badge { display: inline-flex; align-items: center; min-height: 20px; padding: 0 8px; border-radius: 9999px; font-size: 12px; line-height: 16px; font-weight: 500; }
+.cg-badge.warn { background: var(--cg-warnSoft); color: var(--cg-warnText); }
+.cg-badge.danger { background: var(--cg-dangerSoft); color: var(--cg-danger); }
+.cg-badge.info { background: var(--cg-infoSoft); color: var(--cg-infoText); }
+.cg-tag { display: inline-block; padding: 4px 8px; border-radius: calc(4px * var(--k)); background: var(--cg-elevatedSecondary); color: var(--cg-textSecondary); font-size: 14px; line-height: 14px; }
+
+.cg-avatar { width: 24px; height: 24px; border-radius: 9999px; display: inline-grid; place-items: center; background: var(--cg-seq2); color: var(--cg-onComposerPrimary); font: 400 10px/1 var(--font); flex: none; }
+.cg-avatar.xl { width: 112px; height: 112px; font-size: 44px; }
+.cg-profile { width: 736px; max-width: 100%; display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; }
+.cg-profile .name { font-size: 24px; line-height: 36px; font-weight: 500; min-height: 36px; }
+.cg-inline-input { border: none; background: transparent; color: var(--cg-text); font: 500 24px/29px var(--font); padding: 2px 8px; border-radius: calc(8px * var(--k)); width: 150px; text-align: center; }
+.cg-inline-input:focus-visible, .cg-inline-input.is-focus { background: var(--cg-hover); outline: 1px solid var(--cg-ring); }
+.cg-stats { width: 736px; max-width: 100%; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border: 1px solid var(--cg-border); border-radius: calc(16px * var(--k)); overflow: hidden; }
+.cg-stats > div { padding: 10px 12px; text-align: center; font-size: 14px; line-height: 20px; position: relative; }
+.cg-stats > div + div::before { content: ""; position: absolute; left: 0; top: 14px; bottom: 14px; width: 1px; background: var(--cg-border); }
+.cg-stats small { display: block; color: var(--cg-textSecondary); font-size: 14px; line-height: 20px; }
+.cg-showcase { width: 736px; max-width: 100%; min-height: 256px; padding: 40px 24px; border-radius: calc(16px * var(--k)); background: var(--cg-elevatedSecondary); color: var(--cg-textTertiary); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; font-size: 14px; line-height: 20px; text-align: center; }
+.cg-showcase .ph { width: 136px; height: 64px; border-radius: calc(12px * var(--k)); border: 1px dashed var(--cg-borderHeavy); display: grid; place-items: center; font-family: var(--mono); font-size: 11px; }
+.cg-emptybox { width: 736px; max-width: 100%; padding: 24px 16px; border: 1px solid var(--cg-borderLight); border-radius: calc(12px * var(--k)); color: var(--cg-textTertiary); display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 14px; line-height: 20px; }
+.cg-heat { display: grid; grid-template-columns: repeat(52, 11px); grid-auto-flow: column; grid-template-rows: repeat(7, 11px); gap: 3px; }
+.cg-heat i { border-radius: calc(4px * var(--k)); background: var(--cg-elevatedSecondary); }
+.cg-heat i.l1 { background: var(--cg-seq1); } .cg-heat i.l2 { background: var(--cg-seq2); } .cg-heat i.l3 { background: var(--cg-seq3); } .cg-heat i.l4 { background: var(--cg-seq4); }
+.cg-plugin { width: 768px; max-width: 100%; border: 1px solid var(--cg-border); border-radius: calc(16px * var(--k)); }
+.cg-plugin > button { width: 100%; display: flex; align-items: center; gap: 12px; padding: 12px 16px; border: none; background: transparent; color: var(--cg-text); font: inherit; text-align: left; border-radius: inherit; cursor: pointer; }
+.cg-plugin > button:focus-visible, .cg-plugin > button.is-focus { outline: 2px solid var(--cg-ring); outline-offset: -2px; }
+.cg-plugin .tile { width: 36px; height: 36px; border: 1px solid var(--cg-border); border-radius: calc(8px * var(--k)); display: grid; place-items: center; color: var(--cg-text); flex: none; }
+.cg-plugin .txt b { display: block; font-size: 14px; line-height: 20px; font-weight: 500; }
+.cg-plugin .txt small { display: block; font-size: 12px; line-height: 16px; color: var(--cg-textSecondary); }
+.cg-theme-tiles { display: flex; gap: 10px; }
+.cg-theme-tile { width: 80px; height: 60px; border-radius: calc(8px * var(--k)); overflow: hidden; display: grid; grid-template-columns: 1fr 3fr; box-shadow: inset 0 0 0 1px var(--cg-border); cursor: pointer; }
+.cg-theme-tile.on { box-shadow: 0 0 0 2px var(--cg-accentText); }
+.cg-theme-tile .a { background: var(--pa); } .cg-theme-tile .b { background: var(--pb); padding: 10px 6px; display: flex; flex-direction: column; gap: 4px; }
+.cg-theme-tile .b i { height: 2px; border-radius: 1px; background: var(--cg-accent); width: 80%; } .cg-theme-tile .b i:nth-child(2) { width: 55%; background: var(--pc); }
+.cg-para { font-size: 14px; line-height: 20px; margin: 0; max-width: 768px; }
+
+/* nhập liệu */
+.cg-switch { width: 32px; height: 20px; padding: 0; border: none; border-radius: 9999px; background: var(--cg-switchTrack); position: relative; cursor: pointer; flex: none; transition: background-color var(--dur) var(--ease); }
+.cg-switch::after { content: ""; position: absolute; top: 2px; left: 0; width: 16px; height: 16px; border-radius: 9999px; background: var(--cg-switchThumb); border: 1px solid var(--cg-switchThumb); box-shadow: var(--shadow-sm); transform: translateX(2px); transition: transform var(--dur) var(--ease); box-sizing: border-box; }
+.cg-switch[aria-checked="true"] { background: var(--cg-switchOn); }
+.cg-switch[aria-checked="true"]::after { transform: translateX(14px); }
+.cg-switch:focus-visible, .cg-switch.is-focus { outline: none; box-shadow: 0 0 0 2px var(--cg-ring); }
+.cg-switch:disabled { background: var(--cg-elevatedSecondary); cursor: default; }
+
+.cg-composer { width: 768px; max-width: 100%; }
+.cg-composer .body { border-radius: calc(28px * var(--k)); background: var(--cg-elevated); box-shadow: inset 0 0 1px 0 var(--cg-borderHeavy); position: relative; z-index: 1; }
+.cg-composer .editor { min-height: 52px; padding: 14px 18px 0; font-size: 16px; line-height: 26px; outline: none; color: var(--cg-text); }
+.cg-composer .editor:empty::before { content: attr(data-ph); color: var(--cg-placeholder); }
+.cg-composer .tools { height: 64px; padding: 0 12px 12px 10px; display: flex; align-items: flex-end; gap: 4px; }
+.cg-composer .tools .grow { flex: 1; }
+.cg-composer .actions { margin: -2px 12px 0; padding: 6px 4px; background: var(--cg-inputSoft); border-radius: 0 0 calc(16px * var(--k)) calc(16px * var(--k)); display: flex; align-items: center; gap: 8px; }
+.cg-composer .actions .grow { flex: 1; }
+.cg-composer .actions .cg-btn { color: var(--cg-textSecondary); }
+.cg-picker .dim { color: var(--cg-textTertiary); }
+
+.cg-select-font { padding: 0 12px 0 7px; gap: 8px; }
+.cg-aa { width: 20px; height: 20px; border-radius: 9999px; border: 1px solid var(--cg-borderHeavy); background: var(--cg-surface); color: var(--cg-accent); font: 600 12px/1 var(--font); display: inline-grid; place-items: center; }
+.cg-dot { width: 12px; height: 12px; border-radius: 9999px; border: 1px solid var(--cg-border); background: var(--cg-accent); display: inline-block; flex: none; }
+.cg-colorval { height: 28px; padding: 0 12px 0 8px; gap: 8px; font-size: 12px; font-family: var(--font); }
+.cg-colorval .dot { width: 14px; height: 14px; padding: 0; border-radius: 9999px; border: 1px solid var(--cg-border); background: var(--dc); cursor: pointer; flex: none; }
+.cg-colorval .dot:focus-visible, .cg-colorval .dot.is-focus { outline: 1px auto var(--cg-uaRing); }
+.cg-colorval input { width: 56px; border: none; background: transparent; color: var(--cg-text); font: 400 12px/16px var(--font); text-transform: uppercase; font-variant-numeric: tabular-nums; outline: none; padding: 0; }
+.cg-colorval input:focus-visible, .cg-colorval input.is-focus { outline: 1px solid var(--cg-uaRing); }
+.cg-input { width: 176px; height: 36px; padding: 0 10px; border: 1px solid var(--cg-borderHeavy); border-radius: calc(6px * var(--k)); background: var(--cg-inputSoft); color: var(--cg-text); font: 400 14px/20px var(--font); outline: none; }
+.cg-input::placeholder { color: var(--cg-placeholder); }
+.cg-input:focus-visible, .cg-input.is-focus { border-color: var(--cg-ring); }
+.cg-bigsearch { width: 768px; max-width: 100%; height: 44px; padding: 0 16px 0 14px; gap: 8px; border: 1px solid var(--cg-border); border-radius: 9999px; background: var(--cg-card); display: flex; align-items: center; color: var(--cg-textTertiary); font-size: 16px; }
+
+/* phản hồi */
+.cg-spinner { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; line-height: 20px; color: var(--cg-textSecondary); }
+.cg-spinner i { width: 12px; height: 12px; border-radius: 50%; border: 1.5px solid var(--cg-border); border-top-color: var(--cg-text); animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.cg-tip { display: inline-block; padding: 4px 8px; border-radius: calc(6px * var(--k)); background: var(--cg-tooltipCompact); color: var(--cg-onTooltipCompact); font: 600 12px/16px var(--font); }
+.cg-tip-lg { display: inline-block; max-width: 260px; padding: 8px 12px; border-radius: calc(6px * var(--k)); background: var(--cg-tooltip); color: var(--cg-text); font: 400 14px/1.45 var(--font); box-shadow: var(--tip-shadow), 0 0 0 1px var(--cg-borderLight); }
+.cg-menu { width: 220px; padding: 8px; border-radius: calc(16px * var(--k)); background: var(--cg-menu); backdrop-filter: blur(16px); box-shadow: 0 0 0 .5px var(--cg-border), var(--tip-shadow); font-size: 14px; line-height: 20px; }
+.cg-menu div { display: flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: calc(8px * var(--k)); }
+.cg-menu div.on { background: var(--cg-menuItemHover); }
+.cg-menu hr { border: none; height: 1px; background: var(--cg-border); margin: 8px 12px; }
+.cg-menu .danger { color: var(--cg-danger); }
+.focus-demo { display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 12px; line-height: 16px; color: var(--cg-textSecondary); text-align: center; }
+
+/* màn mẫu desktop 1440 × 900, thu nhỏ bằng zoom */
+.screens { overflow-x: auto; padding: 8px 0; }
+.screen-row { display: flex; gap: 24px; width: max-content; }
+.desk { width: 1440px; height: 900px; border-radius: 12px; box-shadow: 0 0 0 1px var(--cg-borderHeavy); background: var(--cg-surface); overflow: hidden; margin: 6px; zoom: .5; display: flex; }
+.desk .cg-sidebar { height: 100%; flex: none; }
+.desk .main { flex: 1; min-width: 0; display: flex; flex-direction: column; position: relative; }
+.desk .topbar { height: 52px; display: flex; align-items: center; justify-content: center; flex: none; }
+.desk .home { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 36px; padding-bottom: 150px; }
+.desk .home h1 { font-size: 24px; line-height: 28.8px; font-weight: 400; margin: 0; }
+.desk .settings { flex: 1; overflow: hidden; padding: 20px 0 0; }
+.desk .col { width: 768px; margin: 0 auto; display: flex; flex-direction: column; gap: 32px; }
+.desk .sect { display: flex; flex-direction: column; gap: 16px; }
+.cap { font-family: var(--mono); font-size: 12px; color: var(--cg-textSecondary); margin: 4px 6px 0; max-width: 720px; }
+
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; transition: all .25s var(--ease); z-index: 20; }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; }
+  .side { display: none; }
+  main { padding: 0 16px 80px; }
+  .grid { grid-template-columns: 1fr; }
+  .intro h1 { font-size: 24px; line-height: 30px; }
+  .type-row { grid-template-columns: 1fr; gap: 2px; }
+  .cg-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cg-stats > div + div::before { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <nav class="side" aria-label="Mục lục">
+    <div class="brand"><div class="brand-mark"><span class="ms">forum</span></div><div><b>ChatGPT UI Kit</b><small>17 trang đã lưu · web</small></div></div>
+    <h6>Nền tảng</h6>
+    <a href="#color"><span class="ms">palette</span>Màu</a>
+    <a href="#type"><span class="ms">text_fields</span>Chữ</a>
+    <a href="#shape"><span class="ms">rounded_corner</span>Bo góc</a>
+    <a href="#layout"><span class="ms">straighten</span>Bố cục &amp; kích thước</a>
+    <h6>Thành phần</h6>
+    <a href="#actions"><span class="ms">touch_app</span>Nút &amp; hành động</a>
+    <a href="#navigation"><span class="ms">side_navigation</span>Điều hướng</a>
+    <a href="#containment"><span class="ms">view_agenda</span>Nhóm &amp; nội dung</a>
+    <a href="#inputs"><span class="ms">toggle_on</span>Nhập liệu</a>
+    <a href="#feedback"><span class="ms">notifications</span>Phản hồi &amp; focus</a>
+    <h6>Mẫu</h6>
+    <a href="#screens"><span class="ms">desktop_windows</span>Màn hình mẫu</a>
+  </nav>
+
+  <main>
+    <div class="bar" role="toolbar" aria-label="Chủ đề">
+      <div class="ctl"><span>Màu nhấn</span><div class="swatches" id="swatches"></div></div>
+      <div class="ctl"><span>Chế độ</span><div class="cg-tabs" id="mode">
+        <button class="cg-pilltab" data-v="light" aria-pressed="false">Sáng</button>
+        <button class="cg-pilltab" data-v="dark" aria-pressed="true">Tối</button></div></div>
+      <div class="ctl"><span>Bo góc</span><div class="cg-tabs" id="shape">
+        <button class="cg-pilltab" data-v="1" aria-pressed="true">Web ×1</button>
+        <button class="cg-pilltab" data-v="1.25" aria-pressed="false">App ×1.25</button></div></div>
+      <div class="grow"></div>
+      <button class="cg-btn v-soft" id="copy-tokens"><span class="ms">data_object</span>Copy CSS token</button>
+    </div>
+
+    <div class="intro">
+      <div class="eyebrow">Desktop/chatgpt/*.html (17 trang) → chatgpt-ui-kit.html</div>
+      <h1>Bộ thành phần của ChatGPT web</h1>
+      <p>Mọi thành phần gặp được trên 17 trang ChatGPT bạn tự lưu (trang chủ, hồ sơ, plugin và 14 trang cài đặt), dựng lại bằng HTML/CSS thuần. Màu đọc thẳng từ CSS đã lưu bằng Playwright (offline, tắt JS), cả hai bộ theme có trong file: accent <b>Tím</b> bạn đang dùng và accent <b>Mặc định</b> (xanh), mỗi bộ đủ sáng lẫn tối. Kích thước, bo góc, cỡ chữ và các trạng thái hover/focus là số đo <code>getComputedStyle</code> của phần tử thật.</p>
+      <p>Mỗi thẻ ghi tên class hay token gốc của site và có nút copy HTML. Muốn dùng lại ở dự án khác thì dán khối <code>--cg-*</code> (nút “Copy CSS token”) cùng CSS <code>.cg-*</code>. Icon thay bằng Material Symbols, ảnh và tên thật thay bằng dữ liệu mẫu.</p>
+      <div class="facts"><span class="fact">sidebar 340 (clamp 240–520)</span><span class="fact">toolbar 52</span><span class="fact">cột cài đặt 768</span><span class="fact">composer 768 × 128 · r 28</span><span class="fact">control 36 · pill</span><span class="fact">radius × --corner-radius-scale</span><span class="fact">ease cubic-bezier(0,0,.2,1) · .15s</span></div>
+    </div>
+
+    <!-- ================= NỀN TẢNG ================= -->
+    <section class="block" id="color">
+      <header><h2>Màu</h2><p><span id="role-count"></span> vai trò màu của lựa chọn đang bật. Mỗi ô ghi tên vai trò trong kit, biến gốc của site và mã hex (8 ký tự khi có alpha). Bấm để copy hex. Ô có alpha nằm trên nền ô bàn cờ để thấy độ trong.</p></header>
+      <div class="roles" id="roles"></div>
+    </section>
+
+    <section class="block" id="type">
+      <header><h2>Chữ</h2><p>ChatGPT không tải webfont: chữ dùng font hệ thống (<code>-apple-system-body, ui-sans-serif, system-ui…</code>), nên trên máy Mac là SF Pro. Thang dưới đây là các cỡ đo được trên trang, kèm class hoặc token site dùng.</p></header>
+      <div class="spec"><div class="stage col" id="typescale"></div></div>
+    </section>
+
+    <section class="block" id="shape">
+      <header><h2>Bo góc</h2><p>Mọi bán kính của site là <code>calc(&lt;base&gt; * var(--corner-radius-scale))</code>. Bản web đặt scale = 1; app desktop (Codex, electron) đặt 1.25 và thêm <code>corner-shape: superellipse(1.5)</code>. Đổi “Bo góc” ở thanh trên để xem cả kit đổi theo. Nút và ô nhập dạng viên thuốc dùng 9999px nên không đổi.</p></header>
+      <div class="spec"><div class="stage" id="shapes" style="gap:24px"></div></div>
+    </section>
+
+    <section class="block" id="layout">
+      <header><h2>Bố cục &amp; kích thước</h2><p>Thang cỡ control và các hằng số khung đọc từ biến CSS của site.</p></header>
+      <div class="grid">
+        <div class="spec"><div class="stage col"><div class="tbl-wrap">
+          <table class="tok"><thead><tr><th>--control-size-*</th><th>px</th><th>gặp ở</th></tr></thead><tbody>
+            <tr><td>4xs · 3xs · 2xs</td><td>20 · 22 · 24</td><td>nút icon 20, 24</td></tr>
+            <tr><td>xs · sm</td><td>26 · 28</td><td>nút nhỏ, tab 28</td></tr>
+            <tr><td>md · lg</td><td>32 · 36</td><td>nút icon 32, nút pill 36</td></tr>
+            <tr><td>xl · 2xl · 3xl</td><td>40 · 44 · 48</td><td>ô tìm plugin 44</td></tr></tbody></table>
+        </div></div><div class="spec-f"><span class="note">Font control: sm 12 · md 14 · lg 16. Icon control: xs 14 · sm 16 · md 18 · lg 20 · xl 22 · 2xl 24.</span></div></div>
+        <div class="spec"><div class="stage col"><div class="tbl-wrap">
+          <table class="tok"><thead><tr><th>Hằng số</th><th>px</th><th>dùng cho</th></tr></thead><tbody>
+            <tr><td>--spacing-token-sidebar</td><td>340</td><td>thanh bên, clamp 240–520</td></tr>
+            <tr><td>--height-toolbar</td><td>52</td><td>thanh trên, đầu sidebar</td></tr>
+            <tr><td>cột nội dung</td><td>768</td><td>trang cài đặt, composer</td></tr>
+            <tr><td>hàng sidebar</td><td>36 · r 8 · px 10</td><td>nav-row, lề ngoài 6</td></tr>
+            <tr><td>hàng cài đặt</td><td>px 16 · py 12 · gap 24</td><td>gạch chia inset 16</td></tr>
+            <tr><td>--switch-track</td><td>32 × 19–20</td><td>thumb 16, lệch 2 / 14</td></tr>
+            <tr><td>--dialog / --menu radius</td><td>16</td><td>popover, modal, menu</td></tr>
+            <tr><td>--dialog-max-width</td><td>450</td><td>min 250 · padding 20</td></tr></tbody></table>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- ================= NÚT & HÀNH ĐỘNG ================= -->
+    <section class="block" id="actions">
+      <header><h2>Nút &amp; hành động</h2><p>Gần như mọi nút là <code>button-toolbar</code> dạng viên thuốc cao 36, chữ 14/18. Khác nhau ở nền và viền. Hover luôn phủ một lớp chữ trong suốt (<code>--cg-hover</code>), focus là vòng <code>ring-2</code> màu <code>--color-ring</code> (= màu nhấn).</p></header>
+      <div class="grid">
+        <div class="spec full" data-sig="bf6c5dedeb 824a23f9c1 f9b71021e9 0c79025834 e28a9898ea 0cb250ec41 6a29cb3645 9e34aa6672 17abcfb781 363de3fe93 a7deada16f 878acf60e2"><div class="spec-h"><b>Nút viên thuốc · 9 kiểu</b><span class="kind">button-toolbar · rounded-button-toolbar</span><span class="dp">h 36 · px 12 · gap 4 · 14/18</span></div>
+          <div class="stage">
+            <button class="cg-btn v-primary">Khôi phục mặc định</button>
+            <button class="cg-btn v-secondary">Duyệt danh mục</button>
+            <button class="cg-btn v-soft">Quản lý</button>
+            <button class="cg-btn v-soft">Thêm trang web</button>
+            <button class="cg-btn"><span class="ms">edit</span>Chỉnh sửa</button>
+            <button class="cg-btn"><span class="ms">ios_share</span>Chia sẻ</button>
+            <button class="cg-btn v-outline">Create a site</button>
+            <button class="cg-btn v-surface sm"><span class="ms s16">upload</span>Tải thú cưng lên</button>
+            <button class="cg-btn v-danger">Xóa tất cả</button>
+            <button class="cg-btn v-upsell"><span class="ms s18 fill">auto_awesome</span>So sánh các gói</button>
+            <button class="cg-btn sm t2"><span class="ms s16">desktop_windows</span>Mở ứng dụng máy tính</button>
+          </div>
+          <div class="states"><span class="lbl">hover · nền lớp chữ 10% (primary: btnPrimaryHover 80%, soft 5→10%, danger 10→20%, upsell 15→20%)</span>
+            <button class="cg-btn v-primary is-hover" data-sig-state="bf6c5dedeb:hover">Khôi phục</button>
+            <button class="cg-btn v-secondary is-hover" data-sig-state="f9b71021e9:hover">Duyệt danh mục</button>
+            <button class="cg-btn v-soft is-hover" data-sig-state="0c79025834:hover e28a9898ea:hover">Quản lý</button>
+            <button class="cg-btn is-hover" data-sig-state="0cb250ec41:hover 6a29cb3645:hover">Chỉnh sửa</button>
+            <button class="cg-btn v-outline is-hover" data-sig-state="9e34aa6672:hover">Create a site</button>
+            <button class="cg-btn v-surface sm is-hover" data-sig-state="17abcfb781:hover">Tải lên</button>
+            <button class="cg-btn v-danger is-hover" data-sig-state="363de3fe93:hover">Xóa tất cả</button>
+            <button class="cg-btn v-upsell is-hover" data-sig-state="a7deada16f:hover">So sánh các gói</button>
+            <button class="cg-btn sm t2 is-hover" data-sig-state="878acf60e2:hover">Mở ứng dụng</button>
+          </div>
+          <div class="states"><span class="lbl">focus-visible · box-shadow 0 0 0 2px --color-ring</span>
+            <button class="cg-btn v-primary is-focus" data-sig-state="bf6c5dedeb:focus 824a23f9c1:focus">Khôi phục</button>
+            <button class="cg-btn v-secondary is-focus" data-sig-state="f9b71021e9:focus">Duyệt danh mục</button>
+            <button class="cg-btn v-soft is-focus" data-sig-state="0c79025834:focus e28a9898ea:focus">Quản lý</button>
+            <button class="cg-btn is-focus" data-sig-state="0cb250ec41:focus 6a29cb3645:focus">Chỉnh sửa</button>
+            <button class="cg-btn v-outline is-focus" data-sig-state="9e34aa6672:focus">Create a site</button>
+            <button class="cg-btn v-surface sm is-focus" data-sig-state="17abcfb781:focus">Tải lên</button>
+            <button class="cg-btn v-danger is-focus" data-sig-state="363de3fe93:focus">Xóa tất cả</button>
+            <button class="cg-btn v-upsell is-focus" data-sig-state="a7deada16f:focus">So sánh các gói</button>
+            <button class="cg-btn sm t2 is-focus" data-sig-state="878acf60e2:focus">Mở ứng dụng</button>
+          </div>
+          <div class="spec-f"><span class="note">Primary chữ 500 và px 16. Nút nhỏ cao 28, px 10 (chữ 12/500 khi có viền). Upsell luôn xanh dù đổi màu nhấn: site viết cứng <code>--blue-100/15%</code> (tối) và <code>--blue-a25</code> (sáng).</span></div></div>
+
+        <div class="spec" data-sig="3fd5b009e5"><div class="spec-h"><b>Nút phím tắt</b><span class="kind">button-toolbar · text-secondary</span><span class="dp">h 36 · px 12</span></div>
+          <div class="stage">
+            <button class="cg-btn t2 cg-kbd">⇧Esc</button><button class="cg-btn t2 cg-kbd">⌘↩&#xFE0E;</button><button class="cg-btn t2 cg-kbd">⇧⌘Delete</button>
+          </div>
+          <div class="states"><span class="lbl">hover · focus</span>
+            <button class="cg-btn t2 cg-kbd is-hover" data-sig-state="3fd5b009e5:hover">⌘K</button><button class="cg-btn t2 cg-kbd is-focus" data-sig-state="3fd5b009e5:focus">⌘K</button></div>
+          <div class="spec-f"><span class="note">Bấm vào để ghi tổ hợp phím mới (trang Bàn phím).</span></div></div>
+
+        <div class="spec" data-sig="8f29154077"><div class="spec-h"><b>Nút gửi</b><span class="kind">bg-composer-primary · size-token-button-composer</span><span class="dp">36 · p 2 · pill</span></div>
+          <div class="stage">
+            <button class="cg-send" aria-label="Gửi"><span class="ms fill">arrow_upward</span></button>
+          </div>
+          <div class="states"><span class="lbl">focus · outline 2 cùng màu nền</span>
+            <button class="cg-send is-focus" aria-label="Gửi" data-sig-state="8f29154077:focus"><span class="ms fill">arrow_upward</span></button></div>
+          <div class="spec-f"><span class="note">Accent Tím: nền tím. Accent Mặc định: đen (sáng) hoặc trắng (tối).</span></div></div>
+
+        <div class="spec full" data-sig="ce2f2ea1e6 818cfea306 d5ca9d770f c65adc2f66 4031cf2ea9 42e4dd349e e849d18bc6 173426424e 82b82338d8 5fcfaf41ab 64a70ebe32"><div class="spec-h"><b>Nút icon · 5 cỡ</b><span class="kind">Button-G93JGk · button-toolbar</span><span class="dp">36 r8 · 36 · 32 pill · 24 r4 · 20 pill</span></div>
+          <div class="stage">
+            <button class="cg-icon" aria-label="Tìm kiếm"><span class="ms">search</span></button>
+            <button class="cg-icon" aria-label="Đóng thanh bên"><span class="ms">left_panel_close</span></button>
+            <button class="cg-icon hv" aria-label="Tải xuống"><span class="ms">download</span></button>
+            <button class="cg-icon hv pill" aria-label="Đính kèm"><span class="ms">add</span></button>
+            <button class="cg-icon hv pill s32" aria-label="Giọng nói"><span class="ms">mic</span></button>
+            <button class="cg-icon hv pill s32" aria-label="Thêm"><span class="ms">more_horiz</span></button>
+            <button class="cg-icon s24" aria-label="Sắp xếp"><span class="ms">tune</span></button>
+            <button class="cg-icon s24" aria-label="Thêm dự án"><span class="ms">create_new_folder</span></button>
+            <button class="cg-icon s20" aria-label="Tuỳ chọn"><span class="ms">more_horiz</span></button>
+          </div>
+          <div class="states"><span class="lbl">hover · 36/32 phủ nền, 24/20 chỉ đổi màu icon sang chữ 85%</span>
+            <button class="cg-icon hv is-hover" aria-label="Tải xuống" data-sig-state="42e4dd349e:hover"><span class="ms">download</span></button>
+            <button class="cg-icon hv pill is-hover" aria-label="Đính kèm" data-sig-state="c65adc2f66:hover"><span class="ms">add</span></button>
+            <button class="cg-icon hv pill s32 is-hover" aria-label="Giọng nói" data-sig-state="d5ca9d770f:hover 4031cf2ea9:hover"><span class="ms">mic</span></button>
+            <button class="cg-icon s24 is-hover" aria-label="Sắp xếp" data-sig-state="e849d18bc6:hover 173426424e:hover 82b82338d8:hover"><span class="ms">tune</span></button>
+            <button class="cg-icon s20 is-hover" aria-label="Tuỳ chọn" data-sig-state="5fcfaf41ab:hover 64a70ebe32:hover"><span class="ms">more_horiz</span></button>
+          </div>
+          <div class="states"><span class="lbl">focus-visible · ring 2</span>
+            <button class="cg-icon hv is-focus" aria-label="Tải xuống" data-sig-state="42e4dd349e:focus"><span class="ms">download</span></button>
+            <button class="cg-icon hv pill is-focus" aria-label="Đính kèm" data-sig-state="c65adc2f66:focus"><span class="ms">add</span></button>
+            <button class="cg-icon hv pill s32 is-focus" aria-label="Giọng nói" data-sig-state="d5ca9d770f:focus 4031cf2ea9:focus"><span class="ms">mic</span></button>
+          </div>
+          <div class="spec-f"><span class="note">Hai nút 36 r8 ở đầu thanh bên (tìm kiếm, đóng thanh bên) không có hover riêng khi đo. Nút 24/20 nằm trong tiêu đề mục của thanh bên và trên hàng lịch sử.</span></div></div>
+
+        <div class="spec full" data-sig="9da0a135e0 3f9cdf3793 73f0041502 bd42ebe837 fd04d54a4f 91238d7bcb"><div class="spec-h"><b>Nút dạng chữ</b><span class="kind">text-info · interactive-button · rounded-md</span><span class="dp">12/16 · 14/18 · 16/24</span></div>
+          <div class="stage">
+            <span class="cg-para">Xem tổng quan và dùng <button class="cg-textbtn xs">hướng dẫn tùy chỉnh</button> để cung cấp thông tin.</span>
+            <button class="cg-textbtn">nâng cấp gói của bạn</button>
+            <button class="cg-more">Cài đặt nâng cao<span class="ms s18">chevron_right</span></button>
+            <button class="cg-handle">@nguoidung</button>
+            <span class="cg-value" tabindex="0">Vừa · 77%</span>
+            <span class="cg-value t3" tabindex="0">Chưa dùng</span>
+          </div>
+          <div class="states"><span class="lbl">hover</span>
+            <button class="cg-textbtn xs is-hover" data-sig-state="9da0a135e0:hover">hướng dẫn tùy chỉnh</button>
+            <button class="cg-textbtn is-hover" data-sig-state="3f9cdf3793:hover">nâng cấp gói của bạn</button>
+            <button class="cg-more is-hover" data-sig-state="73f0041502:hover">Cài đặt nâng cao<span class="ms s18">chevron_right</span></button>
+            <button class="cg-handle is-hover" data-sig-state="bd42ebe837:hover">@nguoidung</button>
+          </div>
+          <div class="states"><span class="lbl">focus-visible</span>
+            <button class="cg-textbtn xs is-focus" data-sig-state="9da0a135e0:focus">hướng dẫn tùy chỉnh</button>
+            <button class="cg-textbtn is-focus" data-sig-state="3f9cdf3793:focus">nâng cấp gói</button>
+            <button class="cg-more is-focus" data-sig-state="73f0041502:focus">Cài đặt nâng cao</button>
+            <button class="cg-handle is-focus" data-sig-state="bd42ebe837:focus">@nguoidung</button>
+            <span class="cg-value is-focus" data-sig-state="fd04d54a4f:focus">Vừa · 77%</span>
+            <span class="cg-value t3 is-focus" data-sig-state="91238d7bcb:focus">Chưa dùng</span>
+          </div>
+          <div class="spec-f"><span class="note">Nút chữ màu nhấn nằm trong đoạn mô tả. “Vừa · 77%” và “Chưa dùng” là giá trị có tooltip (con trỏ mặc định, chỉ nhận focus bàn phím).</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= ĐIỀU HƯỚNG ================= -->
+    <section class="block" id="navigation">
+      <header><h2>Điều hướng</h2><p>Thanh bên 340 có hai dạng: của app (đoạn chat, dự án, lịch sử) và của trang cài đặt (quay lại, tìm kiếm, danh mục). Hàng nào cũng cao 36, bo 8, hover và đang chọn cùng một nền.</p></header>
+      <div class="grid">
+        <div class="spec" data-sig="e0b54464c1 3baf34f4d4 0279090c67 0d442bffdd a636aba7d8 3b8425ff2a 5591193c11 a76d4a66b4"><div class="spec-h"><b>Thanh bên của app</b><span class="kind">app-shell-left-panel · nav-list</span><span class="dp">340 · hàng 36 · r 8</span></div>
+          <div class="stage center">
+            <div class="cg-sidebar" style="height:auto">
+              <div class="cg-sb-head"><button class="cg-brand-btn">ChatGPT<span class="ms">expand_more</span></button><span class="grow"></span>
+                <button class="cg-icon" aria-label="Tìm kiếm"><span class="ms">search</span></button><button class="cg-icon" aria-label="Đóng thanh bên"><span class="ms">left_panel_close</span></button></div>
+              <div class="cg-sb-list">
+                <button class="cg-nav-row is-on"><span class="ms">edit_square</span><span class="t">Đoạn chat mới</span></button>
+                <button class="cg-nav-row"><span class="ms">schedule</span><span class="t">Đã lên lịch</span></button>
+                <button class="cg-nav-row"><span class="ms">book_2</span><span class="t">Thư viện</span></button>
+                <button class="cg-nav-row"><span class="ms">alternate_email</span><span class="t">Plugin</span></button>
+                <button class="cg-nav-row"><span class="ms">more_horiz</span><span class="t">Khám phá</span></button>
+              </div>
+              <div class="cg-sec"><button class="cg-sec-btn">Đã ghim<span class="ms">expand_more</span></button></div>
+              <div style="padding:0 6px"><a class="cg-hist" href="#navigation"><span>Kế hoạch ra mắt tính năng</span></a></div>
+              <div class="cg-sec plain">Dự án<button class="cg-icon s24" aria-label="Thêm dự án"><span class="ms">create_new_folder</span></button></div>
+              <div style="padding:0 6px"><div class="cg-empty-row">Không có dự án</div></div>
+              <div class="cg-sec"><button class="cg-sec-btn">Gần đây<span class="ms">expand_more</span></button></div>
+              <div style="padding:0 6px"><a class="cg-hist" href="#navigation"><span>Tóm tắt bài báo khoa học</span></a><a class="cg-hist" href="#navigation"><span>So sánh hai thư viện biểu đồ</span></a></div>
+              <div class="cg-sb-foot"><div class="cg-user"><span class="cg-avatar">NM</span><span class="who"><b>Người dùng mẫu</b><small>Plus</small></span><button class="cg-overlay-btn" aria-label="Mở menu tài khoản"></button></div></div>
+            </div>
+          </div>
+          <div class="states"><span class="lbl">hover · focus-visible (outline 2 ring, offset −2)</span>
+            <button class="cg-nav-row is-hover" style="width:160px" data-sig-state="3baf34f4d4:hover 0279090c67:hover"><span class="ms">book_2</span><span class="t">Thư viện</span></button>
+            <button class="cg-nav-row is-focus" style="width:160px" data-sig-state="3baf34f4d4:focus 0279090c67:focus"><span class="ms">book_2</span><span class="t">Thư viện</span></button>
+            <button class="cg-sec-btn is-hover" style="flex:none;width:110px" data-sig-state="0d442bffdd:hover">Đã ghim<span class="ms">expand_more</span></button>
+            <button class="cg-sec-btn is-focus" style="flex:none;width:110px" data-sig-state="0d442bffdd:focus">Đã ghim<span class="ms">expand_more</span></button>
+            <div class="cg-sec plain is-hover" style="width:160px;margin:0" data-sig-state="a636aba7d8:hover">Dự án<button class="cg-icon s24" aria-label="Thêm dự án"><span class="ms">create_new_folder</span></button></div>
+            <div class="cg-sec plain is-ua" style="width:160px;margin:0" data-sig-state="a636aba7d8:focus">Dự án</div>
+            <a class="cg-hist is-ua" href="#navigation" style="width:160px" data-sig-state="3b8425ff2a:focus"><span>Tóm tắt bài báo</span></a>
+            <div class="cg-user" style="width:180px"><span class="cg-avatar">NM</span><span class="who"><b>Người dùng</b><small>Plus</small></span><button class="cg-overlay-btn is-focus" aria-label="Mở menu tài khoản" data-sig-state="5591193c11:focus"></button></div>
+          </div>
+          <div class="spec-f"><span class="note">Tiêu đề mục (“Đã ghim”, “Gần đây”) 14/18 500 màu phụ, chevron chỉ hiện khi hover/focus. Tiêu đề “Dự án” và link lịch sử dùng focus mặc định trình duyệt (outline auto), site không style riêng. Lịch sử là chữ 85%.</span></div></div>
+
+        <div class="spec" data-sig="ea9e1d52cb 74fd423dc0 8e2e7b4b97"><div class="spec-h"><b>Thanh bên của trang cài đặt</b><span class="kind">sidebar-navigation</span><span class="dp">340 · tìm kiếm 36 pill</span></div>
+          <div class="stage center">
+            <div class="cg-sidebar" style="height:auto">
+              <div class="cg-sb-head"><button class="cg-icon" aria-label="Mở thanh bên"><span class="ms">left_panel_open</span></button></div>
+              <div class="cg-sb-list" style="gap:8px;padding-top:8px">
+                <button class="cg-nav-row"><span class="ms">arrow_back</span><span class="t">Quay lại ứng dụng</span></button>
+                <label class="cg-search"><span class="ms s18">search</span><input placeholder="Tìm kiếm" aria-label="Tìm kiếm cài đặt"></label>
+              </div>
+              <div class="cg-sec" style="margin-top:4px"><span style="font-size:14px;line-height:18px">Cá nhân</span></div>
+              <div class="cg-sb-list" style="padding-top:0">
+                <button class="cg-nav-row"><span class="ms">settings</span><span class="t">Cài đặt chung</span></button>
+                <button class="cg-nav-row"><span class="ms">light_mode</span><span class="t">Giao diện</span></button>
+                <button class="cg-nav-row"><span class="ms">account_circle</span><span class="t">Hồ sơ</span><span class="ms end s16">north_east</span></button>
+                <button class="cg-nav-row is-on" aria-current="page"><span class="ms">keyboard</span><span class="t">Bàn phím</span></button>
+                <button class="cg-nav-row"><span class="ms">speed</span><span class="t">Mức sử dụng</span></button>
+                <button class="cg-nav-row"><span class="ms">credit_card</span><span class="t">Thanh toán</span></button>
+              </div>
+            </div>
+          </div>
+          <div class="states"><span class="lbl">focus · mục đang chọn (outline 2 ring) · ô tìm kiếm (viền trình duyệt)</span>
+            <button class="cg-nav-row is-on is-focus" style="width:180px" data-sig-state="74fd423dc0:focus"><span class="ms">keyboard</span><span class="t">Bàn phím</span></button>
+            <label class="cg-search is-focus" style="width:180px" data-sig-state="8e2e7b4b97:focus"><span class="ms s18">search</span><input placeholder="Tìm kiếm" aria-label="Tìm kiếm"></label>
+          </div>
+          <div class="spec-f"><span class="note">Mục “Hồ sơ” có mũi tên ↗ vì mở trang riêng. Ô tìm kiếm nền lớp chữ 10%, không đổi màu khi focus ngoài outline mặc định.</span></div></div>
+
+        <div class="spec" data-sig="2ccce47704 7cc8a95a84"><div class="spec-h"><b>Chọn chế độ</b><span class="kind">home-mode-toggle</span><span class="dp">h 36 · 224 · thumb 121</span></div>
+          <div class="stage center">
+            <div class="cg-mode" role="radiogroup" aria-label="Chế độ"><span class="thumb"></span><button role="radio" aria-checked="false">Trò chuyện</button><button role="radio" aria-checked="true" class="is-on">Công việc</button></div>
+          </div>
+          <div class="states"><span class="lbl">hover · focus (chữ sang --color-text-mode-toggle-primary)</span>
+            <div class="cg-mode"><span class="thumb"></span><button class="is-hover" data-sig-state="2ccce47704:hover">Trò chuyện</button><button class="is-on">Công việc</button></div>
+            <div class="cg-mode"><span class="thumb"></span><button class="is-focus" data-sig-state="2ccce47704:focus">Trò chuyện</button><button class="is-on">Công việc</button></div>
+          </div>
+          <div class="spec-f"><span class="note">Rãnh <code>--color-background-mode-toggle-track</code> lùi vào 1px, con trượt <code>…-selected</code>. Nằm giữa thanh trên của trang chủ.</span></div></div>
+
+        <div class="spec" data-sig="1d1719a0a4 aa5865dc58"><div class="spec-h"><b>Tab viên thuốc</b><span class="kind">button-toolbar · bg-text/10</span><span class="dp">h 36 · px 12</span></div>
+          <div class="stage"><div class="cg-tabs" role="tablist"><button class="cg-pilltab is-on" role="tab" aria-selected="true">Tổng quan</button><button class="cg-pilltab" role="tab" aria-selected="false">Phân tích</button></div></div>
+          <div class="states"><span class="lbl">hover · focus · đang chọn</span>
+            <button class="cg-pilltab is-on is-hover" data-sig-state="1d1719a0a4:hover">Tổng quan</button>
+            <button class="cg-pilltab is-hover" data-sig-state="aa5865dc58:hover">Phân tích</button>
+            <button class="cg-pilltab is-on is-focus" data-sig-state="1d1719a0a4:focus">Tổng quan</button>
+            <button class="cg-pilltab is-focus" data-sig-state="aa5865dc58:focus">Phân tích</button>
+            <button class="cg-pilltab is-on" data-sig-state="aa5865dc58:selected">Phân tích</button>
+          </div>
+          <div class="spec-f"><span class="note">Đang chọn: nền chữ 10%, hover 15%. Chưa chọn: chữ cấp ba, hover nền 10%. Trang Mức sử dụng.</span></div></div>
+
+        <div class="spec" data-sig="22b4987cb7 0e7ce7e3c5 cabf2975d1"><div class="spec-h"><b>Tab nhỏ trong thẻ</b><span class="kind">rounded-md px-2 py-1 font-medium</span><span class="dp">h 28 · r 6</span></div>
+          <div class="stage"><div class="cg-segbar" role="tablist"><button class="cg-segtab is-on" role="tab" aria-selected="true">Có sẵn <span class="n">4</span></button><button class="cg-segtab" role="tab" aria-selected="false">Lịch sử</button></div></div>
+          <div class="states"><span class="lbl">hover · focus · focus cả dải (mặc định trình duyệt)</span>
+            <button class="cg-segtab is-hover" data-sig-state="cabf2975d1:hover">Lịch sử</button>
+            <button class="cg-segtab is-on is-focus" data-sig-state="0e7ce7e3c5:focus">Có sẵn <span class="n">4</span></button>
+            <button class="cg-segtab is-focus" data-sig-state="cabf2975d1:focus">Lịch sử</button>
+            <div class="cg-segbar is-ua" style="width:auto" data-sig-state="22b4987cb7:focus"><span class="cg-segtab is-on">Có sẵn</span><span class="cg-segtab">Lịch sử</span></div>
+          </div>
+          <div class="spec-f"><span class="note">Tab đang chọn và hover đều lấy nền bề mặt (<code>bg-surface</code>), nên chỉ thấy rõ khi thẻ có nền khác.</span></div></div>
+
+        <div class="spec" data-sig="e701fbd264 5916d061de"><div class="spec-h"><b>Tab chữ</b><span class="kind">text-token-text-primary / -secondary</span><span class="dp">14/20 · r 4 · gap 12</span></div>
+          <div class="stage"><div class="cg-tabs" style="gap:12px" role="tablist"><button class="cg-texttab is-on" role="tab" aria-selected="true">Hằng ngày</button><button class="cg-texttab" role="tab" aria-selected="false">Hằng tuần</button><button class="cg-texttab" role="tab" aria-selected="false">Lũy kế</button></div></div>
+          <div class="states"><span class="lbl">focus (outline 2, màu mặc định trình duyệt) · đang chọn</span>
+            <button class="cg-texttab is-focus" data-sig-state="e701fbd264:focus">Hằng tuần</button>
+            <button class="cg-texttab is-on is-focus" data-sig-state="5916d061de:focus">Hằng ngày</button>
+            <button class="cg-texttab is-on" data-sig-state="e701fbd264:selected">Hằng tuần</button>
+          </div>
+          <div class="spec-f"><span class="note">Chưa chọn là chữ 65%. Đặt trên biểu đồ hoạt động của trang hồ sơ.</span></div></div>
+
+        <div class="spec" data-sig="71ed3d51b7 b7b288e85c"><div class="spec-h"><b>Thanh công cụ trang · tay kéo</b><span class="kind">app-shell-header-toolbar · cursor-col-resize</span><span class="dp">h 52 · kéo 16</span></div>
+          <div class="stage col">
+            <div class="cg-toolbar"><button class="cg-btn"><span class="ms">edit</span>Chỉnh sửa</button><button class="cg-btn"><span class="ms">lock</span>Riêng tư</button><button class="cg-btn"><span class="ms">ios_share</span>Chia sẻ</button></div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--cg-textTertiary)"><div class="cg-divider-v" aria-hidden="true"></div>vùng kéo 16px giữa thanh bên và nội dung, hiện một đường 1px</div>
+          </div></div>
+      </div>
+    </section>
+
+    <!-- ================= NHÓM & NỘI DUNG ================= -->
+    <section class="block" id="containment">
+      <header><h2>Nhóm &amp; nội dung</h2><p>Trang cài đặt xếp mọi thứ trong nhóm bo 16 viền 1px, rộng 768. Mỗi hàng có tiêu đề 14/20 500 và mô tả 12/16 màu phụ, phía phải là công tắc, nút, dropdown hoặc giá trị kèm chevron.</p></header>
+      <div class="grid">
+        <div class="spec full" data-sig="333d485acb 35e6c2ab4c aedcf47b92 d6fcdf77c7 17f8feac42 fa49c29597 d91218744f c86dc99b2a"><div class="spec-h"><b>Tiêu đề, mô tả &amp; link</b><span class="kind">heading-lg · font-medium · text-info</span><span class="dp">24 · 16/500 · 14/500 · 14 · 12</span></div>
+          <div class="stage col" style="gap:14px">
+            <h3 class="cg-page-title">Cá nhân hóa</h3>
+            <div><h4 class="cg-sec-title">Bộ nhớ</h4><p class="cg-sec-desc">Thiết lập cách trợ lý quản lý bộ nhớ. <a class="cg-link" href="#containment">Tìm hiểu thêm</a></p></div>
+            <div style="font-size:14px;line-height:20px;font-weight:500">Giao diện</div>
+            <p class="cg-para">Phụ huynh và thanh thiếu niên có thể liên kết tài khoản để điều chỉnh một số tính năng. <a class="cg-link muted" href="#containment">Tìm hiểu thêm</a></p>
+            <p style="margin:0;font-size:12px;line-height:16px;color:var(--cg-textSecondary)">Mô tả 12/16. <a class="cg-link" href="#containment">Tìm hiểu thêm</a> · <a class="cg-link muted" href="#containment">Tìm hiểu thêm</a></p>
+          </div>
+          <div class="states"><span class="lbl">focus link · mặc định trình duyệt (outline auto), site không style riêng</span>
+            <a class="cg-link is-ua" href="#containment" style="font-size:12px" data-sig-state="d6fcdf77c7:focus">Tìm hiểu thêm</a>
+            <a class="cg-link is-ua" href="#containment" style="font-size:14px" data-sig-state="d91218744f:focus">Tìm hiểu thêm</a>
+            <a class="cg-link muted is-ua" href="#containment" style="font-size:14px" data-sig-state="17f8feac42:focus">Tìm hiểu thêm</a>
+            <a class="cg-link muted is-ua" href="#containment" style="font-size:12px" data-sig-state="fa49c29597:focus">Tìm hiểu thêm</a>
+          </div>
+          <div class="spec-f"><span class="note">Tiêu đề trang 24/28.8 chữ thường (heading-lg font-normal). Link màu nhấn dùng <code>--app-color-text-accent</code>, link gạch chân dùng chữ phụ.</span></div></div>
+
+        <div class="spec full" data-sig="bc7aa80e8f 25f3083e8f 74774620c0 e2476079c4 873b41649c 45cd0d9702 c9589ea355 bd88654837 44fa4666de 4290d44b90 6d797c1302"><div class="spec-h"><b>Nhóm cài đặt</b><span class="kind">rounded-2xl border border-default · after:inset-x-4 bg-border</span><span class="dp">768 · r 16 · hàng px16 py12 gap24</span></div>
+          <div class="stage col">
+            <div class="cg-group">
+              <button class="cg-row"><span class="txt"><b>Mã khóa truy cập</b><small>Đăng nhập chống lừa đảo thay cho mật khẩu</small></span><span class="end">1<span class="ms">chevron_right</span></span></button>
+              <button class="cg-row"><span class="txt"><b>Mật khẩu</b><small>Quản lý mật khẩu bạn dùng để đăng nhập</small></span><span class="end">Thêm<span class="ms">chevron_right</span></span></button>
+              <div class="cg-row"><span class="txt"><b>Ứng dụng xác thực</b><small>Dùng mã một lần từ ứng dụng xác thực</small></span><span class="end"><button class="cg-switch" role="switch" aria-checked="false" aria-label="Ứng dụng xác thực"></button></span></div>
+              <div class="cg-row"><span class="txt"><b>Bật bộ nhớ</b><small>Cho phép cá nhân hoá dựa trên các cuộc trò chuyện. <a class="cg-link" href="#containment">Tìm hiểu thêm</a></small></span><span class="end"><button class="cg-switch" role="switch" aria-checked="true" aria-label="Bật bộ nhớ"></button></span></div>
+              <div class="cg-row"><span class="txt"><b>Liên kết đã chia sẻ</b></span><span class="end"><button class="cg-btn v-soft">Quản lý</button></span></div>
+              <div class="cg-row"><span class="txt"><b>Tên</b></span><span class="end"><input class="cg-input" value="Người dùng mẫu" aria-label="Tên"><button class="cg-btn t3" disabled style="opacity:.4">Lưu</button></span></div>
+              <div class="cg-row"><span class="txt"><b>Bảo mật tài khoản nâng cao</b><small>Thêm lớp bảo vệ khi đăng nhập</small></span><a class="cg-link plain" href="#containment" style="font-size:16px">Đăng ký<span class="ms s18" style="color:var(--cg-textTertiary)">chevron_right</span></a></div>
+              <div class="cg-row"><span class="txt"><b>Xoá tất cả trò chuyện</b></span><span class="end"><button class="cg-btn v-danger">Xóa tất cả</button></span></div>
+            </div>
+            <div class="cg-group"><div class="cg-row callout"><span class="txt"><b>Thêm một phương thức khác để tránh bị khóa tài khoản</b></span><span class="end"><span class="ms">lock_person</span></span></div></div>
+            <div class="cg-group"><div class="cg-row center">Chưa ghi nhận việc sử dụng tín dụng</div></div>
+          </div>
+          <div class="states"><span class="lbl">focus hàng bấm được (cả hàng là button, hoặc lớp bấm phủ absolute inset-0) · outline 2 ring offset −2 · link “Đăng ký” focus mặc định trình duyệt</span>
+            <div class="cg-group" style="width:360px"><button class="cg-row is-focus" data-sig-state="45cd0d9702:focus c9589ea355:focus bd88654837:focus"><span class="txt"><b>Phiên đang hoạt động</b><small>Xem các thiết bị đã đăng nhập</small></span><span class="end">3<span class="ms">chevron_right</span></span></button></div>
+            <div class="cg-group" style="width:360px"><div class="cg-row" style="position:relative"><span class="txt"><b>Hướng dẫn tùy chỉnh</b><small>Ngữ cảnh cho mọi cuộc trò chuyện</small></span><span class="end"><span class="ms">chevron_right</span></span><button class="cg-overlay-btn is-focus" style="outline:2px solid var(--cg-ring);outline-offset:-2px;box-shadow:none;border-radius:0" aria-label="Mở hướng dẫn" data-sig-state="44fa4666de:focus 4290d44b90:focus"></button></div></div>
+            <a class="cg-link plain is-ua" href="#containment" data-sig-state="6d797c1302:focus">Đăng ký<span class="ms s18">chevron_right</span></a>
+          </div>
+          <div class="spec-f"><span class="note">Hàng cảnh báo có nền xám (đo theo ảnh, gần <code>--cg-elevatedSecondary</code>). Ô “Tên” là input soft viền <code>border-heavy</code>, focus đổi viền sang ring.</span></div></div>
+
+        <div class="spec full" data-sig="2140ca45d2 c040d27fed 2c3e037c4f"><div class="spec-h"><b>Danh sách chọn một</b><span class="kind">min-h-19 hover:bg-primary-ghost-hover</span><span class="dp">h 76 · icon 40 · radio 20</span></div>
+          <div class="stage col">
+            <div class="cg-radio-row"><button><span class="ic"><span class="ms s24">pets</span></span><span class="txt"><b>Tạo thú cưng mới</b><small>Mô tả điều bạn muốn, trợ lý sẽ tạo giúp bạn</small></span></button></div>
+            <div class="cg-radio-row"><button role="radio" aria-checked="false"><span class="ic"></span><span class="txt"><b>Bạn đồng hành A</b><small>Mô tả ngắn một dòng.</small></span><span class="cg-radio"><i></i></span></button></div>
+            <div class="cg-radio-row"><button role="radio" aria-checked="true"><span class="ic"></span><span class="txt"><b>Không hiển thị thú cưng</b></span><span class="cg-radio on"><i></i></span></button></div>
+          </div>
+          <div class="states"><span class="lbl">hover (nền --cg-hover) · focus nút trong hàng (outline 2 ring offset −2)</span>
+            <div class="cg-radio-row is-hover" style="width:360px;min-height:60px"><button><span class="txt"><b>Bạn đồng hành B</b></span><span class="cg-radio"><i></i></span></button></div>
+            <div class="cg-radio-row" style="width:360px;min-height:60px"><button class="is-focus" data-sig-state="2c3e037c4f:focus"><span class="txt"><b>Tạo thú cưng mới</b></span></button></div>
+          </div>
+          <div class="spec-f"><span class="note">Radio là icon SVG 20 (vòng tròn chữ cấp ba, chọn thì tròn đặc màu nhấn có dấu tích). Ảnh thú cưng của site thay bằng ô trống.</span></div></div>
+
+        <div class="spec full" data-sig="b71565ff4e c8f29668e7 cbcb2a5e3d b6197fff88"><div class="spec-h"><b>Danh sách phím tắt</b><span class="kind">list-none px-3 · border-b border-subtle</span><span class="dp">hàng 52 · pl 16 pr 12</span></div>
+          <div class="stage col" style="padding-bottom:0">
+            <h5 class="cg-sub-title">Khung soạn thảo</h5>
+            <ul class="cg-kbd-list">
+              <li><button class="cg-switch" role="switch" aria-checked="true" aria-label="Bật"></button><span class="t">Chuyển tiêu điểm đến khung chat chính</span><button class="cg-btn t2 cg-kbd">⇧Esc</button></li>
+              <li><button class="cg-switch" role="switch" aria-checked="true" aria-label="Bật"></button><span class="t">Gửi tin nhắn</span><button class="cg-btn t2 cg-kbd">↩&#xFE0E;</button></li>
+              <li><button class="cg-switch" role="switch" aria-checked="true" aria-label="Bật"></button><span class="t">Xoá cuộc trò chuyện</span><button class="cg-btn t2 cg-kbd">⇧⌘Delete</button><button class="cg-btn t2 cg-kbd">⇧⌘Backspace</button></li>
+            </ul>
+            <div class="cg-footbar" style="margin-top:8px"><button class="cg-btn v-primary">Khôi phục mặc định</button></div>
+          </div>
+          <div class="spec-f"><span class="note">Tiêu đề nhóm dính (sticky) 14/24 500, nền bề mặt. Thanh chân cố định đáy trang, viền trên <code>border-primary-outline</code> (đo được 20%).</span></div></div>
+
+        <div class="spec" data-sig="dbe9403d62"><div class="spec-h"><b>Hạn mức &amp; thanh tiến độ</b><span class="kind">ring-1 ring-inset · progress h-1.5</span><span class="dp">r 16 · thanh 6</span></div>
+          <div class="stage col">
+            <div class="cg-group cg-ring-card" style="width:100%">
+              <div class="cg-limit"><b>Giới hạn trong 5 giờ</b><div class="meta"><span>Đặt lại sau 5 giờ 0 phút</span><span>Còn lại 100%</span></div><div class="cg-progress" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"><i></i></div></div>
+              <div class="cg-limit"><b>Giới hạn hằng tuần</b><div class="meta"><span>Đặt lại sau 4 ngày</span><span>Còn lại 62%</span></div><div class="cg-progress" style="--v:62%" role="progressbar" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100"><i></i></div></div>
+            </div>
+          </div><div class="spec-f"><span class="note">Chiều cao 6 và bo tròn là số đo. Màu phần đã dùng/phần nền vẽ theo ảnh (chữ chính trên nền viền), vì <code>&lt;progress&gt;</code> tô bằng pseudo-element không đọc được.</span></div></div>
+
+        <div class="spec" data-sig="02d5f2f4b6 7cf00af581 126c9e5fcb"><div class="spec-h"><b>Bảng giao dịch</b><span class="kind">table text-sm · td px-3 py-2</span><span class="dp">hàng 38–39</span></div>
+          <div class="stage col"><div class="cg-group" style="width:100%"><div class="tbl-wrap">
+            <table class="cg-table"><thead><tr><th>Gói</th><th>Ngày</th><th class="c">Trạng thái</th><th style="text-align:right">Số tiền</th><th></th></tr></thead><tbody>
+              <tr><td>Gói trả phí</td><td>01/10/2026</td><td class="c"><span class="cg-badge warn">Đến hạn</span></td><td class="num">500.000 ₫</td><td><span class="ms s18" style="color:var(--cg-textTertiary)">chevron_right</span></td></tr>
+              <tr><td>Gói trả phí</td><td>01/09/2026</td><td class="c"><span class="cg-tag">Đã thanh toán</span></td><td class="num">0 ₫</td><td><span class="ms s18" style="color:var(--cg-textTertiary)">chevron_right</span></td></tr>
+            </tbody></table></div></div></div>
+          <div class="spec-f"><span class="note">Badge cảnh báo pill 20, 12/500. Nhãn “Đã thanh toán” bo 4, 14/14, nền xám.</span></div></div>
+
+        <div class="spec full" data-sig="14ddfbab38 e8d4497606 f3c5379100 6d4e8ab212 32edce1f90 7ed27d9270 c959d58e14 e7676bcc57 2fe4b7bbe2 9d639dc8ae b3bce875fd"><div class="spec-h"><b>Trang hồ sơ</b><span class="kind">identityHeading · showcaseEmptyState · cell</span><span class="dp">736 · avatar 112 · ô 11 r4</span></div>
+          <div class="stage col" style="align-items:center;gap:20px">
+            <div class="cg-profile"><span class="cg-avatar xl">NM</span><div class="name">Người dùng mẫu</div><button class="cg-handle">@nguoidung</button></div>
+            <div class="cg-stats"><div>391,8 Tr<small>Token trọn đời</small></div><div>77,1 Tr<small>Token cao nhất</small></div><div>1 giờ 7 phút<small>Tác vụ lâu nhất</small></div><div>9 ngày<small>Chuỗi dài nhất</small></div><div>2 ngày<small>Chuỗi hiện tại</small></div></div>
+            <div class="cg-showcase"><div class="ph">ảnh minh hoạ</div>Hiển thị các trang web nổi bật trên hồ sơ của bạn<button class="cg-btn v-outline">Create a site</button></div>
+            <div style="width:736px;max-width:100%;display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><h4 class="cg-sec-title">Hoạt động token</h4><div class="cg-tabs" style="gap:12px"><button class="cg-texttab is-on">Hằng ngày</button><button class="cg-texttab">Hằng tuần</button><button class="cg-texttab">Lũy kế</button></div></div>
+              <div class="tbl-wrap"><div class="cg-heat" id="heat" aria-label="Biểu đồ hoạt động mẫu"></div></div>
+            </div>
+            <div class="cg-emptybox"><span class="ms s18">alternate_email</span><span>Chưa dùng plugin nào · <a class="cg-link t3" href="#containment">Duyệt</a></span></div>
+          </div>
+          <div class="states"><span class="lbl">tên sửa tại chỗ khi focus · link “Duyệt” hover (chữ phụ) và focus mặc định trình duyệt</span>
+            <input class="cg-inline-input is-focus" value="Người dùng" aria-label="Tên hiển thị" data-sig-state="f3c5379100:focus">
+            <a class="cg-link t3 is-hover" href="#containment" data-sig-state="c959d58e14:hover">Duyệt</a>
+            <a class="cg-link t3 is-ua" href="#containment" data-sig-state="c959d58e14:focus">Duyệt</a>
+          </div>
+          <div class="spec-f"><span class="note">Ô heatmap: mức 0 = <code>--cg-elevatedSecondary</code>, mức 1–4 = <code>--color-chart-sequential-1..4</code> (đổi theo màu nhấn). Dữ liệu ô là mẫu. Ảnh đại diện và hình minh hoạ của site thay bằng khối giữ chỗ.</span></div></div>
+
+        <div class="spec" data-sig="116727041a"><div class="spec-h"><b>Thẻ plugin</b><span class="kind">rounded-2xl border · tile 36</span><span class="dp">768 · r 16</span></div>
+          <div class="stage col">
+            <div class="cg-plugin" style="width:100%"><button><span class="tile"><span class="ms s18">extension</span></span><span class="txt"><b>Công cụ từ xa (mẫu)</b><small>Đọc, ghi tệp và chạy script trong không gian làm việc mẫu.</small></span></button></div>
+            <div class="cg-plugin" style="width:100%"><button class="is-focus" data-sig-state="116727041a:focus"><span class="tile"><span class="ms s18">extension</span></span><span class="txt"><b>Focus</b><small>outline 2 ring, offset −2</small></span></button></div>
+          </div></div>
+
+        <div class="spec" data-sig="b22df1640f 1f44b3f779 7c9c6eea50 6f72ba645b"><div class="spec-h"><b>Ô xem trước giao diện</b><span class="kind">aspect-4/3 · rounded-lg</span><span class="dp">80 × 60 · r 8</span></div>
+          <div class="stage">
+            <div class="cg-theme-tiles"><span class="cg-theme-tile on" style="--pa:#f9f9f9;--pb:#0d0d0d;--pc:#5d5d5d" title="Hệ thống"><span class="a"></span><span class="b"><i></i><i></i></span></span><span class="cg-theme-tile" style="--pa:#f3f3f3;--pb:#fcfcfc;--pc:#8f8f8f" title="Sáng"><span class="a"></span><span class="b"><i></i><i></i></span></span><span class="cg-theme-tile" style="--pa:#303030;--pb:#000000;--pc:#afafaf" title="Tối"><span class="a"></span><span class="b"><i></i><i></i></span></span></div>
+          </div>
+          <div class="spec-f"><span class="note">Hình trong ô là SVG của site, dựng lại đơn giản bằng khối màu. Ô đang chọn viền màu nhấn. Chấm màu 12 và nút “Aa” 20 xem ở thẻ Chọn giao diện (Nhập liệu).</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= NHẬP LIỆU ================= -->
+    <section class="block" id="inputs">
+      <header><h2>Nhập liệu</h2><p>Công tắc màu nhấn, composer bo 28, và dropdown dạng nút viên thuốc có chevron.</p></header>
+      <div class="grid">
+        <div class="spec" data-sig="6cbd229e58 ee4ca00d44 138ea76e2a ee776a80d1"><div class="spec-h"><b>Công tắc</b><span class="kind">bg-chart-blue h-5 w-8 · thumb h-4 w-4</span><span class="dp">32 × 20 · thumb 16 · x 2/14</span></div>
+          <div class="stage">
+            <button class="cg-switch" role="switch" aria-checked="true" aria-label="Bật"></button>
+            <button class="cg-switch" role="switch" aria-checked="false" aria-label="Tắt"></button>
+            <button class="cg-switch" role="switch" aria-checked="false" aria-label="Tắt, không dùng được" disabled></button>
+          </div>
+          <div class="states"><span class="lbl">bật (selected) · focus ring 2 (bọc 32 × 20)</span>
+            <button class="cg-switch" role="switch" aria-checked="true" aria-label="Bật" data-sig-state="ee4ca00d44:selected"></button>
+            <button class="cg-switch is-focus" role="switch" aria-checked="true" aria-label="Bật" data-sig-state="ee776a80d1:focus"></button>
+          </div>
+          <div class="spec-f"><span class="note">Nền bật là <code>--switch-track-color-checked</code> (màu nhấn), tắt là chữ 10%. Bấm để thử.</span></div></div>
+
+        <div class="spec" data-sig="5c5388ad23 b4f7fc1618 981c5c14d2 6a4a4fb03c 4820193250"><div class="spec-h"><b>Chọn giao diện &amp; ô nhập</b><span class="kind">button-toolbar · input border</span><span class="dp">36 · 28 · input 176 × 36 r 6</span></div>
+          <div class="stage">
+            <button class="cg-btn v-secondary chev">Mặc định</button>
+            <button class="cg-btn v-outline cg-select-font chev" style="background:var(--cg-surface)"><span class="cg-aa">Aa</span>ChatGPT</button>
+            <button class="cg-btn v-outline sm chev" style="background:var(--cg-surface);font-size:12px;padding-left:8px"><span class="cg-dot"></span>Tím</button>
+            <span class="cg-btn v-outline sm cg-colorval" style="background:var(--cg-surface);cursor:default"><button class="dot" style="--dc:var(--cg-surface)" aria-label="Màu nền"></button><input value="#000000" aria-label="Mã màu nền"></span>
+            <input class="cg-input" placeholder="Tên hiển thị" aria-label="Tên hiển thị">
+          </div>
+          <div class="states"><span class="lbl">hover · focus</span>
+            <button class="cg-btn v-secondary chev is-hover" data-sig-state="5c5388ad23:hover">Mặc định</button>
+            <button class="cg-btn v-secondary chev is-focus" data-sig-state="5c5388ad23:focus">Mặc định</button>
+            <button class="cg-btn v-outline cg-select-font chev is-hover" data-sig-state="b4f7fc1618:hover"><span class="cg-aa">Aa</span>ChatGPT</button>
+            <button class="cg-btn v-outline cg-select-font chev is-focus" style="background:var(--cg-surface)" data-sig-state="b4f7fc1618:focus"><span class="cg-aa">Aa</span>ChatGPT</button>
+            <button class="cg-btn v-outline sm chev is-hover" style="font-size:12px;padding-left:8px" data-sig-state="981c5c14d2:hover"><span class="cg-dot"></span>Tím</button>
+            <button class="cg-btn v-outline sm chev is-focus" style="background:var(--cg-surface);font-size:12px;padding-left:8px" data-sig-state="981c5c14d2:focus"><span class="cg-dot"></span>Tím</button>
+            <span class="cg-btn v-outline sm cg-colorval" style="background:var(--cg-surface)"><button class="dot is-focus" style="--dc:var(--cg-surface)" aria-label="Màu nền" data-sig-state="b22df1640f:focus"></button><input class="is-focus" value="#000000" aria-label="Mã màu" data-sig-state="6a4a4fb03c:focus"></span>
+            <span class="cg-btn v-outline sm cg-colorval" style="background:var(--cg-surface)"><button class="dot is-focus" style="--dc:var(--cg-text)" aria-label="Màu chữ" data-sig-state="1f44b3f779:focus"></button><input value="#EDEDED" aria-label="Mã màu chữ"></span>
+            <input class="cg-input is-focus" value="Người dùng mẫu" aria-label="Tên" data-sig-state="4820193250:focus">
+          </div>
+          <div class="spec-f"><span class="note">Dropdown hàng cài đặt: nền <code>btnSecondary</code> + viền. Chọn font/màu nhấn: nền bề mặt + viền. Chấm màu 14 và ô mã màu 12 in hoa nhận focus mặc định trình duyệt.</span></div></div>
+
+        <div class="spec full" data-sig="e7e446a5ac 1d54327a50 5aca44f40e bac13dfb45 6f07446d39"><div class="spec-h"><b>Composer</b><span class="kind">ComposerLayoutBody · bg-background-composer-action-bar</span><span class="dp">768 × 128 · r 28 · thanh phụ 48</span></div>
+          <div class="stage center">
+            <div class="cg-composer">
+              <div class="body">
+                <div class="editor" contenteditable="true" role="textbox" aria-label="Soạn tin nhắn" data-ph="Hỏi bất kỳ điều gì"></div>
+                <div class="tools"><button class="cg-icon hv pill" aria-label="Thêm tệp"><span class="ms s24">add</span></button><span class="grow"></span>
+                  <button class="cg-btn t3 cg-picker" style="padding:0 8px">GPT-6.1 Sol <span class="dim">Nhẹ nhàng</span><span class="ms s16">expand_more</span></button>
+                  <button class="cg-icon hv pill" aria-label="Giọng nói"><span class="ms">mic</span></button>
+                  <button class="cg-send" aria-label="Gửi"><span class="ms fill">arrow_upward</span></button></div>
+              </div>
+              <div class="actions"><button class="cg-btn sm"><span class="ms s16">folder</span>Chọn dự án</button><button class="cg-btn sm"><span class="ms s16">book_2</span>Tệp</button><button class="cg-btn sm"><span class="ms s16">alternate_email</span>Plugin</button><span class="grow"></span><button class="cg-btn sm"><span class="ms s16">desktop_windows</span>Mở ứng dụng máy tính</button></div>
+            </div>
+          </div>
+          <div class="states"><span class="lbl">chọn mô hình · hover · focus</span>
+            <button class="cg-btn t3 cg-picker is-hover" style="padding:0 8px" data-sig-state="6f07446d39:hover">GPT-6.1 Sol <span class="dim">Nhẹ nhàng</span></button>
+            <button class="cg-btn t3 cg-picker is-focus" style="padding:0 8px" data-sig-state="6f07446d39:focus">GPT-6.1 Sol <span class="dim">Nhẹ nhàng</span></button>
+          </div>
+          <div class="spec-f"><span class="note">Thân composer nền <code>elevated</code> (#1B1B1B tối), viền trong 1px mờ. Ô soạn là ProseMirror 16/26. Thanh phụ bên dưới nền <code>composer-action-bar</code>, lùi vào 12px mỗi bên. Gõ thử vào ô soạn.</span></div></div>
+
+        <div class="spec" data-sig=""><div class="spec-h"><b>Ô tìm plugin</b><span class="kind">rounded-full border</span><span class="dp">768 × 44</span></div>
+          <div class="stage col"><label class="cg-bigsearch"><span class="ms s18">search</span><span>Tìm kiếm plugin đã cài đặt</span></label></div>
+          <div class="spec-f"><span class="note">Chiều cao và bo đo từ ảnh trang Plugin, discover không tách thành pattern riêng.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= PHẢN HỒI & FOCUS ================= -->
+    <section class="block" id="feedback">
+      <header><h2>Phản hồi &amp; focus</h2><p>Badge, ảnh đại diện, trạng thái tải, cùng tooltip và menu dựng từ token của site.</p></header>
+      <div class="grid">
+        <div class="spec" data-sig=""><div class="spec-h"><b>Badge &amp; nhãn</b><span class="kind">bg-*-soft-alpha · rounded-full</span><span class="dp">min-h 20 · px 8 · 12/500</span></div>
+          <div class="stage"><span class="cg-badge warn">Đến hạn</span><span class="cg-badge danger">Thất bại</span><span class="cg-badge info">Mới</span><span class="cg-tag">Đã thanh toán</span><span class="cg-tag">Mặc định</span></div>
+          <div class="spec-f"><span class="note">“Đến hạn” và nhãn xám đo được; badge đỏ/xanh dựng từ <code>--color-background-danger/info-soft-alpha</code>.</span></div></div>
+
+        <div class="spec" data-sig=""><div class="spec-h"><b>Ảnh đại diện</b><span class="kind">rounded-full size-6 · size-28</span><span class="dp">24 · 112</span></div>
+          <div class="stage"><span class="cg-avatar">NM</span><span class="cg-avatar" style="background:var(--cg-seq4)">AB</span><span class="cg-avatar xl">NM</span></div>
+          <div class="spec-f"><span class="note">Site hiện ảnh; khi chưa có ảnh là chữ cái đầu trên nền màu. Màu nền ở đây lấy từ thang sequential cho gọn.</span></div></div>
+
+        <div class="spec" data-sig=""><div class="spec-h"><b>Đang tải</b><span class="kind">spinner · text-secondary</span><span class="dp">12 · 14/20</span></div>
+          <div class="stage"><span class="cg-spinner"><i></i>Đang tải cài đặt…</span></div>
+          <div class="spec-f"><span class="note">Vòng quay vẽ theo ảnh trang Plugin (icon SVG của site).</span></div></div>
+
+        <div class="spec" data-sig=""><div class="spec-h"><b>Tooltip &amp; menu</b><span class="kind">tooltip-compact · menu</span><span class="dp">r 6 · menu r 16 blur 16</span></div>
+          <div class="stage" style="align-items:flex-start">
+            <span class="cg-tip">⌘K</span>
+            <span class="cg-tip-lg">Mức suy luận dùng nhiều nhất trong 30 ngày.</span>
+            <div class="cg-menu"><div class="on"><span class="ms s18">edit</span>Đổi tên</div><div><span class="ms s18">push_pin</span>Ghim</div><hr><div class="danger"><span class="ms s18">delete</span>Xoá</div></div>
+          </div>
+          <div class="spec-f"><span class="note">Không đo được vì menu và tooltip chỉ mở bằng JS. Dựng từ biến <code>--tooltip-*</code> và <code>--menu-*</code> có trong CSS đã lưu (nền, bo góc, padding, blur, bóng).</span></div></div>
+
+        <div class="spec full" data-sig=""><div class="spec-h"><b>Focus · 4 kiểu</b><span class="kind">focus-visible</span><span class="dp">ring 2 · outline 2 −2 · outline 2 · auto</span></div>
+          <div class="stage" style="gap:32px;justify-content:space-around">
+            <div class="focus-demo"><button class="cg-btn v-soft is-focus">Quản lý</button>ring-2 ring-ring<br>nút viên thuốc, icon, tab</div>
+            <div class="focus-demo"><button class="cg-nav-row is-focus" style="width:170px"><span class="ms">book_2</span><span class="t">Thư viện</span></button>outline 2 ring, offset −2<br>hàng thanh bên, hàng cài đặt</div>
+            <div class="focus-demo"><button class="cg-send is-focus" aria-label="Gửi"><span class="ms fill">arrow_upward</span></button>outline 2 cùng màu nền<br>nút gửi</div>
+            <div class="focus-demo"><a class="cg-link is-ua" href="#feedback">Tìm hiểu thêm</a>mặc định trình duyệt<br>13/65 phần tử: link, tiêu đề mục</div>
+          </div>
+          <div class="spec-f"><span class="note">Đo 65 trạng thái focus: 52 do site tự style (ring hoặc outline màu <code>--color-ring</code>), 13 chỉ là outline auto của trình duyệt.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= MÀN MẪU ================= -->
+    <section class="block" id="screens">
+      <header><h2>Màn hình mẫu</h2><p>Hai màn desktop 1440 × 900 ghép từ chính các class ở trên, bố cục như trang đã lưu: thanh bên 340 + nội dung căn giữa cột 768. Không có màn mobile vì bộ trang đã lưu chỉ có bản desktop, không có số đo nào cho bố cục hẹp.</p></header>
+      <div class="screens"><div class="screen-row">
+        <div>
+          <div class="desk">
+            <div class="cg-sidebar">
+              <div class="cg-sb-head"><button class="cg-brand-btn">ChatGPT<span class="ms">expand_more</span></button><span class="grow"></span><button class="cg-icon" aria-label="Tìm kiếm"><span class="ms">search</span></button><button class="cg-icon" aria-label="Đóng thanh bên"><span class="ms">left_panel_close</span></button></div>
+              <div class="cg-sb-list">
+                <button class="cg-nav-row is-on"><span class="ms">edit_square</span><span class="t">Đoạn chat mới</span></button>
+                <button class="cg-nav-row"><span class="ms">schedule</span><span class="t">Đã lên lịch</span></button>
+                <button class="cg-nav-row"><span class="ms">book_2</span><span class="t">Thư viện</span></button>
+                <button class="cg-nav-row"><span class="ms">alternate_email</span><span class="t">Plugin</span></button>
+                <button class="cg-nav-row"><span class="ms">more_horiz</span><span class="t">Khám phá</span></button>
+              </div>
+              <div class="cg-sec"><button class="cg-sec-btn">Đã ghim<span class="ms">expand_more</span></button></div>
+              <div style="padding:0 6px"><a class="cg-hist" href="#screens"><span>Kế hoạch ra mắt tính năng</span></a></div>
+              <div class="cg-sec plain">Dự án<button class="cg-icon s24" aria-label="Thêm dự án"><span class="ms">create_new_folder</span></button></div>
+              <div style="padding:0 6px"><div class="cg-empty-row">Không có dự án</div></div>
+              <div class="cg-sec"><button class="cg-sec-btn">Gần đây<span class="ms">expand_more</span></button></div>
+              <div style="padding:0 6px">
+                <a class="cg-hist" href="#screens"><span>Tóm tắt bài báo khoa học</span></a><a class="cg-hist" href="#screens"><span>So sánh hai thư viện biểu đồ</span></a><a class="cg-hist" href="#screens"><span>Lên thực đơn cho tuần sau</span></a><a class="cg-hist" href="#screens"><span>Viết email xin nghỉ phép</span></a><a class="cg-hist" href="#screens"><span>Giải thích định lý Bayes</span></a><a class="cg-hist" href="#screens"><span>Dịch đoạn văn sang tiếng Anh</span></a><a class="cg-hist" href="#screens"><span>Ý tưởng quà sinh nhật</span></a>
+              </div>
+              <div class="cg-sb-foot"><div class="cg-user"><span class="cg-avatar">NM</span><span class="who"><b>Người dùng mẫu</b><small>Plus</small></span></div></div>
+            </div>
+            <div class="main">
+              <div class="topbar"><div class="cg-mode"><span class="thumb"></span><button>Trò chuyện</button><button class="is-on">Công việc</button></div></div>
+              <div class="home"><h1>Chúng ta nên làm gì?</h1>
+                <div class="cg-composer">
+                  <div class="body"><div class="editor" data-ph="Hỏi bất kỳ điều gì"></div>
+                    <div class="tools"><button class="cg-icon hv pill" aria-label="Thêm tệp"><span class="ms s24">add</span></button><span class="grow"></span><button class="cg-btn t3 cg-picker" style="padding:0 8px">GPT-6.1 Sol <span class="dim">Nhẹ nhàng</span><span class="ms s16">expand_more</span></button><button class="cg-icon hv pill" aria-label="Giọng nói"><span class="ms">mic</span></button><button class="cg-send" aria-label="Gửi"><span class="ms fill">arrow_upward</span></button></div></div>
+                  <div class="actions"><button class="cg-btn sm"><span class="ms s16">folder</span>Chọn dự án</button><button class="cg-btn sm"><span class="ms s16">book_2</span>Tệp</button><button class="cg-btn sm"><span class="ms s16">alternate_email</span>Plugin</button><span class="grow"></span><button class="cg-btn sm"><span class="ms s16">desktop_windows</span>Mở ứng dụng máy tính</button></div>
+                </div></div>
+            </div>
+          </div>
+          <div class="cap">trang chủ · 1440 × 900 · cg-sidebar + cg-nav-row + cg-sec-btn + cg-hist + cg-user · cg-mode · cg-composer + cg-send + cg-btn sm</div>
+        </div>
+        <div>
+          <div class="desk">
+            <div class="cg-sidebar">
+              <div class="cg-sb-head"><button class="cg-icon" aria-label="Mở thanh bên"><span class="ms">left_panel_open</span></button></div>
+              <div class="cg-sb-list" style="gap:8px;padding-top:8px"><button class="cg-nav-row"><span class="ms">arrow_back</span><span class="t">Quay lại ứng dụng</span></button><label class="cg-search"><span class="ms s18">search</span><input placeholder="Tìm kiếm" aria-label="Tìm kiếm cài đặt" tabindex="-1"></label></div>
+              <div class="cg-sec" style="margin-top:4px"><span>Cá nhân</span></div>
+              <div class="cg-sb-list" style="padding-top:0">
+                <button class="cg-nav-row"><span class="ms">settings</span><span class="t">Cài đặt chung</span></button><button class="cg-nav-row"><span class="ms">light_mode</span><span class="t">Giao diện</span></button><button class="cg-nav-row"><span class="ms">notifications</span><span class="t">Thông báo</span></button><button class="cg-nav-row"><span class="ms">account_circle</span><span class="t">Hồ sơ</span><span class="ms end s16">north_east</span></button><button class="cg-nav-row"><span class="ms">shield_person</span><span class="t">Bảo mật và đăng nhập</span></button><button class="cg-nav-row"><span class="ms">person</span><span class="t">Tài khoản</span></button><button class="cg-nav-row is-on"><span class="ms">history_toggle_off</span><span class="t">Cá nhân hóa</span></button><button class="cg-nav-row"><span class="ms">keyboard</span><span class="t">Bàn phím</span></button><button class="cg-nav-row"><span class="ms">speed</span><span class="t">Mức sử dụng</span></button><button class="cg-nav-row"><span class="ms">credit_card</span><span class="t">Thanh toán</span></button><button class="cg-nav-row"><span class="ms">inventory_2</span><span class="t">Kiểm soát dữ liệu</span></button>
+              </div>
+              <div class="cg-sec"><span>Tích hợp</span></div>
+              <div class="cg-sb-list" style="padding-top:0"><button class="cg-nav-row"><span class="ms">alternate_email</span><span class="t">Plugin</span></button><button class="cg-nav-row"><span class="ms">cloud</span><span class="t">Cloud computer</span></button></div>
+            </div>
+            <div class="main"><div class="settings"><div class="col">
+              <h3 class="cg-page-title">Cá nhân hóa</h3>
+              <div class="sect"><div><h4 class="cg-sec-title">Bộ nhớ</h4><p class="cg-sec-desc">Thiết lập cách trợ lý quản lý bộ nhớ. <a class="cg-link" href="#screens">Tìm hiểu thêm</a></p></div>
+                <div class="cg-group">
+                  <div class="cg-row"><span class="txt"><b>Bật bộ nhớ</b><small>Cho phép cá nhân hoá dựa trên các cuộc trò chuyện, tệp và ứng dụng đã kết nối.</small></span><span class="end"><button class="cg-switch" role="switch" aria-checked="true" aria-label="Bật bộ nhớ"></button></span></div>
+                  <div class="cg-row"><span class="txt"><b>Tóm tắt bộ nhớ</b><small>Xem tổng quan những gì trợ lý đã biết về bạn.</small></span><span class="end"><button class="cg-btn v-soft">Quản lý</button></span></div>
+                </div></div>
+              <div class="sect"><h4 class="cg-sec-title">Hướng dẫn tùy chỉnh</h4>
+                <div class="cg-group">
+                  <button class="cg-row"><span class="txt"><b>Trợ lý</b><small>Ngữ cảnh cho mọi cuộc trò chuyện. <span class="cg-link">Tìm hiểu thêm</span></small></span><span class="end"><span class="ms">chevron_right</span></span></button>
+                  <button class="cg-row"><span class="txt"><b>Lập trình</b><small>Ngữ cảnh cho các phiên lập trình.</small></span><span class="end"><span class="ms">chevron_right</span></span></button>
+                </div></div>
+              <div class="sect"><h4 class="cg-sec-title">Đặc điểm</h4>
+                <div class="cg-group">
+                  <div class="cg-row"><span class="txt"><b>Phong cách và giọng điệu</b></span><span class="end"><button class="cg-btn v-secondary chev">Hiệu quả</button></span></div>
+                  <div class="cg-row"><span class="txt"><b>Sự thân thiện</b></span><span class="end"><button class="cg-btn v-secondary chev">Mặc định</button></span></div>
+                  <div class="cg-row"><span class="txt"><b>Biểu tượng cảm xúc</b></span><span class="end"><button class="cg-btn v-secondary chev">Mặc định</button></span></div>
+                </div></div>
+            </div></div></div>
+          </div>
+          <div class="cap">cài đặt · 1440 × 900 · cg-sidebar + cg-search + cg-nav-row (is-on) · cg-page-title · cg-group + cg-row · cg-switch · cg-btn v-soft / v-secondary chev</div>
+        </div>
+      </div></div>
+    </section>
+  </main>
+</div>
+<div class="toast cg-tip" id="toast" role="status"><span id="toast-t">Đã copy</span></div>
+
+<script>
+/* 2 bộ accent × sáng/tối, đọc từ CSS đã lưu bằng Playwright (getComputedStyle trên :root, data-theme light|dark;
+   accent Mặc định = tắt khối <style> accent Tím inline). Hex 8 ký tự = có alpha. */
+const ROLES=["surface", "elevated", "elevatedSecondary", "card", "editor", "callout", "menu", "tooltip", "tooltipCompact", "onTooltipCompact", "text", "textSecondary", "textTertiary", "accent", "accentText", "accentBg", "btnPrimary", "onBtnPrimary", "btnPrimaryHover", "btnSecondary", "onBtnSecondary", "hover", "pressed", "menuItemHover", "border", "borderLight", "borderHeavy", "focus", "composerPrimary", "onComposerPrimary", "userMessage", "onUserMessage", "inputSoft", "placeholder", "switchTrack", "switchOn", "switchThumb", "segTrack", "segThumb", "danger", "success", "warning", "scrim", "selection", "ring", "modeTrack", "modeSelected", "seq1", "seq2", "seq3", "seq4", "warnSoft", "warnText", "dangerSoft", "infoSoft", "infoText", "modeText", "modeInactive", "upsellBg", "upsellText", "upsellHover", "uaRing"];
+const VARS={"surface": "--app-color-background-surface", "elevated": "--app-color-background-elevated-primary", "elevatedSecondary": "--app-color-background-elevated-secondary", "card": "--app-color-background-card", "editor": "--app-color-background-editor-opaque", "callout": "--color-background-callout-surface", "menu": "--menu-background-color", "tooltip": "--tooltip-background-color", "tooltipCompact": "--tooltip-compact-background-color", "onTooltipCompact": "--tooltip-compact-text-color", "text": "--app-color-text-foreground", "textSecondary": "--app-color-text-foreground-secondary", "textTertiary": "--app-color-text-foreground-tertiary", "accent": "--app-color-accent-blue", "accentText": "--app-color-text-accent", "accentBg": "--app-color-background-accent", "btnPrimary": "--app-color-background-button-primary", "onBtnPrimary": "--app-color-text-button-primary", "btnPrimaryHover": "--app-color-background-button-primary-hover", "btnSecondary": "--app-color-background-button-secondary", "onBtnSecondary": "--app-color-text-button-secondary", "hover": "--app-color-background-button-secondary-hover", "pressed": "--app-color-background-button-secondary-active", "menuItemHover": "--menu-item-background-color", "border": "--app-color-border", "borderLight": "--app-color-border-light", "borderHeavy": "--app-color-border-heavy", "focus": "--app-color-border-focus", "composerPrimary": "--color-background-composer-primary", "onComposerPrimary": "--color-text-composer-primary", "userMessage": "--color-background-user-message", "onUserMessage": "--color-text-user-message", "inputSoft": "--input-soft-background-color", "placeholder": "--input-placeholder-text-color", "switchTrack": "--switch-track-color", "switchOn": "--switch-track-color-checked", "switchThumb": "--switch-thumb-color", "segTrack": "--segmented-control-background", "segThumb": "--segmented-control-thumb-background", "danger": "--color-text-danger", "success": "--color-text-success", "warning": "--color-text-warning", "scrim": "--modal-backdrop-background", "selection": "--color-background-text-selection", "ring": "--color-ring", "modeTrack": "--color-background-mode-toggle-track", "modeSelected": "--color-background-mode-toggle-selected", "seq1": "--color-chart-sequential-1", "seq2": "--color-chart-sequential-2", "seq3": "--color-chart-sequential-3", "seq4": "--color-chart-sequential-4", "warnSoft": "--color-background-warning-soft-alpha", "warnText": "--color-text-warning-surface", "dangerSoft": "--color-background-danger-soft-alpha", "infoSoft": "--color-background-info-soft-alpha", "infoText": "--color-text-info-surface", "modeText": "--color-text-mode-toggle-primary", "modeInactive": "--color-text-mode-toggle-inactive", "upsellBg": "light-dark(--blue-a25, --blue-100/15%)", "upsellText": "light-dark(--blue-500, --blue-50)", "upsellHover": "light-dark(--blue-400/9%, --blue-100/20%)", "uaRing": "-webkit-focus-ring-color (đo)"};
+const PALETTES={"purple": {"label": "T\u00edm", "light": ["#FCFCFC", "#FFFFFF", "#F3F3F3", "#FFFFFF", "#F9F9F9", "#F3F3F3", "#FFFFFFE6", "#FFFFFF", "#0D0D0D", "#FFFFFF", "#0D0D0D", "#5D5D5D", "#8F8F8F", "#A67DF2", "#7849D1", "#EDE5FC", "#0D0D0D", "#FFFFFF", "#000000CC", "#F3F3F3", "#0D0D0D", "#0000000D", "#0000001A", "#0D0D0D14", "#0000001A", "#0000000D", "#00000026", "#A67DF2", "#8952EE", "#FFFFFF", "#EDE5FC", "#291947", "#F3F3F3", "#8F8F8F", "#0A0A0A1A", "#A67DF2", "#FFFFFF", "#EDEDED", "#FFFFFF", "#E02E2A", "#00A240", "#E25507", "#0000004D", "#A67EF159", "#A67DF2", "#00000008", "#FFFFFF", "#E0CEFD", "#BE95FA", "#924FF7", "#6B3AB4", "#F96A1F29", "#B9480D", "#F9443E29", "#0083FF21", "#004F99", "#0D0D0D", "#5D5D5D", "#0285FF0A", "#0169CC", "#0285FF17", "#005FCC"], "dark": ["#000000", "#1B1B1B", "#303030", "#212121", "#212121", "#414141", "#303030E6", "#1B1B1B", "#FFFFFF", "#0D0D0D", "#EDEDED", "#CDCDCD", "#AFAFAF", "#A67DF2", "#7849D1", "#3B2366", "#EDEDED", "#0D0D0D", "#FFFFFFCC", "#303030", "#EDEDED", "#FFFFFF1A", "#FFFFFF0D", "#EBEBEB1A", "#FFFFFF26", "#FFFFFF0D", "#FFFFFF33", "#A67DF2", "#7849D1", "#FFFFFF", "#4E2F88", "#F8F5FD", "#303030", "#AFAFAF", "#EBEBEB1A", "#A67DF2", "#FFFFFF", "#0D0D0D", "#303030", "#FF6764", "#40C977", "#FF8549", "#00000080", "#8952EE99", "#A67DF2", "#131313", "#1B1B1B", "#3F226A", "#6B3AB4", "#924FF7", "#BE95FA", "#F96A1F29", "#FF8549", "#F9443E29", "#0083FF21", "#339CFF", "#FFFFFF", "#CDCDCD", "#99CEFF26", "#E5F3FF", "#99CEFF33", "#99C8FF"]}, "default": {"label": "M\u1eb7c \u0111\u1ecbnh", "light": ["#FCFCFC", "#FFFFFF", "#F3F3F3", "#FFFFFF", "#F9F9F9", "#F3F3F3", "#FFFFFFE6", "#FFFFFF", "#0D0D0D", "#FFFFFF", "#0D0D0D", "#5D5D5D", "#8F8F8F", "#3A83F7", "#2C67C5", "#E8F3FE", "#0D0D0D", "#FFFFFF", "#000000CC", "#F3F3F3", "#0D0D0D", "#0000000D", "#0000001A", "#0D0D0D14", "#0000001A", "#0000000D", "#00000026", "#3A83F7", "#000000", "#FFFFFF", "#E9E9E980", "#0D0D0D", "#F3F3F3", "#8F8F8F", "#0A0A0A1A", "#3A83F7", "#FFFFFF", "#EDEDED", "#FFFFFF", "#E02E2A", "#00A240", "#E25507", "#0000004D", "#539BF959", "#3A83F7", "#00000008", "#FFFFFF", "#CCE6FF", "#66B5FF", "#0285FF", "#004F99", "#F96A1F29", "#B9480D", "#F9443E29", "#0083FF21", "#004F99", "#0D0D0D", "#5D5D5D", "#0285FF0A", "#0169CC", "#0285FF17", "#005FCC"], "dark": ["#000000", "#1B1B1B", "#303030", "#212121", "#212121", "#414141", "#303030E6", "#1B1B1B", "#FFFFFF", "#0D0D0D", "#EDEDED", "#CDCDCD", "#AFAFAF", "#3A83F7", "#2C67C5", "#133463", "#EDEDED", "#0D0D0D", "#FFFFFFCC", "#303030", "#EDEDED", "#FFFFFF1A", "#FFFFFF0D", "#EBEBEB1A", "#FFFFFF26", "#FFFFFF0D", "#FFFFFF33", "#3A83F7", "#FFFFFF", "#000000", "#333333D9", "#FFFFFF", "#303030", "#AFAFAF", "#EBEBEB1A", "#3A83F7", "#FFFFFF", "#0D0D0D", "#303030", "#FF6764", "#40C977", "#FF8549", "#00000080", "#64A8F866", "#3A83F7", "#131313", "#1B1B1B", "#013566", "#004F99", "#0285FF", "#66B5FF", "#F96A1F29", "#FF8549", "#F9443E29", "#0083FF21", "#339CFF", "#FFFFFF", "#CDCDCD", "#99CEFF26", "#E5F3FF", "#99CEFF33", "#99C8FF"]}};
+(function () {
+  const root = document.documentElement;
+  /* lần đầu theo chế độ của máy; sau đó nhớ lựa chọn của người xem */
+  const state = { pal: "purple", mode: matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark", k: "1" };
+  try { Object.assign(state, JSON.parse(localStorage.getItem("cg-kit") || "{}")); } catch (e) {}
+
+  const toast = (t) => {
+    const el = document.getElementById("toast");
+    document.getElementById("toast-t").textContent = t;
+    el.classList.add("show");
+    clearTimeout(toast.t);
+    toast.t = setTimeout(() => el.classList.remove("show"), 1600);
+  };
+  const copy = async (text, msg) => {
+    try { await navigator.clipboard.writeText(text); toast(msg); }
+    catch (e) { toast("Trình duyệt chặn clipboard, hãy copy tay"); }
+  };
+
+  function apply() {
+    const p = PALETTES[state.pal] || PALETTES.purple;
+    const vals = p[state.mode];
+    ROLES.forEach((r, i) => root.style.setProperty("--cg-" + r, vals[i]));
+    root.style.setProperty("--k", state.k);
+    root.dataset.mode = state.mode;
+    document.querySelectorAll("#swatches .sw").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === state.pal));
+    document.querySelectorAll("#mode button").forEach((b) => { b.setAttribute("aria-pressed", b.dataset.v === state.mode); b.classList.toggle("is-on", b.dataset.v === state.mode); });
+    document.querySelectorAll("#shape button").forEach((b) => { b.setAttribute("aria-pressed", b.dataset.v === state.k); b.classList.toggle("is-on", b.dataset.v === state.k); });
+    renderRoles(vals);
+    try { localStorage.setItem("cg-kit", JSON.stringify(state)); } catch (e) {}
+  }
+
+  const sw = document.getElementById("swatches");
+  Object.entries(PALETTES).forEach(([key, p]) => {
+    const b = document.createElement("button");
+    b.className = "sw"; b.dataset.v = key; b.title = p.label; b.setAttribute("aria-label", "Màu nhấn " + p.label);
+    b.style.setProperty("--c", p.dark[ROLES.indexOf("accent")]);
+    b.onclick = () => { state.pal = key; apply(); };
+    sw.appendChild(b);
+  });
+  document.querySelectorAll("#mode button").forEach((b) => (b.onclick = () => { state.mode = b.dataset.v; apply(); }));
+  document.querySelectorAll("#shape button").forEach((b) => (b.onclick = () => { state.k = b.dataset.v; apply(); }));
+
+  /* ô màu: chữ trên ô chọn theo độ sáng của nền đã trộn lên bề mặt */
+  const lum = (hex, base) => {
+    const c = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+    const a = hex.length > 7 ? parseInt(hex.slice(7, 9), 16) / 255 : 1;
+    const [r, g, b] = c(hex).map((v, i) => v * a + c(base)[i] * (1 - a));
+    return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+  };
+  document.getElementById("role-count").textContent = ROLES.length;
+  function renderRoles(vals) {
+    const box = document.getElementById("roles");
+    const surface = vals[ROLES.indexOf("surface")];
+    box.innerHTML = "";
+    ROLES.forEach((r, i) => {
+      const v = vals[i];
+      const b = document.createElement("button");
+      b.className = "role" + (v.length > 7 ? " chk" : "");
+      b.style.backgroundColor = surface;
+      b.style.boxShadow = "inset 0 0 0 200px " + v + ", inset 0 0 0 1px var(--cg-border)";
+      b.style.color = lum(v, surface) > 0.5 ? "#0D0D0D" : "#EDEDED";
+      b.innerHTML = "<b>" + r + "</b><code>" + VARS[r] + "</code><code>" + v + "</code>";
+      b.onclick = () => copy(v, "Đã copy " + r + " " + v);
+      box.appendChild(b);
+    });
+  }
+
+  /* thang chữ đo được trên trang */
+  const TYPE = [["heading-lg · font-normal", 24, 28.8, 400, "Cá nhân hóa"], ["brand · font-semibold", 18, 26, 600, "ChatGPT"], ["section title · font-medium", 16, 24, 500, "Bộ nhớ"],
+    ["text-base (composer)", 16, 26, 400, "Hỏi bất kỳ điều gì"], ["row value · 16", 16, 24, 400, "Thêm"], ["row title · font-medium", 14, 20, 500, "Bật bộ nhớ"],
+    ["text-sm (nav, bảng)", 14, 20, 400, "Đoạn chat mới"], ["control · leading-[18px]", 14, 18, 400, "Quản lý"], ["section toggle · 500", 14, 18, 500, "Đã ghim"],
+    ["text-xs (mô tả)", 12, 16, 400, "Dùng mã một lần từ ứng dụng xác thực"], ["badge · font-medium", 12, 16, 500, "Đến hạn"], ["tooltip-compact · 600", 12, 16, 600, "⌘K"]];
+  const ts = document.getElementById("typescale");
+  TYPE.forEach(([name, size, lh, w, sample]) => {
+    const row = document.createElement("div");
+    row.className = "type-row";
+    row.innerHTML = '<span class="meta">' + name + '</span><span class="t" style="font-size:' + size + "px;line-height:" + lh + "px;font-weight:" + w + '">' + sample + '</span><span class="meta">' + size + " / " + lh + " · " + w + "</span>";
+    ts.appendChild(row);
+  });
+
+  /* thang bo góc: --radius-* × --corner-radius-scale */
+  const sh = document.getElementById("shapes");
+  [["xs", 2], ["sm", 4], ["md", 6], ["lg", 8], ["xl", 12], ["2xl", 16], ["3xl", 24], ["composer", 28], ["4xl", 32]].forEach(([n, r]) => {
+    const c = document.createElement("div");
+    c.className = "shape-cell";
+    c.innerHTML = '<i style="border-radius:calc(' + r + 'px * var(--k))"></i>' + n + " · " + r;
+    sh.appendChild(c);
+  });
+  const full = document.createElement("div");
+  full.className = "shape-cell"; full.innerHTML = '<i style="border-radius:9999px"></i>full · 9999';
+  sh.appendChild(full);
+
+  /* heatmap mẫu: 52 tuần × 7 ngày, mức 0–4 sinh tất định */
+  const heat = document.getElementById("heat");
+  for (let i = 0; i < 364; i++) {
+    const x = Math.sin(i * 12.9898) * 43758.5453, f = x - Math.floor(x);
+    const lv = i < 300 ? (f > 0.97 ? 1 : 0) : f > 0.8 ? 4 : f > 0.55 ? 3 : f > 0.3 ? 2 : f > 0.12 ? 1 : 0;
+    const cell = document.createElement("i");
+    if (lv) cell.className = "l" + lv;
+    heat.appendChild(cell);
+  }
+
+  /* mỗi thẻ thành phần có nút copy HTML của phần trình diễn */
+  document.querySelectorAll(".spec").forEach((spec) => {
+    const stage = spec.querySelector(".stage");
+    if (!stage || !spec.querySelector(".spec-h")) return;
+    let foot = spec.querySelector(".spec-f");
+    if (!foot) { foot = document.createElement("div"); foot.className = "spec-f"; foot.innerHTML = '<span class="note"></span>'; spec.appendChild(foot); }
+    const b = document.createElement("button");
+    b.className = "copy"; b.innerHTML = '<span class="ms s16">content_copy</span>HTML';
+    b.onclick = () => copy(stage.innerHTML.trim().replace(/\n\s+/g, "\n"), "Đã copy HTML của " + spec.querySelector(".spec-h b").textContent);
+    foot.appendChild(b);
+  });
+
+  /* token hiện tại dưới dạng khối :root để dán vào dự án khác */
+  document.getElementById("copy-tokens").onclick = () => {
+    const vals = PALETTES[state.pal][state.mode];
+    const lines = ROLES.map((r, i) => "  --cg-" + r + ": " + vals[i] + ";");
+    copy(":root {\n" + lines.join("\n") + "\n  --k: " + state.k + ";\n  --ease: cubic-bezier(0, 0, .2, 1);\n  --dur: .15s;\n}", "Đã copy token " + PALETTES[state.pal].label + " " + (state.mode === "dark" ? "tối" : "sáng"));
+  };
+
+  /* làm nổi mục đang xem trong mục lục */
+  const links = [...document.querySelectorAll(".side a")];
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (e.isIntersecting) links.forEach((a) => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id));
+  }), { rootMargin: "-30% 0px -60% 0px" });
+  document.querySelectorAll("section.block").forEach((s) => io.observe(s));
+
+  /* công tắc bấm được */
+  document.addEventListener("click", (e) => {
+    const s = e.target.closest(".cg-switch");
+    if (s && !s.disabled) s.setAttribute("aria-checked", s.getAttribute("aria-checked") !== "true");
+  });
+
+  apply();
+})();
+</script>
+</body>
+</html>

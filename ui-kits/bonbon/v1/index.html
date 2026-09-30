@@ -1,0 +1,1481 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta name="ui-kit-id" content="bonbon">
+<!-- UI kit rút từ app duyệt hồ sơ nội bộ (bonbon.coteccons.vn, Next.js + Tailwind), 28/09/2026.
+     Nguồn: CSS đã build (_next/static/css/*) + getComputedStyle của phần tử thật sau khi đăng nhập, 13 lượt discover.mjs.
+     Mọi tên người, mã hồ sơ, số tiền, phòng ban, loại hồ sơ, logo/wordmark đã thay bằng dữ liệu mẫu. -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BonBon UI Kit</title>
+<meta name="ui-kit-skip" content="">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=block">
+<style>
+/* Token của kit = màu THỰC DÙNG trong component (app viết hex thẳng trong class Tailwind arbitrary,
+   vd bg-[#16315e]); mỗi giá trị đo bằng getComputedStyle. Mọi class .bb-* chỉ tham chiếu --bb-*.
+   Độ trong suốt (rgba) dựng bằng color-mix trên cùng token. */
+:root {
+  --bb-ink:#001C44; --bb-brand:#16315E; --bb-rail:#0F1E2F; --bb-brandMuted:#829ACD;
+  --bb-text:#111C2C; --bb-title:#171C1F; --bb-muted:#44474F; --bb-subtle:#747780;
+  --bb-outline:#C4C6D0; --bb-divider:#EAEEF2; --bb-line:#E4E9ED; --bb-hair:#F0F4F8; --bb-press:#E0E4E8;
+  --bb-bg:#F6F7F9; --bb-bgTint:#F6FAFE; --bb-note:#F8FAFC; --bb-surface:#FFFFFF; --bb-white:#FFFFFF; --bb-black:#000000;
+  --bb-accent:#10CFC9; --bb-onAccent:#00201F; --bb-accentBright:#32DCD6; --bb-accentInk:#006A67; --bb-accentSoft:#E0F8F7; --bb-accentDot:#89F5E7;
+  --bb-error:#BA1A1A; --bb-errorSoft:#FFDAD6; --bb-errorTint:#FDE8E8;
+  --bb-warnInk:#856404; --bb-warnBg:#FFF3CD; --bb-warnHover:#FFFBF0; --bb-orange:#FF8C00; --bb-amber:#D97706; --bb-okInk:#155724;
+  --bb-neutralBg:#E2E3E5; --bb-neutralInk:#383D41; --bb-slate200:#E2E8F0; --bb-slate100:#F1F5F9;
+  --bb-uaFocus:#005FCC;
+  --bb-panelBg:#F7F9FB; --bb-purple:#7B3294; --bb-accentHover:#0BBFB9; --bb-errorHover:#A51616; --bb-warnPress:#FFF5CC;
+  --bb-okSoft2:#E6F4F1; --bb-grey240:#F0F0F0; --bb-accentInk2:#00706A; --bb-prose:#374151; --bb-hairPress:#E8F0F4; --bb-viewerBar:#111618; --bb-viewerBg:#0B0F10;
+  --k: 1;
+  --bb-font: "Lexend Deca", ui-sans-serif, system-ui, sans-serif;
+  --bb-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --bb-sh-card: 0 1px 8px color-mix(in srgb, var(--bb-brand) 6%, transparent);
+  --bb-sh-open: 0 4px 16px color-mix(in srgb, var(--bb-brand) 10%, transparent);
+  --bb-sh-panel: 0 20px 40px color-mix(in srgb, var(--bb-brand) 6%, transparent);
+  --bb-sh-sm: 0 1px 2px color-mix(in srgb, var(--bb-black) 5%, transparent);
+  --bb-sh-dialog: 0 25px 50px -12px color-mix(in srgb, var(--bb-black) 25%, transparent);
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--bb-bg); color: var(--bb-text); font: 400 14px/20px var(--bb-font); -webkit-font-smoothing: antialiased; }
+.ms { font-family: "Material Symbols Outlined"; font-weight: normal; font-style: normal; font-size: 24px; line-height: 1; letter-spacing: normal; text-transform: none; display: inline-block; white-space: nowrap; direction: ltr; font-feature-settings: "liga"; -webkit-font-smoothing: antialiased; user-select: none; }
+code, .code { font-family: var(--bb-mono); font-size: 12px; }
+:focus-visible { outline: 2px solid var(--bb-uaFocus); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+/* ---------- vỏ trang ---------- */
+.shell { display: grid; grid-template-columns: 232px minmax(0, 1fr); min-height: 100vh; }
+.side { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 20px 12px; background: var(--bb-rail); display: flex; flex-direction: column; gap: 2px; }
+.brand { display: flex; align-items: center; gap: 10px; padding: 4px 12px 16px; color: var(--bb-white); }
+.brand-mark { width: 32px; height: 32px; background: var(--bb-accent); color: var(--bb-onAccent); display: grid; place-items: center; }
+.brand b { font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; display: block; }
+.brand small { color: color-mix(in srgb, var(--bb-white) 40%, transparent); font-size: 10px; letter-spacing: .45px; text-transform: uppercase; }
+.side h6 { margin: 14px 12px 6px; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: color-mix(in srgb, var(--bb-white) 40%, transparent); }
+.side a { display: flex; align-items: center; gap: 12px; height: 40px; padding: 0 12px; border-left: 2px solid transparent; color: color-mix(in srgb, var(--bb-white) 55%, transparent); text-decoration: none; font-weight: 500; font-size: 13px; }
+.side a .ms { font-size: 18px; }
+.side a:hover { background: color-mix(in srgb, var(--bb-white) 5%, transparent); color: var(--bb-white); }
+.side a.on { background: color-mix(in srgb, var(--bb-white) 10%, transparent); color: var(--bb-white); border-left-color: var(--bb-accent); }
+.side a.on .ms { color: var(--bb-accent); }
+main.kit { padding: 0 32px 96px; min-width: 0; }
+
+.bar { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; padding: 14px 0; background: var(--bb-bg); border-bottom: 1px solid var(--bb-divider); }
+.bar .grow { flex: 1; }
+.ctl { display: flex; align-items: center; gap: 8px; }
+.ctl > span { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--bb-muted); }
+.swatches { display: flex; gap: 6px; }
+.sw { width: 26px; height: 26px; border-radius: 50%; border: 2px solid transparent; padding: 0; cursor: pointer; background: var(--c); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--bb-black) 8%, transparent); }
+.sw[aria-pressed="true"] { border-color: var(--bb-ink); }
+.seg { display: inline-flex; gap: 2px; padding: 3px; background: var(--bb-divider); border-radius: 9999px; }
+.seg button { height: 28px; padding: 0 12px; border: none; background: transparent; color: var(--bb-muted); font: 700 11px var(--bb-font); letter-spacing: 1px; text-transform: uppercase; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; border-radius: 9999px; }
+.seg button[aria-pressed="true"] { background: var(--bb-brand); color: var(--bb-white); }
+.seg button:disabled { opacity: .45; cursor: not-allowed; }
+.seg .ms { font-size: 16px; }
+.copy { height: 32px; padding: 0 12px; border: none; background: transparent; color: var(--bb-accentInk); font: 700 11px var(--bb-font); letter-spacing: .8px; text-transform: uppercase; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.copy:hover { background: color-mix(in srgb, var(--bb-accentInk) 8%, transparent); }
+.copy .ms { font-size: 16px; }
+
+.intro { padding: 40px 0 8px; max-width: 780px; }
+.intro .eyebrow { font-family: var(--bb-mono); font-size: 12px; color: var(--bb-accentInk); }
+.intro h1 { font-size: 36px; line-height: 40px; font-weight: 900; letter-spacing: -1.8px; text-transform: uppercase; color: var(--bb-ink); margin: 10px 0 14px; text-wrap: balance; }
+.intro p { font-size: 15px; line-height: 24px; color: var(--bb-muted); margin: 0 0 10px; max-width: 68ch; }
+.intro .facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.fact { font-family: var(--bb-mono); font-size: 12px; padding: 4px 10px; background: var(--bb-hair); color: var(--bb-muted); }
+
+section.block { padding-top: 48px; scroll-margin-top: 64px; }
+section.block > header { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+section.block > header h2 { font-size: 12px; line-height: 16px; font-weight: 900; letter-spacing: 2.4px; text-transform: uppercase; margin: 0; color: var(--bb-ink); }
+section.block > header p { margin: 0; color: var(--bb-muted); max-width: 72ch; font-size: 13px; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 16px; }
+.grid.wide { grid-template-columns: repeat(auto-fill, minmax(480px, 1fr)); }
+.spec { background: var(--bb-surface); box-shadow: var(--bb-sh-sm); display: flex; flex-direction: column; min-width: 0; }
+.spec.full { grid-column: 1 / -1; }
+.spec-h { display: flex; align-items: center; gap: 8px; padding: 14px 16px 0; flex-wrap: wrap; }
+.spec-h b { font-size: 14px; font-weight: 700; color: var(--bb-title); }
+.kind { font-family: var(--bb-mono); font-size: 11px; padding: 2px 8px; background: color-mix(in srgb, var(--bb-brand) 10%, transparent); color: var(--bb-brand); }
+.spec-h .dp { margin-left: auto; font-family: var(--bb-mono); font-size: 11px; color: var(--bb-subtle); font-variant-numeric: tabular-nums; }
+.stage { padding: 20px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; min-height: 96px; overflow-x: auto; }
+.stage.col { flex-direction: column; align-items: stretch; }
+.stage.bg { background: var(--bb-bg); margin: 12px 12px 0; }
+.stage.tint { background: var(--bb-bgTint); margin: 12px 12px 0; }
+.stage.dark { background: var(--bb-rail); margin: 12px 12px 0; }
+.stage.navy { background: var(--bb-brand); margin: 12px 12px 0; }
+.spec-f { display: flex; align-items: center; gap: 8px; padding: 8px 12px 12px 16px; margin-top: auto; }
+.spec-f .note { font-size: 12px; line-height: 17px; color: var(--bb-muted); flex: 1; }
+/* dải trạng thái: mỗi ô là một biến thể ép tĩnh bằng class is-hover / is-active / is-focus / is-on */
+.states { display: flex; flex-wrap: wrap; gap: 16px 20px; align-items: flex-end; }
+.st { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+.st > small { font-family: var(--bb-mono); font-size: 10px; color: var(--bb-subtle); }
+.stage.dark .st > small, .stage.navy .st > small { color: var(--bb-brandMuted); }
+.ph { background: repeating-linear-gradient(45deg, var(--bb-hair) 0 6px, var(--bb-divider) 6px 12px); color: var(--bb-subtle); display: grid; place-items: center; font: 500 9px var(--bb-mono); }
+
+/* nền tảng */
+.roles { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; }
+.role { padding: 12px; min-height: 80px; display: flex; flex-direction: column; justify-content: space-between; gap: 6px; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--bb-outline) 60%, transparent); cursor: pointer; border: none; text-align: left; font: inherit; }
+.role b { font-size: 12px; font-weight: 700; }
+.role code { font-size: 11px; opacity: .85; }
+.role i { font-style: normal; font-size: 10px; opacity: .8; line-height: 14px; }
+.rgroup { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--bb-subtle); margin: 18px 0 8px; }
+.type-row { display: grid; grid-template-columns: 170px minmax(0, 1fr) 190px; gap: 16px; align-items: baseline; padding: 10px 12px; border-bottom: 1px solid var(--bb-divider); }
+.type-row:last-child { border-bottom: none; }
+.type-row .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.type-row .meta { font-family: var(--bb-mono); font-size: 11px; color: var(--bb-subtle); font-variant-numeric: tabular-nums; }
+.type-row.on-dark { background: var(--bb-brand); } .type-row.on-dark .meta { color: var(--bb-brandMuted); }
+.type-row.on-rail { background: var(--bb-rail); } .type-row.on-rail .meta { color: var(--bb-brandMuted); }
+.shape-cell { display: flex; flex-direction: column; align-items: center; gap: 6px; font-family: var(--bb-mono); font-size: 11px; color: var(--bb-subtle); text-align: center; }
+.shape-cell i { display: block; width: 64px; height: 64px; background: var(--bb-brand); }
+table.tok { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+table.tok th, table.tok td { text-align: left; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--bb-divider); font-size: 13px; vertical-align: top; }
+table.tok th { font-weight: 700; color: var(--bb-muted); font-size: 11px; letter-spacing: .5px; text-transform: uppercase; }
+table.tok td:first-child { font-family: var(--bb-mono); font-size: 12px; white-space: nowrap; }
+.scroll-x { overflow-x: auto; }
+
+/* ================= các thành phần bb-* (chỉ cần khối --bb-* là dùng lại được) ================= */
+.bb { font-family: var(--bb-font); }
+.bb button { font-family: var(--bb-font); }
+.is-focus { outline: auto 1px var(--bb-uaFocus); outline: 2px solid var(--bb-uaFocus); outline-offset: 0; }
+
+/* segmented filter (PENDING / ALL) */
+.bb-seg { display: inline-flex; gap: 2px; padding: 4px; background: var(--bb-divider); border-radius: calc(9999px * var(--k)); }
+.bb-seg-i { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border: 0; border-radius: calc(9999px * var(--k)); background: transparent; color: var(--bb-muted); font: 700 11px/16.5px var(--bb-font); letter-spacing: 1.1px; text-transform: uppercase; cursor: pointer; white-space: nowrap; }
+.bb-seg-i .ms { font-size: 14px; }
+.bb-seg-i:hover, .bb-seg-i.is-hover { color: var(--bb-ink); }
+.bb-seg-i.on { background: var(--bb-brand); color: var(--bb-white); box-shadow: var(--bb-sh-sm); }
+.bb-seg-i.on.teal { background: var(--bb-accent); color: var(--bb-ink); }
+.bb-count { padding: 2px 6px; border-radius: calc(9999px * var(--k)); font: 700 9px/13.5px var(--bb-font); letter-spacing: 1.1px; text-transform: uppercase; }
+.bb-count.err { background: color-mix(in srgb, var(--bb-error) 10%, transparent); color: var(--bb-error); }
+.bb-count.onbrand { background: color-mix(in srgb, var(--bb-white) 20%, transparent); color: var(--bb-white); }
+.bb-count.muted { background: color-mix(in srgb, var(--bb-brand) 10%, transparent); color: var(--bb-muted); }
+.bb-count.lg { padding: 2px 8px; font-size: 10px; line-height: 15px; letter-spacing: normal; }
+
+/* nút icon */
+.bb-icon { width: 36px; height: 36px; border: 0; padding: 0; background: transparent; color: var(--bb-muted); display: inline-grid; place-items: center; cursor: pointer; transition: transform .15s, color .15s; }
+.bb-icon .ms { font-size: 20px; }
+.bb-icon:hover, .bb-icon.is-hover { color: var(--bb-ink); }
+.bb-icon:active, .bb-icon.is-active { color: var(--bb-ink); transform: scale(.95); }
+.bb-avatar-btn { width: 36px; height: 36px; border: 0; padding: 2px; background: transparent; border-radius: calc(12px * var(--k)); display: inline-grid; place-items: center; cursor: pointer; transition: transform .15s, opacity .15s; }
+.bb-avatar-btn .ph { width: 32px; height: 32px; }
+.bb-avatar-btn.m { padding: 0; border-radius: 0; } .bb-avatar-btn.m .ph { width: 36px; height: 36px; }
+.bb-avatar-btn:not(.m):hover, .bb-avatar-btn:not(.m).is-hover { opacity: .8; }
+.bb-avatar-btn:active, .bb-avatar-btn.is-active { transform: scale(.95); }
+.bb-avatar-btn:not(.m):active, .bb-avatar-btn:not(.m).is-active { opacity: .8; }
+.bb-back { width: 40px; height: 40px; border: 0; padding: 0; border-radius: calc(9999px * var(--k)); background: transparent; color: var(--bb-brand); display: inline-grid; place-items: center; cursor: pointer; transition: transform .15s, background .15s; }
+.bb-back:hover, .bb-back.is-hover { background: var(--bb-hair); }
+.bb-back:active, .bb-back.is-active { background: var(--bb-hair); transform: scale(.95); }
+.bb-close { width: 32px; height: 32px; border: 0; padding: 0; border-radius: calc(9999px * var(--k)); background: var(--bb-hair); color: var(--bb-muted); display: inline-grid; place-items: center; cursor: pointer; }
+.bb-close:hover, .bb-close.is-hover { background: var(--bb-press); }
+
+/* phân trang */
+.bb-pager { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid var(--bb-divider); padding-top: 16px; }
+.bb-pager-l { font: 400 11px/16.5px var(--bb-font); letter-spacing: 1.1px; text-transform: uppercase; color: var(--bb-subtle); }
+.bb-pager-b { display: flex; gap: 8px; }
+.bb-pg { display: inline-flex; align-items: center; gap: 4px; padding: 8px 12px; border: 1px solid transparent; font: 700 12px/16px var(--bb-font); letter-spacing: 1.2px; text-transform: uppercase; cursor: pointer; transition: background .15s, filter .15s; }
+.bb-pg svg { width: 12px; height: 12px; }
+.bb-pg.prev { background: transparent; color: var(--bb-ink); border-color: var(--bb-outline); }
+.bb-pg.prev:hover, .bb-pg.prev.is-hover { background: var(--bb-hair); }
+.bb-pg.next { background: var(--bb-ink); color: var(--bb-white); border: 0; }
+.bb-pg.next:hover, .bb-pg.next.is-hover { filter: brightness(1.1); }
+
+/* link chữ */
+.bb-more { display: inline-flex; align-items: center; gap: 4px; border: 0; padding: 0; background: none; color: var(--bb-ink); font: 700 10px/15px var(--bb-font); letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: color .15s; }
+.bb-more .ms { font-size: 14px; transition: transform .15s; }
+.bb-more:hover, .bb-more.is-hover { color: var(--bb-accent); }
+.bb-more:hover .ms, .bb-more.is-hover .ms { transform: translateX(2px); }
+.bb-viewall { border: 0; padding: 0; background: none; color: var(--bb-muted); font: 700 10px/15px var(--bb-font); letter-spacing: 1px; cursor: pointer; }
+.bb-viewall:hover, .bb-viewall.is-hover { color: var(--bb-ink); }
+.bb-seemore { border: 0; padding: 0; background: none; color: var(--bb-accentInk); font: 700 10px/15px var(--bb-font); cursor: pointer; }
+.bb-seemore:hover, .bb-seemore.is-hover { text-decoration: underline; }
+.bb-bulk { display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; border: 0; border-radius: calc(9999px * var(--k)); background: var(--bb-divider); color: var(--bb-ink); font: 700 12px/16px var(--bb-font); cursor: pointer; }
+.bb-bulk .ms { font-size: 15px; }
+
+/* rail thu gọn 64 + sidebar mở 256 */
+.bb-rail { width: 64px; background: var(--bb-rail); display: flex; flex-direction: column; min-height: 100%; }
+.bb-rail-top { padding: 32px 0 0; flex: 1; display: flex; flex-direction: column; gap: 24px; }
+.bb-rail-hd { display: flex; justify-content: center; }
+.bb-toggle { position: relative; width: 36px; height: 36px; border: 0; padding: 0; background: color-mix(in srgb, var(--bb-white) 10%, transparent); color: var(--bb-white); display: grid; place-items: center; cursor: pointer; }
+.bb-toggle .ms { font-size: 18px; }
+.bb-toggle:hover, .bb-toggle.is-hover { background: color-mix(in srgb, var(--bb-white) 20%, transparent); }
+.bb-toggle.open { background: color-mix(in srgb, var(--bb-white) 20%, transparent); }
+.bb-toggle.hint { box-shadow: 0 0 0 1px color-mix(in srgb, var(--bb-accent) 60%, transparent); }
+.bb-toggle.hint::after { content: ""; position: absolute; inset: 0; background: color-mix(in srgb, var(--bb-accent) 20%, transparent); animation: bb-ping 1.6s cubic-bezier(0, 0, .2, 1) infinite; }
+.bb-toggle.hint:hover, .bb-toggle.hint.is-hover, .bb-toggle.hint:focus-visible, .bb-toggle.hint.is-focus { box-shadow: none; }
+.bb-toggle.hint:hover::after, .bb-toggle.hint.is-hover::after, .bb-toggle.hint:focus-visible::after, .bb-toggle.hint.is-focus::after { animation: none; opacity: 0; }
+@keyframes bb-ping { 75%, 100% { transform: scale(2); opacity: 0; } }
+.bb-rail nav { display: flex; flex-direction: column; gap: 4px; padding: 0 8px; }
+.bb-rail-i { width: 48px; height: 42px; padding: 12px 0; border: 0; border-radius: calc(4px * var(--k)); background: transparent; color: color-mix(in srgb, var(--bb-white) 50%, transparent); display: grid; place-items: center; cursor: pointer; }
+.bb-rail-i .ms { font-size: 18px; }
+.bb-rail-i:hover, .bb-rail-i.is-hover { background: color-mix(in srgb, var(--bb-white) 5%, transparent); color: var(--bb-white); }
+.bb-rail-i.on { background: color-mix(in srgb, var(--bb-white) 10%, transparent); color: var(--bb-white); }
+.bb-rail-i.on .ms { color: var(--bb-accent); }
+.bb-rail-ft { border-top: 1px solid color-mix(in srgb, var(--bb-white) 10%, transparent); padding: 16px 8px; display: flex; justify-content: center; }
+.bb-initial { width: 32px; height: 32px; border-radius: calc(9999px * var(--k)); background: color-mix(in srgb, var(--bb-white) 10%, transparent); color: var(--bb-white); display: grid; place-items: center; font: 700 12px/16px var(--bb-font); flex: none; }
+.bb-side { width: 256px; background: var(--bb-rail); display: flex; flex-direction: column; min-height: 100%; }
+.bb-side-hd { display: flex; align-items: center; gap: 12px; padding: 32px 24px 0; }
+.bb-side-hd h1 { margin: 0; font: 700 10px/15px var(--bb-font); letter-spacing: 1px; text-transform: uppercase; color: var(--bb-white); }
+.bb-side-hd p { margin: 0; font: 400 9px/13.5px var(--bb-font); letter-spacing: .45px; text-transform: uppercase; color: color-mix(in srgb, var(--bb-white) 40%, transparent); }
+.bb-side nav { padding: 0 24px; margin-top: 48px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
+.bb-side-i { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 16px; border: 0; border-left: 2px solid transparent; background: transparent; color: color-mix(in srgb, var(--bb-white) 50%, transparent); font: 500 14px/20px var(--bb-font); cursor: pointer; text-align: left; }
+.bb-side-i .ms { font-size: 18px; }
+.bb-side-i:hover, .bb-side-i.is-hover { background: color-mix(in srgb, var(--bb-white) 5%, transparent); color: var(--bb-white); }
+.bb-side-i.on { background: color-mix(in srgb, var(--bb-white) 10%, transparent); color: var(--bb-white); border-left-color: var(--bb-accent); }
+.bb-side-i.on .ms { color: var(--bb-accent); }
+.bb-side-ft { border-top: 1px solid color-mix(in srgb, var(--bb-white) 10%, transparent); padding: 16px; display: flex; align-items: center; gap: 12px; }
+.bb-side-ft b { display: block; font: 600 12px/16px var(--bb-font); color: color-mix(in srgb, var(--bb-white) 80%, transparent); }
+.bb-side-ft small { display: inline-flex; align-items: center; gap: 4px; font: 400 10px/15px var(--bb-font); color: color-mix(in srgb, var(--bb-white) 40%, transparent); }
+.bb-side-ft small .ms { font-size: 10px; }
+
+/* đầu trang desktop */
+.bb-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.bb-h-title { margin: 0; font: 900 36px/40px var(--bb-font); letter-spacing: -1.8px; text-transform: uppercase; color: var(--bb-ink); }
+.bb-h-title.plain { font-weight: 700; letter-spacing: -.9px; text-transform: none; }
+.bb-h-row { display: flex; align-items: center; gap: 16px; margin-top: 8px; }
+.bb-status { padding: 4px 12px; background: color-mix(in srgb, var(--bb-accentInk) 10%, transparent); color: var(--bb-accentInk); font: 700 10px/15px var(--bb-font); letter-spacing: 1px; text-transform: uppercase; }
+.bb-h-meta { font: 500 12px/16px var(--bb-font); color: var(--bb-subtle); }
+.bb-h-tools { display: flex; align-items: center; gap: 12px; }
+.bb-eyebrow { font: 700 10px/15px var(--bb-font); letter-spacing: 2px; text-transform: uppercase; color: var(--bb-muted); }
+
+/* panel */
+.bb-panel { background: var(--bb-surface); padding: 40px; box-shadow: var(--bb-sh-panel); }
+.bb-panel.hero { background: var(--bb-brand); display: flex; flex-direction: column; }
+.bb-p-label { margin: 0; font: 900 12px/16px var(--bb-font); letter-spacing: 2.4px; text-transform: uppercase; color: var(--bb-ink); }
+.bb-panel.hero .bb-p-label { font-weight: 700; color: var(--bb-brandMuted); }
+.bb-p-sub { margin: 4px 0 0; font: 400 12px/16px var(--bb-font); color: var(--bb-subtle); }
+.bb-hero-n { display: flex; align-items: baseline; gap: 8px; margin: 24px 0 16px; }
+.bb-hero-n b { font: 900 72px/72px var(--bb-font); color: var(--bb-white); }
+.bb-hero-n span { font: 700 20px/28px var(--bb-font); color: var(--bb-accent); }
+.bb-panel.hero p { margin: 0; font: 400 12px/16px var(--bb-font); color: var(--bb-brandMuted); }
+.bb-progress { height: 2px; background: color-mix(in srgb, var(--bb-white) 10%, transparent); margin-top: auto; }
+.bb-progress i { display: block; height: 100%; background: var(--bb-accent); }
+.bb-p-hd { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.bb-p-hd .l { display: flex; align-items: center; gap: 12px; }
+.bb-total { padding: 2px 8px; background: color-mix(in srgb, var(--bb-brand) 10%, transparent); color: var(--bb-brand); font: 700 10px/15px var(--bb-font); }
+.bb-list { display: flex; flex-direction: column; gap: 8px; margin: 24px 0; }
+
+/* thẻ hồ sơ (request card) */
+.bb-req { background: var(--bb-surface); border-left: 4px solid var(--bb-accent); border-radius: calc(12px * var(--k)); box-shadow: var(--bb-sh-card); overflow: hidden; }
+.bb-req.sign { border-left-color: var(--bb-line); }
+.bb-req.open { box-shadow: var(--bb-sh-open); }
+.bb-req-b { display: flex; gap: 12px; width: 100%; padding: 12px; border: 0; background: transparent; text-align: left; cursor: pointer; color: var(--bb-text); }
+.bb-req-m { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.bb-req-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
+.bb-code { font: 700 9px/13.5px var(--bb-font); letter-spacing: .9px; text-transform: uppercase; color: var(--bb-accent); }
+.bb-req-type { font: 700 9px/13.5px var(--bb-font); letter-spacing: .45px; text-transform: uppercase; color: var(--bb-error); }
+.bb-req-t { font: 500 12px/16px var(--bb-font); color: var(--bb-ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bb-req-d { font: 400 10px/15px var(--bb-font); color: var(--bb-muted); }
+.bb-req-s { display: flex; align-items: center; gap: 4px; font: 400 10px/15px var(--bb-font); color: color-mix(in srgb, var(--bb-muted) 70%, transparent); }
+.bb-req-s .ms { font-size: 11px; } .bb-req-s b { font-weight: 600; }
+.bb-req-r { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.bb-amt { font: 700 14px/20px var(--bb-font); color: var(--bb-ink); white-space: nowrap; }
+.bb-req-r .ms { color: color-mix(in srgb, var(--bb-muted) 40%, transparent); }
+.bb-req-x { border-top: 1px solid var(--bb-divider); }
+.bb-meta { background: var(--bb-hair); padding: 12px; }
+.bb-meta h4 { margin: 0 0 12px; font: 700 9px/13.5px var(--bb-font); letter-spacing: .45px; text-transform: uppercase; color: var(--bb-muted); }
+.bb-meta-g { display: flex; flex-wrap: wrap; gap: 12px 16px; }
+.bb-meta-g div { display: flex; flex-direction: column; }
+.bb-meta-g span { font: 600 9px/13.5px var(--bb-font); letter-spacing: -.225px; text-transform: uppercase; color: var(--bb-muted); }
+.bb-meta-g b { font: 700 11px/16.5px var(--bb-font); color: var(--bb-title); }
+.bb-typebar { background: var(--bb-brand); padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.bb-typebar span { display: block; font: 700 9px/13.5px var(--bb-font); letter-spacing: .9px; text-transform: uppercase; color: color-mix(in srgb, var(--bb-white) 50%, transparent); }
+.bb-typebar b { font: 700 12px/16px var(--bb-font); color: var(--bb-accentBright); }
+.bb-notes { display: inline-flex; align-items: center; gap: 4px; padding: 6px 10px; border: 0; border-radius: calc(4px * var(--k)); background: color-mix(in srgb, var(--bb-white) 10%, transparent); color: color-mix(in srgb, var(--bb-white) 70%, transparent); font: 700 9px/13.5px var(--bb-font); letter-spacing: .45px; text-transform: uppercase; cursor: pointer; }
+.bb-notes:hover, .bb-notes.is-hover { background: color-mix(in srgb, var(--bb-white) 20%, transparent); color: var(--bb-white); }
+.bb-acts { display: flex; border-top: 1px solid var(--bb-divider); }
+.bb-act { border: 0; background: transparent; padding: 12px 0; display: inline-flex; align-items: center; justify-content: center; gap: 4px; cursor: pointer; transition: background .15s, color .15s, filter .15s; }
+.bb-act.block { width: 36px; color: color-mix(in srgb, var(--bb-error) 60%, transparent); }
+.bb-act.block:hover, .bb-act.block.is-hover { background: color-mix(in srgb, var(--bb-error) 5%, transparent); color: var(--bb-error); }
+.bb-act.ret { padding: 12px 10px; color: color-mix(in srgb, var(--bb-muted) 50%, transparent); font: 700 8px/12px var(--bb-font); letter-spacing: .45px; text-transform: uppercase; }
+.bb-act.ret:hover, .bb-act.ret.is-hover { background: var(--bb-warnHover); color: var(--bb-orange); }
+.bb-act.ok { flex: 1; background: var(--bb-accent); color: var(--bb-onAccent); font: 700 10px/15px var(--bb-font); letter-spacing: .5px; text-transform: uppercase; }
+.bb-act.ok:active, .bb-act.ok.is-active { filter: brightness(.95); }
+.bb-act.det { flex: 1; flex-direction: column; gap: 2px; border-left: 1px solid var(--bb-divider); color: color-mix(in srgb, var(--bb-ink) 50%, transparent); font: 700 7px/10.5px var(--bb-font); letter-spacing: .35px; text-transform: uppercase; }
+.bb-act.det:hover, .bb-act.det.is-hover { color: var(--bb-ink); }
+.bb-act.det:active, .bb-act.det.is-active { background: var(--bb-hair); color: var(--bb-ink); }
+.bb-note-in { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--bb-note); border-top: 1px solid var(--bb-divider); }
+.bb-note-in .ms { color: var(--bb-outline); }
+.bb-note-in textarea { flex: 1; min-width: 0; height: 36px; border: 0; padding: 0; resize: none; background: transparent; color: var(--bb-ink); font: 400 11px/17.875px var(--bb-font); outline: none; }
+.bb-note-in textarea::placeholder { color: color-mix(in srgb, var(--bb-muted) 50%, transparent); }
+
+/* chip trạng thái */
+.bb-chip { display: inline-block; padding: 2px 6px; border-radius: calc(4px * var(--k)); font: 700 9px/13.5px var(--bb-font); letter-spacing: .45px; text-transform: uppercase; white-space: nowrap; }
+.bb-chip.neutral { background: var(--bb-neutralBg); color: var(--bb-neutralInk); }
+.bb-chip.warn { background: var(--bb-warnBg); color: var(--bb-warnInk); }
+.bb-chip.late { padding: 2px 4px; border-radius: 0; background: color-mix(in srgb, var(--bb-error) 10%, transparent); color: var(--bb-error); }
+.bb-chip.ok { background: var(--bb-accentSoft); color: var(--bb-accentInk); letter-spacing: normal; }
+.bb-chip.back { background: var(--bb-errorTint); color: var(--bb-error); letter-spacing: normal; }
+.bb-chip.muted { background: var(--bb-hair); color: var(--bb-muted); letter-spacing: normal; }
+.bb-range { display: inline-block; padding: 4px 8px; font: 700 10px/15px var(--bb-font); letter-spacing: -.5px; text-transform: uppercase; }
+.bb-range.low { background: color-mix(in srgb, var(--bb-accentInk) 10%, transparent); color: var(--bb-accentInk); }
+.bb-range.mid { background: var(--bb-errorSoft); color: var(--bb-error); }
+.bb-range.high { background: var(--bb-brand); color: var(--bb-white); }
+.bb-dot { width: 10px; height: 10px; border-radius: calc(9999px * var(--k)); flex: none; }
+.bb-dot.grey { background: var(--bb-outline); } .bb-dot.teal { background: var(--bb-accentDot); } .bb-dot.red { background: var(--bb-error); } .bb-dot.amber { background: var(--bb-amber); }
+
+/* phòng ban / loại hồ sơ */
+.bb-tiles { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 24px; }
+.bb-dept { width: 208px; padding: 24px; background: var(--bb-bgTint); cursor: pointer; transition: background .15s; }
+.bb-dept:hover, .bb-dept.is-hover { background: var(--bb-hair); }
+.bb-dept p { margin: 0; font: 700 10px/15px var(--bb-font); color: var(--bb-subtle); }
+.bb-dept h4 { margin: 0 0 16px; font: 700 14px/20px var(--bb-font); color: var(--bb-title); }
+.bb-dept-f { display: flex; align-items: baseline; justify-content: space-between; }
+.bb-dept-f b { font: 900 20px/28px var(--bb-font); color: var(--bb-ink); }
+.bb-dept-f span { font: 700 10px/15px var(--bb-font); color: var(--bb-accentInk); }
+.bb-types { margin-top: 24px; display: flex; flex-direction: column; }
+.bb-type { display: flex; align-items: center; gap: 24px; padding: 16px; border-bottom: 1px solid var(--bb-hair); cursor: pointer; transition: background .15s; }
+.bb-type:hover, .bb-type.is-hover { background: var(--bb-bgTint); }
+.bb-type-ic { width: 48px; height: 48px; background: var(--bb-brand); color: var(--bb-white); display: grid; place-items: center; flex: none; }
+.bb-type-m { flex: 1; min-width: 0; }
+.bb-type-m h4 { margin: 0; font: 700 14px/20px var(--bb-font); color: var(--bb-title); }
+.bb-type-m p { margin: 0; font: 400 12px/16px var(--bb-font); color: var(--bb-subtle); }
+.bb-type-n { text-align: right; }
+.bb-type-n b { display: block; font: 900 18px/28px var(--bb-font); color: var(--bb-ink); }
+.bb-type-n span { font: 700 10px/15px var(--bb-font); color: var(--bb-subtle); }
+
+/* ô nhập */
+.bb-search { position: relative; display: inline-flex; align-items: center; }
+.bb-search .ms { position: absolute; left: 12px; font-size: 16px; color: var(--bb-subtle); pointer-events: none; }
+.bb-search input { width: 256px; height: 34px; padding: 8px 16px 8px 36px; border: 1px solid var(--bb-outline); background: var(--bb-surface); color: var(--bb-text); font: 400 12px/16px var(--bb-font); outline: none; }
+.bb-search input::placeholder { color: var(--bb-subtle); }
+.bb-search input:focus, .bb-search input.is-focus { border-color: var(--bb-accent); outline: none; }
+.bb-search.m { display: flex; } .bb-search.m input { width: 100%; height: 42px; padding: 12px 36px; }
+.bb-uline { display: inline-flex; align-items: center; gap: 8px; padding-bottom: 4px; border-bottom: 1px solid var(--bb-outline); }
+.bb-uline .ms { font-size: 18px; color: var(--bb-muted); }
+.bb-uline input { width: 192px; border: 0; padding: 0; background: transparent; color: var(--bb-text); font: 400 10px/15px var(--bb-font); letter-spacing: 1px; text-transform: uppercase; outline: none; box-shadow: none; }
+.bb-uline input::placeholder { color: var(--bb-outline); }
+.bb-mfield { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: var(--bb-surface); border: 1px solid var(--bb-divider); }
+.bb-mfield .ms { color: var(--bb-outline); }
+.bb-mfield input { flex: 1; min-width: 0; border: 0; padding: 0; background: transparent; color: var(--bb-ink); font: 400 11px/16.5px var(--bb-font); outline: none; }
+
+/* overdue desktop */
+.bb-ranges { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); box-shadow: var(--bb-sh-sm); }
+.bb-rcard { background: var(--bb-surface); padding: 32px; display: flex; flex-direction: column; gap: 16px; cursor: pointer; transition: background .15s; min-width: 0; }
+.bb-rcard + .bb-rcard { border-left: 1px solid var(--bb-hair); }
+.bb-rcard:hover, .bb-rcard.is-hover { background: var(--bb-bgTint); }
+.bb-rcard-h { display: flex; justify-content: space-between; align-items: center; }
+.bb-rcard-h > span:first-child { font: 700 10px/15px var(--bb-font); letter-spacing: 1px; text-transform: uppercase; color: var(--bb-muted); }
+.bb-rcard-n { display: flex; align-items: baseline; gap: 8px; }
+.bb-rcard-n b { font: 700 60px/60px var(--bb-font); letter-spacing: -3px; color: var(--bb-ink); }
+.bb-rcard-n span { font: 500 12px/16px var(--bb-font); color: var(--bb-muted); }
+.bb-rcard-f { display: flex; justify-content: space-between; align-items: center; padding-top: 16px; border-top: 1px solid var(--bb-hair); font: 700 12px/16px var(--bb-font); letter-spacing: -.3px; text-transform: uppercase; color: var(--bb-ink); }
+.bb-rcard-f .ms { font-size: 18px; color: var(--bb-accentInk); }
+.bb-table { background: var(--bb-surface); box-shadow: 0 20px 40px color-mix(in srgb, var(--bb-brand) 4%, transparent); }
+.bb-table-h { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 20px 32px; border-bottom: 1px solid var(--bb-hair); }
+.bb-table-h h3 { margin: 0; font: 700 18px/28px var(--bb-font); letter-spacing: -.45px; color: var(--bb-ink); }
+.bb-empty { padding: 48px 32px; text-align: center; font: 400 14px/20px var(--bb-font); color: var(--bb-muted); }
+.bb-table-f { display: flex; justify-content: space-between; align-items: center; padding: 16px 32px; background: var(--bb-hair); font: 700 10px/15px var(--bb-font); letter-spacing: 1px; text-transform: uppercase; color: var(--bb-muted); }
+
+/* dialog lịch sử duyệt */
+.bb-scrim { position: relative; padding: 32px 16px; background: color-mix(in srgb, var(--bb-black) 40%, transparent); display: grid; place-items: center; }
+.bb-dialog { width: 512px; max-width: 100%; background: var(--bb-surface); border-radius: calc(12px * var(--k)); box-shadow: var(--bb-sh-dialog); overflow: hidden; }
+.bb-dialog-h { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; padding: 16px 20px 12px; border-bottom: 1px solid var(--bb-divider); }
+.bb-dialog-h small { display: block; font: 700 10px/15px var(--bb-font); letter-spacing: 1.5px; text-transform: uppercase; color: var(--bb-muted); }
+.bb-dialog-h b { display: block; font: 700 14px/20px var(--bb-font); color: var(--bb-ink); }
+.bb-dialog-h span { font: 400 10px/15px var(--bb-font); color: color-mix(in srgb, var(--bb-muted) 60%, transparent); }
+.bb-tl { padding: 16px 20px; display: flex; flex-direction: column; }
+.bb-tl-i { display: grid; grid-template-columns: 10px minmax(0, 1fr); gap: 12px; }
+.bb-tl-rail { display: flex; flex-direction: column; align-items: center; gap: 4px; padding-top: 5px; }
+.bb-tl-rail i { width: 1px; flex: 1; background: var(--bb-divider); }
+.bb-tl-b { padding: 0 0 20px; min-width: 0; }
+.bb-tl-name { margin: 0; font: 700 14px/20px var(--bb-font); color: var(--bb-ink); }
+.bb-tl-role { margin: 0; font: 400 10px/15px var(--bb-mono); text-transform: uppercase; color: color-mix(in srgb, var(--bb-muted) 60%, transparent); }
+.bb-tl-when { display: flex; align-items: center; gap: 8px; margin-top: 4px; font: 400 10px/15px var(--bb-font); }
+.bb-tl-when .t { color: color-mix(in srgb, var(--bb-muted) 70%, transparent); }
+.bb-tl-when .d { color: color-mix(in srgb, var(--bb-muted) 40%, transparent); }
+.bb-quote { margin-top: 12px; padding: 8px 12px; background: var(--bb-hair); border-left: 2px solid var(--bb-accent); border-radius: calc(8px * var(--k)); }
+.bb-quote p { margin: 0; font: 400 12px/19.5px var(--bb-font); color: var(--bb-muted); }
+
+/* mobile */
+.bb-mbar { height: 68px; padding: 16px 24px; background: var(--bb-surface); border-bottom: 1px solid var(--bb-divider); display: flex; align-items: center; justify-content: space-between; }
+.bb-mbar.back { height: 72px; }
+.bb-mbar .l { display: flex; align-items: center; gap: 16px; }
+.bb-greet { font: 900 20px/25px var(--bb-font); color: var(--bb-brand); }
+.bb-word { font: 900 20px/28px var(--bb-font); letter-spacing: 2px; text-transform: uppercase; color: var(--bb-brand); }
+.bb-msec { padding-bottom: 12px; border-bottom: 1px solid var(--bb-divider); }
+.bb-msec > span { display: block; font: 700 9px/13.5px var(--bb-font); letter-spacing: .9px; text-transform: uppercase; color: var(--bb-accent); }
+.bb-msec h1 { margin: 0; font: 700 36px/45px var(--bb-font); letter-spacing: -.9px; color: var(--bb-brand); }
+.bb-msec p { margin: 6px 0 0; font: 400 12px/16px var(--bb-font); color: var(--bb-muted); }
+.bb-mtitle h1 { margin: 0; font: 700 24px/32px var(--bb-font); letter-spacing: -.6px; color: var(--bb-ink); }
+.bb-mtitle p { margin: 0; font: 600 10px/15px var(--bb-font); letter-spacing: 1px; text-transform: uppercase; color: var(--bb-outline); }
+.bb-mtitle .w { color: var(--bb-warnInk); } .bb-mtitle .o { color: var(--bb-okInk); }
+.bb-menu { display: flex; flex-direction: column; gap: 4px; }
+.bb-mrow { display: flex; align-items: center; gap: 12px; width: 100%; padding: 24px; background: var(--bb-surface); border: 1px solid var(--bb-divider); box-shadow: var(--bb-sh-sm); text-align: left; cursor: pointer; transition: background .15s; }
+.bb-mrow:hover, .bb-mrow.is-hover { background: var(--bb-hair); }
+.bb-mrow-ic { width: 40px; height: 40px; background: color-mix(in srgb, var(--bb-accent) 8%, transparent); color: var(--bb-brand); display: grid; place-items: center; flex: none; }
+.bb-mrow-ic.b { background: color-mix(in srgb, var(--bb-brand) 5%, transparent); }
+.bb-mrow-ic .ms { font-size: 20px; }
+.bb-mrow-m { flex: 1; min-width: 0; margin-left: 8px; }
+.bb-mrow-m b { display: block; font: 700 12.8px/19.2px var(--bb-font); letter-spacing: 1.28px; text-transform: uppercase; color: var(--bb-title); }
+.bb-mrow-m span { display: block; font: 400 10px/15px var(--bb-font); letter-spacing: 1px; text-transform: uppercase; color: var(--bb-subtle); }
+.bb-mrow > .ms { color: var(--bb-subtle); }
+.bb-mlist-h { display: flex; justify-content: flex-end; padding: 0 12px 4px 0; }
+.bb-mlist-h span, .bb-mli-n span { width: 32px; text-align: center; }
+.bb-mlist-h span { font: 700 8px/12px var(--bb-font); text-transform: uppercase; }
+.bb-mli { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px; background: var(--bb-surface); border: 0; border-bottom: 1px solid color-mix(in srgb, var(--bb-outline) 15%, transparent); text-align: left; cursor: pointer; }
+.bb-mli:active, .bb-mli.is-active { background: var(--bb-hair); }
+.bb-mli > .ms { color: var(--bb-ink); }
+.bb-mli-m { flex: 1; min-width: 0; }
+.bb-mli-m b { display: block; font: 700 12px/12px var(--bb-font); color: var(--bb-title); margin-bottom: 2px; }
+.bb-mli-m span { font: 400 10px/15px var(--bb-font); letter-spacing: -.5px; text-transform: uppercase; color: var(--bb-subtle); }
+.bb-mli-n { display: flex; }
+.bb-mli-n span { font: 700 10px/15px var(--bb-font); }
+.w { color: var(--bb-warnInk); } .o { color: var(--bb-okInk); } .z { color: var(--bb-outline); }
+.bb-mstats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.bb-mstat { padding: 12px; min-height: 80px; }
+.bb-mstat > span { display: block; font: 700 9px/13.5px var(--bb-font); letter-spacing: .9px; text-transform: uppercase; }
+.bb-mstat.navy { background: var(--bb-brand); } .bb-mstat.navy > span { color: var(--bb-brandMuted); }
+.bb-mstat.navy b { font: 700 20px/28px var(--bb-font); color: var(--bb-accent); text-transform: uppercase; }
+.bb-mstat.white { background: var(--bb-surface); border-bottom: 1px solid color-mix(in srgb, var(--bb-outline) 15%, transparent); } .bb-mstat.white > span { color: var(--bb-subtle); }
+.bb-mstat.white div { display: flex; align-items: center; gap: 8px; } .bb-mstat.white b { font: 700 30px/36px var(--bb-font); color: var(--bb-ink); } .bb-mstat.white .ms { color: var(--bb-accentInk); }
+.bb-bnav { height: 64px; padding: 0 16px; background: var(--bb-surface); border-top: 1px solid color-mix(in srgb, var(--bb-outline) 15%, transparent); box-shadow: 0 -4px 20px color-mix(in srgb, var(--bb-brand) 6%, transparent); display: flex; justify-content: space-around; align-items: center; }
+.bb-bnav-i { width: 56px; height: 56px; border: 0; padding: 0; background: transparent; color: color-mix(in srgb, var(--bb-brand) 60%, transparent); opacity: .8; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; cursor: pointer; transition: color .15s, opacity .15s; }
+.bb-bnav-i span:last-child { font: 500 10px/15px var(--bb-font); letter-spacing: .5px; text-transform: uppercase; }
+.bb-bnav-i:hover, .bb-bnav-i.is-hover { color: var(--bb-brand); opacity: 1; }
+.bb-bnav-i.on { color: var(--bb-brand); }
+.bb-mo-h { padding-bottom: 8px; border-bottom: 1px solid var(--bb-slate200); display: flex; justify-content: space-between; align-items: flex-end; }
+.bb-mo-h span { display: block; font: 700 8px/12px var(--bb-font); letter-spacing: 1.6px; text-transform: uppercase; color: var(--bb-accent); }
+.bb-mo-h h1 { margin: 0; font: 700 30px/30px var(--bb-font); letter-spacing: -.75px; color: var(--bb-ink); }
+.bb-mo-h p { margin: 0; font: 700 10px/15px var(--bb-font); letter-spacing: .5px; text-transform: uppercase; color: var(--bb-muted); }
+.bb-mo-r { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.bb-mo-b { aspect-ratio: 1; padding: 12px; border: 0; border-left: 1px solid var(--bb-slate200); background: var(--bb-hair); box-shadow: var(--bb-sh-sm); display: flex; flex-direction: column; justify-content: space-between; text-align: left; cursor: pointer; }
+.bb-mo-b small { font: 700 7px/8.75px var(--bb-font); letter-spacing: .35px; text-transform: uppercase; color: color-mix(in srgb, var(--bb-muted) 50%, transparent); }
+.bb-mo-b b { font: 700 30px/36px var(--bb-font); color: color-mix(in srgb, var(--bb-muted) 30%, transparent); }
+.bb-h9 { margin: 0 0 8px; font: 700 9px/13.5px var(--bb-font); letter-spacing: .9px; text-transform: uppercase; color: var(--bb-muted); }
+.bb-mempty { padding: 24px; background: var(--bb-surface); border: 1px solid var(--bb-slate100); font: 400 12px/16px var(--bb-font); color: var(--bb-muted); text-align: center; }
+
+/* chi tiết phiếu: khung xem tài liệu + panel phải (desktop), trang cuộn + footer duyệt (mobile) */
+.bb-dt { display: flex; background: var(--bb-bg); min-height: 100%; }
+.bb-viewer { flex: 1; min-width: 0; background: var(--bb-hair); display: flex; flex-direction: column; }
+.bb-vbar { height: 48px; padding: 0 16px; background: var(--bb-surface); border-bottom: 1px solid var(--bb-divider); display: flex; align-items: center; gap: 12px; }
+.bb-vback { width: 28px; height: 28px; border: 0; padding: 0; border-radius: calc(8px * var(--k)); background: transparent; color: color-mix(in srgb, var(--bb-muted) 60%, transparent); display: grid; place-items: center; cursor: pointer; }
+.bb-vback:hover, .bb-vback.is-hover { background: var(--bb-hair); color: var(--bb-ink); }
+.bb-vname { flex: 1; min-width: 0; font: 400 10px/15px var(--bb-font); color: var(--bb-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bb-copylink { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border: 0; border-radius: calc(8px * var(--k)); background: transparent; color: color-mix(in srgb, var(--bb-muted) 70%, transparent); font: 600 11px/16.5px var(--bb-font); cursor: pointer; }
+.bb-copylink:hover, .bb-copylink.is-hover { background: var(--bb-hair); color: var(--bb-ink); }
+.bb-vbody { flex: 1; min-height: 160px; display: flex; align-items: center; justify-content: center; gap: 12px; color: color-mix(in srgb, var(--bb-muted) 60%, transparent); font: 400 14px/20px var(--bb-font); }
+.bb-spin { width: 28px; height: 28px; border-radius: calc(9999px * var(--k)); border: 2px solid var(--bb-accent); border-top-color: transparent; animation: bb-spin 1s linear infinite; }
+@keyframes bb-spin { to { transform: rotate(360deg); } }
+.bb-rp { width: 413px; max-width: 100%; background: var(--bb-panelBg); display: flex; flex-direction: column; flex: none; }
+.bb-tabs { height: 48px; padding: 0 16px; background: var(--bb-surface); border-bottom: 1px solid var(--bb-divider); display: flex; align-items: center; column-gap: 20px; }
+.bb-tabs .sp { flex: 1; }
+.bb-tab { padding: 12px 0; border: 0; border-bottom: 2px solid transparent; background: none; color: color-mix(in srgb, var(--bb-muted) 70%, transparent); font: 500 14px/20px var(--bb-font); text-transform: capitalize; cursor: pointer; }
+.bb-tab:hover, .bb-tab.is-hover { color: var(--bb-muted); }
+.bb-tab.on { color: var(--bb-ink); border-bottom-color: var(--bb-accent); }
+.bb-av28 { width: 28px; height: 28px; border: 0; padding: 0; background: transparent; display: grid; place-items: center; cursor: pointer; transition: transform .15s, opacity .15s; }
+.bb-av28 .ph { width: 24px; height: 24px; }
+.bb-av28:hover, .bb-av28.is-hover { opacity: .8; }
+.bb-av28:active, .bb-av28.is-active { opacity: .8; transform: scale(.95); }
+.bb-pbody { padding: 24px; flex: 1; display: flex; flex-direction: column; gap: 20px; min-height: 0; }
+.bb-dh { display: flex; justify-content: space-between; gap: 16px; }
+.bb-dh-l { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.bb-dh-t { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.bb-dtype { font: 700 9px/13.5px var(--bb-font); letter-spacing: 1.8px; text-transform: uppercase; color: var(--bb-error); }
+.bb-dcode { margin: 0; font: 700 16px/22px var(--bb-font); letter-spacing: -.4px; color: var(--bb-ink); }
+.bb-dh-r { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.bb-damt { margin: 0; font: 700 24px/32px var(--bb-font); color: var(--bb-ink); white-space: nowrap; }
+.bb-dst { display: flex; align-items: center; gap: 6px; }
+.bb-st { padding: 2px 8px; font: 900 9px/13.5px var(--bb-font); letter-spacing: .9px; text-transform: uppercase; background: color-mix(in srgb, var(--bb-accent) 10%, transparent); color: var(--bb-accentInk); }
+.bb-st.plain { background: none; padding: 2px 0; color: var(--bb-muted); font-weight: 700; }
+.bb-dtitle { margin: 0; font: 500 14px/19.25px var(--bb-font); color: var(--bb-muted); }
+.bb-dby { margin: 0; font: 400 11px/16.5px var(--bb-font); color: var(--bb-subtle); }
+.bb-hr { height: 1px; background: var(--bb-divider); }
+.bb-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 48px; }
+.bb-fields .full { grid-column: 1 / -1; }
+.bb-fl { margin: 0 0 4px; font: 700 9px/13.5px var(--bb-font); letter-spacing: 1.35px; text-transform: uppercase; color: var(--bb-muted); }
+.bb-fv { margin: 0; font: 500 14px/20px var(--bb-font); color: var(--bb-ink); }
+.bb-t8 { display: inline-block; padding: 2px 6px; font: 900 8px/12px var(--bb-font); text-transform: uppercase; white-space: nowrap; flex: none; align-self: flex-start; }
+.bb-t8.ok { background: var(--bb-accentSoft); color: var(--bb-accentInk); }
+.bb-t8.back { background: var(--bb-errorTint); color: var(--bb-error); }
+.bb-t8.muted { background: var(--bb-hair); color: var(--bb-muted); }
+.bb-t8.purple { background: color-mix(in srgb, var(--bb-purple) 10%, transparent); color: var(--bb-purple); letter-spacing: .8px; }
+.bb-t8.cached { background: color-mix(in srgb, var(--bb-accent) 15%, transparent); color: var(--bb-accentInk); font-weight: 700; letter-spacing: .4px; }
+.bb-cmts { display: flex; flex-direction: column; gap: 8px; }
+.bb-cmt { display: flex; gap: 10px; padding: 10px 12px; background: var(--bb-panelBg); border: 1px solid var(--bb-divider); }
+.bb-cmt-m { margin: 0; font: 400 10px/15px var(--bb-font); color: color-mix(in srgb, var(--bb-muted) 60%, transparent); }
+.bb-cmt-t { margin: 0; font: 400 12px/19.5px var(--bb-font); color: var(--bb-ink); }
+.bb-files { margin: 0 -24px; }
+.bb-files-h { display: flex; justify-content: space-between; align-items: center; padding: 12px 24px; }
+.bb-files-h span { font: 400 9px/13.5px var(--bb-font); color: color-mix(in srgb, var(--bb-muted) 50%, transparent); }
+.bb-file { display: flex; gap: 12px; padding: 12px 24px; border-top: 1px solid var(--bb-divider); cursor: pointer; }
+.bb-file:hover, .bb-file.is-hover { background: var(--bb-surface); }
+.bb-file.on { background: var(--bb-surface); border-left: 2px solid var(--bb-accent); padding-left: 22px; }
+.bb-file > .ms { color: var(--bb-accent); }
+.bb-file b { display: block; font: 500 12px/16px var(--bb-font); color: var(--bb-ink); }
+.bb-file small { display: block; font: 400 10px/15px var(--bb-font); color: color-mix(in srgb, var(--bb-muted) 60%, transparent); }
+.bb-file i { font: 700 9px/13.5px var(--bb-font); font-style: normal; letter-spacing: .225px; text-transform: uppercase; color: color-mix(in srgb, var(--bb-muted) 40%, transparent); margin-right: 8px; }
+.bb-dfoot { background: var(--bb-surface); border-top: 1px solid var(--bb-divider); }
+.bb-dnote { display: flex; align-items: center; gap: 8px; padding: 10px 24px 4px; border-bottom: 1px solid var(--bb-divider); }
+.bb-dnote .ms { color: var(--bb-outline); }
+.bb-dnote input { flex: 1; min-width: 0; border: 0; padding: 0; background: transparent; color: var(--bb-ink); font: 400 11px/16.5px var(--bb-font); outline: none; }
+.bb-dnote input::placeholder { color: color-mix(in srgb, var(--bb-muted) 50%, transparent); }
+.bb-dsum { padding: 12px 16px; display: flex; flex-direction: column; gap: 10px; }
+.bb-dsum .bb-fl { margin: 0; }
+.bb-dtotal { margin: 0; font: 700 18px/28px var(--bb-font); color: var(--bb-ink); }
+.bb-dacts { display: flex; gap: 6px; }
+.bb-dbtn { display: inline-flex; align-items: center; justify-content: center; gap: 4px; padding: 8px; border: 1px solid var(--bb-outline); background: transparent; color: var(--bb-muted); font: 700 10px/15px var(--bb-font); letter-spacing: .5px; text-transform: uppercase; cursor: pointer; }
+.bb-dbtn.rej:hover, .bb-dbtn.rej.is-hover { background: color-mix(in srgb, var(--bb-error) 5%, transparent); color: var(--bb-error); }
+.bb-dbtn.ok { flex: 1; border: 0; padding: 8px; background: var(--bb-accent); color: var(--bb-ink); box-shadow: 0 4px 12px color-mix(in srgb, var(--bb-accent) 30%, transparent); }
+.bb-dbtn.ok:hover, .bb-dbtn.ok.is-hover { background: var(--bb-accentHover); }
+.bb-seg2 { display: inline-flex; gap: 4px; padding: 4px; background: var(--bb-surface); border: 1px solid var(--bb-divider); box-shadow: 0 2px 8px color-mix(in srgb, var(--bb-brand) 4%, transparent); align-self: flex-start; }
+.bb-seg2 button { padding: 6px 16px; border: 0; background: transparent; color: var(--bb-muted); font: 700 12px/16px var(--bb-font); letter-spacing: 1.2px; text-transform: uppercase; cursor: pointer; }
+.bb-seg2 button:hover, .bb-seg2 button.is-hover { color: var(--bb-ink); }
+.bb-seg2 button.on { background: var(--bb-accent); color: var(--bb-ink); }
+.bb-box { background: var(--bb-surface); border: 1px solid var(--bb-divider); box-shadow: 0 2px 8px color-mix(in srgb, var(--bb-brand) 4%, transparent); }
+.bb-ai-h { display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; border-bottom: 1px solid var(--bb-divider); }
+.bb-ai-h > div { display: flex; align-items: center; gap: 8px; }
+.bb-ai-h > div > .ms { color: var(--bb-accent); }
+.bb-lbl10 { font: 700 10px/15px var(--bb-font); letter-spacing: 1.5px; text-transform: uppercase; color: var(--bb-muted); }
+.bb-airef { width: 32px; height: 38px; padding: 4px; border: 0; background: transparent; color: var(--bb-muted); cursor: pointer; }
+.bb-airef:hover, .bb-airef.is-hover { color: var(--bb-ink); }
+.bb-ai-b { padding: 20px 24px; font: 400 14px/24px var(--bb-font); color: var(--bb-prose); }
+.bb-ai-b p { margin: 0 0 16px; } .bb-ai-b p:last-child { margin: 0; }
+.bb-ai-b strong { color: var(--bb-ink); font-weight: 700; }
+.bb-hbox { padding: 20px; }
+.bb-hbox .bb-fl { margin-bottom: 16px; }
+.bb-chip.ok2 { background: var(--bb-okSoft2); color: var(--bb-accentInk); letter-spacing: normal; }
+.bb-chip.grey { background: var(--bb-grey240); color: var(--bb-muted); letter-spacing: normal; }
+.bb-seemore.v2 { color: var(--bb-accentInk2); }
+.bb-due { margin: 4px 0 0; font: 400 10px/15px var(--bb-font); color: color-mix(in srgb, var(--bb-muted) 60%, transparent); }
+.bb-quote.s p { line-height: 16px; }
+.bb-sys { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 32px; }
+.bb-sys span { display: block; font: 400 9px/13.5px var(--bb-font); letter-spacing: .225px; text-transform: uppercase; color: var(--bb-muted); }
+.bb-sys b { display: block; font: 500 12px/16px var(--bb-font); color: var(--bb-ink); } .bb-sys b.dim { color: var(--bb-muted); }
+.bb-toasts { display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 280px; }
+.bb-toast { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: var(--bb-text); color: var(--bb-white); border-radius: calc(6px * var(--k)); font: 500 12px/16px var(--bb-font); box-shadow: 0 4px 12px color-mix(in srgb, var(--bb-black) 20%, transparent); }
+.bb-toast .ms { font-size: 14px; width: 18px; height: 18px; display: grid; place-items: center; border-radius: 50%; background: color-mix(in srgb, var(--bb-accent) 20%, transparent); color: var(--bb-accent); }
+/* mobile */
+.bb-mmain { padding: 0 16px 16px; display: flex; flex-direction: column; gap: 16px; }
+.bb-mdh { padding: 24px 0 8px; }
+.bb-mdh .bb-dtype { font-size: 10px; line-height: 15px; letter-spacing: 1.5px; }
+.bb-mdh h2 { margin: 0; font: 700 24px/32px var(--bb-font); letter-spacing: -.6px; color: var(--bb-ink); }
+.bb-mdh p { margin: 0; font: 500 14px/19.25px var(--bb-font); color: var(--bb-muted); }
+.bb-mchips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.bb-mchip { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border: 0; border-radius: calc(12px * var(--k)); background: color-mix(in srgb, var(--bb-accent) 15%, transparent); color: var(--bb-accentInk); font: 600 11px/16.5px var(--bb-font); cursor: pointer; transition: background .15s, transform .15s; }
+.bb-mchip:hover, .bb-mchip.is-hover { background: color-mix(in srgb, var(--bb-accent) 25%, transparent); }
+.bb-mchip:active, .bb-mchip.is-active { background: color-mix(in srgb, var(--bb-accent) 25%, transparent); transform: scale(.95); }
+.bb-mcard { background: var(--bb-surface); border: 1px solid var(--bb-divider); border-radius: calc(12px * var(--k)); box-shadow: 0 4px 12px color-mix(in srgb, var(--bb-brand) 4%, transparent); overflow: hidden; }
+.bb-minfo { padding: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px 24px; }
+.bb-minfo label { display: block; font: 700 10px/15px var(--bb-font); letter-spacing: .5px; text-transform: uppercase; color: var(--bb-muted); }
+.bb-minfo div > div { font: 600 14px/20px var(--bb-font); color: var(--bb-ink); overflow-wrap: anywhere; }
+.bb-mcard-h { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; border-bottom: 1px solid var(--bb-divider); }
+.bb-mcard-h span:last-child { font: 400 10px/15px var(--bb-font); color: var(--bb-outline); }
+.bb-mcmt { display: flex; gap: 12px; padding: 14px 20px; }
+.bb-mcmt + .bb-mcmt { border-top: 1px solid var(--bb-hair); }
+.bb-mcmt-t { margin: 4px 0 0; font: 400 14px/22.75px var(--bb-font); color: var(--bb-ink); }
+.bb-mstep { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; padding: 20px; border: 0; border-radius: calc(12px * var(--k)); background: var(--bb-hair); box-shadow: 0 4px 12px color-mix(in srgb, var(--bb-brand) 4%, transparent); text-align: left; cursor: pointer; }
+.bb-mstep:active, .bb-mstep.is-active { background: var(--bb-hairPress); }
+.bb-mstep label { display: block; font: 700 10px/15px var(--bb-font); letter-spacing: 1px; text-transform: uppercase; color: var(--bb-muted); }
+.bb-mstep b { display: block; font: 700 18px/28px var(--bb-font); color: var(--bb-ink); }
+.bb-mstep small { font: 400 10px/15px var(--bb-font); color: var(--bb-subtle); }
+.bb-mstep .ic { width: 40px; height: 40px; border-radius: calc(9999px * var(--k)); background: color-mix(in srgb, var(--bb-accent) 15%, transparent); color: var(--bb-accentInk); display: grid; place-items: center; flex: none; }
+.bb-mfile { display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px 20px; border: 0; border-top: 1px solid var(--bb-hair); background: transparent; text-align: left; cursor: pointer; }
+.bb-mfile.first { border-top: 0; }
+.bb-mfile:active, .bb-mfile.is-active { background: var(--bb-hair); }
+.bb-mfile.on { background: var(--bb-hair); border-left: 2px solid var(--bb-accent); padding-left: 18px; }
+.bb-mfile .ft { width: 32px; height: 32px; border-radius: calc(12px * var(--k)); color: var(--bb-accent); display: grid; place-items: center; flex: none; }
+.bb-mfile .mm { flex: 1; min-width: 0; }
+.bb-mfile b { display: block; font: 600 14px/19.25px var(--bb-font); color: var(--bb-ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bb-mfile small { display: block; font: 400 10px/15px var(--bb-font); color: color-mix(in srgb, var(--bb-muted) 60%, transparent); }
+.bb-mfile em { display: block; font: 400 9px/13.5px var(--bb-font); font-style: normal; color: color-mix(in srgb, var(--bb-muted) 40%, transparent); }
+.bb-mfile > .ms:last-child { color: var(--bb-outline); }
+.bb-mfoot { background: color-mix(in srgb, var(--bb-surface) 90%, transparent); backdrop-filter: blur(8px); border-top: 1px solid var(--bb-divider); box-shadow: 0 -4px 12px color-mix(in srgb, var(--bb-brand) 6%, transparent); padding: 8px 16px 24px; display: flex; flex-direction: column; gap: 8px; position: relative; }
+.bb-mfoot-n { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--bb-divider); }
+.bb-mfoot-n .ms { color: var(--bb-outline); }
+.bb-mfoot-n input { flex: 1; min-width: 0; border: 0; padding: 0; background: transparent; color: var(--bb-ink); font: 400 12px/18px var(--bb-font); outline: none; }
+.bb-mfoot-a { display: flex; gap: 8px; }
+.bb-mact { height: 48px; border: 0; border-radius: calc(6px * var(--k)); display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font: 700 10px/15px var(--bb-font); letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: background .15s, transform .15s; }
+.bb-mact.rej { width: 85px; background: var(--bb-error); color: var(--bb-white); }
+.bb-mact.rej:hover, .bb-mact.rej.is-hover { background: var(--bb-errorHover); }
+.bb-mact.rej:active, .bb-mact.rej.is-active { background: var(--bb-errorHover); transform: scale(.95); }
+.bb-mact.ret { width: 87px; background: var(--bb-warnHover); color: var(--bb-orange); border: 1px solid color-mix(in srgb, var(--bb-orange) 30%, transparent); }
+.bb-mact.ret:hover, .bb-mact.ret.is-hover { background: var(--bb-warnPress); }
+.bb-mact.ret:active, .bb-mact.ret.is-active { background: var(--bb-warnPress); transform: scale(.95); }
+.bb-mact.ok { flex: 1; flex-direction: row; gap: 8px; background: var(--bb-accent); color: var(--bb-ink); font-size: 14px; line-height: 20px; letter-spacing: 1.4px; box-shadow: 0 10px 15px -3px color-mix(in srgb, var(--bb-accent) 25%, transparent), 0 4px 6px -4px color-mix(in srgb, var(--bb-accent) 25%, transparent); }
+.bb-mact.ok:hover, .bb-mact.ok.is-hover { background: var(--bb-accentHover); }
+.bb-mact.ok:active, .bb-mact.ok.is-active { background: var(--bb-accentHover); transform: scale(.95); }
+.bb-handle { width: 96px; height: 4px; border-radius: calc(9999px * var(--k)); background: color-mix(in srgb, var(--bb-outline) 40%, transparent); align-self: center; }
+.bb-pdf { background: var(--bb-viewerBg); display: flex; flex-direction: column; position: relative; }
+.bb-pdf-h { height: 56px; padding: 0 16px; background: var(--bb-viewerBar); border-bottom: 1px solid color-mix(in srgb, var(--bb-white) 10%, transparent); display: flex; align-items: center; gap: 8px; }
+.bb-pdf-x { width: 36px; height: 36px; border: 0; padding: 0; border-radius: calc(12px * var(--k)); background: transparent; color: color-mix(in srgb, var(--bb-white) 70%, transparent); display: grid; place-items: center; cursor: pointer; transition: color .15s, transform .15s; }
+.bb-pdf-x:hover, .bb-pdf-x.is-hover { color: var(--bb-white); }
+.bb-pdf-x:active, .bb-pdf-x.is-active { color: var(--bb-white); transform: scale(.95); }
+.bb-pdf-n { flex: 1; min-width: 0; text-align: center; font: 500 11px/16.5px var(--bb-font); color: color-mix(in srgb, var(--bb-white) 60%, transparent); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bb-pdf-f { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border: 0; border-radius: calc(12px * var(--k)); background: transparent; color: color-mix(in srgb, var(--bb-white) 70%, transparent); font: 600 11px/16.5px var(--bb-font); cursor: pointer; transition: transform .15s; }
+.bb-pdf-f:active, .bb-pdf-f.is-active { transform: scale(.95); }
+.bb-pdf-b { flex: 1; padding: 12px; display: flex; flex-direction: column; gap: 12px; }
+.bb-pdf-b .ph { flex: 1; min-height: 120px; }
+.bb-fab { position: absolute; right: 16px; bottom: 24px; width: 48px; height: 48px; border: 0; border-radius: calc(9999px * var(--k)); background: var(--bb-accent); color: var(--bb-white); display: grid; place-items: center; box-shadow: 0 4px 12px color-mix(in srgb, var(--bb-black) 25%, transparent); }
+
+/* ---------- màn mẫu ---------- */
+.frames { overflow-x: auto; padding: 8px 0; }
+.frames-in { display: flex; gap: 28px; width: max-content; align-items: flex-start; }
+.fr { display: flex; flex-direction: column; }
+.phone { width: 390px; height: 844px; border-radius: 36px; box-shadow: 0 0 0 10px var(--bb-rail); background: var(--bb-bgTint); position: relative; overflow: hidden; margin: 10px; zoom: .62; display: flex; flex-direction: column; }
+.phone .body { flex: 1; overflow: hidden; padding: 32px 24px 0; display: flex; flex-direction: column; gap: 16px; }
+.phone .bb-bnav { flex: none; }
+.desk { width: 1440px; height: 900px; border-radius: 16px; box-shadow: 0 0 0 10px var(--bb-rail); background: var(--bb-bg); overflow: hidden; margin: 10px; zoom: .5; display: flex; }
+.desk > .bb-rail, .desk > .bb-side { flex: none; }
+.desk .page { flex: 1; min-width: 0; padding: 24px 48px 48px; overflow: hidden; }
+.desk .page-in { max-width: 1056px; margin: 0 auto; display: flex; flex-direction: column; gap: 32px; }
+.desk .cols { display: grid; grid-template-columns: 331px minmax(0, 1fr); gap: 32px; align-items: start; }
+.cap { font-family: var(--bb-mono); font-size: 12px; color: var(--bb-muted); margin: 4px 10px 0; width: 0; min-width: 100%; }
+
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; transition: all .25s; z-index: 20; background: var(--bb-ink); color: var(--bb-white); padding: 10px 16px; font: 500 13px var(--bb-font); box-shadow: var(--bb-sh-dialog); }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; }
+  .side { display: none; }
+  main.kit { padding: 0 16px 80px; }
+  .grid, .grid.wide { grid-template-columns: 1fr; }
+  .intro h1 { font-size: 28px; line-height: 32px; }
+  .type-row { grid-template-columns: 1fr; gap: 2px; }
+  .bb-ranges { grid-template-columns: 1fr; }
+  .bb-rcard + .bb-rcard { border-left: 0; border-top: 1px solid var(--bb-hair); }
+  .bb-search input { width: 200px; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <nav class="side" aria-label="Mục lục">
+    <div class="brand"><div class="brand-mark"><span class="ms">approval</span></div><div><b>BonBon UI Kit</b><small>App duyệt hồ sơ</small></div></div>
+    <h6>Nền tảng</h6>
+    <a href="#color"><span class="ms">palette</span>Màu</a>
+    <a href="#type"><span class="ms">text_fields</span>Chữ</a>
+    <a href="#shape"><span class="ms">rounded_corner</span>Bo góc &amp; bóng</a>
+    <a href="#layout"><span class="ms">straighten</span>Bố cục &amp; kích thước</a>
+    <h6>Thành phần</h6>
+    <a href="#actions"><span class="ms">touch_app</span>Hành động</a>
+    <a href="#navigation"><span class="ms">explore</span>Điều hướng</a>
+    <a href="#containment"><span class="ms">web_asset</span>Chứa nội dung</a>
+    <a href="#detail"><span class="ms">description</span>Chi tiết phiếu</a>
+    <a href="#inputs"><span class="ms">edit</span>Nhập liệu</a>
+    <a href="#feedback"><span class="ms">label</span>Trạng thái &amp; phản hồi</a>
+    <h6>Mẫu</h6>
+    <a href="#screens"><span class="ms">devices</span>Màn hình mẫu</a>
+  </nav>
+
+  <main class="kit">
+    <div class="bar" role="toolbar" aria-label="Chủ đề">
+      <div class="ctl"><span>Palette</span><div class="swatches" id="swatches"></div></div>
+      <div class="ctl"><span>Chế độ</span><div class="seg" id="mode">
+        <button data-v="light" aria-pressed="true"><span class="ms">light_mode</span>Sáng</button>
+        <button data-v="dark" aria-pressed="false" disabled title="App không có chế độ tối cho component: màu viết thẳng bằng hex, không đi qua token .dark"><span class="ms">dark_mode</span>Tối</button></div></div>
+      <div class="grow"></div>
+      <button class="copy" id="copy-tokens"><span class="ms">data_object</span>Copy CSS token</button>
+    </div>
+
+    <div class="intro">
+      <div class="eyebrow">_next/static/css/*.css + getComputedStyle (21 lượt, đã đăng nhập) → docs/bonbon-ui-kit.html</div>
+      <h1>Bộ thành phần của app duyệt hồ sơ</h1>
+      <p>App viết bằng Next.js và Tailwind. Component không đi qua token: màu viết thẳng bằng hex trong class arbitrary như <code>bg-[#16315e]</code>. Vì vậy mọi màu ở đây là <b>màu thực dùng</b>, đo bằng <code>getComputedStyle</code> trên phần tử thật rồi đặt tên theo vai trò. Font Lexend Deca, icon Material Symbols Outlined.</p>
+      <p>Kit chỉ lấy style và cấu trúc. Tên người, mã hồ sơ, số tiền, phòng ban, loại hồ sơ, ảnh đại diện và wordmark đều thay bằng dữ liệu mẫu. Muốn dùng lại: dán khối <code>--bb-*</code> cùng CSS <code>.bb-*</code>, rồi copy HTML từ từng thẻ.</p>
+      <div class="facts"><span class="fact">desktop 1440 × 900 · rail 64 / sidebar 256</span><span class="fact">content max 1056 · pad 24 48 48</span><span class="fact">mobile 390 × 844 · bottom nav 64</span><span class="fact">panel pad 40 · card r 12 · pill r 9999</span></div>
+    </div>
+
+    <!-- ================= NỀN TẢNG ================= -->
+    <section class="block" id="color">
+      <header><h2>Màu</h2><p>50 vai trò lấy từ màu thực dùng (đo, không đoán). Mỗi ô ghi chỗ app dùng màu đó. Bấm một ô để copy mã hex. Độ trong suốt (vd <code>#BA1A1A/10</code>) dựng bằng <code>color-mix</code> trên cùng token.</p></header>
+      <div id="roles"></div>
+      <div class="spec" style="margin-top:16px"><div class="stage col"><div class="scroll-x">
+        <table class="tok"><thead><tr><th>Token shadcn trong CSS</th><th>:root (HSL)</th><th>.dark (HSL)</th><th>Ghi chú</th></tr></thead><tbody>
+          <tr><td>--background / --foreground</td><td>210 22% 97% · 215 45% 12%</td><td>0 0% 3.9% · 0 0% 98%</td><td rowspan="5">Có sẵn trong CSS (khung shadcn/ui) nhưng component chính không dùng. Không có công tắc bật lớp <code>.dark</code> nên kit không dựng chế độ tối.</td></tr>
+          <tr><td>--primary / --primary-foreground</td><td>215 68% 23% · 0 0% 98%</td><td>0 0% 98% · 0 0% 9%</td></tr>
+          <tr><td>--accent / --accent-foreground</td><td>180 87% 43% · 215 68% 15%</td><td>0 0% 8% · 0 0% 98%</td></tr>
+          <tr><td>--border / --input / --ring</td><td>213 20% 88% · 213 20% 88% · 215 68% 23%</td><td>0 0% 14.9% · 0 0% 14.9% · 0 0% 83.1%</td></tr>
+          <tr><td>--radius</td><td>0.5rem</td><td>—</td></tr>
+        </tbody></table></div></div></div>
+    </section>
+
+    <section class="block" id="type">
+      <header><h2>Chữ</h2><p>Lexend Deca. Đây là mọi kiểu chữ đo được trên các màn, gom theo cỡ. App không định nghĩa thang chữ riêng: cỡ đến từ class Tailwind (<code>text-xs</code>…) và giá trị arbitrary (<code>text-[9px]</code>). Hàng nào có <code>data-sig</code> là heading/text mà vòng khám phá bắt được.</p></header>
+      <div class="spec" data-sig="b0b1468212 88958e7939 1cd290b55e 469c11b80d 1a8ce45c44 8b5f3f60ae 8854bdb20b fad6423e80 e62479d307 701b7383cd 4d162e70bb 8f76f832f4 b13bc3fcc2 3d7e0cdd81 a95f8b8085"><div class="stage col" style="padding:8px 0">
+        <div class="type-row"><span class="meta">Hero count</span><span class="t" style="font:900 72px/72px var(--bb-font);color:var(--bb-ink)">12</span><span class="meta">72 / 72 · 900</span></div>
+        <div class="type-row"><span class="meta">Range count</span><span class="t" style="font:700 60px/60px var(--bb-font);letter-spacing:-3px;color:var(--bb-ink)">04</span><span class="meta">60 / 60 · 700 · −3</span></div>
+        <div class="type-row" data-sig="b0b1468212"><span class="meta">Page title · h2</span><span class="t" style="font:900 36px/40px var(--bb-font);letter-spacing:-1.8px;text-transform:uppercase;color:var(--bb-ink)">Overview</span><span class="meta">36 / 40 · 900 · −1.8 · UPPER</span></div>
+        <div class="type-row" data-sig="88958e7939"><span class="meta">Page title plain · h2</span><span class="t" style="font:700 36px/40px var(--bb-font);letter-spacing:-.9px;color:var(--bb-ink)">Overdue Items</span><span class="meta">36 / 40 · 700 · −0.9</span></div>
+        <div class="type-row" data-sig="1cd290b55e"><span class="meta">Mobile h1 · brand</span><span class="t" style="font:700 36px/45px var(--bb-font);letter-spacing:-.9px;color:var(--bb-brand)">Pending</span><span class="meta">36 / 45 · 700 · −0.9</span></div>
+        <div class="type-row" data-sig="469c11b80d"><span class="meta">Mobile h1 · overdue</span><span class="t" style="font:700 30px/30px var(--bb-font);letter-spacing:-.75px;color:var(--bb-ink)">Overdue</span><span class="meta">30 / 30 · 700 · −0.75</span></div>
+        <div class="type-row" data-sig="1a8ce45c44"><span class="meta">Mobile h1 · section</span><span class="t" style="font:700 24px/32px var(--bb-font);letter-spacing:-.6px;color:var(--bb-ink)">Departments</span><span class="meta">24 / 32 · 700 · −0.6</span></div>
+        <div class="type-row"><span class="meta">Greeting / wordmark</span><span class="t" style="font:900 20px/25px var(--bb-font);color:var(--bb-brand)">Hi there, An</span><span class="meta">20 / 25 · 900</span></div>
+        <div class="type-row" data-sig="8b5f3f60ae"><span class="meta">Panel title · h3</span><span class="t" style="font:700 18px/28px var(--bb-font);letter-spacing:-.45px;color:var(--bb-ink)">Overdue Requests</span><span class="meta">18 / 28 · 700 · −0.45</span></div>
+        <div class="type-row" data-sig="e62479d307"><span class="meta">Doc count · p</span><span class="t" style="font:900 18px/28px var(--bb-font);color:var(--bb-ink)">28</span><span class="meta">18 / 28 · 900</span></div>
+        <div class="type-row" data-sig="8854bdb20b"><span class="meta">Item title · h4</span><span class="t" style="font:700 14px/20px var(--bb-font);color:var(--bb-title)">Phòng ban mẫu A</span><span class="meta">14 / 20 · 700 · #171C1F</span></div>
+        <div class="type-row" data-sig="fad6423e80"><span class="meta">Person name · p</span><span class="t" style="font:700 14px/20px var(--bb-font);color:var(--bb-ink)">Nguyễn Văn A / Trần Thị B</span><span class="meta">14 / 20 · 700 · #001C44</span></div>
+        <div class="type-row"><span class="meta">Card title</span><span class="t" style="font:500 12px/16px var(--bb-font);color:var(--bb-ink)">Hợp đồng mẫu với nhà cung cấp</span><span class="meta">12 / 16 · 500</span></div>
+        <div class="type-row" data-sig="a95f8b8085"><span class="meta">Note text · p</span><span class="t" style="font:400 12px/19.5px var(--bb-font);color:var(--bb-muted)">Ghi chú duyệt mẫu, cắt sau hai dòng…</span><span class="meta">12 / 19.5 · 400</span></div>
+        <div class="type-row" data-sig="701b7383cd"><span class="meta">Section label · h3</span><span class="t" style="font:900 12px/16px var(--bb-font);letter-spacing:2.4px;text-transform:uppercase;color:var(--bb-ink)">All Requests</span><span class="meta">12 / 16 · 900 · 2.4 · UPPER</span></div>
+        <div class="type-row on-dark" data-sig="4d162e70bb"><span class="meta">Hero label · h3</span><span class="t" style="font:700 12px/16px var(--bb-font);letter-spacing:2.4px;text-transform:uppercase;color:var(--bb-brandMuted)">Pending Requests</span><span class="meta">12 / 16 · 700 · 2.4 · #829ACD</span></div>
+        <div class="type-row"><span class="meta">Pill label</span><span class="t" style="font:700 11px/16.5px var(--bb-font);letter-spacing:1.1px;text-transform:uppercase;color:var(--bb-muted)">Pending</span><span class="meta">11 / 16.5 · 700 · 1.1 · UPPER</span></div>
+        <div class="type-row on-rail" data-sig="8f76f832f4"><span class="meta">App name · h1</span><span class="t" style="font:700 10px/15px var(--bb-font);letter-spacing:1px;text-transform:uppercase;color:var(--bb-white)">Tên ứng dụng</span><span class="meta">10 / 15 · 700 · 1 · UPPER</span></div>
+        <div class="type-row"><span class="meta">Meta</span><span class="t" style="font:400 10px/15px var(--bb-font);color:var(--bb-muted)">PB/CT: Phòng ban mẫu A</span><span class="meta">10 / 15 · 400</span></div>
+        <div class="type-row" data-sig="b13bc3fcc2"><span class="meta">Block label · h4</span><span class="t" style="font:700 9px/13.5px var(--bb-font);letter-spacing:.45px;text-transform:uppercase;color:var(--bb-muted)">Technical metadata</span><span class="meta">9 / 13.5 · 700 · 0.45 · UPPER</span></div>
+        <div class="type-row" data-sig="3d7e0cdd81"><span class="meta">List label · h3</span><span class="t" style="font:700 9px/13.5px var(--bb-font);letter-spacing:.9px;text-transform:uppercase;color:var(--bb-muted)">Pending items (0)</span><span class="meta">9 / 13.5 · 700 · 0.9 · UPPER</span></div>
+        <div class="type-row"><span class="meta">Code</span><span class="t" style="font:700 9px/13.5px var(--bb-font);letter-spacing:.9px;text-transform:uppercase;color:var(--bb-accent)">Mã: AB12-XYZ-00000001</span><span class="meta">9 / 13.5 · 700 · 0.9 · #10CFC9</span></div>
+        <div class="type-row"><span class="meta">Micro</span><span class="t" style="font:700 7px/10.5px var(--bb-font);letter-spacing:.35px;text-transform:uppercase;color:var(--bb-muted)">Detail</span><span class="meta">7 / 10.5 · 700 · 0.35</span></div>
+      </div></div>
+    </section>
+
+    <section class="block" id="shape">
+      <header><h2>Bo góc &amp; bóng</h2><p>App không có thang shape: chỉ dùng 5 mức bo cố định (<code>rounded</code>, <code>rounded-lg</code>, <code>rounded-xl</code>, <code>rounded-full</code>). Kit vẫn nhân với <code>--k</code> (=1) để dự án khác chỉnh được. Phần lớn khối lớn (panel, ô, nút phân trang) là góc vuông.</p></header>
+      <div class="spec"><div class="stage" id="shapes" style="gap:28px"></div></div>
+      <div class="spec" style="margin-top:12px"><div class="stage col"><div class="scroll-x"><table class="tok"><thead><tr><th>Bóng</th><th>Giá trị</th><th>Dùng cho</th></tr></thead><tbody>
+        <tr><td>--bb-sh-card</td><td>0 1px 8px #16315E/6</td><td>thẻ hồ sơ khi đóng</td></tr>
+        <tr><td>--bb-sh-open</td><td>0 4px 16px #16315E/10</td><td>thẻ hồ sơ khi mở</td></tr>
+        <tr><td>--bb-sh-panel</td><td>0 20px 40px #16315E/6</td><td>panel hero, danh sách, phòng ban, loại hồ sơ</td></tr>
+        <tr><td>--bb-sh-sm</td><td>0 1px 2px #000/5</td><td>pill đang chọn, dải range, hàng menu mobile</td></tr>
+        <tr><td>--bb-sh-dialog</td><td>0 25px 50px −12px #000/25</td><td>dialog lịch sử duyệt (<code>shadow-2xl</code>)</td></tr>
+      </tbody></table></div></div></div>
+    </section>
+
+    <section class="block" id="layout">
+      <header><h2>Bố cục &amp; kích thước</h2><p>Số đo px lấy từ <code>getBoundingClientRect</code> ở viewport 1440 × 900 và 390 × 844.</p></header>
+      <div class="grid wide">
+        <div class="spec"><div class="stage col"><div class="scroll-x">
+          <table class="tok"><thead><tr><th>Desktop</th><th>px</th><th>Ghi chú</th></tr></thead><tbody>
+            <tr><td>rail · sidebar</td><td>64 · 256</td><td>bg #0F1E2F, nút expand mở sidebar đè lên nội dung</td></tr>
+            <tr><td>main padding</td><td>24 48 48</td><td>content max 1056, căn giữa</td></tr>
+            <tr><td>hero · list</td><td>331 · 693</td><td>gap 32, panel pad 40</td></tr>
+            <tr><td>depts · types</td><td>512 · 512</td><td>hàng thứ hai, gap 32</td></tr>
+            <tr><td>request card</td><td>613 × 111</td><td>pad 12, viền trái 4, gap giữa thẻ 8</td></tr>
+            <tr><td>seg pill</td><td>h 34 · pad 8 16</td><td>khung pad 4, gap 2</td></tr>
+            <tr><td>icon button</td><td>36 × 36</td><td>icon 20 (refresh), 18 (rail)</td></tr>
+            <tr><td>search</td><td>256 × 34</td><td>pad 8 16 8 36, icon 16 ở x 12</td></tr>
+            <tr><td>dialog</td><td>512 × ≤720</td><td>r 12, header pad 16 20 12</td></tr>
+          </tbody></table></div></div></div>
+        <div class="spec"><div class="stage col"><div class="scroll-x">
+          <table class="tok"><thead><tr><th>Mobile</th><th>px</th><th>Ghi chú</th></tr></thead><tbody>
+            <tr><td>top bar</td><td>68 · 72</td><td>pad 16 24; bản có nút back cao 72</td></tr>
+            <tr><td>main padding</td><td>76 · 80</td><td>chừa top bar / bottom nav; nội dung lề 24</td></tr>
+            <tr><td>bottom nav</td><td>390 × 64</td><td>item 56 × 56, icon 24, nhãn 10</td></tr>
+            <tr><td>menu row</td><td>342 × 90</td><td>pad 24, icon tile 40, gap 4 giữa hàng</td></tr>
+            <tr><td>list row</td><td>342 × 54</td><td>pad 12, cột số 32</td></tr>
+            <tr><td>stat tile</td><td>167 × 80</td><td>2 cột, gap 8</td></tr>
+            <tr><td>overdue range</td><td>114 × 114</td><td>3 cột vuông, gap 8</td></tr>
+            <tr><td>back · avatar</td><td>40 · 36</td><td>back tròn, avatar vuông</td></tr>
+          </tbody></table></div></div></div>
+      </div>
+    </section>
+
+    <!-- ================= HÀNH ĐỘNG ================= -->
+    <section class="block" id="actions">
+      <header><h2>Hành động</h2><p>Focus: app không style riêng. Mọi nút dùng viền focus mặc định của trình duyệt (<code>outline: auto</code>, xanh #005FCC trên Chrome). Kit vẽ lại viền đó bằng class <code>is-focus</code>.</p></header>
+      <div class="grid">
+        <div class="spec full" data-sig="12dcad3c64 bc4648e59d 4a63aae0f0 d4ffe5971d 11e992616a 5590f4159a"><div class="spec-h"><b>Bộ lọc Pending / All</b><span class="kind">button (segmented)</span><span class="dp">h 34 · r 9999 · 11/700 · 1.1</span></div>
+          <div class="stage bb col">
+            <div class="states">
+              <div class="st"><div class="bb-seg"><button class="bb-seg-i"><span class="ms">pending_actions</span>Pending<span class="bb-count err">1</span></button><button class="bb-seg-i on"><span class="ms">checklist</span>All<span class="bb-count onbrand">82</span></button></div><small>All đang chọn (navy)</small></div>
+              <div class="st"><div class="bb-seg"><button class="bb-seg-i on teal"><span class="ms">pending_actions</span>Pending</button><button class="bb-seg-i"><span class="ms">checklist</span>All<span class="bb-count muted">81</span></button></div><small>Pending đang chọn (teal)</small></div>
+            </div>
+            <div class="states">
+              <div class="st" data-sig-state="12dcad3c64:hover"><button class="bb-seg-i is-hover"><span class="ms">pending_actions</span>Pending<span class="bb-count err">1</span></button><small>hover · chữ → #001C44</small></div>
+              <div class="st" data-sig-state="12dcad3c64:focus"><button class="bb-seg-i is-focus"><span class="ms">pending_actions</span>Pending<span class="bb-count err">1</span></button><small>focus</small></div>
+              <div class="st" data-sig-state="bc4648e59d:focus"><button class="bb-seg-i on is-focus"><span class="ms">checklist</span>All<span class="bb-count onbrand">82</span></button><small>focus</small></div>
+              <div class="st" data-sig-state="4a63aae0f0:focus"><button class="bb-seg-i on teal is-focus"><span class="ms">pending_actions</span>Pending</button><small>focus</small></div>
+            </div>
+          </div><div class="spec-f"><span class="note">Pill đang chọn không có hover riêng. Badge số: đỏ /10 cho Pending, trắng /20 trên nền navy, navy /10 khi tab All không chọn.</span></div></div>
+
+        <div class="spec" data-sig="fe18f7e3f6 f30b422adf de8c95ccda 6ab22ab736"><div class="spec-h"><b>Nút icon ở đầu trang</b><span class="kind">button (icon)</span><span class="dp">36 × 36</span></div>
+          <div class="stage bb"><div class="states">
+            <div class="st"><button class="bb-icon" aria-label="Làm mới"><span class="ms">refresh</span></button><small>refresh</small></div>
+            <div class="st" data-sig-state="fe18f7e3f6:hover"><button class="bb-icon is-hover" aria-label="Làm mới"><span class="ms">refresh</span></button><small>hover</small></div>
+            <div class="st" data-sig-state="fe18f7e3f6:active"><button class="bb-icon is-active" aria-label="Làm mới"><span class="ms">refresh</span></button><small>active ×.95</small></div>
+            <div class="st" data-sig-state="fe18f7e3f6:focus"><button class="bb-icon is-focus" aria-label="Làm mới"><span class="ms">refresh</span></button><small>focus</small></div>
+            <div class="st"><button class="bb-avatar-btn" aria-label="Hướng dẫn"><span class="ph">ảnh</span></button><small>avatar r12</small></div>
+            <div class="st" data-sig-state="f30b422adf:hover"><button class="bb-avatar-btn is-hover" aria-label="Hướng dẫn"><span class="ph">ảnh</span></button><small>hover .8</small></div>
+            <div class="st" data-sig-state="f30b422adf:active"><button class="bb-avatar-btn is-active" aria-label="Hướng dẫn"><span class="ph">ảnh</span></button><small>active</small></div>
+            <div class="st" data-sig-state="f30b422adf:focus"><button class="bb-avatar-btn is-focus" aria-label="Hướng dẫn"><span class="ph">ảnh</span></button><small>focus</small></div>
+            <div class="st" data-sig-state="de8c95ccda:active"><button class="bb-avatar-btn m is-active" aria-label="Hướng dẫn"><span class="ph">ảnh</span></button><small>mobile active</small></div>
+            <div class="st" data-sig-state="de8c95ccda:focus"><button class="bb-avatar-btn m is-focus" aria-label="Hướng dẫn"><span class="ph">ảnh</span></button><small>mobile focus</small></div>
+          </div></div><div class="spec-f"><span class="note">Nút avatar mở "Hướng dẫn"; ảnh linh vật của app thay bằng khối giữ chỗ. Bản mobile 36 không bo, không mờ khi hover.</span></div></div>
+
+        <div class="spec" data-sig="6a64fb915f c7de7d0f9d"><div class="spec-h"><b>Back · Close</b><span class="kind">button (round)</span><span class="dp">40 · 32 · r 9999</span></div>
+          <div class="stage bb"><div class="states">
+            <div class="st"><button class="bb-back" aria-label="Quay lại"><span class="ms">arrow_back</span></button><small>back</small></div>
+            <div class="st" data-sig-state="6a64fb915f:hover"><button class="bb-back is-hover" aria-label="Quay lại"><span class="ms">arrow_back</span></button><small>hover</small></div>
+            <div class="st" data-sig-state="6a64fb915f:active"><button class="bb-back is-active" aria-label="Quay lại"><span class="ms">arrow_back</span></button><small>active</small></div>
+            <div class="st" data-sig-state="6a64fb915f:focus"><button class="bb-back is-focus" aria-label="Quay lại"><span class="ms">arrow_back</span></button><small>focus</small></div>
+            <div class="st"><button class="bb-close" aria-label="Đóng"><span class="ms">close</span></button><small>close</small></div>
+            <div class="st" data-sig-state="c7de7d0f9d:hover"><button class="bb-close is-hover" aria-label="Đóng"><span class="ms">close</span></button><small>hover</small></div>
+            <div class="st" data-sig-state="c7de7d0f9d:focus"><button class="bb-close is-focus" aria-label="Đóng"><span class="ms">close</span></button><small>focus</small></div>
+          </div></div></div>
+
+        <div class="spec" data-sig="29c8009477 ff8ab80bf8 8dc6f7cd3e"><div class="spec-h"><b>Phân trang</b><span class="kind">button (pager)</span><span class="dp">79 × 34 · 12/700 · 1.2</span></div>
+          <div class="stage bb col">
+            <div class="bb-pager"><span class="bb-pager-l">Page 1 / 17</span><div class="bb-pager-b">
+              <button class="bb-pg prev"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7.5 3 4.5 6l3 3"/></svg>Prev</button>
+              <button class="bb-pg next">Next<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m4.5 3 3 3-3 3"/></svg></button></div></div>
+            <div class="states">
+              <div class="st" data-sig-state="29c8009477:hover"><button class="bb-pg prev is-hover">Prev</button><small>prev hover</small></div>
+              <div class="st" data-sig-state="29c8009477:focus"><button class="bb-pg prev is-focus">Prev</button><small>prev focus</small></div>
+              <div class="st" data-sig-state="ff8ab80bf8:hover"><button class="bb-pg next is-hover">Next</button><small>next hover · brightness 1.1</small></div>
+              <div class="st" data-sig-state="ff8ab80bf8:focus"><button class="bb-pg next is-focus">Next</button><small>next focus</small></div>
+            </div>
+          </div><div class="spec-f"><span class="note">Mũi tên là SVG 12 px (vẽ lại, path gốc không chép).</span></div></div>
+
+        <div class="spec" data-sig="ee0c2304f8 5ba699dede 3ca083254e"><div class="spec-h"><b>Link chữ</b><span class="kind">button (text)</span><span class="dp">10/700</span></div>
+          <div class="stage bb"><div class="states">
+            <div class="st"><button class="bb-more">+3 more<span class="ms">arrow_forward</span></button><small>more</small></div>
+            <div class="st" data-sig-state="ee0c2304f8:hover"><button class="bb-more is-hover">+3 more<span class="ms">arrow_forward</span></button><small>hover · teal, → +2px</small></div>
+            <div class="st" data-sig-state="ee0c2304f8:focus"><button class="bb-more is-focus">+3 more<span class="ms">arrow_forward</span></button><small>focus</small></div>
+            <div class="st"><button class="bb-viewall">View All →</button><small>view all</small></div>
+            <div class="st" data-sig-state="5ba699dede:hover"><button class="bb-viewall is-hover">View All →</button><small>hover</small></div>
+            <div class="st" data-sig-state="5ba699dede:focus"><button class="bb-viewall is-focus">View All →</button><small>focus</small></div>
+            <div class="st"><button class="bb-seemore">Xem thêm</button><small>xem thêm</small></div>
+            <div class="st" data-sig-state="3ca083254e:hover"><button class="bb-seemore is-hover">Xem thêm</button><small>hover · gạch chân</small></div>
+            <div class="st" data-sig-state="3ca083254e:focus"><button class="bb-seemore is-focus">Xem thêm</button><small>focus</small></div>
+          </div></div></div>
+
+        <div class="spec full" data-sig="c59c8b9c32 5cbe436de4 d9b4ea634a d8658c379d 66065afeaa"><div class="spec-h"><b>Hàng nút duyệt</b><span class="kind">div > button ×4</span><span class="dp">h 61 · block 36 · return 86 · approve / detail flex 1</span></div>
+          <div class="stage bb col">
+            <div class="bb-acts" style="max-width:609px;background:var(--bb-surface)">
+              <button class="bb-act block" aria-label="Từ chối"><span class="ms">block</span></button>
+              <button class="bb-act ret"><span class="ms">keyboard_return</span><span>Return</span></button>
+              <button class="bb-act ok"><span class="ms">check_circle</span>Approve</button>
+              <button class="bb-act det"><span class="ms">open_in_new</span><span>Detail</span></button>
+            </div>
+            <div class="states">
+              <div class="st" data-sig-state="5cbe436de4:hover"><button class="bb-act block is-hover" aria-label="Từ chối"><span class="ms">block</span></button><small>block hover</small></div>
+              <div class="st" data-sig-state="5cbe436de4:focus"><button class="bb-act block is-focus" aria-label="Từ chối"><span class="ms">block</span></button><small>focus</small></div>
+              <div class="st" data-sig-state="d9b4ea634a:hover"><button class="bb-act ret is-hover"><span class="ms">keyboard_return</span><span>Return</span></button><small>return hover · cam</small></div>
+              <div class="st" data-sig-state="d9b4ea634a:focus"><button class="bb-act ret is-focus"><span class="ms">keyboard_return</span><span>Return</span></button><small>focus</small></div>
+              <div class="st" data-sig-state="d8658c379d:active"><button class="bb-act ok is-active" style="width:180px"><span class="ms">check_circle</span>Approve</button><small>approve active · brightness .95</small></div>
+              <div class="st" data-sig-state="d8658c379d:focus"><button class="bb-act ok is-focus" style="width:180px"><span class="ms">check_circle</span>Approve</button><small>focus</small></div>
+              <div class="st" data-sig-state="66065afeaa:hover"><button class="bb-act det is-hover" style="width:90px"><span class="ms">open_in_new</span><span>Detail</span></button><small>detail hover</small></div>
+              <div class="st" data-sig-state="66065afeaa:active"><button class="bb-act det is-active" style="width:90px"><span class="ms">open_in_new</span><span>Detail</span></button><small>active</small></div>
+              <div class="st" data-sig-state="66065afeaa:focus"><button class="bb-act det is-focus" style="width:90px"><span class="ms">open_in_new</span><span>Detail</span></button><small>focus</small></div>
+            </div>
+          </div><div class="spec-f"><span class="note">Chỉ đo style. Kit không bấm nút nào trên app thật (không duyệt, trả về, từ chối hồ sơ nào). Approve không có hover riêng.</span></div></div>
+
+        <div class="spec" data-sig="1685effdac"><div class="spec-h"><b>Approval notes</b><span class="kind">button</span><span class="dp">138 × 36 · r 4 · 9/700</span></div>
+          <div class="stage navy bb"><div class="states">
+            <div class="st"><button class="bb-notes"><span class="ms">history</span>Approval notes</button><small>nghỉ</small></div>
+            <div class="st" data-sig-state="1685effdac:hover"><button class="bb-notes is-hover"><span class="ms">history</span>Approval notes</button><small>hover</small></div>
+            <div class="st" data-sig-state="1685effdac:focus"><button class="bb-notes is-focus"><span class="ms">history</span>Approval notes</button><small>focus</small></div>
+          </div></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Duyệt hàng loạt</b><span class="kind">button</span><span class="dp">142 × 28 · r 9999 · 12/700</span></div>
+          <div class="stage bb"><button class="bb-bulk"><span class="ms">checklist</span>Duyệt hàng loạt</button></div>
+          <div class="spec-f"><span class="note">Chỉ hiện ở tab Pending. Vòng khám phá không tách được pattern riêng (không có sig); style đo tay bằng getComputedStyle.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= ĐIỀU HƯỚNG ================= -->
+    <section class="block" id="navigation">
+      <header><h2>Điều hướng</h2><p>Desktop: rail 64 px luôn hiện, nút expand mở sidebar 256 px. Mobile: bottom nav 3 mục (Overdue · All · Logout) và top bar có lời chào hoặc nút back.</p></header>
+      <div class="grid">
+        <div class="spec" data-sig="1e51fa85b3 37f89ae3a4 f70b14809d 84cafd910f d43caa3435 5649836dde"><div class="spec-h"><b>Rail thu gọn</b><span class="kind">aside > nav</span><span class="dp">w 64 · item 48 × 42 · r 4</span></div>
+          <div class="stage bg bb" style="align-items:stretch">
+            <div class="bb-rail" style="min-height:320px"><div class="bb-rail-top"><div class="bb-rail-hd"><button class="bb-toggle hint" aria-label="Mở sidebar"><span class="ms">architecture</span></button></div>
+              <nav><button class="bb-rail-i" aria-label="Overdue"><span class="ms">alarm</span></button><button class="bb-rail-i on" aria-label="All"><span class="ms">checklist</span></button></nav></div>
+              <div class="bb-rail-ft"><span class="bb-initial">A</span></div></div>
+            <div class="stage dark" style="margin:0;flex:1;align-items:flex-start"><div class="states">
+              <div class="st"><button class="bb-toggle" aria-label="Mở sidebar"><span class="ms">architecture</span></button><small>toggle</small></div>
+              <div class="st" data-sig-state="37f89ae3a4:hover"><button class="bb-toggle is-hover" aria-label="Mở sidebar"><span class="ms">architecture</span></button><small>hover</small></div>
+              <div class="st" data-sig-state="37f89ae3a4:focus"><button class="bb-toggle is-focus" aria-label="Mở sidebar"><span class="ms">architecture</span></button><small>focus</small></div>
+              <div class="st"><button class="bb-toggle hint" aria-label="Mở sidebar"><span class="ms">architecture</span></button><small>gợi ý (ring + ping)</small></div>
+              <div class="st" data-sig-state="f70b14809d:hover"><button class="bb-toggle hint is-hover" aria-label="Mở sidebar"><span class="ms">architecture</span></button><small>hover · tắt ring</small></div>
+              <div class="st" data-sig-state="f70b14809d:focus"><button class="bb-toggle hint is-focus" aria-label="Mở sidebar"><span class="ms">architecture</span></button><small>focus · tắt ring</small></div>
+              <div class="st" data-sig-state="84cafd910f:hover"><button class="bb-rail-i is-hover" aria-label="Overdue"><span class="ms">alarm</span></button><small>item hover</small></div>
+              <div class="st" data-sig-state="84cafd910f:focus"><button class="bb-rail-i is-focus" aria-label="Overdue"><span class="ms">alarm</span></button><small>item focus</small></div>
+              <div class="st" data-sig-state="d43caa3435:focus"><button class="bb-rail-i on is-focus" aria-label="All"><span class="ms">checklist</span></button><small>on focus</small></div>
+            </div></div>
+          </div><div class="spec-f"><span class="note">Nút toggle lúc mới tải có vòng teal /60 và hiệu ứng ping (<code>animate-ping</code>). Hover hoặc focus tắt cả hai. Thời lượng ping lấy theo mặc định Tailwind (1s), kit dùng 1.6s cho dễ nhìn.</span></div></div>
+
+        <div class="spec" data-sig="20d8847291 98d47a174c 4b838d5e74 c5abcfa916 23e17cee8c 833cb4a29b"><div class="spec-h"><b>Sidebar mở rộng</b><span class="kind">aside</span><span class="dp">w 256 · item 208 × 44 · viền trái 2</span></div>
+          <div class="stage bg bb" style="align-items:stretch;flex-wrap:nowrap">
+            <div class="bb-side" style="min-height:360px"><div class="bb-side-hd"><button class="bb-toggle open" aria-label="Thu sidebar"><span class="ms">architecture</span></button><div><h1>Tên ứng dụng</h1><p>Mô tả ngắn</p></div></div>
+              <nav><button class="bb-side-i"><span class="ms">alarm</span>Overdue</button><button class="bb-side-i on"><span class="ms">checklist</span>All</button></nav>
+              <div class="bb-side-ft"><span class="bb-initial">A</span><div><b>Nguyễn Văn A</b><small>Quyền truy cập <span class="ms">logout</span></small></div></div></div>
+          </div>
+          <div class="stage dark bb"><div class="states">
+            <div class="st" data-sig-state="4b838d5e74:hover" style="width:208px"><button class="bb-side-i is-hover"><span class="ms">alarm</span>Overdue</button><small>hover</small></div>
+            <div class="st" data-sig-state="4b838d5e74:focus" style="width:208px"><button class="bb-side-i is-focus"><span class="ms">alarm</span>Overdue</button><small>focus</small></div>
+            <div class="st" data-sig-state="c5abcfa916:focus" style="width:208px"><button class="bb-side-i on is-focus"><span class="ms">checklist</span>All</button><small>on focus</small></div>
+            <div class="st" data-sig-state="23e17cee8c:focus"><button class="bb-toggle open is-focus" aria-label="Thu sidebar"><span class="ms">architecture</span></button><small>toggle mở · focus</small></div>
+          </div></div><div class="spec-f"><span class="note">Chân sidebar: tên người dùng /80 và nhãn quyền /40 kèm icon logout 10 px. Bấm vào khối này là đăng xuất.</span></div></div>
+
+        <div class="spec full" data-sig="63d48e8c58"><div class="spec-h"><b>Đầu trang desktop</b><span class="kind">header</span><span class="dp">1056 × 71</span></div>
+          <div class="stage bg bb col"><div class="bb-head"><div><h2 class="bb-h-title">Overview</h2><div class="bb-h-row"><span class="bb-status">System operational</span><span class="bb-h-meta">1 pending requests</span></div></div>
+            <div class="bb-h-tools"><div class="bb-seg"><button class="bb-seg-i"><span class="ms">pending_actions</span>Pending<span class="bb-count err">1</span></button><button class="bb-seg-i on"><span class="ms">checklist</span>All<span class="bb-count onbrand">82</span></button></div><button class="bb-icon" aria-label="Làm mới"><span class="ms">refresh</span></button><button class="bb-avatar-btn" aria-label="Hướng dẫn"><span class="ph">ảnh</span></button></div></div></div></div>
+
+        <div class="spec" data-sig="b54cefd8fb"><div class="spec-h"><b>Top bar mobile</b><span class="kind">header</span><span class="dp">390 × 68 / 72</span></div>
+          <div class="stage bg bb col" style="gap:16px">
+            <div class="bb-mbar"><span class="bb-greet">Hi there, An</span><button class="bb-avatar-btn m" aria-label="Hướng dẫn"><span class="ph">ảnh</span></button></div>
+            <div class="bb-mbar back"><div class="l"><button class="bb-back" aria-label="Quay lại"><span class="ms">arrow_back</span></button><span class="bb-word">Tên app</span></div><button class="bb-avatar-btn m" aria-label="Hướng dẫn"><span class="ph">ảnh</span></button></div>
+          </div><div class="spec-f"><span class="note">Màn gốc hiện lời chào 20/900. Màn con hiện nút back cùng wordmark 20/900, letter-spacing 2 (wordmark thật thay bằng "Tên app").</span></div></div>
+
+        <div class="spec" data-sig="f3eae2ccd6 4998e5305c 920a71d223 74032349ac"><div class="spec-h"><b>Bottom nav</b><span class="kind">nav</span><span class="dp">390 × 64 · item 56</span></div>
+          <div class="stage bg bb col">
+            <div class="bb-bnav"><button class="bb-bnav-i"><span class="ms">alarm</span><span>Overdue</span></button><button class="bb-bnav-i on"><span class="ms">checklist</span><span>All</span></button><button class="bb-bnav-i"><span class="ms">power_settings_new</span><span>Logout</span></button></div>
+            <div class="states">
+              <div class="st" data-sig-state="920a71d223:hover"><button class="bb-bnav-i is-hover"><span class="ms">alarm</span><span>Overdue</span></button><small>hover</small></div>
+              <div class="st" data-sig-state="920a71d223:focus"><button class="bb-bnav-i is-focus"><span class="ms">alarm</span><span>Overdue</span></button><small>focus</small></div>
+              <div class="st" data-sig-state="74032349ac:hover"><button class="bb-bnav-i on is-hover"><span class="ms">checklist</span><span>All</span></button><small>on hover · opacity 1</small></div>
+              <div class="st" data-sig-state="74032349ac:focus"><button class="bb-bnav-i on is-focus"><span class="ms">checklist</span><span>All</span></button><small>on focus</small></div>
+            </div>
+          </div><div class="spec-f"><span class="note">Mọi mục có opacity .8 khi nghỉ; mục không chọn thêm màu navy /60. Ở màn Departments/Types, nav bọc thêm một div (sig riêng) nhưng nhìn giống hệt.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= CHỨA NỘI DUNG ================= -->
+    <section class="block" id="containment">
+      <header><h2>Chứa nội dung</h2><p>Mọi dữ liệu trong thẻ là dữ liệu mẫu.</p></header>
+      <div class="grid wide">
+        <div class="spec full" data-sig="531612f04c 5302de349b"><div class="spec-h"><b>Thẻ hồ sơ · đóng</b><span class="kind">div > button</span><span class="dp">613 × 111 · r 12 · viền trái 4 · pad 12</span></div>
+          <div class="stage tint bb col" style="max-width:660px">
+            <div class="bb-req"><button class="bb-req-b"><div class="bb-req-m"><div class="bb-req-top"><span class="bb-code">Mã: AB12-XYZ-00000001</span><span class="bb-chip late">Quá hạn 12n</span><span class="bb-chip warn">Chờ duyệt</span></div>
+              <span class="bb-req-type">Yêu cầu thanh toán</span><span class="bb-req-t">Hồ sơ mẫu số một</span><span class="bb-req-d">PB/CT: Phòng ban mẫu A</span><span class="bb-req-s"><span class="ms">person</span><b>Bước hiện tại:</b> Vai trò — Nguyễn Văn A</span></div>
+              <div class="bb-req-r"><span class="bb-amt">1.250.000 ₫</span><span class="ms">expand_more</span></div></button></div>
+            <div class="bb-req sign"><button class="bb-req-b"><div class="bb-req-m"><div class="bb-req-top"><span class="bb-code">Mã: CD34-XYZ-00000002</span><span class="bb-chip neutral">Chờ ký số</span></div>
+              <span class="bb-req-type">Duyệt hợp đồng</span><span class="bb-req-t">Hợp đồng mẫu với nhà cung cấp</span><span class="bb-req-d">PB/CT: Phòng ban mẫu A</span><span class="bb-req-s"><span class="ms">person</span><b>Bước hiện tại:</b> Party (esign) — Trần Thị B</span></div>
+              <div class="bb-req-r"><span class="bb-amt">0 ₫</span><span class="ms">expand_more</span></div></button></div>
+            <div class="states"><div class="st" data-sig-state="5302de349b:focus" style="width:100%"><div class="bb-req" style="width:100%"><button class="bb-req-b is-focus"><div class="bb-req-m"><div class="bb-req-top"><span class="bb-code">Mã: AB12-XYZ-00000001</span></div><span class="bb-req-t">Hồ sơ mẫu số một</span></div><div class="bb-req-r"><span class="bb-amt">0 ₫</span></div></button></div><small>focus (nút bên trong thẻ)</small></div></div>
+          </div><div class="spec-f"><span class="note">Viền trái teal khi hồ sơ đang chờ mình duyệt, xám #E4E9ED khi chờ ký số. Kết luận này suy từ 5 thẻ quan sát được, chưa đọc logic trong code. Dòng loại hồ sơ màu đỏ #BA1A1A cho mọi loại.</span></div></div>
+
+        <div class="spec full" data-sig="0b413dd0ad 4075d29515 72e685d892 cc3366a61e f241501149 001916db7d"><div class="spec-h"><b>Thẻ hồ sơ · mở</b><span class="kind">div (expanded)</span><span class="dp">613 × 403 · shadow 0 4 16</span></div>
+          <div class="stage tint bb col" style="max-width:660px">
+            <div class="bb-req sign open"><button class="bb-req-b"><div class="bb-req-m"><div class="bb-req-top"><span class="bb-code">Mã: CD34-XYZ-00000002</span><span class="bb-chip neutral">Chờ ký số</span></div>
+              <span class="bb-req-type">Duyệt hợp đồng</span><span class="bb-req-t">Hợp đồng mẫu với nhà cung cấp</span><span class="bb-req-d">PB/CT: Phòng ban mẫu A</span><span class="bb-req-s"><span class="ms">person</span><b>Bước hiện tại:</b> Party (esign) — Trần Thị B</span></div>
+              <div class="bb-req-r"><span class="bb-amt">0 ₫</span><span class="ms">expand_less</span></div></button>
+              <div class="bb-req-x">
+                <div class="bb-meta"><h4>Technical metadata</h4><div class="bb-meta-g"><div><span>Bước duyệt</span><b>Bước mẫu (esign)</b></div><div><span>Số HĐ</span><b>0000/HĐ/00/0000</b></div><div style="flex-basis:100%;flex-direction:row;justify-content:space-between;gap:16px"><div style="display:flex;flex-direction:column"><span>Đối tác</span><b>CÔNG TY MẪU A</b></div><div style="display:flex;flex-direction:column"><span>Người đề nghị</span><b>Lê Văn C</b></div></div></div></div>
+                <div class="bb-typebar"><div><span>Type</span><b>LHS1</b></div><button class="bb-notes"><span class="ms">history</span>Approval notes</button></div>
+                <div class="bb-acts"><button class="bb-act block" aria-label="Từ chối"><span class="ms">block</span></button><button class="bb-act ret"><span class="ms">keyboard_return</span><span>Return</span></button><button class="bb-act ok"><span class="ms">check_circle</span>Approve</button><button class="bb-act det"><span class="ms">open_in_new</span><span>Detail</span></button></div>
+                <div class="bb-note-in"><span class="ms">edit_note</span><textarea placeholder="Add approval note (optional)…" aria-label="Ghi chú duyệt"></textarea></div>
+              </div></div>
+          </div><div class="spec-f"><span class="note">Bốn phần khi mở: metadata (#F0F4F8) → dải loại hồ sơ navy (mã teal #32DCD6) → hàng nút duyệt → ô ghi chú (#F8FAFC, textarea 11 px). Textarea không có focus style.</span></div></div>
+
+        <div class="spec" data-sig="39bbfd4612"><div class="spec-h"><b>Panel hero</b><span class="kind">div</span><span class="dp">331 × auto · pad 40 · navy</span></div>
+          <div class="stage bg bb"><div class="bb-panel hero" style="width:331px;min-height:300px"><h3 class="bb-p-label">Pending requests</h3><div class="bb-hero-n"><b>1</b><span>items</span></div><p>Awaiting your approval</p><div class="bb-progress" style="margin-top:48px"><i style="width:100%"></i></div></div></div>
+          <div class="spec-f"><span class="note">Thanh 2 px ở đáy: track trắng /10 và phần tô teal. Trên app, panel cao bằng panel danh sách bên cạnh.</span></div></div>
+
+        <div class="spec" data-sig="6109482083 81c4848a41"><div class="spec-h"><b>Panel danh sách</b><span class="kind">div</span><span class="dp">693 × auto · pad 40</span></div>
+          <div class="stage bg bb"><div class="bb-panel" style="width:100%"><div class="bb-p-hd"><div><h3 class="bb-p-label">Pending requests</h3><p class="bb-p-sub">0 items</p></div><label class="bb-search"><span class="ms">search</span><input placeholder="Search code, name, partner…" aria-label="Tìm hồ sơ"></label></div>
+            <div style="border-top:1px solid var(--bb-divider);margin-top:24px;padding-top:12px"><button class="bb-bulk"><span class="ms">checklist</span>Duyệt hàng loạt</button></div>
+            <div class="bb-empty" style="padding:32px 0">Không có hồ sơ</div></div></div>
+          <div class="spec-f"><span class="note">Tab All có thêm danh sách thẻ và phân trang. Tab Pending có thêm hàng "Duyệt hàng loạt". Chữ trạng thái rỗng không đo được (tài khoản có 1 hồ sơ); kit dùng kiểu <code>.bb-empty</code>.</span></div></div>
+
+        <div class="spec" data-sig="a6eb338883 aa944c9595 0293ffc48b"><div class="spec-h"><b>Panel phòng ban</b><span class="kind">div</span><span class="dp">512 · tile 208 × 131 · pad 24</span></div>
+          <div class="stage bg bb col"><div class="bb-panel"><div class="bb-p-hd"><div class="l"><h3 class="bb-p-label">Departments</h3><span class="bb-total">2 total</span></div></div>
+            <div class="bb-tiles"><div class="bb-dept" tabindex="0"><p>D01</p><h4>Phòng ban mẫu A</h4><div class="bb-dept-f"><b>12</b><span>PENDING</span></div></div>
+              <div class="bb-dept is-hover" data-sig-state="aa944c9595:hover"><p>D02</p><h4>Phòng ban mẫu B</h4><div class="bb-dept-f"><b>5</b><span>PENDING</span></div></div>
+              <div class="bb-dept is-focus" data-sig-state="aa944c9595:focus"><p>D03</p><h4>focus</h4><div class="bb-dept-f"><b>0</b><span>PENDING</span></div></div></div></div></div>
+          <div class="spec-f"><span class="note">Ô thứ hai ở trạng thái hover (#F0F4F8), ô thứ ba ở trạng thái focus.</span></div></div>
+
+        <div class="spec" data-sig="4994e0ee3a 7c47539651"><div class="spec-h"><b>Panel loại hồ sơ</b><span class="kind">div</span><span class="dp">512 · hàng 432 × 81 · icon 48</span></div>
+          <div class="stage bg bb col"><div class="bb-panel"><div class="bb-p-hd"><div class="l"><h3 class="bb-p-label">Contract types</h3><span class="bb-total">7 total</span></div><button class="bb-more">+3 more<span class="ms">arrow_forward</span></button></div>
+            <div class="bb-types">
+              <div class="bb-type" tabindex="0"><div class="bb-type-ic"><span class="ms">description</span></div><div class="bb-type-m"><h4>Loại hồ sơ A</h4><p>LHS1</p></div><div class="bb-type-n"><b>28</b><span>DOCS</span></div></div>
+              <div class="bb-type is-hover" data-sig-state="7c47539651:hover"><div class="bb-type-ic"><span class="ms">description</span></div><div class="bb-type-m"><h4>Loại hồ sơ B · hover</h4><p>LHS2</p></div><div class="bb-type-n"><b>20</b><span>DOCS</span></div></div>
+              <div class="bb-type is-focus" data-sig-state="7c47539651:focus"><div class="bb-type-ic"><span class="ms">description</span></div><div class="bb-type-m"><h4>Loại hồ sơ C · focus</h4><p>LHS3</p></div><div class="bb-type-n"><b>8</b><span>DOCS</span></div></div>
+            </div></div></div></div>
+
+        <div class="spec full" data-sig="884e6e2e47 900871e630 fa5473cc76 e95f11eff9 b6db154324"><div class="spec-h"><b>Dải mức quá hạn</b><span class="kind">div ×3</span><span class="dp">352 × 238 · pad 32 · số 60/700 −3</span></div>
+          <div class="stage bg bb col"><div class="bb-ranges">
+            <div class="bb-rcard" tabindex="0"><div class="bb-rcard-h"><span>Low</span><span class="bb-range low">0-3 days</span></div><div class="bb-rcard-n"><b>00</b><span>Pending Items</span></div><div class="bb-rcard-f">Apply filter<span class="ms">arrow_forward</span></div></div>
+            <div class="bb-rcard is-hover" data-sig-state="900871e630:hover"><div class="bb-rcard-h"><span>Medium · hover</span><span class="bb-range mid">3-7 days</span></div><div class="bb-rcard-n"><b>02</b><span>Pending Items</span></div><div class="bb-rcard-f">Apply filter<span class="ms">arrow_forward</span></div></div>
+            <div class="bb-rcard is-focus" data-sig-state="900871e630:focus"><div class="bb-rcard-h"><span>High · focus</span><span class="bb-range high">&gt;7 days</span></div><div class="bb-rcard-n"><b>05</b><span>Pending Items</span></div><div class="bb-rcard-f">Apply filter<span class="ms">arrow_forward</span></div></div>
+          </div></div><div class="spec-f"><span class="note">Tag mức: teal /10, đỏ nhạt #FFDAD6, navy đặc. Vạch ngăn giữa các thẻ là 1 px #F0F4F8, vẽ theo ảnh chụp (chưa đo được phần tử vạch).</span></div></div>
+
+        <div class="spec full" data-sig="95184df077 5c26c371e3"><div class="spec-h"><b>Bảng hồ sơ quá hạn</b><span class="kind">div</span><span class="dp">1056 × 248 · header pad 20 32</span></div>
+          <div class="stage bg bb col"><div class="bb-table"><div class="bb-table-h"><h3>Overdue Requests</h3><label class="bb-uline"><span class="ms">search</span><input placeholder="Request code, name, partner" aria-label="Tìm hồ sơ quá hạn"></label></div>
+            <div class="bb-empty">No requests in this range</div>
+            <div class="bb-table-f"><span>Showing 0 of 0 overdue items</span><button class="bb-viewall">View All →</button></div></div></div></div>
+
+        <div class="spec full" data-sig="c1b54c236c 7da819e328 f614897d25 9d354c8ed6"><div class="spec-h"><b>Dialog lịch sử duyệt</b><span class="kind">div (modal)</span><span class="dp">512 × ≤720 · r 12 · scrim #000/40</span></div>
+          <div class="stage bb" style="padding:0;margin:12px 12px 0"><div class="bb-scrim" style="width:100%">
+            <div class="bb-dialog"><div class="bb-dialog-h"><div><small>Lịch sử duyệt</small><b>AB12-XYZ-00000001</b><span>Loại hồ sơ A</span></div><button class="bb-close" aria-label="Đóng"><span class="ms">close</span></button></div>
+              <div class="bb-tl">
+                <div class="bb-tl-i"><div class="bb-tl-rail"><span class="bb-dot teal"></span><i></i></div><div class="bb-tl-b"><p class="bb-tl-name">Nguyễn Văn A</p><p class="bb-tl-role">TP PB</p><div class="bb-tl-when"><span class="t">09:15:00</span><span class="d">1/1/2026</span><span class="bb-chip ok">Đã duyệt</span></div>
+                  <div class="bb-quote"><p>Ghi chú mẫu của người duyệt, dài hơn hai dòng thì cắt và hiện nút xem thêm ở dưới…</p><button class="bb-seemore">Xem thêm</button></div></div></div>
+                <div class="bb-tl-i"><div class="bb-tl-rail"><span class="bb-dot red"></span><i></i></div><div class="bb-tl-b"><p class="bb-tl-name">Trần Thị B</p><p class="bb-tl-role">CV Pháp chế</p><div class="bb-tl-when"><span class="t">14:02:10</span><span class="d">2/1/2026</span><span class="bb-chip back">Trả về</span></div></div></div>
+                <div class="bb-tl-i"><div class="bb-tl-rail"><span class="bb-dot amber"></span><i></i></div><div class="bb-tl-b"><p class="bb-tl-name">Lê Văn C</p><p class="bb-tl-role">Ban thư ký</p><div class="bb-tl-when"><span class="t">—</span><span class="bb-chip warn" style="letter-spacing:normal">Chờ duyệt</span></div></div></div>
+                <div class="bb-tl-i"><div class="bb-tl-rail"><span class="bb-dot grey"></span></div><div class="bb-tl-b" style="padding-bottom:0"><p class="bb-tl-name">Phạm Thị D</p><p class="bb-tl-role">Vai trò mẫu</p><div class="bb-tl-when"><span class="bb-chip muted">Signed reviewer</span></div></div></div>
+              </div></div></div></div>
+          <div class="spec-f"><span class="note">Chấm 10 px: teal #89F5E7 (đã duyệt) · đỏ (trả về) · cam #D97706 (chờ) · xám #C4C6D0 (chưa tới). Cách gán màu suy từ ảnh. Scrim trên app có làm mờ nền (blur, chưa đo độ lớn); kit không dựng blur. Dòng vai trò trông như font mono trên ảnh, kit dùng JetBrains Mono (theo ảnh, chưa đo).</span></div></div>
+
+        <div class="spec" data-sig="73b45f7dd8 3ceb765d06"><div class="spec-h"><b>Hàng menu mobile</b><span class="kind">button</span><span class="dp">342 × 90 · pad 24 · icon tile 40</span></div>
+          <div class="stage tint bb col"><div class="bb-menu">
+            <button class="bb-mrow"><span class="bb-mrow-ic"><span class="ms">pending_actions</span></span><span class="bb-mrow-m"><b>Pending</b><span>Awaiting your approval</span></span><span class="bb-count err lg">1</span><span class="ms">chevron_right</span></button>
+            <button class="bb-mrow is-hover" data-sig-state="73b45f7dd8:hover"><span class="bb-mrow-ic b"><span class="ms">domain</span></span><span class="bb-mrow-m"><b>Departments</b><span>hover</span></span><span class="ms">chevron_right</span></button>
+            <button class="bb-mrow is-focus" data-sig-state="73b45f7dd8:focus"><span class="bb-mrow-ic b"><span class="ms">description</span></span><span class="bb-mrow-m"><b>Contract types</b><span>focus</span></span><span class="ms">chevron_right</span></button>
+          </div></div></div>
+
+        <div class="spec" data-sig="af573b486d 01c3996883 8e6d6193b9"><div class="spec-h"><b>Danh sách &amp; ô số mobile</b><span class="kind">section</span><span class="dp">hàng 342 × 54 · ô 167 × 80</span></div>
+          <div class="stage tint bb col">
+            <div class="bb-mtitle"><h1>Contract Types</h1><p><span class="w">12 chờ xử lý</span> · <span class="o">4 đã xong</span></p></div>
+            <div><div class="bb-mlist-h"><span class="w">Chờ</span><span class="o">Xong</span></div>
+              <button class="bb-mli"><span class="ms">description</span><span class="bb-mli-m"><b>Loại hồ sơ A</b><span>LHS1</span></span><span class="bb-mli-n"><span class="w">8</span><span class="o">2</span></span></button>
+              <button class="bb-mli is-active" data-sig-state="af573b486d:active"><span class="ms">description</span><span class="bb-mli-m"><b>Loại hồ sơ B · active</b><span>LHS2</span></span><span class="bb-mli-n"><span class="w">4</span><span class="z">0</span></span></button>
+              <button class="bb-mli is-focus" data-sig-state="af573b486d:focus"><span class="ms">description</span><span class="bb-mli-m"><b>Loại hồ sơ C · focus</b><span>LHS3</span></span><span class="bb-mli-n"><span class="z">0</span><span class="o">2</span></span></button></div>
+            <div class="bb-mstats"><div class="bb-mstat navy"><span>Total pending</span><b>12 items</b></div><div class="bb-mstat white"><span>Types</span><div><b>3</b><span class="ms">trending_up</span></div></div></div>
+          </div><div class="spec-f"><span class="note">Số chờ màu #856404, số xong màu #155724, số 0 màu #C4C6D0. Màn Departments dùng cùng bố cục, icon <code>domain</code>.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= CHI TIẾT PHIẾU ================= -->
+    <section class="block" id="detail">
+      <header><h2>Chi tiết phiếu</h2><p>Route <code>/dashboard/request/&lt;mã&gt;?back=…</code>, mở từ nút DETAIL trong thẻ hồ sơ. Desktop: khung xem tài liệu 958 px bên trái, panel 413 px bên phải với 3 tab Detail · AI · History. Mobile: trang cuộn dọc, footer duyệt cố định ở đáy, bấm "Xem PDF" mở trình xem tối toàn màn.</p></header>
+      <div class="grid wide">
+        <div class="spec full" data-sig="6164a47120 af6ffbaf2f 08208df782 29508edf04 a487182f67"><div class="spec-h"><b>Khung xem tài liệu</b><span class="kind">div (viewer)</span><span class="dp">958 × 900 · thanh 48 · nền #F0F4F8</span></div>
+          <div class="stage bb col">
+            <div class="bb-viewer" style="border:1px solid var(--bb-divider)"><div class="bb-vbar"><button class="bb-vback" aria-label="Quay lại"><span class="ms">arrow_back</span></button><span class="bb-vname">AB12-XYZ-00000001.docx</span><button class="bb-copylink"><span class="ms">link</span>Copy link</button></div>
+              <div class="bb-vbody"><span class="bb-spin"></span>Đang tải tài liệu…</div></div>
+            <div class="states">
+              <div class="st" data-sig-state="29508edf04:hover"><button class="bb-vback is-hover" aria-label="Quay lại"><span class="ms">arrow_back</span></button><small>back hover</small></div>
+              <div class="st" data-sig-state="29508edf04:focus"><button class="bb-vback is-focus" aria-label="Quay lại"><span class="ms">arrow_back</span></button><small>focus</small></div>
+              <div class="st" data-sig-state="a487182f67:hover"><button class="bb-copylink is-hover"><span class="ms">link</span>Copy link</button><small>copy link hover</small></div>
+              <div class="st" data-sig-state="a487182f67:focus"><button class="bb-copylink is-focus"><span class="ms">link</span>Copy link</button><small>focus</small></div>
+            </div>
+          </div><div class="spec-f"><span class="note">Tài liệu hiện trong iframe; ở trình duyệt headless iframe không vẽ nên chỉ đo được trạng thái đang tải (vòng quay viền 2 px teal). Nội dung tài liệu không đưa vào kit.</span></div></div>
+
+        <div class="spec" data-sig="4cdae4c3ff 64c25efabe a654c27c8d 85c930cd55 c83cea7642 7dd8828a81 4d9b8879ba 6a7ed810a2 46ef06b2e7"><div class="spec-h"><b>Panel phải · tab Detail</b><span class="kind">div (w 413)</span><span class="dp">tab 14/500 · gạch dưới 2 · pad 24</span></div>
+          <div class="stage bg bb" style="justify-content:center"><div class="bb-rp">
+            <div class="bb-tabs"><button class="bb-tab on">Detail</button><button class="bb-tab">AI</button><button class="bb-tab">History</button><span class="sp"></span><button class="bb-av28" aria-label="Hướng dẫn"><span class="ph">ảnh</span></button></div>
+            <div class="bb-pbody">
+              <div class="bb-dh"><div class="bb-dh-l"><div class="bb-dh-t"><span class="bb-dtype">Duyệt hợp đồng</span><span class="bb-t8 purple">Returned</span></div><h2 class="bb-dcode">AB12-XYZ-00000001</h2></div>
+                <div class="bb-dh-r"><p class="bb-damt">0 ₫</p><div class="bb-dst"><span class="bb-st">Waiting sign</span></div></div></div>
+              <div><p class="bb-dtitle">Hợp đồng mẫu với nhà cung cấp</p><p class="bb-dby">Lê Văn C</p></div>
+              <div class="bb-hr"></div>
+              <div class="bb-fields">
+                <div><p class="bb-fl">Người lập phiếu</p><p class="bb-fv">Lê Văn C</p></div><div><p class="bb-fl">Ngày tạo</p><p class="bb-fv">—</p></div>
+                <div><p class="bb-fl">Phòng ban</p><p class="bb-fv">Phòng ban mẫu A</p></div><div><p class="bb-fl">Dự án</p><p class="bb-fv">Dự án mẫu</p></div>
+                <div class="full"><p class="bb-fl">Đối tác / nhà cung cấp</p><p class="bb-fv">CÔNG TY MẪU A</p></div>
+                <div><p class="bb-fl">Số hợp đồng</p><p class="bb-fv">0000/HĐ/00/0000</p></div><div><p class="bb-fl">Bước duyệt hiện tại</p><p class="bb-fv">Bước mẫu (esign)</p></div>
+              </div>
+            </div></div></div>
+          <div class="stage bb"><div class="states">
+            <div class="st" data-sig-state="a654c27c8d:hover"><button class="bb-tab is-hover">History</button><small>tab hover</small></div>
+            <div class="st" data-sig-state="a654c27c8d:focus"><button class="bb-tab is-focus">History</button><small>tab focus</small></div>
+            <div class="st" data-sig-state="85c930cd55:focus"><button class="bb-tab on is-focus">AI</button><small>tab chọn · focus</small></div>
+            <div class="st" data-sig-state="c83cea7642:hover"><button class="bb-av28 is-hover" aria-label="Hướng dẫn"><span class="ph">ảnh</span></button><small>hover</small></div>
+            <div class="st" data-sig-state="c83cea7642:active"><button class="bb-av28 is-active" aria-label="Hướng dẫn"><span class="ph">ảnh</span></button><small>active</small></div>
+            <div class="st" data-sig-state="c83cea7642:focus"><button class="bb-av28 is-focus" aria-label="Hướng dẫn"><span class="ph">ảnh</span></button><small>focus</small></div>
+          </div></div>
+          <div class="spec-f"><span class="note">Trạng thái phiếu: tag tím #7B3294 /10 (Returned) cạnh loại hồ sơ; nhãn bước ở dưới số tiền (teal /10). Phiếu đã đóng thì nhãn bước hiện thêm chữ "Closed" không nền cạnh "Waiting approve".</span></div></div>
+
+        <div class="spec" data-sig="74a586aef1 9abef5bec3 2520075e2f 1d54b7dd5a"><div class="spec-h"><b>Nhận xét duyệt</b><span class="kind">div</span><span class="dp">365 · pad 10 12 · tag 8/900</span></div>
+          <div class="stage bg bb col"><p class="bb-fl" style="margin:0">Nhận xét duyệt</p><div class="bb-cmts">
+            <div class="bb-cmt"><span class="bb-t8 ok">Duyệt</span><div><p class="bb-cmt-m">Nguyễn Văn A · TP PB  09:15 01/01/2026</p><p class="bb-cmt-t">Ghi chú mẫu của người duyệt thứ nhất.</p></div></div>
+            <div class="bb-cmt"><span class="bb-t8 muted">Signed reviewer</span><div><p class="bb-cmt-m">Trần Thị B · CV Pháp chế  16:36 02/01/2026</p><p class="bb-cmt-t">Ghi chú dài hơn sẽ xuống dòng, không cắt.</p></div></div>
+            <div class="bb-cmt"><span class="bb-t8 back">Đã trả về</span><div><p class="bb-cmt-m">Lê Văn C · Ban thư ký  10:02 03/01/2026</p><p class="bb-cmt-t">Trả về theo yêu cầu.</p></div></div>
+          </div></div></div>
+
+        <div class="spec" data-sig="9c684425c7 9b69433812 01ae255a35 26f427f748"><div class="spec-h"><b>Tài liệu đính kèm</b><span class="kind">div > div</span><span class="dp">hàng 413 × 76 · pad 12 24</span></div>
+          <div class="stage bg bb col"><div class="bb-rp" style="width:100%;padding:0 24px"><div class="bb-files">
+            <div class="bb-files-h"><p class="bb-fl" style="margin:0">Tài liệu đính kèm</p><span>4 files</span></div>
+            <div class="bb-file on" tabindex="0"><span class="ms">description</span><div><b>Hợp đồng mẫu</b><small>mau-hop-dong.docx</small><i>BG-001</i><small style="display:inline">Lê Văn C</small></div></div>
+            <div class="bb-file"><span class="ms">table</span><div><b>Bảng khối lượng mẫu</b><small>khoi-luong.xlsx</small><i>BG-002</i><small style="display:inline">Lê Văn C</small></div></div>
+            <div class="bb-file is-hover" data-sig-state="9b69433812:hover"><span class="ms">picture_as_pdf</span><div><b>Tài liệu ký số · hover</b><small>tai-lieu.pdf</small><i>TL-003</i><small style="display:inline">Trần Thị B</small></div></div>
+            <div class="bb-file is-focus" data-sig-state="9b69433812:focus"><span class="ms">picture_as_pdf</span><div><b>Cover · focus</b><small>cover.pdf</small></div></div>
+          </div></div>
+          <div class="states">
+            <div class="st" data-sig-state="01ae255a35:focus" style="width:100%"><div class="bb-file on is-focus" style="width:100%"><span class="ms">description</span><div><b>Đang chọn · focus</b><small>mau-hop-dong.docx</small></div></div><small>mục đang xem · focus</small></div>
+            <div class="st" data-sig-state="26f427f748:focus" style="width:100%"><div class="bb-file on is-focus" style="width:100%"><span class="ms">picture_as_pdf</span><div><b>Đang chọn (không ở đầu) · focus</b><small>tai-lieu.pdf</small></div></div><small>focus</small></div>
+          </div></div>
+          <div class="spec-f"><span class="note">Mục đang xem nền trắng, viền trái 2 px teal (đo được ở mục đầu). Bấm một mục thì khung xem bên trái đổi tài liệu.</span></div></div>
+
+        <div class="spec" data-sig="d604066697 9d3bbc32cb 70d8681173 79661c01ce ef188c8f14"><div class="spec-h"><b>Footer duyệt (desktop)</b><span class="kind">div</span><span class="dp">413 × 160 · nút h 42 / 40</span></div>
+          <div class="stage bg bb col">
+            <div class="bb-dfoot"><div class="bb-dnote"><span class="ms">edit_note</span><input placeholder="Approval note (optional)…" aria-label="Ghi chú duyệt"></div>
+              <div class="bb-dsum"><div><p class="bb-fl">Total value</p><p class="bb-dtotal">1.250.000 ₫</p></div>
+                <div class="bb-dacts"><button class="bb-dbtn rej"><span class="ms">block</span>Reject</button><button class="bb-dbtn"><span class="ms">keyboard_return</span>Return</button><button class="bb-dbtn ok"><span class="ms">check_circle</span>Approve</button></div></div></div>
+            <div class="bb-dfoot"><div class="bb-dsum"><div><p class="bb-fl">Total value</p><p class="bb-dtotal">0 ₫</p></div></div></div>
+            <div class="states">
+              <div class="st" data-sig-state="79661c01ce:hover"><button class="bb-dbtn rej is-hover"><span class="ms">block</span>Reject</button><small>reject hover</small></div>
+              <div class="st" data-sig-state="79661c01ce:focus"><button class="bb-dbtn rej is-focus"><span class="ms">block</span>Reject</button><small>focus</small></div>
+              <div class="st" data-sig-state="ef188c8f14:hover"><button class="bb-dbtn ok is-hover" style="width:160px"><span class="ms">check_circle</span>Approve</button><small>approve hover #0BBFB9</small></div>
+              <div class="st" data-sig-state="ef188c8f14:focus"><button class="bb-dbtn ok is-focus" style="width:160px"><span class="ms">check_circle</span>Approve</button><small>focus</small></div>
+            </div>
+          </div><div class="spec-f"><span class="note">Bản thứ hai là phiếu đã đóng: chỉ còn tổng tiền, không có ô ghi chú và nút. Return trên desktop cùng kiểu viền với Reject; hover của nó không tách được sig riêng nên kit để nguyên.</span></div></div>
+
+        <div class="spec" data-sig="f16768a03f 8aeb9f5b4b d8ecf38409 bd00023ffe c307a0ce93 4eb68c6f24 8315a8aca0"><div class="spec-h"><b>Tab AI · tóm tắt</b><span class="kind">div</span><span class="dp">365 × auto · chữ 14/24 #374151</span></div>
+          <div class="stage bg bb col">
+            <div class="bb-seg2"><button class="on">Tóm tắt</button><button>Chi tiết</button></div>
+            <div class="bb-box"><div class="bb-ai-h"><div><span class="ms">flash_on</span><span class="bb-lbl10">Tóm tắt</span><span class="bb-t8 cached">Cached</span></div><button class="bb-airef" aria-label="Tạo lại"><span class="ms">refresh</span></button></div>
+              <div class="bb-ai-b"><p><strong>Mã yêu cầu:</strong> AB12-XYZ-00000001</p><p><strong>Phòng ban:</strong> Phòng ban mẫu A</p><p><strong>Tình trạng:</strong> Không quá hạn, không khẩn cấp</p><p><strong>Khuyến nghị:</strong> Cần xem xét thêm.</p></div></div>
+            <div class="states">
+              <div class="st" data-sig-state="c307a0ce93:focus"><div class="bb-seg2"><button class="on is-focus">Tóm tắt</button></div><small>chọn · focus</small></div>
+              <div class="st" data-sig-state="4eb68c6f24:hover"><div class="bb-seg2"><button class="is-hover">Chi tiết</button></div><small>hover</small></div>
+              <div class="st" data-sig-state="4eb68c6f24:focus"><div class="bb-seg2"><button class="is-focus">Chi tiết</button></div><small>focus</small></div>
+              <div class="st" data-sig-state="8315a8aca0:hover"><button class="bb-airef is-hover" aria-label="Tạo lại"><span class="ms">refresh</span></button><small>refresh hover</small></div>
+              <div class="st" data-sig-state="8315a8aca0:focus"><button class="bb-airef is-focus" aria-label="Tạo lại"><span class="ms">refresh</span></button><small>focus</small></div>
+            </div>
+          </div><div class="spec-f"><span class="note">Kit chỉ xem bản tóm tắt đã lưu (Cached). Không bấm refresh hay "Phân tích" vì các nút này có thể chạy phân tích AI thật.</span></div></div>
+
+        <div class="spec" data-sig="11fab5c500 ac579520eb 2d28480d37 b516c40d06"><div class="spec-h"><b>Tab History</b><span class="kind">div</span><span class="dp">365 · pad 20 · timeline như dialog</span></div>
+          <div class="stage bg bb col">
+            <div class="bb-box bb-hbox"><p class="bb-fl">Lịch sử duyệt</p><div class="bb-tl" style="padding:0">
+              <div class="bb-tl-i"><div class="bb-tl-rail"><span class="bb-dot teal"></span><i></i></div><div class="bb-tl-b"><p class="bb-tl-name">Nguyễn Văn A</p><p class="bb-tl-role">TP PB</p><div class="bb-tl-when"><span class="t">09:15:00</span><span class="d">1/1/2026</span><span class="bb-chip ok2">Đã duyệt</span></div>
+                <div class="bb-quote s"><p>Ghi chú mẫu, dài thì cắt và hiện nút xem thêm…</p><button class="bb-seemore v2">Xem thêm</button></div></div></div>
+              <div class="bb-tl-i"><div class="bb-tl-rail"><span class="bb-dot grey"></span><i></i></div><div class="bb-tl-b"><p class="bb-tl-name">Trần Thị B</p><p class="bb-tl-role">CV Pháp chế (esign)</p><div class="bb-tl-when"><span class="t">16:19:28</span><span class="d">2/1/2026</span><span class="bb-chip grey">Signed reviewer</span></div></div></div>
+              <div class="bb-tl-i"><div class="bb-tl-rail"><span class="bb-dot red"></span></div><div class="bb-tl-b" style="padding-bottom:0"><p class="bb-tl-name">Lê Văn C</p><p class="bb-tl-role">Admin PB</p><p class="bb-due">Hạn: 15/1/2026</p><div class="bb-tl-when"><span class="bb-chip warn" style="letter-spacing:normal">Chờ duyệt</span></div></div></div>
+            </div></div>
+            <div class="bb-box bb-hbox"><p class="bb-fl">Thông tin hệ thống</p><div class="bb-sys"><div><span>Module</span><b>LHS1</b></div><div><span>Form</span><b>LHS1</b></div><div><span>Unit</span><b>All</b></div><div><span>Dept code</span><b>00000000</b></div><div><span>Request status</span><b class="dim">—</b></div><div><span>Internal ID</span><b class="dim">000000</b></div></div></div>
+            <div class="states">
+              <div class="st" data-sig-state="b516c40d06:hover"><button class="bb-seemore v2 is-hover">Xem thêm</button><small>hover · gạch chân</small></div>
+              <div class="st" data-sig-state="b516c40d06:focus"><button class="bb-seemore v2 is-focus">Xem thêm</button><small>focus</small></div>
+            </div>
+          </div><div class="spec-f"><span class="note">Khác dialog ở Overview: chip Đã duyệt nền #E6F4F1, Signed reviewer nền #F0F0F0, nút "Xem thêm" #00706A. Người chưa tới lượt hiện dòng "Hạn: …".</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Toast tiến trình</b><span class="kind">ol (toaster)</span><span class="dp">theo ảnh</span></div>
+          <div class="stage bg bb"><div class="bb-toasts">
+            <div class="bb-toast"><span class="ms">check</span>Kết nối thành công</div><div class="bb-toast"><span class="ms">check</span>Waiting — 1 items</div><div class="bb-toast"><span class="ms">check</span>Hoàn tất</div></div></div>
+          <div class="spec-f"><span class="note">Vẽ theo ảnh chụp: toast hiện chồng lên panel khi tải dữ liệu, rồi tự tắt trước khi đo được. Màu, bo góc và bóng chưa đo, vòng quét không bắt được pattern này.</span></div></div>
+      </div>
+
+      <h3 class="rgroup" style="margin-top:32px">Mobile</h3>
+      <div class="grid">
+        <div class="spec" data-sig="31dfc5bdb0 ccbccb2257"><div class="spec-h"><b>Đầu phiếu mobile + chip hành động</b><span class="kind">section · button</span><span class="dp">chip h 40 · r 12 · teal /15</span></div>
+          <div class="stage tint bb col"><div class="bb-mdh"><span class="bb-dtype">Duyệt hợp đồng</span><h2>AB12-XYZ-00000001</h2><p>Hợp đồng mẫu với nhà cung cấp</p>
+            <div class="bb-mchips"><button class="bb-mchip"><span class="ms">smart_toy</span>Phân tích</button><button class="bb-mchip"><span class="ms">picture_as_pdf</span>Xem PDF</button><span class="bb-mchip"><span class="ms">draw</span>Chờ ký số</span></div></div>
+            <div class="states">
+              <div class="st" data-sig-state="31dfc5bdb0:hover"><button class="bb-mchip is-hover"><span class="ms">smart_toy</span>Phân tích</button><small>hover /25</small></div>
+              <div class="st" data-sig-state="31dfc5bdb0:active"><button class="bb-mchip is-active"><span class="ms">smart_toy</span>Phân tích</button><small>active ×.95</small></div>
+              <div class="st" data-sig-state="31dfc5bdb0:focus"><button class="bb-mchip is-focus"><span class="ms">smart_toy</span>Phân tích</button><small>focus</small></div>
+            </div></div>
+          <div class="spec-f"><span class="note">"Chờ ký số" là div (nhãn trạng thái), cùng kiểu với chip nhưng không bấm được. Icon của nó đoán theo ảnh (<code>draw</code>).</span></div></div>
+
+        <div class="spec" data-sig="80d39af8f3"><div class="spec-h"><b>Thẻ thông tin mobile</b><span class="kind">div</span><span class="dp">358 × 200 · r 12 · pad 20</span></div>
+          <div class="stage tint bb col"><div class="bb-mcard"><div class="bb-minfo"><div><label>Người lập phiếu</label><div>Lê Văn C</div></div><div><label>Phòng ban</label><div>Phòng ban mẫu A</div></div><div><label>Đối tác</label><div>CÔNG TY MẪU A</div></div><div><label>Số hợp đồng</label><div>0000/HĐ/00/0000</div></div></div></div></div></div>
+
+        <div class="spec" data-sig="b62989a76a ef386b648d 4513a5e728"><div class="spec-h"><b>Nhận xét duyệt mobile</b><span class="kind">div</span><span class="dp">hàng pad 14 20 · chữ 14/22.75</span></div>
+          <div class="stage tint bb col"><div class="bb-mcard"><div class="bb-mcard-h"><span class="bb-lbl10">Nhận xét duyệt</span></div>
+            <div class="bb-mcmt"><span class="bb-t8 ok">Duyệt</span><div><p class="bb-cmt-m">Nguyễn Văn A · TP PB <span style="color:color-mix(in srgb,var(--bb-muted) 70%,transparent)">09:15:00</span> <span style="color:color-mix(in srgb,var(--bb-muted) 40%,transparent)">1/1/2026</span></p><p class="bb-mcmt-t">Ghi chú mẫu của người duyệt.</p></div></div>
+            <div class="bb-mcmt"><span class="bb-t8 back">Đã trả về</span><div><p class="bb-cmt-m">Lê Văn C · Ban thư ký</p><p class="bb-mcmt-t">Trả về theo yêu cầu.</p></div></div></div></div></div>
+
+        <div class="spec" data-sig="bd95388b56"><div class="spec-h"><b>Bước duyệt hiện tại</b><span class="kind">button</span><span class="dp">358 × 106 · r 12 · #F0F4F8</span></div>
+          <div class="stage tint bb col">
+            <button class="bb-mstep"><div><label>Bước duyệt hiện tại</label><b>Bước mẫu (esign)</b><small>Nhấn để xem lịch sử duyệt</small></div><span class="ic"><span class="ms">rule</span></span></button>
+            <div class="states">
+              <div class="st" data-sig-state="bd95388b56:active" style="width:100%"><button class="bb-mstep is-active"><div><label>Bước duyệt hiện tại</label><b>active</b></div><span class="ic"><span class="ms">rule</span></span></button><small>active #E8F0F4</small></div>
+              <div class="st" data-sig-state="bd95388b56:focus" style="width:100%"><button class="bb-mstep is-focus"><div><label>Bước duyệt hiện tại</label><b>focus</b></div><span class="ic"><span class="ms">rule</span></span></button><small>focus</small></div>
+            </div></div>
+          <div class="spec-f"><span class="note">Nhãn và icon (<code>rule</code>) vẽ theo ảnh; nền, bo góc, cỡ tên bước đo được.</span></div></div>
+
+        <div class="spec" data-sig="383c0a7c64 3c0d053b40 c98b416aae d6550ec77c 4bfcad291a"><div class="spec-h"><b>Tài liệu đính kèm mobile</b><span class="kind">button</span><span class="dp">hàng 356 × 80 · pad 14 20</span></div>
+          <div class="stage tint bb col"><div class="bb-mcard"><div class="bb-mcard-h"><span class="bb-lbl10">Tài liệu đính kèm</span><span>4 files</span></div>
+            <button class="bb-mfile first on"><span class="ft"><span class="ms">description</span></span><span class="mm"><b>Hợp đồng mẫu</b><small>mau-hop-dong.docx</small><em>Lê Văn C</em></span><span class="ms">chevron_right</span></button>
+            <button class="bb-mfile"><span class="ft"><span class="ms">table</span></span><span class="mm"><b>Bảng khối lượng mẫu</b><small>khoi-luong.xlsx</small><em>Lê Văn C</em></span><span class="ms">chevron_right</span></button>
+            <button class="bb-mfile"><span class="ft"><span class="ms">picture_as_pdf</span></span><span class="mm"><small>cover.pdf</small></span><span class="ms">chevron_right</span></button></div>
+            <div class="states">
+              <div class="st" data-sig-state="c98b416aae:active" style="width:100%"><div class="bb-mcard"><button class="bb-mfile first is-active"><span class="ft"><span class="ms">description</span></span><span class="mm"><b>Mục đầu · active</b></span><span class="ms">chevron_right</span></button></div><small>mục đầu active</small></div>
+              <div class="st" data-sig-state="c98b416aae:focus" style="width:100%"><div class="bb-mcard"><button class="bb-mfile first is-focus"><span class="ft"><span class="ms">description</span></span><span class="mm"><b>Mục đầu · focus</b></span><span class="ms">chevron_right</span></button></div><small>focus</small></div>
+              <div class="st" data-sig-state="3c0d053b40:active" style="width:100%"><div class="bb-mcard"><button class="bb-mfile is-active"><span class="ft"><span class="ms">table</span></span><span class="mm"><b>Mục giữa · active</b></span><span class="ms">chevron_right</span></button></div><small>active</small></div>
+              <div class="st" data-sig-state="3c0d053b40:focus" style="width:100%"><div class="bb-mcard"><button class="bb-mfile is-focus"><span class="ft"><span class="ms">table</span></span><span class="mm"><b>Mục giữa · focus</b></span><span class="ms">chevron_right</span></button></div><small>focus</small></div>
+              <div class="st" data-sig-state="d6550ec77c:active" style="width:100%"><div class="bb-mcard"><button class="bb-mfile is-active"><span class="ft"><span class="ms">picture_as_pdf</span></span><span class="mm"><small>chỉ tên file · active</small></span><span class="ms">chevron_right</span></button></div><small>active</small></div>
+              <div class="st" data-sig-state="d6550ec77c:focus" style="width:100%"><div class="bb-mcard"><button class="bb-mfile is-focus"><span class="ft"><span class="ms">picture_as_pdf</span></span><span class="mm"><small>chỉ tên file · focus</small></span><span class="ms">chevron_right</span></button></div><small>focus</small></div>
+              <div class="st" data-sig-state="4bfcad291a:focus" style="width:100%"><div class="bb-mcard"><button class="bb-mfile first on is-focus"><span class="ft"><span class="ms">description</span></span><span class="mm"><b>Đang xem · focus</b></span><span class="ms">chevron_right</span></button></div><small>đang xem · focus</small></div>
+            </div></div>
+          <div class="spec-f"><span class="note">Mục đang xem (sau khi mở trình xem) nền #F0F4F8 + viền trái 2 px teal. File không có tiêu đề chỉ hiện tên file.</span></div></div>
+
+        <div class="spec" data-sig="2ccab20b87 c9c1d2d0cd 5fd8befbbc 4a9251e328"><div class="spec-h"><b>Footer duyệt mobile</b><span class="kind">footer (fixed)</span><span class="dp">390 × 142 · nút h 48 · r 6</span></div>
+          <div class="stage tint bb col">
+            <div class="bb-mfoot"><div class="bb-mfoot-n"><span class="ms">edit_note</span><input placeholder="Approval note (optional)…" aria-label="Ghi chú duyệt"></div>
+              <div class="bb-mfoot-a"><button class="bb-mact rej"><span class="ms">close</span>Reject</button><button class="bb-mact ret"><span class="ms">keyboard_return</span>Return</button><button class="bb-mact ok"><span class="ms">check</span>Approve</button></div><span class="bb-handle"></span></div>
+            <div class="states">
+              <div class="st" data-sig-state="c9c1d2d0cd:hover"><button class="bb-mact rej is-hover"><span class="ms">close</span>Reject</button><small>hover</small></div>
+              <div class="st" data-sig-state="c9c1d2d0cd:active"><button class="bb-mact rej is-active"><span class="ms">close</span>Reject</button><small>active</small></div>
+              <div class="st" data-sig-state="c9c1d2d0cd:focus"><button class="bb-mact rej is-focus"><span class="ms">close</span>Reject</button><small>focus</small></div>
+              <div class="st" data-sig-state="5fd8befbbc:hover"><button class="bb-mact ret is-hover"><span class="ms">keyboard_return</span>Return</button><small>hover</small></div>
+              <div class="st" data-sig-state="5fd8befbbc:active"><button class="bb-mact ret is-active"><span class="ms">keyboard_return</span>Return</button><small>active</small></div>
+              <div class="st" data-sig-state="5fd8befbbc:focus"><button class="bb-mact ret is-focus"><span class="ms">keyboard_return</span>Return</button><small>focus</small></div>
+              <div class="st" data-sig-state="4a9251e328:hover"><button class="bb-mact ok is-hover" style="width:150px"><span class="ms">check</span>Approve</button><small>hover</small></div>
+              <div class="st" data-sig-state="4a9251e328:active"><button class="bb-mact ok is-active" style="width:150px"><span class="ms">check</span>Approve</button><small>active</small></div>
+              <div class="st" data-sig-state="4a9251e328:focus"><button class="bb-mact ok is-focus" style="width:150px"><span class="ms">check</span>Approve</button><small>focus</small></div>
+            </div></div>
+          <div class="spec-f"><span class="note">Nền trắng /90 có làm mờ nền phía sau (blur 8 px trong kit là đoán, chưa đo). Khác desktop: Reject nền đỏ đặc, Return nền kem viền cam, Approve 14 px. Thanh nhỏ 96 × 4 ở đáy.</span></div></div>
+
+        <div class="spec" data-sig="d15ab63c08 4370b603aa b2545f4809"><div class="spec-h"><b>Trình xem PDF mobile</b><span class="kind">div (overlay)</span><span class="dp">390 × 844 · thanh 56 · #111618</span></div>
+          <div class="stage bb col">
+            <div class="bb-pdf" style="height:300px"><div class="bb-pdf-h"><button class="bb-pdf-x" aria-label="Đóng"><span class="ms">close</span></button><span class="bb-pdf-n">mau-hop-dong.docx</span><button class="bb-pdf-f"><span class="ms">folder_open</span>4</button></div>
+              <div class="bb-pdf-b"><div class="ph">ảnh trang tài liệu</div></div><span class="bb-fab" aria-hidden="true"><span class="ms">auto_fix_high</span></span></div>
+            <div class="stage dark" style="margin:0"><div class="states">
+              <div class="st" data-sig-state="4370b603aa:hover"><button class="bb-pdf-x is-hover" aria-label="Đóng"><span class="ms">close</span></button><small>hover</small></div>
+              <div class="st" data-sig-state="4370b603aa:active"><button class="bb-pdf-x is-active" aria-label="Đóng"><span class="ms">close</span></button><small>active</small></div>
+              <div class="st" data-sig-state="4370b603aa:focus"><button class="bb-pdf-x is-focus" aria-label="Đóng"><span class="ms">close</span></button><small>focus</small></div>
+              <div class="st" data-sig-state="b2545f4809:active"><button class="bb-pdf-f is-active"><span class="ms">folder_open</span>4</button><small>active</small></div>
+              <div class="st" data-sig-state="b2545f4809:focus"><button class="bb-pdf-f is-focus"><span class="ms">folder_open</span>4</button><small>focus</small></div>
+            </div></div></div>
+          <div class="spec-f"><span class="note">Nút "4" (folder_open) mở danh sách file. Nút tròn teal nổi ở góc dưới vẽ theo ảnh (có thể nằm trong iframe trình xem), chưa đo, icon đoán. Trang tài liệu thay bằng khối giữ chỗ.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= NHẬP LIỆU ================= -->
+    <section class="block" id="inputs">
+      <header><h2>Nhập liệu</h2><p>App chỉ có ô tìm kiếm và ô ghi chú duyệt. Không có form nào khác trên các màn đã quét.</p></header>
+      <div class="grid">
+        <div class="spec" data-sig="eef02e8f6f fd1e828d00"><div class="spec-h"><b>Ô tìm kiếm có viền</b><span class="kind">input</span><span class="dp">256 × 34 · mobile 342 × 42</span></div>
+          <div class="stage bb col" style="align-items:flex-start"><div class="states">
+            <div class="st"><label class="bb-search"><span class="ms">search</span><input placeholder="Search code, name, partner…" aria-label="Tìm"></label><small>nghỉ</small></div>
+            <div class="st" data-sig-state="eef02e8f6f:focus"><label class="bb-search"><span class="ms">search</span><input class="is-focus" placeholder="Search code, name, partner…" aria-label="Tìm"></label><small>focus · viền teal, không outline</small></div>
+          </div>
+          <div class="st" data-sig-state="fd1e828d00:focus" style="width:100%;max-width:342px"><label class="bb-search m"><span class="ms">search</span><input class="is-focus" placeholder="Tìm mã, tên, đối tác…" aria-label="Tìm"></label><small>mobile · focus</small></div></div>
+          <div class="spec-f"><span class="note">Chỉ viền trên được đo đổi sang teal (so sánh <code>borderTopColor</code>), kit đổi cả 4 cạnh. Đổi cả 4 cạnh là suy luận, chưa đo.</span></div></div>
+
+        <div class="spec" data-sig="86fa9c7255"><div class="spec-h"><b>Ô tìm kiếm gạch chân</b><span class="kind">input</span><span class="dp">192 × 15 · 10 px UPPER</span></div>
+          <div class="stage bb"><div class="states">
+            <div class="st"><label class="bb-uline"><span class="ms">search</span><input placeholder="Request code, name, partner" aria-label="Tìm"></label><small>nghỉ</small></div>
+            <div class="st" data-sig-state="86fa9c7255:focus"><label class="bb-uline"><span class="ms">search</span><input class="is-focus" style="outline:none" placeholder="Request code, name, partner" aria-label="Tìm"></label><small>focus · không đổi thấy được</small></div>
+          </div></div><div class="spec-f"><span class="note">Focus gắn <code>ring-0</code>: box-shadow đổi nhưng rộng 0 px, nên không thấy gì thay đổi.</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Ô tìm kiếm mobile (Overdue)</b><span class="kind">div > input</span><span class="dp">358 × 46 · pad 10 12</span></div>
+          <div class="stage tint bb col"><div class="bb-mfield"><span class="ms">search</span><input placeholder="Tìm mã, tên…" aria-label="Tìm"></div></div>
+          <div class="spec-f"><span class="note">Input nằm trong pattern Overdue mobile (sig 7e11b36529 và các sig kế bên), không có sig riêng.</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Ô ghi chú duyệt</b><span class="kind">textarea</span><span class="dp">553 × 36 · 11 px</span></div>
+          <div class="stage bb col"><div class="bb-note-in"><span class="ms">edit_note</span><textarea placeholder="Add approval note (optional)…" aria-label="Ghi chú duyệt"></textarea></div></div>
+          <div class="spec-f"><span class="note">Nằm ở đáy thẻ hồ sơ khi mở (sig f241501149, 001916db7d ở thẻ "Thẻ hồ sơ · mở").</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= TRẠNG THÁI ================= -->
+    <section class="block" id="feedback">
+      <header><h2>Trạng thái &amp; phản hồi</h2></header>
+      <div class="grid">
+        <div class="spec" data-sig="c0e61da98d 3ec34cf39c"><div class="spec-h"><b>Chip trạng thái hồ sơ</b><span class="kind">span</span><span class="dp">h 18 · r 4 · 9/700</span></div>
+          <div class="stage bb">
+            <span class="bb-chip warn">Chờ duyệt</span><span class="bb-chip neutral">Chờ ký số</span><span class="bb-chip late">Quá hạn 12n</span><span class="bb-chip ok">Đã duyệt</span><span class="bb-chip back">Trả về</span><span class="bb-chip muted">Signed reviewer</span>
+          </div><div class="spec-f"><span class="note">"Quá hạn" không bo góc và pad 2 4. Các chip trong dialog không giãn chữ.</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Tag mức &amp; hệ thống</b><span class="kind">span</span><span class="dp">h 23 · 10/700</span></div>
+          <div class="stage bb"><span class="bb-range low">0-3 days</span><span class="bb-range mid">3-7 days</span><span class="bb-range high">&gt;7 days</span><span class="bb-status">System operational</span><span class="bb-total">7 total</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Badge đếm</b><span class="kind">span</span><span class="dp">h 18 / 19 · r 9999</span></div>
+          <div class="stage bb"><span class="bb-count err">1</span><span class="bb-count muted">81</span><span class="bb-count err lg">1</span><span style="background:var(--bb-brand);padding:6px"><span class="bb-count onbrand">82</span></span><span style="background:var(--bb-rail);padding:6px"><span class="bb-initial">A</span></span></div>
+          <div class="spec-f"><span class="note">Bản lớn (10 px, pad 2 8) dùng ở menu mobile. Chữ cái đầu tên 32 px nằm ở chân rail và sidebar.</span></div></div>
+
+        <div class="spec" data-sig="588758774e 8b24d0ba10 df7ef1a37e 78741b07bb"><div class="spec-h"><b>Chấm timeline</b><span class="kind">div</span><span class="dp">10 × 10 · r 9999</span></div>
+          <div class="stage bb"><span class="bb-dot teal"></span><span class="bb-dot red"></span><span class="bb-dot amber"></span><span class="bb-dot grey"></span></div></div>
+
+        <div class="spec" data-sig="7e11b36529 f4ef83766d bd7e3d9f25"><div class="spec-h"><b>Overdue mobile · trống</b><span class="kind">header + button ×3</span><span class="dp">ô 114 × 114</span></div>
+          <div class="stage tint bb col">
+            <div class="bb-mo-h"><div><span>Triage dashboard</span><h1>Overdue</h1></div><p>0 active</p></div>
+            <div class="bb-mo-r"><button class="bb-mo-b"><small>Low<br>0 – 3 days</small><b>0</b></button><button class="bb-mo-b"><small>Medium<br>3 – 7 days</small><b>0</b></button><button class="bb-mo-b is-focus" data-sig-state="f4ef83766d:focus"><small>High · focus<br>&gt; 7 days</small><b>0</b></button></div>
+            <div><p class="bb-h9">Pending items (0)</p><div class="bb-mfield"><span class="ms">search</span><input placeholder="Tìm mã, tên…" aria-label="Tìm"></div></div>
+            <div class="bb-mempty">No overdue requests</div>
+          </div><div class="spec-f"><span class="note">Chỉ đo được lúc không có hồ sơ quá hạn: số và nhãn đều mờ (/30, /50). Khi có số liệu, màu có thể khác: chưa đo.</span></div></div>
+
+        <div class="spec" data-sig="faba514f63"><div class="spec-h"><b>Đầu mục mobile</b><span class="kind">div</span><span class="dp">342 × 96</span></div>
+          <div class="stage tint bb col"><div class="bb-msec"><span>All requests</span><h1>All</h1><p>82 items</p></div></div></div>
+      </div>
+    </section>
+
+    <!-- ================= MÀN MẪU ================= -->
+    <section class="block" id="screens">
+      <header><h2>Màn hình mẫu</h2><p>Ghép lại từ class <code>.bb-*</code> ở trên theo đúng bố cục app, khung 390 × 844 và 1440 × 900 thu nhỏ bằng <code>zoom</code>. Dữ liệu là mẫu.</p></header>
+      <div class="frames"><div class="frames-in bb">
+        <div class="fr"><div class="phone" data-sig="18142ee3c8">
+          <div class="bb-mbar"><span class="bb-greet">Hi there, An</span><button class="bb-avatar-btn m" aria-label="Hướng dẫn"><span class="ph">ảnh</span></button></div>
+          <div class="body"><div class="bb-msec"><span>All requests</span><h1>All</h1><p>82 items</p></div>
+            <div class="bb-menu"><button class="bb-mrow"><span class="bb-mrow-ic"><span class="ms">pending_actions</span></span><span class="bb-mrow-m"><b>Pending</b><span>Awaiting your approval</span></span><span class="bb-count err lg">1</span><span class="ms">chevron_right</span></button>
+              <button class="bb-mrow"><span class="bb-mrow-ic b"><span class="ms">domain</span></span><span class="bb-mrow-m"><b>Departments</b><span>Browse by department</span></span><span class="ms">chevron_right</span></button>
+              <button class="bb-mrow"><span class="bb-mrow-ic b"><span class="ms">description</span></span><span class="bb-mrow-m"><b>Contract types</b><span>Browse by contract type</span></span><span class="ms">chevron_right</span></button></div></div>
+          <div class="bb-bnav"><button class="bb-bnav-i"><span class="ms">alarm</span><span>Overdue</span></button><button class="bb-bnav-i on"><span class="ms">checklist</span><span>All</span></button><button class="bb-bnav-i"><span class="ms">power_settings_new</span><span>Logout</span></button></div>
+        </div><p class="cap">All (mobile) · top bar lời chào · đầu mục · 3 hàng menu · bottom nav</p></div>
+
+        <div class="fr"><div class="phone">
+          <div class="bb-mbar back"><div class="l"><button class="bb-back" aria-label="Quay lại"><span class="ms">arrow_back</span></button><span class="bb-word">Tên app</span></div><button class="bb-avatar-btn m" aria-label="Hướng dẫn"><span class="ph">ảnh</span></button></div>
+          <div class="body"><div class="bb-msec"><span>Pending approval</span><h1>Pending</h1><p>2 items</p></div>
+            <label class="bb-search m"><span class="ms">search</span><input placeholder="Tìm mã, tên, đối tác…" aria-label="Tìm"></label>
+            <div class="bb-list" style="margin:0">
+              <div class="bb-req"><button class="bb-req-b"><div class="bb-req-m"><div class="bb-req-top"><span class="bb-code">Mã: AB12-XYZ-01</span><span class="bb-chip warn">Chờ duyệt</span></div><span class="bb-req-type">Yêu cầu thanh toán</span><span class="bb-req-t">Hồ sơ mẫu số một</span><span class="bb-req-d">PB/CT: Phòng ban mẫu A</span><span class="bb-req-s"><span class="ms">person</span><b>Bước hiện tại:</b> Vai trò — Nguyễn Văn A</span></div><div class="bb-req-r"><span class="bb-amt">1.250.000 ₫</span><span class="ms">expand_more</span></div></button></div>
+              <div class="bb-req sign"><button class="bb-req-b"><div class="bb-req-m"><div class="bb-req-top"><span class="bb-code">Mã: CD34-XYZ-02</span><span class="bb-chip neutral">Chờ ký số</span></div><span class="bb-req-type">Duyệt hợp đồng</span><span class="bb-req-t">Hợp đồng mẫu</span><span class="bb-req-d">PB/CT: Phòng ban mẫu A</span><span class="bb-req-s"><span class="ms">person</span><b>Bước hiện tại:</b> Party (esign)</span></div><div class="bb-req-r"><span class="bb-amt">0 ₫</span><span class="ms">expand_more</span></div></button></div>
+            </div></div>
+          <div class="bb-bnav"><button class="bb-bnav-i"><span class="ms">alarm</span><span>Overdue</span></button><button class="bb-bnav-i on"><span class="ms">checklist</span><span>All</span></button><button class="bb-bnav-i"><span class="ms">power_settings_new</span><span>Logout</span></button></div>
+        </div><p class="cap">Pending (mobile) · top bar back · ô tìm · thẻ hồ sơ</p></div>
+
+        <div class="fr"><div class="phone">
+          <div class="bb-mbar back"><div class="l"><button class="bb-back" aria-label="Quay lại"><span class="ms">arrow_back</span></button><span class="bb-word">Tên app</span></div><button class="bb-avatar-btn m" aria-label="Hướng dẫn"><span class="ph">ảnh</span></button></div>
+          <div class="body" style="padding-top:16px;gap:12px"><div class="bb-mtitle"><h1>Contract Types</h1><p><span class="w">12 chờ xử lý</span> · <span class="o">4 đã xong</span></p></div>
+            <div><div class="bb-mlist-h"><span class="w">Chờ</span><span class="o">Xong</span></div>
+              <button class="bb-mli"><span class="ms">description</span><span class="bb-mli-m"><b>Loại hồ sơ A</b><span>LHS1</span></span><span class="bb-mli-n"><span class="w">8</span><span class="o">2</span></span></button>
+              <button class="bb-mli"><span class="ms">description</span><span class="bb-mli-m"><b>Loại hồ sơ B</b><span>LHS2</span></span><span class="bb-mli-n"><span class="w">3</span><span class="o">1</span></span></button>
+              <button class="bb-mli"><span class="ms">description</span><span class="bb-mli-m"><b>Loại hồ sơ C</b><span>LHS3</span></span><span class="bb-mli-n"><span class="w">1</span><span class="z">0</span></span></button>
+              <button class="bb-mli"><span class="ms">description</span><span class="bb-mli-m"><b>Loại hồ sơ D</b><span>LHS4</span></span><span class="bb-mli-n"><span class="z">0</span><span class="o">1</span></span></button></div>
+            <div class="bb-mstats"><div class="bb-mstat navy"><span>Total pending</span><b>12 items</b></div><div class="bb-mstat white"><span>Types</span><div><b>4</b><span class="ms">trending_up</span></div></div></div></div>
+          <div class="bb-bnav"><button class="bb-bnav-i"><span class="ms">alarm</span><span>Overdue</span></button><button class="bb-bnav-i on"><span class="ms">checklist</span><span>All</span></button><button class="bb-bnav-i"><span class="ms">power_settings_new</span><span>Logout</span></button></div>
+        </div><p class="cap">Contract types (mobile) · danh sách đếm · ô số</p></div>
+
+        <div class="fr"><div class="desk" data-sig="7c1cc758da">
+          <div class="bb-rail"><div class="bb-rail-top"><div class="bb-rail-hd"><button class="bb-toggle" aria-label="Mở sidebar"><span class="ms">architecture</span></button></div><nav><button class="bb-rail-i" aria-label="Overdue"><span class="ms">alarm</span></button><button class="bb-rail-i on" aria-label="All"><span class="ms">checklist</span></button></nav></div><div class="bb-rail-ft"><span class="bb-initial">A</span></div></div>
+          <div class="page"><div class="page-in">
+            <div class="bb-head"><div><h2 class="bb-h-title">Overview</h2><div class="bb-h-row"><span class="bb-status">System operational</span><span class="bb-h-meta">1 pending requests</span></div></div>
+              <div class="bb-h-tools"><div class="bb-seg"><button class="bb-seg-i"><span class="ms">pending_actions</span>Pending<span class="bb-count err">1</span></button><button class="bb-seg-i on"><span class="ms">checklist</span>All<span class="bb-count onbrand">82</span></button></div><button class="bb-icon" aria-label="Làm mới"><span class="ms">refresh</span></button><button class="bb-avatar-btn" aria-label="Hướng dẫn"><span class="ph">ảnh</span></button></div></div>
+            <div class="cols">
+              <div class="bb-panel hero" style="min-height:760px"><h3 class="bb-p-label">Pending requests</h3><div class="bb-hero-n"><b>1</b><span>items</span></div><p>Awaiting your approval</p><div class="bb-progress"><i style="width:100%"></i></div></div>
+              <div class="bb-panel"><div class="bb-p-hd"><div><h3 class="bb-p-label">All requests</h3><p class="bb-p-sub">82 items</p></div><label class="bb-search"><span class="ms">search</span><input placeholder="Search code, name, partner…" aria-label="Tìm hồ sơ"></label></div>
+                <div class="bb-list">
+                  <div class="bb-req sign open"><button class="bb-req-b"><div class="bb-req-m"><div class="bb-req-top"><span class="bb-code">Mã: CD34-XYZ-00000002</span><span class="bb-chip neutral">Chờ ký số</span></div><span class="bb-req-type">Duyệt hợp đồng</span><span class="bb-req-t">Hợp đồng mẫu với nhà cung cấp</span><span class="bb-req-d">PB/CT: Phòng ban mẫu A</span><span class="bb-req-s"><span class="ms">person</span><b>Bước hiện tại:</b> Party (esign) — Trần Thị B</span></div><div class="bb-req-r"><span class="bb-amt">0 ₫</span><span class="ms">expand_less</span></div></button>
+                    <div class="bb-req-x"><div class="bb-meta"><h4>Technical metadata</h4><div class="bb-meta-g"><div><span>Bước duyệt</span><b>Bước mẫu (esign)</b></div><div><span>Số HĐ</span><b>0000/HĐ/00/0000</b></div></div></div>
+                      <div class="bb-typebar"><div><span>Type</span><b>LHS1</b></div><button class="bb-notes"><span class="ms">history</span>Approval notes</button></div>
+                      <div class="bb-acts"><button class="bb-act block" aria-label="Từ chối"><span class="ms">block</span></button><button class="bb-act ret"><span class="ms">keyboard_return</span><span>Return</span></button><button class="bb-act ok"><span class="ms">check_circle</span>Approve</button><button class="bb-act det"><span class="ms">open_in_new</span><span>Detail</span></button></div>
+                      <div class="bb-note-in"><span class="ms">edit_note</span><textarea placeholder="Add approval note (optional)…" aria-label="Ghi chú duyệt"></textarea></div></div></div>
+                  <div class="bb-req"><button class="bb-req-b"><div class="bb-req-m"><div class="bb-req-top"><span class="bb-code">Mã: AB12-XYZ-00000001</span><span class="bb-chip late">Quá hạn 12n</span><span class="bb-chip warn">Chờ duyệt</span></div><span class="bb-req-type">Yêu cầu thanh toán</span><span class="bb-req-t">Hồ sơ mẫu số một</span><span class="bb-req-d">PB/CT: Phòng ban mẫu A</span><span class="bb-req-s"><span class="ms">person</span><b>Bước hiện tại:</b> Vai trò — Nguyễn Văn A</span></div><div class="bb-req-r"><span class="bb-amt">1.250.000 ₫</span><span class="ms">expand_more</span></div></button></div>
+                  <div class="bb-req"><button class="bb-req-b"><div class="bb-req-m"><div class="bb-req-top"><span class="bb-code">Mã: EF56-XYZ-00000003</span><span class="bb-chip late">Quá hạn 5n</span><span class="bb-chip warn">Chờ duyệt</span></div><span class="bb-req-type">Tờ trình</span><span class="bb-req-t">Hồ sơ mẫu số ba</span><span class="bb-req-d">PB/CT: Phòng ban mẫu B</span><span class="bb-req-s"><span class="ms">person</span><b>Bước hiện tại:</b> Vai trò — Lê Văn C</span></div><div class="bb-req-r"><span class="bb-amt">40.000.000 ₫</span><span class="ms">expand_more</span></div></button></div>
+                </div>
+                <div class="bb-pager"><span class="bb-pager-l">Page 1 / 17</span><div class="bb-pager-b"><button class="bb-pg prev">Prev</button><button class="bb-pg next">Next</button></div></div></div>
+            </div></div></div>
+        </div><p class="cap">Overview (desktop) · rail · đầu trang · panel hero + danh sách · thẻ mở · phân trang</p></div>
+
+        <div class="fr"><div class="desk">
+          <div class="bb-side"><div class="bb-side-hd"><button class="bb-toggle open" aria-label="Thu sidebar"><span class="ms">architecture</span></button><div><h1>Tên ứng dụng</h1><p>Mô tả ngắn</p></div></div>
+            <nav><button class="bb-side-i on"><span class="ms">alarm</span>Overdue</button><button class="bb-side-i"><span class="ms">checklist</span>All</button></nav>
+            <div class="bb-side-ft"><span class="bb-initial">A</span><div><b>Nguyễn Văn A</b><small>Quyền truy cập <span class="ms">logout</span></small></div></div></div>
+          <div class="page"><div class="page-in">
+            <div class="bb-head"><div><span class="bb-eyebrow">Triage overview</span><h2 class="bb-h-title plain">Overdue Items</h2></div><div class="bb-h-tools"><button class="bb-icon" aria-label="Làm mới"><span class="ms">refresh</span></button><button class="bb-avatar-btn" aria-label="Hướng dẫn"><span class="ph">ảnh</span></button></div></div>
+            <div class="bb-ranges">
+              <div class="bb-rcard"><div class="bb-rcard-h"><span>Low</span><span class="bb-range low">0-3 days</span></div><div class="bb-rcard-n"><b>00</b><span>Pending Items</span></div><div class="bb-rcard-f">Apply filter<span class="ms">arrow_forward</span></div></div>
+              <div class="bb-rcard"><div class="bb-rcard-h"><span>Medium</span><span class="bb-range mid">3-7 days</span></div><div class="bb-rcard-n"><b>00</b><span>Pending Items</span></div><div class="bb-rcard-f">Apply filter<span class="ms">arrow_forward</span></div></div>
+              <div class="bb-rcard"><div class="bb-rcard-h"><span>High</span><span class="bb-range high">&gt;7 days</span></div><div class="bb-rcard-n"><b>00</b><span>Pending Items</span></div><div class="bb-rcard-f">Apply filter<span class="ms">arrow_forward</span></div></div></div>
+            <div class="bb-table"><div class="bb-table-h"><h3>Overdue Requests</h3><label class="bb-uline"><span class="ms">search</span><input placeholder="Request code, name, partner" aria-label="Tìm hồ sơ quá hạn"></label></div><div class="bb-empty">No requests in this range</div><div class="bb-table-f"><span>Showing 0 of 0 overdue items</span><button class="bb-viewall">View All →</button></div></div>
+          </div></div>
+        </div><p class="cap">Overdue (desktop) · sidebar mở · dải mức · bảng rỗng. Trên app, sidebar đè lên nội dung; ở đây xếp cạnh cho dễ xem.</p></div>
+        <div class="fr"><div class="desk" data-sig="b0141ec455 5dafefe9db">
+          <div class="bb-rail"><div class="bb-rail-top"><div class="bb-rail-hd"><button class="bb-toggle" aria-label="Mở sidebar"><span class="ms">architecture</span></button></div><nav><button class="bb-rail-i" aria-label="Overdue"><span class="ms">alarm</span></button><button class="bb-rail-i" aria-label="All"><span class="ms">checklist</span></button></nav></div><div class="bb-rail-ft"><span class="bb-initial">A</span></div></div>
+          <div class="bb-viewer"><div class="bb-vbar"><button class="bb-vback" aria-label="Quay lại"><span class="ms">arrow_back</span></button><span class="bb-vname">mau-hop-dong.docx</span><button class="bb-copylink"><span class="ms">link</span>Copy link</button></div><div class="bb-vbody" style="padding:48px"><div class="ph" style="width:100%;height:100%;font-size:14px">ảnh trang tài liệu</div></div></div>
+          <div class="bb-rp" style="height:100%">
+            <div class="bb-tabs"><button class="bb-tab on">Detail</button><button class="bb-tab">AI</button><button class="bb-tab">History</button><span class="sp"></span><button class="bb-av28" aria-label="Hướng dẫn"><span class="ph">ảnh</span></button></div>
+            <div class="bb-pbody" style="overflow:hidden">
+              <div class="bb-dh"><div class="bb-dh-l"><div class="bb-dh-t"><span class="bb-dtype">Duyệt hợp đồng</span><span class="bb-t8 purple">Returned</span></div><h2 class="bb-dcode">AB12-XYZ-00000001</h2></div><div class="bb-dh-r"><p class="bb-damt">0 ₫</p><div class="bb-dst"><span class="bb-st">Waiting sign</span></div></div></div>
+              <div><p class="bb-dtitle">Hợp đồng mẫu với nhà cung cấp</p><p class="bb-dby">Lê Văn C</p></div><div class="bb-hr"></div>
+              <div class="bb-fields"><div><p class="bb-fl">Người lập phiếu</p><p class="bb-fv">Lê Văn C</p></div><div><p class="bb-fl">Ngày tạo</p><p class="bb-fv">—</p></div><div><p class="bb-fl">Phòng ban</p><p class="bb-fv">Phòng ban mẫu A</p></div><div><p class="bb-fl">Dự án</p><p class="bb-fv">Dự án mẫu</p></div><div class="full"><p class="bb-fl">Đối tác / nhà cung cấp</p><p class="bb-fv">CÔNG TY MẪU A</p></div><div><p class="bb-fl">Số hợp đồng</p><p class="bb-fv">0000/HĐ/00/0000</p></div><div><p class="bb-fl">Bước duyệt hiện tại</p><p class="bb-fv">Bước mẫu (esign)</p></div></div>
+              <div><p class="bb-fl">Nhận xét duyệt</p><div class="bb-cmts"><div class="bb-cmt"><span class="bb-t8 ok">Duyệt</span><div><p class="bb-cmt-m">Nguyễn Văn A · TP PB  09:15 01/01/2026</p><p class="bb-cmt-t">Ghi chú mẫu của người duyệt thứ nhất.</p></div></div><div class="bb-cmt"><span class="bb-t8 back">Đã trả về</span><div><p class="bb-cmt-m">Lê Văn C · Ban thư ký  10:02 03/01/2026</p><p class="bb-cmt-t">Trả về theo yêu cầu.</p></div></div></div></div>
+            </div>
+            <div class="bb-dfoot"><div class="bb-dnote"><span class="ms">edit_note</span><input placeholder="Approval note (optional)…" aria-label="Ghi chú duyệt"></div><div class="bb-dsum"><div><p class="bb-fl">Total value</p><p class="bb-dtotal">0 ₫</p></div><div class="bb-dacts"><button class="bb-dbtn rej"><span class="ms">block</span>Reject</button><button class="bb-dbtn"><span class="ms">keyboard_return</span>Return</button><button class="bb-dbtn ok"><span class="ms">check_circle</span>Approve</button></div></div></div>
+          </div>
+        </div><p class="cap">Chi tiết phiếu (desktop) · rail · khung xem · panel tab Detail · footer duyệt</p></div>
+
+        <div class="fr"><div class="phone" style="background:var(--bb-panelBg)">
+          <div class="bb-mbar back"><div class="l"><button class="bb-back" aria-label="Quay lại"><span class="ms">arrow_back</span></button><span class="bb-word">Tên app</span></div><div class="l" style="gap:8px"><button class="bb-back" aria-label="Copy link"><span class="ms">link</span></button><button class="bb-avatar-btn m" aria-label="Hướng dẫn"><span class="ph">ảnh</span></button></div></div>
+          <div class="bb-mmain" style="flex:1;overflow:hidden">
+            <div class="bb-mdh"><span class="bb-dtype">Duyệt hợp đồng</span><h2>AB12-XYZ-00000001</h2><p>Hợp đồng mẫu với nhà cung cấp</p><div class="bb-mchips"><button class="bb-mchip"><span class="ms">smart_toy</span>Phân tích</button><button class="bb-mchip"><span class="ms">picture_as_pdf</span>Xem PDF</button><span class="bb-mchip"><span class="ms">draw</span>Chờ ký số</span></div></div>
+            <div class="bb-mcard"><div class="bb-minfo"><div><label>Người lập phiếu</label><div>Lê Văn C</div></div><div><label>Phòng ban</label><div>Phòng ban mẫu A</div></div><div><label>Đối tác</label><div>CÔNG TY MẪU A</div></div><div><label>Số hợp đồng</label><div>0000/HĐ/00/0000</div></div></div></div>
+            <div class="bb-mcard"><div class="bb-mcard-h"><span class="bb-lbl10">Nhận xét duyệt</span></div><div class="bb-mcmt"><span class="bb-t8 ok">Duyệt</span><div><p class="bb-cmt-m">Nguyễn Văn A · TP PB</p><p class="bb-mcmt-t">Ghi chú mẫu của người duyệt.</p></div></div></div>
+          </div>
+          <div class="bb-mfoot"><div class="bb-mfoot-n"><span class="ms">edit_note</span><input placeholder="Approval note (optional)…" aria-label="Ghi chú duyệt"></div><div class="bb-mfoot-a"><button class="bb-mact rej"><span class="ms">close</span>Reject</button><button class="bb-mact ret"><span class="ms">keyboard_return</span>Return</button><button class="bb-mact ok"><span class="ms">check</span>Approve</button></div><span class="bb-handle"></span></div>
+        </div><p class="cap">Chi tiết phiếu (mobile) · chip hành động · thông tin · nhận xét · footer duyệt</p></div>
+
+        <div class="fr"><div class="phone" style="background:var(--bb-viewerBg)">
+          <div class="bb-pdf" style="flex:1"><div class="bb-pdf-h"><button class="bb-pdf-x" aria-label="Đóng"><span class="ms">close</span></button><span class="bb-pdf-n">mau-hop-dong.docx</span><button class="bb-pdf-f"><span class="ms">folder_open</span>4</button></div>
+            <div class="bb-pdf-b"><div class="ph">ảnh trang 1</div><div class="ph">ảnh trang 2</div></div><span class="bb-fab" aria-hidden="true"><span class="ms">auto_fix_high</span></span></div>
+        </div><p class="cap">Trình xem PDF (mobile) · thanh tối · trang tài liệu (giữ chỗ) · nút nổi</p></div>
+      </div></div>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"><span id="toast-t"></span></div>
+
+<script>
+/* vai trò màu: [tên, chỗ dùng, cặp chữ]. Giá trị đo bằng getComputedStyle trên app thật (đã đăng nhập), 28/09/2026 */
+const ROLES = [
+  ["ink", "chữ chính, h2, nút Next", "surface", "Nền & chữ"], ["brand", "panel hero, pill chọn, dải loại, nav mobile", "surface"], ["rail", "rail / sidebar", "surface"], ["brandMuted", "chữ trên nền navy", "brand"],
+  ["text", "chữ mặc định body", "surface"], ["title", "tiêu đề h4 trong danh sách", "surface"], ["muted", "chữ phụ, pill nghỉ", "surface"], ["subtle", "meta, placeholder, icon tìm", "surface"],
+  ["outline", "viền input / Prev, icon ghi chú", "ink", "Viền & bề mặt"], ["divider", "khung seg, vạch ngăn thẻ", "ink"], ["line", "viền trái thẻ chờ ký", "ink"], ["hair", "metadata, hover, footer bảng", "ink"], ["press", "hover nút đóng", "ink"],
+  ["bg", "nền trang desktop", "ink"], ["bgTint", "nền mobile, ô phòng ban", "ink"], ["note", "ô ghi chú duyệt", "ink"], ["surface", "panel, thẻ", "ink"],
+  ["accent", "teal: mã hồ sơ, Approve, pill Pending", "onAccent", "Nhấn (teal)"], ["onAccent", "chữ trên Approve", "accent"], ["accentBright", "mã loại trên dải navy", "brand"], ["accentInk", "System operational, PENDING", "surface"], ["accentSoft", "chip Đã duyệt", "accentInk"], ["accentDot", "chấm đã duyệt", "ink"],
+  ["error", "loại hồ sơ, quá hạn, từ chối", "surface", "Trạng thái"], ["errorSoft", "tag 3-7 days", "error"], ["errorTint", "chip Trả về", "error"],
+  ["warnInk", "chữ Chờ duyệt, số chờ", "warnBg"], ["warnBg", "chip Chờ duyệt", "warnInk"], ["warnHover", "hover Return", "orange"], ["orange", "chữ Return khi hover", "surface"], ["amber", "chấm chờ duyệt", "surface"], ["okInk", "số đã xong", "surface"],
+  ["neutralBg", "chip Chờ ký số", "neutralInk"], ["neutralInk", "chữ Chờ ký số", "neutralBg"], ["slate200", "viền overdue mobile", "ink"], ["slate100", "viền trống mobile", "ink"],
+  ["panelBg", "nền panel chi tiết, ô nhận xét", "ink", "Chi tiết phiếu"], ["purple", "tag Returned", "surface"], ["accentHover", "hover Approve (chi tiết)", "ink"], ["errorHover", "hover Reject mobile", "surface"], ["warnPress", "hover Return mobile", "orange"], ["okSoft2", "chip Đã duyệt (History)", "accentInk"], ["grey240", "chip Signed reviewer (History)", "muted"], ["accentInk2", "Xem thêm (History)", "surface"], ["prose", "chữ tóm tắt AI", "surface"], ["hairPress", "active thẻ bước duyệt", "ink"], ["viewerBar", "thanh trình xem PDF", "surface"], ["viewerBg", "nền trình xem PDF", "surface"],
+  ["uaFocus", "viền focus mặc định Chrome (không phải của app)", "surface", "Khác"], ["black", "gốc cho scrim /40 và bóng", "surface"]
+];
+const PALETTES = { bonbon: { label: "BonBon", light: ["#001C44", "#16315E", "#0F1E2F", "#829ACD", "#111C2C", "#171C1F", "#44474F", "#747780", "#C4C6D0", "#EAEEF2", "#E4E9ED", "#F0F4F8", "#E0E4E8", "#F6F7F9", "#F6FAFE", "#F8FAFC", "#FFFFFF", "#10CFC9", "#00201F", "#32DCD6", "#006A67", "#E0F8F7", "#89F5E7", "#BA1A1A", "#FFDAD6", "#FDE8E8", "#856404", "#FFF3CD", "#FFFBF0", "#FF8C00", "#D97706", "#155724", "#E2E3E5", "#383D41", "#E2E8F0", "#F1F5F9", "#F7F9FB", "#7B3294", "#0BBFB9", "#A51616", "#FFF5CC", "#E6F4F1", "#F0F0F0", "#00706A", "#374151", "#E8F0F4", "#111618", "#0B0F10", "#005FCC", "#000000"] } };
+(function () {
+  const root = document.documentElement;
+  const state = { pal: "bonbon", mode: "light" };
+  try { const s = JSON.parse(localStorage.getItem("bonbon-kit") || "{}"); if (PALETTES[s.pal]) state.pal = s.pal; } catch (e) {}
+
+  const toast = (t) => {
+    const el = document.getElementById("toast");
+    document.getElementById("toast-t").textContent = t;
+    el.classList.add("show");
+    clearTimeout(toast.t);
+    toast.t = setTimeout(() => el.classList.remove("show"), 1600);
+  };
+  const copy = async (text, msg) => {
+    try { await navigator.clipboard.writeText(text); toast(msg); }
+    catch (e) { toast("Trình duyệt chặn clipboard, hãy copy tay"); }
+  };
+  const val = (name) => PALETTES[state.pal][state.mode][ROLES.findIndex((r) => r[0] === name)];
+
+  function apply() {
+    const vals = PALETTES[state.pal][state.mode];
+    ROLES.forEach((r, i) => root.style.setProperty("--bb-" + r[0], vals[i]));
+    root.dataset.mode = state.mode;
+    document.querySelectorAll("#swatches .sw").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === state.pal));
+    document.querySelectorAll("#mode button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === state.mode));
+    renderRoles();
+    try { localStorage.setItem("bonbon-kit", JSON.stringify(state)); } catch (e) {}
+  }
+
+  const sw = document.getElementById("swatches");
+  Object.entries(PALETTES).forEach(([key, p]) => {
+    const b = document.createElement("button");
+    b.className = "sw"; b.dataset.v = key; b.title = p.label + " (app chỉ có một bảng màu)"; b.setAttribute("aria-label", p.label);
+    b.style.setProperty("--c", p.light[1]);
+    b.onclick = () => { state.pal = key; apply(); };
+    sw.appendChild(b);
+  });
+
+  function renderRoles() {
+    const box = document.getElementById("roles");
+    box.innerHTML = "";
+    let grid;
+    ROLES.forEach(([name, use, fg, group]) => {
+      if (group) { const h = document.createElement("div"); h.className = "rgroup"; h.textContent = group; box.appendChild(h); grid = document.createElement("div"); grid.className = "roles"; box.appendChild(grid); }
+      const hex = val(name);
+      const b = document.createElement("button");
+      b.className = "role"; b.style.background = hex; b.style.color = val(fg);
+      b.innerHTML = "<b>" + name + "</b><i>" + use + "</i><code>" + hex + "</code>";
+      b.onclick = () => copy(hex, "Đã copy " + name + " " + hex);
+      grid.appendChild(b);
+    });
+  }
+
+  /* bo góc: 5 mức app dùng */
+  const sh = document.getElementById("shapes");
+  [["0", 0, "panel, ô, Prev/Next"], ["rounded · 4", 4, "chip, rail item, notes"], ["rounded-lg · 8", 8, "khung ghi chú"], ["rounded-xl · 12", 12, "thẻ hồ sơ, dialog, avatar"], ["full", 9999, "pill, badge, back, chấm"]].forEach(([n, r, use]) => {
+    const c = document.createElement("div");
+    c.className = "shape-cell";
+    c.innerHTML = '<i style="border-radius:calc(' + r + 'px * var(--k))"></i>' + n + "<br>" + use;
+    sh.appendChild(c);
+  });
+
+  /* mỗi thẻ thành phần có nút copy HTML của phần trình diễn */
+  document.querySelectorAll(".spec").forEach((spec) => {
+    const stage = spec.querySelector(".stage");
+    if (!stage || !spec.querySelector(".spec-h")) return;
+    let foot = spec.querySelector(".spec-f");
+    if (!foot) { foot = document.createElement("div"); foot.className = "spec-f"; foot.innerHTML = '<span class="note"></span>'; spec.appendChild(foot); }
+    const b = document.createElement("button");
+    b.className = "copy"; b.innerHTML = '<span class="ms">content_copy</span>HTML';
+    b.onclick = () => copy(stage.innerHTML.trim().replace(/\n\s+/g, "\n"), "Đã copy HTML của " + spec.querySelector(".spec-h b").textContent);
+    foot.appendChild(b);
+  });
+
+  document.getElementById("copy-tokens").onclick = () => {
+    const vals = PALETTES[state.pal][state.mode];
+    const lines = ROLES.map((r, i) => "  --bb-" + r[0] + ": " + vals[i] + ";");
+    const cs = getComputedStyle(root);
+    const extra = ["--k", "--bb-font", "--bb-sh-card", "--bb-sh-open", "--bb-sh-panel", "--bb-sh-sm", "--bb-sh-dialog"].map((v) => "  " + v + ": " + cs.getPropertyValue(v).trim() + ";");
+    copy(":root {\n" + lines.join("\n") + "\n" + extra.join("\n") + "\n}", "Đã copy token " + PALETTES[state.pal].label);
+  };
+
+  /* làm nổi mục đang xem trong mục lục */
+  const links = [...document.querySelectorAll(".side a")];
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (e.isIntersecting) links.forEach((a) => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id));
+  }), { rootMargin: "-30% 0px -60% 0px" });
+  document.querySelectorAll("section.block").forEach((s) => io.observe(s));
+
+  apply();
+})();
+</script>
+</body>
+</html>

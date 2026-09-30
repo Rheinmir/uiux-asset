@@ -1,0 +1,1153 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta name="ui-kit-id" content="drafted-ai">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Drafted UI Kit</title>
+<meta name="ui-kit-skip" content="cca73b90ae:ảnh/logo của site hoặc bên thứ ba, không nhúng (RULE-09);08dabc2756:ảnh/logo của site hoặc bên thứ ba, không nhúng (RULE-09);403a646bf7:ảnh/logo của site hoặc bên thứ ba, không nhúng (RULE-09);62b89bbdd6:ảnh/logo của site hoặc bên thứ ba, không nhúng (RULE-09);e086467754:ảnh/logo của site hoặc bên thứ ba, không nhúng (RULE-09);36768b1dff:ảnh/logo của site hoặc bên thứ ba, không nhúng (RULE-09);4cd6953376:ảnh/logo của site hoặc bên thứ ba, không nhúng (RULE-09);5e56f2018f:ảnh/logo của site hoặc bên thứ ba, không nhúng (RULE-09);b573f62e91:ảnh/logo của site hoặc bên thứ ba, không nhúng (RULE-09);813d3490ad:ảnh/logo của site hoặc bên thứ ba, không nhúng (RULE-09);4063208987:ảnh/logo của site hoặc bên thứ ba, không nhúng (RULE-09);ae088a7400:ảnh/logo của site hoặc bên thứ ba, không nhúng (RULE-09);d5ce46fc7d:ảnh/logo của site hoặc bên thứ ba, không nhúng (RULE-09);28bfc949d0:ảnh/logo của site hoặc bên thứ ba, không nhúng (RULE-09);ba39925827:ảnh/logo của site hoặc bên thứ ba, không nhúng (RULE-09);baef2822ef:ảnh/logo của site hoặc bên thứ ba, không nhúng (RULE-09);632cf8a9b8:khung bố cục cả trang bài viết, không phải component;184e15174b:khung bố cục cả trang danh sách;5f3eab365d:thẻ chỉ chứa ảnh minh hoạ (RULE-09);53964f2c57:thẻ chỉ chứa ảnh V2 (RULE-09);b0bbae75a9:embed tweet của X (bên thứ ba);19615970f3:embed bài báo Business Insider (bên thứ ba)">
+<!-- Sinh bởi skill ui-kit-from-code (28/09/2026) từ https://www.drafted.ai/ + /auth + /learn.
+     Token lấy bằng Playwright: CSS vars ở :root / .dark (Tailwind v4 + shadcn) và getComputedStyle
+     của phần tử thật; màu lab() đổi sang hex (D50 → sRGB). Ảnh minh hoạ và logo báo chí của site
+     không nhúng, thay bằng khối giữ chỗ. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* token của Drafted: lớp ngữ nghĩa shadcn (--df-background…--df-ring, có bản .dark trên site)
+   + lớp thương hiệu (paper/ink/stone) lấy từ class Tailwind mà trang thật dùng.
+   --k nhân --df-radius-base (site: --radius .625rem = 10px) để xem thử thang bo góc. */
+:root {
+  --df-background:#FFFFFF; --df-foreground:#0A0A0A; --df-card:#FFFFFF; --df-cardForeground:#0A0A0A;
+  --df-primary:#171717; --df-primaryForeground:#FAFAFA; --df-secondary:#F5F5F5; --df-secondaryForeground:#171717;
+  --df-muted:#F5F5F5; --df-mutedForeground:#737373; --df-accent:#F5F5F5; --df-accentForeground:#171717;
+  --df-destructive:#E7000B; --df-border:#A4A4A4; --df-input:#A4A4A4; --df-ring:#A1A1A1;
+  --df-paper:#FAF8F2; --df-ink:#1C1917; --df-inkDeep:#0C0A09; --df-inkStrong:#292524; --df-inkSoft:#44403B;
+  --df-inkBody:#57534D; --df-inkMuted:#79716B; --df-line:#D6D3D1; --df-lineSoft:#E7E5E4; --df-lineStrong:#A6A09B; --df-cardLine:#A9A9A9;
+  --df-onInk:#FAF8F2; --df-link:#155DFC; --df-sand:#ECE2CC; --df-warn:#B36B5A; --df-good:#4F9469;
+  --k: 1;
+  --df-radius-base: 10px;
+  --r-sm: calc((var(--df-radius-base) - 4px) * var(--k));
+  --r-md: calc((var(--df-radius-base) - 2px) * var(--k));
+  --r-lg: calc(var(--df-radius-base) * var(--k));
+  --r-xl: calc((var(--df-radius-base) + 4px) * var(--k));
+  --serif: "DM Serif Display", Georgia, "Times New Roman", serif;
+  --sans: Inter, ui-sans-serif, system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --ease: cubic-bezier(.4, 0, .2, 1);
+  --ease-out: cubic-bezier(0, 0, .2, 1);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.1), 0 1px 2px -1px rgba(0,0,0,.1);
+  --shadow-xs: 0 1px 2px rgba(0,0,0,.05);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,.1), 0 4px 6px -4px rgba(0,0,0,.1);
+  --shadow-card: 0 14px 36px rgba(28,25,23,.13);
+  color-scheme: light;
+}
+:root[data-mode="dark"] { color-scheme: dark; }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--df-paper); color: var(--df-ink); font: 400 14px/20px var(--sans); -webkit-font-smoothing: antialiased; }
+code { font-family: var(--mono); font-size: 12px; }
+svg.i { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+:focus-visible { outline: 2px solid var(--df-ink); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+/* ---------- vỏ trang ---------- */
+.shell { display: grid; grid-template-columns: 232px minmax(0, 1fr); min-height: 100vh; }
+.side { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 20px 12px; border-right: 1px solid var(--df-line); display: flex; flex-direction: column; gap: 2px; }
+.brand { padding: 4px 12px 16px; }
+.brand b { font: 400 26px/1 var(--serif); display: block; }
+.brand small { color: var(--df-inkMuted); font-size: 12px; }
+.side h6 { margin: 14px 12px 6px; font-size: 10.4px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--df-inkMuted); }
+.side a { display: flex; align-items: center; gap: 10px; height: 36px; padding: 0 12px; border-radius: var(--r-md); color: var(--df-inkBody); text-decoration: none; font-weight: 500; }
+.side a:hover { background: color-mix(in srgb, var(--df-ink) 6%, transparent); }
+.side a.on { background: var(--df-ink); color: var(--df-onInk); }
+main { padding: 0 32px 96px; min-width: 0; }
+
+.bar { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; padding: 12px 0; background: var(--df-paper); border-bottom: 1px solid var(--df-line); }
+.bar .grow { flex: 1; }
+.ctl { display: flex; align-items: center; gap: 8px; }
+.ctl > span { font-size: 12px; font-weight: 500; color: var(--df-inkMuted); }
+.pal-note { font-size: 12px; color: var(--df-inkBody); display: inline-flex; align-items: center; gap: 8px; }
+.pal-note i { width: 18px; height: 18px; border-radius: 50%; background: var(--df-ink); box-shadow: 0 0 0 3px var(--df-paper), 0 0 0 4px var(--df-lineStrong); }
+.seg { display: inline-flex; border: 2px solid var(--df-border); border-radius: var(--r-lg); overflow: hidden; background: var(--df-background); }
+.seg button { height: 28px; padding: 0 12px; border: none; background: transparent; color: var(--df-inkSoft); font: 600 12px var(--sans); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.seg button + button { border-left: 1px solid var(--df-line); }
+.seg button[aria-pressed="true"] { background: var(--df-ink); color: var(--df-onInk); }
+.copy { height: 32px; padding: 0 12px; border-radius: var(--r-lg); border: none; background: transparent; color: var(--df-inkSoft); font: 600 12px var(--sans); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.copy:hover { background: color-mix(in srgb, var(--df-ink) 7%, transparent); }
+
+.intro { padding: 48px 0 8px; max-width: 780px; }
+.intro .eyebrow { font-size: 10.4px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--df-inkMuted); }
+.intro h1 { font: 400 60px/1.1 var(--serif); margin: 12px 0 14px; text-wrap: balance; color: var(--df-inkDeep); }
+.intro p { font-size: 16px; line-height: 28px; color: var(--df-inkBody); margin: 0; max-width: 64ch; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.fact { font-family: var(--mono); font-size: 11.5px; padding: 4px 10px; border-radius: var(--r-md); border: 1px solid var(--df-line); background: var(--df-background); color: var(--df-inkBody); }
+
+section.block { padding-top: 56px; scroll-margin-top: 64px; }
+section.block > header { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+section.block h2 { font: 400 36px/45px var(--serif); margin: 0; color: var(--df-inkDeep); }
+section.block > header p { margin: 0; color: var(--df-inkBody); max-width: 72ch; font-size: 14px; line-height: 24px; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+.grid.wide { grid-template-columns: repeat(auto-fill, minmax(460px, 1fr)); }
+.spec { background: var(--df-background); border: 2px solid var(--df-line); border-radius: var(--r-lg); display: flex; flex-direction: column; min-width: 0; }
+.spec.full { grid-column: 1 / -1; }
+.spec-h { display: flex; align-items: center; gap: 8px; padding: 14px 16px 0; flex-wrap: wrap; }
+.spec-h b { font-size: 15px; font-weight: 600; }
+.kind { font-family: var(--mono); font-size: 11px; padding: 2px 8px; border-radius: var(--r-sm); background: var(--df-secondary); color: var(--df-inkSoft); border: 1px solid var(--df-line); }
+.spec-h .dp { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--df-inkMuted); font-variant-numeric: tabular-nums; }
+.stage { padding: 22px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; min-height: 96px; overflow-x: auto; }
+.stage.col { flex-direction: column; align-items: stretch; }
+.stage.center { justify-content: center; }
+.stage.paper { background: var(--df-paper); margin: 12px 12px 0; border-radius: var(--r-md); }
+.stage.dim { background: color-mix(in srgb, var(--df-inkMuted) 70%, var(--df-paper)); margin: 12px 12px 0; border-radius: var(--r-md); }
+.spec-f { display: flex; align-items: center; gap: 8px; padding: 8px 12px 12px 16px; margin-top: auto; }
+.spec-f .note { font-size: 12px; line-height: 18px; color: var(--df-inkMuted); flex: 1; }
+
+.roles { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; }
+.roles-h { font-size: 10.4px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--df-inkMuted); margin: 20px 0 8px; }
+.role { border-radius: var(--r-md); padding: 12px; min-height: 76px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--df-ink) 12%, transparent); cursor: pointer; border: none; text-align: left; font: inherit; }
+.role b { font-size: 13px; font-weight: 600; }
+.role code { font-size: 11px; opacity: .85; }
+.type-row { display: grid; grid-template-columns: 170px minmax(0, 1fr) 150px; gap: 16px; align-items: baseline; padding: 12px 0; border-bottom: 1px solid var(--df-line); }
+.type-row:last-child { border-bottom: none; }
+.type-row .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--df-inkDeep); }
+.type-row .meta { font-family: var(--mono); font-size: 11px; color: var(--df-inkMuted); font-variant-numeric: tabular-nums; }
+.shape-cell { display: flex; flex-direction: column; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px; color: var(--df-inkMuted); }
+.shape-cell i { display: block; width: 64px; height: 64px; background: var(--df-ink); }
+table.tok { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+table.tok th, table.tok td { text-align: left; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--df-line); font-size: 13px; }
+table.tok th { font-weight: 600; color: var(--df-inkMuted); font-size: 12px; }
+table.tok td:first-child { font-family: var(--mono); font-size: 12px; }
+
+/* ================= component .df-* (chỉ dựa vào --df-* và --r-*) ================= */
+.df-wordmark { font: 400 22px/1 var(--serif); color: var(--df-inkDeep); letter-spacing: -.01em; }
+
+.df-cta { height: 56px; padding: 0 36px; gap: 8px; border-radius: var(--r-md); background: var(--df-ink); color: var(--df-onInk); font: 600 16px/24px var(--sans); letter-spacing: .4px; border: none;
+  display: inline-flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); cursor: pointer; position: relative; overflow: hidden; text-decoration: none;
+  transition: background-color .3s var(--ease-out), transform .3s var(--ease-out); }
+.df-cta svg.i { width: 18px; height: 18px; }
+.df-cta:hover, .df-cta:focus-visible { transform: scale(1.05); background: var(--df-inkStrong); }
+.df-cta::after { content: ""; position: absolute; inset: 0 auto 0 -100%; width: 100%; background: linear-gradient(120deg, transparent 15%, rgba(255,255,255,.32) 50%, transparent 85%); }
+.df-cta:hover::after { animation: shine .9s var(--ease-out); }
+@keyframes shine { to { left: 100%; } }
+.df-cta.md { height: 49px; padding: 0 32px; font-size: 15px; line-height: 22.5px; letter-spacing: .375px; gap: 6px; }
+.df-cta.sm { height: 32px; padding: 0 16px; font-size: 12px; line-height: 16px; letter-spacing: .3px; gap: 6px; }
+.df-cta.sm svg.i { width: 14px; height: 14px; }
+
+.df-nav-btn { height: 32px; padding: 0 12px; gap: 6px; border-radius: var(--r-lg); font: 700 12px/16px var(--sans); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; text-decoration: none; border: none; }
+.df-nav-btn.solid { background: var(--df-ink); color: var(--df-onInk); }
+.df-nav-btn.outline { background: var(--df-background); color: var(--df-inkSoft); border: 2px solid var(--df-border); font-weight: 600; }
+.df-nav-btn.outline-ink { background: var(--df-background); color: var(--df-ink); border: 2px solid var(--df-ink); }
+.df-nav-btn.ghost { background: transparent; color: var(--df-inkBody); padding: 0 4px; font-weight: 600; }
+.df-nav-btn.icon { width: 32px; padding: 0; }
+
+.df-btn { height: 44px; padding: 8px 16px; gap: 8px; border-radius: var(--r-md); font: 500 14px/20px var(--sans); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; border: none; }
+.df-btn.primary { background: var(--df-primary); color: var(--df-primaryForeground); }
+.df-btn.outline { background: var(--df-background); color: var(--df-foreground); border: 2px solid var(--df-border); }
+.df-btn.secondary { background: var(--df-secondary); color: var(--df-secondaryForeground); }
+.df-btn[disabled] { opacity: .5; cursor: not-allowed; }
+.df-btn.block { width: 100%; }
+.df-g { width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; font: 700 11px/1 var(--sans); color: var(--df-background); background: conic-gradient(#EA4335 0 25%, #FBBC05 0 50%, #34A853 0 75%, #4285F4 0); }
+.df-link { background: none; border: none; padding: 0; color: var(--df-link); font: 400 14px/20px var(--sans); cursor: pointer; }
+.df-link:hover { text-decoration: underline; }
+.df-close { width: 18px; height: 18px; border: 1px solid var(--df-inkBody); border-radius: 2px; background: transparent; color: var(--df-foreground); display: grid; place-items: center; cursor: pointer; padding: 0; }
+.df-close svg.i { width: 14px; height: 14px; }
+
+.df-header { width: 100%; height: 48px; padding: 8px 12px; display: flex; align-items: center; gap: 12px; }
+.df-header .nav { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+.df-header.bordered { height: 55px; border-bottom: 1px solid var(--df-line); background: var(--df-paper); }
+.df-header .studio { display: inline-flex; align-items: center; gap: 6px; font: 400 16px var(--serif); color: var(--df-inkBody); }
+.df-press { display: flex; gap: 28px; align-items: center; justify-content: center; flex-wrap: wrap; }
+.df-press span { font: 800 18px/1 var(--sans); letter-spacing: -.02em; color: var(--df-inkBody); opacity: .85; padding: 6px 10px; border: 1px dashed var(--df-lineStrong); border-radius: var(--r-sm); }
+
+.df-house { width: 238px; border-radius: var(--r-lg); border: 1px solid color-mix(in srgb, var(--df-line) 80%, transparent); background: var(--df-paper); box-shadow: var(--shadow-card); overflow: hidden; text-align: center; display: flex; flex-direction: column; }
+.df-house .top { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 13px 20px 15px; }
+.df-house .title { font: 400 16px/1 var(--serif); color: var(--df-inkStrong); margin: 0; }
+.df-meta { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; line-height: 1.25; color: var(--df-inkMuted); }
+.df-avatar { width: 20px; height: 20px; border-radius: 999px; background: var(--df-line); color: var(--df-background); display: grid; place-items: center; font: 600 9px/1 var(--sans); text-transform: uppercase; }
+.df-rule { display: flex; align-items: center; gap: 8px; padding: 0 12px; }
+.df-rule::before, .df-rule::after { content: ""; flex: 1; height: 2px; background: var(--df-line); }
+.df-rule i { width: 8px; height: 8px; transform: rotate(45deg); background: var(--df-lineStrong); }
+.df-art { margin: 12px 12px 12px; aspect-ratio: 600 / 334; border-radius: var(--r-sm); background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--df-line) 55%, transparent) 0 6px, transparent 6px 14px), color-mix(in srgb, var(--df-line) 35%, var(--df-paper)); display: grid; place-items: center; font: 500 10px var(--mono); color: var(--df-inkMuted); }
+
+.df-choice { width: 340px; max-width: 100%; border-radius: var(--r-lg); border: 2px solid var(--df-cardLine); background: var(--df-background); padding: 16px 20px; text-decoration: none; color: var(--df-ink); display: block; transition: border-color .15s var(--ease); cursor: pointer; }
+.df-choice:hover { border-color: var(--df-inkMuted); }
+.df-choice h3 { margin: 0; display: flex; align-items: center; gap: 8px; font: 600 16px/24px var(--sans); color: var(--df-ink); }
+.df-choice p { margin: 12px 0 0; font-size: 14px; line-height: 20px; color: var(--df-inkBody); }
+.df-feature { border-radius: var(--r-lg); border: 2px solid var(--df-cardLine); background: var(--df-background); padding: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; width: 100%; }
+.df-feature.dashed { border-style: dashed; border-color: var(--df-line); background: transparent; padding: 20px; }
+.df-eyebrow { font: 600 10.4px/15.6px var(--sans); letter-spacing: .16em; text-transform: uppercase; color: var(--df-inkMuted); }
+.df-feature h2 { margin: 12px 0 0; font: 400 36px/45px var(--serif); color: var(--df-ink); }
+.df-feature p { margin: 16px 0 0; font-size: 16px; line-height: 28px; color: var(--df-inkBody); }
+.df-feature .panel { border-radius: var(--r-lg); border: 1px solid var(--df-line); background: var(--df-paper); padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.df-feature .panel .pair { display: flex; align-items: center; gap: 12px; }
+.df-feature .panel .pair div { flex: 1; aspect-ratio: 4 / 3; border-radius: var(--r-sm); border: 1px solid var(--df-line); background: var(--df-background); }
+.df-round { width: 26px; height: 26px; border-radius: 999px; border: 1px solid var(--df-line); background: var(--df-background); display: grid; place-items: center; color: var(--df-inkBody); }
+
+.df-dialog { width: 448px; max-width: 100%; border-radius: var(--r-xl); border: 1px solid var(--df-border); background: var(--df-paper); color: var(--df-foreground); box-shadow: var(--shadow-lg); padding: 24px; position: relative; display: flex; flex-direction: column; gap: 16px; }
+.df-dialog .df-close { position: absolute; top: 16px; right: 16px; }
+.df-dialog h2 { margin: 0; text-align: center; font: 600 18px/1 var(--sans); padding: 0 24px; }
+.df-dialog .sub { text-align: center; font-size: 12px; line-height: 16px; color: var(--df-inkMuted); }
+.df-dialog .foot { text-align: center; font-size: 14px; line-height: 20px; }
+.df-dialog .fan { height: 96px; border-radius: var(--r-md); background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--df-line) 55%, transparent) 0 6px, transparent 6px 14px); display: grid; place-items: center; font: 500 10px var(--mono); color: var(--df-inkMuted); }
+
+.df-field { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.df-label { font: 500 14px/14px var(--sans); color: var(--df-foreground); display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.df-label small { font: 400 12px/16px var(--sans); color: var(--df-mutedForeground); }
+.df-input { height: 36px; padding: 4px 12px; border-radius: var(--r-md); border: 1px solid var(--df-input); background: transparent; color: var(--df-foreground); font: 400 14px/20px var(--sans); box-shadow: var(--shadow-xs); width: 100%; outline: none; transition: box-shadow .15s var(--ease), border-color .15s var(--ease); }
+.df-input::placeholder { color: var(--df-mutedForeground); }
+.df-input:focus-visible { border-color: var(--df-ring); box-shadow: 0 0 0 3px color-mix(in srgb, var(--df-ring) 50%, transparent); }
+.df-input[aria-invalid="true"] { border-color: var(--df-destructive); box-shadow: 0 0 0 3px color-mix(in srgb, var(--df-destructive) 20%, transparent); }
+.df-select { height: 36px; padding: 8px 12px; border-radius: var(--r-md); border: 1px solid var(--df-input); background: transparent; color: var(--df-mutedForeground); font: 400 14px/20px var(--sans); box-shadow: var(--shadow-xs); display: inline-flex; align-items: center; gap: 8px; cursor: pointer; width: fit-content; }
+.df-select svg.i { opacity: .5; }
+.df-menu { width: 240px; border-radius: var(--r-md); border: 1px solid var(--df-border); background: var(--df-background); box-shadow: var(--shadow-lg); padding: 4px; }
+.df-menu div { height: 32px; padding: 0 8px; border-radius: var(--r-sm); display: flex; align-items: center; justify-content: space-between; font-size: 14px; color: var(--df-foreground); }
+.df-menu div.on { background: var(--df-accent); color: var(--df-accentForeground); }
+.df-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.df-or { display: flex; align-items: center; gap: 8px; }
+.df-or::before, .df-or::after { content: ""; flex: 1; height: 1px; background: var(--df-border); }
+.df-or span { font: 400 12px/16px var(--sans); text-transform: uppercase; color: var(--df-mutedForeground); padding: 0 8px; }
+.df-hint { font: 400 12px/16px var(--sans); color: var(--df-inkMuted); }
+.df-error { font: 400 12px/16px var(--sans); color: var(--df-destructive); }
+
+/* ---- bổ sung từ vòng khám phá (/learn/*, /onboarding) ---- */
+.df-crumb { display: flex; align-items: center; gap: 8px; font: 400 14px/24px var(--sans); color: var(--df-inkStrong); }
+.df-crumb a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+.df-crumb span[aria-hidden] { color: var(--df-lineStrong); }
+.df-back { height: 32px; padding: 0 4px; gap: 6px; border: none; background: transparent; border-radius: var(--r-md); color: var(--df-inkBody); font: 600 14px var(--sans); display: inline-flex; align-items: center; cursor: pointer; }
+.df-back:hover { color: var(--df-ink); }
+.df-nav-btn.plain { background: var(--df-background); color: var(--df-inkDeep); border: 1px solid var(--df-line); border-radius: var(--r-md); padding: 0 16px; }
+.df-pill-link { height: 46px; padding: 12px 16px; gap: 12px; border-radius: var(--r-lg); border: 1px solid color-mix(in srgb, var(--df-lineSoft) 80%, transparent); background: transparent; color: var(--df-ink); font: 600 14px var(--sans); display: inline-flex; align-items: center; justify-content: space-between; text-decoration: none; transition: border-color .15s var(--ease); }
+.df-pill-link.paper { background: var(--df-paper); border-color: var(--df-lineSoft); border-radius: var(--r-md); }
+.df-pill-link:hover { border-color: var(--df-lineStrong); }
+.df-pill-link.big { height: 62px; padding: 0 24px; font-size: 18px; border: 1px solid var(--df-lineSoft); background: var(--df-background); border-radius: var(--r-lg); min-width: 260px; }
+.df-under-link { display: inline-flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--df-cardLine); padding-bottom: 8px; font: 600 14px/20px var(--sans); color: var(--df-inkStrong); text-decoration: none; min-width: 200px; }
+.df-under-link svg.i { color: var(--df-inkMuted); width: 14px; height: 14px; }
+.df-title-link { display: inline; border-bottom: 1px solid var(--df-ink); padding-bottom: 2px; font: 600 16px var(--sans); color: var(--df-ink); text-decoration: none; }
+.df-title-link:hover { color: var(--df-inkBody); }
+.df-inline-link { font-weight: 600; color: var(--df-ink); text-decoration: underline; text-underline-offset: 3px; }
+.df-round.shadow { box-shadow: var(--shadow-xs); color: var(--df-lineStrong); }
+
+.df-sticky { width: 100%; height: 56px; padding: 0 12px; display: flex; align-items: center; gap: 12px; border-bottom: 2px solid var(--df-line); background: color-mix(in srgb, var(--df-paper) 95%, transparent); backdrop-filter: blur(8px); position: relative; }
+.df-sticky .center { position: absolute; left: 50%; transform: translateX(-50%); }
+.df-sticky .nav { margin-left: auto; display: flex; gap: 12px; align-items: center; }
+.df-onboard-bar { width: 100%; max-width: 1152px; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 24px; padding: 12px 16px; }
+.df-progress { height: 6px; border-radius: 999px; background: var(--df-lineSoft); overflow: hidden; }
+.df-progress i { display: block; height: 100%; width: 25%; background: var(--df-ink); border-radius: inherit; }
+.df-toc { width: 224px; border-radius: var(--r-lg); border: 1px solid color-mix(in srgb, var(--df-lineSoft) 80%, transparent); padding: 16px 12px; font: 400 14px/20px var(--sans); display: flex; flex-direction: column; gap: 10px; }
+.df-toc b { font-weight: 600; }
+.df-toc a { color: var(--df-inkBody); text-decoration: none; }
+.df-toc a.on { color: var(--df-ink); font-weight: 600; }
+.df-toc .row { display: flex; align-items: center; justify-content: space-between; }
+.df-toc .sub { border-left: 2px solid var(--df-line); padding-left: 10px; display: flex; flex-direction: column; gap: 8px; font-size: 13px; }
+.df-disclose { width: 22px; height: 22px; padding: 4px; border: none; border-radius: var(--r-md); background: transparent; color: var(--df-inkMuted); display: grid; place-items: center; cursor: pointer; transition: transform .2s var(--ease); }
+.df-disclose[aria-expanded="true"] { transform: rotate(180deg); }
+.df-disclose:hover { color: var(--df-ink); }
+.df-folder { display: flex; align-items: flex-end; border-bottom: 2px solid var(--df-lineStrong); width: 100%; overflow-x: auto; padding-left: 8px; }
+.df-folder a { position: relative; height: 40px; min-width: 128px; padding: 4px 32px 0; margin-bottom: -2px; display: flex; align-items: center; justify-content: center; font: 600 14px var(--sans); color: var(--df-lineStrong); text-decoration: none; text-transform: capitalize; flex: none; }
+.df-folder a + a { margin-left: -36px; }
+.df-folder a svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.df-folder a svg path { fill: color-mix(in srgb, var(--df-lineSoft) 55%, var(--df-paper)); stroke: var(--df-lineStrong); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.df-folder a span { position: relative; transform: translateY(2px); }
+.df-folder a:hover { color: var(--df-inkBody); }
+.df-folder a.on { color: var(--df-inkDeep); z-index: 3; }
+.df-folder a.on svg path { fill: var(--df-paper); stroke: var(--df-inkBody); }
+.df-folder a.lead { text-transform: none; }
+
+.df-section { border-radius: var(--r-lg); border: 2px dashed var(--df-line); padding: 24px; width: 100%; }
+.df-section:hover { border-color: var(--df-lineStrong); }
+.df-section h2 { margin: 0; font: 400 30px/37.5px var(--serif); color: var(--df-ink); }
+.df-section > p { margin: 8px 0 0; font-size: 14px; line-height: 24px; color: var(--df-inkBody); max-width: 64ch; }
+.df-section .head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.df-section .head svg.i { width: 28px; height: 28px; color: var(--df-ink); }
+.df-feat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px; margin-top: 20px; }
+.df-feat { border-radius: var(--r-lg); border: 1px solid var(--df-lineSoft); background: var(--df-background); padding: 16px; }
+.df-feat h3 { margin: 0; font: 600 16px/24px var(--sans); color: var(--df-ink); }
+.df-feat p { margin: 4px 0 0; font-size: 14px; line-height: 20px; color: var(--df-inkBody); }
+.df-rows { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; }
+.df-row-link { border-radius: var(--r-lg); border: 1px solid color-mix(in srgb, var(--df-lineSoft) 80%, transparent); background: var(--df-background); padding: 16px; display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--df-ink); transition: border-color .15s var(--ease); }
+.df-row-link:hover { border-color: var(--df-lineStrong); }
+.df-row-link .t { flex: 1; min-width: 0; }
+.df-row-link b { display: block; font: 600 16px/24px var(--sans); }
+.df-row-link small { display: block; font-size: 14px; line-height: 20px; color: var(--df-inkBody); }
+.df-row-link > svg.i { color: var(--df-inkMuted); }
+.df-row-link.paper { background: var(--df-paper); border: 2px solid var(--df-lineSoft); }
+.df-row-link.compact { padding: 12px 16px; }
+.df-row-link.compact b { font-size: 14px; line-height: 20px; }
+
+.df-flow { border-radius: var(--r-lg); border: 1px solid var(--df-line); background: var(--df-paper); padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.df-flow .steps { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; align-items: center; gap: 8px; }
+.df-step { min-height: 96px; border-radius: var(--r-md); border: 1px solid var(--df-lineSoft); background: var(--df-background); padding: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-align: center; }
+.df-step svg.i { color: var(--df-inkBody); }
+.df-step b { font: 600 14px/20px var(--sans); color: var(--df-ink); }
+.df-step small { font-size: 12px; color: var(--df-inkMuted); }
+.df-step.on { border-color: var(--df-inkMuted); box-shadow: 0 0 0 1px var(--df-inkMuted); }
+.df-flow .arrow { color: var(--df-lineStrong); }
+.df-flow .note { border-radius: var(--r-md); border: 1px solid var(--df-lineSoft); background: var(--df-background); height: 32px; display: flex; align-items: center; justify-content: center; gap: 8px; font: 500 12px var(--sans); color: var(--df-inkSoft); }
+.df-compare { border-radius: var(--r-lg); border: 1px solid var(--df-lineSoft); background: var(--df-paper); padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+.df-compare .pair { display: grid; grid-template-columns: 1fr auto 1fr; gap: 12px; align-items: center; }
+.df-compare .pair > div:not(.df-round) { aspect-ratio: 4 / 3; border-radius: var(--r-md); border: 1px solid var(--df-lineSoft); background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--df-line) 45%, transparent) 0 6px, transparent 6px 14px), var(--df-background); display: grid; place-items: center; font: 500 10px var(--mono); color: var(--df-inkMuted); }
+.df-dark-panel { max-width: 384px; border-radius: var(--r-lg); border: 2px solid var(--df-lineSoft); background: #0C0A09; padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+.df-dark-panel .top { display: flex; justify-content: space-between; align-items: center; }
+.df-dark-panel .top span { font: 600 10.4px var(--sans); letter-spacing: .16em; text-transform: uppercase; color: #E7E5E4; }
+.df-dark-panel .top em { font: 600 10.4px var(--sans); letter-spacing: .12em; font-style: normal; color: #E7E5E4; border: 1px solid #57534D; border-radius: 999px; padding: 3px 10px; }
+.df-dark-panel .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.df-dark-panel .pair div { aspect-ratio: 4 / 3; border-radius: var(--r-md); border: 1px solid #292524; background: #1C1917; display: grid; place-items: center; font: 500 10px var(--mono); color: #79716B; }
+.df-outcome { border-radius: var(--r-lg); border: 2px solid var(--df-cardLine); background: var(--df-background); padding: 20px; display: flex; flex-direction: column; gap: 14px; max-width: 569px; }
+.df-outcome h3 { margin: 0; font: 600 16px/24px var(--sans); color: var(--df-ink); }
+.df-tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.df-tile { min-height: 96px; border-radius: var(--r-md); border: 1px solid var(--df-line); background: var(--df-paper); padding: 16px 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center; font: 500 13px var(--sans); color: var(--df-inkStrong); }
+.df-option-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; width: 100%; max-width: 760px; }
+.df-option { min-height: 52px; border-radius: var(--r-lg); border: 2px solid var(--df-line); background: var(--df-background); padding: 0 20px; display: flex; align-items: center; gap: 12px; font: 400 16px var(--sans); color: var(--df-inkStrong); cursor: pointer; transition: border-color .15s var(--ease); }
+.df-option:hover { border-color: var(--df-inkMuted); }
+.df-option[aria-pressed="true"] { border-color: var(--df-ink); }
+.df-option svg.i { color: var(--df-inkBody); }
+.df-related { width: 288px; border-radius: var(--r-lg); border: 1px solid var(--df-lineSoft); background: var(--df-background); padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+.df-related .df-eyebrow { font-size: 12px; }
+.df-band { width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, .65fr); gap: 24px; align-items: center; padding: 56px 16px; border-top: 2px solid var(--df-cardLine); border-bottom: 2px solid var(--df-cardLine); }
+.df-band h2 { margin: 0; font: 400 36px/40px var(--serif); color: var(--df-ink); }
+.df-band p { margin: 8px 0 0; font-size: 14px; color: var(--df-inkBody); }
+.df-band .df-cta { width: 100%; max-width: 200px; justify-self: end; padding: 0 24px; }
+.df-linkgrid { display: grid; grid-template-columns: 220px 1fr; gap: 24px; width: 100%; }
+.df-linkgrid h2 { margin: 0; font: 400 24px/32px var(--serif); color: var(--df-ink); }
+.df-linkgrid nav { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px 32px; }
+.df-foot { width: 100%; display: flex; justify-content: space-between; font-size: 12px; color: var(--df-inkMuted); padding-top: 16px; }
+.df-foot nav { display: flex; gap: 16px; }
+.df-foot a { color: inherit; text-decoration: none; }
+.df-table-wrap { width: 100%; overflow-x: auto; }
+.df-table { width: 100%; min-width: 560px; border-collapse: collapse; text-align: left; font: 400 14px/20px var(--sans); color: var(--df-inkSoft); }
+.df-table th { font-weight: 600; font-size: 13px; color: var(--df-ink); padding: 10px 12px; border-bottom: 1px solid var(--df-line); }
+.df-table td { padding: 12px; border-bottom: 1px solid var(--df-lineSoft); vertical-align: top; }
+.df-table td:first-child { font-weight: 600; color: var(--df-ink); width: 140px; }
+.df-bullets { margin: 0; padding-left: 40px; display: flex; flex-direction: column; gap: 4px; font: 400 18px/28px var(--sans); color: var(--df-inkSoft); }
+.df-video { width: 100%; aspect-ratio: 16 / 7; border-radius: var(--r-lg); border: 1px solid var(--df-lineSoft); background: var(--df-paper); display: grid; place-items: center; font: 600 10.4px var(--sans); letter-spacing: .16em; text-transform: uppercase; color: var(--df-inkMuted); }
+.df-workflow { border-radius: var(--r-lg); border: 2px solid var(--df-cardLine); background: var(--df-background); padding: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; width: 100%; }
+.df-workflow h2 { margin: 0; font: 400 24px/32px var(--serif); color: var(--df-ink); }
+.df-workflow p { margin: 8px 0 0; font-size: 14px; color: var(--df-inkBody); }
+@media (max-width: 900px) {
+  .df-band, .df-linkgrid, .df-workflow { grid-template-columns: 1fr; }
+  .df-band .df-cta { justify-self: start; }
+  .df-option-grid, .df-tiles { grid-template-columns: 1fr; }
+  .df-flow .steps { grid-template-columns: 1fr; }
+  .df-flow .arrow { transform: rotate(90deg); justify-self: center; }
+}
+
+/* ---- vòng khám phá lần 2: trang mẫu nhà, FAQ, news, careers, bài so sánh ---- */
+.df-chip-sand { height: 18px; padding: 3px 8px; border-radius: 999px; background: color-mix(in srgb, var(--df-sand) 60%, transparent); color: var(--df-inkSoft); font: 500 10.5px/1 var(--sans); display: inline-flex; align-items: center; gap: 4px; }
+.df-chip-sand svg.i { width: 11px; height: 11px; }
+.df-filter { height: 32px; padding: 0 10px; gap: 6px; border-radius: var(--r-md); border: 1px solid var(--df-line); background: var(--df-paper); color: var(--df-inkSoft); font: 500 12px var(--sans); display: inline-flex; align-items: center; box-shadow: var(--shadow-xs); cursor: pointer; }
+.df-filter svg.i { width: 14px; height: 14px; }
+.df-filter.on { background: var(--df-background); border-color: var(--df-inkSoft); color: var(--df-inkDeep); }
+.df-filter.icon { width: 32px; padding: 0; justify-content: center; }
+.df-popover { width: 288px; border-radius: var(--r-lg); border: 1px solid var(--df-line); background: var(--df-paper); padding: 12px; box-shadow: var(--shadow-lg); display: flex; flex-direction: column; gap: 10px; }
+.df-popover .t { display: flex; align-items: center; gap: 8px; font: 600 14px var(--sans); color: var(--df-ink); }
+.df-choice-btn { min-height: 36px; padding: 6px 12px; border-radius: var(--r-md); border: 1.5px solid var(--df-line); background: var(--df-background); color: var(--df-inkSoft); font: 500 14px var(--sans); cursor: pointer; width: 100%; }
+.df-choice-btn:hover { border-color: var(--df-inkBody); }
+.df-btn.sm { height: 32px; padding: 0 12px; }
+.df-empty { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 24px; text-align: center; font-size: 14px; color: var(--df-inkBody); }
+.df-plan { position: relative; width: 309px; border-radius: var(--r-lg); border: 1px solid color-mix(in srgb, var(--df-line) 80%, transparent); background: var(--df-paper); box-shadow: 0 3px 10px rgba(0,0,0,.06); overflow: hidden; display: flex; flex-direction: column; transition: background-color .5s cubic-bezier(.22,1,.36,1), box-shadow .5s cubic-bezier(.22,1,.36,1), border-color .5s; }
+.df-plan:hover { background: var(--df-background); border-color: var(--df-lineStrong); box-shadow: 0 8px 20px rgba(0,0,0,.1); }
+.df-plan .top { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 13px 48px 15px; }
+.df-plan .top .fav { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); }
+.df-plan .title { margin: 0; font: 400 16px/1 var(--serif); color: var(--df-inkStrong); }
+.df-plan .chips { display: flex; flex-wrap: wrap; gap: 4px; padding: 0 12px 12px; justify-content: center; }
+.df-plan .dl { position: absolute; right: 12px; bottom: 12px; opacity: 0; transition: opacity .2s; }
+.df-plan:hover .dl, .df-plan:focus-within .dl { opacity: 1; }
+.df-accordion { width: 100%; border-radius: var(--r-lg); border: 2px solid var(--df-cardLine); background: var(--df-background); overflow: hidden; }
+.df-accordion details { border-bottom: 1px solid var(--df-lineSoft); }
+.df-accordion details:last-child { border-bottom: none; }
+.df-accordion summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 20px; font: 600 18px/28px var(--sans); color: var(--df-ink); cursor: pointer; list-style: none; }
+.df-accordion summary::-webkit-details-marker { display: none; }
+.df-accordion summary:hover { background: #FAFAF9; }
+.df-accordion summary svg.i { transition: transform .2s var(--ease); color: var(--df-inkMuted); }
+.df-accordion details[open] summary svg.i { transform: rotate(180deg); }
+.df-accordion .body { padding: 0 20px 20px; }
+.df-accordion .body p { margin: 0; font-size: 16px; line-height: 24px; color: var(--df-inkBody); }
+.df-accordion .body a { margin-top: 20px; display: inline-flex; align-items: center; gap: 8px; font: 600 14px var(--sans); color: var(--df-inkStrong); text-decoration: none; }
+.df-accordion .body a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.df-proscons { width: 100%; border-radius: var(--r-lg); border: 2px solid var(--df-cardLine); background: var(--df-background); padding: 16px 20px; display: grid; grid-template-columns: 1fr 1fr; }
+.df-proscons > div:first-child { padding-right: 32px; }
+.df-proscons > div + div { border-left: 1px solid var(--df-cardLine); padding-left: 32px; }
+.df-proscons h3 { margin: 0; font: 600 15px var(--sans); color: var(--df-ink); }
+.df-proscons ul { margin: 12px 0 0; padding-left: 20px; display: flex; flex-direction: column; gap: 4px; font: 500 15px/24px var(--sans); color: var(--df-inkSoft); }
+.df-tip { max-width: 404px; border-radius: var(--r-md); border: 1px solid var(--df-cardLine); background: var(--df-paper); padding: 16px; display: flex; gap: 12px; align-items: flex-start; }
+.df-num { width: 32px; height: 32px; flex: none; border-radius: 999px; border: 1px solid var(--df-cardLine); background: var(--df-background); display: grid; place-items: center; font: 400 18px/1 var(--serif); color: var(--df-ink); }
+.df-tip h3 { margin: 0; font: 400 24px/1.25 var(--serif); color: var(--df-ink); }
+.df-tip .lbl { margin: 8px 0 0; font: 600 14px/20px var(--sans); text-transform: uppercase; }
+.df-tip .lbl.warn { color: var(--df-warn); }
+.df-tip .lbl.good { color: var(--df-good); margin-top: 12px; }
+.df-tip p:not(.lbl) { margin: 4px 0 0; font: 500 15px/24px var(--sans); color: var(--df-inkSoft); }
+.df-news { width: 100%; border-radius: var(--r-lg); border: 2px dashed var(--df-line); padding: 20px; display: grid; grid-template-columns: .78fr 1fr; gap: 24px; align-items: center; text-decoration: none; color: var(--df-ink); transition: border-color .15s var(--ease); }
+.df-news:hover { border-color: var(--df-inkMuted); }
+.df-news .img { aspect-ratio: 1672 / 941; border-radius: var(--r-lg); background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--df-line) 55%, transparent) 0 6px, transparent 6px 14px), var(--df-paper); display: grid; place-items: center; font: 500 10px var(--mono); color: var(--df-inkMuted); }
+.df-news .cat { margin: 0; font: 600 14px var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--df-inkMuted); }
+.df-news h2 { margin: 12px 0 0; font: 400 36px/1.25 var(--serif); color: var(--df-ink); }
+.df-news p { margin: 16px 0 0; font-size: 16px; line-height: 28px; color: var(--df-inkBody); }
+.df-news .more { margin-top: 16px; display: inline-flex; align-items: center; gap: 6px; font: 600 14px var(--sans); }
+.df-window { width: 100%; max-width: 560px; border-radius: var(--r-lg); background: #1F2A33; overflow: hidden; }
+.df-window .chrome { height: 36px; display: flex; align-items: center; gap: 8px; padding: 0 14px; font: 600 13px var(--sans); color: #E7E5E4; }
+.df-window .chrome i { width: 10px; height: 10px; border-radius: 50%; }
+.df-window .view { margin: 0 12px 12px; aspect-ratio: 16 / 8; border-radius: var(--r-sm); background: linear-gradient(#9CA3AF, #D1D5DB); display: grid; place-items: center; font: 500 10px var(--mono); color: #1F2A33; }
+.df-lot { width: 100%; max-width: 560px; aspect-ratio: 16 / 9; border-radius: var(--r-lg); border: 1px solid var(--df-lineSoft); background: linear-gradient(var(--df-lineSoft) 1px, transparent 1px) 0 0 / 20px 20px, linear-gradient(90deg, var(--df-lineSoft) 1px, transparent 1px) 0 0 / 20px 20px, var(--df-paper); position: relative; }
+.df-lot .area { position: absolute; inset: 18% 14%; border: 1.5px dashed var(--df-lineStrong); border-radius: 4px; }
+.df-lot .area small { position: absolute; top: -18px; left: 0; font: 600 9px var(--sans); letter-spacing: .12em; color: var(--df-inkMuted); }
+.df-lot .rooms { position: absolute; left: 6%; top: 30%; display: flex; flex-direction: column; gap: 6px; }
+.df-lot .rooms i { width: 26px; height: 16px; border-radius: 4px; }
+.df-lot .shape { position: absolute; left: 36%; top: 30%; width: 38%; height: 44%; background: color-mix(in srgb, var(--df-sand) 45%, var(--df-background)); border: 2px solid var(--df-inkStrong); clip-path: polygon(0 0, 62% 0, 62% 18%, 100% 18%, 100% 100%, 20% 100%, 20% 78%, 0 78%); }
+.df-dot { width: 8px; height: 8px; border-radius: 999px; background: var(--df-ink); display: inline-block; }
+@media (max-width: 900px) { .df-proscons, .df-news { grid-template-columns: 1fr; } .df-proscons > div + div { border-left: none; border-top: 1px solid var(--df-cardLine); padding: 24px 0 0; } .df-proscons > div:first-child { padding-right: 0; } }
+
+/* ---- trạng thái tương tác (đo bằng discover.mjs: hover / focus-visible / active / selected) ----
+   .is-hover / .is-focus / .is-active / .is-on là bản "đóng băng" của rule :hover… trên site, để
+   bày mọi trạng thái cạnh nhau. Mỗi rule ghi kèm giá trị đo được. */
+.states { display: flex; flex-wrap: wrap; gap: 14px 18px; align-items: flex-end; padding: 14px 16px; margin: 0 12px 4px; border-top: 1px dashed var(--df-line); }
+.states > figure { margin: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+.states figcaption { font: 500 10.5px var(--mono); color: var(--df-inkMuted); letter-spacing: .02em; }
+.states figcaption b { color: var(--df-ink); font-weight: 600; }
+.df-ring, .df-cta.is-focus, .df-nav-btn.is-focus, .df-btn.is-focus, .df-pill-link.is-focus { box-shadow: 0 0 0 2px var(--df-paper), 0 0 0 4px var(--df-ink); outline: none; }
+.is-focus-ua { outline: 1px auto -webkit-focus-ring-color; outline: 1px auto Highlight; outline-offset: 0; }
+/* CTA: hover:scale-105 hover:bg-stone-800 (hero) · bg-stone-700 (bản sm) */
+.df-cta.is-hover { transform: scale(1.05); background: var(--df-inkStrong); }
+.df-cta.sm.is-hover, .df-cta.sm:hover { transform: none; background: var(--df-inkSoft); }
+/* nút header */
+.df-nav-btn.solid:hover, .df-nav-btn.solid.is-hover { background: var(--df-inkSoft); }
+.df-nav-btn.outline:hover, .df-nav-btn.outline.is-hover { background: #000; color: #fff; border-color: #000; }
+.df-nav-btn.outline-ink:hover, .df-nav-btn.outline-ink.is-hover { background: var(--df-ink); color: var(--df-onInk); }
+.df-nav-btn.ghost:hover, .df-nav-btn.ghost.is-hover { color: var(--df-inkDeep); }
+.df-nav-btn.plain:hover, .df-nav-btn.plain.is-hover { background: #FAFAF9; border-color: var(--df-inkMuted); } /* đo: bg stone-50, viền stone-500 */
+/* link gạch chân: hover đổi viền + chữ sang mực đậm; title-link nhạt về stone-600 */
+.df-under-link:hover, .df-under-link.is-hover { color: var(--df-inkDeep); border-bottom-color: var(--df-ink); }
+.df-under-link:hover svg.i, .df-under-link.is-hover svg.i { color: var(--df-ink); }
+.df-title-link.is-hover { color: var(--df-inkBody); }
+.df-crumb a:hover, .df-crumb a.is-hover, .df-foot a:hover, .df-foot a.is-hover { color: var(--df-inkDeep); }
+/* thẻ link: viền stone-400 (hàng) · stone-500 (thẻ lớn) */
+.df-row-link.is-hover { border-color: var(--df-lineStrong); }
+.df-row-link.paper:hover, .df-row-link.paper.is-hover { background: var(--df-background); border-color: var(--df-inkMuted); } /* đo: nền trắng, viền stone-500 */
+.df-row-link.paper.compact:hover, .df-row-link.paper.compact.is-hover { border-color: var(--df-ink); }
+.df-choice.is-hover { border-color: var(--df-inkMuted); } /* đo: stone-500 */
+.df-feature.is-hover, a.df-feature:hover { border-color: var(--df-inkMuted); }
+.df-news.is-hover { border-color: var(--df-inkMuted); }
+.df-pill-link.is-hover, .df-pill-link:hover { background: var(--df-background); color: var(--df-inkBody); border-color: var(--df-line); } /* đo: nền trắng, chữ stone-600 */
+.df-pill-link.paper.is-hover, .df-pill-link.paper:hover { color: var(--df-ink); border-color: var(--df-lineStrong); }
+.df-section.is-hover { border-color: var(--df-lineStrong); }
+.df-plan.is-hover { background: var(--df-background); border-color: var(--df-lineStrong); box-shadow: 0 8px 20px rgba(0,0,0,.1); }
+.df-outcome:hover, .df-outcome.is-hover { border-color: var(--df-inkMuted); }
+.df-meta.btn:hover, .df-meta.btn.is-hover { background: color-mix(in srgb, var(--df-ink) 6%, transparent); color: var(--df-inkSoft); }
+.df-open-roles:hover, .df-open-roles.is-hover { color: var(--df-inkDeep); border-color: var(--df-inkMuted) !important; }
+.df-accordion .body a.is-hover { text-decoration: underline; text-underline-offset: 4px; }
+.df-toc a:hover, .df-toc a.is-hover { color: var(--df-ink); }
+.df-disclose.is-hover { color: var(--df-ink); }
+.df-back.is-hover { color: var(--df-inkDeep); }
+.df-sticky .studio:hover, .df-sticky .studio.is-hover { color: var(--df-ink); }
+.df-btn.outline.sm.is-hover { background: var(--df-accent); color: var(--df-accentForeground); }
+.df-plan.is-hover .dl { opacity: 1; }
+.df-option.is-hover { border-color: var(--df-inkMuted); } /* đo: stone-500 */
+.df-filter:hover, .df-filter.is-hover { border-color: var(--df-lineStrong); background: var(--df-background); } /* đo: nền trắng, viền stone-400 */
+.df-choice-btn.is-hover { border-color: var(--df-inkBody); }
+.df-folder a.is-hover { color: var(--df-inkBody); }
+.df-accordion summary.is-hover { background: #FAFAF9; } /* đo: stone-50 */
+.df-input.is-focus { border-color: var(--df-ring); box-shadow: 0 0 0 3px color-mix(in srgb, var(--df-ring) 50%, transparent); }
+.df-btn.primary:hover, .df-btn.primary.is-hover { background: color-mix(in srgb, var(--df-primary) 90%, transparent); }
+.df-btn.outline:hover, .df-btn.outline.is-hover { background: var(--df-accent); }
+
+/* màn mẫu: khung đúng kích thước viewport đã chụp, thu nhỏ bằng zoom */
+.screens { overflow-x: auto; padding: 8px 0; }
+.screens-row { display: flex; gap: 32px; width: max-content; align-items: flex-start; }
+.phone { width: 390px; height: 844px; border-radius: 44px; box-shadow: 0 0 0 10px var(--df-inkDeep); background: var(--df-paper); overflow: hidden; margin: 10px; zoom: .62; position: relative; }
+.desk { width: 1440px; height: 900px; border-radius: 16px; box-shadow: 0 0 0 10px var(--df-inkDeep); background: var(--df-paper); overflow: hidden; margin: 10px; zoom: .52; position: relative; }
+.hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse at 18% 45%, color-mix(in srgb, var(--df-line) 60%, transparent), transparent 55%), radial-gradient(ellipse at 82% 40%, color-mix(in srgb, var(--df-lineStrong) 35%, transparent), transparent 50%); }
+.hero { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; }
+.hero h1 { font: 400 60px/72px var(--serif); color: var(--df-inkDeep); margin: 0; }
+.hero p { font: 500 18px/28px var(--sans); color: var(--df-inkBody); margin: 20px 0 0; max-width: 42rem; }
+.screens-row > div { width: min-content; }
+.screen-cap { font-family: var(--mono); font-size: 12px; color: var(--df-inkMuted); margin: 6px 10px 0; }
+.carousel { position: relative; display: flex; justify-content: center; gap: 24px; margin-top: 56px; }
+.carousel .df-house:nth-child(1), .carousel .df-house:nth-child(4) { margin-top: 48px; }
+
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; transition: all .25s var(--ease); z-index: 20; background: var(--df-ink); color: var(--df-onInk); padding: 12px 16px; border-radius: var(--r-md); font-size: 13px; box-shadow: var(--shadow-lg); }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; }
+  .side { display: none; }
+  main { padding: 0 16px 80px; }
+  .grid, .grid.wide { grid-template-columns: 1fr; }
+  .intro h1 { font-size: 40px; }
+  .type-row { grid-template-columns: 1fr; gap: 2px; }
+  .df-feature { grid-template-columns: 1fr; }
+  .df-feature h2 { font-size: 28px; line-height: 36px; }
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="zap" viewBox="0 0 24 24"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></symbol>
+  <symbol id="book" viewBox="0 0 24 24"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></symbol>
+  <symbol id="x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+  <symbol id="chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="faq" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M10 10.3c.2-.4.5-.8.9-1a2.1 2.1 0 0 1 2.6.4c.3.4.5.8.5 1.3 0 1.3-2 2-2 2"/><path d="M12 17h.01"/></symbol>
+  <symbol id="news" viewBox="0 0 24 24"><path d="M15 18h-5"/><path d="M18 14h-8"/><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-4 0v-9a2 2 0 0 1 2-2h2"/><rect width="8" height="4" x="10" y="6" rx="1"/></symbol>
+  <symbol id="house" viewBox="0 0 24 24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+  <symbol id="arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+  <symbol id="left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+  <symbol id="ext" viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol>
+  <symbol id="file" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 13H8M16 17H8M16 13h-2"/></symbol>
+  <symbol id="spark" viewBox="0 0 24 24"><path d="M9.9 15.5A2 2 0 0 0 8.5 14.1l-6.1-1.6a.5.5 0 0 1 0-1l6.1-1.6a2 2 0 0 0 1.4-1.4l1.6-6.1a.5.5 0 0 1 1 0l1.6 6.1a2 2 0 0 0 1.4 1.4l6.1 1.6a.5.5 0 0 1 0 1l-6.1 1.6a2 2 0 0 0-1.4 1.4l-1.6 6.1a.5.5 0 0 1-1 0z"/></symbol>
+  <symbol id="ruler" viewBox="0 0 24 24"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0Z"/><path d="m14.5 12.5 2-2M11.5 9.5l2-2M8.5 6.5l2-2M17.5 15.5l2-2"/></symbol>
+  <symbol id="scan" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="sofa" viewBox="0 0 24 24"><path d="M20 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3"/><path d="M2 16a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5a2 2 0 0 0-4 0v1.5a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5V11a2 2 0 0 0-4 0z"/><path d="M4 18v2M20 18v2"/></symbol>
+  <symbol id="user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></symbol>
+  <symbol id="cursor" viewBox="0 0 24 24"><path d="M4.04 4.66a.5.5 0 0 1 .62-.62l16 5.97a.5.5 0 0 1-.06.95l-6.12 1.58a2 2 0 0 0-1.44 1.43l-1.57 6.13a.5.5 0 0 1-.95.06z"/></symbol>
+  <symbol id="bed" viewBox="0 0 24 24"><path d="M2 4v16M2 8h18a2 2 0 0 1 2 2v10M2 17h20M6 8v9"/></symbol>
+  <symbol id="shapes" viewBox="0 0 24 24"><path d="M8.3 10a.7.7 0 0 1-.63-1.02l3.7-6.63a.7.7 0 0 1 1.27 0l3.7 6.63A.7.7 0 0 1 15.7 10z"/><rect x="3" y="14" width="7" height="7" rx="1"/><circle cx="17.5" cy="17.5" r="3.5"/></symbol>
+  <symbol id="trophy" viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22M18 2H6v7a6 6 0 0 0 12 0V2Z"/></symbol>
+  <symbol id="heart" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></symbol>
+  <symbol id="download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></symbol>
+  <symbol id="copy" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol>
+  <symbol id="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"/></symbol>
+  <symbol id="moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol>
+</svg>
+
+<div class="shell">
+  <nav class="side" aria-label="Mục lục">
+    <div class="brand"><b>Drafted</b><small>UI kit · rút từ drafted.ai</small></div>
+    <h6>Nền tảng</h6>
+    <a href="#color">Màu</a>
+    <a href="#type">Chữ</a>
+    <a href="#shape">Bo góc &amp; bóng</a>
+    <a href="#layout">Bố cục &amp; kích thước</a>
+    <h6>Thành phần</h6>
+    <a href="#actions">Hành động</a>
+    <a href="#navigation">Điều hướng</a>
+    <a href="#containment">Chứa nội dung</a>
+    <a href="#inputs">Nhập liệu</a>
+    <a href="#listing">Danh sách mẫu nhà</a>
+    <a href="#editorial">Bài viết &amp; section</a>
+    <a href="#feedback">Phản hồi &amp; phụ trợ</a>
+    <h6>Mẫu</h6>
+    <a href="#screens">Màn hình mẫu</a>
+  </nav>
+
+  <main>
+    <div class="bar" role="toolbar" aria-label="Chủ đề">
+      <div class="ctl"><span>Palette</span><span class="pal-note"><i></i>Stone · site chỉ có 1 palette</span></div>
+      <div class="ctl"><span>Chế độ</span><div class="seg" id="mode">
+        <button data-v="light" aria-pressed="true"><svg class="i"><use href="#sun"/></svg>Sáng</button>
+        <button data-v="dark" aria-pressed="false"><svg class="i"><use href="#moon"/></svg>Tối</button></div></div>
+      <div class="ctl"><span>--radius</span><div class="seg" id="shape">
+        <button data-v="0.4" aria-pressed="false">4px</button>
+        <button data-v="1" aria-pressed="true">10px · site</button>
+        <button data-v="1.6" aria-pressed="false">16px</button></div></div>
+      <div class="grow"></div>
+      <button class="copy" id="copy-tokens"><svg class="i"><use href="#copy"/></svg>Copy CSS token</button>
+    </div>
+
+    <div class="intro">
+      <div class="eyebrow">drafted.ai · :root / .dark + getComputedStyle → drafted-ai.html</div>
+      <h1>Hệ giao diện của Drafted</h1>
+      <p>Token và component của drafted.ai, gồm landing, <code>/auth</code> và <code>/learn</code>, dựng lại bằng HTML/CSS thuần. Site chạy Tailwind v4 với shadcn/ui: lớp màu ngữ nghĩa đi theo shadcn (có bản tối), lớp màu thương hiệu là giấy kem <code>#FAF8F2</code> cùng thang <code>stone</code>. Chữ ghép DM Serif Display cho tiêu đề với Inter cho mọi chữ còn lại. Mỗi thẻ ghi class Tailwind gốc để đối chiếu, bấm nút HTML là lấy được markup.</p>
+      <div class="facts"><span class="fact">--radius .625rem = 10px</span><span class="fact">--spacing .25rem</span><span class="fact">header 48 · CTA 56 · nav 32 · input 36 · form btn 44</span><span class="fact">container 1120 · dialog 448</span><span class="fact">ease-out cubic-bezier(0,0,.2,1) · 300ms</span></div>
+    </div>
+
+    <!-- ================= NỀN TẢNG ================= -->
+    <section class="block" id="color">
+      <header><h2>Màu</h2><p>Hai lớp màu. Lớp ngữ nghĩa là biến shadcn có sẵn trên site, cả sáng lẫn tối. Lớp thương hiệu gom từ class Tailwind mà trang thật dùng (bg-[#FAF8F2], text-stone-900…). Bấm một ô để copy mã hex.</p></header>
+      <div class="roles-h">Thương hiệu · class trên trang</div>
+      <div class="roles" id="roles-brand"></div>
+      <div class="roles-h">Ngữ nghĩa · shadcn :root / .dark</div>
+      <div class="roles" id="roles-sem"></div>
+    </section>
+
+    <section class="block" id="type">
+      <header><h2>Chữ</h2><p>Mọi cỡ chữ đo được trên ba trang. DM Serif Display chỉ dùng một độ đậm (400) cho tiêu đề, tên thẻ và wordmark. Inter đảm nhận nút, nhãn, thân bài và chú thích.</p></header>
+      <div class="spec"><div class="stage col" id="typescale"></div></div>
+      <div class="spec" style="margin-top:16px"><div class="spec-h"><b>Chữ thực dùng · sinh từ inventory</b><span class="kind">discover.mjs · 29 kiểu</span><span class="dp">màu đo trên site</span></div>
+        <div class="stage col">
+<div class="type-row" data-sig="a77d44ff0d"><span class="meta">heading · ×1</span><span class="t" style="font-family:var(--serif);font-size:76px;font-weight:400;color:#1C1917;letter-spacing:0;text-transform:none;">Learn More</span><span class="meta">DM Serif 76 · 400 · #1C1917</span></div>
+<div class="type-row" data-sig="aefc38e017"><span class="meta">heading · ×1</span><span class="t" style="font-family:var(--serif);font-size:60px;font-weight:400;color:#0C0A09;letter-spacing:0;text-transform:none;">Design House Plans Instantly with AI</span><span class="meta">DM Serif 60 · 400 · #0C0A09</span></div>
+<div class="type-row" data-sig="eeecb1a269"><span class="meta">heading · ×24</span><span class="t" style="font-family:var(--serif);font-size:60px;font-weight:400;color:#1C1917;letter-spacing:0;text-transform:none;">AI for Homebuyers</span><span class="meta">DM Serif 60 · 400 · #1C1917</span></div>
+<div class="type-row" data-sig="0085b5c3bf"><span class="meta">heading · ×63</span><span class="t" style="font-family:var(--serif);font-size:48px;font-weight:400;color:#1C1917;letter-spacing:0;text-transform:none;">What describes you?</span><span class="meta">DM Serif 48 · 400 · #1C1917</span></div>
+<div class="type-row" data-sig="c79dd27280"><span class="meta">heading · ×37</span><span class="t" style="font-family:var(--serif);font-size:36px;font-weight:400;color:#1C1917;letter-spacing:0;text-transform:none;">How to generate house plans with AI</span><span class="meta">DM Serif 36 · 400 · #1C1917</span></div>
+<div class="type-row" data-sig="5aef8f76a2"><span class="meta">heading · ×41</span><span class="t" style="font-family:var(--serif);font-size:30px;font-weight:400;color:#1C1917;letter-spacing:0;text-transform:none;">How are homebuyers using AI?</span><span class="meta">DM Serif 30 · 400 · #1C1917</span></div>
+<div class="type-row" data-sig="01d23eb657"><span class="meta">heading · ×5</span><span class="t" style="font-family:var(--serif);font-size:24px;font-weight:500;color:#292524;letter-spacing:0;text-transform:none;">Free 4 Bedroom 3 Bath House Plans</span><span class="meta">DM Serif 24 · 500 · #292524</span></div>
+<div class="type-row" data-sig="a9f04f0ab1"><span class="meta">heading · ×36</span><span class="t" style="font-family:var(--serif);font-size:24px;font-weight:400;color:#1C1917;letter-spacing:0;text-transform:none;">More Use Cases</span><span class="meta">DM Serif 24 · 400 · #1C1917</span></div>
+<div class="type-row" data-sig="223a148e10"><span class="meta">heading · ×4</span><span class="t" style="font-family:var(--sans);font-size:20px;font-weight:600;color:#1C1917;letter-spacing:0;text-transform:none;">Choose by the outcome you need</span><span class="meta">Inter 20 · 600 · #1C1917</span></div>
+<div class="type-row" data-sig="ddebdfb85f"><span class="meta">heading · ×111</span><span class="t" style="font-family:var(--sans);font-size:16px;font-weight:600;color:#1C1917;letter-spacing:0;text-transform:none;">Input and canvas based prompting</span><span class="meta">Inter 16 · 600 · #1C1917</span></div>
+<div class="type-row" data-sig="d34e148b94"><span class="meta">heading · ×1</span><span class="t" style="font-family:var(--sans);font-size:14px;font-weight:600;color:#79716B;letter-spacing:1.96px;text-transform:uppercase;">RELATED</span><span class="meta">Inter 14 · 600 · #79716B</span></div>
+<div class="type-row" data-sig="a6e5ddd5c3"><span class="meta">link · ×3</span><span class="t" style="font-family:var(--sans);font-size:18px;font-weight:600;color:#1C1917;letter-spacing:0;text-transform:none;text-decoration:underline;text-underline-offset:3px;">Drafted</span><span class="meta">Inter 18 · 600 · #1C1917</span></div>
+<div class="type-row" data-sig="c528a5ea64"><span class="meta">link · ×58</span><span class="t" style="font-family:var(--sans);font-size:18px;font-weight:400;color:#44403B;letter-spacing:0;text-transform:none;text-decoration:underline;text-underline-offset:3px;">AI floor plan generator</span><span class="meta">Inter 18 · 400 · #44403B</span></div>
+<div class="type-row" data-sig="7dd308cc2c"><span class="meta">link · ×7</span><span class="t" style="font-family:var(--sans);font-size:16px;font-weight:600;color:#1C1917;letter-spacing:0;text-transform:none;text-decoration:underline;text-underline-offset:3px;">compare layouts</span><span class="meta">Inter 16 · 600 · #1C1917</span></div>
+<div class="type-row" data-sig="cbcf57645d"><span class="meta">link · ×5</span><span class="t" style="font-family:var(--sans);font-size:16px;font-weight:400;color:#0A0A0A;letter-spacing:0;text-transform:none;">(link icon)</span><span class="meta">Inter 16 · 400 · #0A0A0A</span></div>
+<div class="type-row" data-sig="fba5a82900"><span class="meta">link · ×28</span><span class="t" style="font-family:var(--sans);font-size:16px;font-weight:400;color:#1C1917;letter-spacing:0;text-transform:none;">(link icon)</span><span class="meta">Inter 16 · 400 · #1C1917</span></div>
+<div class="type-row" data-sig="3d495ad4ba"><span class="meta">link · ×6</span><span class="t" style="font-family:var(--sans);font-size:14px;font-weight:600;color:#1C1917;letter-spacing:0;text-transform:none;text-decoration:underline;text-underline-offset:3px;">See the thread</span><span class="meta">Inter 14 · 600 · #1C1917</span></div>
+<div class="type-row" data-sig="887b4d56ee"><span class="meta">link · ×33</span><span class="t" style="font-family:var(--sans);font-size:14px;font-weight:400;color:#57534D;letter-spacing:0;text-transform:none;">Explore Site-Fit Direction</span><span class="meta">Inter 14 · 400 · #57534D</span></div>
+<div class="type-row" data-sig="c13d548f2e"><span class="meta">link · ×44</span><span class="t" style="font-family:var(--sans);font-size:14px;font-weight:400;color:#292524;letter-spacing:0;text-transform:none;text-decoration:underline;text-underline-offset:3px;">Learn</span><span class="meta">Inter 14 · 400 · #292524</span></div>
+<div class="type-row" data-sig="f59212ead5"><span class="meta">link · ×14</span><span class="t" style="font-family:var(--sans);font-size:14px;font-weight:400;color:#79716B;letter-spacing:0;text-transform:none;">Floor Plan Generation</span><span class="meta">Inter 14 · 400 · #79716B</span></div>
+<div class="type-row" data-sig="cdb8204393"><span class="meta">link · ×53</span><span class="t" style="font-family:var(--sans);font-size:12px;font-weight:600;color:#79716B;letter-spacing:0;text-transform:none;">Careers</span><span class="meta">Inter 12 · 600 · #79716B</span></div>
+<div class="type-row" data-sig="f86c3ab92e"><span class="meta">text · ×14</span><span class="t" style="font-family:var(--sans);font-size:30px;font-weight:500;color:#44403B;letter-spacing:0;text-transform:none;">Use Drafted to turn a real site into clearer layout directions before </span><span class="meta">Inter 30 · 500 · #44403B</span></div>
+<div class="type-row" data-sig="1e2ec1bf6e"><span class="meta">text · ×1</span><span class="t" style="font-family:var(--sans);font-size:18px;font-weight:500;color:#57534D;letter-spacing:0;text-transform:none;">Generate floor plans, 3D models, renders, and professional CAD/BIM exp</span><span class="meta">Inter 18 · 500 · #57534D</span></div>
+<div class="type-row" data-sig="84bbe25245"><span class="meta">text · ×9</span><span class="t" style="font-family:var(--sans);font-size:18px;font-weight:400;color:#57534D;letter-spacing:0;text-transform:none;">A practical guide for resources on AI and generative AI tools for plan</span><span class="meta">Inter 18 · 400 · #57534D</span></div>
+<div class="type-row" data-sig="f0792567e5"><span class="meta">text · ×278</span><span class="t" style="font-family:var(--sans);font-size:18px;font-weight:400;color:#44403B;letter-spacing:0;text-transform:none;">A real lot, parcel under consideration, or rough site creates the firs</span><span class="meta">Inter 18 · 400 · #44403B</span></div>
+<div class="type-row" data-sig="cebb6d9abd"><span class="meta">text · ×14</span><span class="t" style="font-family:var(--sans);font-size:16px;font-weight:600;color:#1C1917;letter-spacing:0;text-transform:none;">Table of Contents</span><span class="meta">Inter 16 · 600 · #1C1917</span></div>
+<div class="type-row" data-sig="dde743e14e"><span class="meta">text · ×52</span><span class="t" style="font-family:var(--sans);font-size:16px;font-weight:400;color:#57534D;letter-spacing:0;text-transform:none;">Homebuyers can use AI to organize ideas that are hard to explain: room</span><span class="meta">Inter 16 · 400 · #57534D</span></div>
+<div class="type-row" data-sig="7757b6223f"><span class="meta">text · ×147</span><span class="t" style="font-family:var(--sans);font-size:14px;font-weight:400;color:#57534D;letter-spacing:0;text-transform:none;">Drafted is an AI floor plan generation tool for the schematic design p</span><span class="meta">Inter 14 · 400 · #57534D</span></div>
+<div class="type-row" data-sig="b202112498"><span class="meta">text · ×8</span><span class="t" style="font-family:var(--sans);font-size:14px;font-weight:400;color:#79716B;letter-spacing:0;text-transform:none;">Browse free 2 bedroom house plans with AI-generated layouts, exterior </span><span class="meta">Inter 14 · 400 · #79716B</span></div>
+        </div><div class="spec-f"><span class="note">Mỗi dòng là một kiểu chữ riêng mà vòng khám phá gặp (tiêu đề, đoạn văn, link), kèm câu thật đầu tiên và số lần xuất hiện. Bảng này sinh bằng máy từ inventory.json, không gõ tay.</span></div></div>
+    </section>
+
+    <section class="block" id="shape">
+      <header><h2>Bo góc &amp; bóng</h2><p>Bo góc theo công thức shadcn từ <code>--radius</code>: sm = r − 4, md = r − 2, lg = r, xl = r + 4. Site dùng md (8) cho CTA, input, nút form; lg (10) cho nút header và thẻ; xl (14) cho dialog; full cho avatar. Nút --radius ở thanh trên chỉ để xem thử, site cố định ở 10px.</p></header>
+      <div class="spec"><div class="stage" id="shapes" style="gap:28px"></div>
+        <div class="stage" style="gap:28px;padding-top:0">
+          <div class="shape-cell"><i style="background:var(--df-background);border-radius:var(--r-lg);box-shadow:var(--shadow-xs);border:1px solid var(--df-line)"></i>shadow-xs</div>
+          <div class="shape-cell"><i style="background:var(--df-background);border-radius:var(--r-lg);box-shadow:var(--shadow-sm)"></i>shadow-sm</div>
+          <div class="shape-cell"><i style="background:var(--df-background);border-radius:var(--r-lg);box-shadow:var(--shadow-lg)"></i>shadow-lg</div>
+          <div class="shape-cell"><i style="background:var(--df-paper);border-radius:var(--r-lg);box-shadow:var(--shadow-card)"></i>card 0 14 36</div>
+        </div></div>
+    </section>
+
+    <section class="block" id="layout">
+      <header><h2>Bố cục &amp; kích thước</h2><p>Số đo lấy từ <code>getBoundingClientRect</code> ở viewport 1440 × 900 và 390 × 844.</p></header>
+      <div class="grid wide">
+        <div class="spec"><div class="stage col">
+          <table class="tok"><thead><tr><th>Nút</th><th>h</th><th>padX</th><th>chữ</th><th>r</th></tr></thead><tbody>
+            <tr><td>CTA hero</td><td>56</td><td>36</td><td>16 / 600 · +.4px</td><td>8</td></tr>
+            <tr><td>CTA md (learn)</td><td>49</td><td>32</td><td>15 / 600</td><td>8</td></tr>
+            <tr><td>CTA sm (trên ảnh)</td><td>32</td><td>16</td><td>12 / 600</td><td>8</td></tr>
+            <tr><td>Nút header</td><td>32</td><td>12</td><td>12 / 700</td><td>10</td></tr>
+            <tr><td>Nút form (shadcn)</td><td>44</td><td>16</td><td>14 / 500</td><td>8</td></tr></tbody></table>
+        </div></div>
+        <div class="spec"><div class="stage col">
+          <table class="tok"><thead><tr><th>Hằng số</th><th>px</th><th>Dùng cho</th></tr></thead><tbody>
+            <tr><td>header</td><td>48 · pad 8/12</td><td>landing; /learn 55 có viền dưới</td></tr>
+            <tr><td>max-w-7xl nội dung</td><td>1120</td><td>trang /learn</td></tr>
+            <tr><td>hero h1</td><td>60/72 · max-w-4xl</td><td>mobile ~36</td></tr>
+            <tr><td>thẻ nhà</td><td>238 × 618 (khung 259 × 672)</td><td>băng chuyền 3D</td></tr>
+            <tr><td>dialog</td><td>448 · pad 24 · r 14</td><td>/auth</td></tr>
+            <tr><td>input · select</td><td>36</td><td>pad 4/12 · 8/12</td></tr>
+            <tr><td>--spacing</td><td>4</td><td>gap 6 (1.5) · 8 (2) · 24 (6)</td></tr></tbody></table>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- ================= HÀNH ĐỘNG ================= -->
+    <section class="block" id="actions">
+      <header><h2>Hành động</h2></header>
+      <div class="grid">
+        <div class="spec full" data-sig="5fa3b2e537 0cac6a7d1b fa1c9819ee 9439d8b973"><div class="spec-h"><b>CTA · Start Creating</b><span class="kind">bg-stone-900 h-14 px-9 rounded-md</span><span class="dp">56 · 49 · 32</span></div>
+          <div class="stage paper">
+            <a class="df-cta" href="#actions"><svg class="i"><use href="#zap"/></svg>Start Creating</a>
+            <a class="df-cta md" href="#actions"><svg class="i"><use href="#zap"/></svg>Start Creating</a>
+            <a class="df-cta sm" href="#actions"><svg class="i"><use href="#zap"/></svg>Start Creating</a>
+          <div class="states" data-sig-state="0cac6a7d1b:hover 5fa3b2e537:hover 9439d8b973:hover fa1c9819ee:hover"><figure><figcaption>mặc định</figcaption><a class="df-cta" href="#actions"><svg class="i"><use href="#zap"/></svg>Start Creating</a></figure><figure><figcaption><b>hover</b> hero · scale 1.05 · stone-800</figcaption><a class="df-cta is-hover" href="#actions"><svg class="i"><use href="#zap"/></svg>Start Creating</a></figure><figure><figcaption><b>hover</b> bản /learn · stone-800</figcaption><a class="df-cta md is-hover" style="transform:none" href="#actions"><svg class="i"><use href="#zap"/></svg>Start Creating</a></figure><figure><figcaption><b>hover</b> sm · stone-700</figcaption><a class="df-cta sm is-hover" href="#actions"><svg class="i"><use href="#zap"/></svg>Start Creating</a></figure></div></div><div class="spec-f"><span class="note">Hover và focus: phóng 1.05, nền lên stone-800, một vệt sáng quét ngang trong 900ms (animate-shine-transform), tắt khi reduced-motion.</span></div></div>
+
+        <div class="spec" data-sig="d1262f7d4a f40c08060b 9f42c0b65b"><div class="spec-h"><b>Nút header</b><span class="kind">h-8 rounded-lg text-xs</span><span class="dp">32 · r 10</span></div>
+          <div class="stage">
+            <a class="df-nav-btn outline" href="#actions"><svg class="i" style="width:14px;height:14px"><use href="#book"/></svg>Learn</a>
+            <button class="df-nav-btn solid">Sign In</button>
+            <a class="df-nav-btn outline-ink" href="#actions">Sign Up</a>
+            <a class="df-nav-btn ghost" href="#actions">Sign In</a>
+            <button class="df-nav-btn outline icon" aria-label="Learn"><svg class="i" style="width:14px;height:14px"><use href="#book"/></svg></button>
+          <div class="states" data-sig-state="9f42c0b65b:hover d1262f7d4a:hover f40c08060b:hover"><figure><figcaption><b>hover</b> Learn · nền đen</figcaption><a class="df-nav-btn outline is-hover" href="#actions">Learn</a></figure><figure><figcaption><b>hover</b> Sign In · stone-700</figcaption><button class="df-nav-btn solid is-hover">Sign In</button></figure><figure><figcaption><b>hover</b> Sign Up · nền mực</figcaption><a class="df-nav-btn outline-ink is-hover" href="#actions">Sign Up</a></figure></div></div><div class="spec-f"><span class="note">Trên mobile, nút Learn rút thành ô icon 32 × 32.</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Nút form (shadcn Button)</b><span class="kind">Button · default / outline</span><span class="dp">44 · r 8</span></div>
+          <div class="stage col">
+            <button class="df-btn primary block">Create Account</button>
+            <button class="df-btn primary block" disabled>Create Account</button>
+            <button class="df-btn outline block"><span class="df-g">G</span>Sign up with Google</button>
+            <button class="df-btn secondary">Secondary</button>
+          </div><div class="spec-f"><span class="note">Nút disabled mờ 50% cho tới khi điền đủ form. Biến thể secondary có trong token shadcn nhưng không xuất hiện trên ba trang đã quét.</span></div></div>
+
+        <div class="spec" data-sig="07ed28d7cf 402f3ad197"><div class="spec-h"><b>Back · nút viền mảnh</b><span class="kind">h-8 rounded-md · border-stone-300</span><span class="dp">32 · r 8</span></div>
+          <div class="stage"><button class="df-back"><svg class="i"><use href="#left"/></svg>Back</button><button class="df-nav-btn plain">Sign In</button><div class="states" data-sig-state="07ed28d7cf:hover 402f3ad197:hover"><figure><figcaption><b>hover</b> Back · stone-950</figcaption><button class="df-back is-hover"><svg class="i"><use href="#left"/></svg>Back</button></figure><figure><figcaption><b>hover</b> Sign In · bg stone-50, viền stone-500</figcaption><button class="df-nav-btn plain is-hover">Sign In</button></figure></div></div>
+          <div class="spec-f"><span class="note">Nằm trên thanh của /onboarding: Back bên trái, Sign In bên phải.</span></div></div>
+
+        <div class="spec" data-sig="e0c669816e 16583fed29"><div class="spec-h"><b>Nút link có mũi tên</b><span class="kind">rounded-lg border-stone-200/80 px-4 py-3</span><span class="dp">46 · r 10 / 8</span></div>
+          <div class="stage col" style="align-items:flex-start">
+            <a class="df-pill-link" href="#actions"><svg class="i"><use href="#zap"/></svg>Design with Drafted<svg class="i"><use href="#arrow"/></svg></a>
+            <a class="df-pill-link paper" href="#actions">AI Home Design Workflow<svg class="i"><use href="#arrow"/></svg></a>
+          </div><div class="states" data-sig-state="e0c669816e:hover 16583fed29:hover"><figure><figcaption><b>hover</b> · nền trắng, chữ stone-600</figcaption><a class="df-pill-link is-hover" href="#actions"><svg class="i"><use href="#zap"/></svg>Design with Drafted<svg class="i"><use href="#arrow"/></svg></a></figure><figure><figcaption><b>hover</b> bản giấy · viền stone-400</figcaption><a class="df-pill-link paper is-hover" href="#actions">AI Home Design Workflow<svg class="i"><use href="#arrow"/></svg></a></figure></div></div>
+
+        <div class="spec" data-sig="3b0d14c3af 1083ac31ca 301b74a1e4 18195750ae"><div class="spec-h"><b>Link gạch chân</b><span class="kind">border-b pb-0.5 · border-[#A9A9A9] pb-2</span><span class="dp">16 · 14</span></div>
+          <div class="stage col" style="align-items:flex-start;gap:16px">
+            <a class="df-title-link" href="#actions">Design a House Layout to a PDF Plan</a>
+            <a class="df-under-link" href="#actions">4 Bed 3 Bath House Plans<svg class="i"><use href="#arrow"/></svg></a>
+            <a class="df-under-link" href="#actions" style="max-width:220px">Best Floor Plan Generator Software<svg class="i"><use href="#arrow"/></svg></a>
+            <p style="margin:0;font-size:16px;line-height:28px;color:var(--df-inkBody)">…react to tradeoffs, and bring a <a class="df-inline-link" href="#actions">clearer starting point</a> to the people who will design it.</p>
+          <div class="states" data-sig-state="1083ac31ca:hover 18195750ae:hover 301b74a1e4:hover 3b0d14c3af:hover"><figure><figcaption><b>hover</b> link lưới · chữ + viền mực</figcaption><a class="df-under-link is-hover" href="#actions">4 Bed 3 Bath House Plans<svg class="i"><use href="#arrow"/></svg></a></figure><figure><figcaption><b>hover</b> tiêu đề link · stone-600</figcaption><a class="df-title-link is-hover" href="#actions">Design a House Layout to a PDF Plan</a></figure></div></div><div class="spec-f"><span class="note">Tiêu đề link gạch dưới bằng viền 1px (không dùng text-decoration). Link trong đoạn văn đậm 600 và gạch chân.</span></div></div>
+
+        <div class="spec" data-sig="196c918982 7edf729f97 c292f18bfa"><div class="spec-h"><b>Ô mũi tên tròn</b><span class="kind">rounded-full border-stone-300 p-1 shadow-sm</span><span class="dp">26</span></div>
+          <div class="stage"><span class="df-round shadow"><svg class="i" style="width:14px;height:14px"><use href="#arrow"/></svg></span><span class="df-round"><svg class="i" style="width:14px;height:14px"><use href="#arrow"/></svg></span></div>
+          <div class="spec-f"><span class="note">Đặt giữa hai ảnh trong panel so sánh "shape → layout".</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Link · nút đóng</b><span class="kind">text-blue-600 · DialogClose</span><span class="dp">14 · 18</span></div>
+          <div class="stage">
+            <span style="font-size:14px">Already have an account? <button class="df-link">Sign in</button></span>
+            <button class="df-close" aria-label="Đóng"><svg class="i"><use href="#x"/></svg></button>
+          </div></div>
+      </div>
+    </section>
+
+    <!-- ================= ĐIỀU HƯỚNG ================= -->
+    <section class="block" id="navigation">
+      <header><h2>Điều hướng</h2></header>
+      <div class="grid wide">
+        <div class="spec full" data-sig="6f86017535 40f76eec8a"><div class="spec-h"><b>Header · landing</b><span class="kind">header grid min-h-12 px-3 py-2</span><span class="dp">h 48</span></div>
+          <div class="stage paper" style="padding:0"><div class="df-header"><span class="df-wordmark">Drafted</span><div class="nav"><a class="df-nav-btn outline" href="#navigation"><svg class="i" style="width:14px;height:14px"><use href="#book"/></svg>Learn</a><button class="df-nav-btn solid">Sign In</button></div></div></div>
+          <div class="spec-f"><span class="note">Nền trong suốt, nằm đè lên ảnh hero. Wordmark trên site là SVG; ở đây thay bằng chữ DM Serif.</span></div></div>
+
+        <div class="spec full"><div class="spec-h"><b>Header · trang nội dung</b><span class="kind">border-b · My Studio</span><span class="dp">h 55</span></div>
+          <div class="stage" style="padding:0;margin:12px 12px 0"><div class="df-header bordered"><span class="df-wordmark">Drafted</span><span class="studio"><svg class="i"><use href="#house"/></svg>My Studio</span><div class="nav"><a class="df-nav-btn ghost" href="#navigation">Sign In</a><a class="df-nav-btn outline-ink" href="#navigation">Sign Up</a></div></div></div></div>
+
+        <div class="spec full" data-sig="4ab59fd000 44d1d5dde0 dd3890b916 dcceae388f 430152cc8d 1fdc230536 af7039c906 172ef68278 d81ce42099 caf16918c2"><div class="spec-h"><b>Header dính · trang bài viết</b><span class="kind">sticky h-14 border-b-2 bg-[#FAF8F2]/95 backdrop-blur</span><span class="dp">h 56</span></div>
+          <div class="stage" style="padding:0;margin:12px 12px 0"><div class="df-sticky"><span class="df-wordmark">Drafted</span><span class="studio" style="display:inline-flex;align-items:center;gap:6px;font:400 16px var(--serif);color:var(--df-inkBody)"><svg class="i"><use href="#house"/></svg>My Studio</span><a class="df-cta sm center" href="#navigation"><svg class="i"><use href="#zap"/></svg>Start Creating</a><div class="nav"><a class="df-nav-btn ghost" href="#navigation">Sign In</a><a class="df-nav-btn outline-ink" href="#navigation">Sign Up</a></div></div><div class="states" data-sig-state="172ef68278:hover 1fdc230536:hover af7039c906:hover caf16918c2:hover d81ce42099:hover"><figure><figcaption><b>hover</b> My Studio · stone-900</figcaption><span class="studio is-hover" style="display:inline-flex;align-items:center;gap:6px;font:400 16px var(--serif);color:var(--df-ink)"><svg class="i"><use href="#house"/></svg>My Studio</span></figure><figure><figcaption><b>hover</b> Sign In · đậm lên</figcaption><a class="df-nav-btn ghost is-hover" href="#navigation">Sign In</a></figure><figure><figcaption><b>hover</b> Sign Up · nền trắng</figcaption><a class="df-nav-btn outline-ink" style="background:#fff" href="#navigation">Sign Up</a></figure></div></div>
+          <div class="spec-f"><span class="note">CTA nhỏ nằm giữa header, viền dưới 2px stone-300, nền giấy mờ 95% có blur.</span></div></div>
+
+        <div class="spec full" data-sig="089861e4f0"><div class="spec-h"><b>Thanh onboarding</b><span class="kind">grid-cols-[auto_1fr_auto] max-w-6xl</span><span class="dp">h 56</span></div>
+          <div class="stage paper center"><div class="df-onboard-bar"><button class="df-back"><svg class="i"><use href="#left"/></svg>Back</button><div class="df-progress" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" aria-label="Tiến độ"><i></i></div><button class="df-nav-btn plain">Sign In</button></div></div></div>
+
+        <div class="spec" data-sig="c92a9e172a"><div class="spec-h"><b>Breadcrumb</b><span class="kind">text-sm leading-6 text-stone-800</span><span class="dp">14 / 24</span></div>
+          <div class="stage"><nav class="df-crumb" aria-label="Breadcrumb"><a href="#navigation">Learn</a><span aria-hidden="true">/</span><a href="#navigation">Use Cases</a><span aria-hidden="true">/</span><span>AI for Homebuyers</span></nav></div></div>
+
+        <div class="spec" data-sig="364ad04083 b96d17c274"><div class="spec-h"><b>Mục lục bài (TOC)</b><span class="kind">rounded-lg border-stone-200/80 px-3 py-4</span><span class="dp">224 · r 10</span></div>
+          <div class="stage">
+            <nav class="df-toc" aria-label="Table of contents"><b>Table of Contents</b><a class="on" href="#navigation">Explore Site-Fit Direction</a><a href="#navigation">Inputs That Shape the Footprint</a><a href="#navigation">Review the Site Relationship</a>
+              <div class="row"><a href="#navigation">FAQ</a><button class="df-disclose" aria-expanded="true" aria-label="Thu gọn FAQ"><svg class="i" style="width:14px;height:14px"><use href="#chev"/></svg></button></div>
+              <div class="sub"><a href="#navigation">Can Drafted tell me what fits inside my setbacks?</a><a href="#navigation">Can I use Drafted before I have a survey?</a></div></nav>
+          <div class="states" data-sig-state="b96d17c274:hover 887b4d56ee:hover"><figure><figcaption><b>hover</b> mục · stone-900</figcaption><a class="is-hover" style="font-size:14px;color:var(--df-ink);text-decoration:none" href="#navigation">Inputs That Shape the Footprint</a></figure><figure><figcaption><b>hover</b> nút gập</figcaption><button class="df-disclose is-hover" aria-label="Mở"><svg class="i" style="width:14px;height:14px"><use href="#chev"/></svg></button></figure></div></div><div class="spec-f"><span class="note">Dính bên phải bài viết, tự cuộn trong khung khi dài (max-h 100vh − 14rem). Nút chevron gập mở nhóm FAQ.</span></div></div>
+
+        <div class="spec full" data-sig="830e0ff0d9 bd04a8495e bb0236d862 d80fec4bb4"><div class="spec-h"><b>Tab hồ sơ (audience)</b><span class="kind">audience-tab h-10 px-8 -ml-9 · SVG hình thang</span><span class="dp">h 40 · chồng 36</span></div>
+          <div class="stage"><div class="df-folder" role="tablist">
+            <a class="lead" href="#navigation"><svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 40 L16 3 Q17.5 0 20 0 H80 Q82.5 0 84 3 L100 40"/></svg><span>Use Drafted as →</span></a>
+            <a class="on" href="#navigation" aria-pressed="true"><svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 40 L16 3 Q17.5 0 20 0 H80 Q82.5 0 84 3 L100 40"/></svg><span>homebuyer</span></a>
+            <a href="#navigation"><svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 40 L16 3 Q17.5 0 20 0 H80 Q82.5 0 84 3 L100 40"/></svg><span>architect</span></a>
+            <a href="#navigation"><svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 40 L16 3 Q17.5 0 20 0 H80 Q82.5 0 84 3 L100 40"/></svg><span>builder</span></a>
+            <a href="#navigation"><svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 40 L16 3 Q17.5 0 20 0 H80 Q82.5 0 84 3 L100 40"/></svg><span>developer</span></a>
+            <a href="#navigation"><svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 40 L16 3 Q17.5 0 20 0 H80 Q82.5 0 84 3 L100 40"/></svg><span>drafter</span></a></div><div class="states" data-sig-state="830e0ff0d9:hover bd04a8495e:hover 830e0ff0d9:selected bd04a8495e:selected"><figure><figcaption>mặc định · stone-400</figcaption><div class="df-folder" style="width:auto;border:none"><a href="#navigation"><svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 40 L16 3 Q17.5 0 20 0 H80 Q82.5 0 84 3 L100 40"/></svg><span>architect</span></a></div></figure><figure><figcaption><b>hover</b> · stone-600</figcaption><div class="df-folder" style="width:auto;border:none"><a class="is-hover" href="#navigation"><svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 40 L16 3 Q17.5 0 20 0 H80 Q82.5 0 84 3 L100 40"/></svg><span>architect</span></a></div></figure><figure><figcaption><b>selected</b> · aria-pressed, stone-950, z-30</figcaption><div class="df-folder" style="width:auto;border:none"><a class="on" aria-pressed="true" href="#navigation"><svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 40 L16 3 Q17.5 0 20 0 H80 Q82.5 0 84 3 L100 40"/></svg><span>homebuyer</span></a></div></figure></div></div>
+          <div class="spec-f"><span class="note">Bộ phân loại tự động không bắt được pattern này, vì mỗi tab là một thẻ &lt;a&gt; trong suốt với hình thang vẽ bằng SVG. Mình thêm tay sau khi xem ảnh trang. Tab đang chọn nằm trên cùng (z-30), chữ stone-950; tab khác chữ stone-400.</span></div></div>
+
+        <div class="spec full" data-sig="58683030fe"><div class="spec-h"><b>Dải báo chí</b><span class="kind">marquee logo · grayscale</span><span class="dp">cao ~32</span></div>
+          <div class="stage center"><div class="df-press"><span>BÁO A</span><span>BÁO B</span><span>BÁO C</span></div></div>
+          <div class="spec-f"><span class="note">Site đặt 3 logo báo chí thật, màu xám, cuộn vòng trên mobile. Kit không nhúng logo của bên thứ ba, chỉ để khung giữ chỗ.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= CHỨA NỘI DUNG ================= -->
+    <section class="block" id="containment">
+      <header><h2>Chứa nội dung</h2></header>
+      <div class="grid wide">
+        <div class="spec" data-sig="675095cf82"><div class="spec-h"><b>Thẻ nhà (băng chuyền)</b><span class="kind">landing-3d-carousel-card</span><span class="dp">238 · r 10</span></div>
+          <div class="stage paper center">
+            <div class="df-house"><div class="top"><p class="title">Cozy Bright 3-Bed</p><span class="df-meta"><span class="df-avatar">M</span>maxonon<span aria-hidden="true">·</span>1w ago</span></div><div class="df-rule"><i></i></div><div class="df-art">ảnh render</div><div class="df-art" style="margin-top:0">mặt bằng</div></div>
+          </div><div class="spec-f"><span class="note">Viền stone-300/80, nền giấy, bóng 0 14 36. Đường kẻ có hình thoi xoay 45° là chữ ký của site. Ảnh dùng mix-blend-multiply để hoà vào nền giấy.</span></div></div>
+
+        <div class="spec" data-sig="ec634bf6c9"><div class="spec-h"><b>Thẻ lựa chọn</b><span class="kind">rounded-lg border-2 border-[#A9A9A9]</span><span class="dp">pad 16/20</span></div>
+          <div class="stage col">
+            <a class="df-choice" href="#containment"><h3><svg class="i"><use href="#faq"/></svg>FAQ</h3><p>Quick answers about using Drafted.</p></a>
+            <a class="df-choice" href="#containment"><h3><svg class="i"><use href="#book"/></svg>Use Cases</h3><p>Guides on how and when to use Drafted.</p></a>
+            <a class="df-choice" href="#containment"><h3><svg class="i"><use href="#news"/></svg>News</h3><p>Product updates, new features, and press.</p></a>
+          </div><div class="states" data-sig-state="ec634bf6c9:hover"><figure><figcaption><b>hover</b> · viền stone-500</figcaption><a class="df-choice is-hover" href="#containment" style="width:260px"><h3>FAQ</h3><p>Quick answers about using Drafted.</p></a></figure></div></div>
+
+        <div class="spec full" data-sig="cfbd048c8e ed3478a919 990330f70d 4e67567209"><div class="spec-h"><b>Thẻ nổi bật · thẻ viền đứt</b><span class="kind">grid gap-6 p-6 · border-dashed</span><span class="dp">1120 · r 10</span></div>
+          <div class="stage col" style="gap:20px">
+            <div class="df-feature"><div><div class="df-eyebrow">Start here</div><h2>How to generate house plans with AI</h2><p>Generate house layouts, edit walls and openings, and collaborate on your plan.</p></div>
+              <div class="panel"><div class="df-eyebrow">Turn a shape into a house layout</div><div class="pair"><div></div><span class="df-round"><svg class="i" style="width:14px;height:14px"><use href="#arrow"/></svg></span><div></div></div></div></div>
+            <div class="df-feature dashed"><div><h2 style="margin:0">Best floor plan generator tools</h2><p>Compare AI-native generators, manual floor plan creators and CAD tools.</p></div><div style="display:flex;align-items:center"><h3 style="margin:0;font:600 20px/28px var(--sans)">Choose by the outcome you need</h3></div></div>
+          </div><div class="states" data-sig-state="cfbd048c8e:hover ed3478a919:hover"><figure><figcaption><b>hover</b> · viền stone-500</figcaption><div class="df-feature is-hover" style="grid-template-columns:1fr;max-width:360px;padding:16px"><div class="df-eyebrow">Start here</div></div></figure><figure><figcaption><b>hover</b> viền đứt · stone-500</figcaption><div class="df-feature dashed" style="grid-template-columns:1fr;max-width:360px;padding:16px;border-color:var(--df-inkMuted)"><b>Best floor plan generator tools</b></div></figure></div></div>
+
+        <div class="spec full" data-sig="879ccc0027 0d3f2f2fae"><div class="spec-h"><b>Lưới lựa chọn · onboarding</b><span class="kind">min-h-[52px] rounded-lg border-2 px-5</span><span class="dp">52 · r 10</span></div>
+          <div class="stage paper col" style="align-items:center;gap:20px">
+            <h2 style="margin:0;font:400 30px/37.5px var(--serif);color:var(--df-ink)">What describes you?</h2>
+            <div class="df-option-grid">
+              <button class="df-option" aria-pressed="true"><svg class="i"><use href="#house"/></svg>Homebuyer</button>
+              <button class="df-option"><svg class="i"><use href="#ruler"/></svg>Architect</button>
+              <button class="df-option"><svg class="i"><use href="#user"/></svg>Builder</button>
+              <button class="df-option"><svg class="i"><use href="#file"/></svg>Developer</button>
+              <button class="df-option"><svg class="i"><use href="#sofa"/></svg>Interior designer</button>
+              <button class="df-option"><svg class="i"><use href="#scan"/></svg>Real estate agent</button>
+            </div><div class="states" data-sig-state="0d3f2f2fae:hover"><figure><figcaption>mặc định</figcaption><button class="df-option" style="width:220px"><svg class="i"><use href="#house"/></svg>Homebuyer</button></figure><figure><figcaption><b>hover</b> · viền stone-500</figcaption><button class="df-option is-hover" style="width:220px"><svg class="i"><use href="#house"/></svg>Homebuyer</button></figure><figure><figcaption><b>selected</b> · viền stone-900</figcaption><button class="df-option" aria-pressed="true" style="width:220px"><svg class="i"><use href="#house"/></svg>Homebuyer</button></figure></div></div>
+          <div class="spec-f"><span class="note">Bước đầu của /onboarding. Lựa chọn đang chọn và lúc hover đổi viền sang stone-900.</span></div></div>
+
+        <div class="spec full"><div class="spec-h"><b>Dialog đăng ký</b><span class="kind">DialogContent · bg-[#FAF8F2] rounded-xl</span><span class="dp">448 · pad 24 · r 14</span></div>
+          <div class="stage dim center">
+            <div class="df-dialog" role="dialog" aria-label="Đăng ký">
+              <button class="df-close" aria-label="Đóng"><svg class="i"><use href="#x"/></svg></button>
+              <div class="fan">xấp ảnh nhà xoè quạt</div>
+              <h2>Sign up to create your <b>free</b> house plans</h2>
+              <div class="df-field"><label class="df-label" for="k-role">I am a...</label><button class="df-select" id="k-role">Select your role<svg class="i"><use href="#chev"/></svg></button></div>
+              <div class="df-row2"><div class="df-field"><label class="df-label" for="k-fn">First Name</label><input class="df-input" id="k-fn" placeholder="John"></div><div class="df-field"><label class="df-label" for="k-ln">Last Name</label><input class="df-input" id="k-ln" placeholder="Doe"></div></div>
+              <div class="df-field"><label class="df-label" for="k-em">Email</label><input class="df-input" id="k-em" type="email" placeholder="you@example.com"></div>
+              <div class="df-field"><label class="df-label" for="k-pw">Password <small>Must be at least 8 characters</small></label><input class="df-input" id="k-pw" type="password"></div>
+              <div class="sub">All fields required for email signup.</div>
+              <button class="df-btn primary block" disabled>Create Account</button>
+              <div class="df-or"><span>Or continue with</span></div>
+              <button class="df-btn outline block"><span class="df-g">G</span>Sign up with Google</button>
+              <div class="foot">Already have an account? <button class="df-link">Sign in</button></div>
+            </div>
+          </div><div class="spec-f"><span class="note">Lớp phủ phía sau là màu xám đục. Site ghi màu nền dialog cứng thành #FAF8F2 thay vì dùng token --card.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= NHẬP LIỆU ================= -->
+    <section class="block" id="inputs">
+      <header><h2>Nhập liệu</h2><p>Toàn bộ là component shadcn/ui gốc: Input, Label, Select. Viền dùng <code>--input</code>, vòng focus dùng <code>--ring</code>.</p></header>
+      <div class="grid wide">
+        <div class="spec"><div class="spec-h"><b>Input · Label</b><span class="kind">Input · Label</span><span class="dp">h 36 · r 8</span></div>
+          <div class="stage col" style="gap:18px">
+            <div class="df-field"><label class="df-label" for="k-a">Email</label><input class="df-input" id="k-a" placeholder="you@example.com"></div>
+            <div class="df-field"><label class="df-label" for="k-b">Password <small>Must be at least 8 characters</small></label><input class="df-input" id="k-b" type="password" value="secret"></div>
+            <div class="df-field"><label class="df-label" for="k-c">Email</label><input class="df-input" id="k-c" value="john@" aria-invalid="true"><span class="df-error">Nhập email hợp lệ</span></div>
+          </div><div class="spec-f"><span class="note">Trạng thái lỗi theo aria-invalid của shadcn (viền và vòng màu destructive). Trạng thái này không hiện ra lúc quét trang.</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Select</b><span class="kind">SelectTrigger · SelectContent</span><span class="dp">h 36 · item 32</span></div>
+          <div class="stage col" style="gap:10px">
+            <button class="df-select">Select your role<svg class="i"><use href="#chev"/></svg></button>
+            <div class="df-menu"><div>Homebuyer</div><div class="on">Drafter / Residential Designer<svg class="i" style="width:14px;height:14px"><use href="#check"/></svg></div><div>Architect</div></div>
+          </div><div class="spec-f"><span class="note">Ba lựa chọn lấy từ thẻ select thật trên /auth. Menu mở vẽ theo mặc định của shadcn.</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Hàng hai cột · dải phân cách</b><span class="kind">grid-cols-2 gap-4 · separator</span><span class="dp">gap 16</span></div>
+          <div class="stage col" style="gap:18px">
+            <div class="df-row2"><div class="df-field"><label class="df-label" for="k-d">First Name</label><input class="df-input" id="k-d" placeholder="John"></div><div class="df-field"><label class="df-label" for="k-e">Last Name</label><input class="df-input" id="k-e" placeholder="Doe"></div></div>
+            <div class="df-or"><span>Or continue with</span></div>
+          </div></div>
+      </div>
+    </section>
+
+    <!-- ================= DANH SÁCH MẪU NHÀ (vòng khám phá lần 2: /*-house-plans) ================= -->
+    <section class="block" id="listing">
+      <header><h2>Danh sách mẫu nhà</h2><p>Các trang /4-bedroom-3-bath-house-plans, /2-bedroom-house-plans… có thanh lọc dạng chip dropdown, popover chọn hình khối, lưới thẻ mẫu nhà có chip thuộc tính màu cát, và trạng thái rỗng khi không có kết quả.</p></header>
+      <div class="grid wide">
+        <div class="spec full" data-sig="0d38cbd13c fe2da8e80b 089d6f2b86 2a5ca0fdd5 97d9d88e22"><div class="spec-h"><b>Thanh lọc</b><span class="kind">h-8 rounded-md border px-2.5 text-xs · on: border-stone-700 bg-white</span><span class="dp">32 · r 8</span></div>
+          <div class="stage paper">
+            <button class="df-filter on"><svg class="i"><use href="#bed"/></svg>4 Bed<svg class="i"><use href="#chev"/></svg></button>
+            <button class="df-filter"><svg class="i"><use href="#house"/></svg>Heated Area<svg class="i"><use href="#chev"/></svg></button>
+            <button class="df-filter">Bathrooms<svg class="i"><use href="#chev"/></svg></button>
+            <button class="df-filter"><svg class="i"><use href="#shapes"/></svg>Shape<svg class="i"><use href="#chev"/></svg></button>
+            <button class="df-filter icon" aria-label="Gợi ý bằng AI"><svg class="i"><use href="#spark"/></svg></button>
+          <div class="states" data-sig-state="089d6f2b86:hover fe2da8e80b:hover"><figure><figcaption><b>hover</b> · nền trắng, viền stone-400</figcaption><button class="df-filter is-hover"><svg class="i"><use href="#house"/></svg>Heated Area<svg class="i"><use href="#chev"/></svg></button></figure><figure><figcaption><b>hover</b> chip đang lọc</figcaption><button class="df-filter on is-hover" style="border-color:var(--df-lineStrong)"><svg class="i"><use href="#bed"/></svg>4 Bed<svg class="i"><use href="#chev"/></svg></button></figure></div></div><div class="spec-f"><span class="note">Chip đang có giá trị lọc đổi sang nền trắng, viền stone-700. Trên mobile, hàng chip cuộn ngang và thu về icon 19px (tag 2a5ca0fdd5).</span></div></div>
+
+        <div class="spec" data-sig="cb9170a52c 7e25c19e31 8d26f802cc"><div class="spec-h"><b>Popover · Shape</b><span class="kind">PopoverContent bg-[#FAF8F2] p-3 · nút border-[1.5px]</span><span class="dp">288 · nút 36</span></div>
+          <div class="stage paper center"><div class="df-popover"><div class="t"><svg class="i"><use href="#shapes"/></svg>Shape</div><button class="df-choice-btn">Custom Shape</button></div></div></div>
+
+        <div class="spec" data-sig="c2af7d1332 c4f04d4af1 5ef8ba5a98"><div class="spec-h"><b>Trạng thái rỗng · hết kết quả</b><span class="kind">Button outline sm · text-sm text-stone-600</span><span class="dp">32</span></div>
+          <div class="stage col"><div class="df-empty"><span>No matching drafts.</span><button class="df-btn outline sm">Clear filters</button></div><div class="df-empty" style="padding-top:0"><span class="df-hint">You've seen all 111 plans in these results</span></div></div><div class="states" data-sig-state="c2af7d1332:hover"><figure><figcaption><b>hover</b> Clear filters · nền accent</figcaption><button class="df-btn outline sm is-hover">Clear filters</button></figure></div></div>
+
+        <div class="spec full" data-sig="d4ad73a8eb 52570a1360 33708770d3 2f59ad5db5 ec8b0d9905 6c3ed43e57 15f94b8f5c d2f5c62ffb"><div class="spec-h"><b>Thẻ mẫu nhà</b><span class="kind">group/explore-card rounded-lg border-stone-300/80 bg-[#FAF8F2]</span><span class="dp">309 · r 10</span></div>
+          <div class="stage paper center" style="gap:20px;align-items:flex-start">
+            <div class="df-plan"><div class="top"><button class="df-round fav" aria-label="Lưu"><svg class="i" style="width:14px;height:14px"><use href="#heart"/></svg></button><p class="title">Bright 2-Bed Home</p><span class="df-meta"><svg class="i" style="width:12px;height:12px"><use href="#trophy"/></svg><span class="df-avatar" style="background:var(--df-inkMuted)">S</span>Sierra<span aria-hidden="true">·</span>4mo ago</span></div><div class="df-rule"><i></i></div><div class="df-art">ảnh render</div><div class="df-art" style="margin-top:0">mặt bằng</div>
+              <div class="chips"><span class="df-chip-sand">Bright</span><span class="df-chip-sand">2 bd</span><span class="df-chip-sand">2 ba</span><span class="df-chip-sand"><svg class="i"><use href="#house"/></svg>633 ft²</span></div>
+              <button class="df-btn primary sm dl" style="font-size:12px"><svg class="i" style="width:14px;height:14px"><use href="#download"/></svg>Download Files</button></div>
+          <div class="states" data-sig-state="d4ad73a8eb:hover d4ad73a8eb:active 2f59ad5db5:hover"><figure><figcaption><b>hover</b> = <b>active</b> · nền trắng, viền stone-400, bóng 0 8 20, hiện Download</figcaption><div class="df-plan is-hover" style="width:240px"><div class="top"><p class="title">Bright 2-Bed Home</p><span class="df-meta btn is-hover" style="border-radius:999px;padding:2px 4px"><span class="df-avatar" style="background:var(--df-inkMuted)">S</span>Sierra · 4mo ago</span></div><div class="df-rule"><i></i></div><div class="df-art">ảnh render</div><button class="df-btn primary sm dl" style="font-size:12px">Download Files</button></div></figure></div></div><div class="spec-f"><span class="note">Hover (màn ≥ 750px): nền chuyển trắng, viền stone-400, bóng lớn dần trong 500ms; nút Download Files hiện ra ở góc dưới. Avatar trên site là ảnh người dùng, ở đây thay bằng chữ cái. Rê chuột vào thẻ để xem.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= BÀI VIẾT & SECTION (từ vòng khám phá /learn/*) ================= -->
+    <section class="block" id="editorial">
+      <header><h2>Bài viết &amp; section</h2><p>Các khối dựng nên trang /learn/*: khung section viền đứt chứa lưới thẻ hoặc danh sách hàng, sơ đồ luồng, panel so sánh, bảng, dải CTA và lưới link cuối trang. Toàn bộ nhóm này tìm được nhờ vòng khám phá: 16+ trang, dừng khi nhiều trang liền không còn pattern mới.</p></header>
+      <div class="grid wide">
+        <div class="spec full" data-sig="545575548f"><div class="spec-h"><b>Section viền đứt · văn bản</b><span class="kind">rounded-lg border-2 border-dashed border-stone-300 p-6</span><span class="dp">1120 · pad 24</span></div>
+          <div class="stage"><div class="df-section"><h2>How are homebuyers using AI?</h2><p>Homebuyers can use AI to organize ideas that are hard to explain: room lists, lifestyle priorities, style preferences and budget concerns.</p><p>Generative design tools let you <a class="df-inline-link" href="#editorial">compare layouts</a> and react to tradeoffs earlier.</p></div></div></div>
+
+        <div class="spec full" data-sig="cc7dff5ff6 151fb446e5 8450076c00"><div class="spec-h"><b>Section · lưới thẻ tính năng</b><span class="kind">grid gap-2 · rounded-lg border-stone-200 bg-white p-4</span><span class="dp">thẻ ~348 · pad 16</span></div>
+          <div class="stage"><div class="df-section"><h2>What is Drafted AI?</h2><p>Drafted is an AI floor plan generation tool for the schematic design phase.</p>
+            <div class="df-feat-grid">
+              <div class="df-feat"><h3>Input and canvas based prompting</h3><p>Use rooms, square footage targets, lot context, and client priorities as inputs.</p></div>
+              <div class="df-feat"><h3>Generate, edit, and compare</h3><p>Generate multiple concepts, then edit walls, doors, and windows.</p></div>
+              <div class="df-feat"><h3>Review together in live 3D</h3><p>See 2D plan changes update the matching 3D model in real time.</p></div>
+              <div class="df-feat"><h3>Export CAD / BIM files</h3><p>Use the strongest concepts as structured starting points.</p></div>
+            </div></div></div></div>
+
+        <div class="spec full" data-sig="0a973cf0ae 1fd4a98b14 c6bb632c64"><div class="spec-h"><b>Section · danh sách hàng</b><span class="kind">group rounded-lg border-stone-200/80 bg-white p-4 hover:border-stone-400</span><span class="dp">hàng ~86 · gap 8</span></div>
+          <div class="stage"><div class="df-section"><h2>Use Cases</h2><p>Start with the workflows most relevant to this audience.</p>
+            <div class="df-rows">
+              <a class="df-row-link" href="#editorial"><span class="t"><b>Design a house on your lot</b><small>Test footprint, site fit, outdoor connection, and room flow.</small></span><svg class="i"><use href="#arrow"/></svg></a>
+              <a class="df-row-link" href="#editorial"><span class="t"><b>Tiny Home and ADU Plans</b><small>Compare ADU, guest house, and tiny home layouts.</small></span><svg class="i"><use href="#arrow"/></svg></a>
+              <a class="df-row-link" href="#editorial"><span class="t"><b>Prepare for an Architect</b><small>Turn loose preferences into a clearer design brief.</small></span><svg class="i"><use href="#arrow"/></svg></a>
+            </div></div></div><div class="states" data-sig-state="1fd4a98b14:hover"><figure><figcaption><b>hover</b> hàng · viền stone-400</figcaption><a class="df-row-link is-hover" href="#editorial" style="width:320px"><span class="t"><b>Design a house on your lot</b></span><svg class="i"><use href="#arrow"/></svg></a></figure></div></div>
+
+        <div class="spec" data-sig="3b338a29de 60c1097b62"><div class="spec-h"><b>Thẻ nhóm đối tượng</b><span class="kind">group/audience border-2 border-dashed p-6</span><span class="dp">546 · hàng compact</span></div>
+          <div class="stage"><div class="df-section"><div class="head"><div><h2 style="font-size:24px;line-height:32px">For homebuyers</h2><p style="margin:6px 0 0;font-size:13px;color:var(--df-inkBody)">Use Drafted to design your dream home.</p></div><svg class="i"><use href="#arrow"/></svg></div>
+            <div class="df-rows"><a class="df-row-link compact" href="#editorial"><span class="t"><b>Design a House Layout to a PDF Plan</b></span><svg class="i"><use href="#arrow"/></svg></a><a class="df-row-link compact" href="#editorial"><span class="t"><b>Prepare for an Architect</b></span><svg class="i"><use href="#arrow"/></svg></a></div></div></div></div>
+
+        <div class="spec" data-sig="708d6f5c36 f1ba4c8faf"><div class="spec-h"><b>Hàng link nền giấy</b><span class="kind">grid gap-3 rounded-lg border-2 border-stone-200 bg-[#FAF8F2] p-4</span><span class="dp">~600 × 103</span></div>
+          <div class="stage col"><a class="df-row-link paper" href="#editorial"><span class="t"><b>AI for Revit</b><small>Export IFC or DXF files for BIM review.</small></span><svg class="i"><use href="#arrow"/></svg></a><a class="df-row-link paper" href="#editorial"><span class="t"><b>Tiny Home and ADU Plans</b></span><svg class="i"><use href="#arrow"/></svg></a></div><div class="states" data-sig-state="708d6f5c36:hover f1ba4c8faf:hover"><figure><figcaption><b>hover</b> · nền trắng, viền stone-500</figcaption><a class="df-row-link paper is-hover" href="#editorial" style="width:260px"><span class="t"><b>AI for Revit</b></span><svg class="i"><use href="#arrow"/></svg></a></figure><figure><figcaption><b>hover</b> bản gọn · viền stone-900</figcaption><a class="df-row-link paper compact is-hover" href="#editorial" style="width:260px"><span class="t"><b>Tiny Home and ADU Plans</b></span><svg class="i"><use href="#arrow"/></svg></a></figure></div></div>
+
+        <div class="spec full" data-sig="7292417cf4 ce5ab61351 9b5dbaf280 53e27a0130"><div class="spec-h"><b>Sơ đồ luồng (coming soon)</b><span class="kind">rounded-lg border-stone-300 bg-[#FAF8F2] p-4 · bước min-h-24</span><span class="dp">bước 96 · r 8</span></div>
+          <div class="stage" style="gap:24px;align-items:flex-start">
+            <div style="flex:1;min-width:220px"><div class="df-eyebrow">Coming soon</div><h2 style="margin:8px 0 0;font:400 30px/37.5px var(--serif);color:var(--df-ink)">Upload your plan</h2><p style="margin:8px 0 12px;font-size:14px;color:var(--df-inkBody)">Start from your existing plan, and edit it with Drafted.</p><a class="df-title-link" href="#editorial" style="font-size:14px">See the thread →</a></div>
+            <div class="df-flow" style="flex:1.4;min-width:300px"><div class="steps">
+              <div class="df-step"><svg class="i"><use href="#file"/></svg><b>PDF</b><small>Existing plan</small></div><svg class="i arrow"><use href="#arrow"/></svg>
+              <div class="df-step"><svg class="i"><use href="#spark"/></svg><b>Drafted</b><small>Recognize rooms</small></div><svg class="i arrow"><use href="#arrow"/></svg>
+              <div class="df-step on"><svg class="i"><use href="#ruler"/></svg><b>Editable plan</b><small>Adjust layout</small></div></div>
+              <div class="note"><svg class="i" style="width:14px;height:14px"><use href="#cursor"/></svg>Upload, convert, then edit the plan in Drafted</div></div>
+          </div><div class="spec-f"><span class="note">Bước cuối đang chọn có viền stone-500 đậm hơn. Mỗi ô bước cũng xuất hiện riêng lẻ, phóng to, trên trang use-cases.</span></div></div>
+
+        <div class="spec" data-sig="4ab447d6e6"><div class="spec-h"><b>Panel so sánh trước → sau</b><span class="kind">eyebrow + 2 ảnh + ô mũi tên</span><span class="dp">r 10 · pad 14</span></div>
+          <div class="stage"><div class="df-compare" style="width:100%"><div class="df-eyebrow">Turn an image into a Revit model</div><div class="pair"><div>ảnh trước</div><span class="df-round shadow"><svg class="i" style="width:14px;height:14px"><use href="#arrow"/></svg></span><div>ảnh sau</div></div></div></div></div>
+
+        <div class="spec" data-sig="42f1486d27"><div class="spec-h"><b>Panel tối · CAD/BIM</b><span class="kind">bg-stone-950 border-2 border-stone-200 p-3.5</span><span class="dp">max 384</span></div>
+          <div class="stage center"><div class="df-dark-panel"><div class="top"><span>CAD / BIM exports</span><em>DXF / IFC</em></div><div class="pair"><div>bản vẽ</div><div>mô hình 3D</div></div></div></div>
+          <div class="spec-f"><span class="note">Panel này giữ nền tối cả khi trang ở chế độ sáng, nên dùng màu cố định thay vì token.</span></div></div>
+
+        <div class="spec full" data-sig="281565f182"><div class="spec-h"><b>Khối workflow · ảnh + danh sách</b><span class="kind">rounded-lg border-2 border-[#A9A9A9] bg-white p-6</span><span class="dp">1120 × ~386</span></div>
+          <div class="stage"><div class="df-workflow"><div><h2>Use Drafted in Your Workflow</h2><p>Move early concepts into your BIM and drafting tools.</p><div style="margin-top:16px" class="df-dark-panel"><div class="top"><span>CAD / BIM exports</span><em>DXF / IFC</em></div><div class="pair"><div>bản vẽ</div><div>mô hình 3D</div></div></div></div>
+            <div class="df-rows" style="margin:0"><a class="df-row-link paper" href="#editorial"><span class="t"><b>AI for Revit</b><small>Export IFC or DXF files for BIM review.</small></span><svg class="i"><use href="#arrow"/></svg></a><a class="df-row-link paper" href="#editorial"><span class="t"><b>AI for AutoCAD</b><small>Export DXF files for CAD drafting.</small></span><svg class="i"><use href="#arrow"/></svg></a><a class="df-row-link paper" href="#editorial"><span class="t"><b>AI for Chief Architect</b><small>Export plan geometry for model setup.</small></span><svg class="i"><use href="#arrow"/></svg></a></div></div></div></div>
+
+        <div class="spec" data-sig="0acec828af 0b963819dc c260faf6c1"><div class="spec-h"><b>Chọn theo kết quả</b><span class="kind">border-2 border-[#A9A9A9] p-5 · ô min-h-24 bg-[#FAF8F2]</span><span class="dp">ô 96 · r 8</span></div>
+          <div class="stage"><div class="df-outcome"><h3>Choose by the outcome you need</h3><div class="df-tiles"><div class="df-tile"><svg class="i"><use href="#spark"/></svg>Generate floor plans</div><div class="df-tile"><svg class="i"><use href="#scan"/></svg>Scan existing plans</div><div class="df-tile"><svg class="i"><use href="#sofa"/></svg>Interior design</div></div><a class="df-title-link" href="#editorial" style="font-size:13px;align-self:flex-start">Read the comparison →</a></div></div><div class="states" data-sig-state="0acec828af:hover"><figure><figcaption><b>hover</b> · viền stone-500</figcaption><div class="df-outcome is-hover" style="padding:14px"><h3>Choose by the outcome you need</h3></div></figure></div></div>
+
+        <div class="spec" data-sig="f146a53aec"><div class="spec-h"><b>Panel liên quan</b><span class="kind">rounded-lg border-stone-200 bg-white p-5</span><span class="dp">288 · nút 62</span></div>
+          <div class="stage center"><div class="df-related"><div class="df-eyebrow">Related</div><a class="df-pill-link big" href="#editorial">AI Home Design Workflow<svg class="i"><use href="#arrow"/></svg></a><a class="df-pill-link big" href="#editorial">Open thread on X<svg class="i"><use href="#ext"/></svg></a></div></div>
+          <div class="spec-f"><span class="note">Link ra ngoài dùng icon external thay cho mũi tên.</span></div></div>
+
+        <div class="spec full" data-sig="a2026fcac9 e17b3c7be8 644f434224 2630591e53 0c3f081341"><div class="spec-h"><b>Accordion FAQ</b><span class="kind">details · summary px-5 py-4 text-lg · border-2 border-[#A9A9A9]</span><span class="dp">hàng 60 · r 10</span></div>
+          <div class="stage"><div class="df-accordion">
+            <details open><summary>What is Drafted? Does it help me design a custom home or floor plan?<svg class="i"><use href="#chev"/></svg></summary><div class="body"><p>Drafted is an AI floor plan creator. The tool helps you explore, generate, and refine custom home ideas.</p><a href="#editorial">Read the AI floor plan guide<svg class="i" style="width:14px;height:14px"><use href="#arrow"/></svg></a></div></details>
+            <details><summary>How do I get started with Drafted?<svg class="i"><use href="#chev"/></svg></summary><div class="body"><p>Drafted is free to use: open the Create tab, add your wish list, and start generating.</p></div></details>
+            <details><summary>Can I upload an existing floor plan or blueprint?<svg class="i"><use href="#chev"/></svg></summary><div class="body"><p>We're working on it.</p></div></details>
+          </div><div class="states" data-sig-state="644f434224:hover 0c3f081341:hover"><figure><figcaption><b>hover</b> hàng · nền stone-50</figcaption><div class="df-accordion" style="width:360px"><details><summary class="is-hover">How do I get started?<svg class="i"><use href="#chev"/></svg></summary></details></div></figure><figure><figcaption><b>hover</b> link · gạch chân</figcaption><div class="df-accordion" style="width:auto;border:none"><div class="body" style="padding:0"><a class="is-hover" href="#editorial" style="margin:0">Read the AI floor plan guide</a></div></div></figure></div></div><div class="spec-f"><span class="note">Dùng &lt;details&gt; gốc, không cần JS; chevron xoay 180° khi mở.</span></div></div>
+
+        <div class="spec full" data-sig="44d512b149 25f291a2d4 dd21d666ba 2f14eef210"><div class="spec-h"><b>Pros / Cons</b><span class="kind">grid md:grid-cols-2 border-2 border-[#A9A9A9] · list-disc text-[15px]</span><span class="dp">864 · vạch giữa 1px</span></div>
+          <div class="stage"><div class="df-proscons"><div><h3>Pros:</h3><ul><li>Generates new custom home layouts from early requirements</li><li>Supports imperial and metric projects</li><li>Edits walls, doors, and windows with synchronized 3D</li></ul></div><div><h3>Cons:</h3><ul><li>Does not scan an existing home</li><li>Not a replacement for final permit drawings</li></ul></div></div></div></div>
+
+        <div class="spec" data-sig="c8e3b7496a 8b56fe37d7 49eadedfa3"><div class="spec-h"><b>Thẻ mẹo có số</b><span class="kind">rounded-md border-[#A9A9A9] bg-[#FAF8F2] p-4 · số font-serif</span><span class="dp">404 · số 32</span></div>
+          <div class="stage center"><div class="df-tip"><span class="df-num">1</span><div><h3>Render quality</h3><p class="lbl warn">Watch out for</p><p>Choosing based on a beautiful 3D image alone.</p><p class="lbl good">Better choice</p><p>Check whether the plan is editable, dimensioned, exportable, and useful in a professional workflow.</p></div></div></div>
+          <div class="spec-f"><span class="note">Nhãn "Watch out for" dùng màu đất nung #B36B5A, "Better choice" dùng màu xanh #4F9469: hai màu ngữ nghĩa duy nhất trên site ngoài destructive.</span></div></div>
+
+        <div class="spec" data-sig="e52d353780"><div class="spec-h"><b>Khung cửa sổ ứng dụng</b><span class="kind">rounded-lg bg-[#1F2A33] · 3 chấm</span><span class="dp">max 1140</span></div>
+          <div class="stage center"><div class="df-window"><div class="chrome"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i>Drafted IFC Export</div><div class="view">ảnh chụp sản phẩm</div></div></div></div>
+
+        <div class="spec" data-sig="71825ebd03 3a8e0967c9"><div class="spec-h"><b>Canvas lô đất (minh hoạ sản phẩm)</b><span class="kind">lưới 20px · vùng xây dựng nét đứt</span><span class="dp">16:9</span></div>
+          <div class="stage center"><div class="df-lot"><div class="area"><small>TARGET LOT AND SQFT</small></div><div class="rooms"><i style="background:#F4B8A8"></i><i style="background:#F4B8A8"></i><i style="background:#9CC9E8"></i><i style="background:#B8DDB0"></i><i style="background:#F5D372"></i></div><div class="shape"></div></div></div>
+          <div class="spec-f"><span class="note">Vẽ lại đơn giản từ ảnh minh hoạ trên use-cases. Các màu phòng là màu minh hoạ của ảnh, không phải token của site.</span></div></div>
+
+        <div class="spec full" data-sig="ec74e08116 758cf7592d"><div class="spec-h"><b>Thẻ bài news</b><span class="kind">grid lg:grid-cols-[0.78fr_1fr] border-2 border-dashed p-5</span><span class="dp">1120 · r 10</span></div>
+          <div class="stage"><a class="df-news" href="#editorial"><div class="img">ảnh bài viết</div><div><p class="cat">Product</p><h2>Drafted V2 Launch</h2><p>Our biggest upgrade yet adds metric support, editable walls, doors and windows, and real-time 3D editing.</p><span class="more">Read the update<svg class="i" style="width:14px;height:14px"><use href="#arrow"/></svg></span></div></a></div><div class="states" data-sig-state="ec74e08116:hover"><figure><figcaption><b>hover</b> · viền đứt stone-500</figcaption><div class="df-news is-hover" style="grid-template-columns:1fr;max-width:280px;padding:12px"><p class="cat">Product</p></div></figure></div></div>
+
+        <div class="spec full" data-sig="1c71d4d4e5 33ce495998 5d0e2de41c d407d46bdc 09d13655d1 dbf981d603 42ff70d66f a170fb7fd8 fb00b8e670"><div class="spec-h"><b>Careers · tab lọc + vị trí</b><span class="kind">audience-tab · min-h-10 rounded-md border-stone-300</span><span class="dp">tab 40 · nút 40</span></div>
+          <div class="stage col" style="gap:18px">
+            <div class="df-folder" style="max-width:420px"><a class="on" href="#editorial"><svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 40 L16 3 Q17.5 0 20 0 H80 Q82.5 0 84 3 L100 40"/></svg><span>All Roles</span></a><a href="#editorial"><svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 40 L16 3 Q17.5 0 20 0 H80 Q82.5 0 84 3 L100 40"/></svg><span>Engineering</span></a></div>
+            <div style="display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--df-line);padding-bottom:10px"><span class="df-dot"></span><b style="font:400 20px var(--serif)">Open roles</b></div>
+            <p class="df-hint" style="margin:0">No open position for you? If you resonate with our mission and want to join us, send an email to the team.</p>
+            <button class="df-btn outline df-open-roles" style="border:1px solid var(--df-line);height:40px;color:var(--df-inkStrong);font-weight:600;max-width:206px">Open Roles</button>
+          <div class="states" data-sig-state="1c71d4d4e5:hover 1c71d4d4e5:selected 09d13655d1:hover"><figure><figcaption><b>hover</b> tab · stone-600</figcaption><div class="df-folder" style="width:auto;border:none"><a class="is-hover" href="#editorial"><svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 40 L16 3 Q17.5 0 20 0 H80 Q82.5 0 84 3 L100 40"/></svg><span>Engineering</span></a></div></figure><figure><figcaption><b>selected</b> tab</figcaption><div class="df-folder" style="width:auto;border:none"><a class="on" aria-pressed="true" href="#editorial"><svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 40 L16 3 Q17.5 0 20 0 H80 Q82.5 0 84 3 L100 40"/></svg><span>All Roles</span></a></div></figure><figure><figcaption><b>hover</b> Open Roles · viền stone-500</figcaption><button class="df-btn outline df-open-roles is-hover" style="border:1px solid var(--df-line);height:40px;color:var(--df-inkStrong);font-weight:600">Open Roles</button></figure></div></div><div class="spec-f"><span class="note">Tab lọc dùng lại đúng hình thang của tab audience (xem phần Điều hướng). Chấm đen 8px chỉ hiện từ sm trở lên.</span></div></div>
+
+        <div class="spec full" data-sig="00eca31387 5b2e0508dd 844f77e359 a36f069a28"><div class="spec-h"><b>Bảng</b><span class="kind">w-full min-w-[680px] border-collapse text-base</span><span class="dp">cột đầu đậm</span></div>
+          <div class="stage"><div class="df-table-wrap"><table class="df-table"><thead><tr><th>User type</th><th>How AI floor plan generation helps</th></tr></thead><tbody>
+            <tr><td>Homebuyers</td><td>Clarify what you need, compare tradeoffs, and build a more specific concept of what you want.</td></tr>
+            <tr><td>Architects</td><td>Explore early program options, room relationships, and client directions before committing to detailed design work.</td></tr>
+            <tr><td>Builders</td><td>Turn buyer input into clearer layout options before pricing, estimating, and preconstruction conversations.</td></tr></tbody></table></div></div>
+          <div class="spec-f"><span class="note">Trên mobile, bảng cuộn ngang trong khung riêng, không làm cả trang tràn.</span></div></div>
+
+        <div class="spec" data-sig="09d1881884"><div class="spec-h"><b>Danh sách chấm</b><span class="kind">space-y-1 pl-10 text-lg</span><span class="dp">18 / 28</span></div>
+          <div class="stage"><ul class="df-bullets"><li>Lot dimensions or a rough buildable area</li><li>Front, side, and rear setback assumptions</li><li>Desired square footage, stories, bedrooms and garage needs</li></ul></div></div>
+
+        <div class="spec" data-sig="bcc92c6f84"><div class="spec-h"><b>Khung video</b><span class="kind">aspect-video placeholder</span><span class="dp">16:9</span></div>
+          <div class="stage"><div class="df-video">Revit plugin video</div></div>
+          <div class="spec-f"><span class="note">Site cũng hiện khung này khi video chưa tải xong.</span></div></div>
+
+        <div class="spec full" data-sig="f2936114ee"><div class="spec-h"><b>Dải CTA cuối bài</b><span class="kind">grid border-b-2 border-[#A9A9A9] py-20</span><span class="dp">pad 80 dọc</span></div>
+          <div class="stage"><div class="df-band"><div><h2>Start designing your dream house plan.</h2><p>Turn a room list, site idea, or early brief into layouts you can compare.</p></div><a class="df-cta" href="#editorial"><svg class="i"><use href="#zap"/></svg>Start Creating</a></div></div></div>
+
+        <div class="spec full" data-sig="b77710ca56 d3821c024c"><div class="spec-h"><b>Lưới link · footer</b><span class="kind">grid gap-x-8 gap-y-3 lg:grid-cols-3</span><span class="dp">14 / 600</span></div>
+          <div class="stage col"><div class="df-linkgrid"><h2>Popular ways to browse</h2><nav>
+            <a class="df-under-link" href="#editorial">Best Floor Plan Generator Software<svg class="i"><use href="#arrow"/></svg></a><a class="df-under-link" href="#editorial">4 Bed 3 Bath House Plans<svg class="i"><use href="#arrow"/></svg></a><a class="df-under-link" href="#editorial">Industrial House Plans<svg class="i"><use href="#arrow"/></svg></a>
+            <a class="df-under-link" href="#editorial">AI Floor Plan Generator<svg class="i"><use href="#arrow"/></svg></a><a class="df-under-link" href="#editorial">2 Bed House Plans<svg class="i"><use href="#arrow"/></svg></a><a class="df-under-link" href="#editorial">Natural House Plans<svg class="i"><use href="#arrow"/></svg></a></nav></div>
+            <div class="df-foot"><span>© 2026 Drafted</span><nav><a href="#editorial">Careers</a><a href="#editorial">Learn</a></nav></div></div></div>
+      </div>
+    </section>
+
+    <!-- ================= PHẢN HỒI & PHỤ TRỢ ================= -->
+    <section class="block" id="feedback">
+      <header><h2>Phản hồi &amp; phụ trợ</h2><p>Ba trang đã quét không có progress, toast hay badge. Phần này chỉ gom các mảnh nhỏ thật sự xuất hiện.</p></header>
+      <div class="grid">
+
+        <div class="spec full"><div class="spec-h"><b>Focus bàn phím · 2 kiểu</b><span class="kind">focus-visible:ring-2 ring-offset-2 · outline mặc định</span><span class="dp">12 + 44 pattern</span></div>
+          <div class="stage">
+            <div class="states" style="border:none;margin:0;padding:0" data-sig-state="9439d8b973:focus d1262f7d4a:focus 9f42c0b65b:focus f40c08060b:focus 0cac6a7d1b:focus 07ed28d7cf:focus 402f3ad197:focus fa1c9819ee:focus c2af7d1332:focus 09d13655d1:focus d81ce42099:focus caf16918c2:focus"><figure><figcaption><b>vòng tuỳ chỉnh</b> · 2px giấy + 4px mực (12 pattern)</figcaption><div style="display:flex;gap:14px;align-items:center"><button class="df-nav-btn solid is-focus">Sign In</button><a class="df-nav-btn outline is-focus" href="#feedback">Learn</a><a class="df-cta sm is-focus" href="#feedback"><svg class="i"><use href="#zap"/></svg>Start Creating</a><button class="df-back df-ring"><svg class="i"><use href="#left"/></svg>Back</button></div></figure></div>
+            <div class="states" style="border:none;margin:0;padding:0" data-sig-state="52570a1360:focus 33708770d3:focus 2f59ad5db5:focus ec8b0d9905:focus 1083ac31ca:focus 301b74a1e4:focus 5fa3b2e537:focus 18195750ae:focus 3b0d14c3af:focus e0c669816e:focus 0d3f2f2fae:focus 1fdc230536:focus af7039c906:focus 172ef68278:focus 0d38cbd13c:focus 16583fed29:focus 1fd4a98b14:focus 708d6f5c36:focus ec74e08116:focus cfbd048c8e:focus ec634bf6c9:focus f1ba4c8faf:focus ed3478a919:focus b96d17c274:focus 644f434224:focus 089d6f2b86:focus fe2da8e80b:focus c528a5ea64:focus cdb8204393:focus c13d548f2e:focus 887b4d56ee:focus fba5a82900:focus f59212ead5:focus 0c3f081341:focus 7dd308cc2c:focus 3d495ad4ba:focus cbcf57645d:focus a6e5ddd5c3:focus 830e0ff0d9:focus bd04a8495e:focus bb0236d862:focus 1c71d4d4e5:focus d80fec4bb4:focus 33ce495998:focus"><figure><figcaption><b>viền mặc định trình duyệt</b> · outline: auto 1px (44 pattern)</figcaption><div style="display:flex;gap:14px;align-items:center"><a class="df-under-link is-focus-ua" href="#feedback">4 Bed 3 Bath House Plans<svg class="i"><use href="#arrow"/></svg></a><button class="df-filter is-focus-ua">Heated Area</button><a class="df-title-link is-focus-ua" href="#feedback">Design a House Layout</a></div></figure></div>
+          </div><div class="spec-f"><span class="note">Đo bằng cách nhấn Shift (chuyển sang chế độ bàn phím) rồi focus từng phần tử. Chỉ nhóm nút header, CTA và nút onboarding có vòng focus riêng; phần còn lại để trình duyệt tự vẽ viền. Đây là điểm yếu về accessibility của site: viền mặc định mảnh và khó thấy trên nền giấy.<details style="margin-top:6px"><summary style="cursor:pointer">Danh sách pattern theo kiểu focus</summary><p style="margin:6px 0 0"><b>Vòng riêng:</b> Back, Clear filters, Learn, My Studio, Open Roles, Sign In, Sign Up, Start Creating</p><p style="margin:4px 0 0"><b>Mặc định:</b> 4 Bed, 4 Bed 3 Bath House Plans, 633 ft², AI Floor Plan Generator, AI Home Design Workflow, AI floor plan generator, AI for Revit Export IFC , All Roles, Architect, Bedrooms Bathrooms Heate, Best Floor Plan Generato, Best floor plan generato, Bright, Careers, Design a House Layout to, Design a house on your l, Design with Drafted, Download Files, Drafted, Engineering, Explore Site-Fit Directi, FAQ Quick answers about , Floor Plan Generation, Heated Area, Homebuyer, Learn, My Studio, PRODUCT Drafted V2 Launc, Read the AI floor plan g, S Sierra · 4mo ago, START HERE How to genera, See the thread, Sign In, Sign Up, Start Creating, Tiny Home and ADU Plans, Use Drafted as →, What is Drafted? Does it, compare layouts, disclosure, link</p></details></span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Link chữ · hover</b><span class="kind">text-stone-500 hover:text-stone-900 …</span><span class="dp">12–14</span></div>
+          <div class="stage">
+            <div class="states" style="border:none;margin:0;padding:0" data-sig-state="c13d548f2e:hover cdb8204393:hover f59212ead5:hover"><figure><figcaption>mặc định</figcaption><div class="df-foot" style="padding:0;width:auto"><nav><a href="#feedback">Careers</a><a href="#feedback">Learn</a></nav></div></figure><figure><figcaption><b>hover</b> · stone-900 / stone-950</figcaption><div class="df-foot" style="padding:0;width:auto"><nav><a class="is-hover" href="#feedback">Careers</a><a class="is-hover" href="#feedback">Learn</a></nav></div></figure><figure><figcaption><b>hover</b> link cụm chủ đề</figcaption><a class="is-hover" href="#feedback" style="font:600 14px var(--sans);color:var(--df-ink);text-decoration:none">Floor Plan Generation</a></figure></div>
+          </div></div>
+        <div class="spec" data-sig="69492f5616"><div class="spec-h"><b>Avatar chữ cái · dòng meta</b><span class="kind">size-5 rounded-full bg-stone-300</span><span class="dp">20 · 9px</span></div>
+          <div class="stage"><span class="df-meta"><span class="df-avatar">A</span>Alex<span aria-hidden="true">·</span>1w ago</span><span class="df-meta"><span class="df-avatar">V</span>Victor<span aria-hidden="true">·</span>2w ago</span></div></div>
+        <div class="spec"><div class="spec-h"><b>Eyebrow · gợi ý · lỗi</b><span class="kind">tracking-[0.16em] · text-xs</span><span class="dp">10.4 · 12</span></div>
+          <div class="stage col"><span class="df-eyebrow">Turn a shape into a house layout</span><span class="df-hint">All fields required for email signup.</span><span class="df-error">Password must be at least 8 characters</span></div></div>
+        <div class="spec" data-sig="c6983492b0"><div class="spec-h"><b>Đường kẻ thoi</b><span class="kind">h-0.5 · size-2 rotate-45</span><span class="dp">2 · 8</span></div>
+          <div class="stage col"><div class="df-rule"><i></i></div></div></div>
+      </div>
+    </section>
+
+    <!-- ================= MÀN MẪU ================= -->
+    <section class="block" id="screens">
+      <header><h2>Màn hình mẫu</h2><p>Ghép lại từ các class <code>.df-*</code> ở trên, đúng kích thước viewport đã chụp. Ảnh minh hoạ nền, ảnh nhà và logo báo chí được thay bằng khối giữ chỗ.</p></header>
+      <div class="screens"><div class="screens-row">
+        <div>
+          <div class="desk" data-sig="0a1bddc5f4 6d83fa6779">
+            <div class="hero-bg"></div>
+            <div class="df-header" style="position:relative"><span class="df-wordmark">Drafted</span><div class="nav"><a class="df-nav-btn outline" href="#screens"><svg class="i" style="width:14px;height:14px"><use href="#book"/></svg>Learn</a><button class="df-nav-btn solid">Sign In</button></div></div>
+            <div class="hero" style="margin-top:206px"><h1>Design House Plans<br>Instantly with AI</h1><p>Generate floor plans, 3D models, renders, and professional CAD/BIM exports.</p><a class="df-cta" href="#screens" style="margin-top:28px"><svg class="i"><use href="#zap"/></svg>Start Creating</a>
+              <div class="df-press" style="margin-top:56px"><span>BÁO A</span><span>BÁO B</span><span>BÁO C</span></div></div>
+            <div class="carousel">
+              <div class="df-house"><div class="top"><p class="title">Cozy Bright 3-Bed</p><span class="df-meta"><span class="df-avatar">M</span>maxonon · 1w ago</span></div><div class="df-rule"><i></i></div><div class="df-art">ảnh render</div></div>
+              <div class="df-house"><div class="top"><p class="title">Modern black 3-Bed</p><span class="df-meta"><span class="df-avatar">C</span>Connor · 1w ago</span></div><div class="df-rule"><i></i></div><div class="df-art">ảnh render</div></div>
+              <div class="df-house"><div class="top"><p class="title">Spacious Earthy 2-Bed</p><span class="df-meta"><span class="df-avatar">V</span>Victor · 2w ago</span></div><div class="df-rule"><i></i></div><div class="df-art">ảnh render</div></div>
+              <div class="df-house"><div class="top"><p class="title">Natural Mountain 4-Bed</p><span class="df-meta"><span class="df-avatar">S</span>Seema · 2w ago</span></div><div class="df-rule"><i></i></div><div class="df-art">ảnh render</div></div>
+            </div>
+          </div>
+          <div class="screen-cap">landing · 1440 × 900 · header + hero (h1 serif 60) + CTA 56 + dải báo chí + băng chuyền thẻ nhà</div>
+        </div>
+        <div>
+          <div class="phone">
+            <div class="hero-bg"></div>
+            <div class="df-header" style="position:relative;padding:8px 12px"><span class="df-wordmark">Drafted</span><div class="nav"><button class="df-nav-btn outline icon" aria-label="Learn"><svg class="i" style="width:14px;height:14px"><use href="#book"/></svg></button><button class="df-nav-btn solid">Sign In</button></div></div>
+            <div class="hero" style="margin-top:150px;padding:0 16px"><h1 style="font-size:36px;line-height:42px">Design House Plans Instantly with AI</h1><p style="font-size:14px;line-height:24px">Generate floor plans, 3D models, renders, and professional CAD/BIM exports.</p><a class="df-cta" href="#screens" style="margin-top:28px;height:56px"><svg class="i"><use href="#zap"/></svg>Get Started</a></div>
+            <div class="df-press" style="margin-top:48px;flex-wrap:nowrap"><span>BÁO A</span><span>BÁO B</span></div>
+            <div style="display:flex;justify-content:center;margin-top:24px"><div class="df-house" style="width:288px"><div class="top"><p class="title">Cozy bright 4-Bed House</p><span class="df-meta"><span class="df-avatar">A</span>Alex · 1w ago</span></div><div class="df-rule"><i></i></div><div class="df-art">ảnh render</div></div></div>
+          </div>
+          <div class="screen-cap">landing mobile · 390 × 844 · Learn rút thành icon · CTA đổi chữ thành "Get Started"</div>
+        </div>
+      </div></div>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* Token của drafted.ai. semantic: biến shadcn trên :root và .dark (lab() đổi sang hex).
+   brand: màu thực dùng qua class Tailwind trên trang (sand/warn/good tìm thêm ở vòng khám phá). Bản tối của lớp brand KHÔNG có trên site:
+   ở đây suy từ các class dark:from-stone-900/950 của site, đảo thang stone. */
+const ROLES = {
+  brand: ["paper", "ink", "inkDeep", "inkStrong", "inkSoft", "inkBody", "inkMuted", "line", "lineSoft", "lineStrong", "cardLine", "onInk", "link", "sand", "warn", "good"],
+  semantic: ["background", "foreground", "card", "cardForeground", "primary", "primaryForeground", "secondary", "secondaryForeground", "muted", "mutedForeground", "accent", "accentForeground", "destructive", "border", "input", "ring"],
+};
+const PALETTES = {
+  drafted: {
+    label: "Stone",
+    light: {
+      paper: "#FAF8F2", ink: "#1C1917", inkDeep: "#0C0A09", inkStrong: "#292524", inkSoft: "#44403B", inkBody: "#57534D", inkMuted: "#79716B", line: "#D6D3D1", lineSoft: "#E7E5E4", lineStrong: "#A6A09B", cardLine: "#A9A9A9", onInk: "#FAF8F2", link: "#155DFC", sand: "#ECE2CC", warn: "#B36B5A", good: "#4F9469",
+      background: "#FFFFFF", foreground: "#0A0A0A", card: "#FFFFFF", cardForeground: "#0A0A0A", primary: "#171717", primaryForeground: "#FAFAFA", secondary: "#F5F5F5", secondaryForeground: "#171717", muted: "#F5F5F5", mutedForeground: "#737373", accent: "#F5F5F5", accentForeground: "#171717", destructive: "#E7000B", border: "#A4A4A4", input: "#A4A4A4", ring: "#A1A1A1",
+    },
+    dark: {
+      paper: "#0C0A09", ink: "#F5F5F4", inkDeep: "#FAFAF9", inkStrong: "#E7E5E4", inkSoft: "#D6D3D1", inkBody: "#A6A09B", inkMuted: "#79716B", line: "#292524", lineSoft: "#1C1917", lineStrong: "#57534D", cardLine: "#44403B", onInk: "#1C1917", link: "#155DFC", sand: "#44403B", warn: "#D08A78", good: "#6FB287",
+      background: "#0A0A0A", foreground: "#FAFAFA", card: "#171717", cardForeground: "#FAFAFA", primary: "#E5E5E5", primaryForeground: "#171717", secondary: "#262626", secondaryForeground: "#FAFAFA", muted: "#262626", mutedForeground: "#A1A1A1", accent: "#262626", accentForeground: "#FAFAFA", destructive: "#FF6467", border: "#FFFFFF1A", input: "#FFFFFF26", ring: "#737373",
+    },
+  },
+};
+(function () {
+  const root = document.documentElement;
+  const all = [...ROLES.brand, ...ROLES.semantic];
+  const state = { pal: "drafted", mode: matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light", k: "1" };
+  try { Object.assign(state, JSON.parse(localStorage.getItem("drafted-kit") || "{}")); } catch (e) {}
+
+  const toast = (t) => {
+    const el = document.getElementById("toast");
+    el.textContent = t; el.classList.add("show");
+    clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove("show"), 1600);
+  };
+  const copy = async (text, msg) => {
+    try { await navigator.clipboard.writeText(text); toast(msg); }
+    catch (e) { toast("Trình duyệt chặn clipboard, hãy copy tay"); }
+  };
+
+  /* chữ trên từng ô màu: cặp foreground đúng vai trò, còn lại chọn đen/trắng theo độ sáng */
+  const PAIRS = { primary: "primaryForeground", primaryForeground: "primary", secondary: "secondaryForeground", secondaryForeground: "secondary", muted: "mutedForeground", mutedForeground: "muted",
+    accent: "accentForeground", accentForeground: "accent", card: "cardForeground", cardForeground: "card", background: "foreground", foreground: "background", ink: "onInk", onInk: "ink", paper: "ink" };
+  const lum = (hex) => { const n = parseInt(hex.slice(1, 7), 16); return (0.299 * (n >> 16) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255)) / 255; };
+  function renderRoles(vals) {
+    for (const [id, list] of [["roles-brand", ROLES.brand], ["roles-sem", ROLES.semantic]]) {
+      const box = document.getElementById(id); box.innerHTML = "";
+      list.forEach((r) => {
+        const b = document.createElement("button");
+        b.className = "role"; b.style.background = vals[r];
+        b.style.color = PAIRS[r] ? vals[PAIRS[r]] : (lum(vals[r]) > 0.55 ? "#0A0A0A" : "#FAFAFA");
+        b.innerHTML = "<b>" + r + "</b><code>" + vals[r] + "</code>";
+        b.onclick = () => copy(vals[r], "Đã copy " + r + " " + vals[r]);
+        box.appendChild(b);
+      });
+    }
+  }
+
+  function apply() {
+    const vals = PALETTES[state.pal][state.mode];
+    all.forEach((r) => root.style.setProperty("--df-" + r, vals[r]));
+    root.style.setProperty("--k", state.k);
+    root.dataset.mode = state.mode;
+    document.querySelectorAll("#mode button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === state.mode));
+    document.querySelectorAll("#shape button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === state.k));
+    renderRoles(vals);
+    try { localStorage.setItem("drafted-kit", JSON.stringify(state)); } catch (e) {}
+  }
+  document.querySelectorAll("#mode button").forEach((b) => (b.onclick = () => { state.mode = b.dataset.v; apply(); }));
+  document.querySelectorAll("#shape button").forEach((b) => (b.onclick = () => { state.k = b.dataset.v; apply(); }));
+
+  /* thang chữ đo trên site */
+  const TYPE = [
+    ["Display · /learn h1", "serif", 76, 77.5, 400, 0, "Learn More"],
+    ["Hero · landing h1", "serif", 60, 72, 400, 0, "Design House Plans"],
+    ["Heading 2", "serif", 36, 45, 400, 0, "How to generate house plans"],
+    ["Heading 2 · section", "serif", 30, 37.5, 400, 0, "Sort by"],
+    ["Heading 2 · nhỏ", "serif", 24, 32, 400, 0, "Popular ways to browse"],
+    ["Card title", "serif", 16, 16, 400, 0, "Cozy Bright 3-Bed"],
+    ["Heading 3", "sans", 20, 28, 600, 0, "Choose by the outcome you need"],
+    ["Dialog title", "sans", 18, 18, 600, 0, "Sign up to create your free house plans"],
+    ["Lead", "sans", 18, 28, 500, 0, "Generate floor plans, 3D models, renders"],
+    ["Body", "sans", 16, 28, 400, 0, "Generate house layouts, edit walls and openings"],
+    ["Button · CTA", "sans", 16, 24, 600, 0.4, "Start Creating"],
+    ["Body small · Label", "sans", 14, 20, 500, 0, "Quick answers about using Drafted."],
+    ["Nav button", "sans", 12, 16, 700, 0, "Sign In"],
+    ["Caption", "sans", 12, 16, 400, 0, "All fields required for email signup."],
+    ["Eyebrow", "sans", 10.4, 15.6, 600, 1.664, "TURN A SHAPE INTO A HOUSE LAYOUT"],
+    ["Meta", "sans", 10, 12.5, 400, 0, "maxonon · 1w ago"],
+  ];
+  const ts = document.getElementById("typescale");
+  TYPE.forEach(([name, fam, size, lh, w, ls, sample]) => {
+    const row = document.createElement("div");
+    row.className = "type-row";
+    row.innerHTML = '<span class="meta">' + name + '</span><span class="t" style="font-family:var(--' + fam + ');font-size:' + size + "px;line-height:" + lh + "px;font-weight:" + w + ";letter-spacing:" + ls + 'px">' + sample + '</span><span class="meta">' + (fam === "serif" ? "DM Serif" : "Inter") + " " + size + "/" + lh + " · " + w + "</span>";
+    ts.appendChild(row);
+  });
+
+  const sh = document.getElementById("shapes");
+  [["sm", "--r-sm", "r−4"], ["md", "--r-md", "r−2"], ["lg", "--r-lg", "r"], ["xl", "--r-xl", "r+4"], ["full", "999px", "avatar"]].forEach(([n, v, f]) => {
+    const c = document.createElement("div");
+    c.className = "shape-cell";
+    c.innerHTML = '<i style="border-radius:' + (v.startsWith("--") ? "var(" + v + ")" : v) + '"></i>' + n + " · " + f;
+    sh.appendChild(c);
+  });
+
+  /* mỗi thẻ có nút copy HTML */
+  document.querySelectorAll(".spec").forEach((spec) => {
+    const stage = spec.querySelector(".stage");
+    if (!stage || !spec.querySelector(".spec-h")) return;
+    let foot = spec.querySelector(".spec-f");
+    if (!foot) { foot = document.createElement("div"); foot.className = "spec-f"; foot.innerHTML = '<span class="note"></span>'; spec.appendChild(foot); }
+    const b = document.createElement("button");
+    b.className = "copy"; b.innerHTML = '<svg class="i"><use href="#copy"/></svg>HTML';
+    b.onclick = () => copy(stage.innerHTML.trim().replace(/\n\s+/g, "\n"), "Đã copy HTML của " + spec.querySelector(".spec-h b").textContent);
+    foot.appendChild(b);
+  });
+
+  document.getElementById("copy-tokens").onclick = () => {
+    const vals = PALETTES[state.pal][state.mode];
+    const lines = all.map((r) => "  --df-" + r + ": " + vals[r] + ";");
+    copy(":root {\n" + lines.join("\n") + "\n  --df-radius-base: 10px;\n  --k: " + state.k + ";\n  --serif: \"DM Serif Display\", Georgia, serif;\n  --sans: Inter, ui-sans-serif, system-ui, sans-serif;\n}", "Đã copy token Drafted " + (state.mode === "dark" ? "tối" : "sáng"));
+  };
+
+  const links = [...document.querySelectorAll(".side a")];
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (e.isIntersecting) links.forEach((a) => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id));
+  }), { rootMargin: "-30% 0px -60% 0px" });
+  document.querySelectorAll("section.block").forEach((s) => io.observe(s));
+
+  apply();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,871 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta name="ui-kit-id" content="en-namu-wiki">
+<!-- UI kit bóc từ bản lưu "naver - NamuWiki.html" (skin espejo của namu.wiki, the seed engine), 30/09/2026.
+     Token: parse tĩnh CSS đã lưu (--espejo-* ở :root / .theseed-dark-mode / espejo-black) + rule hardcode của nội dung wiki (.HKTNSqh5).
+     Số đo: getComputedStyle trên bản lưu, chạy offline + tắt JS. Không nhúng ảnh, logo hay nội dung bài của namu.wiki. -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="ui-kit-skip" content="7cce57ec93:ảnh/logo/icon ảnh của site hoặc template, thay bằng khối giữ chỗ (RULE-09);c3276c6b95:ảnh/logo/icon ảnh của site hoặc template, thay bằng khối giữ chỗ (RULE-09);22c4307305:ảnh/logo/icon ảnh của site hoặc template, thay bằng khối giữ chỗ (RULE-09);0f4ab3693f:ảnh/logo/icon ảnh của site hoặc template, thay bằng khối giữ chỗ (RULE-09);a15fbb4c89:ảnh/logo/icon ảnh của site hoặc template, thay bằng khối giữ chỗ (RULE-09);254002e77f:ảnh/logo/icon ảnh của site hoặc template, thay bằng khối giữ chỗ (RULE-09);b854861955:ảnh/logo/icon ảnh của site hoặc template, thay bằng khối giữ chỗ (RULE-09);d8e3b12ab2:ảnh/logo/icon ảnh của site hoặc template, thay bằng khối giữ chỗ (RULE-09);7c08754c11:ảnh/logo/icon ảnh của site hoặc template, thay bằng khối giữ chỗ (RULE-09);3923c7f4a4:ảnh/logo/icon ảnh của site hoặc template, thay bằng khối giữ chỗ (RULE-09);ab9ac3af7b:ảnh/logo/icon ảnh của site hoặc template, thay bằng khối giữ chỗ (RULE-09);10a9fefb19:ảnh/logo/icon ảnh của site hoặc template, thay bằng khối giữ chỗ (RULE-09);05c2438e67:ảnh/logo/icon ảnh của site hoặc template, thay bằng khối giữ chỗ (RULE-09);469b4d22c1:ảnh/logo/icon ảnh của site hoặc template, thay bằng khối giữ chỗ (RULE-09);a45c32cbe7:ảnh/logo/icon ảnh của site hoặc template, thay bằng khối giữ chỗ (RULE-09);a8c5e759c7:ảnh/logo/icon ảnh của site hoặc template, thay bằng khối giữ chỗ (RULE-09);40b0d6a2aa:ảnh/logo/icon ảnh của site hoặc template, thay bằng khối giữ chỗ (RULE-09);e029f3f5dc:hover:logo là ảnh nền, hover chỉ đổi color nên không thấy khác biệt">
+<title>Namu Espejo UI Kit</title>
+<style>
+/* Kit mặc chính token của skin espejo: --espejo-<vai trò> (tên giữ nguyên như CSS gốc, bỏ đuôi -color)
+   và --wiki-<vai trò> cho màu hardcode của phần nội dung wiki. Mặc định là chế độ Tối (bản lưu đang ở theseed-dark-mode). */
+:root {
+  --espejo-background: #000000;
+  --espejo-text: #E0E0E0;
+  --espejo-text-secondary: rgba(224,224,224,.749);
+  --espejo-text-tertiary: rgba(224,224,224,.502);
+  --espejo-text-quaternary: rgba(224,224,224,.353);
+  --espejo-text-light: #212529;
+  --espejo-link: #EC9F19;
+  --espejo-link-hover: #BD7F14;
+  --espejo-link-external: #377E21;
+  --espejo-highlight: rgba(233,230,18,.3);
+  --espejo-white: #000000;
+  --espejo-black: #FFFFFF;
+  --espejo-danger: #D64A58;
+  --espejo-danger-hover: #AB3B46;
+  --espejo-pink: #BE185D;
+  --espejo-brand1: #2E3033;
+  --espejo-brand2: #2E3033;
+  --espejo-brand-bright1: #C0C1C2;
+  --espejo-brand-bright2: #C0C1C2;
+  --espejo-card-background: #1C1D1F;
+  --espejo-card-border: #444444;
+  --espejo-component-background: #000000;
+  --espejo-component-background-focus: #262626;
+  --espejo-component-border: #444444;
+  --espejo-component-border-focus: #888888;
+  --espejo-button-background: #000000;
+  --espejo-button-background-disabled: #1F1F1F;
+  --espejo-button-background-secondary: #050505;
+  --espejo-button-background-active: #325E4A;
+  --espejo-button-background-danger: #D64A58;
+  --espejo-button-background-hover: #1E1E1E;
+  --espejo-button-background-secondary-hover: #1D1D1D;
+  --espejo-button-background-active-hover: #2D5543;
+  --espejo-button-background-danger-hover: #C1434F;
+  --espejo-button-background-focus: #0A0A0A;
+  --espejo-button-background-secondary-focus: #141414;
+  --espejo-button-background-active-focus: #305946;
+  --espejo-button-background-danger-focus: #C74552;
+  --espejo-button-border: #3E3E3E;
+  --espejo-button-border-hover: #4A4A4A;
+  --espejo-button-border-focus: #4D4D4D;
+  --espejo-nav-bar-background: #2E3033;
+  --espejo-nav-bar-text: #FFFFFF;
+  --espejo-nav-bar-item-hover: rgba(255,255,255,.1);
+  --espejo-nav-bar-border: #444444;
+  --espejo-site-notice-background: #181800;
+  --espejo-site-notice-icon-background: #2E2E00;
+  --espejo-article-title-namespace-underline: inset 0 -0.5rem 0 rgba(212,240,227,.3);
+  --espejo-article-menu-background: #2E2E2E;
+  --espejo-toc-map-item-background-1: #C2C2C2;
+  --espejo-toc-map-item-background-2: #C2C2C2;
+  --espejo-toc-map-item-background-3: #888888;
+  --espejo-toc-map-item-background-4: #616161;
+  --espejo-toc-map-item-background-5: #4E4E4E;
+  --espejo-toc-map-item-background-6: #4E4E4E;
+  --espejo-toc-map-item-background-hover-1: #D5D5D5;
+  --espejo-toc-map-item-background-hover-2: #D5D5D5;
+  --espejo-toc-map-item-background-hover-3: #959595;
+  --espejo-toc-map-item-background-hover-4: #6B6B6B;
+  --espejo-toc-map-item-background-hover-5: #555555;
+  --espejo-toc-map-item-background-hover-6: #555555;
+  --espejo-nav-control-background: #2E3033;
+  --espejo-nav-control-text: #FFFFFF;
+  --espejo-nav-control-border: rgba(68,68,68,.5);
+  --wiki-heading-border: #383B40;
+  --wiki-cell-border: #383B40;
+  --wiki-table-background: #2D2F34;
+  --wiki-quote-background: #2D2F34;
+  --wiki-quote-border: #383B40;
+  --wiki-quote-accent: #666C75;
+  --wiki-quote-text: #DDDDDD;
+  --wiki-pre-background: #2D2F34;
+  --wiki-pre-border: #383B40;
+  --wiki-footnote-border: #383840;
+  --wiki-hr: #383B40;
+  --wiki-heading-icon: #666666;
+  --wiki-not-exist: #DC4343;
+  --wiki-external: #009900;
+  --wiki-external-badge: #008000;
+  --wiki-del: #808080;
+  --catbox-background: #1C1D1F;
+  --catbox-border: #5C5C5C;
+  --focus-ring: rgba(233,230,18,.3);
+  --font: "Pretendard JP", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Noto Sans CJK KR", NanumBarunGothic, Roboto, "Segoe UI", "Malgun Gothic", sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* hằng số layout của espejo (:root) */
+  --card-radius: 6px; --card-border: 1px; --button-radius: .3rem; --child-radius: 4px;
+  --nav-h: 3.5rem; --nav-gy: .5rem; --nav-gx: 1rem; --brand-gap: 1rem;
+  --article-gx: 1.5rem; --article-gy: 1.5rem; --layout-gutter: 1rem; --sidebar-w: 320px; --card-gutter: 1.25rem;
+  --ctl-item: 2.5rem; --ctl-gap: .75rem;
+  color-scheme: dark;
+}
+:root[data-mode="light"] { color-scheme: light; }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--espejo-background); color: var(--espejo-text); font: 400 15px/1.5 var(--font); -webkit-font-smoothing: antialiased; }
+code, .code { font-family: var(--mono); font-size: 12px; }
+:focus-visible { outline: 2px solid var(--espejo-link); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+svg.i { width: 1.25rem; height: 1.25rem; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+/* ---------- vỏ trang ---------- */
+.shell { display: grid; grid-template-columns: 232px minmax(0, 1fr); min-height: 100vh; }
+.side { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 20px 12px; background: var(--espejo-card-background); border-right: 1px solid var(--espejo-card-border); display: flex; flex-direction: column; gap: 2px; }
+.brand { display: flex; align-items: center; gap: 10px; padding: 4px 12px 16px; }
+.brand-mark { width: 32px; height: 32px; border-radius: var(--card-radius); background: var(--espejo-brand1); color: var(--espejo-nav-bar-text); display: grid; place-items: center; font-weight: 700; }
+.brand b { font-size: 16px; font-weight: 600; display: block; }
+.brand small { color: var(--espejo-text-secondary); font-size: 12px; }
+.side h6 { margin: 14px 12px 6px; font-size: 11px; font-weight: 500; letter-spacing: .5px; text-transform: uppercase; color: var(--espejo-text-tertiary); }
+.side a { display: flex; align-items: center; height: 36px; padding: 0 12px; border-radius: var(--child-radius); color: var(--espejo-text-secondary); text-decoration: none; font-weight: 500; }
+.side a:hover { background: var(--espejo-component-background-focus); }
+.side a.on { background: var(--espejo-button-background-active); color: var(--espejo-text); }
+main { padding: 0 32px 96px; min-width: 0; }
+
+.bar { position: sticky; top: 0; z-index: 520; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; padding: 14px 0; background: var(--espejo-background); border-bottom: 1px solid var(--espejo-card-border); }
+.bar .grow { flex: 1; }
+.ctl { display: flex; align-items: center; gap: 8px; }
+.ctl > span { font-size: 12px; font-weight: 500; color: var(--espejo-text-secondary); }
+.seg { display: inline-flex; border: 1px solid var(--espejo-button-border); border-radius: var(--button-radius); overflow: hidden; }
+.seg button { height: 32px; padding: 0 12px; border: 0; background: var(--espejo-button-background); color: var(--espejo-text); font: 500 13px var(--font); cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--espejo-button-border); }
+.seg button[aria-pressed="true"] { background: var(--espejo-button-background-active); }
+.copy { height: 32px; padding: 0 12px; border-radius: var(--button-radius); border: 1px solid var(--espejo-button-border); background: var(--espejo-button-background); color: var(--espejo-text); font: 500 13px var(--font); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.copy:hover { background: var(--espejo-button-background-hover); border-color: var(--espejo-button-border-hover); }
+
+.intro { padding: 40px 0 8px; max-width: 780px; }
+.intro .eyebrow { font-family: var(--mono); font-size: 12px; color: var(--espejo-link); }
+.intro h1 { font-size: 40px; line-height: 48px; font-weight: 700; margin: 8px 0 12px; text-wrap: balance; }
+.intro p { font-size: 16px; line-height: 26px; color: var(--espejo-text-secondary); margin: 0 0 8px; max-width: 68ch; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.fact { font-family: var(--mono); font-size: 12px; padding: 4px 10px; border-radius: var(--child-radius); background: var(--espejo-component-background-focus); color: var(--espejo-text-secondary); }
+
+section.block { padding-top: 48px; scroll-margin-top: 64px; }
+section.block > header { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+section.block h2 { font-size: 28px; line-height: 36px; font-weight: 700; margin: 0; }
+section.block > header p { margin: 0; color: var(--espejo-text-secondary); max-width: 72ch; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 16px; }
+.spec { background: var(--espejo-card-background); border: 1px solid var(--espejo-card-border); border-radius: var(--card-radius); display: flex; flex-direction: column; min-width: 0; }
+.spec.full { grid-column: 1 / -1; }
+.spec-h { display: flex; align-items: center; gap: 8px; padding: 14px 16px 0; flex-wrap: wrap; }
+.spec-h b { font-size: 15px; font-weight: 600; }
+.kind { font-family: var(--mono); font-size: 11px; padding: 2px 8px; border-radius: var(--child-radius); background: var(--espejo-button-background-active); color: var(--espejo-text); }
+.spec-h .dp { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--espejo-text-tertiary); font-variant-numeric: tabular-nums; }
+.stage { padding: 20px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; min-height: 96px; overflow-x: auto; }
+.stage.col { flex-direction: column; align-items: stretch; }
+.stage.bg { background: var(--espejo-background); margin: 12px 12px 0; border-radius: var(--child-radius); }
+.spec-f { display: flex; align-items: center; gap: 8px; padding: 8px 12px 12px 16px; margin-top: auto; }
+.spec-f .note { font-size: 12px; color: var(--espejo-text-secondary); flex: 1; }
+.st { font-family: var(--mono); font-size: 10px; color: var(--espejo-text-tertiary); display: block; margin-bottom: 4px; }
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+.cell { display: flex; flex-direction: column; gap: 2px; }
+
+/* nền tảng */
+.roles { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
+.roles h4 { grid-column: 1 / -1; margin: 12px 0 0; font-size: 13px; color: var(--espejo-text-secondary); font-weight: 600; }
+.role { border-radius: var(--card-radius); padding: 10px 12px; min-height: 64px; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid var(--espejo-card-border); cursor: pointer; text-align: left; font: inherit; color: var(--espejo-text); background: var(--espejo-card-background); }
+.role i { display: block; height: 28px; border-radius: var(--child-radius); margin-bottom: 8px; box-shadow: inset 0 0 0 1px rgba(128,128,128,.35); }
+.role b { font-size: 12px; font-weight: 500; word-break: break-all; }
+.role code { font-size: 11px; color: var(--espejo-text-secondary); word-break: break-all; }
+.type-row { display: grid; grid-template-columns: 190px minmax(0, 1fr) 150px; gap: 16px; align-items: baseline; padding: 10px 0; border-bottom: 1px solid var(--espejo-card-border); }
+.type-row:last-child { border-bottom: none; }
+.type-row .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.type-row .meta { font-family: var(--mono); font-size: 11px; color: var(--espejo-text-secondary); font-variant-numeric: tabular-nums; }
+.shapes { display: flex; flex-wrap: wrap; gap: 20px; }
+.shape-cell { display: flex; flex-direction: column; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px; color: var(--espejo-text-secondary); text-align: center; }
+.shape-cell i { display: block; width: 72px; height: 56px; background: var(--espejo-component-background-focus); border: 1px solid var(--espejo-component-border); }
+.scroll { overflow-x: auto; }
+table.tok { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; min-width: 560px; }
+table.tok th, table.tok td { text-align: left; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--espejo-card-border); font-size: 13px; vertical-align: top; }
+table.tok th { font-weight: 500; color: var(--espejo-text-secondary); font-size: 12px; }
+table.tok td:first-child { font-family: var(--mono); font-size: 12px; }
+
+/* ================= các thành phần nw-* (chỉ dựa vào --espejo-* / --wiki-*) ================= */
+
+/* tooltip dùng chung (._3KFO1EB6): nhãn là ::before đọc data-tooltip, trượt vào từ phải 1rem trong .1s */
+.nw-tip { position: relative; }
+.nw-tip[data-tooltip]::before { content: attr(data-tooltip); position: absolute; right: 100%; margin: 0 .5rem 0 0; padding: .15rem .4rem; white-space: nowrap; pointer-events: none; z-index: 509;
+  font-size: .9rem; line-height: 1.5; color: var(--espejo-text); background-color: var(--espejo-component-background); border: var(--card-border) solid var(--espejo-component-border); border-radius: var(--card-radius);
+  box-shadow: 0 5px 8px -3px rgba(0,0,0,.165); opacity: 0; visibility: hidden; transform: translateX(1rem); transition: all .1s ease-in-out; }
+.nw-tip[data-tooltip]:not([data-tooltip-no-hover]):hover::before, .nw-tip[data-tooltip][data-tooltip-show]::before,
+[data-tooltip-show-children-hover]:hover .nw-tip[data-tooltip]::before, [data-tooltip-show-children] .nw-tip[data-tooltip]::before { opacity: 1; visibility: visible; transform: translateX(0); }
+.nw-tip[data-tooltip][data-tooltip-direction="right"]::before { left: 100%; right: auto; margin: 0 0 0 .5rem; transform: translateX(-1rem); }
+.nw-tip[data-tooltip][data-tooltip-direction="right"][data-tooltip-show]::before { transform: translateX(0); }
+
+/* TOC map (.HKgW4jUR): cột 4rem dính mép phải, mỗi mục top: %, ô 1rem × 1.75rem, chấm 5px nhạt dần theo cấp */
+.nw-tocmap { position: relative; width: 4rem; height: 886px; padding-left: 1px; flex: none; }
+.nw-tocmap a { position: absolute; right: 0; display: flex; align-items: center; justify-content: center; text-decoration: none; }
+.nw-tocmap a::before { position: static; transition-duration: .05s; }
+.nw-tocmap a:hover::before, .nw-tocmap a.is-hover::before { background-color: var(--espejo-component-background-focus); transition: background-color .05s ease-in; }
+.nw-tocmap .hit { display: flex; align-items: center; justify-content: flex-end; width: 1rem; height: 1.75rem; padding: 0 .5rem 0 0; box-sizing: content-box; }
+.nw-tocmap .dot { display: inline-block; width: 5px; height: 5px; border-radius: 100%; background-color: var(--d); transition: background-color .05s ease-in; }
+.nw-tocmap a:hover .dot, .nw-tocmap a.is-hover .dot { background-color: var(--dh); }
+.nw-tocmap .l1 { --d: var(--espejo-toc-map-item-background-1); --dh: var(--espejo-toc-map-item-background-hover-1); }
+.nw-tocmap .l2 { --d: var(--espejo-toc-map-item-background-2); --dh: var(--espejo-toc-map-item-background-hover-2); }
+.nw-tocmap .l3 { --d: var(--espejo-toc-map-item-background-3); --dh: var(--espejo-toc-map-item-background-hover-3); }
+.nw-tocmap .l4 { --d: var(--espejo-toc-map-item-background-4); --dh: var(--espejo-toc-map-item-background-hover-4); }
+.nw-tocmap .l5 { --d: var(--espejo-toc-map-item-background-5); --dh: var(--espejo-toc-map-item-background-hover-5); }
+.nw-tocmap .l6 { --d: var(--espejo-toc-map-item-background-6); --dh: var(--espejo-toc-map-item-background-hover-6); }
+.tocmap-demo { display: flex; justify-content: flex-end; width: 100%; background: var(--espejo-background); border-radius: var(--child-radius); padding: 8px 0; }
+
+/* nhóm nút nổi (.zStRuzle): thẻ dọc, mỗi ô 2.5rem, ngăn bằng viền nav-control-border */
+.nw-ctl { display: flex; flex-direction: column; gap: var(--ctl-gap); }
+.nw-ctl ul { display: flex; flex-direction: column; list-style: none; margin: 0; padding: 0; background-color: var(--espejo-component-background); border: var(--card-border) solid var(--espejo-component-border); border-radius: var(--card-radius);
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,.165), 0 4px 6px -4px rgba(0,0,0,.165); }
+.nw-ctl li { border-bottom: var(--card-border) solid var(--espejo-nav-control-border); }
+.nw-ctl li:last-of-type { border-bottom-width: 0; }
+.nw-ctl a { display: flex; align-items: center; justify-content: center; width: var(--ctl-item); height: var(--ctl-item); color: var(--espejo-text); }
+.nw-ctl a svg.i { width: 1.25rem; height: 1.25rem; }
+
+/* thanh điều hướng (.uOqVlAwC > ._805ogkFP): cao 3.5rem, đệm .5rem 1rem */
+.nw-nav { background: var(--espejo-nav-bar-background); color: var(--espejo-nav-bar-text); width: 100%; }
+:root[data-mode="black"] .nw-nav { border-bottom: 1px solid var(--espejo-nav-bar-border); }
+.nw-nav .in { display: flex; align-items: stretch; height: var(--nav-h); padding: var(--nav-gy) var(--nav-gx); gap: 0; }
+.nw-brand { width: 10rem; margin-right: var(--brand-gap); display: grid; place-items: center; border-radius: 0; color: var(--espejo-nav-bar-text); font: 700 12px var(--font); letter-spacing: .5px;
+  border: 1px dashed currentColor; opacity: .7; text-decoration: none; }
+.nw-brand:focus-visible, .nw-brand.is-focus { outline: none; box-shadow: 0 0 0 4px var(--focus-ring); transition: box-shadow .1s ease-in; }
+.nw-menu { display: flex; align-items: center; gap: .75rem; padding: 0 .75rem; border-radius: var(--child-radius); color: var(--espejo-nav-bar-text); font-size: 1.05rem; font-weight: 500; text-decoration: none; }
+.nw-menu svg.i { width: 1rem; height: 1rem; }
+.nw-menu:hover, .nw-menu.is-hover { background-color: var(--espejo-nav-bar-item-hover); transition: background-color .05s ease-in; }
+.nw-menu:focus-visible, .nw-menu.is-focus { outline: none; box-shadow: 0 0 0 4px var(--focus-ring); }
+.nw-nav .grow { flex: 1; }
+.nw-searchbox { display: flex; gap: .5rem; width: 20rem; }
+.nw-random { width: 2.5rem; flex: none; display: grid; place-items: center; background: var(--espejo-component-background); color: var(--espejo-text); border-radius: var(--child-radius); }
+.nw-search { flex: 1; min-width: 0; display: flex; background: var(--espejo-component-background); border-radius: var(--child-radius); }
+.nw-search input { flex: 1; min-width: 0; background: transparent; border: none; color: var(--espejo-text); font: 400 15px var(--font); padding: 0 0 0 .75rem; outline: none; }
+.nw-search input::placeholder { color: var(--espejo-text-tertiary); }
+.nw-search a { width: 2.25rem; display: grid; place-items: center; color: var(--espejo-text); }
+.nw-account { width: auto; margin-left: .5rem; }
+
+/* thẻ bài viết (article._4oKM2tJ6): nền card, viền 1px, bo 6px, đệm 1.5rem */
+.nw-article { background: var(--espejo-card-background); border: var(--card-border) solid var(--espejo-card-border); border-radius: var(--card-radius); padding: var(--article-gy) var(--article-gx); min-width: 0; }
+.nw-title { font-size: 2.25rem; font-weight: 700; line-height: 1; margin: 0; word-break: break-all; }
+.nw-modified { margin-top: .75rem; font-size: .96em; color: var(--espejo-text-secondary); }
+.nw-catbox { background: var(--catbox-background); border: 1px solid var(--catbox-border); border-radius: 4px; font-size: .9rem; margin: 1.5rem 0 1em; padding: .2rem .5rem; display: flow-root; }
+.nw-catbox ul { display: inline; margin: 0; padding: 0; }
+.nw-catbox li { display: inline; }
+.nw-catbox li + li::before { content: "|"; margin: 0 .35rem; color: var(--espejo-text-tertiary); }
+.nw-catbox > span { margin-right: .1rem; }
+
+/* nội dung wiki (.HKTNSqh5 ...) */
+.nw-wiki { font-size: 15px; line-height: 1.5; min-width: 0; }
+.nw-p { margin: 0 0 1rem; }
+.nw-h { font-weight: 700; border-bottom: 1px solid var(--wiki-heading-border); margin: 1.2em 0 .8em; padding-bottom: 5px; cursor: pointer; line-height: 1.5; }
+.nw-h::before { content: ""; float: left; width: .4em; height: .4em; margin: .5em .7rem 0 .3rem; border: 2px solid var(--wiki-heading-icon); border-width: 0 2px 2px 0; transform: rotate(45deg); }
+.nw-h.folded { opacity: .5; }
+.nw-h.folded::before { transform: rotate(-45deg); margin-top: .6em; }
+.nw-h a { color: var(--espejo-link); text-decoration: none; }
+.nw-h.h2 { font-size: 1.8em; } .nw-h.h3 { font-size: 1.6em; } .nw-h.h4 { font-size: 1.4em; } .nw-h.h5 { font-size: 1.2em; } .nw-h.h6 { font-size: 1em; }
+.nw-link { color: var(--espejo-link); text-decoration: none; cursor: pointer; }
+.nw-link:hover, .nw-link.is-hover { color: var(--espejo-link-hover); text-decoration: underline; }
+.nw-link.self { font-weight: 700; }
+.nw-link.missing { color: var(--wiki-not-exist); }
+.nw-link.ext { color: var(--wiki-external); }
+.nw-link.ext:hover, .nw-link.ext.is-hover { color: var(--wiki-external); }
+.nw-link.ext::before { content: "↗"; background: var(--wiki-external-badge); color: #fff; font-size: .75rem; margin-right: .1rem; padding: 0 .15em; }
+.nw-fn { font-size: .8em; vertical-align: super; line-height: 0; white-space: nowrap; }
+.nw-del { color: var(--wiki-del); }
+.nw-sizeup { font-size: 1.2888888889em; }
+.nw-hr { border: 0; border-top: .0625rem solid var(--wiki-hr); height: 0; margin: .5em 0; }
+.nw-quote { display: table; background: var(--wiki-quote-background); color: var(--wiki-quote-text); border: 2px dashed var(--wiki-quote-border); border-left: 5px solid var(--wiki-quote-accent); margin: 1em 0; padding: 1em; }
+.nw-pre { background: var(--wiki-pre-background); border: 1px solid var(--wiki-pre-border); border-radius: 3px; padding: 7px; overflow-x: auto; margin: 0; font: 13px/1.3 var(--mono); color: var(--espejo-text); }
+.nw-list { margin: 0 0 1rem; padding-left: 20px; }
+.nw-list li { margin: 0; }
+.nw-fold summary { cursor: pointer; font-weight: 700; list-style: none; user-select: none; text-align: center; }
+.nw-fold summary::-webkit-details-marker { display: none; }
+.nw-fold > div { overflow: hidden; padding-top: .5rem; }
+.nw-toc { border: 1px solid var(--wiki-heading-border); display: inline-block; margin-left: 5px; padding: 12px 20px 12px 0; }
+.nw-toc summary { list-style: none; cursor: pointer; font-size: 1.25em; margin: 0 0 0 14px; display: flex; align-items: center; justify-content: space-between; gap: 40px; }
+.nw-toc summary::-webkit-details-marker { display: none; }
+.nw-toc summary::before { content: "Mục lục"; }
+.nw-toc summary::after { content: ""; width: .45em; height: .45em; border: solid var(--espejo-text-secondary); border-width: 0 2px 2px 0; transform: rotate(-45deg); }
+.nw-toc details[open] summary::after { transform: rotate(45deg); }
+.nw-toc details[open] { padding-bottom: 4px; }
+.nw-toc .ind { padding-left: 20px; }
+.nw-toc details > .ind:first-of-type { margin-top: 12px; }
+.nw-toc .it { display: block; }
+.nw-toc .it a { color: var(--espejo-link); text-decoration: none; }
+.nw-fnlist { border-top: 1px solid var(--wiki-footnote-border); margin: 1.5em 0; padding: .5em 0; }
+.nw-fnlist > span { display: block; margin-bottom: .5em; }
+.nw-table { border-collapse: collapse; background: var(--wiki-table-background); }
+.nw-table td, .nw-table th { border: 1px solid var(--wiki-cell-border); padding: 5px 10px; }
+.nw-table td.nopad { padding: 0; }
+.nw-table.framed { border: 2px solid var(--frame, var(--wiki-cell-border)); }
+.nw-notice { border: 5px solid var(--frame, orange); padding: 12px; }
+
+/* thẻ RecentChanges (.hWq6GtcT): card, đệm 20 20 16, đầu 1.2rem 500, hàng cách .25rem, thời gian 12px */
+.nw-rc { width: var(--sidebar-w); max-width: 100%; background: var(--espejo-card-background); border: var(--card-border) solid var(--espejo-card-border); border-radius: var(--card-radius); padding: 20px var(--card-gutter) 1rem; display: flex; flex-direction: column; overflow: hidden; }
+.nw-rc .hd { display: flex; align-items: center; gap: .5rem; font-size: 1.2rem; font-weight: 500; line-height: 1; color: var(--espejo-text); text-decoration: none; margin-bottom: 1rem; }
+.nw-rc .hd .grow { flex: 1; }
+.nw-rc .hd:hover, .nw-rc .hd.is-hover { text-decoration: underline; }
+.nw-rc ul { list-style: none; margin: 0; padding: 0; }
+.nw-rc li { display: flex; margin: 0 0 .25rem; }
+.nw-rc li:last-of-type { margin: 0; }
+.nw-rc li a { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nw-rc time { font-size: 12px; margin-left: 16px; flex: none; }
+
+/* chân trang (.ahBh1oxA) và khối giấy phép (.sJIvAWV6) */
+.nw-license { border-top: 1px solid var(--espejo-card-border); font-size: .9rem; margin: 1.5rem calc(var(--article-gx) * -1) 0; padding: var(--article-gy) var(--article-gx) 0; }
+.nw-license p { margin: 0; }
+.nw-footer { width: 100%; background: var(--espejo-card-background); border: solid var(--espejo-card-border); border-width: 1px 0; font-size: .85rem; padding: var(--card-gutter); }
+.nw-footer ul { list-style: none; display: flex; flex-wrap: wrap; margin: 0 0 .25rem; padding: 0; }
+.nw-footer li { margin-right: 16px; }
+
+/* nút nội dung (.F4pNIhaA): nền bài, viền #dfe1e2 / #5c5c5c, bo 4px */
+.nw-btn { display: inline-flex; align-items: center; gap: .35rem; font: 400 .9rem var(--font); padding: .25rem .75rem; background: var(--catbox-background); color: var(--espejo-text); border: 1px solid var(--catbox-border); border-radius: 4px; cursor: pointer; }
+
+/* một màn desktop 1800 × 1000 (rail chỉ hiện từ 1600px + 8rem) và một màn mobile 390 × 844 (< 728px) */
+.frame-wrap { overflow-x: auto; padding: 8px 0; }
+.frames { display: flex; gap: 32px; width: max-content; align-items: flex-start; }
+.desk { width: 1800px; height: 1000px; border-radius: 12px; box-shadow: 0 0 0 10px #333; background: var(--espejo-background); overflow: hidden; margin: 10px; zoom: .42; position: relative; }
+.desk .lay { width: 1400px; margin: var(--layout-gutter) auto 0; padding: 0 16px; display: flex; gap: var(--layout-gutter); }
+.desk .nw-article { flex: 1; height: 1400px; }
+.desk .nw-tocmap { position: absolute; top: 0; right: 0; height: 100%; }
+.desk .nw-ctl { position: absolute; right: calc(50% - 700px - 3rem); bottom: 2rem; }
+.phone { width: 390px; height: 844px; border-radius: 40px; box-shadow: 0 0 0 10px #333; background: var(--espejo-background); overflow: hidden; margin: 10px; zoom: .62; position: relative; }
+.phone .nw-nav .in { height: 3rem; padding: .5rem; }
+:root[data-mode="light"] .phone .nw-nav { background: var(--espejo-brand1); }
+:root:not([data-mode="light"]) .phone .nw-nav { background: transparent; border-bottom: 1px solid var(--espejo-nav-bar-border); }
+.phone .nw-brand { width: 2.3rem; margin-right: .5rem; }
+.phone .nw-article { border-radius: 0; border-width: 1px 0; padding: .75rem; }
+.phone .nw-title { font-size: 2rem; }
+.phone .nw-ctl { position: absolute; right: 1.5rem; bottom: 1.5rem; opacity: .4; }
+.frame-cap { font-family: var(--mono); font-size: 12px; color: var(--espejo-text-secondary); margin: 4px 10px 0; max-width: 760px; }
+
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; transition: all .25s; z-index: 600; background: var(--espejo-component-background); color: var(--espejo-text); border: 1px solid var(--espejo-component-border); border-radius: var(--card-radius); padding: 10px 16px; }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; }
+  .side { display: none; }
+  main { padding: 0 16px 80px; }
+  .grid { grid-template-columns: 1fr; }
+  .intro h1 { font-size: 30px; line-height: 38px; }
+  .type-row { grid-template-columns: 1fr; gap: 2px; }
+  .nw-searchbox { width: 12rem; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <nav class="side" aria-label="Mục lục kit">
+    <div class="brand"><div class="brand-mark">E</div><div><b>Espejo UI Kit</b><small>namu.wiki · the seed</small></div></div>
+    <h6>Nền tảng</h6>
+    <a href="#color">Màu</a>
+    <a href="#type">Chữ</a>
+    <a href="#shape">Bo góc &amp; viền</a>
+    <a href="#layout">Bố cục &amp; kích thước</a>
+    <h6>Thành phần</h6>
+    <a href="#navigation">Điều hướng</a>
+    <a href="#article">Bài viết</a>
+    <a href="#text">Chữ &amp; liên kết</a>
+    <a href="#blocks">Khối nội dung</a>
+    <a href="#tables">Bảng &amp; template</a>
+    <h6>Mẫu</h6>
+    <a href="#screens">Màn hình mẫu</a>
+  </nav>
+
+  <main>
+    <div class="bar" role="toolbar" aria-label="Chủ đề">
+      <div class="ctl"><span>Chế độ</span><div class="seg" id="mode">
+        <button data-v="light" aria-pressed="false">Sáng</button>
+        <button data-v="dark" aria-pressed="true">Tối</button>
+        <button data-v="black" aria-pressed="false">Black</button></div></div>
+      <div class="grow"></div>
+      <button class="copy" id="copy-tokens">Copy CSS token</button>
+    </div>
+
+    <div class="intro">
+      <div class="eyebrow">naver - NamuWiki_files/nmibepoa.*.css → docs/namuwiki-ui-kit.html</div>
+      <h1>Espejo UI Kit</h1>
+      <p>Hệ giao diện của skin <b>espejo</b> trên namu.wiki. Kit này được bóc từ một trang bài viết đã lưu, chạy offline và tắt JS. Màu lấy nguyên các biến <code>--espejo-*</code> ở <code>:root</code>, <code>.theseed-dark-mode</code> và <code>espejo-black</code>, cộng các giá trị hardcode của phần nội dung wiki. Số đo lấy bằng <code>getComputedStyle</code> trên chính trang đó.</p>
+      <p>Muốn dùng lại: copy khối token của chế độ đang chọn, rồi copy HTML từng thẻ. Mọi class <code>.nw-*</code> chỉ đọc <code>var(--espejo-*)</code> hoặc <code>var(--wiki-*)</code>. Logo, ảnh và nội dung bài của namu.wiki được thay bằng khối giữ chỗ.</p>
+      <div class="facts">
+        <span class="fact">font 15px / 1.5</span><span class="fact">nav 3.5rem</span><span class="fact">layout 1400px</span><span class="fact">bài 1032 + sidebar 320</span>
+        <span class="fact">card bo 6px · viền 1px</span><span class="fact">bài đệm 1.5rem</span><span class="fact">TOC map khi ≥ 1600px + 8rem</span><span class="fact">nút nổi 2.5rem</span>
+      </div>
+    </div>
+
+    <!-- ================= NỀN TẢNG ================= -->
+    <section class="block" id="color">
+      <header><h2>Màu</h2><p>83 vai trò: 64 biến <code>--espejo-*</code> của skin và 19 giá trị hardcode của nội dung wiki (<code>--wiki-*</code>, tên do kit đặt). Chế độ Black lấy Tối rồi ghi đè 10 biến (nền thẻ, nút, thanh điều hướng thành #000). Bấm một ô để copy giá trị.</p></header>
+      <div class="roles" id="roles"></div>
+    </section>
+
+    <section class="block" id="type">
+      <header><h2>Chữ</h2><p>Font là chồng font của espejo, đứng đầu là Pretendard JP. Kit không tải font ngoài: máy có Pretendard thì hiện Pretendard, không thì rơi về font hệ thống như trên site thật. Cỡ chữ gốc 15px, heading tính bằng <code>em</code> nhân với cỡ gốc.</p></header>
+      <div class="spec"><div class="stage col" id="typescale"></div></div>
+    </section>
+
+    <section class="block" id="shape">
+      <header><h2>Bo góc &amp; viền</h2><p>Espejo không có thang shape: chỉ có vài giá trị cố định, và ở dưới 1024px thẻ bỏ bo góc, chỉ giữ viền trên và dưới.</p></header>
+      <div class="spec"><div class="stage"><div class="shapes" id="shapes"></div></div></div>
+    </section>
+
+    <section class="block" id="layout">
+      <header><h2>Bố cục &amp; kích thước</h2><p>Hằng số <code>--espejo-*-var</code> ở <code>:root</code> và giá trị ghi đè theo breakpoint.</p></header>
+      <div class="grid">
+        <div class="spec"><div class="stage col scroll"><table class="tok">
+          <tr><th>biến</th><th>≥ 1024</th><th>&lt; 1024</th><th>&lt; 728</th></tr>
+          <tr><td>nav-bar-height</td><td>3.5rem</td><td>3rem</td><td>3rem</td></tr>
+          <tr><td>layout-gutter</td><td>1rem</td><td>0</td><td>0</td></tr>
+          <tr><td>card-gutter</td><td>1.25rem</td><td>1rem</td><td>.75rem</td></tr>
+          <tr><td>article-gutter x / y</td><td>1.5rem</td><td>1rem</td><td>.75rem</td></tr>
+          <tr><td>article-title-gutter-bottom</td><td>1.5rem</td><td>1.25rem</td><td>1rem</td></tr>
+          <tr><td>nav-control-gutter x / y</td><td>2.5 / 2rem</td><td>1.5rem</td><td>1.5rem</td></tr>
+          <tr><td>nav-control-gap</td><td>.75rem</td><td>.5rem</td><td>.5rem</td></tr>
+          <tr><td>article-min-height</td><td>50rem</td><td>50rem</td><td>35rem</td></tr>
+        </table></div></div>
+        <div class="spec"><div class="stage col scroll"><table class="tok">
+          <tr><th>hằng số</th><th>giá trị</th><th>dùng ở</th></tr>
+          <tr><td>layout</td><td>1400px (1600 khi rộng)</td><td>.WEmlBLek, đệm 0 16px</td></tr>
+          <tr><td>sidebar-width</td><td>320px</td><td>thẻ RecentChanges</td></tr>
+          <tr><td>search-box-width / height</td><td>20rem / 2.5rem</td><td>ô tìm kiếm</td></tr>
+          <tr><td>nav-control-item</td><td>2.5rem × 2.5rem</td><td>nút nổi</td></tr>
+          <tr><td>nav-control-toc-popup</td><td>320px, cao tối đa 28rem</td><td>popup mục lục</td></tr>
+          <tr><td>TOC map</td><td>rộng 4rem, ô 1rem × 1.75rem, chấm 5px</td><td>.HKgW4jUR</td></tr>
+          <tr><td>ô bảng wiki</td><td>đệm 5px 10px, viền 1px</td><td>._3Bvj9Q26 td</td></tr>
+          <tr><td>đoạn wiki</td><td>margin-bottom 1rem</td><td>.sk-4ZP0B</td></tr>
+        </table></div></div>
+      </div>
+    </section>
+
+    <!-- ================= THÀNH PHẦN: ĐIỀU HƯỚNG ================= -->
+    <section class="block" id="navigation">
+      <header><h2>Điều hướng</h2><p>Thanh trên cùng, TOC map bên phải, nhóm nút nổi và thẻ RecentChanges ở sidebar.</p></header>
+      <div class="grid">
+
+        <div class="spec full" data-sig="fa16c128ac 3cb9491721 e029f3f5dc" data-sig-state="e029f3f5dc:focus">
+          <div class="spec-h"><b>Thanh điều hướng</b><span class="kind">.uOqVlAwC · ._805ogkFP</span><span class="dp">cao 3.5rem · đệm .5rem 1rem</span></div>
+          <div class="stage col">
+            <div class="nw-nav"><div class="in">
+              <a class="nw-brand" href="#" title="logo">ẢNH LOGO</a>
+              <a class="nw-menu" href="#"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>RecentChanges</a>
+              <span class="grow"></span>
+              <div class="nw-searchbox">
+                <a class="nw-random" href="#" aria-label="Ngẫu nhiên"><svg class="i" viewBox="0 0 24 24"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg></a>
+                <form class="nw-search" onsubmit="return false"><input placeholder="Search" aria-label="Tìm kiếm"><a href="#" aria-label="Tìm"><svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></a><a href="#" aria-label="Đi tới"><svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></form>
+              </div>
+              <a class="nw-menu nw-account" href="#" aria-label="Tài khoản"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></a>
+            </div></div>
+            <span class="st">trạng thái</span>
+            <div class="row">
+              <div class="nw-nav" style="width:auto"><div class="in"><a class="nw-menu is-hover" href="#">menu :hover</a><a class="nw-menu is-focus" href="#" style="margin-left:12px">menu :focus-visible</a><a class="nw-brand is-focus" href="#" style="margin-left:12px">logo :focus</a></div></div>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Nền là <code>nav-bar-background</code>: gradient xanh ở Sáng, #2e3033 ở Tối, #000 kèm viền dưới ở Black. Hover menu dùng <code>nav-bar-item-hover</code>. Focus là vòng 4px <code>rgba(233,230,18,.3)</code>. Ô tìm kiếm rộng 20rem, gồm nút ngẫu nhiên 2.5rem và nút 2.25rem. Icon ở đây là SVG vẽ giữ chỗ, không phải icon của site.</span></div>
+        </div>
+
+        <div class="spec full">
+          <div class="spec-h"><b>TOC map · thanh mục lục bên phải</b><span class="kind">.HKgW4jUR · a._3KFO1EB6[data-tooltip]</span><span class="dp">rộng 4rem · ô 1rem×1.75rem · chấm 5px</span></div>
+          <div class="stage col">
+            <div class="row" style="align-items:flex-start;gap:24px">
+              <div class="cell" style="flex:1;min-width:260px"><span class="st">nghỉ · chỉ có chấm</span><div class="tocmap-demo"><div class="nw-tocmap" data-tocmap></div></div></div>
+              <div class="cell" style="flex:1;min-width:260px"><span class="st">[data-tooltip-show-children] · mọi nhãn bung, mục 3.1 :hover</span><div class="tocmap-demo"><div class="nw-tocmap" data-tocmap data-tooltip-show-children data-hover="3"></div></div></div>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Mỗi heading là một <code>&lt;a&gt;</code> rỗng chữ, chỉ có một chấm; chữ nằm trong tooltip dùng chung (<code>data-tooltip</code> + <code>::before</code>). Vị trí là <code>top: %</code> theo vị trí heading trong trang, và mục sau luôn cách mục trước ít nhất một ô (3.16% khi rail cao 900px). Chấm nhạt dần theo cấp: token <code>toc-map-item-background-1..6</code>. Rail chỉ hiện khi màn rộng từ 1600px + 8rem. Bộ phân loại tự động bỏ sót thanh này, W01c thêm tay. Kit không chạy JS tính vị trí thật: <code>top</code> ở đây dùng đúng số % của bản lưu, và khung demo cao 886px để 3.16% bằng đúng một ô 1.75rem như trên màn thật.</span></div>
+        </div>
+
+        <div class="spec" data-sig="09ee833e77">
+          <div class="spec-h"><b>Nhóm nút nổi</b><span class="kind">.ISK+fmm9 · ul.zStRuzle</span><span class="dp">ô 2.5rem · gap .75rem</span></div>
+          <div class="stage bg" style="justify-content:center">
+            <div class="nw-ctl">
+              <ul><li><a class="nw-tip" href="#" data-tooltip="Mục lục" aria-label="Mục lục"><svg class="i" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4 6h1M4 12h1M4 18h1"/></svg></a></li></ul>
+              <ul><li><a class="nw-tip" href="#" data-tooltip="Lên đầu" data-tooltip-show aria-label="Lên đầu"><svg class="i" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></a></li><li><a class="nw-tip" href="#" data-tooltip="Xuống cuối" aria-label="Xuống cuối"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M19 12l-7 7-7-7"/></svg></a></li></ul>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Thẻ <code>component-background</code>, viền 1px, bo 6px, bóng <code>0 10px 15px -3px</code>. Ô cách nhau bằng viền <code>nav-control-border</code>. Dưới 1024px nhóm mờ còn <code>opacity .4</code>, dưới 320px thì ẩn. Mỗi nút cũng dùng tooltip chung (ở đây "Lên đầu" đang ghim bằng <code>data-tooltip-show</code>).</span></div>
+        </div>
+
+        <div class="spec">
+          <div class="spec-h"><b>Tooltip dùng chung</b><span class="kind">._3KFO1EB6[data-tooltip]</span><span class="dp">.9rem · đệm .15rem .4rem</span></div>
+          <div class="stage bg col" style="align-items:center;gap:20px;padding:24px 16px">
+            <span class="nw-tip" data-tooltip="bên trái (mặc định)" data-tooltip-show style="margin-left:180px">●</span>
+            <span class="nw-tip" data-tooltip="data-tooltip-direction=right" data-tooltip-direction="right" data-tooltip-show style="margin-right:200px">●</span>
+            <span class="nw-tip" data-tooltip="ẩn cho tới khi hover" style="margin-left:180px">● rê chuột vào đây</span>
+          </div>
+          <div class="spec-f"><span class="note">Chữ lấy từ <code>content: attr(data-tooltip)</code>, không thêm DOM. Có 4 cách bật: tự hover, <code>[data-tooltip-show]</code>, <code>[data-tooltip-hide]</code> để ép tắt, và trên phần tử cha có <code>[data-tooltip-show-children]</code> hoặc <code>[data-tooltip-show-children-hover]:hover</code>. Lưu ý a11y: trình đọc màn hình không đọc được <code>::before</code>, nên cần thêm <code>aria-label</code>.</span></div>
+        </div>
+
+        <div class="spec" data-sig="c6eec3f608 3954218aa3 64262105bd" data-sig-state="64262105bd:hover">
+          <div class="spec-h"><b>Thẻ RecentChanges</b><span class="kind">.hWq6GtcT · .YqcQsP+8</span><span class="dp">320px · đệm 20 20 16</span></div>
+          <div class="stage bg" style="justify-content:center">
+            <div class="nw-rc">
+              <a class="hd" href="#"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span class="grow">RecentChanges</span><svg class="i" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></a>
+              <ul>
+                <li><a class="nw-link" href="#">Tài liệu mẫu A</a><time>12m ago</time></li>
+                <li><a class="nw-link" href="#">Một tiêu đề dài bị cắt bằng dấu ba chấm ở cuối</a><time>12m ago</time></li>
+                <li><a class="nw-link is-hover" href="#">Mục đang :hover</a><time>13m ago</time></li>
+                <li><a class="nw-link" href="#">Tài liệu mẫu D</a><time>15m ago</time></li>
+              </ul>
+            </div>
+          </div>
+          <div class="stage" style="padding-top:0"><span class="st">đầu thẻ :hover</span><div class="nw-rc" style="padding-bottom:4px"><a class="hd is-hover" href="#" data-sig-state="64262105bd:hover"><span class="grow">RecentChanges</span></a></div></div>
+          <div class="spec-f"><span class="note">Đầu thẻ 1.2rem, đậm 500; hover thì gạch chân. Hàng cách nhau .25rem, tiêu đề cắt bằng dấu ba chấm, thời gian 12px lùi 16px. Dưới 1024px thẻ bỏ bo góc.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= THÀNH PHẦN: BÀI VIẾT ================= -->
+    <section class="block" id="article">
+      <header><h2>Bài viết</h2><p>Thẻ bài viết chứa tiêu đề, ngày sửa, hộp danh mục, mục lục, heading đánh số và khối giấy phép.</p></header>
+      <div class="grid">
+        <div class="spec full" data-sig="c0ffa70a2e 8c96885f65 c5bc4ac1ea 7042183b7c 278f2b1a12" data-sig-state="c5bc4ac1ea:hover">
+          <div class="spec-h"><b>Thẻ bài viết · đầu bài</b><span class="kind">article._4oKM2tJ6 · h1.VbvmvMt4 · .rAxoKchl</span><span class="dp">đệm 1.5rem · bo 6 · tiêu đề 2.25rem/1 700</span></div>
+          <div class="stage bg col">
+            <article class="nw-article">
+              <h1 class="nw-title">Tên tài liệu</h1>
+              <div class="nw-modified">Last Modified: 2026-09-07 13:40:18</div>
+              <div class="nw-catbox"><span>Category:</span><ul><li><a class="nw-link" href="#">danh mục 1</a></li><li><a class="nw-link is-hover" href="#" data-sig-state="c5bc4ac1ea:hover">danh mục :hover</a></li><li><a class="nw-link" href="#">danh mục 3</a></li></ul></div>
+              <div class="nw-p">Đoạn văn mở đầu, cỡ 15px, dòng 1.5, cách đoạn sau 1rem.</div>
+              <div class="nw-license"><p>Tài liệu này dùng giấy phép CC BY-NC-SA 2.0 KR (khối giấy phép 14.4px, kéo tràn ra hai mép thẻ, viền trên 1px). <span style="display:inline-block;padding:2px 8px;border:1px dashed var(--espejo-text-tertiary);font-size:11px">ảnh huy hiệu CC</span></p></div>
+            </article>
+          </div>
+          <div class="spec-f"><span class="note">Thẻ: nền <code>card-background</code>, viền <code>card-border</code>. Ngày sửa là <code>&lt;time&gt;</code> 14.4px, màu chữ độ mờ .75. Hộp danh mục có nền bài và viền #dfe1e2 (Sáng) / #5c5c5c (Tối), bo 4px, chữ 14.4px, các mục ngăn bằng dấu "|".</span></div>
+        </div>
+
+        <div class="spec" data-sig="aa3f65bad2 923e5e639b 2ec18612d0">
+          <div class="spec-h"><b>Mục lục trong bài</b><span class="kind">.jHfTUgTB (wiki-macro-toc)</span><span class="dp">đệm 12 20 12 0 · thụt 20px</span></div>
+          <div class="stage bg">
+            <div class="nw-wiki"><div class="nw-toc"><details open>
+              <summary></summary>
+              <div class="ind">
+                <span class="it"><a href="#">1</a>. Tổng quan</span>
+                <span class="it"><a href="#">2</a>. Lịch sử</span>
+                <div class="ind"><span class="it"><a href="#">2.1</a>. Giai đoạn đầu</span><span class="it"><a href="#">2.2</a>. Hiện nay</span>
+                  <div class="ind"><span class="it"><a href="#">2.2.1</a>. Mục cấp ba</span></div></div>
+                <span class="it"><a href="#">3</a>. Xem thêm</span>
+              </div>
+            </details></div></div>
+          </div>
+          <div class="spec-f"><span class="note">Là <code>&lt;details&gt;</code>: tiêu đề "Contents" đặt bằng <code>summary::before</code> (1.25em), mũi tên là ảnh nền SVG đổi hướng khi <code>[open]</code>. Ở đây mũi tên là chevron vẽ bằng CSS và chữ đổi thành "Mục lục".</span></div>
+        </div>
+
+        <div class="spec" data-sig="c06355c8df 3ed7d29015 157e54379e 242c81f6c4 b13c0336d2 3d880cdc41" data-sig-state="242c81f6c4:hover b13c0336d2:hover 3d880cdc41:hover">
+          <div class="spec-h"><b>Heading đánh số</b><span class="kind">h2–h6._2THRJvoO</span><span class="dp">1.8 / 1.6 / 1.4 / 1.2 / 1em · 700</span></div>
+          <div class="stage bg col">
+            <div class="nw-wiki">
+              <h2 class="nw-h h2"><a href="#">1.</a> Heading cấp 2</h2>
+              <h3 class="nw-h h3"><a href="#" class="is-hover" style="color:var(--espejo-link-hover);text-decoration:underline">1.1.</a> Cấp 3 · số :hover</h3>
+              <h4 class="nw-h h4"><a href="#">1.1.1.</a> Heading cấp 4</h4>
+              <h4 class="nw-h h4 folded"><a href="#">1.1.2.</a> Đã gập (.folded)</h4>
+            </div>
+            <div class="row"><span class="st" data-sig-state="242c81f6c4:hover 3d880cdc41:hover">số của heading cấp 2 và 4 hover giống cấp 3: link-hover + gạch chân</span></div>
+          </div>
+          <div class="spec-f"><span class="note">Viền dưới 1px <code>wiki-heading-border</code>, lề 1.2em trên và .8em dưới, đệm dưới 5px. Số thứ tự là link về <code>#toc</code>. Bấm heading để gập nội dung: heading mờ còn .5 và icon đổi hướng. Icon gốc là glyph Ionicons (không tải được khi offline), ở đây vẽ bằng chevron CSS.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= THÀNH PHẦN: CHỮ & LIÊN KẾT ================= -->
+    <section class="block" id="text">
+      <header><h2>Chữ &amp; liên kết</h2><p>Mọi link nội bộ dùng <code>link</code>, hover đổi sang <code>link-hover</code> và gạch chân. Link ngoài luôn màu #090 và có huy hiệu phía trước.</p></header>
+      <div class="grid">
+        <div class="spec full" data-sig="71b86644c0 8cf0830f95 4be9777f3e edc608d786 2c793422f6 42abb76094 a2ced1c27b ed655c5adc"
+             data-sig-state="71b86644c0:hover 8cf0830f95:hover 4be9777f3e:hover edc608d786:hover 2c793422f6:hover 42abb76094:hover a2ced1c27b:hover ed655c5adc:hover">
+          <div class="spec-h"><b>Liên kết wiki</b><span class="kind">a.yfmLLHdM · .jsEuoQS+ · ._0fsTnpcV · .h9KZAl2x</span><span class="dp">theo cỡ chữ quanh nó</span></div>
+          <div class="stage bg col">
+            <div class="row nw-wiki">
+              <div class="cell"><span class="st">nội bộ</span><a class="nw-link" href="#">Tài liệu khác</a></div>
+              <div class="cell"><span class="st">:hover</span><a class="nw-link is-hover" href="#">Tài liệu khác</a></div>
+              <div class="cell"><span class="st">tự trỏ về trang này (.self)</span><a class="nw-link self" href="#">Tên tài liệu</a></div>
+              <div class="cell"><span class="st">.self :hover</span><a class="nw-link self is-hover" href="#">Tên tài liệu</a></div>
+              <div class="cell"><span class="st">chưa có trang (.not-exist)</span><a class="nw-link missing" href="#">Trang chưa viết</a></div>
+              <div class="cell"><span class="st">ngoài</span><a class="nw-link ext" href="#">site ngoài</a></div>
+              <div class="cell"><span class="st">ngoài :hover</span><a class="nw-link ext is-hover" href="#">site ngoài</a></div>
+            </div>
+            <span class="st">cùng một link ở các cỡ thực dùng (trong ô template): 15 · 14 · 13 · 11px</span>
+            <div class="row nw-wiki"><a class="nw-link" href="#">15px</a><a class="nw-link" href="#" style="font-size:14px">14px</a><a class="nw-link" href="#" style="font-size:13px">13px :</a><a class="nw-link is-hover" href="#" style="font-size:13px">hover</a><a class="nw-link" href="#" style="font-size:11px">11px</a><a class="nw-link is-hover" href="#" style="font-size:11px">11px :hover</a><a class="nw-link self" href="#" style="font-size:14px">14px đậm (link ảnh tự trỏ)</a><a class="nw-link self is-hover" href="#" style="font-size:14px">:hover</a></div>
+          </div>
+          <div class="spec-f"><span class="note">Link ngoài: <code>color:#090 !important</code>, hover chỉ thêm gạch chân. Huy hiệu gốc là glyph Ionicons trên nền <code>green</code>; ở đây dùng dấu ↗. Link tới trang chưa có: <code>red</code> ở Sáng, <code>#dc4343</code> ở Tối.</span></div>
+        </div>
+
+        <div class="spec" data-sig="5dbdffee72 4e4dd90caa 8d77132a9d" data-sig-state="5dbdffee72:hover 4e4dd90caa:hover">
+          <div class="spec-h"><b>Chú thích</b><span class="kind">a.qeBnOewP · ._4u852NGx</span><span class="dp">.8em super · viền trên 1px</span></div>
+          <div class="stage bg col">
+            <div class="nw-wiki">
+              <div class="nw-p">Câu có chú thích<a class="nw-link nw-fn" href="#">[1]</a> và chú thích đang hover<a class="nw-link nw-fn is-hover" href="#">[2]</a>. Trong chữ nhỏ<sup style="font-size:.75em">(2018<a class="nw-link nw-fn" href="#">[3]</a>)</sup> nó còn 9px.</div>
+              <div class="nw-fnlist"><span><a class="nw-link" href="#">[1]</a> Nội dung chú thích thứ nhất.</span><span><a class="nw-link" href="#">[2]</a> Chú thích thứ hai, có <a class="nw-link" href="#">liên kết</a>.</span></div>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Số chú thích là <code>.8em</code>, <code>vertical-align: super</code>, không xuống dòng. Danh sách chú thích có viền trên <code>wiki-footnote-border</code> (#777 / #383840), lề 1.5em, đệm .5em.</span></div>
+        </div>
+
+        <div class="spec" data-sig="2ec49edc35">
+          <div class="spec-h"><b>Định dạng chữ</b><span class="kind">del · strong · .B6ek8ctS · hr · pre · ul.WXZcq1kW</span></div>
+          <div class="stage bg col">
+            <div class="nw-wiki">
+              <div class="nw-p"><strong>Đậm</strong> · <span class="nw-del"><del>Gạch ngang</del></span> · <span class="nw-sizeup">cỡ +1 (1.289em)</span></div>
+              <ul class="nw-list"><li>Mục danh sách một</li><li>Mục hai (đoạn trong li không có lề dưới)</li><li>Mục ba</li></ul>
+              <hr class="nw-hr">
+              <pre class="nw-pre">{{{#!syntax khối mã
+  pre: đệm 7px, bo 3px }}}</pre>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note"><code>del</code> màu xám, hover bỏ gạch ngang. <code>hr</code> dày .0625rem. <code>pre</code> nền #eee / #2d2f34, viền #ddd / #383b40.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= THÀNH PHẦN: KHỐI NỘI DUNG ================= -->
+    <section class="block" id="blocks">
+      <header><h2>Khối nội dung</h2><p>Trích dẫn, khối gập [Expand/Collapse], hộp thông báo, chân trang và nút.</p></header>
+      <div class="grid">
+        <div class="spec" data-sig="8936981afb">
+          <div class="spec-h"><b>Trích dẫn</b><span class="kind">blockquote._9MH5568y</span><span class="dp">đệm 1em · trái 5px</span></div>
+          <div class="stage bg"><div class="nw-wiki"><blockquote class="nw-quote" style="margin:0">[Giới thiệu chính thức] Một câu trích dẫn mẫu.</blockquote></div></div>
+          <div class="spec-f"><span class="note"><code>display: table</code> nên co theo nội dung. Viền nét đứt 2px, viền trái 5px liền: #71bc6d ở Sáng, #666c75 ở Tối.</span></div>
+        </div>
+
+        <div class="spec" data-sig="0765f60dd4 4ae92bed52">
+          <div class="spec-h"><b>Khối gập</b><span class="kind">details.bGdrI+iE (wiki-folding)</span><span class="dp">summary 700</span></div>
+          <div class="stage bg col">
+            <div class="nw-wiki"><table class="nw-table framed" style="--frame:var(--espejo-brand2);width:100%"><tr><td style="text-align:center"><details class="nw-fold"><summary>[ Expand/Collapse ]</summary><div>Nội dung bị gập, <code>overflow:hidden</code>.</div></details></td></tr></table></div>
+            <div class="nw-wiki"><details class="nw-fold" open><summary>[ Expand/Collapse ] · đang mở</summary><div>Nội dung mở ra ngay dưới tiêu đề.</div></details></div>
+          </div>
+          <div class="spec-f"><span class="note">Marker bị ẩn (<code>::marker{display:none}</code>), tiêu đề đậm, không cho bôi chọn. Trên namu khối này thường nằm trong một ô bảng template.</span></div>
+        </div>
+
+        <div class="spec" data-sig="b8844b795a">
+          <div class="spec-h"><b>Hộp thông báo (template)</b><span class="kind">td · viền 5px inline</span><span class="dp">đệm 12px</span></div>
+          <div class="stage bg"><div class="nw-wiki nw-notice" style="--frame:orange"><strong class="nw-sizeup" style="font-size:1em">Dịch vụ này đã ngừng.</strong><div style="font-size:.9em">Dòng giải thích nhỏ phía dưới.</div></div></div>
+          <div class="spec-f"><span class="note">Màu viền do người viết template đặt inline, không phải token của skin.</span></div>
+        </div>
+
+        <div class="spec" data-sig="7f977dc2d0">
+          <div class="spec-h"><b>Chân trang</b><span class="kind">footer.ahBh1oxA</span><span class="dp">.85rem · đệm 1.25rem</span></div>
+          <div class="stage bg" style="padding:0"><footer class="nw-footer"><ul><li>tên site</li><li><a class="nw-link" href="#">Liên hệ</a></li><li><a class="nw-link" href="#">Điều khoản</a></li></ul><ul><li>Múi giờ: Asia/Saigon</li><li>Powered by the seed engine</li></ul></footer></div>
+          <div class="spec-f"><span class="note">Nền thẻ, viền trên và dưới 1px, không bo góc. Các mục cách nhau 16px.</span></div>
+        </div>
+
+        <div class="spec">
+          <div class="spec-h"><b>Nút nội dung</b><span class="kind">.F4pNIhaA</span><span class="dp">.9rem · bo 4px</span></div>
+          <div class="stage bg"><button class="nw-btn">Sửa</button><button class="nw-btn" style="background:var(--espejo-button-background-hover)">:hover</button><button class="nw-btn" style="box-shadow:0 0 0 .2rem var(--espejo-button-background-active)">:focus-visible</button></div>
+          <div class="spec-f"><span class="note">Có trong CSS nhưng trang đã lưu không có. Hover đổi nền sang #f0f0f0 / #2d2e2f. Focus là bóng .2rem màu <code>brand-bright</code>. Số đo đọc từ rule CSS, không đo trên phần tử thật.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= THÀNH PHẦN: BẢNG & TEMPLATE ================= -->
+    <section class="block" id="tables">
+      <header><h2>Bảng &amp; template</h2><p>Skin chỉ quy định bảng gốc: nền <code>wiki-table-background</code>, ô đệm 5px 10px, viền 1px <code>wiki-cell-border</code>. Màu header, viền khung 2px, dải sọc là của từng template do người viết wiki tô inline, không phải token.</p></header>
+      <div class="grid">
+        <div class="spec full" data-sig="7334015948 76fa45b8ee 3238140c6c 7c730f4cb7 5608cd2a66 a3ff6f0632 2d061680ff 510ff18e6c 595cc64f82 fa834696b8 0f3469b84e 8f7829c7b6 a2d898a20c 24892b0b60 cbe64a233e 9f51e79746 7f5ea6c13b 2a83c4581c 90ab1214b6">
+          <div class="spec-h"><b>Bảng wiki · khung template</b><span class="kind">table._3Bvj9Q26 (wiki-table)</span><span class="dp">ô 5px 10px · khung 2px</span></div>
+          <div class="stage bg col">
+            <div class="nw-wiki scroll"><table class="nw-table framed" style="--frame:#03c75a;width:100%;min-width:520px">
+              <tr><td colspan="2" style="background:#03c75a;color:#fff;text-align:center"><strong>Tên template</strong><br><span style="font-size:.85em">tài liệu liên quan</span></td></tr>
+              <tr><td colspan="2" style="text-align:center"><details class="nw-fold"><summary>[ Expand/Collapse ]</summary><div></div></details></td></tr>
+              <tr><td style="background:#03c75a;color:#fff;width:22%;text-align:center"><strong>Nhóm A</strong></td><td><a class="nw-link" href="#">Mục 1</a> | <a class="nw-link" href="#">Mục 2</a> | <a class="nw-link" href="#">Mục 3</a></td></tr>
+              <tr><td style="background:#03c75a;color:#fff;text-align:center"><strong>Nhóm B</strong></td><td><a class="nw-link" href="#">Mục 4</a> · <a class="nw-link" href="#">Mục 5</a></td></tr>
+            </table></div>
+            <div class="row">
+              <div class="nw-wiki"><table class="nw-table framed" style="--frame:#b8000e"><tr><td style="background:#b8000e;color:#fff;font-size:.8em;text-align:center"><strong>Header đỏ</strong></td></tr><tr><td>Ô thường</td></tr></table></div>
+              <div class="nw-wiki"><table class="nw-table framed" style="--frame:#fff"><tr><td style="background:linear-gradient(110deg,#000 0 8%,#fff 8% 11%,#000 11% 18%,transparent 18% 82%,#c00 82% 88%,#fff 88% 90%,#003980 90%);font-size:.8em;text-align:center"><strong>Dải sọc (template)</strong></td></tr><tr><td>Ô thường</td></tr></table></div>
+              <div class="nw-wiki"><table class="nw-table"><tr><td>Số liệu</td><td>44,43 triệu <span style="font-size:.85em">(ghi chú)</span></td></tr><tr><td>Năm</td><td>2018<a class="nw-link nw-fn" href="#">[1]</a></td></tr></table></div>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Màu template (#03c75a, #b8000e, dải sọc) được chép đúng giá trị inline trong bản lưu, chỉ để bạn nhận ra template. Đừng coi đó là token của hệ.</span></div>
+        </div>
+
+        <div class="spec full" data-sig="8173eddeac 2b83a189d4 5bda260412 25255718cd 7cfceeea1d ffdd7334c2 7ff1640672 5a2c4982ce 5454a2af19 ac8c44da73 fe6fe6b583 3d29400855 aa79957619 294fa94dca">
+          <div class="spec-h"><b>Ô template · header màu và lưới ảnh</b><span class="kind">td[style] · td.M4YOLVG9 (nopadding)</span><span class="dp">ô ảnh 245×66 · chữ 14px</span></div>
+          <div class="stage bg col">
+            <div class="nw-wiki scroll"><table class="nw-table" style="width:100%;min-width:560px">
+              <tr><td style="background:#03cf5d;color:#fff;text-align:center;width:25%;height:60px"><strong>Header ô</strong></td><td style="background:#2d2f34;text-align:center">Header xám</td><td style="background:#003980;color:#fff;text-align:center">Header xanh đậm</td><td class="nopad" style="text-align:center"><span style="display:block;padding:18px 0;border:1px dashed var(--espejo-text-tertiary);margin:6px;font-size:11px">ảnh (nopadding)</span></td></tr>
+              <tr><td style="text-align:center;font-size:14px"><span style="display:block;margin:0 auto 4px;width:28px;height:20px;border:1px dashed var(--espejo-text-tertiary);font-size:9px">ảnh</span><a class="nw-link" href="#">Dịch vụ A</a></td><td style="text-align:center;font-size:14px"><span style="display:block;margin:0 auto 4px;width:28px;height:20px;border:1px dashed var(--espejo-text-tertiary);font-size:9px">ảnh</span><a class="nw-link" href="#">Dịch vụ B</a><a class="nw-link nw-fn" href="#">[A]</a></td><td style="text-align:center;font-size:14px"><span style="display:block;margin:0 auto 4px;width:28px;height:20px;border:1px dashed var(--espejo-text-tertiary);font-size:9px">ảnh</span>Dịch vụ C</td><td style="text-align:center;font-size:14px"><span style="display:block;margin:0 auto 4px;width:28px;height:20px;border:1px dashed var(--espejo-text-tertiary);font-size:9px">ảnh</span>Dịch vụ D</td></tr>
+            </table></div>
+          </div>
+          <div class="spec-f"><span class="note">Lưới dịch vụ (ảnh ở trên, tên ở dưới) và các ô header tô màu. Ảnh và logo được thay bằng khung đứt nét theo RULE-09.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= MẪU ================= -->
+    <section class="block" id="screens">
+      <header><h2>Màn hình mẫu</h2><p>Ghép lại từ các class ở trên theo quy tắc bố cục của espejo: desktop rộng (≥ 1728px) có sidebar và TOC map; mobile (&lt; 728px) bỏ bo góc thẻ, thu nhỏ tiêu đề và làm mờ nút nổi.</p></header>
+      <div class="frame-wrap"><div class="frames">
+        <div>
+          <div class="desk" id="desk">
+            <div class="nw-nav"><div class="in" style="width:1400px;margin:0 auto">
+              <a class="nw-brand" href="#">ẢNH LOGO</a><a class="nw-menu" href="#"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>RecentChanges</a><span class="grow"></span>
+              <div class="nw-searchbox"><a class="nw-random" href="#" aria-label="Ngẫu nhiên"><svg class="i" viewBox="0 0 24 24"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg></a><form class="nw-search" onsubmit="return false"><input placeholder="Search" aria-label="Tìm kiếm"><a href="#" aria-label="Tìm"><svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></a></form></div>
+              <a class="nw-menu nw-account" href="#" aria-label="Tài khoản"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></a>
+            </div></div>
+            <div class="lay">
+              <article class="nw-article nw-wiki">
+                <h1 class="nw-title">Tên tài liệu</h1>
+                <div class="nw-modified">Last Modified: 2026-09-07 13:40:18</div>
+                <div class="nw-catbox"><span>Category:</span><ul><li><a class="nw-link" href="#">danh mục 1</a></li><li><a class="nw-link" href="#">danh mục 2</a></li><li><a class="nw-link" href="#">danh mục 3</a></li></ul></div>
+                <table class="nw-table framed" style="--frame:#03c75a;width:100%;margin-bottom:1rem"><tr><td style="background:#03c75a;color:#fff;text-align:center"><strong>Tên template</strong></td></tr><tr><td style="text-align:center"><details class="nw-fold"><summary>[ Expand/Collapse ]</summary><div></div></details></td></tr></table>
+                <div style="display:flex;gap:24px;align-items:flex-start">
+                  <div class="nw-toc"><details open><summary></summary><div class="ind"><span class="it"><a href="#">1</a>. Tổng quan</span><span class="it"><a href="#">2</a>. Lịch sử</span><div class="ind"><span class="it"><a href="#">2.1</a>. Giai đoạn đầu</span><span class="it"><a href="#">2.2</a>. Hiện nay</span></div><span class="it"><a href="#">3</a>. Cấu trúc</span><span class="it"><a href="#">4</a>. Xem thêm</span></div></details></div>
+                  <table class="nw-table" style="flex:1"><tr><td colspan="2" style="background:#03c75a;color:#fff;text-align:center"><strong>Hộp thông tin</strong></td></tr><tr><td class="nopad" colspan="2" style="text-align:center"><span style="display:block;padding:40px 0;font-size:12px;color:var(--espejo-text-tertiary)">ảnh logo</span></td></tr><tr><td style="background:#03c75a;color:#fff;width:30%;text-align:center"><strong>loại</strong></td><td><a class="nw-link" href="#">giá trị</a></td></tr><tr><td style="background:#03c75a;color:#fff;text-align:center"><strong>khu vực</strong></td><td>giá trị</td></tr></table>
+                </div>
+                <h2 class="nw-h h2"><a href="#">1.</a> Tổng quan</h2>
+                <div class="nw-p">Đoạn văn mẫu có <a class="nw-link" href="#">liên kết</a>, <a class="nw-link ext" href="#">link ngoài</a> và chú thích<a class="nw-link nw-fn" href="#">[1]</a>.</div>
+                <blockquote class="nw-quote">Một câu trích dẫn mẫu.</blockquote>
+                <h2 class="nw-h h2"><a href="#">2.</a> Lịch sử</h2>
+                <h3 class="nw-h h3"><a href="#">2.1.</a> Giai đoạn đầu</h3>
+                <div class="nw-p">Đoạn văn mẫu thứ hai.</div>
+              </article>
+              <aside><div class="nw-rc"><a class="hd" href="#"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span class="grow">RecentChanges</span><svg class="i" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></a><ul><li><a class="nw-link" href="#">Tài liệu mẫu A</a><time>12m ago</time></li><li><a class="nw-link" href="#">Tài liệu mẫu B</a><time>12m ago</time></li><li><a class="nw-link" href="#">Tài liệu mẫu C</a><time>13m ago</time></li><li><a class="nw-link" href="#">Tài liệu mẫu D</a><time>15m ago</time></li><li><a class="nw-link" href="#">Tài liệu mẫu E</a><time>16m ago</time></li></ul></div></aside>
+            </div>
+            <div class="nw-tocmap" data-tocmap data-tooltip-show-children-hover></div>
+            <div class="nw-ctl"><ul><li><a class="nw-tip" href="#" data-tooltip="Mục lục" aria-label="Mục lục"><svg class="i" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4 6h1M4 12h1M4 18h1"/></svg></a></li></ul><ul><li><a class="nw-tip" href="#" data-tooltip="Lên đầu" aria-label="Lên đầu"><svg class="i" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></a></li><li><a class="nw-tip" href="#" data-tooltip="Xuống cuối" aria-label="Xuống cuối"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M19 12l-7 7-7-7"/></svg></a></li></ul></div>
+          </div>
+          <div class="frame-cap">desktop 1800 × 1000 · nw-nav, nw-article, nw-catbox, nw-toc, nw-table, nw-h, nw-quote, nw-rc, nw-tocmap (rê chuột vào mép phải để bung nhãn), nw-ctl</div>
+        </div>
+        <div>
+          <div class="phone">
+            <div class="nw-nav"><div class="in"><a class="nw-brand" href="#" style="font-size:9px">LOGO</a><span class="grow"></span><a class="nw-menu" href="#" aria-label="Tìm kiếm"><svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></a><a class="nw-menu" href="#" aria-label="Tài khoản"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></a></div></div>
+            <article class="nw-article nw-wiki">
+              <h1 class="nw-title">Tên tài liệu</h1>
+              <div class="nw-modified">Last Modified: 2026-09-07</div>
+              <div class="nw-catbox"><span>Category:</span><ul><li><a class="nw-link" href="#">danh mục 1</a></li><li><a class="nw-link" href="#">danh mục 2</a></li></ul></div>
+              <div class="nw-toc"><details><summary></summary></details></div>
+              <h2 class="nw-h h2"><a href="#">1.</a> Tổng quan</h2>
+              <div class="nw-p">Đoạn văn mẫu có <a class="nw-link" href="#">liên kết</a> và chú thích<a class="nw-link nw-fn" href="#">[1]</a>.</div>
+              <h2 class="nw-h h2"><a href="#">2.</a> Lịch sử</h2>
+              <h3 class="nw-h h3"><a href="#">2.1.</a> Giai đoạn đầu</h3>
+              <div class="nw-p">Đoạn văn mẫu thứ hai.</div>
+            </article>
+            <div class="nw-ctl"><ul><li><a href="#" aria-label="Mục lục"><svg class="i" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4 6h1M4 12h1M4 18h1"/></svg></a></li></ul><ul><li><a href="#" aria-label="Lên đầu"><svg class="i" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></a></li><li><a href="#" aria-label="Xuống cuối"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M19 12l-7 7-7-7"/></svg></a></li></ul></div>
+          </div>
+          <div class="frame-cap">mobile 390 × 844 · nav 3rem (Sáng: nền brand1), thẻ bỏ bo góc, đệm .75rem, tiêu đề 2rem, nút nổi opacity .4, không có TOC map</div>
+        </div>
+      </div></div>
+      <p class="frame-cap" style="margin:12px 0 0">Bố cục mobile của sidebar RecentChanges không có trong bản lưu (trang lưu ở desktop), nên màn mobile không vẽ nó.</p>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"><span id="toast-t"></span></div>
+
+<script>
+/* token dump từ CSS đã lưu: 64 --espejo-* (:root + .theseed-light-mode / .theseed-dark-mode / :has(.espejo-black)) + 19 --wiki-* hardcode */
+const ROLES=["espejo-background", "espejo-text", "espejo-text-secondary", "espejo-text-tertiary", "espejo-text-quaternary", "espejo-text-light", "espejo-link", "espejo-link-hover", "espejo-link-external", "espejo-highlight", "espejo-white", "espejo-black", "espejo-danger", "espejo-danger-hover", "espejo-pink", "espejo-brand1", "espejo-brand2", "espejo-brand-bright1", "espejo-brand-bright2", "espejo-card-background", "espejo-card-border", "espejo-component-background", "espejo-component-background-focus", "espejo-component-border", "espejo-component-border-focus", "espejo-button-background", "espejo-button-background-disabled", "espejo-button-background-secondary", "espejo-button-background-active", "espejo-button-background-danger", "espejo-button-background-hover", "espejo-button-background-secondary-hover", "espejo-button-background-active-hover", "espejo-button-background-danger-hover", "espejo-button-background-focus", "espejo-button-background-secondary-focus", "espejo-button-background-active-focus", "espejo-button-background-danger-focus", "espejo-button-border", "espejo-button-border-hover", "espejo-button-border-focus", "espejo-nav-bar-background", "espejo-nav-bar-text", "espejo-nav-bar-item-hover", "espejo-nav-bar-border", "espejo-site-notice-background", "espejo-site-notice-icon-background", "espejo-article-title-namespace-underline", "espejo-article-menu-background", "espejo-toc-map-item-background-1", "espejo-toc-map-item-background-2", "espejo-toc-map-item-background-3", "espejo-toc-map-item-background-4", "espejo-toc-map-item-background-5", "espejo-toc-map-item-background-6", "espejo-toc-map-item-background-hover-1", "espejo-toc-map-item-background-hover-2", "espejo-toc-map-item-background-hover-3", "espejo-toc-map-item-background-hover-4", "espejo-toc-map-item-background-hover-5", "espejo-toc-map-item-background-hover-6", "espejo-nav-control-background", "espejo-nav-control-text", "espejo-nav-control-border", "wiki-heading-border", "wiki-cell-border", "wiki-table-background", "wiki-quote-background", "wiki-quote-border", "wiki-quote-accent", "wiki-quote-text", "wiki-pre-background", "wiki-pre-border", "wiki-footnote-border", "wiki-hr", "wiki-heading-icon", "wiki-not-exist", "wiki-external", "wiki-external-badge", "wiki-del", "catbox-background", "catbox-border", "focus-ring"];
+const MODES={"light": {"label": "Sáng", "v": ["#F5F5F5", "#212529", "rgba(33,37,41,.749)", "rgba(33,37,41,.502)", "rgba(33,37,41,.353)", "#212529", "#0275D8", "#0263B8", "#377E21", "rgba(231,227,23,.5)", "#FFFFFF", "#000000", "#D64A58", "#AB3B46", "#DB2777", "#00A69C", "#28B472", "#BFE9D5", "#D4F0E3", "#FFFFFF", "#CCCCCC", "#FFFFFF", "#F2F2F2", "#CED4DA", "#878A8D", "#FFFFFF", "#F7F7F7", "#A2A2A2", "#D4F0E3", "#D64A58", "#EFEFEF", "#AAAAAA", "#C9E4D8", "#C1434F", "#F3F3F3", "#A7A7A7", "#CEE9DC", "#C74552", "#DADADA", "#C5C5C5", "#C5C5C5", "linear-gradient(90deg,#00a69c,#00a69c,#28b472)", "#FFFFFF", "rgba(255,255,255,.1)", "#CCCCCC", "#FEFC8C", "#E5E37E", "inset 0 -0.5rem 0 #d4f0e3", "#FFFFFF", "#5A5A5A", "#5A5A5A", "#8C8C8C", "#ADADAD", "#BDBDBD", "#BDBDBD", "#404040", "#404040", "#797979", "#A0A0A0", "#B3B3B3", "#B3B3B3", "#1AAFA6", "#FFFFFF", "rgba(206,212,218,.5)", "#CCCCCC", "#DDDDDD", "#F5F5F5", "#EEEEEE", "#CCCCCC", "#71BC6D", "#212529", "#EEEEEE", "#DDDDDD", "#777777", "#CCCCCC", "#666666", "#FF0000", "#009900", "#008000", "#808080", "#FFFFFF", "#DFE1E2", "rgba(233,230,18,.3)"]}, "dark": {"label": "Tối", "v": ["#000000", "#E0E0E0", "rgba(224,224,224,.749)", "rgba(224,224,224,.502)", "rgba(224,224,224,.353)", "#212529", "#EC9F19", "#BD7F14", "#377E21", "rgba(233,230,18,.3)", "#000000", "#FFFFFF", "#D64A58", "#AB3B46", "#BE185D", "#2E3033", "#2E3033", "#C0C1C2", "#C0C1C2", "#1C1D1F", "#444444", "#000000", "#262626", "#444444", "#888888", "#000000", "#1F1F1F", "#050505", "#325E4A", "#D64A58", "#1E1E1E", "#1D1D1D", "#2D5543", "#C1434F", "#0A0A0A", "#141414", "#305946", "#C74552", "#3E3E3E", "#4A4A4A", "#4D4D4D", "#2E3033", "#FFFFFF", "rgba(255,255,255,.1)", "#444444", "#181800", "#2E2E00", "inset 0 -0.5rem 0 rgba(212,240,227,.3)", "#2E2E2E", "#C2C2C2", "#C2C2C2", "#888888", "#616161", "#4E4E4E", "#4E4E4E", "#D5D5D5", "#D5D5D5", "#959595", "#6B6B6B", "#555555", "#555555", "#2E3033", "#FFFFFF", "rgba(68,68,68,.5)", "#383B40", "#383B40", "#2D2F34", "#2D2F34", "#383B40", "#666C75", "#DDDDDD", "#2D2F34", "#383B40", "#383840", "#383B40", "#666666", "#DC4343", "#009900", "#008000", "#808080", "#1C1D1F", "#5C5C5C", "rgba(233,230,18,.3)"]}, "black": {"label": "Black", "v": ["#000000", "#E0E0E0", "rgba(224,224,224,.749)", "rgba(224,224,224,.502)", "rgba(224,224,224,.353)", "#212529", "#EC9F19", "#BD7F14", "#377E21", "rgba(233,230,18,.3)", "#000000", "#FFFFFF", "#D64A58", "#AB3B46", "#BE185D", "#2E3033", "#2E3033", "#C0C1C2", "#C0C1C2", "#000000", "#444444", "#000000", "#262626", "#444444", "#888888", "#000000", "#1F1F1F", "#050505", "#325E4A", "#D64A58", "#101010", "#1D1D1D", "#2D5543", "#C1434F", "#050505", "#141414", "#305946", "#C74552", "#3E3E3E", "#4A4A4A", "#4D4D4D", "#000000", "#FFFFFF", "rgba(255,255,255,.1)", "#444444", "#000000", "#000000", "inset 0 -0.5rem 0 rgba(212,240,227,.3)", "#000000", "#C2C2C2", "#C2C2C2", "#888888", "#616161", "#4E4E4E", "#4E4E4E", "#D5D5D5", "#D5D5D5", "#959595", "#6B6B6B", "#555555", "#555555", "#000000", "#FFFFFF", "rgba(68,68,68,.5)", "#383B40", "#383B40", "#2D2F34", "#2D2F34", "#383B40", "#666C75", "#DDDDDD", "#2D2F34", "#383B40", "#383840", "#383B40", "#666666", "#DC4343", "#009900", "#008000", "#808080", "#1C1D1F", "#5C5C5C", "rgba(233,230,18,.3)"]}};
+/* TOC map của trang Naver trong bản lưu: [nhãn, cấp, top%] y nguyên từ style="top: …%" */
+const TOCMAP = [["1. outline",2,7.11],["2. history",2,10.26],["3. history",2,24.52],["3.1. 1990-2000",3,27.68],["3.2. 2001 to 2013",3,30.95],["3.3. today",3,34.16],["4. composition",2,37.32],["4.1. main screen",3,40.47],
+  ["4.2. service provided",3,44.72],["4.2.1. service with documents",4,47.88],["4.2.2. Service without documentation",4,51.03],["4.3. terminated service",3,54.19],["4.3.1. service with documents",4,57.35],["4.3.2. Service without documentation",4,60.51],
+  ["5. game",2,75.4],["6. Naver 1784",2,78.55],["7. Criticism and problems",2,81.71],["8. digression",2,84.87],["9. related document",2,88.03],["10. look around",2,91.19]];
+(function () {
+  const root = document.documentElement;
+  const state = { mode: matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark" };
+  try { Object.assign(state, JSON.parse(localStorage.getItem("espejo-kit") || "{}")); } catch (e) {}
+  if (!MODES[state.mode]) state.mode = "dark";
+
+  const toast = (t) => {
+    const el = document.getElementById("toast");
+    document.getElementById("toast-t").textContent = t;
+    el.classList.add("show");
+    clearTimeout(toast.t);
+    toast.t = setTimeout(() => el.classList.remove("show"), 1600);
+  };
+  const copy = async (text, msg) => {
+    try { await navigator.clipboard.writeText(text); toast(msg); }
+    catch (e) { toast("Trình duyệt chặn clipboard, hãy copy tay"); }
+  };
+
+  function apply() {
+    const vals = MODES[state.mode].v;
+    ROLES.forEach((r, i) => root.style.setProperty("--" + r, vals[i]));
+    root.dataset.mode = state.mode;
+    document.querySelectorAll("#mode button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === state.mode));
+    renderRoles(vals);
+    try { localStorage.setItem("espejo-kit", JSON.stringify(state)); } catch (e) {}
+  }
+  document.querySelectorAll("#mode button").forEach((b) => (b.onclick = () => { state.mode = b.dataset.v; apply(); }));
+
+  /* ô màu: nhóm theo tiền tố; giá trị gradient / inset box-shadow vẽ đúng loại của nó */
+  const GROUP = (r) => r.startsWith("wiki-") || r.startsWith("catbox") || r === "focus-ring" ? "nội dung wiki (hardcode)" : r.replace("espejo-", "").split("-")[0];
+  function renderRoles(vals) {
+    const box = document.getElementById("roles");
+    box.innerHTML = "";
+    let last = "";
+    ROLES.forEach((r, i) => {
+      const g = GROUP(r);
+      if (g !== last) { const h = document.createElement("h4"); h.textContent = g; box.appendChild(h); last = g; }
+      const v = vals[i];
+      const b = document.createElement("button");
+      b.className = "role";
+      const sw = v.startsWith("inset") ? v.split(" ").pop() : v;
+      b.innerHTML = '<i></i><b>--' + r + "</b><code></code>";
+      b.querySelector("i").style.background = sw;
+      b.querySelector("code").textContent = v;
+      b.onclick = () => copy(v, "Đã copy --" + r);
+      box.appendChild(b);
+    });
+  }
+
+  /* thang chữ thực dùng: [tên, cỡ px, line-height, đậm, nguồn] */
+  const TYPE = [["Tiêu đề bài", 36, "36px", 700, "h1.VbvmvMt4 · 2.25rem/1"], ["Heading 2", 27, "40.5px", 700, "h2 · 1.8em"], ["Heading 3", 24, "36px", 700, "h3 · 1.6em"], ["Heading 4", 21, "31.5px", 700, "h4 · 1.4em"],
+    ["Heading 5", 18, "27px", 700, "h5 · 1.2em"], ["Cỡ +1", 19.33, "29px", 400, ".B6ek8ctS · 1.289em"], ["Đầu RecentChanges", 19.2, "19.2px", 500, ".jWvkT98d · 1.2rem/1"], ["Mục lục · tiêu đề", 18.75, "28.1px", 400, "toc summary · 1.25em"],
+    ["Menu thanh trên", 16.8, "25.2px", 500, ".z3lZndG0 · 1.05rem"], ["Thân bài", 15, "22.5px", 400, "body · 15px/1.5"], ["Danh mục / giấy phép", 14.4, "21.6px", 400, ".rAxoKchl · .9rem"], ["Tooltip", 14.4, "21.6px", 400, "._3KFO1EB6 · .9rem"],
+    ["Chân trang", 13.6, "20.4px", 400, ".ahBh1oxA · .85rem"], ["Thời gian", 12, "18px", 400, "time · 12px"], ["Số chú thích", 12, "0", 400, ".qeBnOewP · .8em super"]];
+  const ts = document.getElementById("typescale");
+  TYPE.forEach(([name, size, lh, w, src]) => {
+    const row = document.createElement("div");
+    row.className = "type-row";
+    row.innerHTML = '<span class="meta">' + name + '</span><span class="t" style="font-size:' + size + "px;line-height:" + lh + ";font-weight:" + w + '">Tài liệu tự do mà ai cũng sửa được</span><span class="meta">' + src + "</span>";
+    ts.appendChild(row);
+  });
+
+  /* bo góc và viền */
+  const sh = document.getElementById("shapes");
+  [["0", "bảng wiki, chân trang", "0"], ["3px", "pre", "3px"], ["4px", "ô tìm kiếm, danh mục, nav child", "4px"], [".3rem", "button-border-radius", ".3rem"], ["6px", "card, tooltip, nút nổi", "6px"], ["100%", "chấm TOC map", "50%"]].forEach(([n, use, r]) => {
+    const c = document.createElement("div");
+    c.className = "shape-cell";
+    c.innerHTML = '<i style="border-radius:' + r + '"></i><b>' + n + "</b>" + use;
+    sh.appendChild(c);
+  });
+
+  /* dựng TOC map từ số % của bản lưu */
+  document.querySelectorAll("[data-tocmap]").forEach((m) => {
+    const hov = +m.dataset.hover;
+    TOCMAP.forEach(([t, lv, top], i) => {
+      const a = document.createElement("a");
+      a.className = "nw-tip" + (i === hov ? " is-hover" : "");
+      a.href = "#"; a.dataset.tooltip = t; a.setAttribute("aria-label", t); a.style.top = top + "%";
+      a.innerHTML = '<span class="hit"><span class="dot l' + lv + '"></span></span>';
+      m.appendChild(a);
+    });
+  });
+
+  /* mỗi thẻ thành phần có nút copy HTML của phần trình diễn */
+  document.querySelectorAll(".spec").forEach((spec) => {
+    const stage = spec.querySelector(".stage");
+    if (!stage || !spec.querySelector(".spec-h")) return;
+    let foot = spec.querySelector(".spec-f");
+    if (!foot) { foot = document.createElement("div"); foot.className = "spec-f"; foot.innerHTML = '<span class="note"></span>'; spec.appendChild(foot); }
+    const b = document.createElement("button");
+    b.className = "copy"; b.textContent = "Copy HTML";
+    b.onclick = () => copy(stage.innerHTML.trim().replace(/\n\s+/g, "\n"), "Đã copy HTML của " + spec.querySelector(".spec-h b").textContent);
+    foot.appendChild(b);
+  });
+
+  document.getElementById("copy-tokens").onclick = () => {
+    const vals = MODES[state.mode].v;
+    copy(":root {\n" + ROLES.map((r, i) => "  --" + r + ": " + vals[i] + ";").join("\n") + "\n}", "Đã copy token chế độ " + MODES[state.mode].label);
+  };
+
+  const links = [...document.querySelectorAll(".side a")];
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (e.isIntersecting) links.forEach((a) => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id));
+  }), { rootMargin: "-30% 0px -60% 0px" });
+  document.querySelectorAll("section.block").forEach((s) => io.observe(s));
+
+  document.addEventListener("click", (e) => { if (e.target.closest('a[href="#"]')) e.preventDefault(); });
+  apply();
+})();
+</script>
+</body>
+</html>

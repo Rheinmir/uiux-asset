@@ -1,0 +1,734 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta name="ui-kit-id" content="notebook-google">
+<!-- UI kit rút từ https://notebook.google (Gemini Notebook, site marketing Angular + Angular Material), 29/09/2026.
+     Màu và số đo đọc bằng Playwright (getComputedStyle + CSS vars ở :root), khám phá bằng discover.mjs: 3 trang, 60 pattern.
+     Không nhúng ảnh, logo, wordmark hay minh hoạ của site: chỗ đó là khối giữ chỗ ghi "ảnh …". -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Notebook UI Kit</title>
+<meta name="ui-kit-skip" content="2f781921b3:ảnh minh hoạ và ảnh chụp sản phẩm của site (45 lần), không chép theo RULE-09, kit dùng khối giữ chỗ .nb-ph;0ad4b007cc:logo Gemini Notebook dạng ảnh, thay bằng khối giữ chỗ trong header;7182b9fd52:icon robot dạng ảnh trong thẻ notebook, thay bằng khối giữ chỗ emoji;b0b10d8226:wordmark Google dạng ảnh ở footer, thay bằng khối giữ chỗ">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0&display=block">
+<style>
+/* Token của site: vai trò --nb-* (màu đo bằng getComputedStyle trên phần tử thật), thang chữ --sys-* (chép từ :where(:root)
+   của site, có 2 mức ghi đè ở ≤991px và ≤767px). Site chỉ có giao diện sáng. Script bên dưới ghi lại các biến này từ dữ liệu. */
+:root {
+  --nb-ink:#000000; --nb-inkSoft:#1F1F1F; --nb-heading:#212226; --nb-quote:#3C4043; --nb-body:#45474D; --nb-muted:#5F6368;
+  --nb-notebook:#505050; --nb-subtle:#726F6F; --nb-author:#7F7C7C; --nb-accent:#3186FF; --nb-accentSoft:#7F9CFF;
+  --nb-violet:#7182FF; --nb-green:#3CFF52; --nb-mint:#70E1A2; --nb-surface:#FFFFFF; --nb-surfaceTint:#F3F7FB; --nb-surfaceCard:#F8F8FA;
+  --nb-line:#E1E3E1; --nb-lineFaq:#D6DEE6; --nb-dot:#DADCE0; --nb-dotTrack:#E8EAED; --nb-dotFill:#202124; --nb-onInk:#FFFFFF; --nb-focusUa:#005FCC;
+  --nb-matPrimary:#0B28FF; --nb-matOnFab:#0014A4; --nb-matSecondary:#006F0D; --nb-matOutline:#8181A5; --nb-matMenu:#F0F4F9;
+  --nb-matCardElevated:#F8FAFD; --nb-matCardFilled:#DDE3EA; --nb-matCalendar:#E9EEF6; --nb-matToggle:#F6F7FF; --nb-matScrim:#505070;
+  --nb-shadow-rest: 0 4px 8px 0 rgba(0,0,0,.05);
+  --nb-shadow-hover: 0 8px 16px 0 rgba(0,0,0,.1);
+  --nb-grad-hero: linear-gradient(90deg, var(--nb-accent) 57.21%, var(--nb-accentSoft) 82.21%);
+  --nb-grad-tier: linear-gradient(254deg, var(--nb-violet) 17.07%, var(--nb-green) 113.6%);
+  --nb-grad-premium: linear-gradient(272deg, var(--nb-violet) 12.31%, var(--nb-green) 65.49%);
+  --nb-grad-org: linear-gradient(90deg, var(--nb-mint), var(--nb-violet));
+  --nb-display: "Google Sans", Helvetica, Arial, sans-serif;
+  --nb-text: "Google Sans Text", "Google Sans", Helvetica, Arial, sans-serif;
+  --mono: "Roboto Mono", ui-monospace, Menlo, monospace;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--nb-surface); color: var(--nb-ink); font: 400 14px/20px var(--nb-text); -webkit-font-smoothing: antialiased; }
+.ms { font-family: "Material Symbols Outlined"; font-weight: normal; font-style: normal; font-size: 24px; line-height: 1; display: inline-block; white-space: nowrap; direction: ltr; font-feature-settings: "liga"; -webkit-font-smoothing: antialiased; user-select: none; }
+code, .code { font-family: var(--mono); font-size: 12px; }
+:focus-visible { outline: 2px solid var(--nb-accent); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+/* ---------- vỏ trang ---------- */
+.shell { display: grid; grid-template-columns: 232px minmax(0, 1fr); min-height: 100vh; }
+.side { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 20px 12px; background: var(--nb-surfaceCard); display: flex; flex-direction: column; gap: 2px; }
+.brand { display: flex; align-items: center; gap: 10px; padding: 4px 12px 16px; }
+.brand-mark { width: 32px; height: 32px; border-radius: 10px; background: var(--nb-grad-hero); color: var(--nb-onInk); display: grid; place-items: center; }
+.brand b { font-size: 16px; font-weight: 500; display: block; }
+.brand small { color: var(--nb-muted); font-size: 12px; }
+.side h6 { margin: 14px 12px 6px; font-size: 11px; font-weight: 500; letter-spacing: .5px; text-transform: uppercase; color: var(--nb-muted); }
+.side a { display: flex; align-items: center; gap: 12px; height: 40px; padding: 0 12px; border-radius: 20px; color: var(--nb-body); text-decoration: none; font-weight: 500; }
+.side a .ms { font-size: 20px; }
+.side a:hover { background: color-mix(in srgb, var(--nb-ink) 6%, transparent); }
+.side a.on { background: var(--nb-ink); color: var(--nb-onInk); }
+main { padding: 0 32px 96px; min-width: 0; }
+
+.bar { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; padding: 14px 0; background: var(--nb-surface); border-bottom: 1px solid var(--nb-line); }
+.bar .grow { flex: 1; }
+.ctl { display: flex; align-items: center; gap: 8px; }
+.ctl > span { font-size: 12px; font-weight: 500; color: var(--nb-muted); }
+.seg { display: inline-flex; gap: 2px; }
+.seg button { height: 32px; padding: 0 12px; border: 1px solid var(--nb-ink); background: transparent; color: var(--nb-ink); font: 500 13px var(--nb-text); cursor: pointer; border-radius: 6px; }
+.seg button:first-child { border-radius: 16px 6px 6px 16px; }
+.seg button:last-child { border-radius: 6px 16px 16px 6px; }
+.seg button[aria-pressed="true"] { background: var(--nb-ink); color: var(--nb-onInk); }
+.pill-note { font-size: 12px; padding: 4px 10px; border-radius: 16px; background: var(--nb-surfaceTint); color: var(--nb-body); }
+
+.intro { padding: 40px 0 8px; max-width: 780px; }
+.intro .eyebrow { font-family: var(--mono); font-size: 12px; color: var(--nb-accent); }
+.intro h1 { font: 500 56px/60px var(--nb-display); letter-spacing: -.6px; margin: 8px 0 12px; text-wrap: balance; }
+.intro p { font-size: 16px; line-height: 26px; color: var(--nb-body); margin: 0; max-width: 66ch; }
+.intro .facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.fact { font-family: var(--mono); font-size: 12px; padding: 4px 10px; border-radius: 8px; background: var(--nb-surfaceCard); color: var(--nb-body); }
+
+section.block { padding-top: 48px; scroll-margin-top: 64px; }
+section.block > header { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+section.block h2 { font: 400 32px/40px var(--nb-display); margin: 0; }
+section.block > header p { margin: 0; color: var(--nb-body); max-width: 72ch; }
+h3.sub { font: 500 13px/20px var(--nb-text); text-transform: uppercase; letter-spacing: .5px; color: var(--nb-muted); margin: 24px 0 10px; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+.grid.wide { grid-template-columns: repeat(auto-fill, minmax(460px, 1fr)); }
+.spec { background: var(--nb-surfaceCard); border-radius: 16px; display: flex; flex-direction: column; min-width: 0; }
+.spec.full { grid-column: 1 / -1; }
+.spec-h { display: flex; align-items: center; gap: 8px; padding: 14px 16px 0; flex-wrap: wrap; }
+.spec-h b { font-size: 15px; font-weight: 500; }
+.kind { font-family: var(--mono); font-size: 11px; padding: 2px 8px; border-radius: 6px; background: var(--nb-ink); color: var(--nb-onInk); }
+.spec-h .dp { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--nb-muted); font-variant-numeric: tabular-nums; }
+.stage { padding: 20px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 16px; min-height: 96px; overflow-x: auto; }
+.stage.col { flex-direction: column; align-items: stretch; }
+.stage.center { justify-content: center; }
+.stage.surface { background: var(--nb-surface); margin: 12px 12px 0; border-radius: 12px; }
+.stage.dark-bg { background: var(--nb-ink); margin: 12px 12px 0; border-radius: 12px; }
+.spec-f { display: flex; align-items: center; gap: 8px; padding: 8px 12px 12px 16px; margin-top: auto; }
+.spec-f .note { font-size: 12px; line-height: 18px; color: var(--nb-muted); flex: 1; }
+.copy { height: 32px; padding: 0 12px; border-radius: 16px; border: none; background: transparent; color: var(--nb-ink); font: 500 13px var(--nb-text); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; flex: none; }
+.copy:hover { background: color-mix(in srgb, var(--nb-ink) 6%, transparent); }
+.copy .ms { font-size: 18px; }
+.state { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+.state > small { font-family: var(--mono); font-size: 11px; color: var(--nb-muted); }
+
+/* nền tảng */
+.roles { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; }
+.role { border-radius: 12px; padding: 12px; min-height: 76px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: inset 0 0 0 1px var(--nb-line); cursor: pointer; border: none; text-align: left; font: inherit; }
+.role b { font-size: 13px; font-weight: 500; }
+.role code { font-size: 11px; opacity: .85; }
+.type-row { display: grid; grid-template-columns: 170px minmax(0, 1fr) 190px; gap: 16px; align-items: baseline; padding: 10px 0; border-bottom: 1px solid var(--nb-line); }
+.type-row:last-child { border-bottom: none; }
+.type-row .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.type-row .meta { font-family: var(--mono); font-size: 11px; color: var(--nb-muted); font-variant-numeric: tabular-nums; }
+.shape-cell { display: flex; flex-direction: column; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px; color: var(--nb-muted); text-align: center; }
+.shape-cell i { display: block; width: 72px; height: 72px; background: var(--nb-surfaceTint); box-shadow: inset 0 0 0 1px var(--nb-lineFaq); }
+.shadow-cell i { background: var(--nb-surface); box-shadow: var(--sh); border-radius: 24px; }
+table.tok { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+table.tok th, table.tok td { text-align: left; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--nb-line); font-size: 13px; vertical-align: top; }
+table.tok th { font-weight: 500; color: var(--nb-muted); font-size: 12px; }
+table.tok td:first-child { font-family: var(--mono); font-size: 12px; }
+
+/* ================= các thành phần nb-* (tái dùng được: chỉ cần token --nb-* và --sys-*) ================= */
+/* giữ chỗ cho ảnh/logo/minh hoạ của site (RULE-09) */
+.nb-ph { display: grid; place-items: center; text-align: center; font: 500 12px/16px var(--mono); color: var(--nb-muted); background: repeating-linear-gradient(135deg, var(--nb-surfaceCard) 0 10px, var(--nb-surfaceTint) 10px 20px); box-shadow: inset 0 0 0 1px var(--nb-lineFaq); border-radius: 12px; padding: 8px; }
+.nb-grad { background-image: var(--nb-grad-hero); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.nb-grad.tier { background-image: var(--nb-grad-tier); }
+.nb-focus-ua.is-focus { outline: auto 1px var(--nb-focusUa); }
+
+/* nút CTA viên thuốc (hero "Try …"): mdc-button unelevated */
+.nb-cta { height: 50px; padding: 0 24px; border-radius: 94px; background: var(--nb-inkSoft); color: var(--nb-onInk); font: 500 15px/22px var(--nb-text); display: inline-flex; align-items: center; border: none; cursor: pointer; text-decoration: none; white-space: nowrap; }
+/* nút trong bảng giá: .new-plan-button (plus-button đặc · free-trial-button viền) */
+.nb-plan-btn { display: block; width: 194px; max-width: 100%; height: 46px; padding: 8px 16px; border-radius: 8px; border: 1px solid var(--nb-ink); font: 500 16px/28px var(--nb-text); text-align: center; text-decoration: none; cursor: pointer; }
+.nb-plan-btn.filled { background: var(--nb-ink); color: var(--nb-onInk); }
+.nb-plan-btn.outlined { background: var(--nb-surface); color: var(--nb-ink); }
+/* nút lối vào tổ chức: .path-button + .path-subtitle */
+.nb-path { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.nb-path a { display: flex; align-items: center; gap: 12px; padding: 19.2px 38.4px; border-radius: 16px; background: var(--nb-ink); color: var(--nb-onInk); font: 500 16px/20px var(--nb-text); text-decoration: none; white-space: nowrap; }
+.nb-path a .ms { font-size: 20px; }
+.nb-path small { font: 400 12px/16px var(--nb-text); letter-spacing: .096px; color: var(--nb-subtle); }
+
+/* header: 80 cao, lề 0 30 */
+.nb-header { width: 100%; height: 80px; padding: 0 30px; display: flex; align-items: center; gap: 24px; background: var(--nb-surface); font: 400 18px/28px var(--nb-text); color: var(--nb-ink); }
+.nb-header .logo { width: 211px; height: 28px; font-size: 11px; line-height: 12px; padding: 2px; }
+.nb-header nav { margin-left: auto; display: flex; align-items: center; gap: 24px; }
+.nb-navlink { position: relative; font: 500 16px/20px var(--nb-text); color: var(--nb-ink); text-decoration: none; white-space: nowrap; }
+.nb-navlink.active::after { content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 1px; background: var(--nb-ink); }
+.nb-navlink.muted { color: var(--nb-muted); }
+.nb-getapp { border-radius: 83.2px; padding: 8px 16px; }
+.nb-social { display: inline-flex; gap: 0; }
+.nb-social a { padding-right: 8px; display: inline-grid; }
+.nb-social i { width: 25px; height: 25px; border-radius: 50%; display: grid; place-items: center; font: 500 9px var(--mono); color: var(--nb-muted); box-shadow: inset 0 0 0 1px var(--nb-lineFaq); background: var(--nb-surfaceCard); font-style: normal; }
+.nb-header .menu { margin-left: auto; background: none; border: none; color: var(--nb-ink); cursor: pointer; padding: 4px; }
+.nb-header.mobile { padding: 0 24px; }
+.nb-header.mobile .logo { width: 160px; }
+
+/* footer: lề 38 100 70, gap 40 */
+.nb-footer { width: 100%; padding: 38px 100px 70px; display: flex; align-items: center; gap: 40px; }
+.nb-footer .gl { width: 75px; height: 28px; font-size: 10px; padding: 2px; }
+
+/* dải phát sáng trên footer (khối 1440 × 200 trống của site) */
+.nb-glow { height: 200px; width: 100%; background: linear-gradient(90deg, color-mix(in srgb, var(--nb-accent) 12%, transparent), color-mix(in srgb, var(--nb-mint) 14%, transparent), color-mix(in srgb, #FFB38A 14%, transparent)); -webkit-mask: linear-gradient(transparent, #000); mask: linear-gradient(transparent, #000); }
+
+/* chấm carousel: .features-indicator-dot (10 × 10) · .active (40 × 8, có .progress-bar) · chấm trích dẫn (12, viền) */
+.nb-dots { display: flex; align-items: center; gap: 8px; }
+.nb-dot { width: 10px; height: 10px; border-radius: 55px; background: var(--nb-dot); display: block; }
+.nb-dot.active { width: 40px; height: 8px; background: var(--nb-dotTrack); display: flex; overflow: hidden; }
+.nb-dot.active .progress { width: var(--p, 55%); height: 100%; border-radius: 55px; background: var(--nb-dotFill); }
+.nb-ring { width: 12px; height: 12px; border-radius: 50%; border: 1px solid var(--nb-dotFill); display: block; }
+.nb-ring.on { background: var(--nb-ink); }
+
+/* link chữ */
+.nb-link-inline { font: 400 24px/36px var(--nb-display); color: var(--nb-accent); text-decoration: underline; }
+.nb-link-author { font: 500 18px/28px var(--nb-text); color: var(--nb-author); text-decoration: underline; }
+.nb-link-foot { font: 400 12px/16px var(--nb-text); color: var(--nb-ink); text-decoration: underline; }
+
+/* hero: tiêu đề hiển thị có đoạn chữ gradient */
+.nb-hero { border-radius: 36px; padding: 48px 24px; text-align: center; background:
+  radial-gradient(60% 40% at 30% 0%, color-mix(in srgb, var(--nb-accent) 22%, transparent), transparent 70%),
+  radial-gradient(40% 30% at 75% 0%, color-mix(in srgb, #FFB38A 30%, transparent), transparent 70%),
+  radial-gradient(40% 30% at 55% 0%, color-mix(in srgb, var(--nb-mint) 30%, transparent), transparent 70%),
+  linear-gradient(var(--nb-surfaceTint), var(--nb-surface)); display: flex; flex-direction: column; align-items: center; gap: 24px; width: 100%; }
+.nb-hero .kicker { font: 400 24px/36px var(--nb-display); color: var(--nb-body); }
+.nb-display { font: 500 76px/79.8px var(--nb-display); letter-spacing: -.853px; color: var(--nb-inkSoft); margin: 0; }
+.nb-display.plans { font-size: 88px; line-height: 90px; letter-spacing: 0; color: var(--nb-ink); }
+.nb-display.m { font-size: 32px; line-height: 36px; }
+.nb-lead { font: 400 24px/36px var(--nb-display); color: var(--nb-subtle); margin: 0; max-width: 748px; }
+
+/* tiêu đề section + mô tả */
+.nb-h2 { font: 400 40px/48px var(--nb-display); color: var(--nb-heading); margin: 0; }
+.nb-h2.how { font-size: 36px; line-height: 44px; }
+.nb-desc { font: 400 18px/28px var(--nb-text); color: var(--nb-body); margin: 0; }
+
+/* slide tính năng: .slide-title 32/28 + .slide-description */
+.nb-slide { display: flex; flex-direction: column; gap: 16px; width: 567px; max-width: 100%; }
+.nb-slide .shot { height: 220px; border-radius: 24px; }
+.nb-slide h4 { font: 400 32px/28px var(--nb-display); margin: 0 0 8px; color: var(--nb-ink); }
+.nb-slide p { font: 400 18px/28px var(--nb-text); color: var(--nb-muted); margin: 0; }
+
+/* thẻ notebook nổi bật: a.notebook-card 284 × 293, bo 24, lề 32, gap 44 */
+.nb-card { width: 284px; max-width: 100%; height: 293px; border-radius: 24px; padding: 32px; background: var(--nb-surface); box-shadow: var(--nb-shadow-rest); display: flex; flex-direction: column; gap: 44px; text-decoration: none; color: var(--nb-notebook); font: 400 18px/28px var(--nb-display); transition: box-shadow .2s; }
+.nb-card:hover, .nb-card.is-hover { box-shadow: var(--nb-shadow-hover); }
+.nb-card:active, .nb-card.is-active { box-shadow: var(--nb-shadow-hover); }
+.nb-card .emoji { width: 48px; height: 48px; font-size: 9px; line-height: 10px; padding: 2px; }
+.nb-card h5 { font: 400 30px/40px var(--nb-display); color: var(--nb-notebook); margin: 0 0 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.nb-card .meta { display: flex; align-items: center; justify-content: space-between; font-size: 14px; line-height: 28px; color: var(--nb-notebook); }
+.nb-card .meta .ms { font-size: 29px; color: var(--nb-accent); }
+
+/* thẻ tình huống dùng: .card nền surfaceCard, bo 24, lề 48, gap 30 */
+.nb-use { width: 351px; max-width: 100%; border-radius: 24px; padding: 48px; background: var(--nb-surfaceCard); display: flex; flex-direction: column; gap: 30px; }
+.nb-use .ms { font-size: 32px; color: var(--nb-accent); }
+.nb-use h5 { font: 400 32px/28px var(--nb-text); margin: 0; color: var(--nb-ink); }
+.nb-use p { font: 400 18px/28px var(--nb-text); color: var(--nb-subtle); margin: 0; }
+.nb-use b { font-weight: 700; }
+
+/* trích dẫn báo chí: .quotes-carousel-container bo 36 */
+.nb-quote { width: 100%; border-radius: 36px; background: var(--nb-surface); position: relative; overflow: hidden; padding: 64px 24px 32px; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+.nb-quote svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.nb-quote h4 { position: relative; font: 400 40px/48px var(--nb-display); color: var(--nb-quote); margin: 0; }
+.nb-quote .nb-link-author, .nb-quote .nb-dots { position: relative; }
+
+/* section quyền riêng tư: nền surfaceTint, lề trên 70 */
+.nb-privacy { width: 100%; background: var(--nb-surfaceTint); padding: 70px 24px 0; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+.nb-privacy h4 { font: 400 40px/48px var(--nb-display); color: var(--nb-heading); margin: 0; max-width: 928px; }
+.nb-privacy p { font: 400 24px/36px var(--nb-display); color: var(--nb-body); margin: 0; max-width: 888px; }
+.nb-privacy .orbit { width: 300px; max-width: 100%; height: 160px; border-radius: 150px 150px 0 0; }
+
+/* FAQ: .faq-accordion-header lề 26 0, viền dưới lineFaq, câu hỏi 24/36 accent */
+.nb-faq { width: 100%; }
+.nb-faq .q { display: flex; align-items: center; gap: 16px; padding: 26px 0; border: none; border-bottom: 1px solid var(--nb-lineFaq); background: none; width: 100%; text-align: left; cursor: pointer; font: 400 24px/36px var(--nb-display); color: var(--nb-accent); }
+.nb-faq .q span:first-child { flex: 1; }
+.nb-faq .q .ms { color: var(--nb-ink); font-size: 32px; transition: transform .2s; }
+.nb-faq .item.open .q .ms { transform: rotate(180deg); }
+.nb-faq .a { display: none; padding: 16px 0 26px; font: 400 18px/28px var(--nb-text); color: var(--nb-body); border-bottom: 1px solid var(--nb-lineFaq); }
+.nb-faq .item.open .q { border-bottom: none; }
+.nb-faq .item.open .a { display: block; }
+
+/* bảng giá: .new-notebook-features grid 5 cột 227, lề 32; ô .new-notebook-feature-card lề 20 16, viền line */
+.nb-price-wrap { overflow-x: auto; padding: 8px 4px 16px; max-width: 100%; }
+.nb-price { display: grid; grid-template-columns: repeat(5, 227px); isolation: isolate; width: max-content; }
+.nb-price .col { display: grid; grid-template-rows: 170px repeat(4, 110px); background: var(--nb-surface); position: relative; }
+.nb-price .col.premium::before { content: ""; position: absolute; inset: -2px; background: var(--nb-grad-premium); z-index: -1; }
+.nb-price .col.premium::after { content: ""; position: absolute; inset: 20px -12px -12px 20px; background: var(--nb-grad-premium); filter: blur(28px); opacity: .45; z-index: -2; }
+.nb-price .head { padding: 20px 16px; border-left: 1px solid var(--nb-line); border-bottom: 1px solid var(--nb-line); text-align: center; }
+.nb-price .col:first-child .head, .nb-price .col:first-child .cell { border-left: none; }
+.nb-price .col.premium .head, .nb-price .col.premium .cell { border-left: none; }
+.nb-price .tier { font: 500 20px/32px var(--nb-display); padding: 8px 0; margin: 0 0 8px; color: var(--nb-ink); }
+.nb-price .tier-sub { font: 400 14px/18px var(--nb-text); letter-spacing: .2px; color: var(--nb-subtle); margin: 0 0 16px; }
+.nb-price .cell { padding: 20px 16px; border-left: 1px solid var(--nb-line); border-bottom: 1px solid var(--nb-line); }
+.nb-price .col:not(:first-child) .cell { display: flex; gap: 8px; align-items: flex-start; }
+.nb-price .label { font: 500 16px/20px var(--nb-text); color: var(--nb-ink); }
+.nb-price .cell span:not(.ms) { font: 400 16px/22px var(--nb-text); letter-spacing: .2px; color: var(--nb-subtle); }
+.nb-check { width: 30px; height: 30px; flex: none; font-size: 30px; background-image: var(--nb-grad-tier); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.nb-footnote { font: 400 12px/16px var(--nb-text); color: var(--nb-ink); text-align: center; margin: 12px 0 0; }
+
+/* dải tổ chức: .gradient-pill + .upgrade-paths (viền gradient 1.5, bo 24) */
+.nb-org { position: relative; width: 100%; max-width: 1114px; padding: 0 40px 32px; margin-top: 22px; display: flex; flex-direction: column; align-items: center; gap: 32px; }
+.nb-org::before { content: ""; position: absolute; inset: 0; border-radius: 24px; padding: 1.5px; background: var(--nb-grad-org); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
+.nb-gpill { margin-top: -22px; border-radius: 100px; padding: 12px 24px; background: var(--nb-grad-org); color: var(--nb-onInk); font: 500 16px/20px var(--nb-text); text-transform: uppercase; position: relative; text-align: center; }
+.nb-org .paths { display: flex; flex-wrap: wrap; justify-content: center; gap: 24px 56px; }
+
+/* trang tải app: thẻ quảng bá nền surfaceCard bo 32 */
+.nb-promo { width: 816px; max-width: 100%; border-radius: 32px; background: var(--nb-surfaceCard); display: flex; align-items: center; gap: 24px; padding: 32px 40px; }
+.nb-promo h4 { flex: 1; font: 400 40px/58px var(--nb-display); color: var(--nb-heading); margin: 0; }
+.nb-promo .ico { display: inline-block; width: 39px; height: 39px; vertical-align: middle; font-size: 8px; line-height: 9px; padding: 1px; }
+.nb-promo .phone-shot { width: 190px; height: 400px; border-radius: 28px; flex: none; }
+.nb-store { display: flex; gap: 32px; flex-wrap: wrap; }
+.nb-store .badge { width: 157px; height: 47px; border-radius: 8px; }
+.nb-store .qr { width: 124px; height: 124px; margin-top: 12px; }
+
+/* màn hình mẫu */
+.frame-wrap { overflow-x: auto; padding: 8px 0; }
+.frames { display: flex; gap: 32px; width: max-content; align-items: flex-start; }
+.phone { width: 390px; height: 844px; border-radius: 40px; box-shadow: 0 0 0 10px var(--nb-dotFill); background: var(--nb-surface); position: relative; overflow: hidden; margin: 10px; zoom: .62; }
+.phone .body { padding: 8px 16px 24px; display: flex; flex-direction: column; gap: 24px; }
+.desk { width: 1440px; height: 900px; border-radius: 16px; box-shadow: 0 0 0 10px var(--nb-dotFill); background: var(--nb-surface); overflow: hidden; margin: 10px; zoom: .5; }
+.desk .page { display: flex; flex-direction: column; align-items: center; }
+.frame-cap { font-family: var(--mono); font-size: 12px; color: var(--nb-muted); margin: 4px 10px 0; max-width: 520px; }
+
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; transition: all .25s; z-index: 20; background: var(--nb-inkSoft); color: var(--nb-onInk); padding: 12px 20px; border-radius: 94px; font: 500 14px var(--nb-text); }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; }
+  .side { display: none; }
+  main { padding: 0 16px 80px; }
+  .grid, .grid.wide { grid-template-columns: 1fr; }
+  .intro h1 { font-size: 36px; line-height: 42px; }
+  .type-row { grid-template-columns: 1fr; gap: 2px; }
+  .nb-display { font-size: 40px; line-height: 44px; }
+  .nb-display.plans { font-size: 44px; line-height: 46px; }
+  .nb-footer { padding: 24px; }
+  .nb-header { padding: 0 16px; }
+  .nb-promo { flex-direction: column; align-items: stretch; }
+  .nb-promo h4 { font-size: 28px; line-height: 40px; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <nav class="side" aria-label="Mục lục">
+    <div class="brand"><div class="brand-mark"><span class="ms">auto_stories</span></div><div><b>Notebook UI Kit</b><small>notebook.google</small></div></div>
+    <h6>Nền tảng</h6>
+    <a href="#color"><span class="ms">palette</span>Màu</a>
+    <a href="#type"><span class="ms">text_fields</span>Chữ</a>
+    <a href="#shape"><span class="ms">rounded_corner</span>Bo góc &amp; bóng</a>
+    <a href="#layout"><span class="ms">straighten</span>Bố cục &amp; kích thước</a>
+    <h6>Thành phần</h6>
+    <a href="#actions"><span class="ms">touch_app</span>Hành động</a>
+    <a href="#navigation"><span class="ms">explore</span>Điều hướng</a>
+    <a href="#containment"><span class="ms">web_asset</span>Section &amp; thẻ</a>
+    <a href="#pricing"><span class="ms">table_chart</span>Bảng giá</a>
+    <a href="#states"><span class="ms">ads_click</span>Trạng thái</a>
+    <h6>Mẫu</h6>
+    <a href="#screens"><span class="ms">devices</span>Màn hình mẫu</a>
+  </nav>
+
+  <main>
+    <div class="bar" role="toolbar" aria-label="Điều khiển">
+      <div class="ctl"><span>Thang chữ</span><div class="seg" id="bp">
+        <button data-v="lg" aria-pressed="true">Desktop</button>
+        <button data-v="md" aria-pressed="false">≤ 991</button>
+        <button data-v="sm" aria-pressed="false">≤ 767</button></div></div>
+      <div class="ctl"><span>Chế độ</span><span class="pill-note">Chỉ sáng: site không có giao diện tối</span></div>
+      <div class="grow"></div>
+      <button class="copy" id="copy-tokens"><span class="ms">data_object</span>Copy CSS token</button>
+    </div>
+
+    <div class="intro">
+      <div class="eyebrow">notebook.google (getComputedStyle + :root) → docs/notebook-google-ui-kit.html</div>
+      <h1>Bộ thành phần của Gemini Notebook</h1>
+      <p>Kit dựng lại hệ giao diện của site marketing notebook.google gồm 3 trang: Overview, Plans và Get the App. Màu và số đo được đo trên phần tử thật bằng Playwright, không gõ tay. Thang chữ lấy từ các biến <code>--sys-*</code> ở <code>:root</code> của site. Mọi class <code>.nb-*</code> chỉ dùng biến CSS: dán khối token cùng CSS của thành phần sang dự án khác là chạy. Ảnh, logo và minh hoạ của site được thay bằng khối giữ chỗ.</p>
+      <div class="facts"><span class="fact">header 80 · lề 0 30</span><span class="fact">bảng giá 5 × 227 · lề 32</span><span class="fact">thẻ notebook 284 × 293 · r 24</span><span class="fact">breakpoint 991 / 767</span><span class="fact">bóng 0 4 8 .05 → 0 8 16 .1</span></div>
+    </div>
+
+    <!-- ================= NỀN TẢNG ================= -->
+    <section class="block" id="color">
+      <header><h2>Màu</h2><p>Site gần như đơn sắc: chữ đen, các bậc xám cho chữ phụ, một màu nhấn xanh #3186FF, và gradient tím–xanh lá dành riêng cho gói cao cấp. Bấm một ô để copy mã hex.</p></header>
+      <h3 class="sub">Vai trò trên site (đo từ phần tử)</h3>
+      <div class="roles" id="roles-site"></div>
+      <h3 class="sub">Theme Angular Material (biến --mat-*, đã phân giải)</h3>
+      <div class="roles" id="roles-mat"></div>
+      <p class="spec-f" style="padding-left:0"><span class="note">Nhiều biến <code>--mat-*</code> được khai bằng <code>hsl()</code> có độ sáng âm hoặc trên 100% (vd <code>hsl(0,1.2%,-30.8%)</code>), trình duyệt kẹp về đen hoặc trắng. Phần lớn giao diện dùng màu riêng của trang, nên nhóm này chỉ để tham khảo khi dùng component Material.</span></p>
+    </section>
+
+    <section class="block" id="type">
+      <header><h2>Chữ</h2><p>Có hai lớp. Thứ nhất là thang <code>--sys-*</code> khai ở <code>:root</code>, đổi được theo breakpoint bằng nút "Thang chữ" ở trên. Thứ hai là các kiểu chữ trang thực sự hiển thị, đo từ phần tử. Tiêu đề dùng Google Sans, chữ thân dùng Google Sans Text.</p></header>
+      <h3 class="sub">Thang --sys-* (theo breakpoint đang chọn)</h3>
+      <div class="spec"><div class="stage col" id="typescale"></div></div>
+      <h3 class="sub">Kiểu chữ thực dùng (desktop 1440)</h3>
+      <div class="spec"><div class="stage col" id="typeused"></div>
+        <div class="spec-f"><span class="note">Google Fonts không có Google Sans Text, nên kit hiển thị chữ thân bằng Google Sans (font stack vẫn ghi Google Sans Text trước). Icon của site dùng Google Symbols; kit thay bằng Material Symbols Outlined cùng tên glyph.</span></div></div>
+    </section>
+
+    <section class="block" id="shape">
+      <header><h2>Bo góc &amp; bóng</h2><p>Các bán kính đo được trên site. Site không có thang shape đổi được, nên kit không có nút Shape.</p></header>
+      <div class="spec"><div class="stage" id="shapes" style="gap:28px"></div></div>
+      <h3 class="sub">Bóng</h3>
+      <div class="spec"><div class="stage" style="gap:40px">
+        <div class="shape-cell shadow-cell"><i style="--sh:var(--nb-shadow-rest)"></i>rest · 0 4 8 .05</div>
+        <div class="shape-cell shadow-cell"><i style="--sh:var(--nb-shadow-hover)"></i>hover · 0 8 16 .1</div>
+      </div><div class="spec-f"><span class="note">Chỉ thẻ notebook dùng bóng. Mọi bề mặt khác phẳng, phân lớp bằng nền surfaceCard / surfaceTint.</span></div></div>
+    </section>
+
+    <section class="block" id="layout">
+      <header><h2>Bố cục &amp; kích thước</h2><p>Các con số khung trang và khoảng cách, đo ở viewport 1440 × 900 (mobile đo ở 390 × 844).</p></header>
+      <div class="grid wide">
+        <div class="spec"><div class="stage col">
+          <table class="tok"><thead><tr><th>Khung</th><th>px</th><th>Ở đâu</th></tr></thead><tbody>
+            <tr><td>header</td><td>80 · lề 0 30</td><td>mọi trang; mobile còn logo + nút menu</td></tr>
+            <tr><td>.container (how it works)</td><td>1408 · margin 140 16</td><td>grid, gap 24</td></tr>
+            <tr><td>.new-notebook-features</td><td>1200 max · lề 32</td><td>bảng giá, 5 cột 227</td></tr>
+            <tr><td>.upgrade-paths</td><td>1194 · lề 0 40</td><td>dải tổ chức, viền 1.5</td></tr>
+            <tr><td>.grid (use case)</td><td>1114 · gap 30</td><td>3 cột 351</td></tr>
+            <tr><td>faq</td><td>1312 · header lề 26 0</td><td>accordion</td></tr>
+            <tr><td>footer</td><td>lề 38 100 70 · gap 40</td><td>logo + link</td></tr></tbody></table>
+        </div></div>
+        <div class="spec"><div class="stage col">
+          <table class="tok"><thead><tr><th>Thành phần</th><th>Kích thước</th><th>Ghi chú</th></tr></thead><tbody>
+            <tr><td>.nb-cta</td><td>h 50 · lề 0 24 · r 94</td><td>chữ 15/22 500</td></tr>
+            <tr><td>.new-plan-button</td><td>194 × 46 · lề 8 16 · r 8</td><td>viền 1 đen</td></tr>
+            <tr><td>.path-button</td><td>lề 19.2 38.4 · r 16 · gap 12</td><td>+ phụ đề 12/16</td></tr>
+            <tr><td>.notebook-card</td><td>284 × 293 · lề 32 · gap 44</td><td>max-width calc(40% - 10px)</td></tr>
+            <tr><td>.card (use case)</td><td>351 × 707 · lề 48 · gap 30</td><td>r 24</td></tr>
+            <tr><td>.features-indicator-dot</td><td>10 · active 40 × 8</td><td>gap 8</td></tr>
+            <tr><td>.gradient-pill</td><td>h 44 · lề 12 24 · r 100</td><td>uppercase</td></tr>
+            <tr><td>breakpoint</td><td>991 · 767</td><td>đổi 8 biến --sys-*</td></tr></tbody></table>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- ================= HÀNH ĐỘNG ================= -->
+    <section class="block" id="actions">
+      <header><h2>Hành động</h2><p>Site chỉ có ba kiểu nút, đều nền đen hoặc viền đen. Màu nhấn xanh chỉ dùng cho chữ, không dùng cho nút.</p></header>
+      <div class="grid">
+        <div class="spec" data-sig="ead91b7f74"><div class="spec-h"><b>Nút CTA viên thuốc</b><span class="kind">mdc-button unelevated</span><span class="dp">h 50 · r 94</span></div>
+          <div class="stage center"><a class="nb-cta" href="#actions">Dùng thử Notebook</a></div>
+          <div class="spec-f"><span class="note">Nút duy nhất trong hero. Chưa đo được hover: site không đổi style tính toán khi ép <code>:hover</code>.</span></div></div>
+
+        <div class="spec" data-sig="01058b15b2 40a630f4be"><div class="spec-h"><b>Nút bảng giá</b><span class="kind">.new-plan-button</span><span class="dp">194 × 46 · r 8</span></div>
+          <div class="stage col" style="align-items:center">
+            <a class="nb-plan-btn outlined" href="#actions">Dùng thử</a>
+            <a class="nb-plan-btn filled" href="#actions">Nâng cấp</a>
+          </div><div class="spec-f"><span class="note"><code>free-trial-button</code> viền cho gói miễn phí; <code>plus-button</code> đặc cho ba gói trả phí.</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Nút lối vào tổ chức</b><span class="kind">.path-button</span><span class="dp">r 16 · gap 12</span></div>
+          <div class="stage center">
+            <div class="nb-path"><a href="#actions"><span class="ms">work</span>Business</a><small>qua Google Workspace</small></div>
+            <div class="nb-path"><a href="#actions"><span class="ms">school</span>Education</a><small>qua Workspace for Education</small></div>
+          </div></div>
+      </div>
+    </section>
+
+    <!-- ================= ĐIỀU HƯỚNG ================= -->
+    <section class="block" id="navigation">
+      <header><h2>Điều hướng</h2></header>
+      <div class="grid">
+        <div class="spec full" data-sig="bee8ce4e08 57d0384f69 6fa1fafe4d 4a4f33fc51 7fbdedd5a5 fb3aec9888"><div class="spec-h"><b>Header desktop</b><span class="kind">header · a.nav-link</span><span class="dp">h 80 · link 16/20 500</span></div>
+          <div class="stage surface" style="padding:0">
+            <header class="nb-header">
+              <a class="logo nb-ph" href="#navigation">logo + wordmark</a>
+              <nav aria-label="Chính">
+                <a class="nb-navlink active" href="#navigation">Overview</a>
+                <a class="nb-navlink" href="#navigation">Plans</a>
+                <span class="nb-social"><a href="#navigation" aria-label="Discord"><i>DC</i></a><a href="#navigation" aria-label="Reddit"><i>RD</i></a><a href="#navigation" aria-label="X"><i>X</i></a></span>
+                <a class="nb-navlink nb-getapp" href="#navigation">Get the App</a>
+              </nav>
+            </header>
+          </div><div class="spec-f"><span class="note">Link đang mở có gạch chân 1px đen ở <code>bottom:-2px</code> (<code>::after</code> của <code>.nav-link.active</code>). Icon mạng xã hội là logo thương hiệu nên kit dùng khối giữ chỗ 25 px, mỗi icon cách nhau <code>padding-right:8</code>.</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Header mobile</b><span class="kind">header ≤ 767</span><span class="dp">h 80 · menu</span></div>
+          <div class="stage surface" style="padding:0">
+            <header class="nb-header mobile"><span class="logo nb-ph">logo + wordmark</span><button class="menu" aria-label="Mở menu"><span class="ms">menu</span></button></header>
+          </div><div class="spec-f"><span class="note">Dưới 767 px, link nav ẩn và chỉ còn nút menu. Kit chưa dựng drawer mở ra vì vòng khám phá không bấm mở được nó.</span></div></div>
+
+        <div class="spec" data-sig="aa22494f61 ab920cf74d 80c945c17c"><div class="spec-h"><b>Footer</b><span class="kind">footer · .nav-link</span><span class="dp">lề 38 100 70 · gap 40</span></div>
+          <div class="stage surface" style="padding:0">
+            <footer class="nb-footer"><a class="gl nb-ph" href="#navigation">logo Google</a><a class="nb-navlink muted" href="#navigation">Privacy &amp; Terms</a></footer>
+          </div></div>
+
+        <div class="spec" data-sig="5801dc0f13 0e4a48c122 daeff4f409 f1bbe7b79b 0a6e8105d4"><div class="spec-h"><b>Chấm carousel</b><span class="kind">.features-indicator-dot</span><span class="dp">10 · 40 × 8 · 12</span></div>
+          <div class="stage col" style="align-items:center;gap:24px">
+            <div class="nb-dots" aria-label="Slide 4 / 10"><span class="nb-dot"></span><span class="nb-dot"></span><span class="nb-dot"></span><span class="nb-dot active" style="--p:55%"><span class="progress"></span></span><span class="nb-dot"></span><span class="nb-dot"></span><span class="nb-dot"></span></div>
+            <div class="nb-dots"><span class="nb-ring on"></span><span class="nb-ring"></span><span class="nb-ring"></span><span class="nb-ring"></span><span class="nb-ring"></span></div>
+          </div><div class="spec-f"><span class="note">Dòng trên: chấm của slide tính năng. Chấm đang chạy dài 40 px và có <code>.progress-bar</code> #202124 lấp đầy theo thời gian slide (tỉ lệ lấp ở đây là ảnh chụp tĩnh). Dòng dưới: chấm vòng 12 px ở trang Get the App.</span></div></div>
+
+        <div class="spec" data-sig="0fa928c463 759cf2c69d 6a98d84a90"><div class="spec-h"><b>Link chữ</b><span class="kind">a</span><span class="dp">24 · 18 · 12</span></div>
+          <div class="stage col" style="align-items:flex-start">
+            <a class="nb-link-inline" href="#navigation">Xem chi tiết tại đây</a>
+            <a class="nb-link-author" href="#navigation">Tên tờ báo</a>
+            <span class="nb-footnote" style="text-align:left;margin:0">Gói <a class="nb-link-foot" href="#navigation">Plus</a> chỉ có ở một số khu vực.</span>
+          </div><div class="spec-f"><span class="note">Link trong đoạn văn màu accent; link tác giả trích dẫn màu author, đậm 500; link chú thích 12 px màu đen. Cả ba đều có gạch chân.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= SECTION & THẺ ================= -->
+    <section class="block" id="containment">
+      <header><h2>Section &amp; thẻ</h2><p>Trang là chuỗi section lớn, mỗi section có một tiêu đề 40/48 cùng một đoạn mô tả 18/28 và một khối nội dung.</p></header>
+      <div class="grid">
+        <div class="spec full" data-sig="a30224fe5d 6230315c64 0c2514e1e6 c6158fe534 f758bc52d9 c0da9fdbc8"><div class="spec-h"><b>Hero</b><span class="kind">h1.mat-display-large · span.gradient</span><span class="dp">76/79.8 · 88/90 · 500</span></div>
+          <div class="stage col">
+            <div class="nb-hero">
+              <span class="kicker">Trợ lý nghiên cứu của bạn</span>
+              <h4 class="nb-display">Biến giáo trình thành <span class="nb-grad">video tóm tắt</span></h4>
+              <a class="nb-cta" href="#containment">Dùng thử Notebook</a>
+              <div class="nb-ph" style="width:min(560px,100%);height:180px">ảnh chụp sản phẩm (hero)</div>
+            </div>
+            <div style="text-align:center"><h4 class="nb-display plans">Notebook <span class="nb-grad">Plans</span></h4><p class="nb-lead" style="margin:16px auto 0">Dành cho người dùng chuyên sâu, nhóm và tổ chức.</p></div>
+          </div><div class="spec-f"><span class="note">Chữ gradient: <code>linear-gradient(90deg, accent 57.21%, accentSoft 82.21%)</code> cắt theo chữ. Tiêu đề ở trang chủ 76 px với <code>letter-spacing -0.853</code>, ở trang Plans 88 px. Nền hero (các vệt sáng ở mép trên) là ảnh động của site; kit vẽ lại bằng radial-gradient, <b>không đo được</b>.</span></div></div>
+
+        <div class="spec" data-sig="e15b83e38c d91d873b09"><div class="spec-h"><b>Tiêu đề section</b><span class="kind">h1.title · p.description</span><span class="dp">40/48 · 18/28</span></div>
+          <div class="stage col"><h4 class="nb-h2">Khám phá notebook công khai nổi bật</h4><p class="nb-desc">Chưa biết bắt đầu từ đâu? Thử một notebook công khai: đặt câu hỏi, tạo tóm tắt và lấy cảm hứng.</p></div></div>
+
+        <div class="spec" data-sig="8a04459429 b614576363"><div class="spec-h"><b>How it works</b><span class="kind">.title.mat-headline-small</span><span class="dp">36/44 · mô tả 18/28</span></div>
+          <div class="stage col"><h4 class="nb-h2 how">Cách hoạt động</h4><p class="nb-desc" style="max-width:350px">Notebook giúp bạn dùng ghi chú hiệu quả hơn. Hỏi bất cứ điều gì, câu trả lời luôn dựa trên nguồn của bạn.</p><div class="nb-ph" style="height:120px">sơ đồ luồng nguồn → notebook (SVG động)</div></div>
+          <div class="spec-f"><span class="note">Khối 1440 × 200 trống cạnh đây (<code>8a04459429</code>, <code>b614576363</code>) là vùng đệm chứa minh hoạ và dải sáng; xem <code>.nb-glow</code> ở màn mẫu.</span></div></div>
+
+        <div class="spec" data-sig="6de84ddcfe d03c40a1bd 595c019c70"><div class="spec-h"><b>Slide tính năng</b><span class="kind">.slide-title · .slide-description</span><span class="dp">32/28 · 18/28</span></div>
+          <div class="stage col" style="align-items:center"><div class="nb-slide"><div class="shot nb-ph">ảnh chụp tính năng</div><div><h4>Trắc nghiệm</h4><p>Ôn lại kiến thức bằng các câu hỏi giữ bạn tập trung.</p></div></div></div></div>
+
+        <div class="spec" data-sig="fdf454dd3e 00ef503b42 32c64a16d7"><div class="spec-h"><b>Thẻ notebook</b><span class="kind">a.notebook-card</span><span class="dp">284 × 293 · r 24 · lề 32</span></div>
+          <div class="stage center"><a class="nb-card" href="#containment"><span class="emoji nb-ph">emoji</span><div><h5>Bí quyết sống thọ khoẻ mạnh</h5><div class="meta"><span class="notebook-sources">17 nguồn</span><span class="ms">arrow_outward</span></div></div></a></div>
+          <div class="spec-f"><span class="note">Tiêu đề 30/40 màu #505050, cắt ở 2 dòng. Site còn có <code>::after</code> với conic-gradient xanh làm viền phát sáng khi lướt; kit bỏ qua phần này.</span></div></div>
+
+        <div class="spec" data-sig="c1485ca96b 5497f2867e"><div class="spec-h"><b>Thẻ tình huống dùng</b><span class="kind">.card</span><span class="dp">351 · r 24 · lề 48 · gap 30</span></div>
+          <div class="stage center"><div class="nb-use"><span class="ms">school</span><h5>Học tập</h5><p><b>Từ đọc sang học chủ động</b></p><p>Tải lên tài liệu của lớp. Notebook biến nội dung thành <b>bản tóm tắt âm thanh</b> để nghe lại và <b>thẻ ghi nhớ</b> để ôn trước kỳ thi.</p></div></div></div>
+
+        <div class="spec" data-sig="25ecad5d69 32d39dcedb"><div class="spec-h"><b>Trích dẫn báo chí</b><span class="kind">.quotes-carousel-container</span><span class="dp">r 36 · 40/48</span></div>
+          <div class="stage col"><div class="nb-quote">
+            <svg viewBox="0 0 600 240" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="wv" x1="0" x2="1"><stop offset="0" stop-color="var(--nb-accent)"/><stop offset="1" stop-color="var(--nb-violet)"/></linearGradient></defs><path d="M0 150 C 60 60, 110 220, 170 140 S 260 120, 300 150 S 420 40, 470 130 S 560 200, 600 90" fill="none" stroke="url(#wv)" stroke-width="2" opacity=".7"/><path d="M0 170 C 80 110, 130 200, 200 160 S 330 150, 380 170 S 500 80, 600 140" fill="none" stroke="url(#wv)" stroke-width="1.5" opacity=".35"/></svg>
+            <h4>“Thật ấn tượng.”</h4><a class="nb-link-author" href="#containment">Tên tờ báo</a>
+            <div class="nb-dots"><span class="nb-dot active" style="--p:100%"><span class="progress"></span></span><span class="nb-dot"></span><span class="nb-dot"></span><span class="nb-dot"></span></div>
+          </div></div><div class="spec-f"><span class="note">Đường sóng là SVG động của site; kit tự vẽ lại hai đường sóng tĩnh (<b>theo spec</b>, không phải bản sao).</span></div></div>
+
+        <div class="spec full" data-sig="9f670482af"><div class="spec-h"><b>Section quyền riêng tư</b><span class="kind">.container · .title.mat-display-medium</span><span class="dp">nền surfaceTint · lề trên 70</span></div>
+          <div class="stage col"><div class="nb-privacy"><h4>Dữ liệu của tổ chức bạn luôn riêng tư</h4><p>Khi dùng cho tổ chức hoặc trường học, dữ liệu của bạn ở lại với bạn. <a class="nb-link-inline" href="#containment">Xem chi tiết tại đây</a>.</p><div class="orbit nb-ph">minh hoạ vòng tròn + ổ khoá</div></div></div></div>
+
+        <div class="spec full" data-sig="5451840f9d 7efcda3116 7e2221e22c"><div class="spec-h"><b>FAQ accordion</b><span class="kind">.faq-accordion-header.mat-headline-small</span><span class="dp">lề 26 0 · 24/36 · viền #D6DEE6</span></div>
+          <div class="stage col"><h4 class="nb-h2" style="margin-bottom:0">Muốn tìm hiểu thêm?</h4><p class="nb-desc" style="margin-bottom:8px">Câu trả lời cho các câu hỏi thường gặp.</p>
+            <div class="nb-faq">
+              <div class="item"><button class="q" aria-expanded="false"><span>Notebook khác gì các ứng dụng ghi chú AI khác?</span><span class="ms">keyboard_arrow_down</span></button><div class="a">Nội dung câu trả lời.</div></div>
+              <div class="item open"><button class="q" aria-expanded="true"><span>Tôi báo cáo một kết quả tôi cho là không an toàn hoặc không phù hợp như thế nào?</span><span class="ms">keyboard_arrow_down</span></button><div class="a">Nội dung câu trả lời, chữ thân 18/28 màu body.</div></div>
+            </div>
+          </div><div class="spec-f"><span class="note">Câu hỏi dài xuống hai dòng thành biến thể cao 125 px (<code>7efcda3116</code>). Trạng thái mở dựng <b>theo spec</b>: máy khám phá có mở được một mục, nhưng style của phần trả lời chưa được đo riêng.</span></div></div>
+
+        <div class="spec full" data-sig="8ec9381910 7a1d5772d2 3bc7913556"><div class="spec-h"><b>Trang tải app</b><span class="kind">.card · span.gradient</span><span class="dp">816 × 629 · r 32</span></div>
+          <div class="stage col">
+            <div class="nb-store"><div><div class="badge nb-ph">huy hiệu Google Play</div><div class="qr nb-ph">mã QR</div></div><div><div class="badge nb-ph">huy hiệu App Store</div><div class="qr nb-ph">mã QR</div></div></div>
+            <div class="nb-promo"><h4>Tạo và xem các <span class="nb-grad">notebook</span> <span class="ico nb-ph">icon</span></h4><div class="phone-shot nb-ph">ảnh chụp app trên điện thoại</div></div>
+          </div><div class="spec-f"><span class="note">Huy hiệu cửa hàng, mã QR và ảnh chụp app đều là tài sản của Google hoặc Apple, nên chỉ giữ chỗ.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= BẢNG GIÁ ================= -->
+    <section class="block" id="pricing">
+      <header><h2>Bảng giá</h2><p>Trang Plans có 5 cột lưới: 1 cột nhãn và 4 gói. Cột gói cao nhất có viền gradient 2px (<code>::before inset -2</code>) và quầng sáng. Tên gói trả phí dùng chữ gradient tím sang xanh lá.</p></header>
+      <div class="spec full" data-sig="66d249fcd5 017997e0d4 7c95d6c785 5304ef5b78 d97a43a734 69f64c2892 7fa18d2a7b 920223b0f1 b836eefde4"><div class="spec-h"><b>Bảng so sánh gói</b><span class="kind">.new-notebook-features · .new-notebook-feature-column.premium</span><span class="dp">5 × 227 · ô lề 20 16</span></div>
+        <div class="stage col"><div class="nb-price-wrap"><div class="nb-price" id="price"></div></div>
+          <p class="nb-footnote">Các gói <a class="nb-link-foot" href="#pricing">Plus</a>, <a class="nb-link-foot" href="#pricing">Pro</a> và <a class="nb-link-foot" href="#pricing">Ultra</a> chỉ có ở một số khu vực.</p></div>
+        <div class="spec-f"><span class="note">Chiều cao hàng cố định trong kit cho gọn (170 / 110); trên site các hàng tự giãn theo nội dung. Quầng sáng của cột premium dựng <b>theo ảnh</b>, không đo được (là lớp mờ nằm ngoài phần tử).</span></div></div>
+
+      <div class="spec full" style="margin-top:16px"><div class="spec-h"><b>Dải cho tổ chức</b><span class="kind">.gradient-pill · .upgrade-paths</span><span class="dp">viền 1.5 · r 24 · pill h 44</span></div>
+        <div class="stage col" style="align-items:center;padding-top:40px"><div class="nb-org"><span class="nb-gpill">Notebook cho tổ chức và trường học</span>
+          <div class="paths"><div class="nb-path"><a href="#pricing"><span class="ms">work</span>Business</a><small>qua Google Workspace</small></div><div class="nb-path"><a href="#pricing"><span class="ms">school</span>Education</a><small>qua Workspace for Education</small></div><div class="nb-path"><a href="#pricing"><span class="ms">domain</span>Enterprise</a><small>qua Google Cloud</small></div></div></div></div></div>
+    </section>
+
+    <!-- ================= TRẠNG THÁI ================= -->
+    <section class="block" id="states">
+      <header><h2>Trạng thái</h2><p>Trạng thái đo bằng cách ép <code>:hover</code>, <code>:active</code> và <code>:focus-visible</code> qua CDP rồi so style với lúc nghỉ. Kết quả: 13 focus, 1 hover, 2 active, 2 cặp selected. Cả 13 focus đều chỉ là <b>viền focus mặc định của trình duyệt</b> (<code>outline: auto 1px #005FCC</code>); site không style focus riêng.</p></header>
+      <div class="grid">
+        <div class="spec" data-sig="fdf454dd3e"><div class="spec-h"><b>Thẻ notebook · hover / active</b><span class="kind">a.notebook-card</span><span class="dp">bóng 0 8 16 .1</span></div>
+          <div class="stage" style="align-items:flex-start">
+            <div class="state"><a class="nb-card" href="#states" style="width:200px;height:auto;gap:20px;padding:24px"><span class="emoji nb-ph">emoji</span><h5 style="font-size:22px;line-height:30px">Nghỉ</h5></a><small>rest</small></div>
+            <div class="state" data-sig-state="fdf454dd3e:hover"><a class="nb-card is-hover" href="#states" style="width:200px;height:auto;gap:20px;padding:24px"><span class="emoji nb-ph">emoji</span><h5 style="font-size:22px;line-height:30px">Hover</h5></a><small>:hover</small></div>
+            <div class="state" data-sig-state="fdf454dd3e:active"><a class="nb-card is-active" href="#states" style="width:200px;height:auto;gap:20px;padding:24px"><span class="emoji nb-ph">emoji</span><h5 style="font-size:22px;line-height:30px">Active</h5></a><small>:active</small></div>
+          </div><div class="spec-f"><span class="note">Khi nhấn giữ, ngoài bóng đổ còn có màu link mặc định của trình duyệt đổi từ #0000EE sang đỏ trên các phần tử con trong suốt, nên mắt không thấy. Kit chỉ giữ phần thấy được là bóng đổ.</span></div></div>
+
+        <div class="spec" data-sig="fb3aec9888"><div class="spec-h"><b>Link logo · active</b><span class="kind">header a</span><span class="dp">UA :active đỏ</span></div>
+          <div class="stage">
+            <div class="state" data-sig-state="fb3aec9888:active"><span class="nb-ph" style="width:211px;height:28px;font-size:11px;box-shadow:inset 0 0 0 1px red;color:red">logo (con chữ đổi đỏ)</span><small>:active · color #0000EE → #FF0000</small></div>
+          </div><div class="spec-f"><span class="note">Màu <code>:active</code> mặc định của trình duyệt lọt vào logo SVG dùng <code>currentColor</code>. Đây là hành vi UA, site không cố ý style.</span></div></div>
+
+        <div class="spec" data-sig="5801dc0f13 ab920cf74d"><div class="spec-h"><b>Selected</b><span class="kind">.active · routerlinkactive</span></div>
+          <div class="stage" style="gap:32px">
+            <div class="state" data-sig-state="5801dc0f13:selected"><div class="nb-dots"><span class="nb-dot"></span><span class="nb-dot active" style="--p:40%"><span class="progress"></span></span><span class="nb-dot"></span></div><small>chấm → .active 40 × 8</small></div>
+            <div class="state" data-sig-state="ab920cf74d:selected"><span style="display:flex;gap:24px"><a class="nb-navlink muted" href="#states">Privacy</a><a class="nb-navlink active" href="#states">Overview</a></span><small>.nav-link → .active (đen + gạch chân)</small></div>
+          </div></div>
+
+        <div class="spec full" data-sig="5451840f9d 01058b15b2 7efcda3116 40a630f4be 6fa1fafe4d 4a4f33fc51 759cf2c69d 6a98d84a90 0fa928c463 80c945c17c ab920cf74d"><div class="spec-h"><b>Focus · mặc định trình duyệt</b><span class="kind">outline: auto 1px</span><span class="dp">13 phần tử</span></div>
+          <div class="stage" style="gap:28px;align-items:flex-start">
+            <div class="state" data-sig-state="01058b15b2:focus"><a class="nb-plan-btn filled nb-focus-ua is-focus" href="#states" style="width:150px">Nâng cấp</a><small>plan filled</small></div>
+            <div class="state" data-sig-state="40a630f4be:focus"><a class="nb-plan-btn outlined nb-focus-ua is-focus" href="#states" style="width:150px">Dùng thử</a><small>plan outlined</small></div>
+            <div class="state" data-sig-state="6fa1fafe4d:focus"><a class="nb-navlink active nb-focus-ua is-focus" href="#states">Overview</a><small>nav active</small></div>
+            <div class="state" data-sig-state="ab920cf74d:focus"><a class="nb-navlink muted nb-focus-ua is-focus" href="#states">Privacy &amp; Terms</a><small>footer link</small></div>
+            <div class="state" data-sig-state="4a4f33fc51:focus"><span class="nb-social"><a class="nb-focus-ua is-focus" href="#states" aria-label="Discord"><i>DC</i></a></span><small>social</small></div>
+            <div class="state" data-sig-state="80c945c17c:focus"><a class="nb-ph nb-focus-ua is-focus" href="#states" style="width:75px;height:28px;font-size:10px">logo Google</a><small>footer logo</small></div>
+            <div class="state" data-sig-state="fb3aec9888:focus"><a class="nb-ph nb-focus-ua is-focus" href="#states" style="width:150px;height:22px;font-size:10px">logo header</a><small>header logo</small></div>
+            <div class="state" data-sig-state="fdf454dd3e:focus"><a class="nb-card nb-focus-ua is-focus" href="#states" style="width:140px;height:auto;padding:16px;gap:8px"><h5 style="font-size:18px;line-height:24px;margin:0">Notebook</h5></a><small>notebook card</small></div>
+            <div class="state" data-sig-state="0fa928c463:focus"><a class="nb-link-inline nb-focus-ua is-focus" href="#states">Xem chi tiết</a><small>link inline</small></div>
+            <div class="state" data-sig-state="759cf2c69d:focus"><a class="nb-link-author nb-focus-ua is-focus" href="#states">Tên tờ báo</a><small>link tác giả</small></div>
+            <div class="state" data-sig-state="6a98d84a90:focus"><a class="nb-link-foot nb-focus-ua is-focus" href="#states">Plus</a><small>link chú thích</small></div>
+            <div class="state" data-sig-state="5451840f9d:focus 7efcda3116:focus" style="flex:1;min-width:260px"><div class="nb-faq"><button class="q nb-focus-ua is-focus" style="font-size:18px;line-height:28px;padding:12px 0"><span>Câu hỏi FAQ</span><span class="ms">keyboard_arrow_down</span></button></div><small>faq header (1 và 2 dòng)</small></div>
+          </div><div class="spec-f"><span class="note">Lúc nghỉ, site đặt <code>outline: none 3px &lt;currentColor&gt;</code>; khi <code>:focus-visible</code>, trình duyệt vẽ viền <code>auto</code>. Nếu dùng lại kit, nên thay bằng viền focus riêng.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= MÀN MẪU ================= -->
+    <section class="block" id="screens">
+      <header><h2>Màn hình mẫu</h2><p>Ghép từ chính các class <code>.nb-*</code> ở trên, theo bố cục của site: mobile 390 × 844 thu gọn header thành nút menu và xếp các thẻ thành một cột; desktop 1440 × 900 là trang Plans.</p></header>
+      <div class="frame-wrap"><div class="frames">
+        <div>
+          <div class="phone">
+            <header class="nb-header mobile"><span class="logo nb-ph">logo + wordmark</span><button class="menu" aria-label="Mở menu"><span class="ms">menu</span></button></header>
+            <div class="body">
+              <div class="nb-hero" style="padding:48px 16px"><span class="kicker" style="font-size:18px;line-height:28px">Trợ lý nghiên cứu của bạn</span><h4 class="nb-display m" style="font-size:52px;line-height:56px">Hiểu <span class="nb-grad">mọi thứ</span></h4><p class="nb-desc">Đối tác nghiên cứu dựa trên nguồn bạn tin cậy.</p><a class="nb-cta" href="#screens">Dùng thử Notebook</a></div>
+              <div><h4 class="nb-h2 how" style="font-size:28px;line-height:36px">Cách hoạt động</h4><p class="nb-desc" style="font-size:16px;line-height:24px;margin-top:12px">Hỏi bất cứ điều gì, câu trả lời luôn dựa trên nguồn của bạn.</p></div>
+              <a class="nb-card" href="#screens" style="width:100%;height:auto"><span class="emoji nb-ph">emoji</span><div><h5>Bí quyết sống thọ</h5><div class="meta"><span>17 nguồn</span><span class="ms">arrow_outward</span></div></div></a>
+              <div class="nb-dots" style="justify-content:center"><span class="nb-dot"></span><span class="nb-dot active"><span class="progress"></span></span><span class="nb-dot"></span><span class="nb-dot"></span></div>
+            </div>
+          </div>
+          <div class="frame-cap">mobile 390 × 844 · header mobile · hero · how it works · thẻ notebook · chấm carousel</div>
+        </div>
+        <div>
+          <div class="desk"><div class="page">
+            <header class="nb-header"><span class="logo nb-ph">logo + wordmark</span><nav aria-label="Chính"><a class="nb-navlink" href="#screens">Overview</a><a class="nb-navlink active" href="#screens">Plans</a><span class="nb-social"><a href="#screens" aria-label="Discord"><i>DC</i></a><a href="#screens" aria-label="Reddit"><i>RD</i></a><a href="#screens" aria-label="X"><i>X</i></a></span><a class="nb-navlink nb-getapp" href="#screens">Get the App</a></nav></header>
+            <h4 class="nb-display plans" style="margin:40px 0 24px;text-align:center">Notebook <span class="nb-grad">Plans</span></h4>
+            <p class="nb-lead" style="text-align:center;margin-bottom:48px">Dành cho người dùng chuyên sâu, nhóm và tổ chức.</p>
+            <h4 class="nb-h2" style="color:var(--nb-ink);margin-bottom:24px">Mở hạn mức cao hơn và mô hình tốt hơn</h4>
+            <div class="nb-price" id="price-desk"></div>
+          </div></div>
+          <div class="frame-cap">desktop 1440 × 900 · trang Plans · header (Plans active) · hero plans · bảng giá 5 cột có cột premium</div>
+        </div>
+      </div></div>
+      <div class="nb-glow" style="margin-top:24px;border-radius:16px"></div>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status"><span id="toast-t">Đã copy</span></div>
+
+<script>
+/* token đo từ notebook.google bằng Playwright (getComputedStyle trên phần tử thật; biến --mat-* đã phân giải) */
+const ROLES=["ink","inkSoft","heading","quote","body","muted","notebook","subtle","author","accent","accentSoft","violet","green","mint","surface","surfaceTint","surfaceCard","line","lineFaq","dot","dotTrack","dotFill","onInk","focusUa","matPrimary","matOnFab","matSecondary","matOutline","matMenu","matCardElevated","matCardFilled","matCalendar","matToggle","matScrim"];
+const PALETTES={"site":{"label":"notebook.google (sáng)","light":["#000000","#1F1F1F","#212226","#3C4043","#45474D","#5F6368","#505050","#726F6F","#7F7C7C","#3186FF","#7F9CFF","#7182FF","#3CFF52","#70E1A2","#FFFFFF","#F3F7FB","#F8F8FA","#E1E3E1","#D6DEE6","#DADCE0","#E8EAED","#202124","#FFFFFF","#005FCC","#0B28FF","#0014A4","#006F0D","#8181A5","#F0F4F9","#F8FAFD","#DDE3EA","#E9EEF6","#F6F7FF","#505070"]}};
+/* dùng ở đâu: ghi chú dưới ô màu */
+const USE={ink:"chữ chính, nút đen",inkSoft:"tiêu đề hero, nền CTA",heading:"tiêu đề section",quote:"trích dẫn",body:"đoạn mô tả",muted:"mô tả slide, footer",notebook:"tiêu đề thẻ notebook",subtle:"chữ phụ bảng giá, thẻ",author:"link tác giả",accent:"màu nhấn, câu hỏi FAQ",accentSoft:"đuôi gradient hero",violet:"gradient gói",green:"gradient gói",mint:"gradient tổ chức",surface:"nền trang",surfaceTint:"section quyền riêng tư",surfaceCard:"thẻ tình huống",line:"viền bảng giá",lineFaq:"viền FAQ",dot:"chấm carousel",dotTrack:"chấm đang chạy",dotFill:"thanh tiến độ chấm",onInk:"chữ trên nền đen",focusUa:"viền focus của UA",
+  matPrimary:"--mat-*-selected, progress",matOnFab:"--mat-fab-foreground",matSecondary:"--mat-option-selected-text",matOutline:"--mat-*-unselected-icon",matMenu:"--mat-menu-container",matCardElevated:"--mat-card-elevated",matCardFilled:"--mat-card-filled",matCalendar:"--mat-datepicker-container",matToggle:"--mat-slide-toggle-handle",matScrim:"--mat-sidenav-scrim (40%)"};
+/* thang --sys-* của site: :where(:root) + @media (max-width:991px) + @media (max-width:767px) */
+const SYS_LG={"display-large":"500 5.5rem/5.625rem","display-medium":"400 2.5rem/3rem","display-small":"400 2.25rem/2.75rem","headline-large":"400 2rem/1.75rem","headline-medium":"400 1.75rem/2.25rem","headline-small":"400 1.5rem/2.25rem","title-large":"400 1.5rem/2.25rem","title-medium":"500 1rem/1.5rem","title-small":"500 0.875rem/1.25rem","body-large":"400 1.125rem/1.75rem","body-medium":"400 0.875rem/1.25rem","body-small":"400 0.75rem/1rem","label-large":"500 1rem/1.25rem","label-medium":"500 0.75rem/1rem","label-small":"500 0.688rem/1rem"};
+const SYS_MD={"display-large":"500 4.5rem/4.625rem","display-medium":"400 2.2rem/2.5rem","display-small":"400 2rem/2.5rem","headline-large":"400 1.75rem/1.55rem","headline-small":"400 1.2rem/2rem","title-large":"400 1.2rem/2rem","body-large":"400 1rem/1.55rem","label-large":"500 0.875rem/1.25rem"};
+const SYS_SM={"display-large":"500 3.5rem/3.625rem","display-medium":"400 1.912rem/2.25rem","display-small":"400 1.8125rem/2.25rem","headline-large":"400 1.5rem/2rem","headline-small":"400 1.1rem/1.75rem","title-large":"400 1.1rem/1.75rem","body-large":"400 0.9rem/1.4rem","label-large":"500 0.875rem/1.25rem"};
+const SYS={lg:SYS_LG,md:{...SYS_LG,...SYS_MD},sm:{...SYS_LG,...SYS_MD,...SYS_SM}};
+const fam=(k)=>/^(display|headline)/.test(k)?"var(--nb-display)":"var(--nb-text)";
+
+(function () {
+  const root = document.documentElement;
+  const state = { bp: "lg" };
+  try { Object.assign(state, JSON.parse(localStorage.getItem("nb-kit") || "{}")); } catch (e) {}
+  if (!SYS[state.bp]) state.bp = "lg";
+
+  const toast = (t) => {
+    const el = document.getElementById("toast");
+    document.getElementById("toast-t").textContent = t;
+    el.classList.add("show");
+    clearTimeout(toast.t);
+    toast.t = setTimeout(() => el.classList.remove("show"), 1600);
+  };
+  const copy = async (text, msg) => {
+    try { await navigator.clipboard.writeText(text); toast(msg); }
+    catch (e) { toast("Trình duyệt chặn clipboard, hãy copy tay"); }
+  };
+
+  const vals = PALETTES.site.light;
+  ROLES.forEach((r, i) => root.style.setProperty("--nb-" + r, vals[i]));
+
+  /* ô màu: chữ đen hoặc trắng theo độ sáng nền */
+  const lum = (h) => { const n = parseInt(h.slice(1), 16); return (0.299 * (n >> 16) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255)) / 255; };
+  ROLES.forEach((r, i) => {
+    const b = document.createElement("button");
+    b.className = "role"; b.style.background = vals[i]; b.style.color = lum(vals[i]) > 0.6 ? "#000000" : "#FFFFFF";
+    b.innerHTML = "<b>" + r + "</b><code>" + vals[i] + " · " + USE[r] + "</code>";
+    b.onclick = () => copy(vals[i], "Đã copy " + r + " " + vals[i]);
+    document.getElementById(r.startsWith("mat") ? "roles-mat" : "roles-site").appendChild(b);
+  });
+
+  function apply() {
+    const s = SYS[state.bp];
+    Object.entries(s).forEach(([k, v]) => root.style.setProperty("--sys-" + k, v + " " + fam(k)));
+    document.querySelectorAll("#bp button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === state.bp));
+    const ts = document.getElementById("typescale");
+    ts.innerHTML = "";
+    Object.entries(s).forEach(([k, v]) => {
+      const row = document.createElement("div");
+      row.className = "type-row";
+      row.innerHTML = '<span class="meta">--sys-' + k + '</span><span class="t" style="font:var(--sys-' + k + ')">Hiểu mọi thứ từ nguồn của bạn</span><span class="meta">' + v + "</span>";
+      ts.appendChild(row);
+    });
+    try { localStorage.setItem("nb-kit", JSON.stringify(state)); } catch (e) {}
+  }
+  document.querySelectorAll("#bp button").forEach((b) => (b.onclick = () => { state.bp = b.dataset.v; apply(); }));
+
+  /* kiểu chữ thực dùng, đo ở 1440 */
+  const USED = [["hero h1", "display", 76, 79.8, 500, "-0.853px", "inkSoft"], ["plans h1", "display", 88, 90, 500, "0", "ink"], ["section title", "display", 40, 48, 400, "0", "heading"],
+    ["how it works", "display", 36, 44, 400, "0", "heading"], ["slide title", "display", 32, 28, 400, "0", "ink"], ["use-case title", "text", 32, 28, 400, "0", "ink"],
+    ["notebook title", "display", 30, 40, 400, "0", "notebook"], ["lead / FAQ", "display", 24, 36, 400, "0", "body"], ["tier name", "display", 20, 32, 500, "0", "ink"],
+    ["body", "text", 18, 28, 400, "0", "body"], ["nav / label", "text", 16, 20, 500, "0", "ink"], ["price cell", "text", 16, 22, 400, "0.2px", "subtle"],
+    ["cta", "text", 15, 22, 500, "0", "ink"], ["tier subtitle", "text", 14, 18, 400, "0.2px", "subtle"], ["sources", "display", 14, 28, 400, "0", "notebook"],
+    ["path subtitle", "text", 12, 16, 400, "0.096px", "subtle"], ["footnote", "text", 12, 16, 400, "0", "ink"]];
+  const tu = document.getElementById("typeused");
+  USED.forEach(([name, f, size, lh, w, ls, c]) => {
+    const row = document.createElement("div");
+    row.className = "type-row";
+    row.innerHTML = '<span class="meta">' + name + '</span><span class="t" style="font:' + w + " " + size + "px/" + lh + "px var(--nb-" + f + ");letter-spacing:" + ls + ";color:var(--nb-" + c + ')">Hiểu mọi thứ từ nguồn của bạn</span><span class="meta">' + size + " / " + lh + " · " + w + (ls !== "0" ? " · ls " + ls : "") + " · " + c + "</span>";
+    tu.appendChild(row);
+  });
+
+  /* bán kính đo được */
+  const sh = document.getElementById("shapes");
+  [["plan btn", "8px"], ["path btn", "16px"], ["card", "24px"], ["promo", "32px"], ["hero/quote", "36px"], ["pill", "94px"], ["dot", "50%"]].forEach(([n, r]) => {
+    const c = document.createElement("div");
+    c.className = "shape-cell";
+    c.innerHTML = '<i style="border-radius:' + r + '"></i>' + n + "<br>" + r;
+    sh.appendChild(c);
+  });
+
+  /* bảng giá: sinh cùng một markup cho thẻ và màn desktop */
+  const ROWS = ["Hạn mức dùng", "Mô hình Gemini", "Tính năng mới", "Nguồn"];
+  const PLANS = [
+    { name: "Notebook", sub: "Cho dự án cá nhân", btn: ["outlined", "Dùng thử"], cells: ["Hạn mức chuẩn cho chat và tạo nội dung", "Mô hình Gemini tiêu chuẩn", "Truy cập tiêu chuẩn", "Tối đa 50 nguồn / notebook"] },
+    { name: 'Notebook trong <span class="nb-grad tier">AI Plus</span>', sub: "Cho học tập chủ động", btn: ["filled", "Nâng cấp"], cells: ["Gấp đôi hạn mức gói chuẩn", "Mô hình Gemini tốt hơn", "Dùng sớm", "Tối đa 100 nguồn / notebook"] },
+    { name: 'Notebook trong <span class="nb-grad tier">AI Pro</span>', sub: "Cho nghiên cứu hằng ngày", btn: ["filled", "Nâng cấp"], cells: ["Gấp bốn hạn mức gói chuẩn", "Truy cập cao hơn", "Ưu tiên", "Tối đa 300 nguồn / notebook"] },
+    { name: 'Notebook trong <span class="nb-grad tier">AI Ultra</span>', sub: "Cho dự án phức tạp nhất", btn: ["filled", "Nâng cấp"], cells: ["Hạn mức gấp 5–20 lần", "Truy cập cao nhất", "Ưu tiên", "Tối đa 600 nguồn / notebook"], premium: true }];
+  const priceHTML = '<div class="col"><div class="head"></div>' + ROWS.map((r) => '<div class="cell"><div class="label">' + r + "</div></div>").join("") + "</div>" +
+    PLANS.map((p) => '<div class="col' + (p.premium ? " premium" : "") + '"><div class="head"><h5 class="tier">' + p.name + '</h5><p class="tier-sub">' + p.sub + '</p><a class="nb-plan-btn ' + p.btn[0] + '" href="#pricing">' + p.btn[1] + "</a></div>" +
+      p.cells.map((c) => '<div class="cell"><span class="ms nb-check">check_circle</span><span>' + c + "</span></div>").join("") + "</div>").join("");
+  document.getElementById("price").innerHTML = priceHTML;
+  document.getElementById("price-desk").innerHTML = priceHTML;
+
+  /* mỗi thẻ thành phần có nút copy HTML của phần trình diễn */
+  document.querySelectorAll(".spec").forEach((spec) => {
+    const stage = spec.querySelector(".stage");
+    if (!stage || !spec.querySelector(".spec-h")) return;
+    let foot = spec.querySelector(".spec-f");
+    if (!foot) { foot = document.createElement("div"); foot.className = "spec-f"; foot.innerHTML = '<span class="note"></span>'; spec.appendChild(foot); }
+    const b = document.createElement("button");
+    b.className = "copy"; b.innerHTML = '<span class="ms">content_copy</span>HTML';
+    b.onclick = () => copy(stage.innerHTML.trim().replace(/\n\s+/g, "\n"), "Đã copy HTML của " + spec.querySelector(".spec-h b").textContent);
+    foot.appendChild(b);
+  });
+
+  /* token hiện tại dưới dạng khối :root */
+  document.getElementById("copy-tokens").onclick = () => {
+    const lines = ROLES.map((r, i) => "  --nb-" + r + ": " + vals[i] + ";");
+    const sys = Object.entries(SYS[state.bp]).map(([k, v]) => "  --sys-" + k + ": " + v + " " + (fam(k) === "var(--nb-display)" ? '"Google Sans", Helvetica, Arial, sans-serif' : '"Google Sans Text", Helvetica, Arial, sans-serif') + ";");
+    copy(":root {\n" + lines.join("\n") + "\n" + sys.join("\n") + "\n  --nb-shadow-rest: 0 4px 8px 0 rgba(0,0,0,.05);\n  --nb-shadow-hover: 0 8px 16px 0 rgba(0,0,0,.1);\n}", "Đã copy token (thang chữ " + state.bp + ")");
+  };
+
+  /* FAQ mở/đóng */
+  document.addEventListener("click", (e) => {
+    const q = e.target.closest(".nb-faq .item .q");
+    if (!q) return;
+    const it = q.parentElement; it.classList.toggle("open"); q.setAttribute("aria-expanded", it.classList.contains("open"));
+  });
+
+  /* làm nổi mục đang xem trong mục lục */
+  const links = [...document.querySelectorAll(".side a")];
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (e.isIntersecting) links.forEach((a) => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id));
+  }), { rootMargin: "-30% 0px -60% 0px" });
+  document.querySelectorAll("section.block").forEach((s) => io.observe(s));
+
+  apply();
+})();
+</script>
+</body>
+</html>
