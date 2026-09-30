@@ -1,7 +1,25 @@
 <!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>uiux-asset</title>
-<script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
-<style>:root{--bg:#f6f7f9;--fg:#1a1d21;--acc:#2563eb}@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0d1117;--fg:#e6edf3;--acc:#58a6ff}}:root[data-theme=dark]{--bg:#0d1117;--fg:#e6edf3;--acc:#58a6ff}
-body{padding:32px 16px;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,sans-serif;max-width:720px;margin:auto}a{color:var(--acc)}button{float:right}</style></head>
-<body><button type="button" aria-label="Đổi giao diện sáng/tối" onclick="const d=document.documentElement,k=d.dataset.theme?d.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;d.dataset.theme=k?'light':'dark';try{localStorage.setItem('theme',d.dataset.theme)}catch(e){}">◐ Sáng/Tối</button>
-<h1>uiux-asset</h1><p>Code gốc nguyên văn các pattern UI/UX — xem chạy thật, copy nguyên file.</p><div data-ovs-search></div>
-<ul><li><a href="scroll-effects/">scroll-effects</a> — 64 hiệu ứng cuộn trang (freefrontend / CodePen)</li><li><a href="components/">components</a> — component rút từ bài viết UI/UX, tái tạo bằng code (chip…)</li></ul><p><a href="stats.html">Thống kê truy cập</a></p><script src="/search.js" defer></script><script src="/stats.js" defer></script></body></html>
+<meta name="description" content="Code gốc nguyên văn các pattern UI/UX — hiệu ứng cuộn, component, UI kit rút từ site thật. Xem chạy thật, copy nguyên file.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="aw.css"></head><body>
+<main class="aw-wrap"><script src="aw.js"></script>
+<div class="aw-sotd" style="padding-top:16px"><p class="aw-sotd__sub"><span>Kho pattern UI/UX</span><span class="aw-tag aw-tag--medium">Code gốc nguyên văn</span></p>
+<h1 class="aw-h1" style="--aw-h1:clamp(42px,9.4vw,126.7px)">uiux asset<span class="aw-sticker" aria-hidden="true"></span></h1>
+<p class="aw-lead">Hiệu ứng cuộn, component và UI kit rút từ site thật — xem chạy thật, copy nguyên file.</p></div>
+<div class="aw-home-search" data-ovs-search></div>
+<h2 class="aw-heading-hr">Bộ sưu tập</h2>
+<div class="aw-grid">
+<div class="aw-card-slide"><a class="aw-fig is-large" href="scroll-effects/" aria-label="Mở Scroll effects"><img src="scroll-effects/thumbs/interactive-cicada-genomics-landing-page.jpg" alt=""></a>
+<div class="aw-card-slide__foot"><h3 class="aw-card-slide__title"><a href="scroll-effects/">Scroll effects</a></h3><span>từ</span><span>freefrontend / CodePen</span><span class="aw-tag aw-tag--bold">65</span></div></div>
+<div class="aw-card-slide"><a class="aw-fig is-large" href="components/" aria-label="Mở Components"><span class="aw-shot"><iframe loading="lazy" src="components/chip.html" title="Xem trước Components" tabindex="-1" aria-hidden="true"></iframe></span></a>
+<div class="aw-card-slide__foot"><h3 class="aw-card-slide__title"><a href="components/">Components</a></h3><span>từ</span><span>bài viết UI/UX, tái tạo bằng code</span><span class="aw-tag aw-tag--bold">29</span></div></div>
+<div class="aw-card-slide"><a class="aw-fig is-large" href="ui-kits/" aria-label="Mở UI kits"><span class="aw-shot"><iframe loading="lazy" src="https://rheinmir.github.io/uiux-asset/ui-kits/awwwards-com/latest/" title="Xem trước UI kits" tabindex="-1" aria-hidden="true"></iframe></span></a>
+<div class="aw-card-slide__foot"><h3 class="aw-card-slide__title"><a href="ui-kits/">UI kits</a></h3><span>từ</span><span>site thật, rút bằng /ui-kit-from-code</span><span class="aw-tag aw-tag--bold" id="kit-total" hidden></span></div></div>
+</div>
+<h2 class="aw-heading-hr" id="kits-h" hidden>UI kit mới nhất</h2>
+<div class="aw-grid" id="kits"></div>
+</main>
+<script src="ui-kits/kits.js"></script>
+<script>awKits.load().then((k) => { const t = document.getElementById('kit-total'); t.textContent = k.length; t.hidden = false;
+  document.getElementById('kits-h').hidden = false; document.getElementById('kits').innerHTML = k.slice(0, 6).map(awKits.card).join(''); }).catch(() => {});</script>
+<script src="/search.js" defer></script><script src="/stats.js" defer></script></body></html>

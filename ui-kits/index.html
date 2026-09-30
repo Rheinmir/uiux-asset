@@ -1,0 +1,29 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UI kits — uiux-asset</title>
+<meta name="description" content="UI kit rút từ site thật bằng /ui-kit-from-code — mỗi kit là một trang HTML tham chiếu: token, component, màn mẫu.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css"></head><body>
+<main class="aw-wrap"><script src="../aw.js"></script>
+<div class="aw-filters"><label class="aw-search"><button type="button" aria-label="Tìm" tabindex="-1"><span class="ms">search</span></button><input id="q" type="search" placeholder="Lọc theo tên kit, site nguồn…" aria-label="Lọc kit"></label>
+<button type="button" class="aw-filter" data-sort="new" aria-pressed="true">Mới nhất</button><button type="button" class="aw-filter" data-sort="az" aria-pressed="false">A–Z</button>
+<span class="grow"></span><span class="aw-filter has-count" title="Số kit đang hiện"><span class="aw-count" id="n">0</span></span></div>
+<div class="aw-crumb"><h1>UI kits. Hệ thiết kế rút từ site thật <span class="aw-tag aw-tag--bold" id="total">…</span></h1><span>Mỗi kit là một trang HTML: token, component, màn mẫu — phiên bản v1, v2… bất biến. Kit mới tự hiện ở đây.</span></div>
+<div class="aw-grid" id="g"></div>
+<p id="msg" role="status">Đang tải danh sách kit…</p>
+</main>
+<script src="kits.js"></script>
+<script>
+(() => {
+  const g = document.getElementById('g'), q = document.getElementById('q'), msg = document.getElementById('msg'), n = document.getElementById('n');
+  let kits = [], sort = 'new';
+  const filter = () => { const v = q.value.trim().toLowerCase(); let c = 0; for (const a of g.children) { a.hidden = !a.dataset.q.includes(v); c += !a.hidden; }
+    n.textContent = c; msg.hidden = c > 0; msg.textContent = 'Không có kit nào khớp — thử từ khác.'; };
+  const draw = () => { const list = sort === 'az' ? [...kits].sort((a, b) => a.id.localeCompare(b.id)) : kits;   // kits.json đã xếp mới nhất trước
+    g.innerHTML = list.map(awKits.card).join(''); filter(); };
+  q.oninput = filter;
+  document.querySelectorAll('[data-sort]').forEach((b) => (b.onclick = () => { sort = b.dataset.sort;
+    document.querySelectorAll('[data-sort]').forEach((x) => x.setAttribute('aria-pressed', x === b)); draw(); }));
+  awKits.load().then((k) => { kits = k; document.getElementById('total').textContent = k.length; draw(); })
+    .catch((e) => { msg.hidden = false; msg.textContent = `Chưa đọc được danh sách kit (${e.message}). Tải lại trang sau ít phút.`; });
+})();
+</script><script src="/stats.js" defer></script></body></html>

@@ -3,3 +3,6 @@ scroll-effects/*.html
 !scroll-effects/index.html
 scroll-effects/_assets
 tools
+# ui-kits: Vercel chỉ host gallery (index.html + kits.js); kit + kits.json do workflow của Rheinmir/ui-kits đẩy vào, GitHub Pages phát hành
+ui-kits/*/
+ui-kits/kits.json

@@ -304,6 +304,12 @@ $('.more').forEach(b=>b.addEventListener('click',()=>{const extra=['Pulp Fiction
 """
 
 
+def aw_shell(html, up):
+    """Khoác vỏ site theo kit awwwards-com: aw.css đè token --ovs-* của html_base, aw.js chèn header/footer + công tắc sáng/tối."""
+    return (html.replace("</head>", f'<link rel="stylesheet" href="{up}aw.css"></head>', 1)
+                .replace("<body>", f'<body><script src="{up}aw.js"></script>', 1))
+
+
 def build():
     spec = importlib.util.spec_from_file_location("html_base", TOOLS / "html_base.py")
     hb = importlib.util.module_from_spec(spec); spec.loader.exec_module(hb)
@@ -324,7 +330,7 @@ def build():
 <script>{JS}</script><script src="/stats.js" defer></script></body></html>"""
     out = ROOT / "components" / "chip.html"
     # fix=False: tắt tự-vá màu — chip pastel cần chữ tối CỐ ĐỊNH, không theo token đổi chế độ
-    out.write_text(hb.apply(page, fix=False), encoding="utf-8")
+    out.write_text(aw_shell(hb.apply(page, fix=False), "../"), encoding="utf-8")
     print(f"→ {out} ({sum(len(f) for _, f in SECTIONS)} mục)")
 
 

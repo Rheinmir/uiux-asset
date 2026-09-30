@@ -88,6 +88,12 @@ load();setInterval(()=>{if(!document.hidden)load()},30000);
 """
 
 
+def aw_shell(html, up):
+    """Khoác vỏ site theo kit awwwards-com: aw.css đè token --ovs-* của html_base, aw.js chèn header/footer + công tắc sáng/tối."""
+    return (html.replace("</head>", f'<link rel="stylesheet" href="{up}aw.css"></head>', 1)
+                .replace("<body>", f'<body><script src="{up}aw.js"></script>', 1))
+
+
 def build():
     spec = importlib.util.spec_from_file_location("html_base", TOOLS / "html_base.py")
     hb = importlib.util.module_from_spec(spec); spec.loader.exec_module(hb)
@@ -106,7 +112,7 @@ def build():
 <p class="err" id="err" hidden></p>
 <footer class="foot"><span id="f-since"></span><span id="f-last"></span><span id="f-bots"></span></footer>
 <script>{JS}</script><script src="/stats.js" defer></script></body></html>"""
-    (ROOT / "stats.html").write_text(hb.apply(page, fix=False), encoding="utf-8")
+    (ROOT / "stats.html").write_text(aw_shell(hb.apply(page, fix=False), ""), encoding="utf-8")
     print(f"→ {ROOT / 'stats.html'}")
 
 

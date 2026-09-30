@@ -1,4 +1,5 @@
-"""Sinh <category>/index.html (gallery duyệt + chạy thật) từ <category>/manifest.json. Chạy: python3 tools/build-index.py scroll-effects"""
+"""Sinh <category>/index.html (gallery duyệt + chạy thật) từ <category>/manifest.json. Chạy: python3 tools/build-index.py scroll-effects
+Giao diện = class của UI kit awwwards-com (../aw.css + ../aw.js): thanh lọc aw-filters, breadcrumb aw-crumb, lưới thẻ aw-card-site."""
 import html, json, sys
 from pathlib import Path
 
@@ -12,42 +13,31 @@ BADGE = {"ok": "", "partial": "thiếu ảnh", "upstream-drift": "lib đổi API
 def card(i):
     e = lambda s: html.escape(str(s or ""))
     f = i.get("file")
-    thumb = f"thumbs/{f[:-5]}.jpg" if f else ""
-    run = f'<a class="btn" href="{RUN_BASE}{e(f)}" target="_blank">Chạy bản gốc</a>' if f else ""
-    badge = f'<span class="badge" title="{e(i.get("note"))}">{BADGE[i["status"]]}</span>' if i["status"] != "ok" else ""
-    img = f'<a href="{RUN_BASE}{e(f)}" target="_blank"><img loading="lazy" src="{thumb}" alt=""></a>' if f else '<div class="noimg">—</div>'
-    return f"""<article data-q="{e((i['title'] + ' ' + i['desc'] + ' ' + i['user']).lower())}">{img}
-<div class="body"><h3>{e(i['title'])} {badge}</h3><p>{e(i['desc'])}</p>
-<div class="row">{run}<a href="{e(i['url'])}" target="_blank">CodePen · {e(i['user'])}</a><a href="https://github.com/Rheinmir/uiux-asset/blob/main/{cat.name}/{e(f or '')}" target="_blank"><code>{e(f or '')}</code></a></div></div></article>"""
+    badge = f'<span class="aw-tag aw-tag--medium aw-tag--red" title="{e(i.get("note"))}">{BADGE[i["status"]]}</span>' if i["status"] != "ok" else ""
+    hover = (f'<div class="aw-fig__hover" aria-hidden="true"><div><div class="aw-fig__row"><small>CHẠY BẢN GỐC</small></div>'
+             f'<div class="aw-fig__row"><h3>{e(i["title"])}</h3></div></div><div class="aw-fig__bts"><span class="ms">open_in_new</span></div></div>')
+    fig = (f'<a class="aw-fig" href="{RUN_BASE}{e(f)}" target="_blank" rel="noopener" aria-label="Chạy bản gốc: {e(i["title"])}">'
+           f'<img loading="lazy" src="thumbs/{f[:-5]}.jpg" alt="">{hover}</a>') if f else '<div class="aw-fig"><div class="aw-ph">pen đã xoá</div></div>'
+    code = (f'<a class="aw-tag aw-tag--medium" href="https://github.com/Rheinmir/uiux-asset/blob/main/{cat.name}/{e(f)}" target="_blank" rel="noopener" '
+            f'title="{e(f)}">Code</a>') if f else ""
+    return f"""<article class="aw-card-site" data-q="{e((i['title'] + ' ' + i['desc'] + ' ' + i['user']).lower())}">{fig}
+<div class="aw-card-site__info"><h3 class="aw-av__title" style="font-size:15px">{e(i['title'])}</h3><span class="grow"></span>{badge}{code}</div>
+<div class="aw-card-site__info" style="padding-top:4px"><a class="aw-av" href="{e(i['url'])}" target="_blank" rel="noopener" style="font-size:13px"><span class="aw-av__img">{e(i['user'][:1].upper())}</span><span>CodePen · {e(i['user'])}</span></a></div>
+<p class="aw-desc">{e(i['desc'])}</p></article>"""
 
 
 page = f"""<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{cat.name} — uiux-asset</title>
-<script>try{{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}}catch(e){{}}</script>
-<style>
-:root{{--bg:#f6f7f9;--card:#fff;--fg:#1a1d21;--mute:#5d6570;--line:#e2e5ea;--acc:#2563eb;--warn:#b45309}}
-@media (prefers-color-scheme:dark){{:root:not([data-theme=light]){{--bg:#0d1117;--card:#161b22;--fg:#e6edf3;--mute:#8b949e;--line:#30363d;--acc:#58a6ff;--warn:#f0b35a}}}}
-:root[data-theme=dark]{{--bg:#0d1117;--card:#161b22;--fg:#e6edf3;--mute:#8b949e;--line:#30363d;--acc:#58a6ff;--warn:#f0b35a}}
-*{{box-sizing:border-box}}body{{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 system-ui,sans-serif}}
-header{{position:sticky;top:0;z-index:2;background:var(--bg);border-bottom:1px solid var(--line);padding:14px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}}
-h1{{font-size:18px;margin:0;flex:1 1 auto}}input{{flex:1 1 220px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--fg)}}
-button{{padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--fg);cursor:pointer}}
-main{{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;padding:16px;max-width:1400px;margin:auto}}
-article{{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}}
-article img,.noimg{{width:100%;aspect-ratio:16/10;object-fit:cover;display:block;background:#000}}.noimg{{display:grid;place-items:center;color:var(--mute)}}
-.body{{padding:12px 14px;display:flex;flex-direction:column;gap:6px;flex:1}}h3{{font-size:15px;margin:0}}p{{margin:0;color:var(--mute);font-size:13px;flex:1}}
-.row{{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px}}a{{color:var(--acc)}}code{{color:var(--mute);font-size:11px;word-break:break-all}}
-.btn{{background:var(--acc);color:#fff;padding:4px 10px;border-radius:6px;text-decoration:none}}.badge{{font-size:11px;color:var(--warn);border:1px solid var(--warn);border-radius:4px;padding:0 4px;font-weight:400}}
-.note{{padding:0 16px;max-width:1400px;margin:12px auto 0;color:var(--mute);font-size:13px}}
-</style></head><body>
-<header><h1>{cat.name} · {len(items)} mục (code gốc nguyên văn)</h1><input id="q" placeholder="Lọc theo tên, kỹ thuật, tác giả…" aria-label="Lọc">
-<button id="tg" aria-label="Đổi giao diện sáng/tối">◐ Sáng/Tối</button></header>
-<p class="note">Mỗi file là trang kết quả gốc của tác giả trên CodePen (pen public = MIT) — mở "Chạy bản gốc" để xem hiệu ứng thật, copy nguyên file để dùng, giữ comment ghi công ở đầu file. Chạy local cần HTTP server (<code>python3 -m http.server</code>), không mở bằng file://.</p>
-<main id="g">{''.join(card(i) for i in items)}</main>
+<script>try{{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}}catch(e){{}}</script>
+<link rel="stylesheet" href="../aw.css"></head><body>
+<main class="aw-wrap"><script src="../aw.js"></script>
+<div class="aw-filters"><label class="aw-search"><button type="button" aria-label="Tìm" tabindex="-1"><span class="ms">search</span></button><input id="q" type="search" placeholder="Lọc theo tên, kỹ thuật, tác giả…" aria-label="Lọc"></label>
+<span class="grow"></span><span class="aw-filter has-count" title="Số mục đang hiện"><span class="aw-count" id="n">{len(items)}</span></span></div>
+<div class="aw-crumb"><h1>{cat.name}. Code gốc nguyên văn <span class="aw-tag aw-tag--bold">{len(items)}</span></h1><span>Mỗi file là trang kết quả gốc của tác giả trên CodePen (pen public = MIT) — bấm ảnh để chạy thật, copy nguyên file để dùng, giữ comment ghi công ở đầu file. Chạy local cần HTTP server (<code>python3 -m http.server</code>), không mở bằng file://.</span></div>
+<div class="aw-grid" id="g">{''.join(card(i) for i in items)}</div>
+</main>
 <script>
-q.oninput=()=>{{const v=q.value.toLowerCase();for(const a of g.children)a.hidden=!a.dataset.q.includes(v)}};
-tg.onclick=()=>{{const d=document.documentElement,dark=d.dataset.theme?d.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;
-d.dataset.theme=dark?'light':'dark';try{{localStorage.setItem('theme',d.dataset.theme)}}catch(e){{}}}};
+q.oninput=()=>{{const v=q.value.toLowerCase();let c=0;for(const a of g.children){{a.hidden=!a.dataset.q.includes(v);c+=!a.hidden}}n.textContent=c}};
 </script><script src="/stats.js" defer></script></body></html>"""
 (cat / "index.html").write_text(page)
 print(f"{cat}/index.html · {len(items)} mục")
