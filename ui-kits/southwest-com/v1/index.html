@@ -1,0 +1,1275 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta name="ui-kit-id" content="southwest-com">
+<!-- UI kit rút từ southwest.com (quét công khai 01/10/2026, robots.txt cho phép): 32 trang, 452 pattern, 301 trạng thái.
+     Token = biến CSS thật ở :root của site + màu đo bằng getComputedStyle. Không chứa ảnh, logo hay nội dung của Southwest. -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Southwest UI Kit</title>
+<meta name="ui-kit-skip" content="e8525c6ace:widget phản hồi Qualtrics của bên thứ ba;70a4dcb51d:widget phản hồi Qualtrics của bên thứ ba;61e0903e99:widget phản hồi Qualtrics của bên thứ ba;f1d4aaa137:widget phản hồi Qualtrics của bên thứ ba;c62b6502a6:widget phản hồi Qualtrics của bên thứ ba;2497f7444a:widget phản hồi Qualtrics của bên thứ ba;4a11b322ff:widget phản hồi Qualtrics của bên thứ ba;a2bc174bf0:widget phản hồi Qualtrics của bên thứ ba;67c7c9c779:điều khiển bản đồ Mapbox (bên thứ ba);d6be690669:điều khiển bản đồ Mapbox (bên thứ ba);00ec51f2f8:điều khiển bản đồ Mapbox (bên thứ ba);fe6f9664bc:điều khiển bản đồ Mapbox (bên thứ ba)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400..700,0..1,0&display=block">
+<style>
+/* Toàn bộ kit mặc token --sw-*. Palette mặc định: Southwest (core) sáng. Script đổi palette / sáng-tối. */
+:root {
+  --sw-primary: #304CB2;
+  --sw-primaryDeep: #1A2C80;
+  --sw-primaryDark: #1C2D6A;
+  --sw-onPrimary: #FFFFFF;
+  --sw-ink: #090F23;
+  --sw-inkStrong: #111B40;
+  --sw-accent: #FFBF27;
+  --sw-onAccent: #111B40;
+  --sw-accentEdge: #FAD101;
+  --sw-heart: #D5152E;
+  --sw-surface: #FFFFFF;
+  --sw-surfaceSoft: #F5F5F5;
+  --sw-surfaceAlt: #F4F4F4;
+  --sw-surfacePale: #F7F9FF;
+  --sw-tintTop: #F8F9FD;
+  --sw-tintBottom: #E2E7F0;
+  --sw-border: #CCCCCC;
+  --sw-borderSubtle: #E0E0E0;
+  --sw-borderStrong: #AAAAAA;
+  --sw-muted: #515151;
+  --sw-mutedAlt: #757575;
+  --sw-textSoft: #636363;
+  --sw-textDark: #333333;
+  --sw-legacyText: #212529;
+  --sw-success: #00801F;
+  --sw-warning: #FF792E;
+  --sw-danger: #D7112A;
+  --sw-dangerSoft: #FCD9DE;
+  --sw-sunBg: #FEF9AB;
+  --sw-skyBg: #B1DEF1;
+  --sw-peachBg: #F7D1C6;
+  --sw-mistBg: #CFDCF6;
+  --sw-greyBg: #E6E7E8;
+  --sw-focusUa: #005FCC;
+  --sw-focusYellow: #FFE671;
+  --sw-legacyLink: #007BFF;
+  --sw-legacyHover: #0056B3;
+  --sw-promo: #00801F;
+  --font: "Source Sans 3", Arial, sans-serif;   /* site dùng "Southwest Sans" (font riêng, không có trên Google Fonts) */
+  --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --r-xs: 2px; --r-s: 4px; --r-m: 5px; --r-pill: 116px;
+  --shadow-low: 0 1px 3px color-mix(in srgb, var(--sw-ink) 18%, transparent), 0 2px 8px color-mix(in srgb, var(--sw-ink) 8%, transparent);
+  --shadow-card: 0 2px 6px color-mix(in srgb, var(--sw-ink) 16%, transparent);
+  color-scheme: light;
+}
+:root[data-mode="dark"] { color-scheme: dark; }
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--sw-surface); color: var(--sw-ink); font: 400 16px/24px var(--font); -webkit-font-smoothing: antialiased; }
+.ms { font-family: "Material Symbols Outlined"; font-weight: normal; font-style: normal; font-size: 20px; line-height: 1; letter-spacing: normal; text-transform: none; display: inline-block; white-space: nowrap; direction: ltr; font-feature-settings: "liga"; user-select: none; vertical-align: middle; }
+.ms.fill { font-variation-settings: "FILL" 1; }
+code, .code { font-family: var(--mono); font-size: 12px; }
+:focus-visible { outline: 2px solid var(--sw-primary); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+/* ---------- vỏ trang ---------- */
+.shell { display: grid; grid-template-columns: 232px minmax(0, 1fr); min-height: 100vh; }
+.side { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 20px 12px; background: var(--sw-surfaceAlt); display: flex; flex-direction: column; gap: 2px; border-right: 1px solid var(--sw-borderSubtle); }
+.brand { display: flex; align-items: center; gap: 10px; padding: 4px 12px 16px; }
+.brand-mark { width: 32px; height: 32px; border-radius: var(--r-xs); background: var(--sw-primary); color: var(--sw-onPrimary); display: grid; place-items: center; }
+.brand b { font-size: 16px; font-weight: 700; display: block; color: var(--sw-inkStrong); }
+.brand small { color: var(--sw-muted); font-size: 12px; }
+.side h6 { margin: 14px 12px 6px; font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--sw-muted); }
+.side a { display: flex; align-items: center; gap: 12px; height: 36px; padding: 0 12px; border-radius: var(--r-xs); color: var(--sw-primary); text-decoration: none; font-size: 15px; }
+.side a .ms { font-size: 18px; }
+.side a:hover { text-decoration: underline; }
+.side a.on { background: var(--sw-surface); color: var(--sw-inkStrong); font-weight: 700; }
+main { padding: 0 32px 96px; min-width: 0; }
+.bar { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; padding: 12px 0; background: var(--sw-surface); border-bottom: 1px solid var(--sw-borderSubtle); }
+.bar .grow { flex: 1; }
+.ctl { display: flex; align-items: center; gap: 8px; }
+.ctl > span { font-size: 13px; font-weight: 700; color: var(--sw-muted); }
+.swatches { display: flex; gap: 6px; }
+.sw { width: 28px; height: 28px; border-radius: 50%; border: 2px solid transparent; padding: 0; cursor: pointer; background: linear-gradient(135deg, var(--a) 50%, var(--b) 50%); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--sw-ink) 12%, transparent); }
+.sw[aria-pressed="true"] { border-color: var(--sw-inkStrong); }
+.seg { display: inline-flex; }
+.seg button { height: 32px; padding: 0 12px; border: 1px solid var(--sw-border); background: var(--sw-surface); color: var(--sw-primary); font: 400 14px var(--font); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.seg button + button { border-left: none; }
+.seg button:first-child { border-radius: var(--r-xs) 0 0 var(--r-xs); }
+.seg button:last-child { border-radius: 0 var(--r-xs) var(--r-xs) 0; }
+.seg button[aria-pressed="true"] { background: var(--sw-inkStrong); color: var(--sw-onPrimary); border-color: var(--sw-inkStrong); font-weight: 700; }
+.seg .ms { font-size: 18px; }
+.copy { height: 32px; padding: 0 12px; border-radius: var(--r-xs); border: none; background: transparent; color: var(--sw-primary); font: 700 14px var(--font); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.copy:hover { text-decoration: underline; }
+.copy .ms { font-size: 18px; }
+
+.intro { padding: 40px 0 8px; max-width: 800px; }
+.intro .eyebrow { font-family: var(--mono); font-size: 12px; color: var(--sw-primary); }
+.intro h1 { font-size: 45px; line-height: 52px; font-weight: 700; margin: 8px 0 12px; color: var(--sw-primary); text-wrap: balance; }
+.intro p { font-size: 17px; line-height: 26px; color: var(--sw-muted); margin: 0 0 10px; max-width: 68ch; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.fact { font-family: var(--mono); font-size: 12px; padding: 4px 10px; border-radius: var(--r-xs); background: var(--sw-surfaceAlt); color: var(--sw-muted); }
+
+section.block { padding-top: 48px; scroll-margin-top: 64px; }
+section.block > header { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+section.block h2 { font-size: 32px; line-height: 40px; font-weight: 700; margin: 0; color: var(--sw-inkStrong); }
+section.block > header p { margin: 0; color: var(--sw-muted); max-width: 72ch; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 16px; }
+.spec { background: var(--sw-surface); border: 1px solid var(--sw-borderSubtle); border-radius: var(--r-s); display: flex; flex-direction: column; min-width: 0; }
+.spec.full { grid-column: 1 / -1; }
+.spec-h { display: flex; align-items: center; gap: 8px; padding: 14px 16px 0; flex-wrap: wrap; }
+.spec-h b { font-size: 17px; font-weight: 700; color: var(--sw-inkStrong); }
+.kind { font-family: var(--mono); font-size: 11px; padding: 2px 8px; border-radius: var(--r-xs); background: var(--sw-surfacePale); color: var(--sw-primary); box-shadow: inset 0 0 0 1px var(--sw-borderSubtle); }
+.spec-h .dp { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--sw-muted); font-variant-numeric: tabular-nums; }
+.stage { padding: 20px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; min-height: 96px; overflow-x: auto; }
+.stage.col { flex-direction: column; align-items: stretch; }
+.stage.tint { background: linear-gradient(var(--sw-tintTop), var(--sw-tintBottom)); margin: 12px 12px 0; border-radius: var(--r-xs); }
+.stage.alt { background: var(--sw-surfaceAlt); margin: 12px 12px 0; border-radius: var(--r-xs); }
+.stage.blue { background: var(--sw-primary); margin: 12px 12px 0; border-radius: var(--r-xs); }
+.spec-f { display: flex; align-items: center; gap: 8px; padding: 8px 12px 12px 16px; margin-top: auto; }
+.spec-f .note { font-size: 13px; line-height: 19px; color: var(--sw-muted); flex: 1; }
+.lbl { font: 400 12px/16px var(--mono); color: var(--sw-muted); }
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+
+/* dải trạng thái sinh từ inventory */
+.states { margin: 0 12px; padding: 10px 4px 4px; border-top: 1px dashed var(--sw-border); display: grid; grid-template-columns: repeat(auto-fill, minmax(146px, 1fr)); gap: 8px; }
+.st-h { grid-column: 1 / -1; font-size: 12px; font-weight: 700; color: var(--sw-muted); }
+.st-cell { display: flex; flex-direction: column; gap: 2px; padding: 6px; background: var(--sw-surfaceAlt); border-radius: var(--r-xs); min-width: 0; }
+.st-demo { min-height: 40px; display: flex; align-items: center; padding: 4px; margin-bottom: 2px; background: var(--sw-surface); overflow: hidden; }
+.st-demo.on-dark { background: var(--sw-primary); }
+.st-tag { font: 500 11px var(--mono); color: var(--sw-primary); }
+.st-say { font-size: 12px; line-height: 16px; color: var(--sw-muted); }
+.st-ul { text-decoration: underline !important; }
+.st-ring { box-shadow: inset 0 0 0 1px var(--sw-inkStrong) !important; }
+.st-ring-w { box-shadow: inset 0 0 0 1px var(--sw-onPrimary) !important; }
+.st-ring-p { box-shadow: inset 0 0 0 1px var(--sw-primary) !important; }
+.st-ua { outline: 2px solid var(--sw-focusUa) !important; outline-offset: 1px; }
+.st-glow { box-shadow: 0 0 0 3.2px color-mix(in srgb, var(--sw-primary) 40%, transparent) !important; }
+.st-glow-legacy { box-shadow: 0 0 0 3.2px color-mix(in srgb, var(--sw-legacyLink) 50%, transparent) !important; }
+.st-raise { transform: scale(1.03); box-shadow: 0 4px 20px color-mix(in srgb, var(--sw-primary) 20%, transparent) !important; }
+.st-halo { box-shadow: 0 0 4px var(--sw-primary) !important; border: 1px solid var(--sw-primary) !important; }
+.st-lift { transform: translateY(-5px); }
+.st-scale { transform: scale(1.08); }
+.st-b-ink { border-color: var(--sw-inkStrong) !important; }
+.st-b-primary { border-color: var(--sw-primary) !important; }
+.st-b-yellow { border-top: 2px solid var(--sw-focusYellow) !important; }
+.st-b-grey { border-color: var(--sw-borderStrong) !important; }
+.st-b-white { border-color: var(--sw-onPrimary) !important; }
+.st-c-ink { color: var(--sw-inkStrong) !important; }
+.st-c-deep { color: var(--sw-primaryDark) !important; }
+.st-c-legacy { color: var(--sw-legacyHover) !important; }
+.st-c-primary { color: var(--sw-primary) !important; }
+.st-c-white { color: var(--sw-onPrimary) !important; }
+.st-c-white75 { color: color-mix(in srgb, var(--sw-onPrimary) 75%, transparent) !important; }
+.st-c-grey { color: var(--sw-textDark) !important; }
+.st-c-legacytext { color: var(--sw-legacyText) !important; }
+.st-bg-soft { background: var(--sw-surfaceSoft) !important; }
+.st-bg-press { background: var(--sw-borderSubtle) !important; }
+.st-bg-ink20 { background: color-mix(in srgb, var(--sw-inkStrong) 20%, transparent) !important; }
+.st-bg-primary { background: var(--sw-primary) !important; }
+.st-bg-white { background: var(--sw-surface) !important; }
+.st-bg-grey { background: var(--sw-mutedAlt) !important; }
+.st-bg-mid { background: color-mix(in srgb, var(--sw-primary) 55%, var(--sw-inkStrong)) !important; }
+.st-bg-legacy { background: var(--sw-legacyHover) !important; color: var(--sw-onPrimary) !important; }
+.st-none { outline: 2px solid transparent; }
+.st-demo:has(.st-none)::after { content: "= lúc nghỉ"; font-size: 11px; color: var(--sw-muted); margin-left: 8px; }
+
+/* nền tảng */
+.roles { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; }
+.role { border-radius: var(--r-xs); padding: 12px; min-height: 76px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--sw-ink) 10%, transparent); cursor: pointer; border: none; text-align: left; font: inherit; }
+.role b { font-size: 13px; font-weight: 700; }
+.role code { font-size: 11px; opacity: .85; }
+.ramp { display: grid; grid-template-columns: 150px repeat(14, minmax(0, 1fr)); gap: 2px; align-items: stretch; margin-top: 4px; }
+.ramp .n { font: 12px var(--mono); color: var(--sw-muted); align-self: center; }
+.ramp button { height: 34px; border: none; cursor: pointer; padding: 0; border-radius: 0; }
+.type-row { display: grid; grid-template-columns: 170px minmax(0, 1fr) 120px; gap: 16px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--sw-borderSubtle); }
+.type-row:last-child { border-bottom: none; }
+.type-row .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.type-row .meta { font-family: var(--mono); font-size: 11px; line-height: 16px; color: var(--sw-muted); font-variant-numeric: tabular-nums; }
+.shape-cell { display: flex; flex-direction: column; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px; color: var(--sw-muted); text-align: center; }
+.shape-cell i { display: block; width: 72px; height: 48px; background: var(--sw-surfacePale); box-shadow: inset 0 0 0 1px var(--sw-primary); }
+.tbl { overflow-x: auto; }
+table.tok { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+table.tok th, table.tok td { text-align: left; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--sw-borderSubtle); font-size: 14px; white-space: nowrap; }
+table.tok th { font-weight: 700; color: var(--sw-muted); font-size: 12px; }
+table.tok td:first-child { font-family: var(--mono); font-size: 12px; }
+
+/* ================= thành phần sw-* (dùng lại được: chỉ cần khối --sw-* ở :root) ================= */
+/* nút — customer-button-* (button__mvieo) và swa-button cũ */
+.sw-btn { --h: 48px; height: var(--h); padding: 0 24px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid transparent; border-radius: var(--r-xs);
+  font: 700 16px/24px var(--font); cursor: pointer; white-space: nowrap; text-decoration: none; transition: border-color .15s, background-color .15s; }
+.sw-btn .ms { font-size: 18px; }
+.sw-btn.sm { --h: 40px; padding: 0 16px; }
+.sw-btn.lg { --h: 60px; }
+.sw-btn.block { width: 100%; }
+.sw-btn--primary { background: var(--sw-accent); color: var(--sw-onAccent); border-color: var(--sw-accent); }
+.sw-btn--primary:hover { border-color: var(--sw-inkStrong); }
+.sw-btn--legacy { --h: 35px; padding: 0 16px; font-size: 14px; background: var(--sw-accent); color: var(--sw-onAccent); border: 2px solid var(--sw-accentEdge); }
+.sw-btn--secondary { background: var(--sw-surface); color: var(--sw-primary); border-color: var(--sw-primary); font-weight: 400; }
+.sw-btn--secondary:hover { background: color-mix(in srgb, var(--sw-inkStrong) 20%, transparent); border-color: var(--sw-inkStrong); text-decoration: underline; }
+.sw-btn--outline-ink { --h: 36px; font-size: 14px; background: var(--sw-surface); color: var(--sw-inkStrong); border-color: var(--sw-inkStrong); }
+.sw-btn--outline-ink:hover { background: var(--sw-surfaceSoft); }
+.sw-btn--dark { --h: 40px; padding: 0 14px; font-size: 14px; background: var(--sw-inkStrong); color: var(--sw-onPrimary); }
+.sw-btn--disabled { background: var(--sw-border); color: var(--sw-onPrimary); border-color: var(--sw-border); cursor: not-allowed; font-weight: 700; }
+.sw-iconbtn { width: 40px; height: 34px; display: inline-grid; place-items: center; border: 1px solid transparent; border-radius: var(--r-xs); background: transparent; color: var(--sw-inkStrong); cursor: pointer; padding: 0; }
+.sw-iconbtn:hover { border-color: var(--sw-primary); }
+.sw-iconbtn .ms { font-size: 22px; }
+.sw-iconbtn.info { width: 20px; height: 20px; color: var(--sw-primary); }
+.sw-iconbtn.info .ms { font-size: 18px; font-variation-settings: "FILL" 1; }
+.sw-circle { width: 34px; height: 34px; border-radius: 50%; display: inline-grid; place-items: center; border: 1px solid var(--sw-border); background: var(--sw-border); color: var(--sw-mutedAlt); cursor: pointer; padding: 0; }
+.sw-circle.on { background: var(--sw-accent); border-color: var(--sw-accent); color: var(--sw-primary); }
+.sw-circle.ring { background: var(--sw-surface); border-color: var(--sw-primary); color: var(--sw-primaryDark); }
+.sw-circle:hover { background: var(--sw-mutedAlt); border-color: var(--sw-mutedAlt); color: var(--sw-onPrimary); }
+.sw-circle .ms { font-size: 26px; }
+
+/* link — link__JmNX+ showUnderline__1BIMA emphasis__Gzc1g */
+.sw-link { color: var(--sw-primary); font: 400 16px/24px var(--font); text-decoration: none; border-radius: var(--r-xs); padding: 0 4px; background: none; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; }
+.sw-link:hover { text-decoration: underline; }
+.sw-link:focus-visible { outline: none; box-shadow: inset 0 0 0 1px var(--sw-inkStrong); text-decoration: underline; }
+.sw-link.b { font-weight: 700; }
+.sw-link.s14 { font-size: 14px; line-height: 20px; }
+.sw-link.s13 { font-size: 13px; line-height: 20px; }
+.sw-link.nav { font-size: 12px; line-height: 15px; font-weight: 700; text-transform: uppercase; }
+.sw-link.h { font-size: 24px; line-height: 32px; font-weight: 700; }
+.sw-link.dark { color: var(--sw-inkStrong); }
+.sw-link.light { color: var(--sw-onPrimary); }
+.sw-link.ext::after { content: "open_in_new"; font-family: "Material Symbols Outlined"; font-size: 13px; margin-left: 4px; }
+.sw-a { color: var(--sw-primary); text-decoration: underline; }
+.sw-a.plain { text-decoration: none; }
+.sw-a.plain:hover { color: var(--sw-primaryDark); }
+.sw-a.legacy { color: var(--sw-legacyLink); text-decoration: none; }
+.sw-a.legacy:hover { color: var(--sw-legacyHover); text-decoration: underline; }
+.sw-a.ink { color: var(--sw-inkStrong); font-weight: 700; text-decoration: none; }
+
+/* header — dotcomHeader__8eGOW / header__Fc6Y3 */
+.sw-header { background: var(--sw-surface); width: 100%; min-width: 0; }
+.sw-header .in { max-width: 1215px; margin: 0 auto; padding: 0 16px; }
+.sw-header .top { display: flex; justify-content: flex-end; align-items: center; gap: 20px; height: 62px; }
+.sw-header .top i { font-size: 14px; color: var(--sw-primary); }
+.sw-header .main { display: flex; align-items: center; height: 44px; gap: 18px; }
+.sw-header .main .grow { flex: 1; }
+.sw-header.vac { background: var(--sw-primary); }
+.sw-logo { display: inline-grid; place-items: center; width: 225px; height: 36px; border: 1px dashed var(--sw-primary); color: var(--sw-primary); font: 400 11px var(--mono); border-radius: var(--r-xs); flex: none; }
+.sw-logo.sm { width: 99px; height: 24px; }
+.sw-logo.on-dark { border-color: var(--sw-onPrimary); color: var(--sw-onPrimary); }
+.sw-bell { color: var(--sw-primary); }
+
+/* tab sản phẩm — tabsContainer__AzPKZ / tab__hFsYv */
+.sw-tabs { display: flex; background: var(--sw-surface); border-bottom: 1px solid var(--sw-primary); width: 592px; max-width: 100%; position: relative; }
+.sw-tabs .tab { flex: 1; height: 56px; display: grid; place-items: center; font: 400 16px var(--font); color: var(--sw-primary); background: transparent; border: none; border-top: 1px solid transparent; cursor: pointer; position: relative; min-width: 0; padding: 0 4px; }
+.sw-tabs .tab:hover { border-top-color: var(--sw-primary); }
+.sw-tabs .tab[aria-selected="true"] { font-weight: 700; color: var(--sw-primary); }
+.sw-tabs .tab[aria-selected="true"]::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 3px; background: var(--sw-primary); }
+.sw-flag { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--sw-promo); color: var(--sw-onPrimary); font: 700 12px/16px var(--font); padding: 4px 18px; border-radius: var(--r-s); white-space: nowrap; }
+/* tab viên thuốc — nav-link filter-button */
+.sw-pills { display: flex; gap: 10px; flex-wrap: wrap; padding: 18px; background: var(--sw-surfaceSoft); }
+.sw-pill { height: 44px; padding: 0 16px; border-radius: var(--r-pill); border: 1px solid var(--sw-border); background: var(--sw-surface); color: var(--sw-primary); font: 400 16px var(--font); cursor: pointer; }
+.sw-pill.on { background: var(--sw-inkStrong); color: var(--sw-onPrimary); font-weight: 700; }
+/* tab dọc — nav-pills (about-southwest) */
+.sw-vtabs { width: 414px; max-width: 100%; display: flex; flex-direction: column; border: 6px solid var(--sw-accent); }
+.sw-vtabs .t { height: 86px; display: flex; align-items: center; padding: 0 24px; background: var(--sw-primaryDeep); color: var(--sw-accent); font: 700 23px var(--font); border: none; text-align: left; cursor: pointer; }
+.sw-vtabs .t.on { background: var(--sw-surface); color: var(--sw-primary); }
+/* tab gói — packageOptionButton__Wlelk */
+.sw-pkg { display: flex; gap: 18px; }
+.sw-pkg button { height: 30px; padding: 0; border: 1px solid transparent; border-radius: var(--r-xs); background: transparent; color: var(--sw-ink); font: 700 16px var(--font); cursor: pointer; }
+.sw-pkg button.on { color: var(--sw-primary); box-shadow: inset 0 -2px 0 var(--sw-primary); }
+/* sub-nav trang chiến dịch — navbar */
+.sw-subnav { background: var(--sw-primary); display: flex; flex-wrap: wrap; gap: 24px; align-items: center; padding: 13px 20px; color: var(--sw-onPrimary); }
+.sw-subnav a { color: var(--sw-onPrimary); text-decoration: none; font-size: 18px; }
+.sw-subnav a.brand { font-size: 20px; font-weight: 700; }
+.sw-crumbs { font-size: 16px; color: var(--sw-legacyText); }
+.sw-crumbs a { color: var(--sw-primary); text-decoration: none; }
+
+/* footer — dotcomFooter__23774 */
+.sw-footer { background: var(--sw-surfaceAlt); padding: 32px 24px 24px; width: 100%; }
+.sw-footer .help { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 16px; padding-bottom: 20px; border-bottom: 1px solid var(--sw-border); }
+.sw-footer .help .k { font: 700 20px/28px var(--font); color: var(--sw-muted); }
+.sw-footer .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 16px; padding-top: 20px; }
+.sw-footer h5 { margin: 0 0 6px; font: 700 24px/32px var(--font); color: var(--sw-inkStrong); }
+.sw-footer ul { list-style: none; margin: 0; padding: 0; }
+.sw-footer li { padding: 2px 12px 2px 0; }
+.sw-footer .legal { font-size: 12px; line-height: 18px; color: var(--sw-ink); margin-top: 20px; }
+.sw-social { display: flex; gap: 8px; }
+.sw-social i { width: 42px; height: 42px; border-radius: 50%; border: 1px dashed var(--sw-primary); display: grid; place-items: center; font: 400 9px var(--mono); color: var(--sw-primary); font-style: normal; }
+.sw-acc-m { border-top: 1px solid var(--sw-border); }
+.sw-acc-m div { height: 40px; display: flex; align-items: center; justify-content: space-between; color: var(--sw-primary); font: 700 16px var(--font); }
+
+/* form — inputElement__ZtQKd, trigger__cIMrN */
+.sw-field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.sw-field > label { font: 700 12px/18px var(--font); color: var(--sw-ink); display: flex; align-items: center; gap: 4px; }
+.sw-field .hint { font-size: 12px; line-height: 18px; color: var(--sw-ink); }
+.sw-input { height: 48px; width: 100%; padding: 4px 8px 3px; border: 1px solid var(--sw-border); border-radius: var(--r-xs); background: var(--sw-surface); color: var(--sw-inkStrong); font: 400 16px var(--font); }
+.sw-input:focus { outline: none; border-color: var(--sw-primary); }
+.sw-input.is-focus { border-color: var(--sw-primary); }
+.sw-input.err { border-color: var(--sw-danger); background: var(--sw-dangerSoft); }
+.sw-iconin { position: relative; }
+.sw-iconin .sw-input { padding-right: 40px; }
+.sw-iconin .ms { position: absolute; right: 10px; top: 14px; color: var(--sw-inkStrong); }
+.sw-select { height: 34px; display: flex; align-items: center; justify-content: space-between; padding: 4px 12px 4px 16px; border: 1px solid var(--sw-border); border-radius: var(--r-xs); color: var(--sw-primary); font: 400 16px var(--font); background: var(--sw-surface); cursor: pointer; min-width: 0; }
+.sw-select:hover { text-decoration: underline; }
+.sw-check, .sw-radio { display: inline-flex; align-items: center; gap: 10px; font-size: 16px; color: var(--sw-ink); cursor: pointer; }
+.sw-check i { width: 16px; height: 16px; border: 1px solid var(--sw-primary); border-radius: var(--r-xs); background: var(--sw-surface); display: grid; place-items: center; flex: none; }
+.sw-check.on i { background: var(--sw-primary); }
+.sw-check.on i::after { content: ""; width: 9px; height: 5px; border-left: 2px solid var(--sw-onPrimary); border-bottom: 2px solid var(--sw-onPrimary); transform: rotate(-45deg) translate(1px, -1px); }
+.sw-check.ring i { box-shadow: 0 0 0 2px var(--sw-surface), 0 0 0 3px var(--sw-primary); border-radius: var(--r-xs); }
+.sw-radio i { width: 16px; height: 16px; border: 1px solid var(--sw-primary); border-radius: 50%; display: grid; place-items: center; flex: none; background: var(--sw-surface); }
+.sw-radio.on i::after { content: ""; width: 12px; height: 12px; border-radius: 50%; background: var(--sw-primary); }
+.sw-divider { border: 0; border-top: 1px solid var(--sw-border); margin: 8px 0; width: 100%; }
+.sw-divider.thick { border-top-width: 2px; border-color: var(--sw-borderSubtle); }
+.sw-rules { margin: 0; padding-left: 18px; font-size: 14px; line-height: 20px; color: var(--sw-ink); }
+.sw-rules li.ok { color: var(--sw-success); }
+.sw-rules li.bad { color: var(--sw-danger); }
+/* bộ tìm giá vé — route-expansion (Tailwind vg-*) */
+.sw-ff { display: flex; flex-direction: column; gap: 4px; width: 264px; max-width: 100%; }
+.sw-ff > span { font: 700 12px/16px var(--font); text-transform: uppercase; color: var(--sw-muted); }
+.sw-ff .box { height: 48px; display: flex; align-items: center; gap: 8px; padding: 0 10px; border: 1px solid var(--sw-border); border-radius: var(--r-xs); background: var(--sw-surface); color: var(--sw-mutedAlt); font-size: 14px; }
+.sw-ff .box.v { color: var(--sw-primary); }
+.sw-ff .box .ms { font-size: 18px; }
+.sw-ff .box .grow { flex: 1; }
+.sw-date { width: 280px; max-width: 100%; height: 60px; border: 1px solid var(--sw-border); border-radius: var(--r-xs); padding: 6px 10px; display: flex; flex-direction: column; justify-content: center; background: var(--sw-surface); box-shadow: var(--shadow-low); }
+.sw-date b { font: 700 12px/16px var(--font); color: var(--sw-ink); }
+.sw-date span { color: var(--sw-primary); font-size: 16px; }
+.sw-trip { width: 180px; background: var(--sw-surface); box-shadow: var(--shadow-card); }
+.sw-trip div { height: 48px; display: flex; align-items: center; padding: 0 16px; color: var(--sw-inkStrong); cursor: pointer; }
+.sw-trip div.on { color: var(--sw-primary); font-weight: 700; }
+.sw-trip div:hover { color: var(--sw-primary); text-decoration: underline; }
+/* lịch giá vé */
+.sw-cal { width: 300px; max-width: 100%; background: var(--sw-surface); }
+.sw-cal .mh { display: flex; align-items: center; justify-content: space-between; height: 34px; color: var(--sw-primary); font-size: 16px; }
+.sw-cal .g { display: grid; grid-template-columns: repeat(7, 40px); }
+.sw-cal .g > * { height: 40px; display: grid; place-items: center; font-size: 16px; }
+.sw-cal .dow { font-weight: 700; color: var(--sw-ink); }
+.sw-cal .d { color: var(--sw-primary); background: var(--sw-surface); border: 1px solid transparent; cursor: pointer; }
+.sw-cal .d.b { font-weight: 700; }
+.sw-cal .d.rng { background: var(--sw-border); }
+.sw-cal .d.start { background: var(--sw-primary); color: var(--sw-onPrimary); border-radius: 50%; }
+.sw-cal .d.end { background: var(--sw-success); color: var(--sw-onPrimary); border-radius: 50%; }
+.sw-cal .d:hover { background: var(--sw-surface); color: var(--sw-inkStrong); border-color: var(--sw-inkStrong); }
+.sw-cal .ft { display: flex; justify-content: flex-end; gap: 4px; border-top: 1px solid var(--sw-border); padding-top: 8px; margin-top: 8px; }
+.sw-cal .ft button { height: 35px; padding: 0 16px; background: none; border: none; font: 700 16px var(--font); color: var(--sw-primary); cursor: pointer; border-radius: var(--r-xs); }
+.sw-cal .ft button:first-child { color: var(--sw-inkStrong); }
+
+/* chứa nội dung */
+.sw-booking { background: var(--sw-surface); width: 592px; max-width: 100%; box-shadow: var(--shadow-low); }
+.sw-booking .body { padding: 20px 32px 28px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; }
+.sw-booking .body .full { grid-column: 1 / -1; }
+.sw-booking .req { display: flex; justify-content: space-between; font-size: 12px; line-height: 18px; gap: 8px; }
+.sw-hero { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
+.sw-hero h3 { margin: 0; font: 700 32px/48px var(--font); color: var(--sw-primary); }
+.sw-hero p { margin: 0; color: var(--sw-primary); }
+.sw-dest { width: 388px; max-width: 100%; background: var(--sw-surface); border: 1px solid color-mix(in srgb, var(--sw-ink) 12.5%, transparent); border-radius: var(--r-s); box-shadow: var(--shadow-card); overflow: hidden; }
+.sw-dest .body { padding: 16px 20px 20px; display: flex; flex-direction: column; gap: 4px; }
+.sw-dest h4 { margin: 0; font: 500 20px/24px var(--font); color: var(--sw-inkStrong); }
+.sw-dest small { font-size: 12px; color: var(--sw-inkStrong); }
+.sw-dest p { margin: 4px 0 16px; color: var(--sw-textSoft); font-size: 16px; line-height: 24px; }
+.ph { display: grid; place-items: center; text-align: center; background: repeating-linear-gradient(135deg, var(--sw-surfacePale) 0 10px, var(--sw-tintBottom) 10px 20px); color: var(--sw-primary); font: 400 11px/14px var(--mono); padding: 6px; }
+.ph.dark { background: repeating-linear-gradient(135deg, var(--sw-primaryDeep) 0 10px, var(--sw-primaryDark) 10px 20px); color: var(--sw-onPrimary); }
+.sw-tile { width: 193px; height: 181px; position: relative; overflow: hidden; }
+.sw-tile .ph { position: absolute; inset: 0; }
+.sw-tile b { position: absolute; left: 0; right: 0; bottom: 0; padding: 10px 12px; font: 500 18px/22px var(--font); color: var(--sw-onPrimary); background: linear-gradient(transparent, color-mix(in srgb, var(--sw-ink) 70%, transparent)); }
+.sw-imgcard { width: 280px; display: block; text-decoration: none; position: relative; border-radius: var(--r-xs); }
+.sw-imgcard .ph { height: 272px; }
+.sw-imgcard b { position: absolute; top: 14px; left: 12px; font: 700 20px var(--font); color: var(--sw-onPrimary); text-shadow: 0 1px 3px var(--sw-ink); }
+.sw-imgcard:hover b { text-decoration: underline; }
+.sw-theme { width: 256px; display: flex; flex-direction: column; gap: 8px; }
+.sw-theme .ph { height: 248px; }
+.sw-theme b { color: var(--sw-primary); font-size: 18px; display: flex; gap: 6px; align-items: center; }
+.sw-deal { width: 536px; max-width: 100%; min-height: 102px; background: var(--sw-surface); box-shadow: var(--shadow-card); padding: 10px 12px; display: flex; justify-content: space-between; gap: 12px; cursor: pointer; }
+.sw-deal .l b { display: block; font: 700 14px/21px var(--font); color: var(--sw-textDark); }
+.sw-deal .l small { display: block; font-size: 12px; line-height: 16px; color: var(--sw-primary); }
+.sw-deal .r { text-align: right; font-size: 12px; color: var(--sw-primary); }
+.sw-deal .r b { display: block; font: 400 16px var(--font); color: var(--sw-textDark); }
+.sw-deal:hover { background: var(--sw-surfaceSoft); }
+.sw-fares { display: grid; grid-template-columns: repeat(4, minmax(150px, 1fr)); border: 1px solid var(--sw-border); min-width: 640px; }
+.sw-fare { padding: 18px 20px; border-right: 1px solid var(--sw-border); }
+.sw-fare:last-child { border-right: none; }
+.sw-fare h4 { margin: 0; font: 500 18px/21px var(--font); color: var(--sw-inkStrong); }
+.sw-fare .tag { font: 700 13px var(--font); color: var(--sw-inkStrong); margin: 6px 0; }
+.sw-fare .tag.pick { display: inline-block; background: var(--sw-heart); color: var(--sw-onPrimary); padding: 0 6px; border-radius: var(--r-xs); }
+.sw-fare p { font-size: 13px; line-height: 18px; color: var(--sw-inkStrong); margin: 0 0 10px; }
+.sw-fare .bar { height: 6px; background: var(--c); margin-bottom: 14px; }
+.sw-fare ul { margin: 0; padding-left: 16px; font-size: 12px; line-height: 18px; color: var(--sw-legacyText); }
+.sw-fare li::marker { color: var(--c); }
+.sw-and { display: flex; align-items: center; gap: 8px; font: 700 13px var(--font); color: var(--sw-inkStrong); margin-top: 10px; }
+.sw-and::before, .sw-and::after { content: ""; flex: 1; border-top: 1px solid var(--sw-border); }
+.sw-acc { width: 100%; }
+.sw-acc .q { min-height: 48px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 12px; font-size: 15px; color: var(--sw-inkStrong); border-bottom: 1px solid var(--sw-borderSubtle); background: var(--sw-surface); cursor: pointer; }
+.sw-acc .q:hover { background: var(--sw-surfaceSoft); }
+.sw-acc .q.panel { background: var(--sw-surfaceAlt); font: 700 24px/32px var(--font); color: var(--sw-mutedAlt); min-height: 66px; }
+.sw-acc .q.blue { background: var(--sw-surfaceAlt); color: var(--sw-primary); min-height: 64px; }
+.sw-acc .a { padding: 12px; font-size: 14px; line-height: 20px; color: var(--sw-legacyText); }
+.sw-acc .ms { color: var(--sw-primary); }
+.sw-band { min-height: 88px; padding: 14px 16px; display: flex; flex-direction: column; justify-content: flex-end; gap: 2px; font: 400 12px var(--mono); }
+.sw-band b { font: 700 18px/22px var(--font); }
+.sw-info { width: 310px; max-width: 100%; padding: 22px 24px; background: var(--sw-surface); }
+.sw-info b { display: block; font: 700 20px/24px var(--font); color: var(--sw-primary); margin-bottom: 6px; }
+.sw-info p { margin: 0; font-size: 16px; line-height: 24px; color: var(--sw-legacyText); }
+.sw-callout { padding: 24px; background: var(--sw-sunBg); color: var(--sw-legacyText); width: 100%; }
+.sw-about { width: 384px; max-width: 100%; display: flex; flex-direction: column; border-bottom: 6px solid var(--sw-accent); }
+.sw-about .top { background: var(--sw-greyBg); padding: 14px 16px; display: grid; grid-template-columns: 1fr 24px; gap: 4px 12px; align-items: center; }
+.sw-about .top b { grid-column: 1; font: 700 18px/27px var(--font); text-transform: uppercase; color: var(--sw-inkStrong); }
+.sw-about .top p { margin: 0; font-size: 16px; line-height: 24px; color: var(--sw-inkStrong); }
+.sw-about .top .ms { grid-column: 2; grid-row: 1 / span 2; color: var(--sw-accent); font-size: 32px; }
+.sw-about .ph { height: 160px; }
+.sw-list { margin: 0; padding-left: 20px; color: var(--sw-legacyText); font-size: 16px; line-height: 26px; }
+.sw-list.check { list-style: none; padding: 0; }
+.sw-list.check li { display: flex; gap: 8px; }
+.sw-list.check li::before { content: "check"; font-family: "Material Symbols Outlined"; color: var(--sw-accent); }
+.sw-time { border-left: 2px solid var(--sw-borderSubtle); padding-left: 18px; display: flex; flex-direction: column; gap: 12px; }
+.sw-time b { font: 700 32px/40px var(--font); color: var(--sw-ink); }
+.sw-time p { margin: 0; color: var(--sw-muted); }
+.sw-media { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
+
+/* phản hồi & hiển thị */
+.sw-badge { display: inline-flex; align-items: center; height: 24px; padding: 0 18px; border-radius: var(--r-s); background: var(--sw-promo); color: var(--sw-onPrimary); font: 700 12px var(--font); }
+.sw-badge.red { background: var(--sw-heart); padding: 0 6px; border-radius: var(--r-xs); }
+.sw-badge.round { width: 28px; height: 28px; padding: 0; border-radius: 14px; background: var(--sw-surface); color: var(--sw-ink); justify-content: center; box-shadow: var(--shadow-low); }
+.sw-dots { display: flex; gap: 8px; }
+.sw-dots i { width: 12px; height: 12px; border-radius: 500px; background: var(--sw-border); }
+.sw-dots i.on { background: var(--sw-primary); }
+.sw-icons { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; }
+.sw-icons span.ic { display: inline-flex; flex-direction: column; align-items: center; gap: 4px; font: 11px var(--mono); color: var(--sw-muted); }
+.sw-icons .ms { color: var(--sw-primary); }
+.sw-alert { display: flex; align-items: center; gap: 8px; background: var(--sw-surfacePale); padding: 8px 16px; font-size: 14px; color: var(--sw-ink); width: 100%; }
+.sw-alert .ms { color: var(--sw-primary); font-variation-settings: "FILL" 1; }
+/* bản đồ tuyến bay — MapContainer/InformationContent */
+.sw-map { position: relative; width: 100%; height: 260px; background: var(--sw-surfacePale); overflow: hidden; border: 1px solid var(--sw-borderSubtle); }
+.sw-pin { position: absolute; display: grid; place-items: center; border-radius: 50%; background: var(--sw-primaryDeep); color: var(--sw-onPrimary); font: 400 14px var(--font); box-shadow: 0 0 0 2px var(--sw-surface); transition: transform .15s; cursor: pointer; }
+.sw-pin:hover { transform: translateY(-5px); }
+.sw-pin.dot { width: 10px; height: 10px; background: var(--sw-primary); box-shadow: none; }
+.sw-mapnav { width: 300px; max-width: 100%; background: var(--sw-surface); box-shadow: var(--shadow-card); padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+.sw-mapnav .loc { height: 50px; border: 1px solid var(--sw-border); display: flex; align-items: center; gap: 10px; padding: 0 12px; color: var(--sw-muted); }
+.sw-mapnav .loc .grow { flex: 1; }
+.sw-legend { display: flex; gap: 14px; align-items: center; font-size: 14px; color: var(--sw-legacyText); }
+.sw-legend i { display: inline-block; width: 28px; height: 4px; background: var(--sw-primary); border: 4px solid var(--sw-surface); box-sizing: content-box; }
+
+/* thương hiệu con Getaways — vacations-button-* / light__+DETM */
+.sw-vac { background: var(--sw-primary); padding: 16px; display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
+.sw-vac .sw-link { color: var(--sw-onAccent); font-weight: 700; }
+.sw-vac .sw-link.w { color: var(--sw-onPrimary); font-size: 14px; }
+.sw-btn--vac { background: var(--sw-primary); color: var(--sw-onAccent); border-color: var(--sw-primary); font-weight: 400; }
+.sw-btn--vac:hover { border-color: var(--sw-inkStrong); }
+.sw-btn--vac-2 { background: var(--sw-surface); color: var(--sw-primary); border-color: var(--sw-primary); font-weight: 400; }
+.sw-btn--vac-2:hover { background: var(--sw-borderSubtle); border-color: var(--sw-inkStrong); }
+
+/* màn mẫu */
+.screens { display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start; }
+.frame { display: flex; flex-direction: column; gap: 10px; }
+.frame figcaption { font-size: 13px; line-height: 19px; color: var(--sw-muted); max-width: 520px; }
+.scroller { overflow-x: auto; max-width: 100%; }
+.phone { width: 390px; height: 844px; zoom: .62; border: 10px solid var(--sw-inkStrong); border-radius: 44px; overflow: hidden; background: var(--sw-surface); display: flex; flex-direction: column; }
+.phone .scr { flex: 1; overflow: hidden; }
+.desk { width: 1440px; height: 900px; zoom: .5; border: 12px solid var(--sw-inkStrong); border-radius: 14px; overflow: hidden; background: var(--sw-surface); }
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 200%); visibility: hidden; background: var(--sw-inkStrong); color: var(--sw-onPrimary); padding: 12px 18px; border-radius: var(--r-xs); font-size: 14px; transition: transform .25s; z-index: 20; }
+.toast.show { transform: translate(-50%, 0); visibility: visible; }
+
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; }
+  .side { display: none; }
+  main { padding: 0 16px 80px; }
+  .grid { grid-template-columns: 1fr; }
+  .intro h1 { font-size: 34px; line-height: 42px; }
+  .type-row { grid-template-columns: 1fr; gap: 2px; }
+  .ramp { grid-template-columns: 90px repeat(14, minmax(0, 1fr)); }
+  .phone { zoom: .5; }
+  .desk { zoom: .22; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <nav class="side" aria-label="Mục lục">
+    <div class="brand"><div class="brand-mark"><span class="ms fill">flight</span></div><div><b>Southwest UI Kit</b><small>rút từ southwest.com</small></div></div>
+    <h6>Nền tảng</h6>
+    <a href="#color"><span class="ms">palette</span>Màu</a>
+    <a href="#type"><span class="ms">text_fields</span>Chữ</a>
+    <a href="#shape"><span class="ms">rounded_corner</span>Bo góc &amp; bóng</a>
+    <a href="#layout"><span class="ms">straighten</span>Bố cục &amp; kích thước</a>
+    <h6>Thành phần</h6>
+    <a href="#actions"><span class="ms">touch_app</span>Hành động</a>
+    <a href="#links"><span class="ms">link</span>Liên kết</a>
+    <a href="#navigation"><span class="ms">explore</span>Điều hướng</a>
+    <a href="#inputs"><span class="ms">edit_note</span>Nhập liệu &amp; đặt vé</a>
+    <a href="#containment"><span class="ms">web_asset</span>Chứa nội dung</a>
+    <a href="#feedback"><span class="ms">info</span>Hiển thị &amp; bản đồ</a>
+    <a href="#subbrand"><span class="ms">beach_access</span>Getaways</a>
+    <h6>Mẫu</h6>
+    <a href="#screens"><span class="ms">devices</span>Màn hình mẫu</a>
+  </nav>
+
+  <main>
+    <div class="bar" role="toolbar" aria-label="Chủ đề">
+      <div class="ctl"><span>Palette</span><div class="swatches" id="swatches"></div></div>
+      <div class="ctl"><span>Chế độ</span><div class="seg" id="mode">
+        <button data-v="light" aria-pressed="true"><span class="ms">light_mode</span>Sáng</button>
+        <button data-v="dark" aria-pressed="false"><span class="ms">dark_mode</span>Tối (dựng)</button></div></div>
+      <div class="grow"></div>
+      <button class="copy" id="copy-tokens"><span class="ms">data_object</span>Copy CSS token</button>
+    </div>
+
+    <div class="intro">
+      <div class="eyebrow">southwest.com :root + getComputedStyle (32 trang) → docs/southwest-ui-kit.html</div>
+      <h1>Bộ thành phần của Southwest.com</h1>
+      <p>Hệ thiết kế của southwest.com dựng lại bằng HTML/CSS thuần. Màu là biến CSS thật ở <code>:root</code> của site (thang <code>--primary-*</code>, <code>--secondary-*</code>, <code>--neutral-*</code>…) cộng các màu đo bằng <code>getComputedStyle</code>. Kích thước lấy từ phần tử thật. Mỗi thẻ ghi tên class trên site, số đo, và các trạng thái hover / focus / active đã ép đo bằng CDP.</p>
+      <p>Muốn dùng ở dự án khác: dán khối <code>--sw-*</code> (nút Copy CSS token) rồi chép CSS <code>.sw-*</code> và HTML của thẻ cần dùng. Ảnh, logo và nội dung của Southwest đều thay bằng khối giữ chỗ.</p>
+      <div class="facts"><span class="fact">header 106 · tab 56 · input 48 · nút 48 / 40</span><span class="fact">khung nội dung 1215 @1440</span><span class="fact">bo góc 2 · 4 · 5 · 50% · 116</span><span class="fact">452 pattern · 301 trạng thái</span><span class="fact">mobile 390 · desktop 1440</span></div>
+    </div>
+
+    <!-- ================= NỀN TẢNG ================= -->
+    <section class="block" id="color">
+      <header><h2>Màu</h2><p>Các vai trò <code>--sw-*</code> của palette đang chọn. Bấm một ô để copy mã hex. Bên dưới là các thang gốc của site (biến <code>--primary-100…950</code> v.v.), bấm ô để copy tên biến.</p></header>
+      <div class="roles" id="roles"></div>
+      <div class="spec" style="margin-top:16px"><div class="stage col" id="ramps" style="gap:4px"></div></div>
+    </section>
+
+    <section class="block" id="type">
+      <header><h2>Chữ</h2><p>Site dùng một họ chữ riêng là <b>Southwest Sans</b> (400, 700; 300/500 ở vài trang cũ). Kit thay bằng <b>Source Sans 3</b> từ Google Fonts. Thang bên dưới gom 81 cỡ/độ đậm/màu từ 102 pattern heading + text, mỗi dòng gồm cỡ/độ đậm đo được, màu quy về vai trò, và số pattern dùng nó. Câu mẫu là chữ của kit, không phải nội dung site.</p></header>
+      <div class="spec"><div class="stage col" id="typescale" style="gap:0">
+<div class="type-row" data-sig="75227a8957"><span class="meta">heading · 102/700<br>--sw-accent</span><span class="t" style="background:var(--sw-primaryDeep);padding:4px 8px"><span style="font-size:102px;line-height:1.25;font-weight:700;color:var(--sw-accent)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×1</span></div>
+<div class="type-row" data-sig="3e2ef08ed9"><span class="meta">heading · 60/700<br>--sw-onPrimary</span><span class="t" style="background:var(--sw-primaryDeep);padding:4px 8px"><span style="font-size:60px;line-height:1.25;font-weight:700;color:var(--sw-onPrimary)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×1</span></div>
+<div class="type-row" data-sig="63cb14ceec"><span class="meta">heading · 52/700<br>--sw-inkStrong</span><span class="t"><span style="font-size:52px;line-height:1.25;font-weight:700;color:var(--sw-inkStrong)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×1</span></div>
+<div class="type-row" data-sig="fe95f4601a"><span class="meta">heading · 48/400<br>--sw-inkStrong</span><span class="t"><span style="font-size:48px;line-height:1.25;font-weight:400;color:var(--sw-inkStrong)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×2</span></div>
+<div class="type-row" data-sig="68bd67b971"><span class="meta">heading · 45/700<br>--sw-ink</span><span class="t"><span style="font-size:45px;line-height:1.25;font-weight:700;color:var(--sw-ink)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×3</span></div>
+<div class="type-row" data-sig="d6ca2209a9"><span class="meta">heading · 45/700<br>--sw-onPrimary</span><span class="t" style="background:var(--sw-primaryDeep);padding:4px 8px"><span style="font-size:45px;line-height:1.25;font-weight:700;color:var(--sw-onPrimary)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×2</span></div>
+<div class="type-row" data-sig="cde7b61523"><span class="meta">heading · 42/400<br>--sw-inkStrong</span><span class="t"><span style="font-size:42px;line-height:1.25;font-weight:400;color:var(--sw-inkStrong)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×1</span></div>
+<div class="type-row" data-sig="f8013b5789"><span class="meta">heading · 40/700<br>--sw-inkStrong</span><span class="t"><span style="font-size:40px;line-height:1.25;font-weight:700;color:var(--sw-inkStrong)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×2</span></div>
+<div class="type-row" data-sig="37ec7a2cdb"><span class="meta">heading · 40/700<br>--sw-primary</span><span class="t"><span style="font-size:40px;line-height:1.25;font-weight:700;color:var(--sw-primary)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×1</span></div>
+<div class="type-row" data-sig="5a927c258f"><span class="meta">heading · 40/700<br>--sw-onPrimary</span><span class="t" style="background:var(--sw-primaryDeep);padding:4px 8px"><span style="font-size:40px;line-height:1.25;font-weight:700;color:var(--sw-onPrimary)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×1</span></div>
+<div class="type-row" data-sig="8b96414a6f"><span class="meta">heading · 40/500<br>--sw-inkStrong</span><span class="t"><span style="font-size:40px;line-height:1.25;font-weight:500;color:var(--sw-inkStrong)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×1</span></div>
+<div class="type-row" data-sig="931a980a73 0c094b40df"><span class="meta">heading · 36/700<br>--sw-inkStrong</span><span class="t"><span style="font-size:36px;line-height:1.25;font-weight:700;color:var(--sw-inkStrong)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">2 pattern · ×8</span></div>
+<div class="type-row" data-sig="a645f7a100"><span class="meta">heading · 36/700<br>--sw-primary</span><span class="t"><span style="font-size:36px;line-height:1.25;font-weight:700;color:var(--sw-primary)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×3</span></div>
+<div class="type-row" data-sig="cd4c2b178a"><span class="meta">heading · 36/700<br>--sw-primaryDark</span><span class="t"><span style="font-size:36px;line-height:1.25;font-weight:700;color:var(--sw-primaryDark)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×1</span></div>
+<div class="type-row" data-sig="4b21765198"><span class="meta">heading · 36/700<br>--sw-onPrimary</span><span class="t" style="background:var(--sw-primaryDeep);padding:4px 8px"><span style="font-size:36px;line-height:1.25;font-weight:700;color:var(--sw-onPrimary)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×1</span></div>
+<div class="type-row" data-sig="4058b4406b"><span class="meta">heading · 36/700<br>--sw-primaryDeep</span><span class="t"><span style="font-size:36px;line-height:1.25;font-weight:700;color:var(--sw-primaryDeep)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×1</span></div>
+<div class="type-row" data-sig="65d6d762ed 148c785ac8"><span class="meta">heading · 35/700<br>--sw-primary</span><span class="t"><span style="font-size:35px;line-height:1.25;font-weight:700;color:var(--sw-primary)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">2 pattern · ×4</span></div>
+<div class="type-row" data-sig="cca2358653"><span class="meta">heading · 32/700<br>--sw-ink</span><span class="t"><span style="font-size:32px;line-height:1.25;font-weight:700;color:var(--sw-ink)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×18</span></div>
+<div class="type-row" data-sig="431b4d1266 5842415673 5ff496e662"><span class="meta">heading · 32/700<br>--sw-primary</span><span class="t"><span style="font-size:32px;line-height:1.25;font-weight:700;color:var(--sw-primary)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">3 pattern · ×9</span></div>
+<div class="type-row" data-sig="1fcfb297b3"><span class="meta">heading · 32/700<br>--sw-onPrimary</span><span class="t" style="background:var(--sw-primaryDeep);padding:4px 8px"><span style="font-size:32px;line-height:1.25;font-weight:700;color:var(--sw-onPrimary)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×1</span></div>
+<div class="type-row" data-sig="afccd5b160"><span class="meta">heading · 32/700<br>--sw-inkStrong</span><span class="t"><span style="font-size:32px;line-height:1.25;font-weight:700;color:var(--sw-inkStrong)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×1</span></div>
+<div class="type-row" data-sig="6539b5aa3e"><span class="meta">heading · 32/500<br>--sw-primary</span><span class="t"><span style="font-size:32px;line-height:1.25;font-weight:500;color:var(--sw-primary)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×4</span></div>
+<div class="type-row" data-sig="b23db6751d"><span class="meta">heading · 32/400<br>--sw-inkStrong</span><span class="t"><span style="font-size:32px;line-height:1.25;font-weight:400;color:var(--sw-inkStrong)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×1</span></div>
+<div class="type-row" data-sig="bb32cd9a3a 1248f0e62f 74a491ed1a"><span class="meta">heading · 28/700<br>--sw-primary</span><span class="t"><span style="font-size:28px;line-height:1.25;font-weight:700;color:var(--sw-primary)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">3 pattern · ×20</span></div>
+<div class="type-row" data-sig="cc066e4151"><span class="meta">heading · 28/700<br>--sw-onPrimary</span><span class="t" style="background:var(--sw-primaryDeep);padding:4px 8px"><span style="font-size:28px;line-height:1.25;font-weight:700;color:var(--sw-onPrimary)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×1</span></div>
+<div class="type-row" data-sig="038c325d11"><span class="meta">heading · 28/700<br>--sw-inkStrong</span><span class="t"><span style="font-size:28px;line-height:1.25;font-weight:700;color:var(--sw-inkStrong)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×1</span></div>
+<div class="type-row" data-sig="bcfd3dcc93"><span class="meta">heading · 28/500<br>--sw-onPrimary</span><span class="t" style="background:var(--sw-primaryDeep);padding:4px 8px"><span style="font-size:28px;line-height:1.25;font-weight:500;color:var(--sw-onPrimary)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×1</span></div>
+<div class="type-row" data-sig="6f2d5ad812"><span class="meta">heading · 26/700<br>--sw-primary</span><span class="t"><span style="font-size:26px;line-height:1.25;font-weight:700;color:var(--sw-primary)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×1</span></div>
+<div class="type-row" data-sig="c0e2aeec69"><span class="meta">heading · 24/700<br>--sw-mutedAlt</span><span class="t"><span style="font-size:24px;line-height:1.25;font-weight:700;color:var(--sw-mutedAlt)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×120</span></div>
+<div class="type-row" data-sig="97254e42c2"><span class="meta">heading · 24/700<br>--sw-inkStrong</span><span class="t"><span style="font-size:24px;line-height:1.25;font-weight:700;color:var(--sw-inkStrong)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×115</span></div>
+<div class="type-row" data-sig="16d90bae2b 8d929e101b"><span class="meta">heading · 24/700<br>--sw-primary</span><span class="t"><span style="font-size:24px;line-height:1.25;font-weight:700;color:var(--sw-primary)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">2 pattern · ×16</span></div>
+<div class="type-row" data-sig="439e0774fc"><span class="meta">heading · 24/500<br>--sw-primary</span><span class="t"><span style="font-size:24px;line-height:1.25;font-weight:500;color:var(--sw-primary)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×1</span></div>
+<div class="type-row" data-sig="f581ded99c"><span class="meta">heading · 23/700<br>--sw-accent</span><span class="t" style="background:var(--sw-primaryDeep);padding:4px 8px"><span style="font-size:23px;line-height:1.25;font-weight:700;color:var(--sw-accent)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×9</span></div>
+<div class="type-row" data-sig="e03d1c6dc2"><span class="meta">heading · 23/700<br>--sw-primary</span><span class="t"><span style="font-size:23px;line-height:1.25;font-weight:700;color:var(--sw-primary)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×5</span></div>
+<div class="type-row" data-sig="62c542def8"><span class="meta">heading · 23/700<br>--sw-inkStrong</span><span class="t"><span style="font-size:23px;line-height:1.25;font-weight:700;color:var(--sw-inkStrong)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×2</span></div>
+<div class="type-row" data-sig="3cd265d689"><span class="meta">heading · 22/700<br>--sw-onPrimary</span><span class="t" style="background:var(--sw-primaryDeep);padding:4px 8px"><span style="font-size:22px;line-height:1.25;font-weight:700;color:var(--sw-onPrimary)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×1</span></div>
+<div class="type-row" data-sig="6795e84d8e"><span class="meta">heading · 22/700<br>--sw-inkStrong</span><span class="t"><span style="font-size:22px;line-height:1.25;font-weight:700;color:var(--sw-inkStrong)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×1</span></div>
+<div class="type-row" data-sig="cd57f05238"><span class="meta">heading · 22/700<br>--sw-primary</span><span class="t"><span style="font-size:22px;line-height:1.25;font-weight:700;color:var(--sw-primary)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×1</span></div>
+<div class="type-row" data-sig="8143cd078b"><span class="meta">heading · 22/400<br>--sw-primaryDeep</span><span class="t"><span style="font-size:22px;line-height:1.25;font-weight:400;color:var(--sw-primaryDeep)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×12</span></div>
+<div class="type-row" data-sig="4e4365fa1b"><span class="meta">text · 21/400<br>--sw-onPrimary</span><span class="t" style="background:var(--sw-primaryDeep);padding:4px 8px"><span style="font-size:21px;line-height:1.25;font-weight:400;color:var(--sw-onPrimary)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×1</span></div>
+<div class="type-row" data-sig="1be64bdc1a 7f1880e96d 7874cdd7e3"><span class="meta">heading · 20/700<br>--sw-primary</span><span class="t"><span style="font-size:20px;line-height:1.25;font-weight:700;color:var(--sw-primary)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">3 pattern · ×5</span></div>
+<div class="type-row" data-sig="e079cdebdf"><span class="meta">heading · 20/700<br>--sw-inkStrong</span><span class="t"><span style="font-size:20px;line-height:1.25;font-weight:700;color:var(--sw-inkStrong)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×3</span></div>
+<div class="type-row" data-sig="e104245b52"><span class="meta">heading · 20/500<br>--sw-inkStrong</span><span class="t"><span style="font-size:20px;line-height:1.25;font-weight:500;color:var(--sw-inkStrong)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×16</span></div>
+<div class="type-row" data-sig="d1b31d2d59 ca95049a3e"><span class="meta">heading/text · 20/400<br>--sw-inkStrong</span><span class="t"><span style="font-size:20px;line-height:1.25;font-weight:400;color:var(--sw-inkStrong)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">2 pattern · ×2</span></div>
+<div class="type-row" data-sig="243b68dcbd"><span class="meta">text · 20/400<br>--sw-muted</span><span class="t"><span style="font-size:20px;line-height:1.25;font-weight:400;color:var(--sw-muted)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×2</span></div>
+<div class="type-row" data-sig="c72913a0d7"><span class="meta">text · 20/400<br>--sw-primary</span><span class="t"><span style="font-size:20px;line-height:1.25;font-weight:400;color:var(--sw-primary)">Bay giá thấp, hành lý thân thiện</span></span><span class="meta">1 pattern · ×1</span></div>
+<div class="type-row" data-sig="1b004a4a2f"><span class="meta">text · 19/400<br>--sw-inkStrong</span><span class="t"><span style="font-size:19px;line-height:1.25;font-weight:400;color:var(--sw-inkStrong)">Đặt vé, đổi chuyến và tích điểm thưởng cho mỗi lần bay.</span></span><span class="meta">1 pattern · ×4</span></div>
+<div class="type-row" data-sig="a7a0f99c18 262d25d315"><span class="meta">heading/text · 18/700<br>--sw-inkStrong</span><span class="t"><span style="font-size:18px;line-height:1.25;font-weight:700;color:var(--sw-inkStrong)">Đặt vé, đổi chuyến và tích điểm thưởng cho mỗi lần bay.</span></span><span class="meta">2 pattern · ×4</span></div>
+<div class="type-row" data-sig="5f7b9e205a"><span class="meta">text · 18/700<br>--sw-primaryDeep</span><span class="t"><span style="font-size:18px;line-height:1.25;font-weight:700;color:var(--sw-primaryDeep)">Đặt vé, đổi chuyến và tích điểm thưởng cho mỗi lần bay.</span></span><span class="meta">1 pattern · ×4</span></div>
+<div class="type-row" data-sig="5af7a7fc10"><span class="meta">heading · 18/500<br>--sw-inkStrong</span><span class="t"><span style="font-size:18px;line-height:1.25;font-weight:500;color:var(--sw-inkStrong)">Đặt vé, đổi chuyến và tích điểm thưởng cho mỗi lần bay.</span></span><span class="meta">1 pattern · ×8</span></div>
+<div class="type-row" data-sig="4ba1228863"><span class="meta">text · 18/500<br>--sw-onPrimary</span><span class="t" style="background:var(--sw-primaryDeep);padding:4px 8px"><span style="font-size:18px;line-height:1.25;font-weight:500;color:var(--sw-onPrimary)">Đặt vé, đổi chuyến và tích điểm thưởng cho mỗi lần bay.</span></span><span class="meta">1 pattern · ×15</span></div>
+<div class="type-row" data-sig="7ef5747e10"><span class="meta">heading · 18/400<br>--sw-primaryDeep</span><span class="t"><span style="font-size:18px;line-height:1.25;font-weight:400;color:var(--sw-primaryDeep)">Đặt vé, đổi chuyến và tích điểm thưởng cho mỗi lần bay.</span></span><span class="meta">1 pattern · ×1</span></div>
+<div class="type-row" data-sig="316656ce60"><span class="meta">text · 18/400<br>--sw-legacyText</span><span class="t"><span style="font-size:18px;line-height:1.25;font-weight:400;color:var(--sw-legacyText)">Đặt vé, đổi chuyến và tích điểm thưởng cho mỗi lần bay.</span></span><span class="meta">1 pattern · ×32</span></div>
+<div class="type-row" data-sig="af8acb2c02"><span class="meta">text · 18/400<br>--sw-ink</span><span class="t"><span style="font-size:18px;line-height:1.25;font-weight:400;color:var(--sw-ink)">Đặt vé, đổi chuyến và tích điểm thưởng cho mỗi lần bay.</span></span><span class="meta">1 pattern · ×12</span></div>
+<div class="type-row" data-sig="4383d0de69 26d98f70e0 eb2632fba8"><span class="meta">text · 18/400<br>--sw-onPrimary</span><span class="t" style="background:var(--sw-primaryDeep);padding:4px 8px"><span style="font-size:18px;line-height:1.25;font-weight:400;color:var(--sw-onPrimary)">Đặt vé, đổi chuyến và tích điểm thưởng cho mỗi lần bay.</span></span><span class="meta">3 pattern · ×8</span></div>
+<div class="type-row" data-sig="d7b7233cba"><span class="meta">text · 18/400<br>--sw-inkStrong</span><span class="t"><span style="font-size:18px;line-height:1.25;font-weight:400;color:var(--sw-inkStrong)">Đặt vé, đổi chuyến và tích điểm thưởng cho mỗi lần bay.</span></span><span class="meta">1 pattern · ×2</span></div>
+<div class="type-row" data-sig="abc9e376f3"><span class="meta">text · 18/400<br>--sw-primary</span><span class="t"><span style="font-size:18px;line-height:1.25;font-weight:400;color:var(--sw-primary)">Đặt vé, đổi chuyến và tích điểm thưởng cho mỗi lần bay.</span></span><span class="meta">1 pattern · ×1</span></div>
+<div class="type-row" data-sig="68bf8f20ab"><span class="meta">text · 17/400<br>--sw-primaryDeep</span><span class="t"><span style="font-size:17px;line-height:1.25;font-weight:400;color:var(--sw-primaryDeep)">Đặt vé, đổi chuyến và tích điểm thưởng cho mỗi lần bay.</span></span><span class="meta">1 pattern · ×1</span></div>
+<div class="type-row" data-sig="2681ccfe12"><span class="meta">heading · 16/700<br>--sw-primary</span><span class="t"><span style="font-size:16px;line-height:1.25;font-weight:700;color:var(--sw-primary)">Đặt vé, đổi chuyến và tích điểm thưởng cho mỗi lần bay.</span></span><span class="meta">1 pattern · ×2</span></div>
+<div class="type-row" data-sig="9aa09f222d"><span class="meta">text · 16/700<br>--sw-legacyText</span><span class="t"><span style="font-size:16px;line-height:1.25;font-weight:700;color:var(--sw-legacyText)">Đặt vé, đổi chuyến và tích điểm thưởng cho mỗi lần bay.</span></span><span class="meta">1 pattern · ×3</span></div>
+<div class="type-row" data-sig="0187cf22b1 b6d6d6397b 6fd2067820"><span class="meta">heading/text · 16/400<br>--sw-primary</span><span class="t"><span style="font-size:16px;line-height:1.25;font-weight:400;color:var(--sw-primary)">Đặt vé, đổi chuyến và tích điểm thưởng cho mỗi lần bay.</span></span><span class="meta">3 pattern · ×6</span></div>
+<div class="type-row" data-sig="5ad9fc3fc5"><span class="meta">text · 16/400<br>--sw-muted</span><span class="t"><span style="font-size:16px;line-height:1.25;font-weight:400;color:var(--sw-muted)">Đặt vé, đổi chuyến và tích điểm thưởng cho mỗi lần bay.</span></span><span class="meta">1 pattern · ×35</span></div>
+<div class="type-row" data-sig="e4035f0e23 d7071806c3"><span class="meta">text · 16/400<br>--sw-ink</span><span class="t"><span style="font-size:16px;line-height:1.25;font-weight:400;color:var(--sw-ink)">Đặt vé, đổi chuyến và tích điểm thưởng cho mỗi lần bay.</span></span><span class="meta">2 pattern · ×19</span></div>
+<div class="type-row" data-sig="f2f8488c57"><span class="meta">text · 16/400<br>--sw-textSoft</span><span class="t"><span style="font-size:16px;line-height:1.25;font-weight:400;color:var(--sw-textSoft)">Đặt vé, đổi chuyến và tích điểm thưởng cho mỗi lần bay.</span></span><span class="meta">1 pattern · ×16</span></div>
+<div class="type-row" data-sig="82669aae8c"><span class="meta">text · 16/400<br>--sw-legacyText</span><span class="t"><span style="font-size:16px;line-height:1.25;font-weight:400;color:var(--sw-legacyText)">Đặt vé, đổi chuyến và tích điểm thưởng cho mỗi lần bay.</span></span><span class="meta">1 pattern · ×7</span></div>
+<div class="type-row" data-sig="3d4a0a961a 6cec4952a4 91b2f5bd37 195e652a9e"><span class="meta">text · 16/400<br>--sw-inkStrong</span><span class="t"><span style="font-size:16px;line-height:1.25;font-weight:400;color:var(--sw-inkStrong)">Đặt vé, đổi chuyến và tích điểm thưởng cho mỗi lần bay.</span></span><span class="meta">4 pattern · ×13</span></div>
+<div class="type-row" data-sig="60ccd2efba"><span class="meta">text · 16/400<br>--sw-onPrimary</span><span class="t" style="background:var(--sw-primaryDeep);padding:4px 8px"><span style="font-size:16px;line-height:1.25;font-weight:400;color:var(--sw-onPrimary)">Đặt vé, đổi chuyến và tích điểm thưởng cho mỗi lần bay.</span></span><span class="meta">1 pattern · ×1</span></div>
+<div class="type-row" data-sig="19461819c3"><span class="meta">text · 16/400<br>--sw-mutedAlt</span><span class="t"><span style="font-size:16px;line-height:1.25;font-weight:400;color:var(--sw-mutedAlt)">Đặt vé, đổi chuyến và tích điểm thưởng cho mỗi lần bay.</span></span><span class="meta">1 pattern · ×1</span></div>
+<div class="type-row" data-sig="145b56d662"><span class="meta">text · 15/400<br>--sw-inkStrong</span><span class="t"><span style="font-size:15px;line-height:1.25;font-weight:400;color:var(--sw-inkStrong)">Đặt vé, đổi chuyến và tích điểm thưởng cho mỗi lần bay.</span></span><span class="meta">1 pattern · ×1</span></div>
+<div class="type-row" data-sig="edfd52b183"><span class="meta">text · 14/700<br>--sw-textDark</span><span class="t"><span style="font-size:14px;line-height:1.25;font-weight:700;color:var(--sw-textDark)">Đặt vé, đổi chuyến và tích điểm thưởng cho mỗi lần bay.</span></span><span class="meta">1 pattern · ×8</span></div>
+<div class="type-row" data-sig="860f6778e6"><span class="meta">heading · 14/500<br>--sw-inkStrong</span><span class="t"><span style="font-size:14px;line-height:1.25;font-weight:500;color:var(--sw-inkStrong)">Đặt vé, đổi chuyến và tích điểm thưởng cho mỗi lần bay.</span></span><span class="meta">1 pattern · ×2</span></div>
+<div class="type-row" data-sig="4335259019 97769b51ed 9a8a840d8d"><span class="meta">text · 14/400<br>--sw-inkStrong</span><span class="t"><span style="font-size:14px;line-height:1.25;font-weight:400;color:var(--sw-inkStrong)">Đặt vé, đổi chuyến và tích điểm thưởng cho mỗi lần bay.</span></span><span class="meta">3 pattern · ×7</span></div>
+<div class="type-row" data-sig="07abed887f"><span class="meta">text · 14/400<br>--sw-primary</span><span class="t"><span style="font-size:14px;line-height:1.25;font-weight:400;color:var(--sw-primary)">Đặt vé, đổi chuyến và tích điểm thưởng cho mỗi lần bay.</span></span><span class="meta">1 pattern · ×1</span></div>
+<div class="type-row" data-sig="2c0e40251a"><span class="meta">text · 13/400<br>--sw-textSoft</span><span class="t"><span style="font-size:13px;line-height:1.25;font-weight:400;color:var(--sw-textSoft)">Đặt vé, đổi chuyến và tích điểm thưởng cho mỗi lần bay.</span></span><span class="meta">1 pattern · ×1</span></div>
+<div class="type-row" data-sig="d342250a55"><span class="meta">text · 12/400<br>--sw-inkStrong</span><span class="t"><span style="font-size:12px;line-height:1.25;font-weight:400;color:var(--sw-inkStrong)">Đặt vé, đổi chuyến và tích điểm thưởng cho mỗi lần bay.</span></span><span class="meta">1 pattern · ×28</span></div>
+<div class="type-row" data-sig="853f713299"><span class="meta">text · 12/400<br>--sw-ink</span><span class="t"><span style="font-size:12px;line-height:1.25;font-weight:400;color:var(--sw-ink)">Đặt vé, đổi chuyến và tích điểm thưởng cho mỗi lần bay.</span></span><span class="meta">1 pattern · ×2</span></div>
+<div class="type-row" data-sig="f4e7f88a54"><span class="meta">text · 12/400<br>--sw-muted</span><span class="t"><span style="font-size:12px;line-height:1.25;font-weight:400;color:var(--sw-muted)">Đặt vé, đổi chuyến và tích điểm thưởng cho mỗi lần bay.</span></span><span class="meta">1 pattern · ×2</span></div>
+<div class="type-row" data-sig="02a2c0fe1d"><span class="meta">text · 12/400<br>--sw-legacyText</span><span class="t"><span style="font-size:12px;line-height:1.25;font-weight:400;color:var(--sw-legacyText)">Đặt vé, đổi chuyến và tích điểm thưởng cho mỗi lần bay.</span></span><span class="meta">1 pattern · ×1</span></div>
+<div class="type-row" data-sig="a9b5d679d2"><span class="meta">text · 12/400<br>--sw-textSoft</span><span class="t"><span style="font-size:12px;line-height:1.25;font-weight:400;color:var(--sw-textSoft)">Đặt vé, đổi chuyến và tích điểm thưởng cho mỗi lần bay.</span></span><span class="meta">1 pattern · ×1</span></div>
+<div class="type-row" data-sig="ac873eb943"><span class="meta">text · 11/400<br>--sw-inkStrong</span><span class="t"><span style="font-size:11px;line-height:1.25;font-weight:400;color:var(--sw-inkStrong)">Đặt vé, đổi chuyến và tích điểm thưởng cho mỗi lần bay.</span></span><span class="meta">1 pattern · ×9</span></div>
+<div class="type-row" data-sig="d87151dc1b"><span class="meta">text · 11/400<br>--sw-onPrimary</span><span class="t" style="background:var(--sw-primaryDeep);padding:4px 8px"><span style="font-size:11px;line-height:1.25;font-weight:400;color:var(--sw-onPrimary)">Đặt vé, đổi chuyến và tích điểm thưởng cho mỗi lần bay.</span></span><span class="meta">1 pattern · ×2</span></div>
+      </div></div>
+    </section>
+
+    <section class="block" id="shape">
+      <header><h2>Bo góc &amp; bóng</h2><p>Site gần như vuông: 583/690 phần tử ở trang chủ bo 0, nút và ô nhập bo 2px. Bo tròn chỉ có ở viên thuốc lọc (116px) và chấm/marker (50%). Không có thang shape để đổi nên kit không có nút Shape.</p></header>
+      <div class="spec"><div class="stage" id="shapes" style="gap:28px"></div>
+        <div class="stage" style="gap:28px;padding-top:0">
+          <div class="shape-cell"><i style="background:var(--sw-surface);box-shadow:var(--shadow-low)"></i>low-box-shadow<br>thẻ đặt vé</div>
+          <div class="shape-cell"><i style="background:var(--sw-surface);box-shadow:var(--shadow-card)"></i>card<br>thẻ điểm đến · deal</div>
+          <div class="shape-cell"><i style="background:var(--sw-surface);box-shadow:0 4px 20px color-mix(in srgb,var(--sw-primary) 20%,transparent)"></i>hover thẻ bản đồ<br>0 4 20 primary 20%</div>
+        </div></div>
+    </section>
+
+    <section class="block" id="layout">
+      <header><h2>Bố cục &amp; kích thước</h2><p>Số đo ở viewport 1440 × 900 (desktop) và 390 × 844 (mobile), lấy bằng <code>getBoundingClientRect</code>.</p></header>
+      <div class="grid">
+        <div class="spec"><div class="stage col tbl"><table class="tok">
+          <tr><th>Phần tử</th><th>Cao</th><th>Ghi chú</th></tr>
+          <tr><td>header desktop</td><td>106</td><td>hàng trên 62 + hàng nav 44</td></tr>
+          <tr><td>tab sản phẩm</td><td>56</td><td>5 tab × 118 trong khung 592</td></tr>
+          <tr><td>ô nhập</td><td>48</td><td>padding 4 8 3 · viền 1 #ccc · bo 2</td></tr>
+          <tr><td>nút chính</td><td>48</td><td>Search flights 260 · Book now 112</td></tr>
+          <tr><td>nút header</td><td>40</td><td>Log in 97</td></tr>
+          <tr><td>select trigger</td><td>32–34</td><td>padding 4 0 4 16</td></tr>
+          <tr><td>viên thuốc lọc</td><td>44</td><td>bo 116 · khung nền 80</td></tr>
+          <tr><td>ô lịch</td><td>40 × 40</td><td>7 cột · 2 tháng cạnh nhau</td></tr>
+          <tr><td>dòng FAQ</td><td>48</td><td>15px · viền dưới</td></tr>
+        </table></div></div>
+        <div class="spec"><div class="stage col tbl"><table class="tok">
+          <tr><th>Khung</th><th>Giá trị</th></tr>
+          <tr><td>viewport desktop</td><td>1440 × 900</td></tr>
+          <tr><td>khung nội dung</td><td>1215 (lề 112)</td></tr>
+          <tr><td>khung bài (bootstrap)</td><td>1211 / 1241</td></tr>
+          <tr><td>widget đặt vé</td><td>592 · padding 20 32</td></tr>
+          <tr><td>cột footer</td><td>4 × 268</td></tr>
+          <tr><td>viewport mobile</td><td>390 × 844 · lề 16</td></tr>
+          <tr><td>thẻ điểm đến</td><td>388 × 499 · ảnh 290</td></tr>
+          <tr><td>hero vacations</td><td>28rem · lề thêm 5rem (biến site)</td></tr>
+        </table></div></div>
+      </div>
+    </section>
+
+    <!-- ================= HÀNH ĐỘNG ================= -->
+    <section class="block" id="actions">
+      <header><h2>Hành động</h2><p>Nút vàng là hành động chính duy nhất trên mỗi khu. Nút phụ là viền primary trên nền trắng. Site có hai thế hệ nút: <code>customer-button-*</code> mới (cao 48/40, chữ 16) và <code>swa-button</code> cũ (cao 35, chữ 14, viền vàng 2px).</p></header>
+      <div class="grid">
+        <div class="spec" data-sig="5162fb1e5a 14529e9008 4be5bac77d 0431ff4d32 11e2da147b bd85ec9273" data-fam="btn-primary">
+          <div class="spec-h"><b>Nút chính</b><span class="kind">customer-button-primary · swa-button_primary</span><span class="dp">48 / 40 · r2</span></div>
+          <div class="stage">
+            <button class="sw-btn sw-btn--primary">Search flights</button>
+            <button class="sw-btn sw-btn--primary sm"><span class="ms fill">person</span>Log in</button>
+            <button class="sw-btn sw-btn--primary lg">Search</button>
+            <button class="sw-btn sw-btn--legacy">Learn more</button>
+          </div>
+          <div class="states"><div class="st-h">Trạng thái đo được (ép :hover / :focus-visible / :active qua CDP)</div><div class="st-cell" data-sig-state="5162fb1e5a:hover 14529e9008:hover 11e2da147b:hover"><div class="st-demo"><button class="sw-btn sw-btn--primary sm st-b-ink">Book now</button></div><span class="st-tag">hover</span><span class="st-say">viền navy · 3 pattern</span></div><div class="st-cell" data-sig-state="4be5bac77d:hover"><div class="st-demo"><button class="sw-btn sw-btn--primary sm st-ul">Book now</button></div><span class="st-tag">hover</span><span class="st-say">gạch chân · 1 pattern</span></div><div class="st-cell" data-sig-state="11e2da147b:focus"><div class="st-demo"><button class="sw-btn sw-btn--primary sm st-b-ink">Book now</button></div><span class="st-tag">focus</span><span class="st-say">viền navy · 1 pattern</span></div><div class="st-cell" data-sig-state="0431ff4d32:focus"><div class="st-demo"><button class="sw-btn sw-btn--primary sm st-glow-legacy">Book now</button></div><span class="st-tag">focus</span><span class="st-say">quầng xanh Bootstrap · 1 pattern</span></div><div class="st-cell" data-sig-state="4be5bac77d:focus bd85ec9273:focus"><div class="st-demo"><button class="sw-btn sw-btn--primary sm st-ua">Book now</button></div><span class="st-tag">focus</span><span class="st-say">viền mặc định trình duyệt (site không style riêng) · 2 pattern</span></div><div class="st-cell" data-sig-state="5162fb1e5a:focus 14529e9008:focus"><div class="st-demo"><button class="sw-btn sw-btn--primary sm st-ul st-b-ink">Book now</button></div><span class="st-tag">focus</span><span class="st-say">gạch chân · viền navy · 2 pattern</span></div><div class="st-cell" data-sig-state="5162fb1e5a:active"><div class="st-demo"><button class="sw-btn sw-btn--primary sm st-b-ink">Book now</button></div><span class="st-tag">active</span><span class="st-say">viền navy · 1 pattern</span></div><div class="st-cell" data-sig-state="0431ff4d32:active"><div class="st-demo on-dark"><button class="sw-btn sw-btn--primary sm st-c-white st-bg-legacy">Book now</button></div><span class="st-tag">active</span><span class="st-say">chữ trắng · nền xanh Bootstrap · 1 pattern</span></div></div>
+          <div class="spec-f"><span class="note">Chữ trong nút đậm 700 (span con), nút đo ra 400. Hover chỉ đổi viền sang navy, nền giữ vàng.</span></div>
+        </div>
+
+        <div class="spec" data-sig="264d1ad65d 85f5a68719 9e26816e2f 301599ec65 82d5f9bb70 15aa1e5580 6c1ccf7f75 10a3b001c5 c48313474b 0ec35fe818 9124f7b316" data-fam="btn-secondary">
+          <div class="spec-h"><b>Nút phụ</b><span class="kind">customer-button-secondary · swa-button_secondary</span><span class="dp">48 / 36</span></div>
+          <div class="stage">
+            <button class="sw-btn sw-btn--secondary">Manage my flight</button>
+            <button class="sw-btn sw-btn--outline-ink">Explore Dallas</button>
+            <button class="sw-btn sw-btn--secondary sm" style="font-weight:700">Sign up now</button>
+          </div>
+          <div class="states"><div class="st-h">Trạng thái đo được (ép :hover / :focus-visible / :active qua CDP)</div><div class="st-cell" data-sig-state="82d5f9bb70:hover"><div class="st-demo"><button class="sw-btn sw-btn--secondary sm st-b-ink st-c-ink">View more</button></div><span class="st-tag">hover</span><span class="st-say">viền navy · chữ navy · 1 pattern</span></div><div class="st-cell" data-sig-state="264d1ad65d:hover 6c1ccf7f75:hover"><div class="st-demo"><button class="sw-btn sw-btn--secondary sm st-bg-soft">View more</button></div><span class="st-tag">hover</span><span class="st-say">nền #f5f5f5 · 2 pattern</span></div><div class="st-cell" data-sig-state="15aa1e5580:hover"><div class="st-demo on-dark"><button class="sw-btn sw-btn--secondary sm st-c-white st-bg-primary">View more</button></div><span class="st-tag">hover</span><span class="st-say">chữ trắng · nền primary · 1 pattern</span></div><div class="st-cell" data-sig-state="10a3b001c5:hover c48313474b:hover"><div class="st-demo"><button class="sw-btn sw-btn--secondary sm st-ul">View more</button></div><span class="st-tag">hover</span><span class="st-say">gạch chân · 2 pattern</span></div><div class="st-cell" data-sig-state="9e26816e2f:hover"><div class="st-demo"><button class="sw-btn sw-btn--secondary sm st-ul st-bg-ink20">View more</button></div><span class="st-tag">hover</span><span class="st-say">gạch chân · nền navy 20% · 1 pattern</span></div><div class="st-cell" data-sig-state="301599ec65:hover 9124f7b316:hover"><div class="st-demo"><button class="sw-btn sw-btn--secondary sm st-ul st-c-legacy">View more</button></div><span class="st-tag">hover</span><span class="st-say">gạch chân · chữ #0056b3 · 2 pattern</span></div><div class="st-cell" data-sig-state="82d5f9bb70:focus"><div class="st-demo"><button class="sw-btn sw-btn--secondary sm st-b-ink st-c-ink">View more</button></div><span class="st-tag">focus</span><span class="st-say">viền navy · chữ navy · 1 pattern</span></div><div class="st-cell" data-sig-state="301599ec65:focus 9124f7b316:focus"><div class="st-demo"><button class="sw-btn sw-btn--secondary sm st-b-yellow">View more</button></div><span class="st-tag">focus</span><span class="st-say">viền trên vàng 2px · 2 pattern</span></div><div class="st-cell" data-sig-state="15aa1e5580:focus"><div class="st-demo"><button class="sw-btn sw-btn--secondary sm st-none">View more</button></div><span class="st-tag">focus</span><span class="st-say">không đổi thấy được (site tắt viền: outline 0 / trong suốt) · 1 pattern</span></div><div class="st-cell" data-sig-state="264d1ad65d:focus 85f5a68719:focus 6c1ccf7f75:focus 10a3b001c5:focus c48313474b:focus 0ec35fe818:focus"><div class="st-demo"><button class="sw-btn sw-btn--secondary sm st-ua">View more</button></div><span class="st-tag">focus</span><span class="st-say">viền mặc định trình duyệt (site không style riêng) · 6 pattern</span></div><div class="st-cell" data-sig-state="9e26816e2f:focus"><div class="st-demo"><button class="sw-btn sw-btn--secondary sm st-ul st-ring st-b-ink st-bg-ink20">View more</button></div><span class="st-tag">focus</span><span class="st-say">gạch chân · viền trong navy 1px · viền navy · nền navy 20% · 1 pattern</span></div><div class="st-cell" data-sig-state="9e26816e2f:active"><div class="st-demo"><button class="sw-btn sw-btn--secondary sm st-ul st-b-ink st-bg-ink20">View more</button></div><span class="st-tag">active</span><span class="st-say">gạch chân · viền navy · nền navy 20% · 1 pattern</span></div></div>
+          <div class="spec-f"><span class="note">Hover của thế hệ mới: nền navy 20% + viền navy + gạch chân. Bản cũ chỉ đổi nền xám nhạt.</span></div>
+        </div>
+
+        <div class="spec">
+          <div class="spec-h"><b>Nút tắt &amp; nút tối</b><span class="kind">Buttonstyles__StyledButton · ListViewButton</span><span class="dp">60 / 40</span></div>
+          <div class="stage">
+            <button class="sw-btn sw-btn--disabled lg" disabled style="width:220px">Find flights</button>
+            <button class="sw-btn sw-btn--dark"><span class="ms">list</span>View List</button>
+            <button class="sw-btn sw-btn--dark"><span class="ms fill">info</span>Map Legend</button>
+          </div>
+          <div class="spec-f"><span class="note">Nút tắt nền #ccc chữ trắng (bản đồ tuyến, khi chưa chọn sân bay). Nút tối navy chỉ có trên bản đồ.</span></div>
+        </div>
+
+        <div class="spec" data-sig="aaaeebf262 3d0acfccc9 f5b2c99a91 995d6b44c6 d494c7efc1" data-fam="iconbtn">
+          <div class="spec-h"><b>Nút icon</b><span class="kind">switcherooButton · reverseButton · passMouseEvents</span><span class="dp">44×34 · 20</span></div>
+          <div class="stage">
+            <button class="sw-iconbtn" aria-label="Đổi chiều đi/đến"><span class="ms">swap_horiz</span></button>
+            <button class="sw-iconbtn" aria-label="Đảo ngược"><span class="ms">sync_alt</span></button>
+            <button class="sw-iconbtn info" aria-label="Thông tin"><span class="ms">info</span></button>
+          </div>
+          <div class="states"><div class="st-h">Trạng thái đo được (ép :hover / :focus-visible / :active qua CDP)</div><div class="st-cell" data-sig-state="995d6b44c6:hover d494c7efc1:hover"><div class="st-demo"><button class="sw-iconbtn st-b-primary" aria-label="Đổi chiều"><span class="ms">swap_horiz</span></button></div><span class="st-tag">hover</span><span class="st-say">viền primary · 2 pattern</span></div><div class="st-cell" data-sig-state="995d6b44c6:focus d494c7efc1:focus"><div class="st-demo"><button class="sw-iconbtn st-b-primary" aria-label="Đổi chiều"><span class="ms">swap_horiz</span></button></div><span class="st-tag">focus</span><span class="st-say">viền primary · 2 pattern</span></div><div class="st-cell" data-sig-state="aaaeebf262:focus 3d0acfccc9:focus f5b2c99a91:focus"><div class="st-demo"><button class="sw-iconbtn st-none" aria-label="Đổi chiều"><span class="ms">swap_horiz</span></button></div><span class="st-tag">focus</span><span class="st-say">không đổi thấy được (site tắt viền: outline 0 / trong suốt) · 3 pattern</span></div></div>
+        </div>
+
+        <div class="spec" data-sig="19a7be2ad2 a214beef16" data-fam="carousel">
+          <div class="spec-h"><b>Nút cuộn băng chuyền</b><span class="kind">horizontalGestureScrollerButton · keyboard_arrow_*</span><span class="dp">34 · 50%</span></div>
+          <div class="stage">
+            <button class="sw-circle" aria-label="Trước"><span class="ms">chevron_left</span></button>
+            <button class="sw-circle on" aria-label="Sau"><span class="ms">chevron_right</span></button>
+            <button class="sw-circle ring" aria-label="Sau"><span class="ms" style="font-size:20px">chevron_right</span></button>
+          </div>
+          <div class="states"><div class="st-h">Trạng thái đo được (ép :hover / :focus-visible / :active qua CDP)</div><div class="st-cell" data-sig-state="a214beef16:hover"><div class="st-demo on-dark"><button class="sw-circle on st-c-white st-bg-grey" aria-label="Sau"><span class="ms">chevron_right</span></button></div><span class="st-tag">hover</span><span class="st-say">chữ trắng · nền #757575 · 1 pattern</span></div><div class="st-cell" data-sig-state="a214beef16:focus"><div class="st-demo on-dark"><button class="sw-circle on st-c-white st-bg-grey" aria-label="Sau"><span class="ms">chevron_right</span></button></div><span class="st-tag">focus</span><span class="st-say">chữ trắng · nền #757575 · 1 pattern</span></div><div class="st-cell" data-sig-state="19a7be2ad2:focus"><div class="st-demo"><button class="sw-circle on st-none" aria-label="Sau"><span class="ms">chevron_right</span></button></div><span class="st-tag">focus</span><span class="st-say">không đổi thấy được (site tắt viền: outline 0 / trong suốt) · 1 pattern</span></div></div>
+          <div class="spec-f"><span class="note">Xám = hết trang, vàng = còn trang (lịch giá vé). Bản viền primary nằm trong băng chuyền Vacations.</span></div>
+        </div>
+
+        <div class="spec" data-sig="fb187677ff 7a10fb951d" data-fam="promo">
+          <div class="spec-h"><b>Mở mã khuyến mãi</b><span class="kind">Use Promo Code</span><span class="dp">16 / 13</span></div>
+          <div class="stage"><button class="sw-link">Use Promo Code</button><button class="sw-link s13">Use Promo Code</button></div>
+          <div class="states"><div class="st-h">Trạng thái đo được (ép :hover / :focus-visible / :active qua CDP)</div><div class="st-cell" data-sig-state="fb187677ff:hover 7a10fb951d:hover"><div class="st-demo"><button class="sw-link st-ul">Use Promo Code</button></div><span class="st-tag">hover</span><span class="st-say">gạch chân · 2 pattern</span></div><div class="st-cell" data-sig-state="fb187677ff:focus 7a10fb951d:focus"><div class="st-demo"><button class="sw-link st-ul st-ring">Use Promo Code</button></div><span class="st-tag">focus</span><span class="st-say">gạch chân · viền trong navy 1px · 2 pattern</span></div><div class="st-cell" data-sig-state="fb187677ff:active 7a10fb951d:active"><div class="st-demo"><button class="sw-link st-ul">Use Promo Code</button></div><span class="st-tag">active</span><span class="st-say">gạch chân · 2 pattern</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= LIÊN KẾT ================= -->
+    <section class="block" id="links">
+      <header><h2>Liên kết</h2><p>Phần lớn nút trên site thực ra là liên kết <code>link__JmNX+</code>: chữ primary, không gạch chân lúc nghỉ, hover gạch chân, focus là viền trong navy 1px. Đây là pattern nhiều nhất site (×1348).</p></header>
+      <div class="grid">
+        <div class="spec" data-sig="7486cd7d11 ae1017f9a4 37cd0c17d8 bec8a5e2f9 2e841fdb9a 39f10d1f16 b22e548c14 1926b3c530 a66e1ea07d 961109cca2 45a6b2a74f f0c6b5b9ef bbd67cca29 faaec6c9cc aa2d87b534 2d35366916 d26b4a55b7 7fc0d75626 3344ac5bf1 51748530da" data-fam="link-ui">
+          <div class="spec-h"><b>Liên kết giao diện</b><span class="kind">link__JmNX+ showUnderline__1BIMA</span><span class="dp">16 · 14 · 13</span></div>
+          <div class="stage">
+            <button class="sw-link">What's New</button><button class="sw-link b">Help Center</button><button class="sw-link b s14">Create account</button><button class="sw-link s13">Español <span class="ms" style="font-size:16px">language</span></button><button class="sw-link ext">Press Room</button>
+          </div>
+          <div class="states"><div class="st-h">Trạng thái đo được (ép :hover / :focus-visible / :active qua CDP)</div><div class="st-cell" data-sig-state="b22e548c14:hover"><div class="st-demo"><button class="sw-link st-none">Travel Funds</button></div><span class="st-tag">hover</span><span class="st-say">không đổi thấy được (site tắt viền: outline 0 / trong suốt) · 1 pattern</span></div><div class="st-cell" data-sig-state="7486cd7d11:hover 37cd0c17d8:hover bec8a5e2f9:hover 2e841fdb9a:hover a66e1ea07d:hover 961109cca2:hover f0c6b5b9ef:hover bbd67cca29:hover faaec6c9cc:hover aa2d87b534:hover 2d35366916:hover 51748530da:hover"><div class="st-demo"><button class="sw-link st-ul">Travel Funds</button></div><span class="st-tag">hover</span><span class="st-say">gạch chân · 12 pattern</span></div><div class="st-cell" data-sig-state="ae1017f9a4:focus 39f10d1f16:focus b22e548c14:focus 1926b3c530:focus 45a6b2a74f:focus d26b4a55b7:focus 7fc0d75626:focus 3344ac5bf1:focus"><div class="st-demo"><button class="sw-link st-ring">Travel Funds</button></div><span class="st-tag">focus</span><span class="st-say">viền trong navy 1px · 8 pattern</span></div><div class="st-cell" data-sig-state="7486cd7d11:focus 37cd0c17d8:focus bec8a5e2f9:focus 2e841fdb9a:focus a66e1ea07d:focus 961109cca2:focus f0c6b5b9ef:focus bbd67cca29:focus faaec6c9cc:focus aa2d87b534:focus 2d35366916:focus 51748530da:focus"><div class="st-demo"><button class="sw-link st-ul st-ring">Travel Funds</button></div><span class="st-tag">focus</span><span class="st-say">gạch chân · viền trong navy 1px · 12 pattern</span></div><div class="st-cell" data-sig-state="ae1017f9a4:active"><div class="st-demo"><button class="sw-link st-none">Travel Funds</button></div><span class="st-tag">active</span><span class="st-say">không đổi thấy được (site tắt viền: outline 0 / trong suốt) · 1 pattern</span></div><div class="st-cell" data-sig-state="7486cd7d11:active 37cd0c17d8:active bec8a5e2f9:active 2e841fdb9a:active a66e1ea07d:active 961109cca2:active f0c6b5b9ef:active bbd67cca29:active faaec6c9cc:active aa2d87b534:active 2d35366916:active 51748530da:active"><div class="st-demo"><button class="sw-link st-ul">Travel Funds</button></div><span class="st-tag">active</span><span class="st-say">gạch chân · 12 pattern</span></div></div>
+        </div>
+        <div class="spec" data-sig="2266d7ed7d fb3935bd24 a9b7b3250e 3efd998055" data-fam="link-nav">
+          <div class="spec-h"><b>Liên kết menu chính</b><span class="kind">emphasis__Gzc1g menuItem__m3a3H</span><span class="dp">12 / 700 · hoa</span></div>
+          <div class="stage"><button class="sw-link nav">Flight | Hotel | Car | Vacations | Cruises</button><button class="sw-link nav">Special offers</button><button class="sw-link nav">Rapid Rewards®</button></div>
+          <div class="states"><div class="st-h">Trạng thái đo được (ép :hover / :focus-visible / :active qua CDP)</div><div class="st-cell" data-sig-state="2266d7ed7d:hover fb3935bd24:hover a9b7b3250e:hover 3efd998055:hover"><div class="st-demo"><button class="sw-link nav st-ul">Special offers</button></div><span class="st-tag">hover</span><span class="st-say">gạch chân · 4 pattern</span></div><div class="st-cell" data-sig-state="2266d7ed7d:focus fb3935bd24:focus a9b7b3250e:focus 3efd998055:focus"><div class="st-demo"><button class="sw-link nav st-ul st-ring">Special offers</button></div><span class="st-tag">focus</span><span class="st-say">gạch chân · viền trong navy 1px · 4 pattern</span></div><div class="st-cell" data-sig-state="2266d7ed7d:active fb3935bd24:active 3efd998055:active"><div class="st-demo"><button class="sw-link nav st-ul">Special offers</button></div><span class="st-tag">active</span><span class="st-say">gạch chân · 3 pattern</span></div></div>
+        </div>
+        <div class="spec" data-sig="84208ba217 7cb74bf01a" data-fam="link-heading">
+          <div class="spec-h"><b>Liên kết tiêu đề footer</b><span class="kind">emphasis__Gzc1g (footer h5)</span><span class="dp">24 / 700</span></div>
+          <div class="stage"><button class="sw-link h">About Southwest</button></div>
+          <div class="states"><div class="st-h">Trạng thái đo được (ép :hover / :focus-visible / :active qua CDP)</div><div class="st-cell" data-sig-state="84208ba217:hover 7cb74bf01a:hover"><div class="st-demo"><button class="sw-link h st-ul">Help Center</button></div><span class="st-tag">hover</span><span class="st-say">gạch chân · 2 pattern</span></div><div class="st-cell" data-sig-state="84208ba217:focus 7cb74bf01a:focus"><div class="st-demo"><button class="sw-link h st-ul st-ring">Help Center</button></div><span class="st-tag">focus</span><span class="st-say">gạch chân · viền trong navy 1px · 2 pattern</span></div><div class="st-cell" data-sig-state="84208ba217:active 7cb74bf01a:active"><div class="st-demo"><button class="sw-link h st-ul">Help Center</button></div><span class="st-tag">active</span><span class="st-say">gạch chân · 2 pattern</span></div></div>
+        </div>
+        <div class="spec" data-sig="87b7d11995" data-fam="link-dark">
+          <div class="spec-h"><b>Liên kết tối</b><span class="kind">dark__VOcUY</span><span class="dp">16 · navy</span></div>
+          <div class="stage"><button class="sw-link dark">Corporate and Volume sales</button></div>
+          <div class="states"><div class="st-h">Trạng thái đo được (ép :hover / :focus-visible / :active qua CDP)</div><div class="st-cell" data-sig-state="87b7d11995:hover"><div class="st-demo"><button class="sw-link dark st-ul">Corporate sales</button></div><span class="st-tag">hover</span><span class="st-say">gạch chân · 1 pattern</span></div><div class="st-cell" data-sig-state="87b7d11995:focus"><div class="st-demo"><button class="sw-link dark st-ul st-ring">Corporate sales</button></div><span class="st-tag">focus</span><span class="st-say">gạch chân · viền trong navy 1px · 1 pattern</span></div></div>
+        </div>
+        <div class="spec" data-sig="06fefcd9cd 5f19730f19 9fbe2f7ef4 f3a06eb72f 2f5806f5aa be10c4aa77 a993d694e9 6adf21563e 4f40118211 ef8b262a57 234b31b2f5 5f0ab315d3 fd2f32d28b 91945f59d2 f071b9f010 19db2e1b56 f7401eae94 4d6e781fb1 ecb6c4aab9 36144976f9 5ed0abd7c6 2b6c8c323d 0b900e4d54 7f715e9b4d 7dd0d35eb2 20d541c9ab bff5f1f9ca" data-fam="link-inline">
+          <div class="spec-h"><b>Liên kết trong đoạn</b><span class="kind">a (nội dung)</span><span class="dp">9 – 24</span></div>
+          <div class="stage col" style="gap:6px">
+            <span style="font-size:14px"><a class="sw-a" href="#links">Sign up</a> để nhận ưu đãi mới nhất.</span>
+            <span style="font-size:12px"><a class="sw-a" href="#links">Terms and Conditions</a> · <a class="sw-a" href="#links">Privacy Policy</a></span>
+            <span><a class="sw-a plain" href="#links">jdpower.com/awards</a> · <a class="sw-a ink" href="#links">Learn more</a></span>
+          </div>
+          <div class="states"><div class="st-h">Trạng thái đo được (ép :hover / :focus-visible / :active qua CDP)</div><div class="st-cell" data-sig-state="ef8b262a57:hover f7401eae94:hover"><div class="st-demo"><a class="sw-a plain st-b-ink st-c-ink" href="#links">Rapid Rewards®</a></div><span class="st-tag">hover</span><span class="st-say">viền navy · chữ navy · 2 pattern</span></div><div class="st-cell" data-sig-state="6adf21563e:hover 2b6c8c323d:hover 0b900e4d54:hover 7f715e9b4d:hover"><div class="st-demo"><a class="sw-a plain st-c-deep" href="#links">Rapid Rewards®</a></div><span class="st-tag">hover</span><span class="st-say">chữ primary-300 · 4 pattern</span></div><div class="st-cell" data-sig-state="be10c4aa77:hover"><div class="st-demo"><a class="sw-a plain st-c-legacy" href="#links">Rapid Rewards®</a></div><span class="st-tag">hover</span><span class="st-say">chữ #0056b3 · 1 pattern</span></div><div class="st-cell" data-sig-state="a993d694e9:hover 4f40118211:hover 234b31b2f5:hover f071b9f010:hover 36144976f9:hover bff5f1f9ca:hover"><div class="st-demo"><a class="sw-a plain st-ul" href="#links">Rapid Rewards®</a></div><span class="st-tag">hover</span><span class="st-say">gạch chân · 6 pattern</span></div><div class="st-cell" data-sig-state="9fbe2f7ef4:hover"><div class="st-demo"><a class="sw-a plain st-ul st-b-ink st-c-ink" href="#links">Rapid Rewards®</a></div><span class="st-tag">hover</span><span class="st-say">gạch chân · viền navy · chữ navy · 1 pattern</span></div><div class="st-cell" data-sig-state="2f5806f5aa:hover 19db2e1b56:hover"><div class="st-demo"><a class="sw-a plain st-ul st-c-deep" href="#links">Rapid Rewards®</a></div><span class="st-tag">hover</span><span class="st-say">gạch chân · chữ primary-300 · 2 pattern</span></div><div class="st-cell" data-sig-state="234b31b2f5:focus f071b9f010:focus 7dd0d35eb2:focus"><div class="st-demo"><a class="sw-a plain st-b-yellow" href="#links">Rapid Rewards®</a></div><span class="st-tag">focus</span><span class="st-say">viền trên vàng 2px · 3 pattern</span></div><div class="st-cell" data-sig-state="06fefcd9cd:focus 5f19730f19:focus fd2f32d28b:focus ecb6c4aab9:focus"><div class="st-demo"><a class="sw-a plain st-ring" href="#links">Rapid Rewards®</a></div><span class="st-tag">focus</span><span class="st-say">viền trong navy 1px · 4 pattern</span></div><div class="st-cell" data-sig-state="5f0ab315d3:focus"><div class="st-demo"><a class="sw-a plain st-ring st-c-primary" href="#links">Rapid Rewards®</a></div><span class="st-tag">focus</span><span class="st-say">viền trong navy 1px · chữ primary · 1 pattern</span></div><div class="st-cell" data-sig-state="9fbe2f7ef4:focus f3a06eb72f:focus 2f5806f5aa:focus be10c4aa77:focus a993d694e9:focus 6adf21563e:focus 4f40118211:focus ef8b262a57:focus 91945f59d2:focus 19db2e1b56:focus f7401eae94:focus 4d6e781fb1:focus 36144976f9:focus 5ed0abd7c6:focus 2b6c8c323d:focus 0b900e4d54:focus 7f715e9b4d:focus 20d541c9ab:focus"><div class="st-demo"><a class="sw-a plain st-ua" href="#links">Rapid Rewards®</a></div><span class="st-tag">focus</span><span class="st-say">viền mặc định trình duyệt (site không style riêng) · 18 pattern</span></div><div class="st-cell" data-sig-state="bff5f1f9ca:focus"><div class="st-demo"><a class="sw-a plain st-ul" href="#links">Rapid Rewards®</a></div><span class="st-tag">focus</span><span class="st-say">gạch chân · 1 pattern</span></div></div>
+          <div class="spec-f"><span class="note">Hover có 3 kiểu trên các trang khác nhau: gạch chân, đổi sang primary-300 (#1c2d6a), hoặc navy. Focus phần lớn để trình duyệt tự vẽ.</span></div>
+        </div>
+        <div class="spec" data-sig="1c7dae1ceb 7fd00d2227 0bec016101" data-fam="link-legacy">
+          <div class="spec-h"><b>Liên kết Bootstrap cũ</b><span class="kind">a (bootstrap 4)</span><span class="dp">#007bff</span></div>
+          <div class="stage"><a class="sw-a legacy" href="#links">list of documentation</a><a class="sw-a legacy" href="#links">Sign up</a></div>
+          <div class="states"><div class="st-h">Trạng thái đo được (ép :hover / :focus-visible / :active qua CDP)</div><div class="st-cell" data-sig-state="1c7dae1ceb:hover 7fd00d2227:hover 0bec016101:hover"><div class="st-demo"><a class="sw-a legacy st-ul st-c-legacy" href="#links">Sign up</a></div><span class="st-tag">hover</span><span class="st-say">gạch chân · chữ #0056b3 · 3 pattern</span></div><div class="st-cell" data-sig-state="7fd00d2227:focus 0bec016101:focus"><div class="st-demo"><a class="sw-a legacy st-b-yellow" href="#links">Sign up</a></div><span class="st-tag">focus</span><span class="st-say">viền trên vàng 2px · 2 pattern</span></div><div class="st-cell" data-sig-state="1c7dae1ceb:focus"><div class="st-demo"><a class="sw-a legacy st-ua" href="#links">Sign up</a></div><span class="st-tag">focus</span><span class="st-say">viền mặc định trình duyệt (site không style riêng) · 1 pattern</span></div></div>
+          <div class="spec-f"><span class="note">Còn sót trên /international và /citizenship: màu mặc định Bootstrap, lệch khỏi thang primary.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= ĐIỀU HƯỚNG ================= -->
+    <section class="block" id="navigation">
+      <header><h2>Điều hướng</h2><p>Header hai tầng, tab sản phẩm trên widget đặt vé, viên thuốc lọc, tab dọc, footer bốn cột (mobile gập thành accordion).</p></header>
+      <div class="grid">
+        <div class="spec full" data-sig="6f76ea847f 3325b38ee4 c7f992ed02 19b0cefee4 8080d4729b 62305ed0e8" data-fam="header">
+          <div class="spec-h"><b>Header</b><span class="kind">dotcomHeader__8eGOW · header__Fc6Y3 desktop__T4Ijy</span><span class="dp">1440 × 106</span></div>
+          <div class="stage" style="padding:0;border-bottom:1px solid var(--sw-borderSubtle)">
+            <header class="sw-header"><div class="in">
+              <div class="top"><i>Log in to view points balance</i><button class="sw-btn sw-btn--primary sm"><span class="ms fill">person</span>Log in</button><button class="sw-link b s14">Create account</button><button class="sw-link s13">Español <span class="ms" style="font-size:16px">language</span></button></div>
+              <div class="main"><span class="sw-logo">logo Southwest</span><span class="grow"></span><button class="sw-link nav">Flight | Hotel | Car | Vacations | Cruises</button><button class="sw-link nav">Special offers</button><button class="sw-link nav">Rapid Rewards®</button><span class="ms fill sw-bell">notifications</span></div>
+            </div></header>
+          </div>
+          <div class="states"><div class="st-h">Trạng thái đo được (ép :hover / :focus-visible / :active qua CDP)</div><div class="st-cell" data-sig-state="63040d238b:focus dc947c988c:focus"><div class="st-demo"><span class="sw-logo st-ring st-b-ink" style="width:150px">logo</span></div><span class="st-tag">focus</span><span class="st-say">viền trong navy 1px · viền navy · 2 pattern</span></div></div>
+          <div class="spec-f"><span class="note">Logo là khối giữ chỗ (RULE-09). Trang con dùng bản 101px không có dòng "points balance".</span></div>
+        </div>
+
+        <div class="spec" data-sig="ed68e92a88 bb8b02e8e1" data-fam="tabs-product">
+          <div class="spec-h"><b>Tab sản phẩm</b><span class="kind">tabsContainer__AzPKZ · tab__hFsYv</span><span class="dp">56 · 118</span></div>
+          <div class="stage" style="padding-top:28px">
+            <div class="sw-tabs" role="tablist"><button class="tab" role="tab" aria-selected="true">Flights</button><button class="tab" role="tab" aria-selected="false">Vacations</button><button class="tab" role="tab" aria-selected="false">Hotels</button><button class="tab" role="tab" aria-selected="false" style="position:relative"><span class="sw-flag">NEW!</span>Cars</button><button class="tab" role="tab" aria-selected="false">Cruises</button></div>
+          </div>
+          <div class="states"><div class="st-h">Trạng thái đo được (ép :hover / :focus-visible / :active qua CDP)</div><div class="st-cell" data-sig-state="ed68e92a88:hover"><div class="st-demo"><div class="sw-tabs" style="width:150px"><button class="tab st-b-primary" role="tab">Hotels</button></div></div><span class="st-tag">hover</span><span class="st-say">viền primary · 1 pattern</span></div><div class="st-cell" data-sig-state="ed68e92a88:focus"><div class="st-demo"><div class="sw-tabs" style="width:150px"><button class="tab st-ring-p" role="tab">Hotels</button></div></div><span class="st-tag">focus</span><span class="st-say">viền trong primary 1px · 1 pattern</span></div><div class="st-cell" data-sig-state="bb8b02e8e1:focus"><div class="st-demo"><div class="sw-tabs" style="width:150px"><button class="tab st-ua" role="tab">Hotels</button></div></div><span class="st-tag">focus</span><span class="st-say">viền mặc định trình duyệt (site không style riêng) · 1 pattern</span></div></div>
+        </div>
+
+        <div class="spec" data-sig="970158e9a2 f73f677eb5 41adc584df 8c02968889" data-fam="tabs-pill">
+          <div class="spec-h"><b>Viên thuốc lọc</b><span class="kind">nav-link filter-button · pill-box</span><span class="dp">44 · r116</span></div>
+          <div class="stage" style="padding:0"><div class="sw-pills"><button class="sw-pill">All</button><button class="sw-pill">Hawaii</button><button class="sw-pill">Snow</button><button class="sw-pill on" aria-pressed="true">Family Trips</button></div></div>
+          <div class="states"><div class="st-h">Trạng thái đo được (ép :hover / :focus-visible / :active qua CDP)</div><div class="st-cell" data-sig-state="f73f677eb5:focus 41adc584df:focus 8c02968889:focus"><div class="st-demo"><button class="sw-pill st-ua">Hawaii</button></div><span class="st-tag">focus</span><span class="st-say">viền mặc định trình duyệt (site không style riêng) · 3 pattern</span></div></div>
+        </div>
+
+        <div class="spec" data-sig="27b3d00835 d96e3aafcc 829d153c59 594fbe24d6" data-fam="tabs-vertical">
+          <div class="spec-h"><b>Tab dọc</b><span class="kind">nav flex-column nav-pills · nav-link</span><span class="dp">414 × 86</span></div>
+          <div class="stage"><div class="sw-vtabs"><button class="t">Purpose and Vision</button><button class="t">Company Promise</button><button class="t on" aria-selected="true" data-sig-state="d96e3aafcc:selected">Code of Conduct</button></div></div>
+          <div class="states"><div class="st-h">Trạng thái đo được (ép :hover / :focus-visible / :active qua CDP)</div><div class="st-cell" data-sig-state="829d153c59:focus"><div class="st-demo"><div class="sw-vtabs" style="width:220px;border:none"><button class="t st-ua" style="height:52px;font-size:16px">Company Promise</button></div></div><span class="st-tag">focus</span><span class="st-say">viền mặc định trình duyệt (site không style riêng) · 1 pattern</span></div></div>
+          <div class="spec-f"><span class="note">Đang chọn = nền trắng chữ primary (cặp selected đo được). Khung nội dung bên phải có viền vàng 6px.</span></div>
+        </div>
+
+        <div class="spec" data-sig="ec972d5823 8b3cc29d50 d6aee26462" data-fam="tabs-package">
+          <div class="spec-h"><b>Tab gói vacation</b><span class="kind">packageOptionButton__Wlelk</span><span class="dp">30 · 16/700</span></div>
+          <div class="stage"><div class="sw-pkg"><button class="on" aria-pressed="true">Flight + Hotel</button><button>Flight + Hotel + Car</button><button>Flight + Car</button></div></div>
+          <div class="states"><div class="st-h">Trạng thái đo được (ép :hover / :focus-visible / :active qua CDP)</div><div class="st-cell" data-sig-state="ec972d5823:hover"><div class="st-demo"><div class="sw-pkg"><button class="st-none">Flight + Car</button></div></div><span class="st-tag">hover</span><span class="st-say">không đổi thấy được (site tắt viền: outline 0 / trong suốt) · 1 pattern</span></div><div class="st-cell" data-sig-state="ec972d5823:focus"><div class="st-demo"><div class="sw-pkg"><button class="st-b-primary">Flight + Car</button></div></div><span class="st-tag">focus</span><span class="st-say">viền primary · 1 pattern</span></div><div class="st-cell" data-sig-state="8b3cc29d50:focus"><div class="st-demo"><div class="sw-pkg"><button class="st-none">Flight + Car</button></div></div><span class="st-tag">focus</span><span class="st-say">không đổi thấy được (site tắt viền: outline 0 / trong suốt) · 1 pattern</span></div><div class="st-cell" data-sig-state="d6aee26462:focus"><div class="st-demo"><div class="sw-pkg"><button class="st-ua">Flight + Car</button></div></div><span class="st-tag">focus</span><span class="st-say">viền mặc định trình duyệt (site không style riêng) · 1 pattern</span></div></div>
+        </div>
+
+        <div class="spec" data-sig="12eb8fd060" data-fam="subnav">
+          <div class="spec-h"><b>Sub-nav chiến dịch &amp; breadcrumb</b><span class="kind">navbar-expand-lg · subnav</span><span class="dp">60 · 20</span></div>
+          <div class="stage col">
+            <nav class="sw-subnav"><a class="brand" href="#navigation">Customer Enhancements</a><a href="#navigation">Assigned seating</a><a href="#navigation">Cardmember benefits</a></nav>
+            <div class="sw-crumbs"><a href="#navigation">Home</a> / About</div>
+          </div>
+          <div class="states"><div class="st-h">Trạng thái đo được (ép :hover / :focus-visible / :active qua CDP)</div><div class="st-cell" data-sig-state="12eb8fd060:focus"><div class="st-demo on-dark"><nav class="sw-subnav" style="padding:6px 10px"><a class="st-b-white st-c-white75" href="#navigation">Cardmember benefits</a></nav></div><span class="st-tag">focus</span><span class="st-say">viền trắng · chữ trắng 75% · 1 pattern</span></div></div>
+        </div>
+
+        <div class="spec" data-sig="ad8cd5df20 635d837b64 aa0262494e b0dbeb6339 aae1e3c247" data-fam="triptype">
+          <div class="spec-h"><b>Chọn loại chuyến</b><span class="kind">listbox (route-expansion)</span><span class="dp">180 × 48</span></div>
+          <div class="stage"><div class="sw-trip" role="listbox"><div role="option">One-way</div><div class="on" role="option" aria-selected="true">Round-trip</div></div></div>
+          <div class="states"><div class="st-h">Trạng thái đo được (ép :hover / :focus-visible / :active qua CDP)</div><div class="st-cell" data-sig-state="635d837b64:hover"><div class="st-demo"><div class="sw-trip"><div class="st-ul st-c-primary">One-way</div></div></div><span class="st-tag">hover</span><span class="st-say">gạch chân · chữ primary · 1 pattern</span></div><div class="st-cell" data-sig-state="b0dbeb6339:focus"><div class="st-demo"><div class="sw-trip"><div class="st-none">One-way</div></div></div><span class="st-tag">focus</span><span class="st-say">không đổi thấy được (site tắt viền: outline 0 / trong suốt) · 1 pattern</span></div><div class="st-cell" data-sig-state="aa0262494e:focus"><div class="st-demo"><div class="sw-trip"><div class="st-ua">One-way</div></div></div><span class="st-tag">focus</span><span class="st-say">viền mặc định trình duyệt (site không style riêng) · 1 pattern</span></div><div class="st-cell" data-sig-state="635d837b64:focus"><div class="st-demo"><div class="sw-trip"><div class="st-ul st-c-primary">One-way</div></div></div><span class="st-tag">focus</span><span class="st-say">gạch chân · chữ primary · 1 pattern</span></div></div>
+        </div>
+
+        <div class="spec" data-sig="6119a54552 9f41bd16a9 d6daa7dadf 0f5a738c68 8f6a61bc87 fbc539f5e6 b2fc187592 f4a2261b02 7158a91b6c" data-fam="calendar">
+          <div class="spec-h"><b>Lịch chọn ngày</b><span class="kind">calendar grid · Clear / Done</span><span class="dp">ô 40 · tháng 280</span></div>
+          <div class="stage"><div class="sw-cal">
+            <div class="mh"><button class="sw-circle" aria-label="Tháng trước" style="width:24px;height:24px"><span class="ms" style="font-size:18px">chevron_left</span></button>Tháng 10 2026<button class="sw-circle on" aria-label="Tháng sau" style="width:24px;height:24px"><span class="ms" style="font-size:18px">chevron_right</span></button></div>
+            <div class="g"><span class="dow">Su</span><span class="dow">Mo</span><span class="dow">Tu</span><span class="dow">We</span><span class="dow">Th</span><span class="dow">Fr</span><span class="dow">Sa</span>
+              <span></span><span></span><span></span><span></span><button class="d b">1</button><button class="d">2</button><button class="d">3</button>
+              <button class="d">4</button><button class="d">5</button><button class="d">6</button><button class="d">7</button><button class="d start" aria-selected="true" data-sig-state="0f5a738c68:selected">8</button><button class="d rng">9</button><button class="d rng">10</button>
+              <button class="d rng">11</button><button class="d rng">12</button><button class="d rng">13</button><button class="d rng">14</button><button class="d end" aria-selected="true">15</button><button class="d">16</button><button class="d">17</button></div>
+            <div class="ft"><button>Clear</button><button>Done</button></div>
+          </div></div>
+          <div class="states"><div class="st-h">Trạng thái đo được (ép :hover / :focus-visible / :active qua CDP)</div><div class="st-cell" data-sig-state="0f5a738c68:hover b2fc187592:hover"><div class="st-demo"><div class="sw-cal" style="width:auto"><div class="g" style="grid-template-columns:40px"><button class="d st-b-ink st-c-ink">21</button></div></div></div><span class="st-tag">hover</span><span class="st-say">viền navy · chữ navy · 2 pattern</span></div><div class="st-cell" data-sig-state="8f6a61bc87:hover f4a2261b02:hover 7158a91b6c:hover"><div class="st-demo"><div class="sw-cal" style="width:auto"><div class="g" style="grid-template-columns:40px"><button class="d st-b-ink st-c-ink st-bg-white">21</button></div></div></div><span class="st-tag">hover</span><span class="st-say">viền navy · chữ navy · nền trắng · 3 pattern</span></div><div class="st-cell" data-sig-state="9f41bd16a9:hover"><div class="st-demo"><div class="sw-cal" style="width:auto"><div class="g" style="grid-template-columns:40px"><button class="d st-ul">21</button></div></div></div><span class="st-tag">hover</span><span class="st-say">gạch chân · 1 pattern</span></div><div class="st-cell" data-sig-state="6119a54552:hover"><div class="st-demo"><div class="sw-cal" style="width:auto"><div class="g" style="grid-template-columns:40px"><button class="d st-ul st-c-grey">21</button></div></div></div><span class="st-tag">hover</span><span class="st-say">gạch chân · chữ #333 · 1 pattern</span></div><div class="st-cell" data-sig-state="0f5a738c68:focus b2fc187592:focus"><div class="st-demo"><div class="sw-cal" style="width:auto"><div class="g" style="grid-template-columns:40px"><button class="d st-b-ink st-c-ink">21</button></div></div></div><span class="st-tag">focus</span><span class="st-say">viền navy · chữ navy · 2 pattern</span></div><div class="st-cell" data-sig-state="8f6a61bc87:focus f4a2261b02:focus 7158a91b6c:focus"><div class="st-demo"><div class="sw-cal" style="width:auto"><div class="g" style="grid-template-columns:40px"><button class="d st-b-ink st-c-ink st-bg-white">21</button></div></div></div><span class="st-tag">focus</span><span class="st-say">viền navy · chữ navy · nền trắng · 3 pattern</span></div><div class="st-cell" data-sig-state="fbc539f5e6:focus"><div class="st-demo"><div class="sw-cal" style="width:auto"><div class="g" style="grid-template-columns:40px"><button class="d st-ua">21</button></div></div></div><span class="st-tag">focus</span><span class="st-say">viền mặc định trình duyệt (site không style riêng) · 1 pattern</span></div><div class="st-cell" data-sig-state="9f41bd16a9:focus"><div class="st-demo"><div class="sw-cal" style="width:auto"><div class="g" style="grid-template-columns:40px"><button class="d st-ul">21</button></div></div></div><span class="st-tag">focus</span><span class="st-say">gạch chân · 1 pattern</span></div><div class="st-cell" data-sig-state="6119a54552:focus"><div class="st-demo"><div class="sw-cal" style="width:auto"><div class="g" style="grid-template-columns:40px"><button class="d st-ul st-c-grey">21</button></div></div></div><span class="st-tag">focus</span><span class="st-say">gạch chân · chữ #333 · 1 pattern</span></div></div>
+          <div class="spec-f"><span class="note">Ngày đi tròn primary, ngày về tròn xanh lá (success), khoảng giữa nền #ccc. Các cặp selected đo được đều quy về ô ngày thường.</span></div>
+        </div>
+
+        <div class="spec full" data-sig="cb143f640b 6dc96fa30a" data-fam="footer">
+          <div class="spec-h"><b>Footer</b><span class="kind">dotcomFooter__23774 · list__FBgLV</span><span class="dp">4 cột × 268 · nền #f4f4f4</span></div>
+          <div class="stage" style="padding:0"><footer class="sw-footer">
+            <div class="help"><div><div class="k">Need help?</div><button class="sw-link b" style="font-size:28px;line-height:38px">Help Center</button></div><div><div class="k">Subscribe</div><button class="sw-link b">Wanna receive email from us?</button></div><div><div class="k">Connect with us</div><div class="sw-social" data-sig="f6fa337240" data-fam="social"><i>ảnh</i><i>ảnh</i><i>ảnh</i><i>ảnh</i></div></div></div>
+            <div class="cols"><div><h5>About Southwest</h5><ul><li><button class="sw-link">What's New</button></li><li><button class="sw-link ext">Press Room</button></li><li><button class="sw-link">Careers</button></li></ul></div><div><h5>Flying Southwest</h5><ul><li><button class="sw-link">Rapid Rewards®</button></li><li><button class="sw-link">Airport Information</button></li></ul></div><div><h5>Products</h5><ul><li><button class="sw-link">Fare Types and Benefits</button></li><li><button class="sw-link">Upgrade My Fare</button></li></ul></div><div><h5>Help Center</h5><ul><li><button class="sw-link">Baggage Policies</button></li><li><button class="sw-link">Pet Policy</button></li></ul></div></div>
+            <div class="legal">© 2026 Mẫu chân trang. <a class="sw-a" href="#navigation">Terms and Conditions</a> · <a class="sw-a" href="#navigation">Privacy Policy</a> <span class="sw-logo sm" data-sig="63040d238b dc947c988c c1fabb9322 5439bdcb35" data-fam="logo">logo</span></div>
+          </footer></div>
+          <div class="spec-f"><span class="note">Mobile: hàng trên rút thành "Help Center | Subscribe | Mobile Apps", bốn cột gập thành accordion có chevron. Logo mạng xã hội và logo con là khối giữ chỗ.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= NHẬP LIỆU ================= -->
+    <section class="block" id="inputs">
+      <header><h2>Nhập liệu &amp; đặt vé</h2><p>Ô nhập vuông cao 48, viền #ccc, focus đổi viền sang primary (không quầng). Nhãn 12/700 nằm trên ô, dấu * cho trường bắt buộc.</p></header>
+      <div class="grid">
+        <div class="spec" data-sig="56e3f9c622 1a3037a5d5 15ec023683 74a535af0e 2a34aea5b6 a5c782b3a0 e2f592bb4d" data-fam="input">
+          <div class="spec-h"><b>Ô nhập</b><span class="kind">inputElement__ZtQKd · iconAllowance__Vm15e</span><span class="dp">48 · p 4 8 3 · r2</span></div>
+          <div class="stage" style="align-items:flex-start">
+            <div class="sw-field" style="width:244px"><label>Depart*</label><input class="sw-input" aria-label="Depart"></div>
+            <div class="sw-field" style="width:171px"><label>Depart date*</label><div class="sw-iconin"><input class="sw-input" value="10/02" aria-label="Depart date"><span class="ms">calendar_month</span></div><span class="hint">Fri, Oct 02, 2026</span></div>
+            <div class="sw-field" style="width:171px"><label>Passengers*</label><div class="sw-iconin"><input class="sw-input" value="1" aria-label="Passengers"><span class="ms fill">person</span></div></div>
+            <div class="sw-field" style="width:244px"><label>Email</label><input class="sw-input err" value="name@" aria-label="Email"><span class="hint" style="color:var(--sw-danger)">Mẫu lỗi: dựng từ token --danger-*</span></div>
+          </div>
+          <div class="states"><div class="st-h">Trạng thái đo được (ép :hover / :focus-visible / :active qua CDP)</div><div class="st-cell" data-sig-state="56e3f9c622:focus 1a3037a5d5:focus 15ec023683:focus 74a535af0e:focus 2a34aea5b6:focus a5c782b3a0:focus"><div class="st-demo"><input class="sw-input st-b-primary" style="width:150px" aria-label="mẫu"></div><span class="st-tag">focus</span><span class="st-say">viền primary · 6 pattern</span></div></div>
+          <div class="spec-f"><span class="note">Viền focus đo ra nhiều giá trị (#4f65b7 → #304cb2) vì đang chạy transition; kit dùng giá trị cuối là primary. Trạng thái lỗi không gặp khi quét (không gửi form), dựng từ token.</span></div>
+        </div>
+
+        <div class="spec" data-sig="6c3e033b15 5029211956" data-fam="select">
+          <div class="spec-h"><b>Select</b><span class="kind">trigger__cIMrN · buttonTrigger__KNB1f</span><span class="dp">34 · 16</span></div>
+          <div class="stage" style="align-items:flex-start">
+            <div class="sw-field" style="width:244px"><label>Trip type</label><div class="sw-select">Round-trip<span class="ms">expand_more</span></div></div>
+            <div class="sw-field" style="width:244px"><label>Recent searches</label><div class="sw-select">Select search<span class="ms">expand_more</span></div></div>
+            <button class="sw-link b">1 Room, 2 Travelers <span class="ms">arrow_drop_down</span></button>
+          </div>
+          <div class="states"><div class="st-h">Trạng thái đo được (ép :hover / :focus-visible / :active qua CDP)</div><div class="st-cell" data-sig-state="6c3e033b15:hover"><div class="st-demo"><div class="sw-select st-ul" style="width:170px">One-way<span class="ms">expand_more</span></div></div><span class="st-tag">hover</span><span class="st-say">gạch chân · 1 pattern</span></div><div class="st-cell" data-sig-state="6c3e033b15:focus"><div class="st-demo"><div class="sw-select st-ul" style="width:170px">One-way<span class="ms">expand_more</span></div></div><span class="st-tag">focus</span><span class="st-say">gạch chân · 1 pattern</span></div></div>
+        </div>
+
+        <div class="spec" data-sig="fba6832d29 07d42914a3 12182100ce 608b38583d c26b6dad48 cb352e88c3 707f408703 892d25b731" data-fam="radio">
+          <div class="spec-h"><b>Radio</b><span class="kind">radioInput__eMHcc · selectDot__P63JR</span><span class="dp">16 · chấm 12</span></div>
+          <div class="stage"><label class="sw-radio on"><i></i>$</label><label class="sw-radio"><i></i>Points</label><label class="sw-radio"><i></i>$ + Points</label></div>
+          <div class="states"><div class="st-h">Trạng thái đo được (ép :hover / :focus-visible / :active qua CDP)</div><div class="st-cell" data-sig-state="892d25b731:focus"><div class="st-demo"><label class="sw-radio"><i class="st-none"></i>Points</label></div><span class="st-tag">focus</span><span class="st-say">không đổi thấy được (site tắt viền: outline 0 / trong suốt) · 1 pattern</span></div></div>
+        </div>
+
+        <div class="spec" data-sig="757ce9b6a8 8a3cbea7b8 d193c4d527 f959ef174c" data-fam="checkbox">
+          <div class="spec-h"><b>Checkbox</b><span class="kind">checkboxIcon__RH1Xt · focusRing__FjzlK</span><span class="dp">16 · vòng 20 r4</span></div>
+          <div class="stage col" style="gap:10px"><label class="sw-check"><i></i>Search with low fare calendar</label><label class="sw-check on"><i></i>Show fares in points</label><label class="sw-check ring"><i></i>Đang focus (vòng focusRing)</label></div>
+        </div>
+
+        <div class="spec" data-sig="c9abaaab7d f11598a817 c8ab74bddc 51562ba100 48c1ff095b 68cf7c356d 6f8a136b45 f55cd80e5e 58c2934b12 a0277bdfb5 47df3ab902 bd3ec6ec1d 000ed79db2 7b3ffbe1f5 922678a3f5 677f621752" data-fam="farefinder">
+          <div class="spec-h"><b>Bộ tìm giá vé</b><span class="kind">route-expansion (vg-* · css-*)</span><span class="dp">264 × 48 · 280 × 60</span></div>
+          <div class="stage" style="align-items:flex-start">
+            <label class="sw-ff"><span>From</span><span class="box"><span class="ms">flight_takeoff</span>Input origin</span></label>
+            <label class="sw-ff"><span>Budget (one-way)</span><span class="box"><span style="background:var(--sw-surfaceSoft);color:var(--sw-primary);padding:0 3px">$</span>Input max budget</span></label>
+            <label class="sw-ff"><span>Fare type</span><span class="box v"><span class="grow"></span><span class="ms">keyboard_arrow_down</span></span></label>
+            <div class="sw-date"><b>DEPARTURE</b><span>10/08/2026</span></div>
+          </div>
+          <div class="states"><div class="st-h">Trạng thái đo được (ép :hover / :focus-visible / :active qua CDP)</div><div class="st-cell" data-sig-state="c9abaaab7d:hover"><div class="st-demo"><span class="sw-ff" style="width:170px"><span class="box st-glow">Select dates</span></span></div><span class="st-tag">hover</span><span class="st-say">quầng primary 40% · 1 pattern</span></div><div class="st-cell" data-sig-state="c9abaaab7d:focus 47df3ab902:focus"><div class="st-demo"><span class="sw-ff" style="width:170px"><span class="box st-glow">Select dates</span></span></div><span class="st-tag">focus</span><span class="st-say">quầng primary 40% · 2 pattern</span></div><div class="st-cell" data-sig-state="f55cd80e5e:focus 58c2934b12:focus bd3ec6ec1d:focus 7b3ffbe1f5:focus 922678a3f5:focus"><div class="st-demo"><span class="sw-ff" style="width:170px"><span class="box st-none">Select dates</span></span></div><span class="st-tag">focus</span><span class="st-say">không đổi thấy được (site tắt viền: outline 0 / trong suốt) · 5 pattern</span></div><div class="st-cell" data-sig-state="a0277bdfb5:focus"><div class="st-demo"><span class="sw-ff" style="width:170px"><span class="box st-ua">Select dates</span></span></div><span class="st-tag">focus</span><span class="st-say">viền mặc định trình duyệt (site không style riêng) · 1 pattern</span></div></div>
+          <div class="spec-f"><span class="note">Trang landing dựng bằng Tailwind riêng: nhãn hoa 12/700 ngoài ô, focus là quầng primary 40% 3.2px (khác ô nhập chính).</span></div>
+        </div>
+
+        <div class="spec" data-sig="3e1271301b f832569234 c51b10e536 2d52e7353f 325e795204" data-fam="destpicker">
+          <div class="spec-h"><b>Chọn điểm đến</b><span class="kind">dest-btn · destinations-info</span><span class="dp">646 × 56 · r4</span></div>
+          <div class="stage col" style="background:var(--sw-surfaceAlt);margin:12px 12px 0">
+            <button class="sw-btn sw-btn--secondary" style="color:var(--sw-ink);border-color:var(--sw-border);border-radius:var(--r-s);height:56px;text-decoration:underline">St. Thomas</button>
+            <button class="sw-btn sw-btn--secondary" style="color:var(--sw-ink);border-color:var(--sw-border);border-radius:var(--r-s);height:56px;text-decoration:underline">Knoxville</button>
+          </div>
+          <div class="states"><div class="st-h">Trạng thái đo được (ép :hover / :focus-visible / :active qua CDP)</div><div class="st-cell" data-sig-state="3e1271301b:hover"><div class="st-demo"><button class="sw-btn sw-btn--secondary st-b-grey st-bg-soft" style="color:var(--sw-ink);border-color:var(--sw-border);border-radius:var(--r-s);height:44px">Anchorage</button></div><span class="st-tag">hover</span><span class="st-say">viền xám đậm · nền #f4f4f4 · 1 pattern</span></div><div class="st-cell" data-sig-state="325e795204:hover"><div class="st-demo"><button class="sw-btn sw-btn--secondary st-b-ink" style="color:var(--sw-ink);border-color:var(--sw-border);border-radius:var(--r-s);height:44px">Anchorage</button></div><span class="st-tag">hover</span><span class="st-say">viền navy · 1 pattern</span></div><div class="st-cell" data-sig-state="3e1271301b:focus 325e795204:focus"><div class="st-demo"><button class="sw-btn sw-btn--secondary st-ua" style="color:var(--sw-ink);border-color:var(--sw-border);border-radius:var(--r-s);height:44px">Anchorage</button></div><span class="st-tag">focus</span><span class="st-say">viền mặc định trình duyệt (site không style riêng) · 2 pattern</span></div></div>
+        </div>
+
+        <div class="spec" data-sig="e0baf64ddb ce54565331 ea3523db83" data-fam="divider">
+          <div class="spec-h"><b>Đường chia form &amp; luật mật khẩu</b><span class="kind">formLineSeparator · gridLineSeparator · messages__m9QtO</span><span class="dp">1px #ccc</span></div>
+          <div class="stage col"><hr class="sw-divider"><ul class="sw-rules" data-sig="5236cbe309 ae32bde6e7 7905fdf870 65bae9a4da caea8ed516 0ba11cb058 3ad0170b16 6e52833c0d 53e5e147a1" data-fam="list"><li class="ok">Must be 8-16 characters in length</li><li>Must contain one uppercase letter</li><li class="bad">Mẫu lỗi (dựng từ token)</li></ul><hr class="sw-divider thick"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CHỨA NỘI DUNG ================= -->
+    <section class="block" id="containment">
+      <header><h2>Chứa nội dung</h2><p>Khối nội dung gần như không bo, phân tầng bằng dải nền màu (primary, navy, xám, vàng, xanh nhạt) thay vì bóng. Ảnh là khối giữ chỗ có ghi tỉ lệ.</p></header>
+      <div class="grid">
+        <div class="spec full" data-sig="a44edc63d9 54c05b5dfa a063ec53f1 43f47a822f 86010977c8 c1f556fe8a" data-fam="booking">
+          <div class="spec-h"><b>Widget đặt vé + hero</b><span class="kind">containerWithPadding__a3UKe · card__KjDGf low-box-shadow</span><span class="dp">592 · nền gradient summit-silver</span></div>
+          <div class="stage tint" style="align-items:flex-start;gap:40px;padding:32px">
+            <div class="sw-booking">
+              <div class="sw-tabs" style="width:100%"><button class="tab" aria-selected="true">Flights</button><button class="tab" aria-selected="false">Vacations</button><button class="tab" aria-selected="false">Hotels</button></div>
+              <div class="body">
+                <div class="req full"><span>*Required fields</span><span>Now accepting reservations through … <span class="ms fill" style="font-size:16px;color:var(--sw-primary)">info</span></span></div>
+                <div class="sw-field"><label>Depart*</label><input class="sw-input" aria-label="Depart"></div>
+                <div class="sw-field"><label>Arrive*</label><input class="sw-input" aria-label="Arrive"></div>
+                <div class="full" style="display:flex;justify-content:center;padding-top:12px"><button class="sw-btn sw-btn--primary" style="width:260px">Search flights</button></div>
+              </div>
+            </div>
+            <div class="sw-hero"><h3>Bay giá thấp, đi nhẹ nhàng.</h3><p>Giá thấp khắp nước Mỹ.</p><button class="sw-btn sw-btn--primary">Book now</button></div>
+          </div>
+          <div class="spec-f"><span class="note">Nền khu hero là biến thật <code>--gradients-summit-silver-*</code> (#f8f9fd → #e2e7f0). Chữ hero là câu mẫu, không phải tagline của site.</span></div>
+        </div>
+
+        <div class="spec" data-sig="ed228f53a1" data-fam="destcard">
+          <div class="spec-h"><b>Thẻ điểm đến</b><span class="kind">card p-6 · card-img-top · card-title</span><span class="dp">388 × 499 · r4</span></div>
+          <div class="stage"><article class="sw-dest"><div class="ph" style="height:200px">ảnh điểm đến · 386 × 290</div><div class="body"><h4>Thành phố A, TX</h4><small>AAA</small><p>Mô tả ngắn hai ba dòng về điểm đến, màu #636363.</p><button class="sw-btn sw-btn--outline-ink">Explore</button></div></article></div>
+        </div>
+
+        <div class="spec" data-sig="3b43ae88c8 a76e105f8d 81089a5215" data-fam="imgcard">
+          <div class="spec-h"><b>Thẻ ảnh có chữ</b><span class="kind">link__k… image__ea5Yi (vacations)</span><span class="dp">280 × 272 · 592 × 273</span></div>
+          <div class="stage" style="align-items:flex-start">
+            <a class="sw-imgcard" href="#containment"><div class="ph dark">ảnh · 280 × 272</div><b>Điểm đến</b></a>
+            <div class="sw-theme" data-sig="ebb188ce17 3f513a86f4 eda4faae0c 4f0a7321b0 1f47b0bb98 4d735eb93f ff24736228 78217df532 1e93fec291 14905abbc6 5711e8d076 39318f7018 f95277213b 8c904e4ea9 a23a38cdc3 82fe4f98d3 79dfb4c2fc f78d856ec2 62ced91d3e 3d8f39e397 cd6c64f899 46458c47fa" data-fam="media"><div class="ph">ảnh chủ đề · 248 × 248</div><b><span class="ms">beach_access</span>Beach vacations</b><span style="font-size:16px">Mô tả chủ đề. <a class="sw-a" href="#containment">See more</a></span></div>
+          </div>
+          <div class="states"><div class="st-h">Trạng thái đo được (ép :hover / :focus-visible / :active qua CDP)</div><div class="st-cell" data-sig-state="3b43ae88c8:hover a76e105f8d:hover 81089a5215:hover"><div class="st-demo"><a class="sw-imgcard st-ul" href="#containment" style="width:170px"><div class="ph dark" style="height:80px">ảnh</div><b style="font-size:16px">Hawaii</b></a></div><span class="st-tag">hover</span><span class="st-say">gạch chân · 3 pattern</span></div><div class="st-cell" data-sig-state="3b43ae88c8:focus a76e105f8d:focus 81089a5215:focus"><div class="st-demo"><a class="sw-imgcard st-ul st-ring" href="#containment" style="width:170px"><div class="ph dark" style="height:80px">ảnh</div><b style="font-size:16px">Hawaii</b></a></div><span class="st-tag">focus</span><span class="st-say">gạch chân · viền trong navy 1px · 3 pattern</span></div><div class="st-cell" data-sig-state="3b43ae88c8:active a76e105f8d:active 81089a5215:active"><div class="st-demo"><a class="sw-imgcard st-ul" href="#containment" style="width:170px"><div class="ph dark" style="height:80px">ảnh</div><b style="font-size:16px">Hawaii</b></a></div><span class="st-tag">active</span><span class="st-say">gạch chân · 3 pattern</span></div></div>
+        </div>
+
+        <div class="spec" data-sig="f77c9f7859 996e6607c1 9e72361aeb" data-fam="tile">
+          <div class="spec-h"><b>Ô điểm đến quốc tế</b><span class="kind">intl-destination-text</span><span class="dp">193 × 181 · 18/500</span></div>
+          <div class="stage"><a class="sw-tile" href="#containment"><div class="ph dark">ảnh</div><b>Điểm đến*</b></a><a class="sw-tile" href="#containment"><div class="ph dark">ảnh</div><b>Thành phố B</b></a></div>
+          <div class="states"><div class="st-h">Trạng thái đo được (ép :hover / :focus-visible / :active qua CDP)</div><div class="st-cell" data-sig-state="f77c9f7859:focus 996e6607c1:focus 9e72361aeb:focus"><div class="st-demo"><a class="sw-tile st-ua" href="#containment" style="width:120px;height:60px"><div class="ph dark">ảnh</div><b style="font-size:14px;padding:4px 8px">B</b></a></div><span class="st-tag">focus</span><span class="st-say">viền mặc định trình duyệt (site không style riêng) · 3 pattern</span></div></div>
+        </div>
+
+        <div class="spec" data-sig="ffe0f8a15a" data-fam="dealcard">
+          <div class="spec-h"><b>Thẻ giá vé</b><span class="kind">route deal (vg-DsXya)</span><span class="dp">536 × 102</span></div>
+          <div class="stage"><div class="sw-deal"><div class="l"><b>Thành phố A (AAA) to<br>Thành phố B (BBB)</b><small>Depart: 10/16/2026</small><small>One-way / Choice</small></div><div class="r">From<b>$000*</b>or from <a class="sw-a" href="#containment">$00/mo</a></div></div></div>
+          <div class="states"><div class="st-h">Trạng thái đo được (ép :hover / :focus-visible / :active qua CDP)</div><div class="st-cell" data-sig-state="ffe0f8a15a:hover"><div class="st-demo"><div class="sw-deal st-bg-soft" style="min-height:0;width:200px"><div class="l"><b>AAA to BBB</b></div></div></div><span class="st-tag">hover</span><span class="st-say">nền #f5f5f5 · 1 pattern</span></div><div class="st-cell" data-sig-state="ffe0f8a15a:focus"><div class="st-demo"><div class="sw-deal st-bg-soft" style="min-height:0;width:200px"><div class="l"><b>AAA to BBB</b></div></div></div><span class="st-tag">focus</span><span class="st-say">nền #f5f5f5 · 1 pattern</span></div></div>
+        </div>
+
+        <div class="spec full" data-sig="ea6f2e0871 34d6efe241 86c0e6d444 01f7be8d94" data-fam="farechart">
+          <div class="spec-h"><b>Bảng so sánh hạng vé</b><span class="kind">row fare-chart · faretype-subtext*</span><span class="dp">4 cột · vạch màu 6</span></div>
+          <div class="stage tbl" style="display:block">
+            <div class="sw-fares">
+              <div class="sw-fare" style="--c:var(--sw-borderStrong)"><h4>Basic¹</h4><div class="tag">Go for less</div><p>Gói rẻ nhất, có vài giới hạn.</p><div class="bar"></div><ul><li>Ghế xếp khi check-in</li><li>Lên máy bay sau cùng</li></ul></div>
+              <div class="sw-fare" style="--c:var(--sw-primary)"><h4>Choice</h4><div class="tag pick">Top pick</div><p>Cân bằng linh hoạt và tiết kiệm.</p><div class="bar"></div><ul><li>Chọn ghế thường khi đặt</li><li>Không phí huỷ</li></ul></div>
+              <div class="sw-fare" style="--c:var(--sw-inkStrong)"><h4>Choice Preferred</h4><div class="tag">Earlier access</div><p>Thêm thoải mái và quyền lợi.</p><div class="bar"></div><ul><li>Ghế ưu tiên</li><li>Hoàn tiền được</li></ul><div class="sw-and">AND</div></div>
+              <div class="sw-fare" style="--c:var(--sw-accent)"><h4>Choice Extra</h4><div class="tag">All in</div><p>Gói cao cấp nhất.</p><div class="bar"></div><ul><li>Ghế chân rộng</li><li>Hai kiện ký gửi</li></ul><div class="sw-and">AND</div></div>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Màu vạch: Basic dựng gần đúng (xám), các cột còn lại theo ảnh trang /airfare-types-benefits. Tên hạng vé là tên sản phẩm thật, mô tả đã viết lại.</span></div>
+        </div>
+
+        <div class="spec" data-sig="f405a7e42a a38fb1a614 ec1a29d5e4 b9ea1c735e 43d862ad91 98e6572181 6e0e21adcb aefee0d53d ea52dc6ee5 16821d2f79 17a73106b5" data-fam="accordion">
+          <div class="spec-h"><b>Accordion / FAQ</b><span class="kind">collapsible-pair · panel-title · collapse-content</span><span class="dp">48 · 64 · 66</span></div>
+          <div class="stage col" style="gap:0">
+            <div class="sw-acc">
+              <div class="q">Câu hỏi thường gặp số một?<span class="ms">add</span></div>
+              <div class="q">Câu hỏi thứ hai?<span class="ms">remove</span></div><div class="a">Trả lời ngắn cho câu hỏi thứ hai.</div>
+              <div class="q blue">Làm sao bật thông báo đẩy?<span class="ms">expand_more</span></div>
+              <div class="q panel">Thành phố, ST - AAA<span class="ms">add</span></div>
+            </div>
+          </div>
+          <div class="states"><div class="st-h">Trạng thái đo được (ép :hover / :focus-visible / :active qua CDP)</div><div class="st-cell" data-sig-state="ec1a29d5e4:hover"><div class="st-demo"><div class="sw-acc"><div class="q st-bg-soft" style="min-height:40px">Câu hỏi?</div></div></div><span class="st-tag">hover</span><span class="st-say">nền #f9f9f9 · 1 pattern</span></div><div class="st-cell" data-sig-state="16821d2f79:hover"><div class="st-demo"><div class="sw-acc"><div class="q st-none" style="min-height:40px">Câu hỏi?</div></div></div><span class="st-tag">hover</span><span class="st-say">không đổi thấy được (site tắt viền: outline 0 / trong suốt) · 1 pattern</span></div><div class="st-cell" data-sig-state="16821d2f79:focus"><div class="st-demo"><div class="sw-acc"><div class="q st-b-primary" style="min-height:40px">Câu hỏi?</div></div></div><span class="st-tag">focus</span><span class="st-say">viền primary · 1 pattern</span></div><div class="st-cell" data-sig-state="f405a7e42a:focus a38fb1a614:focus ec1a29d5e4:focus aefee0d53d:focus ea52dc6ee5:focus 17a73106b5:focus"><div class="st-demo"><div class="sw-acc"><div class="q st-ua" style="min-height:40px">Câu hỏi?</div></div></div><span class="st-tag">focus</span><span class="st-say">viền mặc định trình duyệt (site không style riêng) · 6 pattern</span></div></div>
+        </div>
+
+        <div class="spec full" data-sig="3654acc405 004c6dbd40 d678e143ce 1097ce5eb6 50ad2c3b42 d7dd74f587 73c38b1e15 c1253cc745 1bc5b8bcf3 09bc629c9e 279e8c6656 cfa5e09192 9ad562d821 f86bce1189 f7ca1c38c5 aa62e63cbe e9313a400d 2dc74a4d42 3f4a0b67e1 983ef3de3a f8ce6de29e 856cfd68ff fd490fff9a 7f09e3a7a9 fedca12ba8 2b2ce30838 af2d353ac4 0f1b294ec2 189de52247 84bce6ded6 7c8ab8558c 9442c12302 f68559c981 146c4010cf 4f584c0f46 a5b6168834 d4a5e8496d 2f2bad219a 6a0b972269 08b5160650 6b58824e53 8ae1d4afa0 c696b2bb7e 7219ade7c1 51b2540dac 417298e9ed ebf34a780d a3837f8636 58ce68db9f 0b65512baf a914bf418a" data-fam="band">
+          <div class="spec-h"><b>Dải nền section</b><span class="kind">yellowbg · bluebg · redbg · greybg · midnight-blue-bg · lightblue-bg</span><span class="dp">rộng 1440 / 1241</span></div>
+          <div class="stage" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px">
+            <div class="sw-band" style="background:var(--sw-primary);color:var(--sw-onPrimary)"><b>primary</b>card · lightblue-bg</div>
+            <div class="sw-band" style="background:var(--sw-primaryDeep);color:var(--sw-onPrimary)"><b>primaryDeep</b>people-subs</div>
+            <div class="sw-band" style="background:var(--sw-inkStrong);color:var(--sw-onPrimary)"><b>inkStrong</b>midnight-blue-bg</div>
+            <div class="sw-band" style="background:var(--sw-surfaceAlt);color:var(--sw-ink)"><b>surfaceAlt</b>footer · gift card</div>
+            <div class="sw-band" style="background:var(--sw-surfacePale);color:var(--sw-ink)"><b>surfacePale</b>improvements</div>
+            <div class="sw-band" style="background:var(--sw-sunBg);color:var(--sw-legacyText)"><b>sunBg</b>yellowbg</div>
+            <div class="sw-band" style="background:var(--sw-skyBg);color:var(--sw-legacyText)"><b>skyBg</b>bluebg · mexico</div>
+            <div class="sw-band" style="background:var(--sw-peachBg);color:var(--sw-legacyText)"><b>peachBg</b>redbg</div>
+            <div class="sw-band" style="background:var(--sw-mistBg);color:var(--sw-legacyText)"><b>mistBg</b>resources</div>
+            <div class="sw-band" style="background:var(--sw-greyBg);color:var(--sw-legacyText)"><b>greyBg</b>greybg · supplier</div>
+            <div class="sw-band ph dark"><b>ảnh nền hero</b>hero · banner</div>
+          </div>
+          <div class="sw-callout" style="margin:0 12px;width:auto" data-sig="f9054debcf c2126e9e26 a0d6c069ad ba460552be 59763167a2 4302ffc089" data-fam="infobox"><b style="color:var(--sw-primary);font-size:20px">Mẹo du lịch quốc tế</b><p style="margin:6px 0 0">Khối callout nền vàng nhạt, chữ #212529, rộng 1241.</p></div>
+          <div class="spec-f"><span class="note">Gom 51 pattern khung section (hero, banner, dải màu). Màu nền là vai trò đo được; các khung chỉ khác nhau ở chiều cao và nội dung.</span></div>
+        </div>
+
+        <div class="spec" data-sig="5d855e60bd 471e8d70d1 a67357e27d ff69f3fbf1" data-fam="aboutcard">
+          <div class="spec-h"><b>Thẻ giới thiệu</b><span class="kind">card · card-body · card-img-bottom</span><span class="dp">384 · viền dưới 6 vàng</span></div>
+          <div class="stage blue"><div class="sw-about"><div class="top"><b>Our history</b><p>Đoạn giới thiệu ngắn hai dòng.</p><span class="ms">chevron_right</span></div><div class="ph">ảnh · 384 × 209</div></div></div>
+        </div>
+
+        <div class="spec" data-sig="5236cbe309 ae32bde6e7 7905fdf870 65bae9a4da caea8ed516 0ba11cb058 3ad0170b16 6e52833c0d 53e5e147a1" data-fam="list">
+          <div class="spec-h"><b>Danh sách &amp; dòng thời gian</b><span class="kind">customer-commitment-list · timeline</span><span class="dp">16 / 26</span></div>
+          <div class="stage col" style="gap:16px">
+            <ul class="sw-list"><li>Đặt vé dễ dàng tới hơn 100 điểm đến</li><li>Theo dõi hành lý</li></ul>
+            <ul class="sw-list check"><li>Điểm thưởng mỗi năm</li><li>Gấp đôi điểm khi bay</li></ul>
+            <div class="sw-time"><b>2022</b><p>Mốc thay đổi trong năm, chữ #515151.</p></div>
+          </div>
+        </div>
+
+        <div class="spec" data-sig="ebb188ce17 3f513a86f4 eda4faae0c 4f0a7321b0 1f47b0bb98 4d735eb93f ff24736228 78217df532 1e93fec291 14905abbc6 5711e8d076 39318f7018 f95277213b 8c904e4ea9 a23a38cdc3 82fe4f98d3 79dfb4c2fc f78d856ec2 62ced91d3e 3d8f39e397 cd6c64f899 46458c47fa" data-fam="media">
+          <div class="spec-h"><b>Khung ảnh</b><span class="kind">img-fluid · whereweflyimage · bubble-different</span><span class="dp">tỉ lệ đo được</span></div>
+          <div class="stage"><div class="sw-media">
+            <div class="ph" style="width:120px;height:90px">386×290</div><div class="ph" style="width:80px;height:80px">354²</div><div class="ph" style="width:80px;height:80px;border-radius:50%">198² tròn</div><div class="ph" style="width:64px;height:64px">QR 128²</div><div class="ph" style="width:96px;height:64px;border-radius:var(--r-m)">96×64 r5</div>
+          </div></div>
+          <div class="spec-f"><span class="note">22 pattern ảnh: kit chỉ giữ tỉ lệ và bo góc, không nhúng ảnh (RULE-09).</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= HIỂN THỊ & BẢN ĐỒ ================= -->
+    <section class="block" id="feedback">
+      <header><h2>Hiển thị &amp; bản đồ</h2><p>Nhãn, chấm phân trang, bộ icon và bản đồ tuyến bay. Site gần như không có toast/snackbar ở trang công khai; thông báo là dải advisory.</p></header>
+      <div class="grid">
+        <div class="spec" data-sig="60f27179ce" data-fam="badge">
+          <div class="spec-h"><b>Nhãn</b><span class="kind">NEW! · Top pick · circle</span><span class="dp">24 · r4 / r2</span></div>
+          <div class="stage"><span class="sw-badge">NEW!</span><span class="sw-badge red">Top pick</span><span class="sw-badge round"><span class="ms" style="font-size:16px">close</span></span></div>
+        </div>
+        <div class="spec" data-sig="d1bd1662a9 153d97a2ef 100db695a0" data-fam="dots">
+          <div class="spec-h"><b>Chấm phân trang</b><span class="kind">dotContainer · dot__PPXdl</span><span class="dp">12 · r500</span></div>
+          <div class="stage"><div class="sw-dots" role="tablist" aria-label="Trang"><i class="on"></i><i></i><i></i></div></div>
+        </div>
+        <div class="spec" data-sig="647a242fde 0294f55c74 bb6ed29523 c943aa077e bf4e12566c 156961d353 586095e062 fa499c2984 2763b4f9af f7a0139973 59a0dc28ce 349789c5af 8112a4139e a3c02af9c5 dbf6e525eb" data-fam="icon">
+          <div class="spec-h"><b>Icon</b><span class="kind">icon__ApmO- transparentBorder</span><span class="dp">13 · 16 · 18 · 22 · 28 · 30</span></div>
+          <div class="stage"><div class="sw-icons">
+            <span class="ic"><span class="ms" style="font-size:13px">open_in_new</span>13</span><span class="ic"><span class="ms" style="font-size:16px">info</span>16</span><span class="ic"><span class="ms" style="font-size:18px">calendar_month</span>18</span><span class="ic"><span class="ms" style="font-size:22px">notifications</span>22</span><span class="ic"><span class="ms" style="font-size:28px">person</span>28</span><span class="ic"><span class="ms" style="font-size:30px">flight</span>30</span>
+          </div></div>
+          <div class="spec-f"><span class="note">Site dùng bộ SVG riêng (icon__ApmO-, viền trong suốt 2px); kit thay bằng Material Symbols cùng cỡ. Màu theo chữ: primary, navy, #515151, vàng.</span></div>
+        </div>
+        <div class="spec">
+          <div class="spec-h"><b>Dải thông báo</b><span class="kind">travel advisory</span><span class="dp">36 · 14</span></div>
+          <div class="stage"><div class="sw-alert"><span class="ms">info</span><b>TRAVEL ADVISORY</b><a class="sw-a plain" href="#feedback">Thời tiết xấu tại một sân bay</a></div></div>
+          <div class="spec-f"><span class="note">Thấy trên /vacations (ảnh trang), bộ phân loại không tách riêng: dựng theo ảnh.</span></div>
+        </div>
+        <div class="spec full" data-sig="2dd810f97f 3200831471 75a7df46f5 14dacd1d1a a58e0ae4de 4d16344698 d004eb401f e95bae8ca2 9e91ba58d9 e3ddc8e496 b1fe7ec059 c75cee7fb9 7dee9e9803 e35a2cbc67 6be545bec7 80ef19decc 58cd93c3bb ba9a526bf6 03a33364b1" data-fam="routemap">
+          <div class="spec-h"><b>Bản đồ tuyến bay</b><span class="kind">MapContainer · StyledLocation · InformationContent · MapNavigation</span><span class="dp">marker 32–62 · chấm 10</span></div>
+          <div class="stage" style="align-items:flex-start;gap:16px">
+            <div style="flex:1;min-width:260px;display:flex;flex-direction:column;gap:10px">
+              <div class="sw-map" role="img" aria-label="Bản đồ mẫu">
+                <button class="sw-pin" style="left:12%;top:30%;width:32px;height:32px">2</button><button class="sw-pin" style="left:30%;top:55%;width:42px;height:42px">4</button><button class="sw-pin" style="left:52%;top:25%;width:62px;height:62px">8</button><button class="sw-pin" style="left:75%;top:60%;width:37px;height:37px">3</button><button class="sw-pin" style="left:85%;top:20%;width:47px;height:47px">5</button>
+                <i class="sw-pin dot" style="left:40%;top:80%"></i><i class="sw-pin dot" style="left:64%;top:45%"></i><i class="sw-pin dot" style="left:22%;top:75%"></i>
+                <button class="sw-btn sw-btn--dark" style="position:absolute;left:10px;top:10px"><span class="ms fill">info</span>Map Legend</button>
+              </div>
+              <div class="sw-legend"><span><i></i> Nonstop</span><span><i style="background:var(--sw-accent)"></i> Mùa vụ (dựng)</span></div>
+            </div>
+            <div class="sw-mapnav"><div class="sw-field"><label>Depart</label><div class="loc"><span class="ms">flight_takeoff</span><span class="grow">From</span><span class="ms" style="color:var(--sw-primary)">expand_more</span></div></div><div class="sw-field"><label>Arrive</label><div class="loc"><span class="ms">flight_land</span><span class="grow">To</span><span class="ms" style="color:var(--sw-primary)">expand_more</span></div></div><label class="sw-check"><i></i>Nonstop only</label><button class="sw-btn sw-btn--disabled lg block" disabled>Find flights</button></div>
+          </div>
+          <div class="states"><div class="st-h">Trạng thái đo được (ép :hover / :focus-visible / :active qua CDP)</div><div class="st-cell" data-sig-state="3200831471:hover 75a7df46f5:hover 14dacd1d1a:hover 4d16344698:hover d004eb401f:hover"><div class="st-demo"><button class="sw-pin st-lift" style="position:relative;width:32px;height:32px">2</button></div><span class="st-tag">hover</span><span class="st-say">nhấc lên 5px · 5 pattern</span></div><div class="st-cell" data-sig-state="e3ddc8e496:hover b1fe7ec059:hover"><div class="st-demo"><button class="sw-pin st-raise" style="position:relative;width:32px;height:32px">2</button></div><span class="st-tag">hover</span><span class="st-say">nổi lên + phóng 1.03 · 2 pattern</span></div><div class="st-cell" data-sig-state="a58e0ae4de:focus 9e91ba58d9:focus"><div class="st-demo"><button class="sw-pin st-halo" style="position:relative;width:32px;height:32px">2</button></div><span class="st-tag">focus</span><span class="st-say">quầng primary 4px · 2 pattern</span></div><div class="st-cell" data-sig-state="e3ddc8e496:focus b1fe7ec059:focus"><div class="st-demo"><button class="sw-pin st-halo st-b-primary" style="position:relative;width:32px;height:32px">2</button></div><span class="st-tag">focus</span><span class="st-say">quầng primary 4px · viền primary · 2 pattern</span></div><div class="st-cell" data-sig-state="6be545bec7:focus"><div class="st-demo"><button class="sw-pin st-none" style="position:relative;width:32px;height:32px">2</button></div><span class="st-tag">focus</span><span class="st-say">không đổi thấy được (site tắt viền: outline 0 / trong suốt) · 1 pattern</span></div><div class="st-cell" data-sig-state="e95bae8ca2:focus"><div class="st-demo"><button class="sw-pin st-ua" style="position:relative;width:32px;height:32px">2</button></div><span class="st-tag">focus</span><span class="st-say">viền mặc định trình duyệt (site không style riêng) · 1 pattern</span></div><div class="st-cell" data-sig-state="3200831471:active 75a7df46f5:active 14dacd1d1a:active 4d16344698:active d004eb401f:active"><div class="st-demo"><button class="sw-pin st-lift" style="position:relative;width:32px;height:32px">2</button></div><span class="st-tag">active</span><span class="st-say">nhấc lên 5px · 5 pattern</span></div><div class="st-cell" data-sig-state="e3ddc8e496:active b1fe7ec059:active"><div class="st-demo"><button class="sw-pin st-raise" style="position:relative;width:32px;height:32px">2</button></div><span class="st-tag">active</span><span class="st-say">nổi lên + phóng 1.03 · 2 pattern</span></div></div>
+          <div class="spec-f"><span class="note">Nền bản đồ là Mapbox (bên thứ ba, bỏ qua); kit chỉ dựng lớp marker và bảng điều khiển của Southwest. Hover marker nhấc lên 5px, thẻ ảnh trong popup phóng 1.03.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GETAWAYS ================= -->
+    <section class="block" id="subbrand">
+      <header><h2>Getaways (Vacations)</h2><p>Trang /vacations đổi vai: header nền primary, liên kết và chữ nút màu cyan <code>--secondary-vacations-700</code>. Chọn palette "Getaways" ở thanh trên để thấy cả kit đổi theo.</p></header>
+      <div class="grid">
+        <div class="spec full" data-sig="7e7c397919 98e3659304 a2f4b59a0e 2470d35fe7 2e5f898b5f 8024cc33c0 7f61cc9ca9 d3f964d350 cdc52f3252 1b442486ba" data-fam="vacations">
+          <div class="spec-h"><b>Header &amp; nút Getaways</b><span class="kind">vacations-button-primary · vacations-button-secondary · light__+DETM</span><span class="dp">48 / 40</span></div>
+          <div class="stage" style="padding:0"><div class="sw-vac" style="width:100%"><span class="sw-logo on-dark" style="width:150px;height:50px">logo Getaways</span><span style="flex:1"></span><button class="sw-link">Destinations</button><button class="sw-link">Deals</button><button class="sw-link">Manage My Vacation</button><button class="sw-link w">Create account</button></div></div>
+          <div class="stage">
+            <button class="sw-btn sw-btn--vac" style="background:var(--sw-primary);color:var(--sw-onAccent)">Find a vacation</button>
+            <button class="sw-btn sw-btn--vac sm" style="background:var(--sw-primary);color:var(--sw-onAccent)"><span class="ms fill">person</span>Log in</button>
+            <button class="sw-btn sw-btn--vac-2">See all destinations</button>
+            <button class="sw-btn sw-btn--vac-2" style="border-color:transparent">Learn more</button>
+          </div>
+          <div class="states"><div class="st-h">Trạng thái đo được (ép :hover / :focus-visible / :active qua CDP)</div><div class="st-cell" data-sig-state="a2f4b59a0e:hover 2470d35fe7:hover"><div class="st-demo"><button class="sw-btn sw-btn--vac-2 sm st-b-ink">See all</button></div><span class="st-tag">hover</span><span class="st-say">viền navy · 2 pattern</span></div><div class="st-cell" data-sig-state="d3f964d350:hover"><div class="st-demo"><button class="sw-btn sw-btn--vac-2 sm st-bg-press">See all</button></div><span class="st-tag">hover</span><span class="st-say">nền #e0e0e0 · 1 pattern</span></div><div class="st-cell" data-sig-state="1b442486ba:hover"><div class="st-demo"><button class="sw-btn sw-btn--vac-2 sm st-none">See all</button></div><span class="st-tag">hover</span><span class="st-say">không đổi thấy được (site tắt viền: outline 0 / trong suốt) · 1 pattern</span></div><div class="st-cell" data-sig-state="7e7c397919:hover 98e3659304:hover 2e5f898b5f:hover 8024cc33c0:hover cdc52f3252:hover"><div class="st-demo"><button class="sw-btn sw-btn--vac-2 sm st-ul">See all</button></div><span class="st-tag">hover</span><span class="st-say">gạch chân · 5 pattern</span></div><div class="st-cell" data-sig-state="7f61cc9ca9:hover"><div class="st-demo"><button class="sw-btn sw-btn--vac-2 sm st-ul st-b-ink">See all</button></div><span class="st-tag">hover</span><span class="st-say">gạch chân · viền navy · 1 pattern</span></div><div class="st-cell" data-sig-state="1b442486ba:focus"><div class="st-demo"><button class="sw-btn sw-btn--vac-2 sm st-b-primary">See all</button></div><span class="st-tag">focus</span><span class="st-say">viền primary · 1 pattern</span></div><div class="st-cell" data-sig-state="a2f4b59a0e:focus"><div class="st-demo"><button class="sw-btn sw-btn--vac-2 sm st-ul st-b-ink st-bg-mid">See all</button></div><span class="st-tag">focus</span><span class="st-say">gạch chân · viền navy · nền primary→navy · 1 pattern</span></div><div class="st-cell" data-sig-state="d3f964d350:focus"><div class="st-demo"><button class="sw-btn sw-btn--vac-2 sm st-ul st-b-ink st-bg-press">See all</button></div><span class="st-tag">focus</span><span class="st-say">gạch chân · viền navy · nền #e0e0e0 · 1 pattern</span></div><div class="st-cell" data-sig-state="2470d35fe7:focus"><div class="st-demo"><button class="sw-btn sw-btn--vac-2 sm st-ul st-bg-mid">See all</button></div><span class="st-tag">focus</span><span class="st-say">gạch chân · nền primary→navy · 1 pattern</span></div><div class="st-cell" data-sig-state="7f61cc9ca9:focus cdc52f3252:focus"><div class="st-demo"><button class="sw-btn sw-btn--vac-2 sm st-ul st-ring st-b-ink">See all</button></div><span class="st-tag">focus</span><span class="st-say">gạch chân · viền trong navy 1px · viền navy · 2 pattern</span></div><div class="st-cell" data-sig-state="98e3659304:focus 2e5f898b5f:focus"><div class="st-demo on-dark"><button class="sw-btn sw-btn--vac-2 sm st-ul st-ring-w">See all</button></div><span class="st-tag">focus</span><span class="st-say">gạch chân · viền trong trắng 1px · 2 pattern</span></div><div class="st-cell" data-sig-state="7e7c397919:focus 8024cc33c0:focus"><div class="st-demo on-dark"><button class="sw-btn sw-btn--vac-2 sm st-ul st-ring-w st-b-white st-c-white">See all</button></div><span class="st-tag">focus</span><span class="st-say">gạch chân · viền trong trắng 1px · viền trắng · chữ trắng · 2 pattern</span></div><div class="st-cell" data-sig-state="a2f4b59a0e:active 2470d35fe7:active"><div class="st-demo"><button class="sw-btn sw-btn--vac-2 sm st-b-ink">See all</button></div><span class="st-tag">active</span><span class="st-say">viền navy · 2 pattern</span></div><div class="st-cell" data-sig-state="d3f964d350:active"><div class="st-demo"><button class="sw-btn sw-btn--vac-2 sm st-b-ink st-bg-press">See all</button></div><span class="st-tag">active</span><span class="st-say">viền navy · nền #e0e0e0 · 1 pattern</span></div><div class="st-cell" data-sig-state="7e7c397919:active 2e5f898b5f:active 8024cc33c0:active"><div class="st-demo"><button class="sw-btn sw-btn--vac-2 sm st-ul">See all</button></div><span class="st-tag">active</span><span class="st-say">gạch chân · 3 pattern</span></div><div class="st-cell" data-sig-state="7f61cc9ca9:active"><div class="st-demo"><button class="sw-btn sw-btn--vac-2 sm st-ul st-b-ink">See all</button></div><span class="st-tag">active</span><span class="st-say">gạch chân · viền navy · 1 pattern</span></div></div>
+          <div class="spec-f"><span class="note">Ở palette Southwest nút này vẫn giữ primary + chữ cyan như đo được. Trang Getaways có header riêng (header__kcj6Q) nên thẻ này gom cả nút lẫn link sáng màu.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= MÀN MẪU ================= -->
+    <section class="block" id="screens">
+      <header><h2>Màn hình mẫu</h2><p>Trang chủ ghép từ chính các lớp <code>.sw-*</code> ở trên, đúng khung 390 × 844 và 1440 × 900 (thu nhỏ bằng <code>zoom</code>). Mobile: hero lên trên, widget đặt vé xuống dưới, footer gập accordion. Desktop: widget trái, hero phải.</p></header>
+      <div class="screens">
+        <figure class="frame" style="margin:0"><div class="scroller"><div class="phone"><div class="scr">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 12px"><span class="sw-logo" style="width:190px;height:34px">logo</span><button class="sw-btn sw-btn--primary sm"><span class="ms fill">person</span>Log in</button></div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px 18px;padding:6px 16px 10px;align-items:center"><button class="sw-link nav" style="padding:0">Flight | Hotel | Car | Vacations | Cruises</button><button class="sw-link nav" style="padding:0">Special offers</button><button class="sw-link nav" style="padding:0">Rapid Rewards®</button><span class="ms fill sw-bell">notifications</span></div>
+          <div style="background:linear-gradient(var(--sw-tintTop),var(--sw-tintBottom));padding:20px 16px 24px" class="sw-hero"><h3 style="font-size:30px;line-height:38px">Bay giá thấp, đi nhẹ nhàng.</h3><p>Giá thấp khắp nước Mỹ.</p><button class="sw-btn sw-btn--primary block">Book now</button></div>
+          <div class="sw-tabs" style="width:100%;margin-top:14px"><button class="tab" aria-selected="true">Flights</button><button class="tab">Vacations</button><button class="tab">Hotels</button><button class="tab" style="position:relative"><span class="sw-flag" style="padding:2px 10px">NEW!</span>Cars</button><button class="tab">Cruises</button></div>
+          <div style="padding:16px 32px;display:grid;grid-template-columns:1fr 1fr;gap:10px 8px">
+            <div class="sw-field"><label>Trip type</label><div class="sw-select">Round-trip<span class="ms">expand_more</span></div></div>
+            <div class="sw-field"><label>Recent searches</label><div class="sw-select">Select<span class="ms">expand_more</span></div></div>
+            <div class="sw-field"><label>Depart*</label><input class="sw-input" aria-label="Depart"></div>
+            <div class="sw-field"><label>Arrive*</label><input class="sw-input" aria-label="Arrive"></div>
+            <div class="sw-field"><label>Depart date*</label><div class="sw-iconin"><input class="sw-input" value="10/02" aria-label="Depart date"><span class="ms">calendar_month</span></div></div>
+            <div class="sw-field"><label>Return date*</label><div class="sw-iconin"><input class="sw-input" value="10/05" aria-label="Return date"><span class="ms">calendar_month</span></div></div>
+            <label class="sw-check" style="grid-column:1/-1;font-size:15px"><i></i>Show fares in points</label>
+            <button class="sw-btn sw-btn--primary block" style="grid-column:1/-1">Search flights</button>
+          </div>
+          <footer class="sw-footer" style="padding:16px 22px"><div class="sw-acc-m"><div>About Southwest<span class="ms">expand_more</span></div><div>Flying Southwest<span class="ms">expand_more</span></div></div></footer>
+        </div></div></div>
+        <figcaption>Mobile 390 × 844: header gọn (logo + Log in, menu 2 dòng), hero, tab sản phẩm có nhãn NEW!, form 2 cột, checkbox, nút chính rộng hết, footer accordion.</figcaption></figure>
+
+        <figure class="frame" style="margin:0"><div class="scroller"><div class="desk">
+          <header class="sw-header"><div class="in">
+            <div class="top"><i>Log in to view points balance</i><button class="sw-btn sw-btn--primary sm"><span class="ms fill">person</span>Log in</button><button class="sw-link b s14">Create account</button><button class="sw-link s13">Español</button></div>
+            <div class="main"><span class="sw-logo">logo Southwest</span><span class="grow"></span><button class="sw-link nav">Flight | Hotel | Car | Vacations | Cruises</button><button class="sw-link nav">Special offers</button><button class="sw-link nav">Rapid Rewards®</button><span class="ms fill sw-bell">notifications</span></div>
+          </div></header>
+          <div style="background:linear-gradient(var(--sw-tintTop),var(--sw-tintBottom));padding:56px 0 56px"><div style="max-width:1215px;margin:0 auto;display:flex;gap:48px;align-items:flex-start;padding:0 16px">
+            <div class="sw-booking"><div class="sw-tabs" style="width:100%"><button class="tab" aria-selected="true">Flights</button><button class="tab">Vacations</button><button class="tab">Hotels</button><button class="tab" style="position:relative"><span class="sw-flag">NEW!</span>Cars</button><button class="tab">Cruises</button></div>
+              <div class="body">
+                <div class="req full"><span>*Required fields</span><span>Đặt chỗ mở tới 06/2027</span></div>
+                <div class="sw-field"><label>Trip type</label><div class="sw-select">Round-trip<span class="ms">expand_more</span></div></div>
+                <div class="sw-field"><label>Recent searches</label><div class="sw-select">Select search<span class="ms">expand_more</span></div></div>
+                <div class="sw-field"><label>Depart*</label><input class="sw-input" aria-label="Depart"></div>
+                <div class="sw-field"><label>Arrive*</label><input class="sw-input" aria-label="Arrive"></div>
+                <div class="sw-field"><label>Depart date*</label><div class="sw-iconin"><input class="sw-input" value="10/02" aria-label="Depart date"><span class="ms">calendar_month</span></div><span class="hint">Fri, Oct 02, 2026</span></div>
+                <div class="sw-field"><label>Passengers*</label><div class="sw-iconin"><input class="sw-input" value="1" aria-label="Passengers"><span class="ms fill">person</span></div></div>
+                <div class="sw-field"><label>Promo code</label><input class="sw-input" aria-label="Promo code"></div>
+                <div class="sw-field"><label>Show fares in</label><div class="row" style="height:48px"><label class="sw-radio on"><i></i>$</label><label class="sw-radio"><i></i>Points</label></div></div>
+                <label class="sw-check full" style="justify-content:center"><i></i>Search with low fare calendar</label>
+                <div class="full" style="display:flex;justify-content:center"><button class="sw-btn sw-btn--primary" style="width:260px">Search flights</button></div>
+              </div></div>
+            <div class="sw-hero" style="padding-top:100px"><h3>Bay giá thấp, đi nhẹ nhàng.</h3><p>Giá thấp khắp nước Mỹ.</p><button class="sw-btn sw-btn--primary">Book now</button></div>
+          </div></div>
+          <footer class="sw-footer" style="padding:32px 112px"><div class="help"><div><div class="k">Need help?</div><button class="sw-link b" style="font-size:28px;line-height:38px">Help Center</button></div><div><div class="k">Subscribe</div><button class="sw-link b">Wanna receive email from us?</button></div><div><div class="k">Connect with us</div><div class="sw-social"><i>ảnh</i><i>ảnh</i><i>ảnh</i></div></div></div></footer>
+        </div></div>
+        <figcaption>Desktop 1440 × 900: header hai tầng, nền summit-silver, widget đặt vé 592 bên trái (tab, select, ô nhập, radio, checkbox, nút chính), hero bên phải, footer hàng Help.</figcaption></figure>
+      </div>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"><span id="toast-t"></span></div>
+
+<script>
+const ROLES=["primary", "primaryDeep", "primaryDark", "onPrimary", "ink", "inkStrong", "accent", "onAccent", "accentEdge", "heart", "surface", "surfaceSoft", "surfaceAlt", "surfacePale", "tintTop", "tintBottom", "border", "borderSubtle", "borderStrong", "muted", "mutedAlt", "textSoft", "textDark", "legacyText", "success", "warning", "danger", "dangerSoft", "sunBg", "skyBg", "peachBg", "mistBg", "greyBg", "focusUa", "focusYellow", "legacyLink", "legacyHover", "promo"];
+const PALETTES={"core": {"label": "Southwest", "light": ["#304CB2", "#1A2C80", "#1C2D6A", "#FFFFFF", "#090F23", "#111B40", "#FFBF27", "#111B40", "#FAD101", "#D5152E", "#FFFFFF", "#F5F5F5", "#F4F4F4", "#F7F9FF", "#F8F9FD", "#E2E7F0", "#CCCCCC", "#E0E0E0", "#AAAAAA", "#515151", "#757575", "#636363", "#333333", "#212529", "#00801F", "#FF792E", "#D7112A", "#FCD9DE", "#FEF9AB", "#B1DEF1", "#F7D1C6", "#CFDCF6", "#E6E7E8", "#005FCC", "#FFE671", "#007BFF", "#0056B3", "#00801F"], "dark": ["#ABC7FE", "#ACB7E0", "#8293D0", "#090F23", "#F0F3FF", "#DDE7FF", "#FFBF27", "#111B40", "#FAD101", "#DD4357", "#090F23", "#111B40", "#111B40", "#152360", "#111B40", "#090F23", "#263C8E", "#1C2D6A", "#596FC1", "#A3A3A3", "#A3A3A3", "#CCCCCC", "#E0E0E0", "#E0E0E0", "#66B278", "#FF9357", "#F36A7B", "#5F1B23", "#322607", "#152360", "#2A0409", "#1A2C80", "#152360", "#8293D0", "#FFE671", "#549CF2", "#A1CCFF", "#66B278"]}, "vacations": {"label": "Getaways (Vacations)", "light": ["#304CB2", "#1A2C80", "#1C2D6A", "#FFFFFF", "#090F23", "#111B40", "#304CB2", "#00F6FF", "#304CB2", "#D71D84", "#FFFFFF", "#F5F5F5", "#F4F4F4", "#F7F9FF", "#F8F9FD", "#E2E7F0", "#CCCCCC", "#E0E0E0", "#AAAAAA", "#515151", "#757575", "#636363", "#333333", "#212529", "#00801F", "#FF792E", "#D7112A", "#FCD9DE", "#FEF9AB", "#B1DEF1", "#F7D1C6", "#CFDCF6", "#E6E7E8", "#005FCC", "#FFE671", "#007BFF", "#0056B3", "#00A3BD"], "dark": ["#ABC7FE", "#ACB7E0", "#8293D0", "#090F23", "#F0F3FF", "#DDE7FF", "#596FC1", "#00F6FF", "#596FC1", "#DF4A9C", "#090F23", "#111B40", "#111B40", "#152360", "#111B40", "#090F23", "#263C8E", "#1C2D6A", "#596FC1", "#A3A3A3", "#A3A3A3", "#CCCCCC", "#E0E0E0", "#E0E0E0", "#66B278", "#FF9357", "#F36A7B", "#5F1B23", "#322607", "#152360", "#2A0409", "#1A2C80", "#152360", "#8293D0", "#FFE671", "#549CF2", "#A1CCFF", "#33DFE6"]}, "lounge": {"label": "Lounge (ch\u1ec9 token)", "light": ["#806437", "#6F572F", "#544D46", "#FFFFFF", "#090F23", "#111B40", "#BC9862", "#010E1D", "#977949", "#294299", "#FFFFFF", "#F5F5F5", "#F4F4F4", "#F5F3F0", "#F7F1E3", "#E4D4B9", "#CCCCCC", "#E0E0E0", "#AAAAAA", "#515151", "#757575", "#636363", "#333333", "#212529", "#00801F", "#FF792E", "#D7112A", "#FCD9DE", "#FEF9AB", "#B1DEF1", "#F7D1C6", "#CFDCF6", "#E6E7E8", "#005FCC", "#FFE671", "#007BFF", "#0056B3", "#00801F"], "dark": ["#DBC6A4", "#D1B78E", "#C5BFB8", "#090F23", "#F0F3FF", "#DDE7FF", "#C6A778", "#010E1D", "#BC9862", "#549CF2", "#090F23", "#111B40", "#111B40", "#3D3731", "#3D3731", "#090F23", "#263C8E", "#1C2D6A", "#596FC1", "#A3A3A3", "#A3A3A3", "#CCCCCC", "#E0E0E0", "#E0E0E0", "#66B278", "#FF9357", "#F36A7B", "#5F1B23", "#322607", "#152360", "#2A0409", "#1A2C80", "#152360", "#8293D0", "#FFE671", "#549CF2", "#A1CCFF", "#66B278"]}};
+/* thang gốc của site: biến CSS ở :root của southwest.com */
+const RAMPS = {
+  "--primary": [["100","#090f23"],["200","#111b40"],["250","#152360"],["300","#1c2d6a"],["350","#1a2c80"],["400","#263c8e"],["500","#304cb2"],["600","#596fc1"],["700","#8293d0"],["800","#acb7e0"],["850","#abc7fe"],["900","#dde7ff"],["950","#f0f3ff"]],
+  "--secondary": [["100","#322607"],["200","#654c0f"],["300","#997217"],["400","#cc981f"],["500","#ffbf27"],["600","#ffcb52"],["700","#ffd87d"],["800","#ffe5a8"],["900","#fff2d3"]],
+  "--tertiary": [["100","#2a0409"],["200","#550812"],["300","#7f0c1b"],["400","#aa1024"],["500","#d5152e"],["600","#dd4357"],["700","#e57281"],["800","#eea1ab"],["900","#f6d0d5"]],
+  "--neutral": [["100","#000000"],["200","#515151"],["300","#7a7a7a"],["400","#a3a3a3"],["500","#cccccc"],["600","#d6d6d6"],["700","#e0e0e0"],["750","#eeeeee"],["800","#f4f4f4"],["900","#ffffff"]],
+  "--success": [["100","#001906"],["200","#00330c"],["300","#004c12"],["400","#006618"],["500","#00801f"],["600","#33994b"],["700","#66b278"],["800","#99cca5"],["900","#cce5d2"]],
+  "--warning": [["100","#321809"],["200","#653012"],["300","#99481b"],["400","#cc6024"],["500","#ff792e"],["600","#ff9357"],["700","#ffae81"],["800","#ffc9ab"],["900","#ffe4d5"]],
+  "--danger": [["100","#2f0d11"],["200","#5f1b23"],["300","#902936"],["400","#c03748"],["500","#d7112a"],["600","#f36a7b"],["700","#f68f9c"],["800","#f9b4bd"],["900","#fcd9de"]],
+  "--secondary-vacations": [["100","#002b2c"],["200","#005659"],["300","#007994"],["400","#00a3bd"],["500","#01d8e0"],["600","#33dfe6"],["700","#00f6ff"],["800","#99eff2"],["900","#ccf7f8"]],
+  "--tertiary-vacations": [["100","#2a051a"],["200","#550b34"],["300","#88114f"],["400","#ac1769"],["500","#d71d84"],["600","#df4a9c"],["700","#e777b5"],["800","#efa4cd"],["900","#f7d1e6"]],
+  "--primary-lounge": [["100","#6f572f"],["200","#806437"],["300","#977949"],["400","#bc9862"],["500","#c6a778"],["600","#d1b78e"],["700","#dbc6a4"],["800","#e4d4b9"],["900","#f7f1e3"]],
+  "--rr-tier-2": [["100","#6f572f"],["200","#806437"],["300","#977949"],["350","#ab8956"],["400","#bc9862"],["500","#c6a778"],["600","#d1b78e"],["700","#dbc6a4"],["800","#e4d4b9"],["850","#eee3ce"],["900","#f7f1e3"],["950","#fcf9f3"]],
+  "--rr-tier-3": [["100","#4f5861"],["200","#646e79"],["300","#798491"],["350","#8d9ba8"],["400","#a2b1c0"],["500","#afbdcb"],["600","#bbc8d5"],["700","#c8d4e0"],["800","#d5dfea"],["850","#e1ebf5"],["900","#eef6ff"],["950","#f8fbff"]]
+};
+(function () {
+  const root = document.documentElement;
+  const state = { pal: "core", mode: matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light" };
+  try { Object.assign(state, JSON.parse(localStorage.getItem("sw-kit") || "{}")); } catch (e) {}
+  if (!PALETTES[state.pal]) state.pal = "core";
+
+  const toast = (t) => {
+    const el = document.getElementById("toast");
+    document.getElementById("toast-t").textContent = t;
+    el.classList.add("show");
+    clearTimeout(toast.t);
+    toast.t = setTimeout(() => el.classList.remove("show"), 1600);
+  };
+  const copy = async (text, msg) => {
+    try { await navigator.clipboard.writeText(text); toast(msg); }
+    catch (e) { toast("Trình duyệt chặn clipboard, hãy copy tay"); }
+  };
+
+  function apply() {
+    const vals = PALETTES[state.pal][state.mode];
+    ROLES.forEach((r, i) => root.style.setProperty("--sw-" + r, vals[i]));
+    root.dataset.mode = state.mode;
+    document.querySelectorAll("#swatches .sw").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === state.pal));
+    document.querySelectorAll("#mode button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === state.mode));
+    renderRoles(vals);
+    try { localStorage.setItem("sw-kit", JSON.stringify(state)); } catch (e) {}
+  }
+
+  const sw = document.getElementById("swatches");
+  Object.entries(PALETTES).forEach(([key, p]) => {
+    const b = document.createElement("button");
+    const L = p.light;
+    b.className = "sw"; b.dataset.v = key; b.title = p.label; b.setAttribute("aria-label", p.label);
+    b.style.setProperty("--a", L[ROLES.indexOf("primary")]); b.style.setProperty("--b", L[ROLES.indexOf("accent")] === L[ROLES.indexOf("primary")] ? L[ROLES.indexOf("onAccent")] : L[ROLES.indexOf("accent")]);
+    b.onclick = () => { state.pal = key; apply(); };
+    sw.appendChild(b);
+  });
+  document.querySelectorAll("#mode button").forEach((b) => (b.onclick = () => { state.mode = b.dataset.v; apply(); }));
+
+  /* ô màu: nền ghép với chữ cùng cặp */
+  const PAIRS = { primary: "onPrimary", primaryDeep: "onPrimary", primaryDark: "onPrimary", onPrimary: "primary", ink: "surface", inkStrong: "surface",
+    accent: "onAccent", onAccent: "accent", accentEdge: "onAccent", heart: "onPrimary", success: "onPrimary", danger: "onPrimary", warning: "inkStrong",
+    muted: "surface", mutedAlt: "surface", textSoft: "surface", textDark: "surface", legacyText: "surface", focusUa: "onPrimary", legacyLink: "onPrimary",
+    legacyHover: "onPrimary", promo: "onPrimary", dangerSoft: "danger" };
+  function renderRoles(vals) {
+    const box = document.getElementById("roles");
+    box.innerHTML = "";
+    ROLES.forEach((r, i) => {
+      const fg = vals[ROLES.indexOf(PAIRS[r] || "ink")];
+      const b = document.createElement("button");
+      b.className = "role"; b.style.background = vals[i]; b.style.color = fg;
+      b.innerHTML = "<b>" + r + "</b><code>" + vals[i] + "</code>";
+      b.onclick = () => copy(vals[i], "Đã copy " + r + " " + vals[i]);
+      box.appendChild(b);
+    });
+  }
+
+  const rp = document.getElementById("ramps");
+  Object.entries(RAMPS).forEach(([name, steps]) => {
+    const row = document.createElement("div");
+    row.className = "ramp";
+    row.innerHTML = '<span class="n">' + name + "</span>";
+    steps.forEach(([k, hex]) => {
+      const b = document.createElement("button");
+      b.style.background = hex; b.title = name + "-" + k + " " + hex; b.setAttribute("aria-label", name + "-" + k + " " + hex);
+      b.onclick = () => copy("var(" + name + "-" + k + ")", "Đã copy " + name + "-" + k + " (" + hex + ")");
+      row.appendChild(b);
+    });
+    rp.appendChild(row);
+  });
+
+  /* bo góc đo được */
+  const sh = document.getElementById("shapes");
+  [["0", "0", "583 phần tử"], ["2px", "2px", "nút · ô nhập"], ["4px", "4px", "thẻ điểm đến · NEW!"], ["5px", "5px", "swa-btn cũ"], ["pill", "116px", "viên thuốc lọc"], ["50%", "50%", "marker · radio"]].forEach(([n, r, w]) => {
+    const c = document.createElement("div");
+    c.className = "shape-cell";
+    c.innerHTML = '<i style="border-radius:' + r + '"></i>' + n + "<br>" + w;
+    sh.appendChild(c);
+  });
+
+  /* nút copy HTML cho mỗi thẻ */
+  document.querySelectorAll(".spec").forEach((spec) => {
+    const stage = spec.querySelector(".stage");
+    if (!stage || !spec.querySelector(".spec-h")) return;
+    let foot = spec.querySelector(".spec-f");
+    if (!foot) { foot = document.createElement("div"); foot.className = "spec-f"; foot.innerHTML = '<span class="note"></span>'; spec.appendChild(foot); }
+    const b = document.createElement("button");
+    b.className = "copy"; b.innerHTML = '<span class="ms">content_copy</span>HTML';
+    b.onclick = () => copy(stage.innerHTML.trim().replace(/\n\s+/g, "\n"), "Đã copy HTML của " + spec.querySelector(".spec-h b").textContent);
+    foot.appendChild(b);
+  });
+
+  document.getElementById("copy-tokens").onclick = () => {
+    const vals = PALETTES[state.pal][state.mode];
+    const lines = ROLES.map((r, i) => "  --sw-" + r + ": " + vals[i] + ";");
+    copy(":root {\n" + lines.join("\n") + '\n  --font: "Source Sans 3", Arial, sans-serif;\n  --r-xs: 2px; --r-s: 4px; --r-m: 5px; --r-pill: 116px;\n}', "Đã copy token " + PALETTES[state.pal].label + " " + (state.mode === "dark" ? "tối" : "sáng"));
+  };
+
+  const links = [...document.querySelectorAll(".side a")];
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (e.isIntersecting) links.forEach((a) => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id));
+  }), { rootMargin: "-30% 0px -60% 0px" });
+  document.querySelectorAll("section.block").forEach((s) => io.observe(s));
+
+  /* viên thuốc / tab bấm được */
+  document.addEventListener("click", (e) => {
+    const p = e.target.closest(".sw-pills .sw-pill");
+    if (p) p.parentElement.querySelectorAll(".sw-pill").forEach((x) => { x.classList.toggle("on", x === p); x.setAttribute("aria-pressed", x === p); });
+    const t = e.target.closest(".sw-tabs .tab");
+    if (t && !t.closest(".states")) t.parentElement.querySelectorAll(".tab").forEach((x) => x.setAttribute("aria-selected", x === t));
+  });
+
+  apply();
+})();
+</script>
+</body>
+</html>
