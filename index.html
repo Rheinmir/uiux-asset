@@ -15,11 +15,15 @@
 <div class="aw-card-slide__foot"><h3 class="aw-card-slide__title"><a href="components/">Components</a></h3><span>từ</span><span>bài viết UI/UX, tái tạo bằng code</span><span class="aw-tag aw-tag--bold">29</span></div></div>
 <div class="aw-card-slide"><a class="aw-fig is-large" href="ui-kits/" aria-label="Mở UI kits"><span class="aw-shot"><iframe loading="lazy" src="https://rheinmir.github.io/uiux-asset/ui-kits/awwwards-com/latest/" title="Xem trước UI kits" tabindex="-1" aria-hidden="true"></iframe></span></a>
 <div class="aw-card-slide__foot"><h3 class="aw-card-slide__title"><a href="ui-kits/">UI kits</a></h3><span>từ</span><span>site thật, rút bằng /ui-kit-from-code</span><span class="aw-tag aw-tag--bold" id="kit-total" hidden></span></div></div>
+<div class="aw-card-slide"><a class="aw-fig is-large" href="galaxy/" aria-label="Mở Galaxy"><span class="aw-shot gx-mosaic" id="gx-mosaic"></span></a>
+<div class="aw-card-slide__foot"><h3 class="aw-card-slide__title"><a href="galaxy/">Galaxy</a></h3><span>từ</span><span>Uiverse.io (MIT)</span><span class="aw-tag aw-tag--bold">3.802</span></div></div>
 </div>
 <h2 class="aw-heading-hr" id="kits-h" hidden>UI kit mới nhất</h2>
 <div class="aw-grid" id="kits"></div>
 </main>
-<script src="ui-kits/kits.js"></script>
+<script src="ui-kits/kits.js"></script><script src="galaxy/galaxy.js"></script>
+<script>awGalaxy.load().then((all) => { const m = document.getElementById('gx-mosaic');   // 4 element đầu tiên không dùng Tailwind của 4 nhóm
+  m.append(...['Buttons', 'loaders', 'Toggle-switches', 'Checkboxes'].map((c) => awGalaxy.frame(all.find((it) => it[0] === c && !it[5])))); }).catch(() => {});</script>
 <script>awKits.load().then((k) => { const t = document.getElementById('kit-total'); t.textContent = k.length; t.hidden = false;
   document.getElementById('kits-h').hidden = false; document.getElementById('kits').innerHTML = k.slice(0, 6).map(awKits.card).join(''); }).catch(() => {});</script>
 <script src="/search.js" defer></script><script src="/stats.js" defer></script></body></html>

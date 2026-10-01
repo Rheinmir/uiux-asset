@@ -7,7 +7,7 @@
   let saved = null; try { saved = localStorage.getItem(KEY); } catch {}
   d.dataset.theme = saved || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 
-  const NAV = [['scroll-effects/', 'Scroll effects'], ['components/', 'Components'], ['ui-kits/', 'UI kits'], ['stats.html', 'Thống kê']];
+  const NAV = [['scroll-effects/', 'Scroll effects'], ['components/', 'Components'], ['ui-kits/', 'UI kits'], ['galaxy/', 'Galaxy'], ['stats.html', 'Thống kê']];
   const links = NAV.map(([p, t]) => `<a href="${R + p}"${location.href.startsWith(R + p) ? ' aria-current="page"' : ''}>${t}</a>`).join('');
   const run = '<span><b>uiux-asset</b></span><span class="ms">sentiment_satisfied</span><span>Code gốc nguyên văn — xem chạy thật, copy nguyên file</span>';
 

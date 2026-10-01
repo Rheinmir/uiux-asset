@@ -1,0 +1,72 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Galaxy — uiux-asset</title>
+<meta name="description" content="3.800+ UI element của Uiverse.io (uiverse-io/galaxy, MIT) — chạy thật, copy nguyên code.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css">
+<style>
+.gx-prev { display: block; aspect-ratio: 16 / 12; overflow: hidden; border-radius: var(--aw-rounded-small); background: var(--aw-img); }
+.gx-prev iframe { display: block; width: 100%; height: 100%; border: 0; }
+.gx-cats { overflow-x: auto; }
+.gx-copy { cursor: pointer; font-family: inherit; }
+.gx-k { margin-left: 6px; font-size: 11px; opacity: .65; font-variant-numeric: tabular-nums; }
+#more { align-self: center; }
+</style></head><body>
+<main class="aw-wrap"><script src="../aw.js"></script>
+<div class="aw-filters"><label class="aw-search"><button type="button" aria-label="Tìm" tabindex="-1"><span class="ms">search</span></button><input id="q" type="search" placeholder="Lọc theo tác giả, tag (glass, neon, 3d…)" aria-label="Lọc element"></label>
+<span class="grow"></span><span class="aw-filter has-count" title="Số element khớp"><span class="aw-count" id="n">0</span></span></div>
+<div class="aw-filters gx-cats" id="cats" role="group" aria-label="Nhóm element"></div>
+<div class="aw-crumb"><h1>Galaxy. UI element của Uiverse.io <span class="aw-tag aw-tag--bold" id="total">…</span></h1><span>Chép nguyên văn từ <a href="https://github.com/uiverse-io/galaxy" target="_blank" rel="noopener">uiverse-io/galaxy</a> (MIT) — mỗi thẻ chạy thật, rê chuột/bấm thử được; Copy lấy đúng file gốc, giữ dòng ghi công tác giả.</span></div>
+<div class="aw-grid" id="g"></div>
+<p id="msg" role="status">Đang tải danh sách element…</p>
+<button type="button" class="aw-btn aw-btn--outline" id="more" hidden>Xem thêm</button>
+</main>
+<script src="galaxy.js"></script>
+<script>
+(() => {
+  const PAGE = 48, $ = (id) => document.getElementById(id), esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const NAME = { 'Buttons': 'Button', 'Cards': 'Card', 'Checkboxes': 'Checkbox', 'Forms': 'Form', 'Inputs': 'Input', 'loaders': 'Loader', 'Notifications': 'Notification',
+    'Patterns': 'Pattern', 'Radio-buttons': 'Radio', 'Toggle-switches': 'Toggle', 'Tooltips': 'Tooltip' };
+  let all = [], list = [], shown = 0, cat = new URLSearchParams(location.search).get('c') || '';
+
+  function card(it) {
+    const [c, file, author, slug, tags, tw] = it, a = document.createElement('article');
+    a.className = 'aw-card-site';
+    a.innerHTML = `<div class="gx-prev"></div>
+      <div class="aw-card-site__info"><a class="aw-av" href="https://uiverse.io/profile/${esc(author)}" target="_blank" rel="noopener" style="font-size:15px"><span class="aw-av__img">${esc(author[0].toUpperCase())}</span><h3 class="aw-av__title">${esc(author)}</h3></a>
+        <span class="grow"></span>${tw ? '<span class="aw-tag aw-tag--medium aw-tag--dev" title="Dùng Tailwind CSS">TW</span>' : ''}
+        <a class="aw-tag aw-tag--medium" href="https://uiverse.io/${esc(author)}/${esc(slug)}" target="_blank" rel="noopener" aria-label="Xem ${esc(slug)} trên Uiverse">Uiverse</a>
+        <a class="aw-tag aw-tag--medium" href="https://github.com/Rheinmir/uiux-asset/blob/main/galaxy/${esc(c)}/${esc(file)}" target="_blank" rel="noopener" aria-label="Code gốc ${esc(file)}">Code</a>
+        <button type="button" class="aw-tag aw-tag--medium aw-tag--solid-black gx-copy">Copy</button></div>
+      <p class="aw-desc">${esc(NAME[c] || c)} · ${esc(tags.join(', ') || slug)}</p>`;
+    a.querySelector('.gx-prev').append(awGalaxy.frame(it));
+    const b = a.querySelector('.gx-copy');
+    b.onclick = () => awGalaxy.code(it).then((t) => navigator.clipboard.writeText(t)).then(() => { b.textContent = 'Đã copy'; }, () => { b.textContent = 'Lỗi copy'; })
+      .finally(() => setTimeout(() => { b.textContent = 'Copy'; }, 1500));
+    return a;
+  }
+  function more() {
+    const next = list.slice(shown, shown + PAGE); shown += next.length;
+    $('g').append(...next.map(card)); $('more').hidden = shown >= list.length;
+  }
+  function apply() {
+    const v = $('q').value.trim().toLowerCase();
+    list = all.filter((it) => (!cat || it[0] === cat) && (!v || (it[2] + ' ' + it[3] + ' ' + it[4].join(' ')).toLowerCase().includes(v)));
+    $('g').replaceChildren(); shown = 0; more();
+    $('n').textContent = list.length; $('msg').hidden = list.length > 0; $('msg').textContent = 'Không có element nào khớp — thử tag khác.';
+    document.querySelectorAll('#cats button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.c === cat));
+    history.replaceState(null, '', cat ? '?c=' + encodeURIComponent(cat) : location.pathname);
+  }
+  let t; $('q').oninput = () => { clearTimeout(t); t = setTimeout(apply, 200); };
+  $('more').onclick = more;
+  new IntersectionObserver((es) => { if (es[0].isIntersecting && !$('more').hidden) more(); }, { rootMargin: '600px' }).observe($('more'));   // cuộn tới cuối tự nạp thêm
+
+  awGalaxy.load().then((items) => {
+    all = items; $('total').textContent = items.length.toLocaleString('vi-VN');
+    const counts = {}; items.forEach((it) => { counts[it[0]] = (counts[it[0]] || 0) + 1; });
+    $('cats').innerHTML = [['', 'Tất cả', items.length], ...Object.keys(counts).sort((a, b) => counts[b] - counts[a]).map((c) => [c, NAME[c] || c, counts[c]])]
+      .map(([c, label, k]) => `<button type="button" class="aw-filter" data-c="${esc(c)}" aria-pressed="false">${esc(label)}<span class="gx-k">${k}</span></button>`).join('');
+    $('cats').onclick = (e) => { const b = e.target.closest('button'); if (b) { cat = b.dataset.c; apply(); } };
+    apply();
+  }).catch((e) => { $('msg').textContent = `Chưa đọc được danh sách element (${e.message}).`; });
+})();
+</script><script src="/stats.js" defer></script></body></html>

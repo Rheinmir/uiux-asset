@@ -40,8 +40,11 @@ SITE = r"""
 .aw-shot iframe { position: absolute; top: 0; left: 0; width: 400%; height: 400%; border: 0; transform: scale(.25); transform-origin: 0 0; pointer-events: none; }
 .aw-desc { margin: 6px 0 0; font-size: 13px; line-height: 20px; font-weight: 400; color: var(--aw-ink2); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .aw-desc a { color: inherit; }
+.gx-mosaic { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 2px; }
+.gx-mosaic iframe { width: 100%; height: 100%; border: 0; pointer-events: none; }
 a.aw-tag { text-decoration: none; }
 a.aw-tag:hover { border-color: var(--aw-color-primary); }
+.aw-count { width: auto; min-width: 20px; padding: 0 5px; }   /* kit: ô 20px chỉ vừa 2 chữ số */
 .aw-filters .aw-search { background: var(--aw-nf-bg-3); max-width: 420px; }
 .aw-filter[aria-pressed="true"] { background: var(--aw-nf-bg-3); font-weight: 600; }
 .aw-lead { margin: 0; max-width: 62ch; font: 400 var(--aw-text-medium)/28px var(--aw-font); text-align: center; text-wrap: balance; }
