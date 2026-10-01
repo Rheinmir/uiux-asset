@@ -1,8 +1,8 @@
 <!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>uiux-asset</title>
 <meta name="description" content="Code gốc nguyên văn các pattern UI/UX — hiệu ứng cuộn, component, UI kit rút từ site thật. Xem chạy thật, copy nguyên file.">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
-<link rel="stylesheet" href="aw.css?v=0d09397d95"></head><body>
-<main class="aw-wrap"><script src="aw.js?v=0d09397d95"></script>
+<link rel="stylesheet" href="aw.css?v=1ab90dba62"></head><body>
+<main class="aw-wrap"><script src="aw.js?v=1ab90dba62"></script>
 <div class="aw-sotd" style="padding-top:16px"><p class="aw-sotd__sub"><span>Kho pattern UI/UX</span><span class="aw-tag aw-tag--medium">Code gốc nguyên văn</span></p>
 <h1 class="aw-h1" style="--aw-h1:clamp(42px,9.4vw,126.7px)">uiux asset<span class="aw-sticker" aria-hidden="true"></span></h1>
 <p class="aw-lead">Hiệu ứng cuộn, component và UI kit rút từ site thật — xem chạy thật, copy nguyên file.</p></div>
@@ -21,9 +21,9 @@
 <h2 class="aw-heading-hr" id="kits-h" hidden>UI kit mới nhất</h2>
 <div class="aw-grid" id="kits"></div>
 </main>
-<script src="ui-kits/kits.js?v=0d09397d95"></script><script src="galaxy/galaxy.js?v=0d09397d95"></script>
+<script src="ui-kits/kits.js?v=1ab90dba62"></script><script src="galaxy/galaxy.js?v=1ab90dba62"></script>
 <script>awGalaxy.load().then((all) => { const m = document.getElementById('gx-mosaic');   // 4 element đầu tiên không dùng Tailwind của 4 nhóm
   m.append(...['Buttons', 'loaders', 'Toggle-switches', 'Checkboxes'].map((c) => awGalaxy.frame(all.find((it) => it[0] === c && !it[5])))); }).catch(() => {});</script>
 <script>awKits.load().then((k) => { const t = document.getElementById('kit-total'); t.textContent = k.length; t.hidden = false;
   document.getElementById('kits-h').hidden = false; document.getElementById('kits').innerHTML = k.slice(0, 6).map(awKits.card).join(''); }).catch(() => {});</script>
-<script src="/search.js?v=0d09397d95" defer></script><script src="/stats.js?v=0d09397d95" defer></script></body></html>
+<script src="/search.js?v=1ab90dba62" defer></script><script src="/stats.js?v=1ab90dba62" defer></script></body></html>

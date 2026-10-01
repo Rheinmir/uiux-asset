@@ -20,7 +20,7 @@ KIT = Path(args[0]) if args else ROOT / "ui-kits/awwwards-com/latest/index.html"
 # Icon chỉ lấy đúng các tên site dùng (icon_names phải xếp a→z) — cả bộ Material Symbols nặng vài trăm KB.
 FONTS = ("https://fonts.googleapis.com/css2?family=Inter+Tight:wght@100..900"
          "&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..24,300..500,0..1,0"
-         "&icon_names=dark_mode,light_mode,open_in_new,search,sentiment_satisfied&display=block")
+         "&icon_names=dark_mode,light_mode,open_in_new,search,sentiment_satisfied,shopping_bag&display=block")
 
 SITE = r"""
 /* ================= SITE uiux-asset — phần tự viết, chỉ dùng biến của kit ================= */
@@ -51,7 +51,8 @@ a.aw-tag:hover { border-color: var(--aw-color-primary); }
 .aw-wrap .aw-home-search { width: 100%; max-width: 720px; margin: 0 auto; font-size: 14px; line-height: 20px; }
 [hidden] { display: none !important; }
 /* giỏ mẫu (cart.js): nút trên thẻ + ngăn kéo phải — ghép từ aw-btn / aw-tag / aw-search của kit */
-button.aw-tag { cursor: pointer; background: transparent; font-family: inherit; }
+button.aw-tag { cursor: pointer; font-family: inherit; }
+.aw-cart-add { background: transparent; }   /* chỉ nút giỏ; nút solid của kit (Copy) giữ nền */
 .aw-cart-add[aria-pressed="true"] { background: var(--aw-inverse-bg); color: var(--aw-inverse-ink); border-color: var(--aw-inverse-bg); }
 h3 > .aw-cart-add { margin-left: 10px; vertical-align: middle; }
 #aw-cart-btn .aw-count { margin-left: 6px; }
@@ -77,6 +78,17 @@ h3 > .aw-cart-add { margin-left: 10px; vertical-align: middle; }
 .aw-cart__f { margin-top: auto; padding-top: 12px; }
 .aw-cart__f .aw-btn { flex: 1; }
 .aw-btn[disabled] { opacity: .45; cursor: not-allowed; }
+/* bong bóng giỏ: .aw-float của kit, cố định góc dưới phải (mobile: giữa đáy như màn mẫu) */
+.aw-cart-fab { position: fixed; right: 24px; bottom: 24px; z-index: 55; box-shadow: 0 8px 24px rgba(0,0,0,.18); }
+.aw-cart-fab button { cursor: pointer; font-family: var(--aw-font); }
+.aw-cart-fab .aw-float__logo { position: relative; border: none; }
+.aw-cart-fab .aw-float__item { white-space: nowrap; }
+.aw-cart-fab .aw-float__logo .ms { font-size: 26px; }
+.aw-cart-fab .aw-count { position: absolute; top: -6px; right: -6px; font-style: normal; }
+.aw-cart-fab.is-pop { animation: aw-pop .18s ease-out; }              /* phản hồi khi thêm: ngắn, ease-out */
+@keyframes aw-pop { 50% { transform: scale(1.06); } }
+.aw-footer { padding-bottom: 104px; }                                   /* chừa chỗ cho bong bóng, không che footer */
+@media (max-width: 700px) { .aw-cart-fab { right: auto; left: 50%; transform: translateX(-50%); bottom: 16px; } .aw-cart-fab.is-pop { animation: none; } }
 @media (max-width: 700px) {
   .aw-site-head .aw-marquee { display: none; }
   .aw-header { height: auto; min-height: var(--aw-nf-height); flex-wrap: wrap; gap: 4px 16px; padding: 6px; }

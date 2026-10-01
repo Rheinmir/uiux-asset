@@ -14,9 +14,19 @@
   function toggle(x) {
     if (has(x)) st.items = st.items.filter((y) => key(y) !== key(x));
     else if (st.items.length >= MAX) return alertLine(`Giỏ tối đa ${MAX} mục.`);
-    else st.items.push(x);
+    else { st.items.push(x); pulse(); }
     st.out = null; save();
   }
+
+  // ---------- bong bóng giỏ nổi góc dưới: menu nổi .aw-float của kit (màn mẫu mobile) ----------
+  const fab = document.createElement('div');
+  fab.className = 'aw-float aw-cart-fab';
+  fab.innerHTML = `<button type="button" class="aw-float__logo" data-open aria-label="Mở giỏ mẫu"><span class="ms">shopping_bag</span><i class="aw-count" id="aw-fab-n">0</i></button>
+    <button type="button" class="aw-float__item aw-float__item--anchor is-on" data-open id="aw-fab-t">Giỏ trống</button>
+    <button type="button" class="aw-btn aw-btn--medium aw-btn--ch" data-open data-checkout id="aw-fab-go">Chốt sổ</button>`;
+  fab.addEventListener('click', (e) => { if (e.target.closest('[data-open]')) open(); });
+  (document.body ? Promise.resolve() : new Promise((r) => document.addEventListener('DOMContentLoaded', r))).then(() => document.body.append(fab));
+  const pulse = () => { fab.classList.remove('is-pop'); void fab.offsetWidth; fab.classList.add('is-pop'); };
 
   // ---------- nút "+ Giỏ" trên thẻ ----------
   const fromBtn = (b) => ({ k: b.dataset.k, id: b.dataset.id, ...(b.dataset.v ? { v: +b.dataset.v } : {}), t: b.dataset.t || b.dataset.id });
@@ -25,6 +35,9 @@
     document.querySelectorAll('.aw-cart-add').forEach((b) => { const on = has(fromBtn(b));
       if (b.getAttribute('aria-pressed') !== String(on)) { b.setAttribute('aria-pressed', on); b.textContent = on ? '✓ Trong giỏ' : '+ Giỏ'; } });
     const n = $('#aw-cart-n'); if (n) n.textContent = st.items.length;
+    const c = st.items.length;
+    $('#aw-fab-n', fab).textContent = c; $('#aw-fab-n', fab).hidden = !c;
+    $('#aw-fab-t', fab).textContent = c ? `Giỏ mẫu · ${c} mục` : 'Giỏ trống'; $('#aw-fab-go', fab).hidden = !c;
   }
   let q = 0; new MutationObserver((rs) => { if (rs.every((r) => drawer?.contains(r.target))) return; if (!q) q = requestAnimationFrame(() => { q = 0; sync(); }); }).observe(document.documentElement, { childList: true, subtree: true });
 
@@ -66,7 +79,7 @@
         <a class="aw-btn aw-btn--small aw-btn--outline" href="/api/cart?id=${esc(o.id)}&amp;format=html&amp;dl=1">Tải HTML</a>
         <a class="aw-btn aw-btn--small aw-btn--outline" href="/api/cart?id=${esc(o.id)}&amp;format=md&amp;dl=1">Tải MD</a></div></div>` : ''}
       <p class="aw-cart__msg" id="aw-cart-msg" role="status"></p>
-      <footer class="aw-cart__f"><button type="button" class="aw-btn" data-act="export"${st.items.length ? '' : ' disabled'}>Xuất ui-kit</button>
+      <footer class="aw-cart__f"><button type="button" class="aw-btn" data-act="export"${st.items.length ? '' : ' disabled'}>Chốt sổ · xuất ui-kit</button>
         <button type="button" class="aw-btn aw-btn--outline" data-act="clear"${st.items.length ? '' : ' disabled'}>Giỏ mới</button></footer>`;
   }
   function alertLine(t) { const m = $('#aw-cart-msg'); if (m) m.textContent = t; else open(t); }
