@@ -1,0 +1,774 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta name="ui-kit-id" content="instagram-com">
+<!-- UI kit bóc từ trang profile công khai trên instagram.com (xem khi chưa đăng nhập), 01/10/2026.
+     Token: getComputedStyle của 755 biến trên :root thật (CSS inline .__ig-light-mode / .__ig-dark-mode + lớp _aa4c / _aa4d), sáng và tối.
+     Số đo: getComputedStyle của phần tử thật ở 1440px và 390px, qua discover.mjs (6 trang, 56 pattern, 30 trạng thái).
+     Không nhúng ảnh, logo, tên hay nội dung của tài khoản: tất cả thay bằng khối giữ chỗ và chữ mẫu. -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="ui-kit-skip" content="">
+<title>Instagram Web UI Kit</title>
+<style>
+/* Kit mặc chính token của Instagram web. Tên biến giữ nguyên như CSS gốc (--ig-*, --fds-*, --grey-*…).
+   Nhiều biến là bộ ba "r, g, b" nên component đọc qua rgb(var(--x)); biến dạng hex/rgba thì đọc var(--x). */
+:root {
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* hằng số layout đo trên trang thật */
+  --ig-content: 935px; --ig-topbar-h: 60px; --ig-tile-gap: 1px;
+  color-scheme: light;
+}
+:root[data-mode="dark"] { color-scheme: dark; }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: rgb(var(--ig-primary-background)); color: rgb(var(--ig-primary-text)); font: 400 14px/18px var(--font); -webkit-font-smoothing: antialiased; }
+code, .code { font-family: var(--mono); font-size: 12px; }
+:focus-visible { outline: 2px solid rgb(var(--ig-primary-button)); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+svg.i { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+/* ---------- vỏ trang ---------- */
+.shell { display: grid; grid-template-columns: 232px minmax(0, 1fr); min-height: 100vh; }
+.side { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 20px 12px; border-right: 1px solid rgb(var(--ig-separator)); display: flex; flex-direction: column; gap: 2px; background: rgb(var(--ig-primary-background)); }
+.brand { display: flex; align-items: center; gap: 10px; padding: 4px 12px 16px; }
+.brand-mark { width: 32px; height: 32px; border-radius: 8px; background: rgb(var(--ig-primary-button)); color: rgb(var(--web-always-white)); display: grid; place-items: center; font-weight: 700; }
+.brand b { font-size: 16px; font-weight: 600; display: block; }
+.brand small { color: rgb(var(--ig-secondary-text)); font-size: 12px; }
+.side h6 { margin: 14px 12px 6px; font-size: 12px; font-weight: 600; color: rgb(var(--ig-secondary-text)); }
+.side a { display: flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 8px; color: rgb(var(--ig-primary-text)); text-decoration: none; }
+.side a:hover { background: rgba(var(--ig-hover-overlay)); }
+.side a.on { background: rgb(var(--ig-highlight-background)); font-weight: 600; }
+main { padding: 0 32px 96px; min-width: 0; }
+
+.bar { position: sticky; top: 0; z-index: 520; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; padding: 14px 0; background: rgb(var(--ig-primary-background)); border-bottom: 1px solid rgb(var(--ig-separator)); }
+.bar .grow { flex: 1; }
+.ctl { display: flex; align-items: center; gap: 8px; }
+.ctl > span { font-size: 12px; font-weight: 600; color: rgb(var(--ig-secondary-text)); }
+.seg { display: inline-flex; border-radius: 8px; overflow: hidden; background: rgb(var(--ig-secondary-background)); padding: 2px; gap: 2px; }
+.seg button { height: 28px; padding: 0 12px; border: 0; border-radius: 6px; background: transparent; color: rgb(var(--ig-primary-text)); font: 600 13px var(--font); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: rgb(var(--ig-primary-background)); box-shadow: 0 1px 2px rgb(var(--ig-separator)); }
+.copy { height: 32px; padding: 0 16px; border-radius: 8px; border: 0; background: rgb(var(--ig-secondary-button-background)); color: rgb(var(--ig-primary-text)); font: 600 14px var(--font); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.copy:hover { background: rgb(var(--ig-secondary-button-hover)); }
+
+.intro { padding: 40px 0 8px; max-width: 780px; }
+.intro .eyebrow { font-family: var(--mono); font-size: 12px; color: rgb(var(--ig-primary-button)); }
+.intro h1 { font-size: 40px; line-height: 48px; font-weight: 700; margin: 8px 0 12px; text-wrap: balance; }
+.intro p { font-size: 16px; line-height: 24px; color: rgb(var(--ig-secondary-text)); margin: 0 0 8px; max-width: 68ch; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.fact { font-family: var(--mono); font-size: 12px; padding: 4px 10px; border-radius: 6px; background: rgb(var(--ig-secondary-background)); color: rgb(var(--ig-secondary-text)); }
+
+section.block { padding-top: 48px; scroll-margin-top: 64px; }
+section.block > header { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+section.block h2 { font-size: 28px; line-height: 36px; font-weight: 700; margin: 0; }
+section.block > header p { margin: 0; color: rgb(var(--ig-secondary-text)); max-width: 72ch; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 16px; }
+.spec { background: rgb(var(--ig-primary-background)); border: 1px solid rgb(var(--ig-stroke)); border-radius: 12px; display: flex; flex-direction: column; min-width: 0; }
+.spec.full { grid-column: 1 / -1; }
+.spec-h { display: flex; align-items: center; gap: 8px; padding: 14px 16px 0; flex-wrap: wrap; }
+.spec-h b { font-size: 15px; font-weight: 600; }
+.kind { font-family: var(--mono); font-size: 11px; padding: 2px 8px; border-radius: 6px; background: rgb(var(--ig-secondary-background)); color: rgb(var(--ig-primary-text)); }
+.spec-h .dp { margin-left: auto; font-family: var(--mono); font-size: 11px; color: rgb(var(--ig-secondary-text)); font-variant-numeric: tabular-nums; }
+.stage { padding: 20px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; min-height: 96px; overflow-x: auto; }
+.stage.col { flex-direction: column; align-items: stretch; }
+.stage.dim { background: rgb(var(--ig-secondary-background)); margin: 12px 12px 0; border-radius: 8px; }
+.spec-f { display: flex; align-items: center; gap: 8px; padding: 8px 12px 12px 16px; margin-top: auto; }
+.spec-f .note { font-size: 12px; line-height: 16px; color: rgb(var(--ig-secondary-text)); flex: 1; }
+.st { font-family: var(--mono); font-size: 10px; color: rgb(var(--ig-secondary-text)); display: block; margin-bottom: 4px; }
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+.cell { display: flex; flex-direction: column; gap: 4px; }
+
+/* nền tảng */
+.roles { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
+.roles h4 { grid-column: 1 / -1; margin: 12px 0 0; font-size: 13px; color: rgb(var(--ig-secondary-text)); font-weight: 600; }
+.role { border-radius: 8px; padding: 10px 12px; min-height: 64px; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid rgb(var(--ig-stroke)); cursor: pointer; text-align: left; font: inherit; color: rgb(var(--ig-primary-text)); background: rgb(var(--ig-primary-background)); }
+.role i { display: block; height: 28px; border-radius: 6px; margin-bottom: 8px; box-shadow: inset 0 0 0 1px rgb(var(--ig-separator)); }
+.role b { font-size: 12px; font-weight: 500; word-break: break-all; }
+.role code { font-size: 11px; color: rgb(var(--ig-secondary-text)); word-break: break-all; }
+.filter { height: 32px; width: 260px; max-width: 100%; padding: 0 12px; border-radius: 8px; border: 1px solid rgb(var(--ig-stroke)); background: rgb(var(--ig-secondary-background)); color: rgb(var(--ig-primary-text)); font: 14px var(--font); }
+.type-row { display: grid; grid-template-columns: 190px minmax(0, 1fr) 170px; gap: 16px; align-items: baseline; padding: 10px 0; border-bottom: 1px solid rgb(var(--ig-separator)); }
+.type-row:last-child { border-bottom: none; }
+.type-row .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.type-row .meta { font-family: var(--mono); font-size: 11px; color: rgb(var(--ig-secondary-text)); font-variant-numeric: tabular-nums; }
+.shapes { display: flex; flex-wrap: wrap; gap: 20px; }
+.shape-cell { display: flex; flex-direction: column; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px; color: rgb(var(--ig-secondary-text)); text-align: center; max-width: 110px; }
+.shape-cell i { display: block; width: 72px; height: 56px; background: rgb(var(--ig-secondary-background)); border: 1px solid rgb(var(--ig-stroke)); }
+.scroll { overflow-x: auto; }
+table.tok { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; min-width: 520px; }
+table.tok th, table.tok td { text-align: left; padding: 8px 12px 8px 0; border-bottom: 1px solid rgb(var(--ig-separator)); font-size: 13px; vertical-align: top; }
+table.tok th { font-weight: 600; color: rgb(var(--ig-secondary-text)); font-size: 12px; }
+table.tok td:first-child { font-family: var(--mono); font-size: 12px; }
+.ramp { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
+.ramp button { width: 64px; height: 44px; border: 0; border-radius: 6px; cursor: pointer; font: 10px var(--mono); display: flex; align-items: flex-end; padding: 4px; color: rgb(var(--web-always-white)); }
+.ramp .lbl { width: 90px; font: 600 12px var(--font); color: rgb(var(--ig-secondary-text)); align-self: center; }
+
+/* ================= component .ig-* (chỉ dựa vào token) ================= */
+.ig-ph { display: grid; place-items: center; background: rgb(var(--ig-highlight-background)); color: rgb(var(--ig-secondary-text)); font: 600 11px var(--font); text-align: center; overflow: hidden; }
+
+/* nút */
+.ig-btn { display: inline-flex; align-items: center; justify-content: center; height: 32px; padding: 0 16px; border: 0; border-radius: 8px; font: 600 14px/18px var(--font); text-decoration: none; cursor: pointer; transition: transform .1s; }
+.ig-btn.primary { background: rgb(var(--ig-colors-button-primary-background)); color: rgb(var(--ig-colors-button-primary-text)); }
+.ig-btn.primary:hover, .ig-btn.primary.is-hover { background: rgb(var(--ig-colors-button-primary-background--hover)); }
+.ig-btn.primary:active, .ig-btn.primary.is-active { background: rgb(var(--ig-colors-button-primary-background--pressed)); }
+.ig-btn.secondary { background: rgb(var(--ig-colors-button-secondary-background)); color: rgb(var(--ig-colors-button-secondary-text)); }
+.ig-btn.secondary:hover, .ig-btn.secondary.is-hover { background: rgb(var(--ig-colors-button-secondary-background--hover)); }
+.ig-btn.secondary:active, .ig-btn.secondary.is-active { background: rgb(var(--ig-colors-button-secondary-background--pressed)); transform: scale(.98); }
+.ig-btn.lg { height: 42px; width: 100%; padding: 12px 20px; border-radius: 12px; }
+.ig-btn.lg:active, .ig-btn.lg.is-active { transform: scale(.98); }
+.ig-btn.pill { height: 40px; border-radius: 12px; padding: 0 16px; font-size: 16px; }
+.ig-link { color: rgb(var(--ig-colors-button-primary-link-text)); font: 500 14px/18px var(--font); text-decoration: none; border-radius: 2px; cursor: pointer; background: none; border: 0; padding: 0; }
+.ig-link:hover, .ig-link.is-hover { color: rgb(var(--ig-colors-button-borderless-text--hover)); text-decoration: underline; }
+.ig-link:active, .ig-link.is-active { color: rgb(var(--ig-colors-button-borderless-text--pressed)); text-decoration: underline; }
+.ig-link.strong { font-weight: 600; }
+.ig-text-btn { background: none; border: 0; padding: 0; font: 600 12px/16px var(--font); color: rgb(var(--ig-secondary-text)); cursor: pointer; }
+.ig-text-btn:active, .ig-text-btn.is-active { opacity: .7; }
+.ig-icon-btn { display: inline-grid; place-items: center; width: 34px; height: 34px; padding: 8px 0; border: 0; background: none; color: rgb(var(--ig-primary-icon)); cursor: pointer; transition: transform .1s; }
+.ig-icon-btn.sm { width: 24px; height: 24px; padding: 0; }
+.ig-icon-btn:hover, .ig-icon-btn.is-hover { transform: scale(1.05); }
+.ig-icon-btn:active, .ig-icon-btn.is-active { transform: scale(.95); }
+.ig-icon-btn.dim { color: rgb(var(--ig-secondary-icon)); }
+.ig-round { display: inline-grid; place-items: center; width: 28px; height: 28px; border: 0; border-radius: 20px; background: var(--ig-background-always-dark-blur); color: rgb(var(--web-always-white)); cursor: pointer; }
+.ig-round.solid { border-radius: 16px; background: var(--always-dark-overlay); }
+.ig-round svg.i { width: 16px; height: 16px; }
+.ig-close { display: inline-grid; place-items: center; width: 28px; height: 28px; border: 0; border-radius: 16px; background: none; color: rgb(var(--ig-primary-icon)); cursor: pointer; }
+.ig-close svg.i { width: 18px; height: 18px; }
+.ig-showmore { display: inline-flex; align-items: center; gap: 8px; height: 51px; padding: 12px 16px; border-radius: 22px; background: rgb(var(--ig-primary-background)); color: rgb(var(--ig-primary-text)); font: 600 14px/18px var(--font); border: 1px solid rgb(var(--ig-stroke)); cursor: pointer; }
+.ig-showmore:active, .ig-showmore.is-active { opacity: .7; }
+
+/* thanh trên */
+.ig-top { height: var(--ig-topbar-h); display: flex; align-items: center; border-bottom: 1px solid rgb(var(--ig-separator)); background: rgb(var(--ig-primary-background)); }
+.ig-top .in { width: var(--ig-content); max-width: 100%; margin: 0 auto; display: flex; align-items: center; gap: 16px; padding: 0 20px; }
+.ig-top .grow { flex: 1; }
+.ig-logo { width: 103px; height: 29px; border-radius: 4px; }
+
+/* đầu profile */
+.ig-prof { display: grid; grid-template-columns: 311px minmax(0, 1fr); align-items: start; padding-top: 30px; }
+.ig-ring { width: 165px; height: 165px; border-radius: 50%; padding: 4px; background: conic-gradient(from 200deg, rgb(var(--gradient-yellow)), rgb(var(--gradient-orange)), rgb(var(--gradient-red)), rgb(var(--gradient-pink)), rgb(var(--gradient-lavender)), rgb(var(--gradient-purple)), rgb(var(--gradient-yellow))); justify-self: center; }
+.ig-ring > span { display: block; width: 100%; height: 100%; border-radius: 50%; padding: 4px; background: rgb(var(--ig-primary-background)); }
+.ig-ring .ig-ph { width: 100%; height: 100%; border-radius: 50%; background: rgb(var(--ig-secondary-background)); }
+.ig-ring.hl { width: 92px; height: 92px; padding: 2px; background: rgb(var(--ig-stroke)); }
+.ig-ring.hl > span { padding: 5px; }
+.ig-handle { display: flex; align-items: center; gap: 8px; }
+.ig-handle h2 { font: 400 20px/25px var(--font); margin: 0; }
+.ig-verified { width: 18px; height: 18px; color: rgb(var(--blue-5)); flex: none; }
+.ig-stats { list-style: none; display: flex; gap: 40px; margin: 20px 0; padding: 0; font: 400 16px/20px var(--font); }
+.ig-stats a { color: rgb(var(--ig-primary-text)); text-decoration: none; }
+.ig-stats a:active, .ig-stats a.is-active { color: rgb(var(--ig-colors-button-borderless-text--pressed)); }
+.ig-stats b { font-weight: 600; }
+.ig-stats span { color: rgb(var(--ig-secondary-text)); }
+.ig-name { font: 600 14px/18px var(--font); }
+.ig-bio { font: 400 14px/18px var(--font); }
+.ig-web { display: inline-flex; align-items: center; gap: 4px; font: 600 14px/18px var(--font); color: rgb(var(--ig-link)); text-decoration: none; }
+.ig-web svg.i { width: 12px; height: 12px; }
+
+/* tin nổi bật */
+.ig-hls { display: flex; gap: 40px; padding: 40px 0 0 40px; }
+.ig-hl { width: 85px; display: flex; flex-direction: column; align-items: center; gap: 15px; text-decoration: none; color: rgb(var(--ig-primary-text)); }
+.ig-hl small { font: 600 12px/16px var(--font); max-width: 85px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* tab profile */
+.ig-tabs { display: flex; justify-content: space-around; gap: 4px; border-bottom: 1px solid rgb(var(--ig-separator)); margin-top: 44px; }
+.ig-tab { width: 64px; height: 44px; padding: 0 20px; display: grid; place-items: center; color: rgb(var(--grey-5)); border-bottom: 2px solid transparent; }
+.ig-tab.on { color: rgb(var(--ig-primary-icon)); border-bottom-color: rgb(var(--ig-primary-text)); }
+.ig-tab:active, .ig-tab.is-active { color: rgb(var(--ig-colors-button-borderless-text--pressed)); }
+
+/* lưới bài */
+.ig-gridposts { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--ig-tile-gap); }
+.ig-tile { position: relative; aspect-ratio: 3 / 4; display: block; background: rgb(var(--ig-highlight-background)); text-decoration: none; }
+.ig-tile .ig-ph { position: absolute; inset: 0; }
+.ig-tile:active, .ig-tile.is-active { color: rgb(var(--ig-colors-button-borderless-text--pressed)); }
+.ig-multi { position: absolute; top: 8px; right: 8px; width: 30px; height: 30px; display: grid; place-items: center; color: rgb(var(--web-always-white)); }
+.ig-multi svg.i { width: 20px; height: 20px; }
+
+/* bài viết */
+.ig-post { display: flex; border: 1px solid rgb(var(--ig-stroke)); background: rgb(var(--ig-primary-background)); width: 787px; max-width: 100%; height: 601px; }
+.ig-post .media { flex: 1; position: relative; background: rgb(var(--web-always-black)); }
+.ig-post .media .ig-ph { position: absolute; inset: 0; background: rgb(var(--ig-highlight-background)); }
+.ig-post .side { all: unset; width: 335px; display: flex; flex-direction: column; background: rgb(var(--ig-primary-background)); border-left: 1px solid rgb(var(--ig-separator)); }
+.ig-post-h { display: flex; align-items: center; gap: 12px; padding: 14px 4px 14px 16px; border-bottom: 1px solid rgb(var(--ig-separator)); }
+.ig-av .ig-ph { font-size: 8px; }
+.ig-av { width: 32px; height: 32px; border-radius: 50%; flex: none; display: grid; place-items: center; background: rgb(var(--ig-secondary-background)); color: rgb(var(--ig-colors-link-text)); }
+.ig-av:active, .ig-av.is-active { color: rgb(var(--ig-colors-button-borderless-text--pressed)); }
+.ig-user { font: 600 14px/18px var(--font); color: rgb(var(--ig-primary-text)); text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
+.ig-user:active, .ig-user.is-active { color: rgb(var(--ig-colors-button-borderless-text--pressed)); }
+.ig-user.plain { font-weight: 500; color: rgb(var(--ig-primary-text)); }
+.ig-user.plain:hover, .ig-user.plain.is-hover { text-decoration: underline; }
+.ig-follow { display: inline-flex; align-items: center; gap: 4px; background: none; border: 0; padding: 0; height: 28px; font: 600 14px/18px var(--font); color: rgb(var(--ig-colors-button-borderless-text)); cursor: pointer; }
+.ig-follow:hover, .ig-follow.is-hover { color: rgb(var(--ig-colors-button-borderless-text--hover)); }
+.ig-follow:active, .ig-follow.is-active { color: rgb(var(--ig-colors-button-borderless-text--pressed)); }
+.ig-comments { flex: 1; overflow: auto; padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+.ig-cmt { display: flex; gap: 14px; align-items: flex-start; }
+.ig-cmt .body { flex: 1; font: 400 14px/18px var(--font); }
+.ig-cmt .meta { display: flex; gap: 12px; margin-top: 8px; align-items: center; }
+.ig-time { font: 400 12px/16px var(--font); color: rgb(var(--ig-secondary-text)); letter-spacing: .2px; }
+.ig-heart-sm { width: 12px; height: 12px; color: rgb(var(--ig-secondary-text)); margin-top: 10px; }
+.ig-actions { border-top: 1px solid rgb(var(--ig-elevated-highlight-background)); padding: 6px 16px; }
+.ig-actions .bar2 { display: flex; align-items: center; height: 40px; }
+.ig-actions .bar2 .grow { flex: 1; }
+.ig-count { font: 600 14px/18px var(--font); }
+.ig-dots { position: absolute; bottom: 15px; left: 0; right: 0; display: flex; justify-content: center; gap: 4px; }
+.ig-dot { width: 6px; height: 6px; border-radius: 50%; background: rgb(var(--web-always-white)); opacity: .4; }
+.ig-dot.on { opacity: 1; }
+.ig-badge-dot { width: 16px; height: 16px; border-radius: 50%; background: rgb(var(--web-always-white)); display: inline-block; }
+.ig-next { position: absolute; top: 50%; right: 0; transform: translateY(-50%); padding: 16px 8px; background: none; border: 0; cursor: pointer; }
+
+/* gợi ý tài khoản */
+.ig-h4 { font: 600 16px/20px var(--font); margin: 0 0 12px; }
+.ig-sug { width: 153px; height: 210px; border: 1px solid rgb(var(--ig-stroke)); border-radius: 12px; background: rgb(var(--ig-primary-background)); display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px 12px; text-align: center; }
+.ig-sug .ig-ph { width: 77px; height: 77px; border-radius: 50%; }
+.ig-sug b { font: 600 14px/18px var(--font); }
+.ig-sug small { font: 400 12px/16px var(--font); color: rgb(var(--ig-secondary-text)); }
+.ig-sug .ig-btn { margin-top: auto; width: 100%; }
+
+/* hộp thoại đăng ký */
+.ig-scrim { background: var(--overlay-alpha-80); padding: 32px 16px; display: grid; place-items: center; border-radius: 8px; }
+.ig-dialog { position: relative; width: 548px; max-width: 100%; border-radius: 32px; background: rgb(var(--ig-primary-background)); padding: 48px 56px 40px; display: flex; flex-direction: column; gap: 12px; }
+.ig-dialog .ig-close { position: absolute; top: 12px; right: 12px; }
+.ig-dialog .ig-ph { width: 96px; height: 96px; border-radius: 50%; align-self: center; margin-bottom: 12px; }
+.ig-dialog h3 { font: 700 24px/30px var(--font); margin: 0; }
+.ig-dialog p { margin: 0; font: 400 14px/18px var(--font); }
+.ig-dialog .terms { font: 400 12px/16px var(--font); color: rgb(var(--ig-secondary-text)); margin-bottom: 12px; }
+.ig-terms-link { font: 600 12px/16px var(--font); color: rgb(var(--ig-secondary-text)); text-decoration: none; }
+.ig-terms-link:hover, .ig-terms-link.is-hover { text-decoration: underline; }
+.ig-terms-link:active, .ig-terms-link.is-active { color: rgb(var(--ig-colors-button-borderless-text--pressed)); }
+.ig-dialog .ig-link { align-self: center; }
+
+/* chân trang */
+.ig-foot { padding: 24px 16px 52px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.ig-foot nav { display: flex; flex-wrap: wrap; justify-content: center; }
+.ig-foot a { margin: 0 8px 12px; font: 400 12px/16px var(--font); color: rgb(var(--ig-secondary-text)); text-decoration: none; }
+.ig-foot a:hover, .ig-foot a.is-hover { text-decoration: underline; }
+.ig-foot a:active, .ig-foot a.is-active { color: rgb(var(--ig-colors-button-borderless-text--pressed)); }
+.ig-foot small { font: 400 12px/16px var(--font); color: rgb(var(--ig-secondary-text)); }
+
+/* trạng thái focus của trình duyệt (site không style riêng) */
+.is-focus { outline: 2px solid var(--focus-ring-blue); outline-offset: 2px; }
+
+/* ---------- màn mẫu ---------- */
+.frame-wrap { overflow-x: auto; padding: 8px 0; }
+.frames { display: flex; gap: 32px; width: max-content; align-items: flex-start; }
+.desk { width: 1440px; height: 900px; border-radius: 12px; box-shadow: 0 0 0 10px rgb(var(--grey-8)); background: rgb(var(--ig-primary-background)); overflow: hidden; margin: 10px; zoom: .5; position: relative; }
+.desk .wrap { width: var(--ig-content); margin: 0 auto; }
+.phone { width: 390px; height: 844px; border-radius: 40px; box-shadow: 0 0 0 10px rgb(var(--grey-8)); background: rgb(var(--ig-primary-background)); overflow: hidden; margin: 10px; zoom: .62; position: relative; }
+.phone .ig-top { height: 64px; }
+.phone .ig-top .in { padding: 0 16px; }
+.m-prof { display: grid; grid-template-columns: 116px 1fr; gap: 12px 8px; padding: 16px; align-items: center; }
+.m-prof .ig-ring { width: 116px; height: 116px; }
+.m-prof .ig-stats { margin: 8px 0 0; gap: 6px; font-size: 14px; }
+.m-bio { padding: 0 24px 16px; }
+.phone .ig-tabs { margin-top: 0; }
+.frame-cap { font-family: var(--mono); font-size: 12px; color: rgb(var(--ig-secondary-text)); margin: 4px 10px 0; max-width: 760px; }
+.phone + .frame-cap { max-width: 262px; }
+
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; transition: all .25s; z-index: 600; background: rgb(var(--ig-primary-text)); color: rgb(var(--ig-primary-background)); border-radius: 8px; padding: 10px 16px; }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; }
+  .side { display: none; }
+  main { padding: 0 16px 80px; }
+  .grid { grid-template-columns: 1fr; }
+  .intro h1 { font-size: 30px; line-height: 38px; }
+  .type-row { grid-template-columns: 1fr; gap: 2px; }
+  .ig-prof { grid-template-columns: 1fr; gap: 16px; }
+  .ig-post { flex-direction: column; height: auto; }
+  .ig-post .media { min-height: 300px; }
+  .ig-post .side { width: auto; border-left: 0; }
+  .ig-dialog { padding: 40px 20px 28px; }
+  .ig-stats { gap: 16px; flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <nav class="side" aria-label="Mục lục kit">
+    <div class="brand"><div class="brand-mark">I</div><div><b>Instagram Web Kit</b><small>instagram.com · profile</small></div></div>
+    <h6>Nền tảng</h6>
+    <a href="#color">Màu</a>
+    <a href="#type">Chữ</a>
+    <a href="#shape">Bo góc</a>
+    <a href="#layout">Bố cục &amp; kích thước</a>
+    <h6>Thành phần</h6>
+    <a href="#actions">Hành động</a>
+    <a href="#navigation">Điều hướng</a>
+    <a href="#profile">Profile</a>
+    <a href="#post">Bài viết</a>
+    <a href="#feedback">Hộp thoại &amp; chân trang</a>
+    <h6>Mẫu</h6>
+    <a href="#screens">Màn hình mẫu</a>
+  </nav>
+
+  <main>
+    <div class="bar" role="toolbar" aria-label="Chủ đề">
+      <div class="ctl"><span>Chế độ</span><div class="seg" id="mode">
+        <button data-v="light" aria-pressed="true">Sáng</button>
+        <button data-v="dark" aria-pressed="false">Tối</button></div></div>
+      <div class="grow"></div>
+      <button class="copy" id="copy-tokens">Copy CSS token</button>
+    </div>
+
+    <div class="intro">
+      <div class="eyebrow">instagram.com :root (getComputedStyle) → docs/instagram-ui-kit.html</div>
+      <h1>Instagram Web UI Kit</h1>
+      <p>Hệ giao diện của Instagram bản web, bóc từ một trang profile công khai và các trang bài viết của nó khi chưa đăng nhập. Màu là 755 biến CSS thật đọc bằng <code>getComputedStyle</code> trên <code>:root</code>, ở chế độ sáng (<code>.__ig-light-mode</code> + <code>_aa4c</code>) và tối (<code>.__ig-dark-mode</code> + <code>_aa4d</code>). Số đo lấy từ phần tử thật ở 1440px và 390px.</p>
+      <p>Muốn dùng lại: copy khối token của chế độ đang chọn, rồi copy HTML từng thẻ. Mọi class <code>.ig-*</code> chỉ đọc biến của Instagram. Phần lớn biến là bộ ba <code>r, g, b</code> nên đọc qua <code>rgb(var(--x))</code>. Ảnh, logo, tên và nội dung của tài khoản đều thay bằng khối giữ chỗ.</p>
+      <div class="facts">
+        <span class="fact">font hệ thống · 14px / 18px</span><span class="fact">nội dung 935px</span><span class="fact">thanh trên 60px</span><span class="fact">profile 311 + 623</span>
+        <span class="fact">lưới 3 cột · ô 3:4 · khe 1px</span><span class="fact">avatar 150 · vòng 165</span><span class="fact">nút 32px · bo 8</span><span class="fact">hộp thoại 548 · bo 32</span>
+      </div>
+    </div>
+
+    <!-- ================= NỀN TẢNG ================= -->
+    <section class="block" id="color">
+      <header><h2>Màu</h2><p>Tất cả biến màu đọc được trên <code>:root</code>, nhóm theo tiền tố. Biến <code>--ig-*</code> mới và lớp nguyên thuỷ <code>--grey-*</code>, <code>--blue-*</code> cùng tồn tại; khi trùng tên thì giá trị hiện ở đây là giá trị đang thắng trên trang. Bấm một ô để copy giá trị.</p>
+        <input class="filter" id="role-filter" placeholder="Lọc tên biến, vd primary-button" aria-label="Lọc biến màu"></header>
+      <div class="roles" id="roles"></div>
+    </section>
+
+    <section class="block" id="type">
+      <header><h2>Chữ</h2><p>Instagram web dùng chồng font hệ thống (<code>--font-family-system</code>): máy Mac hiện San Francisco, Windows hiện Segoe UI. Kit không tải font ngoài, giống site. Thang dưới là các cỡ chữ đo được trên trang, cùng biến độ đậm <code>--font-weight-system-*</code>.</p></header>
+      <div class="spec"><div class="stage col" id="typescale"></div></div>
+    </section>
+
+    <section class="block" id="shape">
+      <header><h2>Bo góc</h2><p>Instagram không có thang shape để đổi: mỗi loại component có bán kính cố định, đo trên trang. Vì vậy thanh điều khiển không có mục shape.</p></header>
+      <div class="spec"><div class="stage"><div class="shapes" id="shapes"></div></div></div>
+    </section>
+
+    <section class="block" id="layout">
+      <header><h2>Bố cục &amp; kích thước</h2><p>Hằng số đo bằng <code>getBoundingClientRect</code> ở 1440px và 390px, cùng các biến kích thước có sẵn trên <code>:root</code>.</p></header>
+      <div class="grid">
+        <div class="spec"><div class="stage col scroll"><table class="tok">
+          <tr><th>khối</th><th>1440px</th><th>390px</th></tr>
+          <tr><td>thanh trên</td><td>cao 60, nội dung 935</td><td>cao 64, lề 16</td></tr>
+          <tr><td>đầu profile</td><td>lưới 311 + 623</td><td>avatar trái + tên phải</td></tr>
+          <tr><td>avatar · vòng</td><td>150 · 165</td><td>~ 86 · 116</td></tr>
+          <tr><td>tin nổi bật</td><td>ảnh 77, vòng 92, rộng 85</td><td>—</td></tr>
+          <tr><td>tab</td><td>64 × 44, đệm 0 20, vạch 2px</td><td>như desktop</td></tr>
+          <tr><td>ô lưới</td><td>310.7 × 414.2, khe 1</td><td>129 × 172, khe 1</td></tr>
+          <tr><td>bài viết</td><td>787 × 601, cột phải 335</td><td>một cột</td></tr>
+          <tr><td>hộp thoại</td><td>548 × 435, đệm ngang 48</td><td>—</td></tr>
+        </table></div></div>
+        <div class="spec"><div class="stage col scroll"><table class="tok" id="sizevars">
+          <tr><th>biến trên :root</th><th>giá trị</th></tr>
+        </table></div></div>
+      </div>
+    </section>
+
+    <!-- ================= HÀNH ĐỘNG ================= -->
+    <section class="block" id="actions">
+      <header><h2>Hành động</h2><p>Nút chính xanh, nút phụ xám, liên kết dạng nút, nút chữ nhỏ và nút icon. Hover/pressed lấy đúng biến <code>--ig-colors-button-*--hover</code> / <code>--pressed</code> đo được khi ép trạng thái.</p></header>
+      <div class="grid">
+
+        <div class="spec" data-sig="0136a1a836" data-sig-state="0136a1a836:hover 0136a1a836:active">
+          <div class="spec-h"><b>Nút chính</b><span class="kind">a · Log In</span><span class="dp">32 · đệm 0 16 · bo 8 · 600 14</span></div>
+          <div class="stage">
+            <div class="cell"><span class="st">nghỉ</span><a class="ig-btn primary" href="#">Log In</a></div>
+            <div class="cell"><span class="st">:hover</span><a class="ig-btn primary is-hover" href="#">Log In</a></div>
+            <div class="cell"><span class="st">:active</span><a class="ig-btn primary is-active" href="#">Log In</a></div>
+          </div>
+          <div class="spec-f"><span class="note">Nền <code>--ig-colors-button-primary-background</code> (74,93,249), hover và pressed cùng lên (65,80,247).</span></div>
+        </div>
+
+        <div class="spec" data-sig="28adc645c4 4b74a1d7ec" data-sig-state="28adc645c4:hover 28adc645c4:active 4b74a1d7ec:hover 4b74a1d7ec:active">
+          <div class="spec-h"><b>Nút chính lớn</b><span class="kind">div / a · Sign up</span><span class="dp">452 × 42 · đệm 12 20 · bo 12</span></div>
+          <div class="stage col">
+            <div class="cell"><span class="st">nghỉ</span><a class="ig-btn primary lg" href="#">Sign up</a></div>
+            <div class="cell"><span class="st">:hover</span><a class="ig-btn primary lg is-hover" href="#">Sign up</a></div>
+            <div class="cell"><span class="st">:active · scale .98</span><a class="ig-btn primary lg is-active" href="#">Sign up</a></div>
+          </div>
+          <div class="spec-f"><span class="note">Dùng trong hộp thoại đăng ký, rộng hết cột. Nhấn giữ thu nhỏ <code>scale(.98)</code>.</span></div>
+        </div>
+
+        <div class="spec" data-sig="b173872b9b" data-sig-state="b173872b9b:hover b173872b9b:active">
+          <div class="spec-h"><b>Nút phụ</b><span class="kind">div · Follow</span><span class="dp">87 × 32 · đệm 0 16 · bo 8</span></div>
+          <div class="stage">
+            <div class="cell"><span class="st">nghỉ</span><button class="ig-btn secondary">Follow</button></div>
+            <div class="cell"><span class="st">:hover</span><button class="ig-btn secondary is-hover">Follow</button></div>
+            <div class="cell"><span class="st">:active · scale .98</span><button class="ig-btn secondary is-active">Follow</button></div>
+          </div>
+          <div class="spec-f"><span class="note">Nền <code>--ig-colors-button-secondary-background</code> (240,242,245), hover/pressed (231,234,238). Chữ (12,16,20).</span></div>
+        </div>
+
+        <div class="spec" data-sig="2ad62773a3 3cc0e2e0c3" data-sig-state="2ad62773a3:hover 2ad62773a3:active 3cc0e2e0c3:hover 3cc0e2e0c3:active">
+          <div class="spec-h"><b>Liên kết dạng nút</b><span class="kind">a · Sign Up / Log in</span><span class="dp">500 14/18 · bo 2</span></div>
+          <div class="stage">
+            <div class="cell"><span class="st">nghỉ</span><a class="ig-link" href="#">Sign Up</a></div>
+            <div class="cell"><span class="st">:hover</span><a class="ig-link is-hover" href="#">Sign Up</a></div>
+            <div class="cell"><span class="st">:active</span><a class="ig-link is-active" href="#">Sign Up</a></div>
+            <div class="cell"><span class="st">trong hộp thoại</span><a class="ig-link" href="#">Log in</a></div>
+          </div>
+          <div class="spec-f"><span class="note">Chữ <code>--ig-colors-button-primary-link-text</code> (49,67,227); hover (37,54,208) + gạch chân, pressed (31,40,173).</span></div>
+        </div>
+
+        <div class="spec" data-sig="c31b351800" data-sig-state="c31b351800:hover c31b351800:active">
+          <div class="spec-h"><b>Follow dạng chữ</b><span class="kind">button · • Follow</span><span class="dp">cao 28 · 600 14</span></div>
+          <div class="stage">
+            <div class="cell"><span class="st">nghỉ</span><button class="ig-follow">Follow</button></div>
+            <div class="cell"><span class="st">:hover</span><button class="ig-follow is-hover">Follow</button></div>
+            <div class="cell"><span class="st">:active</span><button class="ig-follow is-active">Follow</button></div>
+          </div>
+          <div class="spec-f"><span class="note">Nằm ở đầu bài viết, sau tên tài khoản và dấu "•". Màu <code>--ig-colors-button-borderless-text</code>.</span></div>
+        </div>
+
+        <div class="spec" data-sig="9a91cd05a0 8fcfedf6cd" data-sig-state="9a91cd05a0:active">
+          <div class="spec-h"><b>Nút chữ nhỏ</b><span class="kind">button · Reply / Like</span><span class="dp">600 12/16 · #737373</span></div>
+          <div class="stage">
+            <div class="cell"><span class="st">nghỉ</span><div class="row"><button class="ig-text-btn">Reply</button><button class="ig-text-btn">1 like</button></div></div>
+            <div class="cell"><span class="st">:active · opacity .7</span><button class="ig-text-btn is-active">Reply</button></div>
+          </div>
+          <div class="spec-f"><span class="note">Dưới mỗi bình luận, cách nhau 12px. Màu <code>--ig-secondary-text</code>.</span></div>
+        </div>
+
+        <div class="spec" data-sig="13e7673d24 86edf2dd09 4f4b0e06c9" data-sig-state="13e7673d24:hover 13e7673d24:active 86edf2dd09:hover 86edf2dd09:active">
+          <div class="spec-h"><b>Nút icon</b><span class="kind">div(svg) · Like / Comment / Share / Save</span><span class="dp">34 × 34 · icon 24</span></div>
+          <div class="stage">
+            <div class="cell"><span class="st">nghỉ</span><div class="row" style="gap:0"><button class="ig-icon-btn" aria-label="Thích"><svg class="i" viewBox="0 0 24 24"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/></svg></button> <button class="ig-icon-btn" aria-label="Bình luận"><svg class="i" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-3.5-6.6A8 8 0 0 1 20 12zM20 20l-2-4"/></svg></button> <button class="ig-icon-btn" aria-label="Chia sẻ"><svg class="i" viewBox="0 0 24 24"><path d="M22 3 9 13M22 3l-7 18-3-8-8-3z"/></svg></button></div></div>
+            <div class="cell"><span class="st">:hover · scale 1.05</span><button class="ig-icon-btn is-hover" aria-label="Thích (hover)"><svg class="i" viewBox="0 0 24 24"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/></svg></button></div>
+            <div class="cell"><span class="st">:active · scale .95</span><button class="ig-icon-btn is-active" aria-label="Thích (nhấn)"><svg class="i" viewBox="0 0 24 24"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/></svg></button></div>
+            <div class="cell"><span class="st">nhỏ 24 · …</span><button class="ig-icon-btn sm" aria-label="Tuỳ chọn khác"><svg class="i" viewBox="0 0 24 24"><circle cx="6" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="18" cy="12" r="1.5"/></svg></button></div>
+          </div>
+          <div class="spec-f"><span class="note">Icon là SVG vẽ giữ chỗ theo hình dáng, không phải icon gốc của Instagram. Màu <code>--ig-primary-icon</code>. Hàng nút nằm trong <code>section</code> 303 × 40.</span></div>
+        </div>
+
+        <div class="spec" data-sig="a341bc3b13 f9087b8411 0452ee15c3 f757e6f111 b088e748b2">
+          <div class="spec-h"><b>Nút tròn trên ảnh</b><span class="kind">button · Next / Close / gắn thẻ</span><span class="dp">28 · bo 20 / 16</span></div>
+          <div class="stage dim">
+            <div class="cell"><span class="st">mờ 50% · bo 20</span><button class="ig-round" aria-label="Ảnh kế"><svg class="i" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></button></div>
+            <div class="cell"><span class="st">mờ 80% · bo 16</span><button class="ig-round solid" aria-label="Người được gắn thẻ"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></button></div>
+            <div class="cell"><span class="st">đóng · 28 bo 16</span><button class="ig-close" aria-label="Đóng"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+            <div class="cell"><span class="st">vùng Next 46 × 62</span><button class="ig-text-btn" style="padding:16px 8px" aria-label="Bài kế"><svg class="i" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></button></div>
+            <div class="cell"><span class="st">chấm trắng 16</span><span class="ig-badge-dot"></span></div>
+          </div>
+          <div class="spec-f"><span class="note">Nền <code>--ig-background-always-dark-blur</code> (43,48,54,.5) và <code>--always-dark-overlay</code> (43,48,54,.8). Site không đo được hover cho các nút này.</span></div>
+        </div>
+
+        <div class="spec" data-sig="a512bf4631" data-sig-state="a512bf4631:active">
+          <div class="spec-h"><b>Xem thêm bài</b><span class="kind">div · Show more posts</span><span class="dp">304 × 51 · bo 22 · đệm 12 16</span></div>
+          <div class="stage">
+            <div class="cell"><span class="st">nghỉ</span><button class="ig-showmore"><span class="ig-ph" style="width:24px;height:24px;border-radius:50%">ảnh</span>Show more posts from tên_tài_khoản</button></div>
+            <div class="cell"><span class="st">:active · opacity .7</span><button class="ig-showmore is-active">Show more posts</button></div>
+          </div>
+          <div class="spec-f"><span class="note">Viền 1px <code>--ig-stroke</code> vẽ theo ảnh để thấy hình viên thuốc trên nền trắng; site không có viền đo được.</span></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= ĐIỀU HƯỚNG ================= -->
+    <section class="block" id="navigation">
+      <header><h2>Điều hướng</h2><p>Thanh trên cùng khi chưa đăng nhập và hàng tab của profile.</p></header>
+      <div class="grid">
+        <div class="spec full" data-sig="e02d922bf8">
+          <div class="spec-h"><b>Thanh trên (chưa đăng nhập)</b><span class="kind">div · header</span><span class="dp">cao 60 · nội dung 935 · viền dưới 1px</span></div>
+          <div class="stage col">
+            <div class="ig-top"><div class="in"><span class="ig-ph ig-logo">logo</span><span class="grow"></span><a class="ig-btn primary" href="#">Log In</a><a class="ig-link" href="#">Sign Up</a></div></div>
+          </div>
+          <div class="spec-f"><span class="note">Desktop: logo trái, nút Log In và liên kết Sign Up phải. Mobile (390px) cao 64, thay bằng liên kết "Log in" và nút "Open app" bo 12 cỡ chữ 16 (xem màn mẫu). Logo là khối giữ chỗ.</span></div>
+        </div>
+
+        <div class="spec full" data-sig="5a5ab9da3e 20d1f54335" data-sig-state="20d1f54335:active">
+          <div class="spec-h"><b>Tab profile</b><span class="kind">div(a) · Posts / Tagged</span><span class="dp">tab 64 × 44 · đệm 0 20 · vạch 2px</span></div>
+          <div class="stage col">
+            <div class="ig-tabs" style="margin-top:0">
+              <a class="ig-tab on" href="#" aria-label="Bài viết"><svg class="i" viewBox="0 0 24 24"><path d="M3 3h18v18H3zM9 3v18M15 3v18M3 9h18M3 15h18"/></svg></a>
+              <a class="ig-tab" href="#" aria-label="Được gắn thẻ"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="12" cy="10" r="3"/><path d="M7 21c0-3 2-5 5-5s5 2 5 5"/></svg></a>
+            </div>
+            <span class="st">:active</span>
+            <div class="ig-tabs" style="margin-top:0"><a class="ig-tab on is-active" href="#" aria-label="Bài viết (đang nhấn)"><svg class="i" viewBox="0 0 24 24"><path d="M3 3h18v18H3zM9 3v18M15 3v18M3 9h18M3 15h18"/></svg></a></div>
+          </div>
+          <div class="spec-f"><span class="note">Hàng tab rộng 935, viền dưới 1px <code>--ig-separator</code>. Tab chọn có vạch dưới 2px <code>--ig-primary-text</code>, icon (38,38,38); tab thường icon (142,142,142).</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= PROFILE ================= -->
+    <section class="block" id="profile">
+      <header><h2>Profile</h2><p>Đầu trang profile, tin nổi bật, lưới bài và thẻ gợi ý tài khoản.</p></header>
+      <div class="grid">
+        <div class="spec full" data-sig="e545af622c f320a4a4d7 69e51b22ea a29b3b2699 f8fbfc58b8 ab8e2b0b9d 32225d0d0c 226ae6a918" data-sig-state="32225d0d0c:active">
+          <div class="spec-h"><b>Đầu profile</b><span class="kind">header · section × 3</span><span class="dp">935 × 373 · lưới 311 + 623</span></div>
+          <div class="stage col">
+            <div class="ig-prof">
+              <div class="ig-ring"><span><span class="ig-ph">ảnh đại diện</span></span></div>
+              <div>
+                <div class="ig-handle"><h2>ten_tai_khoan</h2><svg class="ig-verified" viewBox="0 0 24 24" aria-label="Đã xác minh"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="m8 12 3 3 5-6" stroke="#fff" stroke-width="2" fill="none"/></svg></div>
+                <ul class="ig-stats"><li><a href="#"><b>12K</b> <span>followers</span></a></li><li><a href="#"><b>1,000</b> <span>following</span></a></li><li><a class="is-active" href="#"><b>12K</b> <span>:active</span></a></li></ul>
+                <div class="ig-name">Tên hiển thị</div>
+                <div class="ig-bio">Dòng giới thiệu mẫu của tài khoản</div>
+                <a class="ig-web" href="#"><svg class="i" viewBox="0 0 24 24"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>www.vidu.com</a>
+              </div>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Tên 400 20/25, số liệu 16/20 (số 600, chữ <code>--ig-secondary-text</code>), tên hiển thị 600 14/18, liên kết web 600 14/18 <code>--ig-link</code>. Vòng avatar là gradient Instagram dựng từ <code>--gradient-*</code>: site vẽ bằng canvas, kit vẽ lại bằng conic-gradient (đơn giản hoá). Khoảng cách dọc vẽ theo ảnh.</span></div>
+        </div>
+
+        <div class="spec" data-sig="7788f068d5 4a954ed627 d16f80ae2b">
+          <div class="spec-h"><b>Tin nổi bật</b><span class="kind">div(canvas, span) · highlight</span><span class="dp">rộng 85 · vòng 92 · ảnh 77</span></div>
+          <div class="stage">
+            <a class="ig-hl" href="#"><span class="ig-ring hl"><span><span class="ig-ph">ảnh</span></span></span><small>Tên tin nổi bật</small></a>
+            <a class="ig-hl" href="#"><span class="ig-ring hl"><span><span class="ig-ph">ảnh</span></span></span><small>Tin 2</small></a>
+          </div>
+          <div class="spec-f"><span class="note">Nhãn 600 12/16, cắt dấu "…" khi dài. Vòng xám <code>--ig-stroke</code> vẽ theo ảnh (site dùng canvas).</span></div>
+        </div>
+
+        <div class="spec" data-sig="fe484ae267 4e04c89431 0aa636351a 24683dbdd7 e1322d786d" data-sig-state="e1322d786d:active">
+          <div class="spec-h"><b>Ô lưới bài</b><span class="kind">a(div(img)) · tile</span><span class="dp">310.7 × 414.2 · 3:4 · khe 1</span></div>
+          <div class="stage col">
+            <div class="ig-gridposts" style="width:100%">
+              <a class="ig-tile" href="#"><span class="ig-ph">ảnh bài</span><span class="ig-multi"><svg class="i" viewBox="0 0 24 24"><rect x="7" y="3" width="14" height="14" rx="2"/><path d="M17 21H5a2 2 0 0 1-2-2V7"/></svg></span></a>
+              <a class="ig-tile" href="#"><span class="ig-ph">ảnh bài</span></a>
+              <a class="ig-tile is-active" href="#"><span class="ig-ph">:active</span></a>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Nền chờ ảnh <code>--ig-highlight-background</code> (239,239,239). Icon "nhiều ảnh" 30 × 30 góc phải trên. Trong trang bài viết, ô "More posts" lớn hơn (449 × 599 ở 1440).</span></div>
+        </div>
+
+        <div class="spec" data-sig="114dd7fc54 d31ade77b0 20ace28904">
+          <div class="spec-h"><b>Gợi ý tài khoản</b><span class="kind">div · Accounts you might like</span><span class="dp">153 × 210 · bo 12 · viền 1</span></div>
+          <div class="stage col">
+            <h4 class="ig-h4">Accounts you might like</h4>
+            <div class="row" style="gap:8px">
+              <div class="ig-sug"><span class="ig-ph">ảnh</span><b>Tên tài khoản</b><small>Gợi ý cho bạn</small><button class="ig-btn secondary">Follow</button></div>
+              <div class="ig-sug"><span class="ig-ph">ảnh</span><b>Tên khác</b><small>Gợi ý cho bạn</small><button class="ig-btn secondary">Follow</button></div>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Tiêu đề 600 16/20. Viền thẻ <code>--ig-stroke</code> (219,219,219). Đệm trong thẻ vẽ theo ảnh.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= BÀI VIẾT ================= -->
+    <section class="block" id="post">
+      <header><h2>Bài viết</h2><p>Trang bài viết trên desktop: ảnh trái, cột phải 335px gồm đầu bài, bình luận và hàng hành động.</p></header>
+      <div class="grid">
+        <div class="spec full" data-sig="7ac19d9891 56367406fc 52264cacbc 0d3d6609a6 33de9401fb a605b7cc85 8b5f35862b c97d376bd8 4a6a4fb3e4 a01e6cee35" data-sig-state="a605b7cc85:active c97d376bd8:active 4a6a4fb3e4:hover">
+          <div class="spec-h"><b>Khung bài viết</b><span class="kind">div · article</span><span class="dp">787 × 601 · cột phải 335 · viền 1</span></div>
+          <div class="stage col">
+            <div class="ig-post">
+              <div class="media"><span class="ig-ph">ảnh bài</span><button class="ig-round ig-next-r" style="position:absolute;right:12px;top:50%" aria-label="Ảnh kế"><svg class="i" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></button><div class="ig-dots"><i class="ig-dot on"></i><i class="ig-dot"></i><i class="ig-dot"></i><i class="ig-dot"></i></div></div>
+              <div class="side">
+                <div class="ig-post-h"><a class="ig-av" href="#"><span class="ig-ph" style="width:32px;height:32px;border-radius:50%">ảnh</span></a><a class="ig-user" href="#">ten_tai_khoan</a><span>•</span><button class="ig-follow">Follow</button><span style="flex:1"></span><button class="ig-icon-btn" aria-label="Tuỳ chọn khác"><svg class="i" viewBox="0 0 24 24"><circle cx="6" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="18" cy="12" r="1.5"/></svg></button></div>
+                <div class="ig-comments">
+                  <div class="ig-cmt"><span class="ig-av"><span class="ig-ph" style="width:32px;height:32px;border-radius:50%">ảnh</span></span><div class="body"><a class="ig-user" href="#">ten_tai_khoan</a> Chú thích mẫu của bài viết.<div class="meta"><time class="ig-time">1w</time></div></div></div>
+                  <div class="ig-cmt"><span class="ig-av"><span class="ig-ph" style="width:32px;height:32px;border-radius:50%">ảnh</span></span><div class="body"><a class="ig-user plain" href="#">nguoi_binh_luan</a> Một bình luận mẫu.<div class="meta"><time class="ig-time">6d</time><button class="ig-text-btn">1 like</button><button class="ig-text-btn">Reply</button></div></div><svg class="i ig-heart-sm" viewBox="0 0 24 24"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/></svg></div>
+                </div>
+                <div class="ig-actions">
+                  <div class="bar2"><button class="ig-icon-btn" aria-label="Thích"><svg class="i" viewBox="0 0 24 24"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/></svg></button> <button class="ig-icon-btn" aria-label="Bình luận"><svg class="i" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-3.5-6.6A8 8 0 0 1 20 12zM20 20l-2-4"/></svg></button> <button class="ig-icon-btn" aria-label="Chia sẻ"><svg class="i" viewBox="0 0 24 24"><path d="M22 3 9 13M22 3l-7 18-3-8-8-3z"/></svg></button><span class="grow"></span><button class="ig-icon-btn" aria-label="Lưu"><svg class="i" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-5-6 5z"/></svg></button></div>
+                  <div class="ig-count">388 likes</div>
+                  <time class="ig-time">7 days ago</time>
+                </div>
+              </div>
+            </div>
+            <span class="st">trạng thái</span>
+            <div class="row"><a class="ig-av is-active" href="#">av</a><a class="ig-user is-active" href="#">tên :active</a><a class="ig-user plain is-hover" href="#">tên :hover</a></div>
+          </div>
+          <div class="spec-f"><span class="note">Viền khung <code>--ig-stroke</code>; hàng hành động có viền trên 1px <code>--ig-elevated-highlight-background</code>, đệm 6 16. Avatar 32 bo tròn. Số like 600 14/18, thời gian 12/16 chữ cách .2px. Chấm carousel và nút Next vẽ theo ảnh.</span></div>
+        </div>
+
+        <div class="spec" data-sig="965417a710">
+          <div class="spec-h"><b>Ảnh bo 20</b><span class="kind">img · media</span><span class="dp">251 × 251 · bo 20</span></div>
+          <div class="stage"><span class="ig-ph" style="width:160px;height:160px;border-radius:20px">ảnh</span></div>
+          <div class="spec-f"><span class="note">Ảnh vuông bo 20px xuất hiện 2 lần trên trang bài viết. Kit thu nhỏ còn 160.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= HỘP THOẠI & CHÂN TRANG ================= -->
+    <section class="block" id="feedback">
+      <header><h2>Hộp thoại &amp; chân trang</h2><p>Hộp thoại mời đăng ký bật lên khi xem trang mà chưa đăng nhập, và chân trang chung.</p></header>
+      <div class="grid">
+        <div class="spec full" data-sig="6603c09e51 c9eecb912b 8bf86b7d23" data-sig-state="8bf86b7d23:hover 8bf86b7d23:active">
+          <div class="spec-h"><b>Hộp thoại đăng ký</b><span class="kind">div[role=dialog]</span><span class="dp">548 × 435 · bo 32 · nền mờ .7</span></div>
+          <div class="stage col">
+            <div class="ig-scrim">
+              <div class="ig-dialog">
+                <button class="ig-close" aria-label="Đóng"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+                <span class="ig-ph">ảnh</span>
+                <h3>See photos, videos and more from tên_tài_khoản</h3>
+                <p>Sign up and never miss a post from tên_tài_khoản.</p>
+                <p class="terms">By continuing, you agree to Instagram's <a class="ig-terms-link" href="#">Terms of Use</a> and <a class="ig-terms-link is-hover" href="#">Privacy Policy</a> <a class="ig-terms-link is-active" href="#">(:hover / :active)</a>.</p>
+                <a class="ig-btn primary lg" href="#">Sign up</a>
+                <a class="ig-link" href="#">Log in</a>
+              </div>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Nền phủ <code>--overlay-alpha-80</code> (12,16,20,.7). Tiêu đề 700 24/30, phụ đề 14/18, điều khoản 12/16 <code>--ig-secondary-text</code> với liên kết 600. Đệm trong hộp vẽ theo ảnh.</span></div>
+        </div>
+
+        <div class="spec full" data-sig="a11631d774 dc5a67f72f" data-sig-state="dc5a67f72f:hover dc5a67f72f:active">
+          <div class="spec-h"><b>Chân trang</b><span class="kind">footer</span><span class="dp">cao 135 · liên kết 12/16 · lề 0 8 12</span></div>
+          <div class="stage col">
+            <footer class="ig-foot">
+              <nav><a href="#">Meta</a><a href="#">About</a><a href="#">Blog</a><a href="#">Jobs</a><a href="#">Help</a><a href="#">API</a><a href="#">Privacy</a><a class="is-hover" href="#">Terms :hover</a><a class="is-active" href="#">Locations :active</a></nav>
+              <small>English · © 2026 Instagram from Meta</small>
+            </footer>
+          </div>
+          <div class="spec-f"><span class="note">Liên kết <code>--ig-secondary-text</code>, hover gạch chân, pressed (31,40,173).</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= MẪU ================= -->
+    <section class="block" id="screens">
+      <header><h2>Màn hình mẫu</h2><p>Ghép lại từ các class ở trên theo bố cục đo được: desktop 1440 có nội dung 935 giữa trang, đầu profile hai cột; mobile 390 dồn avatar sang trái, tiểu sử xuống dưới, lưới ba cột sát mép.</p></header>
+      <div class="frame-wrap"><div class="frames">
+        <div>
+          <div class="desk">
+            <div class="ig-top"><div class="in"><span class="ig-ph ig-logo">logo</span><span class="grow"></span><a class="ig-btn primary" href="#">Log In</a><a class="ig-link" href="#">Sign Up</a></div></div>
+            <div class="wrap">
+              <div class="ig-prof">
+                <div class="ig-ring"><span><span class="ig-ph">ảnh đại diện</span></span></div>
+                <div>
+                  <div class="ig-handle"><h2>ten_tai_khoan</h2><svg class="ig-verified" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="m8 12 3 3 5-6" stroke="#fff" stroke-width="2" fill="none"/></svg></div>
+                  <ul class="ig-stats"><li><a href="#"><b>12K</b> <span>followers</span></a></li><li><a href="#"><b>1,000</b> <span>following</span></a></li></ul>
+                  <div class="ig-name">Tên hiển thị</div><div class="ig-bio">Dòng giới thiệu mẫu của tài khoản</div>
+                  <a class="ig-web" href="#"><svg class="i" viewBox="0 0 24 24"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>www.vidu.com</a>
+                </div>
+              </div>
+              <div class="ig-hls"><a class="ig-hl" href="#"><span class="ig-ring hl"><span><span class="ig-ph">ảnh</span></span></span><small>Tin 1</small></a><a class="ig-hl" href="#"><span class="ig-ring hl"><span><span class="ig-ph">ảnh</span></span></span><small>Tin 2</small></a></div>
+              <div class="ig-tabs"><a class="ig-tab on" href="#" aria-label="Bài viết"><svg class="i" viewBox="0 0 24 24"><path d="M3 3h18v18H3zM9 3v18M15 3v18M3 9h18M3 15h18"/></svg></a><a class="ig-tab" href="#" aria-label="Được gắn thẻ"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="12" cy="10" r="3"/><path d="M7 21c0-3 2-5 5-5s5 2 5 5"/></svg></a></div>
+              <div class="ig-gridposts"><a class="ig-tile" href="#"><span class="ig-ph">ảnh bài</span></a><a class="ig-tile" href="#"><span class="ig-ph">ảnh bài</span></a><a class="ig-tile" href="#"><span class="ig-ph">ảnh bài</span></a><a class="ig-tile" href="#"><span class="ig-ph">ảnh bài</span></a><a class="ig-tile" href="#"><span class="ig-ph">ảnh bài</span></a><a class="ig-tile" href="#"><span class="ig-ph">ảnh bài</span></a></div>
+            </div>
+          </div>
+          <div class="frame-cap">desktop 1440 × 900 · ig-top, ig-prof (ig-ring, ig-stats), ig-hls, ig-tabs, ig-gridposts (ig-tile)</div>
+        </div>
+        <div>
+          <div class="phone">
+            <div class="ig-top"><div class="in"><span class="ig-ph ig-logo">logo</span><span class="grow"></span><a class="ig-link" href="#">Log in</a><a class="ig-btn primary pill" href="#">Open app</a></div></div>
+            <div class="m-prof">
+              <div class="ig-ring"><span><span class="ig-ph">ảnh</span></span></div>
+              <div><div class="ig-handle"><h2>ten_tai_khoan</h2></div><div class="ig-name" style="font-weight:400;margin-top:4px">Tên hiển thị</div><ul class="ig-stats"><li><b>12K</b> <span>followers</span></li><li>·</li><li><b>1,000</b> <span>following</span></li></ul></div>
+            </div>
+            <div class="m-bio ig-bio">Dòng giới thiệu mẫu của tài khoản</div>
+            <div class="ig-tabs"><a class="ig-tab on" href="#" aria-label="Bài viết"><svg class="i" viewBox="0 0 24 24"><path d="M3 3h18v18H3zM9 3v18M15 3v18M3 9h18M3 15h18"/></svg></a><a class="ig-tab" href="#" aria-label="Được gắn thẻ"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="12" cy="10" r="3"/><path d="M7 21c0-3 2-5 5-5s5 2 5 5"/></svg></a></div>
+            <div class="ig-gridposts"><a class="ig-tile" href="#"><span class="ig-ph">ảnh bài</span></a><a class="ig-tile" href="#"><span class="ig-ph">ảnh bài</span></a><a class="ig-tile" href="#"><span class="ig-ph">ảnh bài</span></a><a class="ig-tile" href="#"><span class="ig-ph">ảnh bài</span></a><a class="ig-tile" href="#"><span class="ig-ph">ảnh bài</span></a><a class="ig-tile" href="#"><span class="ig-ph">ảnh bài</span></a><a class="ig-tile" href="#"><span class="ig-ph">ảnh bài</span></a><a class="ig-tile" href="#"><span class="ig-ph">ảnh bài</span></a><a class="ig-tile" href="#"><span class="ig-ph">ảnh bài</span></a></div>
+          </div>
+          <div class="frame-cap">mobile 390 × 844 · thanh trên 64 (Log in + Open app), avatar 116 trái, số liệu 14px một dòng, lưới 129 × 172</div>
+        </div>
+      </div></div>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"><span id="toast-t"></span></div>
+
+<script>
+/* token: getComputedStyle trên :root của trang thật, sáng (.__ig-light-mode + _aa4c) và tối (.__ig-dark-mode + _aa4d) */
+const ROLES = ["fds-black", "fds-black-alpha-05", "fds-black-alpha-10", "fds-black-alpha-15", "fds-black-alpha-20", "fds-black-alpha-30", "fds-black-alpha-40", "fds-black-alpha-50", "fds-black-alpha-60", "fds-black-alpha-80", "fds-blue-05", "fds-blue-30", "fds-blue-40", "fds-blue-60", "fds-blue-70", "fds-blue-80", "fds-button-text", "fds-comment-background", "fds-dark-mode-gray-35", "fds-dark-mode-gray-50", "fds-dark-mode-gray-70", "fds-dark-mode-gray-80", "fds-dark-mode-gray-90", "fds-dark-mode-gray-100", "fds-gray-00", "fds-gray-05", "fds-gray-10", "fds-gray-20", "fds-gray-25", "fds-gray-30", "fds-gray-45", "fds-gray-70", "fds-gray-80", "fds-gray-90", "fds-gray-100", "fds-green-55", "fds-green-60", "fds-green-65", "fds-highlight", "fds-highlight-cell-background", "fds-primary-icon", "fds-primary-text", "fds-red-55", "fds-spectrum-aluminum-tint-70", "fds-spectrum-blue-gray-tint-70", "fds-spectrum-cherry", "fds-spectrum-cherry-tint-70", "fds-spectrum-grape-tint-70", "fds-spectrum-grape-tint-90", "fds-spectrum-lemon-dark-1", "fds-spectrum-lemon-tint-70", "fds-spectrum-lime", "fds-spectrum-lime-tint-70", "fds-spectrum-orange-tint-70", "fds-spectrum-orange-tint-90", "fds-spectrum-seafoam-tint-70", "fds-spectrum-slate-dark-2", "fds-spectrum-slate-tint-70", "fds-spectrum-teal", "fds-spectrum-teal-dark-1", "fds-spectrum-teal-dark-2", "fds-spectrum-teal-tint-70", "fds-spectrum-teal-tint-90", "fds-spectrum-tomato", "fds-spectrum-tomato-tint-30", "fds-spectrum-tomato-tint-90", "fds-unified-blue-35", "fds-unified-gray-20", "fds-white", "fds-white-alpha-05", "fds-white-alpha-10", "fds-white-alpha-20", "fds-white-alpha-30", "fds-white-alpha-40", "fds-white-alpha-50", "fds-white-alpha-60", "fds-white-alpha-80", "fds-yellow-20", "accent", "always-white", "always-black", "always-dark-overlay", "always-light-overlay", "always-gray-40", "always-gray-75", "always-gray-95", "attachment-footer-background", "background-deemphasized", "badge-background-color-blue", "badge-background-color-dark-gray", "badge-background-color-gray", "badge-background-color-green", "badge-background-color-light-blue", "badge-background-color-red", "badge-background-color-yellow", "base-blue", "base-cherry", "base-grape", "base-lemon", "base-lime", "base-pink", "base-seafoam", "base-teal", "base-tomato", "text-badge-success-background", "text-badge-critical-background", "blue-link", "border-focused", "card-background", "card-background-flat", "comment-background", "comment-footer-background", "dataviz-primary-1", "dataviz-blue-primary", "dataviz-blue-secondary", "dataviz-orange", "disabled-button-background", "disabled-button-text", "disabled-icon", "disabled-text", "divider", "divider-on-color", "event-date", "fb-wordmark", "fb-logo", "focus-ring-blue", "glimmer-base-opaque", "glimmer-high-contrast-base-opaque", "glimmer-spinner-icon", "hero-banner-background", "hosted-view-selected-state", "highlight-bg", "hover-overlay", "inverse-text", "list-cell-chevron", "media-hover", "media-inner-border", "media-outer-border", "media-pressed", "messenger-card-background", "mwp-header-background-color", "mwp-header-button-color", "mwp-message-row-background", "messenger-reply-background", "overlay-alpha-80", "overlay-on-media", "nav-bar-background", "popover-card-background", "new-notification-background", "non-media-pressed", "non-media-pressed-on-dark", "notification-badge", "placeholder-icon", "placeholder-image", "placeholder-text", "placeholder-text-on-media", "popover-background", "positive", "positive-background", "press-overlay", "primary-button-background", "primary-button-icon", "primary-button-pressed", "primary-button-text", "primary-deemphasized-button-background", "primary-deemphasized-button-pressed", "primary-deemphasized-button-pressed-overlay", "primary-deemphasized-button-text", "primary-icon", "primary-text", "primary-text-on-media", "primary-web-focus-indicator", "progress-ring-neutral-background", "progress-ring-neutral-foreground", "progress-ring-on-media-background", "progress-ring-on-media-foreground", "progress-ring-blue-background", "progress-ring-disabled-background", "progress-ring-disabled-foreground", "rating-star-active", "scroll-thumb", "secondary-button-background", "secondary-button-background-floating", "secondary-button-background-on-dark", "secondary-button-pressed", "secondary-button-stroke", "secondary-button-text", "secondary-icon", "secondary-text", "secondary-text-on-media", "section-header-text", "shadow-1", "shadow-2", "shadow-5", "shadow-8", "shadow-inset", "surface-background", "switch-inactive", "switch-unchecked-background-color", "text-highlight", "input-background", "input-background-hover", "input-background-disabled", "input-border-color", "input-border-color-hover", "input-label-color-inside", "input-label-color-disabled", "text-input-bar-background", "text-input-outside-label", "toast-background", "toast-text", "toast-text-link", "toast-border-color", "toggle-active-background", "toggle-active-icon", "toggle-active-text", "toggle-button-active-background", "tooltip-background", "popover-border-color", "wash", "web-wash", "chat-bubble-emphasis-ring-after", "chat-bubble-emphasis-ring-before", "chat-text-blockquote-color-background-line", "chat-text-blockquote-color-text-primary-media", "chat-incoming-message-bubble-background-color", "chat-outgoing-message-bubble-background-color", "chat-replied-message-background-color", "radio-border-color", "radio-border-color-disabled", "radio-border-color-selected", "radio-checked-icon-color", "radio-checked-icon-color-disabled", "tab-underline-color", "blue-primary", "blue-secondary", "blue-tertiary", "chartreuse-primary", "chartreuse-secondary", "chartreuse-tertiary", "cyan-primary", "cyan-secondary", "cyan-tertiary", "dataviz-primary-2", "dataviz-primary-3", "dataviz-secondary-1", "dataviz-secondary-2", "dataviz-secondary-3", "dataviz-supplementary-1", "dataviz-supplementary-2", "dataviz-supplementary-3", "dataviz-supplementary-4", "fuschia-primary", "fuschia-secondary", "fuschia-tertiary", "green-primary", "green-secondary", "green-tertiary", "magenta-primary", "magenta-secondary", "magenta-tertiary", "orange-primary", "orange-secondary", "orange-tertiary", "purple-primary", "purple-secondary", "purple-tertiary", "red-primary", "red-secondary", "red-tertiary", "teal-primary", "teal-secondary", "teal-tertiary", "yellow-primary", "yellow-secondary", "yellow-tertiary", "blue-0", "blue-1", "blue-2", "blue-3", "blue-4", "blue-5", "blue-6", "blue-7", "blue-8", "blue-9", "cyan-5", "gradient-lavender", "gradient-orange", "gradient-pink", "gradient-purple", "gradient-red", "gradient-yellow", "green-4", "green-5", "green-6", "grey-0", "grey-1", "grey-2", "grey-3", "grey-4", "grey-5", "grey-6", "grey-7", "grey-8", "grey-9", "grey-10", "ig-badge", "ig-close-friends-refreshed", "ig-error-or-destructive", "ig-facebook-blue", "ig-live-badge", "ig-primary-button", "ig-primary-button-hover", "ig-secondary-icon", "ig-stroke-on-media", "ig-tertiary-button-background", "ig-tertiary-button-border", "ig-tertiary-button-hover", "ig-tertiary-button-text", "ig-subscribers-only", "ig-success", "ig-text-on-color", "ig-text-on-media", "modal-backdrop-dark", "modal-backdrop-default", "orange-5", "pink-5", "purple-5", "red-4", "red-5", "red-6", "red-7", "web-always-black", "web-always-white", "web-overlay-on-media", "web-secondary-action", "yellow-5", "barcelona-logo", "challenge-link", "ig-banner-background", "ig-elevated-background", "ig-elevated-highlight-background", "ig-elevated-separator", "ig-focus-stroke", "ig-highlight-background", "ig-hover-overlay", "ig-link", "ig-primary-background", "ig-primary-icon", "ig-primary-text", "ig-secondary-background", "ig-secondary-button", "ig-secondary-button-background", "ig-secondary-button-hover", "ig-secondary-text", "ig-separator", "ig-stroke", "ig-temporary-highlight", "ig-tertiary-icon", "ig-tertiary-text", "post-separator", "tos-box-shadow", "ig-toggle-background-on-prism", "ig-toggle-background-off-prism", "ig-toggle-background-disabled-on-prism", "ig-toggle-background-disabled-off-prism", "ig-toggle-outline-prism", "ig-toggle-outline-disabled-prism", "ig-stroke-prism", "ig-stroke-disabled-on-prism", "ig-stroke-disabled-off-prism", "ig-dropdown-background", "ig-background-always-dark-blur", "ig-toast-prism-background-color", "ig-colors-button-borderless-background--disabled", "ig-colors-button-borderless-text", "ig-colors-button-borderless-text--disabled", "ig-colors-button-borderless-text--hover", "ig-colors-button-borderless-text--pressed", "ig-colors-button-primary-background", "ig-colors-button-primary-background--disabled", "ig-colors-button-primary-background--hover", "ig-colors-button-primary-background--pressed", "ig-colors-button-primary-link-text", "ig-colors-button-primary-link-text--disabled", "ig-colors-button-primary-link-text--hover", "ig-colors-button-primary-link-text--pressed", "ig-colors-button-primary-text", "ig-colors-button-secondary-background", "ig-colors-button-secondary-background--disabled", "ig-colors-button-secondary-background--hover", "ig-colors-button-secondary-background--pressed", "ig-colors-button-secondary-link-text", "ig-colors-button-secondary-link-text--disabled", "ig-colors-button-secondary-link-text--hover", "ig-colors-button-secondary-link-text--pressed", "ig-colors-button-secondary-text", "ig-colors-button-secondary-text--disabled", "ig-colors-link-text", "ig-input-border-primary", "ig-input-border-secondary", "ig-input-disabled-background-color", "ig-input-text-and-icon-primary", "ig-input-text-and-icon-secondary", "ig-menu-background-color", "ig-menu-text-color", "ig-tab-underline-active", "ig-tablist-border", "status-alert", "status-positive", "ig-incoming-message-bubble", "ig-outgoing-message-bubble", "barcelona-primary-button", "text-secondary", "ig-background-blur", "ig-banner-highlight-background", "ig-bubble-background", "ig-secondary-elevated-background", "ig-secondary-white-text", "ig-text-input-border-prism", "ig-text-input-border-hover-prism", "segmented-bar-chart-primary", "segmented-bar-chart-secondary"];
+const PALETTES = { ig: { label: "Instagram", light: ["#000000", "rgba(0, 0, 0, 0.05)", "rgba(0, 0, 0, 0.1)", "rgba(0, 0, 0, 0.15)", "rgba(0, 0, 0, 0.2)", "rgba(0, 0, 0, 0.3)", "rgba(0, 0, 0, 0.4)", "rgba(0, 0, 0, 0.5)", "rgba(0, 0, 0, 0.6)", "rgba(0, 0, 0, 0.8)", "#ECF3FF", "#AAC9FF", "#77A7FF", "#1877F2", "#2851A3", "#1D3C78", "#444950", "#F2F3F5", "#CCCCCC", "#828282", "#4A4A4A", "#373737", "#282828", "#1C1C1C", "#F5F6F7", "#F2F3F5", "#EBEDF0", "#DADDE1", "#CCD0D5", "#BEC3C9", "#8D949E", "#606770", "#444950", "#303338", "#1C1E21", "#00A400", "#31A73B", "#51CE70", "#3578E5", "#ECF3FF", "#1C1E21", "#1C1E21", "#FA383E", "#E4F0F6", "#CFD1D5", "#F35369", "#FBCCD2", "#DDD5F0", "#F4F1FA", "#F5C33B", "#FEF2D1", "#A3CE71", "#E4F0D5", "#FCDEC5", "#FEF4EC", "#CAEEF9", "#89A1AC", "#EAEFF2", "#6BCEBB", "#4DBBA6", "#31A38D", "#D2F0EA", "#F0FAF8", "#FB724B", "#F38E7B", "#FDEFED", "#1455B0", "#323436", "#FFFFFF", "rgba(255, 255, 255, 0.05)", "rgba(255, 255, 255, 0.1)", "rgba(255, 255, 255, 0.2)", "rgba(255, 255, 255, 0.3)", "rgba(255, 255, 255, 0.4)", "rgba(255, 255, 255, 0.5)", "rgba(255, 255, 255, 0.6)", "rgba(255, 255, 255, 0.8)", "#FFBA00", "#0095F6", "#FFFFFF", "black", "rgba(43, 48, 54, 0.8)", "rgba(255, 255, 255, 0.4)", "#65676B", "#BCC0C4", "#F0F2F5", "#F0F2F5", "#F0F2F5", "#0095F6", "#8E8E8E", "#BCC0C4", "#31A24C", "#E7F3FF", "#e41e3f", "#F7B928", "#1877F2", "#F3425F", "#9360F7", "#F7B928", "#45BD62", "#FF66BF", "#54C7EC", "#2ABBA7", "#FB724B", "#31A24C", "#e41e3f", "#00376B", "#65676B", "#FFFFFF", "#F7F8FA", "#F0F2F5", "#F6F9FA", "rgb(0,174,143)", "#1D85FC", "#043B72", "#D06C14", "rgba(0, 149, 246, 0.3)", "#FFFFFF", "#BCC0C4", "#BCC0C4", "#DBDBDB", "#CED0D4", "#F3425F", "#0866FF", "#0866FF", "#1877F2", "#979A9F", "#65686C", "#65676B", "#FFFFFF", "rgba(45, 136, 255, 0.1)", "#E7F3FF", "rgba(0, 0, 0, 0.05)", "#FFFFFF", "#65676B", "rgba(68, 73, 80, 0.15)", "rgba(0, 0, 0, 0.1)", "#FFFFFF", "rgba(68, 73, 80, 0.35)", "#FFFFFF", "#FFFFFF", "#0095F6", "#FFFFFF", "#F0F2F5", "rgba(12, 16, 20, 0.7)", "rgba(0, 0, 0, 0.6)", "#FFFFFF", "#FFFFFF", "#E7F3FF", "rgba(68, 73, 80, 0.15)", "rgba(255, 255, 255, 0.3)", "#e41e3f", "#65676B", "rgb(164, 167, 171)", "#65676B", "rgba(255, 255, 255, 0.5)", "#FFFFFF", "#31A24C", "#DEEFE1", "rgba(0, 0, 0, 0.10)", "#0095F6", "#FFFFFF", "#77A7FF", "#FFFFFF", "rgba(0, 149, 246, 0.1)", "rgba(0, 149, 246, 0.05)", "rgba(0, 149, 246, 0.15)", "#0095F6", "#262626", "#262626", "#FFFFFF", "#D24294", "rgba(0, 0, 0, 0.2)", "#000000", "rgba(255, 255, 255, 0.2)", "#FFFFFF", "rgba(24, 119, 242, 0.2)", "rgba(190,195,201, 0.2)", "#BEC3C9", "#EB660D", "#BCC0C4", "transparent", "#ffffff", "rgba(0, 0, 0, 0.4)", "rgba(0, 0, 0, 0.05)", "transparent", "#0095F6", "#8E8E8E", "#8E8E8E", "rgba(255, 255, 255, 0.9)", "#4B4C4F", "rgba(0, 0, 0, 0.1)", "rgba(0, 0, 0, 0.2)", "rgba(0, 0, 0, 0.5)", "rgba(0, 0, 0, 0.8)", "rgba(255, 255, 255, 0.5)", "#FFFFFF", "#DBDBDB", "#8F9297", "rgba(24, 119, 242, 0.2)", "#FFFFFF", "#FFFFFF", "#F0F2F5", "#CED0D4", "#65676B", "#8E8E8E", "#BCC0C4", "#F0F2F5", "#000000", "#FFFFFF", "#1C2B33", "#216FDB", "transparent", "#E7F3FF", "rgb(24, 119, 242)", "rgb(24, 119, 242)", "#E7F3FF", "rgba(244, 244, 244, 0.8)", "transparent", "#FAFAFA", "#FAFAFA", "black", "white", "rgba(0, 0, 0, 0.12)", "rgba(255, 255, 255, 0.7)", "#F0F0F0", "#0095F6", "rgba(0, 0, 0, 0.03)", "#262626", "rgba(0, 149, 246, 0.3)", "#0095F6", "#0095F6", "rgba(0, 149, 246, 0.3)", "transparent", "rgb(0,136,244)", "rgb(4,59,114)", "rgb(235,245,255)", "rgb(106,147,22)", "rgb(50,65,19)", "rgb(226,255,152)", "rgb(0,142,213)", "rgb(15,63,93)", "rgb(231,245,255)", "rgb(156,219,255)", "rgb(73,156,255)", "rgb(83,78,191)", "rgb(103,96,228)", "rgb(119,45,88)", "rgb(253,91,67)", "rgb(161,132,0)", "rgb(36,131,44)", "rgb(51,51,52)", "rgb(250,45,138)", "rgb(118,14,62)", "rgb(255,241,246)", "rgb(43,154,53)", "rgb(26,68,27)", "rgb(227,250,224)", "rgb(215,77,204)", "rgb(96,36,91)", "rgb(255,239,254)", "rgb(208,108,20)", "rgb(94,49,14)", "rgb(255,241,239)", "rgb(125,116,255)", "rgb(55,50,121)", "rgb(245,241,255)", "rgb(251,60,68)", "rgb(118,22,27)", "rgb(255,241,239)", "rgb(0,152,124)", "rgb(10,68,56)", "rgb(227,247,241)", "rgb(161,132,0)", "rgb(72,59,12)", "rgb(255,246,161)", "245, 251, 255", "224, 241, 255", "179, 219, 255", "112, 188, 255", "71, 175, 255", "0, 149, 246", "0, 116, 204", "0, 87, 163", "0, 55, 107", "0, 41, 82", "39, 196, 245", "211, 0, 197", "255, 122, 0", "255, 1, 105", "118, 56, 250", "255, 48, 64", "255, 214, 0", "120, 222, 69", "88, 195, 34", "55, 166, 0", "245, 245, 245", "239, 239, 239", "219, 219, 219", "199, 199, 199", "168, 168, 168", "142, 142, 142", "115, 115, 115", "85, 85, 85", "54, 54, 54", "38, 38, 38", "26, 26, 26", "255, 48, 64", "28, 209, 79", "237, 73, 86", "53, 121, 234", "255, 1, 105", "74, 93, 249", "65, 80, 247", "142, 142, 142", "255, 255, 255", "255, 255, 255", "219, 219, 219", "245, 245, 245", "38, 38, 38", "118, 56, 250", "88, 195, 34", "255, 255, 255", "255, 255, 255", "rgba(0, 0, 0, .85)", "rgba(0, 0, 0, .65)", "253, 141, 50", "209, 8, 105", "163, 7, 186", "255, 104, 116", "237, 73, 86", "198, 35, 48", "167, 3, 17", "0, 0, 0", "255, 255, 255", "38, 38, 38", "224, 241, 255", "253, 203, 92", "0, 0, 0", "54, 54, 54", "255, 255, 255", "255, 255, 255", "239 239 239", "219, 219, 219", "168, 168, 168", "239, 239, 239", "0, 0, 0, .05", "0, 55, 107", "255, 255, 255", "38, 38, 38", "0, 0, 0", "243, 245, 247", "38, 38, 38", "239, 239, 239", "219, 219, 219", "115, 115, 115", "219, 219, 219", "219, 219, 219", "245, 251, 255", "199, 199, 199", "199, 199, 199", "239, 239, 239", "0, 0, 0", "12, 16, 20", "219, 223, 228", "131, 137, 147", "131, 137, 147", "219, 223, 228", "243, 245, 247", "255, 255, 255", "220, 224, 229", "220, 224, 229", "243, 245, 247", "rgba(43, 48, 54, 0.5)", "rgba(37, 41, 46, 0.95)", "220, 224, 229", "65, 80, 247", "184, 205, 255", "37, 54, 208", "31, 40, 173", "74, 93, 249", "184, 205, 255", "65, 80, 247", "65, 80, 247", "49, 67, 227", "163, 188, 255", "37, 54, 208", "31, 40, 173", "255, 255, 255", "240, 242, 245", "220, 224, 229", "231, 234, 238", "231, 234, 238", "12, 16, 20", "94, 100, 109", "12, 16, 20", "12, 16, 20", "12, 16, 20", "94, 100, 109", "65, 80, 247", "33, 35, 40", "219, 223, 228", "243, 245, 247", "12, 16, 20", "106, 113, 122", "248, 249, 249", "12, 16, 20", "12, 16, 20", "219, 223, 228", "224, 1, 13", "0, 142, 40", "243, 245, 247", "74, 93, 249", "0, 0, 0", "153, 153, 153", "248, 249, 249, .8", "239 239 239", "255, 255, 255", "243, 245, 247", "255, 255, 255, .5", "219, 223, 228", "12, 16, 20", "211, 0, 197", "88, 6, 224"], dark: ["black", "rgba(0, 0, 0, 0.05)", "rgba(0, 0, 0, 0.1)", "rgba(0, 0, 0, 0.15)", "rgba(0, 0, 0, 0.2)", "rgba(0, 0, 0, 0.3)", "rgba(0, 0, 0, 0.4)", "rgba(0, 0, 0, 0.5)", "rgba(0, 0, 0, 0.6)", "rgba(0, 0, 0, 0.8)", "black", "black", "black", "black", "black", "black", "black", "black", "black", "black", "black", "black", "black", "black", "black", "black", "black", "black", "black", "black", "black", "black", "black", "black", "black", "black", "#31A73B", "black", "black", "black", "white", "white", "black", "black", "black", "black", "black", "black", "black", "black", "black", "black", "black", "black", "black", "black", "black", "black", "black", "black", "black", "black", "black", "black", "black", "black", "black", "black", "black", "rgba(255, 255, 255, 0.05)", "rgba(255, 255, 255, 0.1)", "rgba(255, 255, 255, 0.2)", "rgba(255, 255, 255, 0.3)", "rgba(255, 255, 255, 0.4)", "rgba(255, 255, 255, 0.5)", "rgba(255, 255, 255, 0.6)", "rgba(255, 255, 255, 0.8)", "black", "#0095F6", "white", "black", "rgba(43, 48, 54, 0.8)", "rgba(255, 255, 255, 0.4)", "#65676B", "#BCC0C4", "#F0F2F5", "rgba(255,255,255,0.1)", "rgba(255,255,255,0.1)", "#0095F6", "#B0B3B8", "rgba(255, 255, 255, 0.3)", "#31A24C", "rgba(24, 119, 242, .31)", "#e41e3f", "#F7B928", "#1877F2", "#F3425F", "#9360F7", "#F7B928", "#45BD62", "#FF66BF", "#54C7EC", "#2ABBA7", "#FB724B", "#31A24C", "#e41e3f", "#00376B", "#8A8D91", "#242526", "#323436", "#3A3B3C", "#4E4F50", "rgb(0,174,143)", "#1D85FC", "#EBF5FF", "#D06C14", "rgba(255, 255, 255, 0.2)", "rgba(255, 255, 255, 0.3)", "rgba(255, 255, 255, 0.3)", "rgba(255, 255, 255, 0.3)", "#3E4042", "#3E4042", "#F3425F", "#FFFFFF", "#0866FF", "#1877F2", "#FFFFFF", "#FFFFFF", "white", "#E85D07", "rgba(45, 136, 255, 0.1)", "rgba(24, 119, 242, .31)", "rgba(255, 255, 255, 0.1)", "white", "#B0B3B8", "rgba(68, 73, 80, 0.15)", "rgba(255, 255, 255, 0.05)", "#33363A", "rgba(68, 73, 80, 0.35)", "#242526", "#242526", "#0095F6", "#242526", "#18191A", "rgba(12, 16, 20, 0.7)", "rgba(0, 0, 0, 0.6)", "#242526", "#242526", "#E7F3FF", "rgba(68, 73, 80, 0.15)", "rgba(255, 255, 255, 0.3)", "#e41e3f", "#8A8D91", "rgb(164, 167, 171)", "#8A8D91", "rgba(255, 255, 255, 0.5)", "#3E4042", "#31A24C", "#1F3520", "rgba(255, 255, 255, 0.2)", "#0095F6", "#FFFFFF", "#77A7FF", "#FFFFFF", "rgba(45, 136, 255, 0.2)", "rgba(24, 119, 242, 0.2)", "rgba(25, 110, 255, 0.15)", "#2D88FF", "#E4E6EB", "#E4E6EB", "white", "#D24294", "rgba(255, 255, 255, 0.2)", "#ffffff", "rgba(255, 255, 255, 0.2)", "#FFFFFF", "rgba(45, 136, 255, 0.2)", "rgba(122,125,130, 0.2)", "#7A7D82", "#FF9831", "rgba(255, 255, 255, 0.3)", "rgba(255,255,255,.1)", "#4B4C4F", "rgba(255, 255, 255, 0.4)", "rgba(0, 0, 0, 0.05)", "transparent", "#E4E6EB", "#B0B3B8", "#B0B3B8", "rgba(255, 255, 255, 0.9)", "#BCC0C4", "rgba(0, 0, 0, 0.1)", "rgba(0, 0, 0, 0.2)", "rgba(0, 0, 0, 0.5)", "rgba(0, 0, 0, 0.8)", "rgba(255, 255, 255, 0.05)", "#242526", "#3E4042", "#6F7276", "rgba(24, 119, 242, 0.45)", "#242526", "#242526", "#18191A", "#3E4042", "#8A8D91", "#B0B3B8", "rgba(255, 255, 255, 0.3)", "rgba(255, 255, 255, 0.1)", "#FFFFFF", "#242526", "#FFFFFF", "#4599FF", "transparent", "rgb(45, 136, 255)", "#FFFFFF", "#FFFFFF", "#E6F2FF", "rgba(11, 11, 11, 0.8)", "transparent", "#3E4042", "#18191A", "white", "black", "rgba(255, 255, 255, 0.19)", "rgba(255, 255, 255, 0.7)", "#303030", "#0095F6", "rgba(255, 255, 255, 0.12)", "#E4E6EB", "rgba(255, 255, 255, 0.2)", "#0095F6", "#0095F6", "rgba(255, 255, 255, 0.2)", "transparent", "rgb(0,136,244)", "rgb(235,245,255)", "rgb(4,59,114)", "rgb(106,147,22)", "rgb(226,255,152)", "rgb(50,65,19)", "rgb(0,142,213)", "rgb(231,245,255)", "rgb(15,63,93)", "rgb(156,219,255)", "rgb(73,156,255)", "rgb(92,87,210)", "rgb(142,129,255)", "rgb(119,45,88)", "rgb(253,91,67)", "rgb(161,132,0)", "rgb(36,131,44)", "rgb(232,234,238)", "rgb(250,45,138)", "rgb(255,241,246)", "rgb(118,14,62)", "rgb(43,154,53)", "rgb(227,250,224)", "rgb(26,68,27)", "rgb(215,77,204)", "rgb(255,239,254)", "rgb(96,36,91)", "rgb(208,108,20)", "rgb(255,241,239)", "rgb(94,49,14)", "rgb(125,116,255)", "rgb(245,241,255)", "rgb(55,50,121)", "rgb(251,60,68)", "rgb(255,241,239)", "rgb(118,22,27)", "rgb(0,152,124)", "rgb(227,247,241)", "rgb(10,68,56)", "rgb(161,132,0)", "rgb(255,246,161)", "rgb(72,59,12)", "245, 251, 255", "224, 241, 255", "179, 219, 255", "112, 188, 255", "71, 175, 255", "0, 149, 246", "0, 116, 204", "0, 87, 163", "0, 55, 107", "0, 41, 82", "39, 196, 245", "211, 0, 197", "255, 122, 0", "255, 1, 105", "118, 56, 250", "255, 48, 64", "255, 214, 0", "120, 222, 69", "88, 195, 34", "55, 166, 0", "245, 245, 245", "239, 239, 239", "219, 219, 219", "199, 199, 199", "168, 168, 168", "142, 142, 142", "115, 115, 115", "85, 85, 85", "54, 54, 54", "38, 38, 38", "26, 26, 26", "255, 48, 64", "28, 209, 79", "237, 73, 86", "53, 121, 234", "255, 1, 105", "74, 93, 249", "65, 80, 247", "142, 142, 142", "255, 255, 255", "255, 255, 255", "219, 219, 219", "245, 245, 245", "38, 38, 38", "118, 56, 250", "88, 195, 34", "255, 255, 255", "255, 255, 255", "rgba(0, 0, 0, 0.85)", "rgba(0, 0, 0, 0.65)", "253, 141, 50", "209, 8, 105", "163, 7, 186", "255, 104, 116", "237, 73, 86", "198, 35, 48", "167, 3, 17", "12, 16, 20", "255, 255, 255", "38, 38, 38", "224, 241, 255", "253, 203, 92", "255, 255, 255", "219, 219, 219", "38, 38, 38", "33, 35, 40", "54, 54, 54", "43, 48, 54", "85, 85, 85", "37, 41, 46", "255, 255, 255, 0.1", "224, 241, 255", "12, 16, 20", "248, 249, 249", "248, 249, 249", "37, 41, 46", "245, 245, 245", "85, 85, 85, 0.7", "54, 54, 54", "162, 170, 180", "43, 48, 54", "54, 54, 54", "0, 149, 246", "115, 115, 115", "115, 115, 115", "38, 38, 38", "255, 255, 255", "248, 249, 249", "162, 170, 180", "131, 137, 147", "131, 137, 147", "162, 170, 180", "43, 48, 54, 1", "12, 16, 20", "54, 60, 68", "54, 60, 68", "37, 41, 46", "rgba(43, 48, 54, 0.5)", "rgba(37, 41, 46, 0.95)", "220, 224, 229", "112, 141, 255", "24, 32, 139", "133, 161, 255", "163, 188, 255", "74, 93, 249", "24, 32, 139", "65, 80, 247", "65, 80, 247", "133, 161, 255", "31, 40, 173", "163, 188, 255", "184, 205, 255", "255, 255, 255", "37, 41, 46", "43, 48, 54", "54, 60, 68", "54, 60, 68", "255, 255, 255", "162, 170, 180", "255, 255, 255", "255, 255, 255", "255, 255, 255", "162, 170, 180", "112, 141, 255", "248, 249, 249", "94, 100, 109", "37, 41, 46", "248, 249, 249", "162, 170, 180", "38, 43, 49", "248, 249, 249", "248, 249, 249", "43, 48, 54", "254, 97, 114", "28, 209, 100", "37, 41, 46", "74, 93, 249", "255, 255, 255", "119, 119, 119", "43, 48, 54, .5", "54 54 54", "33, 35, 40", "43, 48, 54", "255, 255, 255, .5", "43, 48, 54", "248, 249, 249", "245, 62, 242", "118, 56, 250"] } };
+const SIZEVARS = [["toast-border-width", "0px"], ["dialog-anchor-vertical-padding", "56px"], ["header-height", "0px"], ["global-panel-width", "0px"], ["global-panel-width-expanded", "0px"], ["alert-banner-corner-radius", "8px"], ["button-corner-radius", "4px"], ["button-corner-radius-medium", "10px"], ["button-corner-radius-large", "12px"], ["button-height-large", "40px"], ["button-height-medium", "36px"], ["button-padding-horizontal-large", "16px"], ["button-padding-horizontal-medium", "16px"], ["button-padding-icon-only", "16px"], ["button-icon-padding-large", "16px"], ["button-icon-padding-medium", "16px"], ["button-inner-icon-spacing-large", "3px"], ["button-inner-icon-spacing-medium", "3px"], ["blueprint-button-height-medium", "40px"], ["blueprint-button-height-large", "48px"], ["card-corner-radius", "4px"], ["card-padding-horizontal", "10px"], ["card-padding-vertical", "20px"], ["chip-corner-radius", "6px"], ["comment-bubble", "18px"], ["dialog-corner-radius", "8px"], ["glimmer-corner-radius", "8px"], ["image-corner-radius", "4px"], ["infochip-medium-radius", "12px"], ["input-corner-radius", "6px"], ["input-border-width", "1px"], ["nav-list-cell-corner-radius", "8px"], ["list-cell-corner-radius", "8px"], ["list-cell-min-height", "52px"], ["list-cell-padding-vertical", "20px"], ["list-cell-padding-vertical-with-addon", "14px"], ["menu-base-list-item-padding-horizontal", "8px"], ["menu-base-list-item-padding-vertical", "12px"], ["menu-base-size-full-margin-end", "48px"], ["menu-item-base-margin-horizontal", "8px"], ["menu-item-base-margin-vertical", "0px"], ["menu-item-base-padding-horizontal", "8px"], ["menu-item-base-overlay-radius", "4px"], ["menu-item-base-padding-vertical", "12px"], ["menu-item-base-with-icon-padding-horizontal", "8px"], ["separator-menu-item-margin-horizontal", "16px"], ["separator-menu-item-margin-vertical", "4px"], ["nav-list-cell-min-height", "0px"], ["nav-list-cell-padding-vertical", "16px"], ["nav-list-cell-padding-vertical-with-addon", "16px"], ["nux-card-body-padding-end", "24px"], ["page-footer-padding-vertical", "16px"], ["popover-border-width", "0px"], ["section-header-addOnEnd-margin-horizontal", "8px"], ["section-header-addOnStart-margin-horizontal", "12px"], ["section-header-addOnEnd-button-padding-horizontal", "0px"], ["section-header-addOnEnd-button-padding-vertical", "0px"], ["section-header-padding-vertical", "16px"], ["section-header-padding-vertical-dense", "8px"], ["section-header-subtitle-margin-vertical", "14px"], ["section-header-subtitle-with-addOnEnd-margin-vertical", "6px"], ["tab-height", "60px"], ["tab-icon-padding-end", "0px"], ["tab-text-icon-gap", "4px"], ["tab-underline-height", "3px"], ["text-badge-corner-radius", "4px"], ["text-badge-padding-horizontal", "6px"], ["text-badge-padding-vertical", "6px"], ["text-input-multi-padding-between-text-scrollbar", "20px"], ["text-input-multi-padding-scrollbar", "16px"], ["text-input-caption-margin-top", "10px"], ["text-input-padding-vertical", "12px"], ["toast-addon-padding-horizontal", "6px"], ["toast-addon-padding-vertical", "6px"], ["toast-container-min-width", "288px"], ["toast-container-padding-horizontal", "10px"], ["toast-container-padding-vertical", "16px"], ["toast-corner-radius", "8px"], ["toaster-view-max-width", "328px"], ["tooltip-corner-radius", "8px"], ["typeahead-list-outer-padding-vertical", "2px"], ["text-input-label-font-size", "17px"], ["messenger-card-min-width", "300px"], ["messenger-card-max-width", "480px"], ["messenger-application-max-width", "2560px"], ["messenger-sidebar-collapsed-width", "44px"], ["messenger-sidebar-expanded-width", "240px"], ["messenger-card-corner-radius", "8px"], ["messenger-card-spacing", "16px"], ["chat-bubble-padding-vertical", "8px"], ["chat-bubble-padding-horizontal", "12px"], ["chat-bubble-border-radius", "18px"], ["radio-checked-icon-size-large", "12px"], ["radio-checked-icon-size-medium", "12px"], ["radio-border-width", "2px"], ["radio-size-large", "24px"], ["radio-size-medium", "20px"], ["base-unit", "4px"], ["breakpoint-medium-width", "1536px"], ["breakpoint-small-width", "1024px"], ["challenge-width", "460px"], ["creation-header-height", "43px"], ["creation-min-padding-x", "32px"], ["creation-modal-max-height", "898px"], ["creation-modal-min-height", "391px"], ["creation-padding-x", "64px"], ["creation-padding-y", "112px"], ["creation-settings-width", "340px"], ["desktop-grid-item-margin", "28px"], ["desktop-grid-item-margin-slim", "4px"], ["desktop-nav-height", "60px"], ["desktop-story-tray-bottom-margin", "48px"], ["desktop-story-tray-bottom-margin-denser", "24px"], ["direct-message-max-width", "236px"], ["fb-signup-page-profile-pic-size", "88px"], ["feed-sidebar-width", "319px"], ["feed-width", "470px"], ["feed-width-story", "630px"], ["feed-width-wide-story", "930px"], ["footer-width-wide", "1150px"], ["igds-dialog-border-radius", "24px"], ["igds-menu-border-radius", "20px"], ["ig-input-border-radius", "12px"], ["ig-input-border-width", "1px"], ["ig-text-input-padding-vertical", "20px"], ["in-feed-story-item-padding", "12px"], ["input-border-radius", "6px"], ["live-video-border-radius", "4px"], ["media-info", "335px"], ["medium-screen-max", "875px"], ["medium-screen-min", "736px"], ["mobile-grid-item-margin", "2px"], ["mobile-nav-height", "45px"], ["modal-border-radius", "12px"], ["modal-padding", "16px"], ["nav-narrow-width", "72px"], ["nav-medium-width", "244px"], ["nav-wide-width", "335px"], ["nav-bottom-screen-max", "767px"], ["nav-narrow-screen-min", "768px"], ["nav-medium-screen-min", "1264px"], ["nav-wide-screen-min", "1920px"], ["photo", "600px"], ["polaris-feed-with-padding-threshold-min", "640px"], ["polaris-extra-small-screen-max", "413px"], ["polaris-small-screen-min", "414px"], ["polaris-small-screen-max", "735px"], ["polaris-medium-screen-min", "736px"], ["polaris-medium-screen-max", "875px"], ["polaris-large-screen-min", "876px"], ["polaris-nav-bottom-screen-max", "767px"], ["polaris-post-modal-small-screen-max", "1366px"], ["polaris-post-modal-large-screen-min", "1536px"], ["polaris-post-modal-large-height-max", "1032px"], ["polaris-challenge-width", "460px"], ["polaris-breakpoint-medium-width", "1536px"], ["polaris-breakpoint-small-width", "1024px"], ["polaris-site-width-narrow", "600px"], ["polaris-site-width-wide", "935px"], ["polaris-site-padding-top", "30px"], ["polaris-tablet-screen-max", "1136px"], ["revamp-nav-bottom-toolbar-height", "50px"], ["revamp-feed-card-media-min-width", "390px"], ["revamp-feed-card-dense-padding", "16px"], ["revamp-feed-item-spacing", "20px"], ["right-rail-width", "352px"], ["scrollable-content-header-height-large", "72px"], ["scrollable-content-header-height-med", "49px"], ["scrollable-content-header-height", "44px"], ["search-box-height", "40px"], ["search-modal-height-expanded", "450px"], ["search-modal-height", "362px"], ["search-modal-top-offset", "12px"], ["search-result-height", "50px"], ["search-result-list-width", "375px"], ["site-width-narrow", "600px"], ["site-width-wide", "935px"], ["small-layout-max", "1079px"], ["small-screen-max", "735px"], ["small-screen-min", "414px"], ["system-10-font-size", "10px"], ["system-10-line-height", "12px"], ["system-11-font-size", "11px"], ["system-11-line-height", "13px"], ["system-12-font-size", "12px"], ["system-12-line-height", "16px"], ["system-14-font-size", "14px"], ["system-14-line-height", "18px"], ["system-16-font-size", "16px"], ["system-16-line-height", "24px"], ["system-18-font-size", "18px"], ["system-18-line-height", "24px"], ["system-20-font-size", "20px"], ["system-20-line-height", "25px"], ["system-22-font-size", "22px"], ["system-22-line-height", "26px"], ["system-24-font-size", "24px"], ["system-24-line-height", "27px"], ["system-26-font-size", "26px"], ["system-26-line-height", "28px"], ["system-28-font-size", "28px"], ["system-28-line-height", "32px"], ["system-30-font-size", "30px"], ["system-30-line-height", "36px"], ["system-32-font-size", "32px"], ["system-32-line-height", "40px"], ["feed-sidebar-padding-familiar", "64px"], ["system-13-font-size", "12px"], ["system-15-font-size", "15px"]];
+(function () {
+  const root = document.documentElement;
+  const state = { mode: matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light" };
+  try { Object.assign(state, JSON.parse(localStorage.getItem("ig-kit") || "{}")); } catch (e) {}
+  if (!PALETTES.ig[state.mode]) state.mode = "light";
+
+  const toast = (t) => {
+    const el = document.getElementById("toast");
+    document.getElementById("toast-t").textContent = t;
+    el.classList.add("show");
+    clearTimeout(toast.t);
+    toast.t = setTimeout(() => el.classList.remove("show"), 1600);
+  };
+  const copy = async (text, msg) => {
+    try { await navigator.clipboard.writeText(text); toast(msg); }
+    catch (e) { toast("Trình duyệt chặn clipboard, hãy copy tay"); }
+  };
+  /* bộ ba "r, g, b" → rgb() để vẽ ô màu */
+  const paint = (v) => /^\d+(\s*,\s*|\s+)\d+(\s*,\s*|\s+)\d+(\s*,\s*[\d.]+)?$/.test(v) ? (v.split(",").length > 3 ? "rgba(" : "rgb(") + v + ")" : v;
+
+  function apply() {
+    const vals = PALETTES.ig[state.mode];
+    ROLES.forEach((r, i) => root.style.setProperty("--" + r, vals[i]));
+    root.dataset.mode = state.mode;
+    document.querySelectorAll("#mode button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === state.mode));
+    renderRoles(vals);
+    try { localStorage.setItem("ig-kit", JSON.stringify(state)); } catch (e) {}
+  }
+  document.querySelectorAll("#mode button").forEach((b) => (b.onclick = () => { state.mode = b.dataset.v; apply(); }));
+
+  const GROUP = (r) => r.startsWith("ig-colors-") ? "ig-colors (nút, liên kết)" : r.startsWith("ig-") ? "ig" : r.split("-")[0];
+  let filter = "";
+  function renderRoles(vals) {
+    const box = document.getElementById("roles");
+    box.innerHTML = "";
+    let last = "";
+    ROLES.forEach((r, i) => {
+      if (filter && !r.includes(filter)) return;
+      const g = GROUP(r);
+      if (g !== last) { const h = document.createElement("h4"); h.textContent = g; box.appendChild(h); last = g; }
+      const v = vals[i];
+      const b = document.createElement("button");
+      b.className = "role";
+      b.innerHTML = "<i></i><b>--" + r + "</b><code></code>";
+      b.querySelector("i").style.background = paint(v);
+      b.querySelector("code").textContent = v;
+      b.onclick = () => copy(v, "Đã copy --" + r);
+      box.appendChild(b);
+    });
+  }
+  document.getElementById("role-filter").oninput = (e) => { filter = e.target.value.trim().replace(/^--/, ""); renderRoles(PALETTES.ig[state.mode]); };
+
+  /* thang chữ đo được: [tên, cỡ, line-height, đậm, nơi dùng] */
+  const TYPE = [["Tiêu đề hộp thoại", 24, 30, 700, "dialog h3 · 24/30"], ["Tên tài khoản", 20, 25, 400, "profile h2 · 20/25"], ["Số liệu profile", 16, 20, 400, "ul li · 16/20, số 600"],
+    ["Tiêu đề mục", 16, 20, 600, "h4 · 16/20"], ["Nút / tên đậm", 14, 18, 600, "button, a · 14/18"], ["Liên kết nút", 14, 18, 500, "a Sign Up · 14/18"], ["Thân chữ", 14, 18, 400, "body · 14/18"],
+    ["Nhãn tin nổi bật", 12, 16, 600, "span · 12/16"], ["Thời gian / chân trang", 12, 16, 400, "time, footer a · 12/16"]];
+  const ts = document.getElementById("typescale");
+  TYPE.forEach(([name, size, lh, w, src]) => {
+    const row = document.createElement("div");
+    row.className = "type-row";
+    row.innerHTML = '<span class="meta">' + name + '</span><span class="t" style="font-size:' + size + "px;line-height:" + lh + "px;font-weight:" + w + '">Chia sẻ khoảnh khắc với bạn bè</span><span class="meta">' + src + "</span>";
+    ts.appendChild(row);
+  });
+  [["--font-weight-system-regular", 400], ["--font-weight-system-medium", 500], ["--font-weight-system-semibold", 600], ["--font-weight-system-bold", 700], ["--font-weight-system-extra-bold", 800]].forEach(([n, w]) => {
+    const row = document.createElement("div");
+    row.className = "type-row";
+    row.innerHTML = '<span class="meta">' + n + '</span><span class="t" style="font-size:16px;font-weight:var(' + n + ')">Độ đậm ' + w + '</span><span class="meta">' + w + "</span>";
+    ts.appendChild(row);
+  });
+
+  /* bo góc đo trên trang */
+  const sh = document.getElementById("shapes");
+  [["0", "ô lưới, khung bài", "0"], ["2px", "liên kết dạng nút", "2px"], ["8px", "nút 32px", "8px"], ["12px", "nút lớn, thẻ gợi ý", "12px"], ["16px", "nút đóng, nhãn mờ", "16px"], ["20px", "nút carousel, ảnh vuông", "20px"], ["22px", "nút xem thêm", "22px"], ["32px", "hộp thoại", "32px"], ["50%", "avatar, chấm", "50%"]].forEach(([n, use, r]) => {
+    const c = document.createElement("div");
+    c.className = "shape-cell";
+    c.innerHTML = '<i style="border-radius:' + r + '"></i><b>' + n + "</b>" + use;
+    sh.appendChild(c);
+  });
+
+  /* biến kích thước có sẵn trên :root */
+  const sv = document.getElementById("sizevars");
+  SIZEVARS.forEach(([n, v]) => { const tr = document.createElement("tr"); tr.innerHTML = "<td>--" + n + "</td><td></td>"; tr.lastChild.textContent = v; sv.appendChild(tr); });
+
+  /* mỗi thẻ thành phần có nút copy HTML của phần trình diễn */
+  document.querySelectorAll(".spec").forEach((spec) => {
+    const stage = spec.querySelector(".stage");
+    if (!stage || !spec.querySelector(".spec-h")) return;
+    let foot = spec.querySelector(".spec-f");
+    if (!foot) { foot = document.createElement("div"); foot.className = "spec-f"; foot.innerHTML = '<span class="note"></span>'; spec.appendChild(foot); }
+    const b = document.createElement("button");
+    b.className = "copy"; b.textContent = "Copy HTML";
+    b.onclick = () => copy(stage.innerHTML.trim().replace(/\n\s+/g, "\n"), "Đã copy HTML của " + spec.querySelector(".spec-h b").textContent);
+    foot.appendChild(b);
+  });
+
+  document.getElementById("copy-tokens").onclick = () => {
+    const vals = PALETTES.ig[state.mode];
+    copy(":root {\n" + ROLES.map((r, i) => "  --" + r + ": " + vals[i] + ";").join("\n") + "\n}", "Đã copy token chế độ " + (state.mode === "dark" ? "Tối" : "Sáng"));
+  };
+
+  const links = [...document.querySelectorAll(".side a")];
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (e.isIntersecting) links.forEach((a) => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id));
+  }), { rootMargin: "-30% 0px -60% 0px" });
+  document.querySelectorAll("section.block").forEach((s) => io.observe(s));
+
+  document.addEventListener("click", (e) => { if (e.target.closest('a[href="#"]')) e.preventDefault(); });
+  apply();
+})();
+</script>
+</body>
+</html>
