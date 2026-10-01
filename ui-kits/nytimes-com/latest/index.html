@@ -1,0 +1,864 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta name="ui-kit-id" content="nytimes-com">
+<!-- UI kit rút từ trang chủ nytimes.com (bản International) do user tự lưu, 01/10/2026.
+     Nguồn: hệ token TPL trong global-*.css (--tpl-color-*, --tpl-typography-*, --tpl-size-*), resolve bằng Playwright
+     trên trang lưu (offline, tắt JS), không request ra ngoài. Kit chỉ lấy style/cấu trúc: mọi chữ là mẫu tự viết,
+     mọi ảnh/logo là khối giữ chỗ (RULE-09). Font NYT là font độc quyền nên thay bằng Google Fonts gần nhất.
+     Tracking: nhãn in hoa của site dùng .1em; kit hạ mọi letter-spacing về ≤ .02em theo luật cấm giãn chữ của dự án. -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="ui-kit-skip" content="182332d39d:logo chữ 2026 Elections là SVG wordmark của NYT, không nhúng (RULE-09);2bb6d5ca23:khung p bọc chính logo 2026 Elections ở trên, cùng lý do RULE-09">
+<title>NYT UI Kit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;400;500;600;700;800&family=Newsreader:opsz,wght@6..72,200..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,700&family=Roboto+Slab:wght@700&family=Roboto+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..24,400,0..1,0&display=block">
+<style>
+/* Token: 19 vai trò màu của hệ TPL (--tpl-color-<role>) đổi tên thành --nyt-<role>, giá trị resolve từ
+   .tpl-always-light / .tpl-always-dark. Font: --nyt-cheltenham / imperial / franklin / karnak là font thay thế. */
+:root {
+  --nyt-background-primary:#FFFFFF; --nyt-background-secondary:#F8F8F8; --nyt-background-tertiary:#EBEBEB;
+  --nyt-background-elevated:#FFFFFF; --nyt-background-highlight:#FEFAD1; --nyt-background-scrim:rgba(18,18,18,.6);
+  --nyt-content-primary:#121212; --nyt-content-primary-dim:#363636; --nyt-content-secondary:#5A5A5A;
+  --nyt-content-secondary-dim:#727272; --nyt-content-placeholder:#8B8B8B; --nyt-content-accent:#346EB7;
+  --nyt-content-accent-dim:#326891; --nyt-content-breaking:#D0021B; --nyt-content-negative:#A90111;
+  --nyt-content-positive:#267C30; --nyt-stroke-primary:#121212; --nyt-stroke-secondary:#959595; --nyt-stroke-tertiary:#DFDFDF;
+  --nyt-hover:#F7F7F7;
+  --nyt-cheltenham: Newsreader, georgia, "times new roman", serif;
+  --nyt-imperial: "Source Serif 4", georgia, "times new roman", serif;
+  --nyt-franklin: "Libre Franklin", helvetica, arial, sans-serif;
+  --nyt-karnak: "Roboto Slab", georgia, serif;
+  --nyt-rule-primary: 2px solid var(--nyt-stroke-primary);
+  --nyt-rule-secondary: 1px solid var(--nyt-stroke-primary);
+  --nyt-rule-tertiary: 1px solid var(--nyt-stroke-tertiary);
+  --nyt-focus: 2px solid var(--nyt-content-accent);
+  --mono: "Roboto Mono", ui-monospace, Menlo, monospace;
+  color-scheme: light;
+}
+:root[data-mode="dark"] { color-scheme: dark; }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--nyt-background-primary); color: var(--nyt-content-primary); font: 400 14px/20px var(--nyt-franklin); -webkit-font-smoothing: antialiased; }
+.ms { font-family: "Material Symbols Outlined"; font-weight: normal; font-style: normal; font-size: 20px; line-height: 1; letter-spacing: normal; text-transform: none; display: inline-block; white-space: nowrap; direction: ltr; font-feature-settings: "liga"; -webkit-font-smoothing: antialiased; user-select: none; }
+code, .code { font-family: var(--mono); font-size: 12px; }
+:focus-visible { outline: var(--nyt-focus); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+/* ---------- vỏ trang (mặc token của kit) ---------- */
+.shell { display: grid; grid-template-columns: 232px minmax(0, 1fr); min-height: 100vh; }
+.side { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 20px 12px; background: var(--nyt-background-secondary); border-right: var(--nyt-rule-tertiary); display: flex; flex-direction: column; gap: 2px; }
+.brand { padding: 4px 12px 16px; border-bottom: var(--nyt-rule-secondary); margin-bottom: 6px; }
+.brand b { font: 700 20px/24px var(--nyt-cheltenham); display: block; }
+.brand small { color: var(--nyt-content-secondary); font-size: 12px; }
+.side h6 { margin: 14px 12px 6px; font: 700 12px/16px var(--nyt-franklin); color: var(--nyt-content-secondary); }
+.side a { display: flex; align-items: center; gap: 10px; height: 36px; padding: 0 12px; border-radius: 3px; color: var(--nyt-content-primary-dim); text-decoration: none; font-weight: 500; }
+.side a .ms { font-size: 18px; color: var(--nyt-content-secondary); }
+.side a:hover { background: var(--nyt-hover); }
+.side a.on { background: var(--nyt-background-tertiary); color: var(--nyt-content-primary); font-weight: 600; }
+main { padding: 0 32px 96px; min-width: 0; }
+
+.bar { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; padding: 12px 0; background: var(--nyt-background-primary); border-bottom: var(--nyt-rule-tertiary); }
+.bar .grow { flex: 1; }
+.ctl { display: flex; align-items: center; gap: 8px; }
+.ctl > span { font-size: 12px; font-weight: 600; color: var(--nyt-content-secondary); }
+.seg { display: inline-flex; }
+.seg button { height: 32px; padding: 0 12px; border: 1px solid var(--nyt-stroke-tertiary); background: var(--nyt-background-primary); color: var(--nyt-content-primary); font: 500 13px var(--nyt-franklin); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.seg button:first-child { border-radius: 3px 0 0 3px; }
+.seg button:last-child { border-radius: 0 3px 3px 0; border-left: none; }
+.seg button[aria-pressed="true"] { background: var(--nyt-content-primary); color: var(--nyt-background-primary); border-color: var(--nyt-content-primary); }
+.seg .ms { font-size: 18px; }
+
+.intro { padding: 40px 0 8px; max-width: 780px; }
+.intro .eyebrow { font-family: var(--mono); font-size: 12px; color: var(--nyt-content-accent); }
+.intro h1 { font: 700 44px/50px var(--nyt-cheltenham); margin: 8px 0 12px; text-wrap: balance; }
+.intro p { font: 400 17px/26px var(--nyt-imperial); color: var(--nyt-content-primary-dim); margin: 0 0 10px; max-width: 66ch; }
+.intro .facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.fact { font-family: var(--mono); font-size: 12px; padding: 4px 10px; border-radius: 3px; background: var(--nyt-background-secondary); border: var(--nyt-rule-tertiary); color: var(--nyt-content-secondary); }
+
+section.block { padding-top: 48px; scroll-margin-top: 60px; }
+section.block > header { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; border-top: var(--nyt-rule-primary); padding-top: 10px; }
+section.block > header h2 { font: 700 28px/34px var(--nyt-cheltenham); margin: 0; }
+section.block > header p { margin: 0; color: var(--nyt-content-secondary); max-width: 74ch; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+.grid.wide { grid-template-columns: repeat(auto-fill, minmax(460px, 1fr)); }
+.spec { background: var(--nyt-background-secondary); border: var(--nyt-rule-tertiary); border-radius: 4px; display: flex; flex-direction: column; min-width: 0; }
+.spec.full { grid-column: 1 / -1; }
+.spec-h { display: flex; align-items: center; gap: 8px; padding: 12px 16px 0; flex-wrap: wrap; }
+.spec-h b { font-size: 15px; font-weight: 600; }
+.kind { font-family: var(--mono); font-size: 11px; padding: 2px 8px; border-radius: 3px; background: var(--nyt-background-tertiary); color: var(--nyt-content-primary-dim); }
+.spec-h .dp { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--nyt-content-secondary); font-variant-numeric: tabular-nums; }
+.stage { padding: 20px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 16px; min-height: 96px; overflow-x: auto; }
+.stage.col { flex-direction: column; align-items: stretch; }
+.stage.surface { background: var(--nyt-background-primary); margin: 12px 12px 0; border: var(--nyt-rule-tertiary); }
+.spec-f { display: flex; align-items: center; gap: 8px; padding: 8px 12px 12px 16px; margin-top: auto; }
+.spec-f .note { font-size: 12px; line-height: 17px; color: var(--nyt-content-secondary); flex: 1; }
+.copy { height: 30px; padding: 0 10px; border-radius: 3px; border: 1px solid var(--nyt-stroke-tertiary); background: var(--nyt-background-primary); color: var(--nyt-content-primary); font: 500 13px var(--nyt-franklin); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; flex: none; }
+.copy:hover { background: var(--nyt-hover); }
+.copy .ms { font-size: 16px; }
+.st { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+.st > small { font-family: var(--mono); font-size: 10px; color: var(--nyt-content-secondary); }
+
+/* nền tảng */
+.roles { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 8px; }
+.role { border-radius: 3px; padding: 12px; min-height: 76px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: inset 0 0 0 1px var(--nyt-stroke-tertiary); cursor: pointer; border: none; text-align: left; font: inherit; }
+.role b { font-size: 12px; font-weight: 600; }
+.role code { font-size: 11px; opacity: .85; }
+.type-row { display: grid; grid-template-columns: 170px minmax(0, 1fr) 150px; gap: 16px; align-items: baseline; padding: 10px 0; border-bottom: var(--nyt-rule-tertiary); }
+.type-row:last-child { border-bottom: none; }
+.type-row .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.type-row .meta { font-family: var(--mono); font-size: 11px; color: var(--nyt-content-secondary); font-variant-numeric: tabular-nums; }
+.type-group { font: 700 12px/16px var(--nyt-franklin); color: var(--nyt-content-secondary); padding: 18px 0 4px; }
+.shape-cell { display: flex; flex-direction: column; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px; color: var(--nyt-content-secondary); }
+.shape-cell i { display: block; width: 64px; height: 64px; background: var(--nyt-background-tertiary); border: 1px solid var(--nyt-stroke-secondary); }
+.space-row { display: flex; align-items: center; gap: 12px; font-family: var(--mono); font-size: 11px; color: var(--nyt-content-secondary); }
+.space-row i { display: block; height: 12px; background: var(--nyt-content-accent); }
+.space-row span { width: 150px; flex: none; }
+.rule-demo { display: flex; flex-direction: column; gap: 18px; width: 100%; }
+.rule-demo div { display: flex; flex-direction: column; gap: 6px; font-family: var(--mono); font-size: 11px; color: var(--nyt-content-secondary); }
+.tbl { overflow-x: auto; width: 100%; }
+table.tok { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+table.tok th, table.tok td { text-align: left; padding: 8px 12px 8px 0; border-bottom: var(--nyt-rule-tertiary); font-size: 13px; }
+table.tok th { font-weight: 600; color: var(--nyt-content-secondary); font-size: 12px; }
+table.tok td:first-child { font-family: var(--mono); font-size: 12px; white-space: nowrap; }
+
+/* ================= các thành phần nyt-* (chỉ dùng --nyt-*) ================= */
+/* khối giữ chỗ ảnh / logo (RULE-09) */
+.nyt-ph { background: var(--nyt-background-tertiary); color: var(--nyt-content-secondary-dim); display: grid; place-items: center; text-align: center; font: 500 11px/14px var(--nyt-franklin); padding: 6px; }
+.nyt-wordmark { font: 700 34px/1 var(--nyt-karnak); color: var(--nyt-content-primary); display: inline-flex; flex-direction: column; align-items: center; gap: 4px; }
+.nyt-wordmark small { font: 500 10px/1 var(--nyt-franklin); color: var(--nyt-content-secondary-dim); }
+
+/* skip link: css-kgn7zc · franklin 11/700 · pad 11 12 8 · r 3 · hover #f7f7f7 */
+.nyt-skip { display: inline-block; background: var(--nyt-background-primary); color: var(--nyt-content-primary); font: 700 11px/1 var(--nyt-franklin); letter-spacing: .02em; text-transform: uppercase; text-decoration: none; padding: 11px 12px 8px; border-radius: 3px; box-shadow: 0 0 0 1px var(--nyt-stroke-tertiary); }
+.nyt-skip:hover, .nyt-skip.is-hover { background: var(--nyt-hover); }
+
+/* edition menu: CqtwdW_editionMenu · franklin 11/500 uppercase · pad 7 8 6 · r 3 (site tracking .1em → kit .02em) */
+.nyt-edition { display: flex; gap: 0; list-style: none; margin: 0; padding: 0; justify-content: center; }
+.nyt-edition a { display: block; color: var(--nyt-content-secondary); font: 500 11px/11px var(--nyt-franklin); text-transform: uppercase; letter-spacing: .02em; padding: 7px 8px 6px; border-radius: 3px; text-decoration: none; transition: background-color .2s; }
+.nyt-edition a:hover, .nyt-edition a.is-hover, .nyt-edition a:active, .nyt-edition a.is-active { background: var(--nyt-hover); }
+.nyt-edition a.is-on { color: var(--nyt-content-primary); font-weight: 600; }
+
+/* focus của hệ: viền accent 2px (tpl-lbl dùng .125rem solid content-accent, offset .125rem) */
+.is-focus { outline: var(--nyt-focus); outline-offset: 2px; }
+.is-focus-ua { outline: 2px auto var(--nyt-content-accent); outline-offset: 1px; }
+
+/* masthead: Wr7_RG_masthead · ngày franklin 14/20 · Today's Paper 11 · logo giữa */
+.nyt-masthead { width: 100%; background: var(--nyt-background-primary); color: var(--nyt-content-primary); }
+.nyt-masthead .top { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px; padding: 10px 0 14px; }
+.nyt-masthead .date { font: 400 14px/20px var(--nyt-franklin); letter-spacing: .1px; }
+.nyt-masthead .paper { font: 400 11px/14px var(--nyt-franklin); color: var(--nyt-content-primary); text-decoration: none; display: inline-block; letter-spacing: .1px; }
+.nyt-masthead .paper:hover, .nyt-masthead .paper.is-hover, .nyt-masthead .paper:active, .nyt-masthead .paper.is-active { color: var(--nyt-content-secondary); }
+.nyt-masthead .ticker { justify-self: end; font: 400 11px/14px var(--nyt-franklin); color: var(--nyt-content-primary-dim); display: flex; gap: 12px; }
+.nyt-masthead .ticker b { font-weight: 500; }
+.nyt-masthead .ticker .up { color: var(--nyt-content-positive); }
+.nyt-masthead .ticker .down { color: var(--nyt-content-negative); }
+.nyt-masthead .sections { display: flex; justify-content: center; gap: 22px; border-top: var(--nyt-rule-tertiary); border-bottom: var(--nyt-rule-secondary); padding: 10px 0; flex-wrap: wrap; }
+.nyt-masthead .sections a { font: 400 14px/18px var(--nyt-franklin); color: var(--nyt-content-primary); text-decoration: none; }
+.nyt-masthead .sections a:hover { text-decoration: underline; }
+
+/* nút gói đăng ký / đăng nhập (mobile header + masthead) */
+.nyt-btn { height: 32px; padding: 0 12px; border-radius: 3px; font: 700 11px/1 var(--nyt-franklin); text-transform: uppercase; letter-spacing: .02em; display: inline-flex; align-items: center; cursor: pointer; border: 1px solid transparent; }
+.nyt-btn.v-solid { background: var(--nyt-content-accent); color: var(--nyt-background-primary); }
+.nyt-btn.v-ghost { background: transparent; color: var(--nyt-content-primary); border-color: var(--nyt-stroke-secondary); }
+
+/* email signup (polls): svelte-227g9t · franklin 14/600 · 1px stroke-tertiary · pad 4 12 · r 3 · hover bg secondary */
+.nyt-signup { height: 32px; padding: 4px 12px; border: 1px solid var(--nyt-stroke-tertiary); border-radius: 3px; background: transparent; color: var(--nyt-content-primary); font: 600 14px/1 var(--nyt-franklin); cursor: pointer; white-space: nowrap; }
+.nyt-signup:hover, .nyt-signup.is-hover { background: var(--nyt-background-secondary); }
+
+/* nút icon tròn 26 (carousel back/next, mute) */
+.nyt-iconbtn { width: 26px; height: 26px; border-radius: 50%; display: inline-grid; place-items: center; border: 1px solid var(--nyt-stroke-tertiary); background: var(--nyt-background-primary); color: var(--nyt-content-secondary); cursor: pointer; padding: 0; }
+.nyt-iconbtn svg { width: 14px; height: 14px; }
+.nyt-iconbtn.v-media { border: none; background: var(--nyt-background-scrim); color: #FFFFFF; border-radius: 0; }
+.nyt-iconbtn.v-media.is-focus { outline-color: #FFFFFF; }
+.nyt-play { width: 26px; height: 26px; border-radius: 50%; background: rgba(0,0,0,.49); color: #FFFFFF; display: inline-grid; place-items: center; }
+.nyt-play svg { width: 12px; height: 12px; }
+
+/* section header của gói: O8nPlG_packageTitle · franklin 16/700 lh 1.3 · rule trên 1px primary (site .5px → kit .02em) */
+.nyt-pkg-title { border-top: var(--nyt-rule-secondary); padding-top: 8px; width: 100%; display: flex; flex-wrap: wrap; align-items: baseline; gap: 5px; margin-bottom: 12px; }
+.nyt-pkg-title h2 { margin: 0; font: 700 16px/1.3 var(--nyt-franklin); letter-spacing: .02em; color: var(--nyt-content-primary); }
+.nyt-pkg-title .desc { font: italic 400 16px/1.2 var(--nyt-cheltenham); letter-spacing: .01em; color: var(--nyt-content-primary); }
+.nyt-pkg-title.thick { border-top: var(--nyt-rule-primary); }
+
+/* nhãn: kicker (css-18dz3rz), thời gian đọc (css-1a0ymrn), label TPL — site tracking .1em → kit .02em */
+.nyt-kicker { font: 600 11px/13px var(--nyt-franklin); letter-spacing: .02em; text-transform: uppercase; color: var(--nyt-content-primary); margin: 0 0 4px; }
+.nyt-kicker.breaking { color: var(--nyt-content-breaking); }
+.nyt-readtime { font: 500 10px/1.25em var(--nyt-franklin); letter-spacing: .02em; text-transform: uppercase; color: var(--nyt-content-secondary-dim); margin: 6px 0 0; }
+.nyt-source { font: 500 10px/1.25em var(--nyt-franklin); letter-spacing: .02em; text-transform: uppercase; color: var(--nyt-content-secondary-dim); margin: 6px 0 0; }
+.nyt-letters { font: 700 11px/15px var(--nyt-cheltenham); letter-spacing: .02em; text-transform: uppercase; color: var(--nyt-content-secondary-dim); margin: 0 0 4px; }
+
+/* headline: indicate-hover · cheltenham (thay: Newsreader) */
+.nyt-hed { margin: 0; color: var(--nyt-content-primary); font-family: var(--nyt-cheltenham); }
+.nyt-hed.n16 { font-size: 16px; line-height: 19.2px; font-weight: 700; letter-spacing: .16px; }
+.nyt-hed.n18 { font-size: 18px; line-height: 21.6px; font-weight: 700; letter-spacing: .18px; }
+.nyt-hed.n22 { font-size: 22px; line-height: 25.3px; font-weight: 700; }
+.nyt-hed.op20 { font-size: 20px; line-height: 23px; font-weight: 700; font-stretch: 85%; letter-spacing: .05px; }
+.nyt-hed.f24 { font-size: 24px; line-height: 27.6px; font-weight: 300; }
+.nyt-hed.f28 { font-size: 28px; line-height: 32.2px; font-weight: 300; }
+.nyt-hed.inv { color: #FFFFFF; font-weight: 400; font-size: 16px; line-height: 19.2px; }
+.nyt-summary { margin: 6px 0 0; font: 400 14px/1.39 var(--nyt-imperial); color: var(--nyt-content-secondary); }
+.nyt-story { display: block; text-decoration: none; color: inherit; max-width: 280px; }
+.nyt-story:hover .nyt-hed, .nyt-story.is-hover .nyt-hed { color: var(--nyt-content-secondary); }
+.nyt-story:hover .nyt-summary, .nyt-story.is-hover .nyt-summary { color: var(--nyt-content-secondary); }
+
+/* số bình luận: css-vh8abo / css-ut44vn · franklin 11/500 · icon bong bóng */
+.nyt-comments { display: inline-flex; align-items: center; gap: 4px; font: 500 11px/18px var(--nyt-franklin); color: var(--nyt-content-secondary); text-decoration: none; margin-top: 6px; }
+.nyt-comments.v-dark { color: var(--nyt-content-primary); }
+.nyt-comments svg { width: 12px; height: 12px; }
+
+/* byline cột opinion: tên franklin label + ảnh chân dung 40 */
+.nyt-byline { display: grid; grid-template-columns: minmax(0, 1fr) 40px; gap: 10px; max-width: 280px; }
+.nyt-byline .who { font: 500 10px/13px var(--nyt-franklin); letter-spacing: .02em; text-transform: uppercase; color: var(--nyt-content-secondary); margin: 0 0 4px; }
+.nyt-byline .nyt-ph { width: 40px; height: 40px; font-size: 8px; line-height: 9px; padding: 2px; }
+.nyt-byline .nyt-ph.tall { height: 59px; }
+.nyt-byline .nyt-hed { font-size: 18px; line-height: 21.6px; font-weight: 400; letter-spacing: .18px; }
+
+/* media-container: ZzXvKG_container · nền background-tertiary · tỉ lệ bằng padding-bottom */
+.nyt-media { position: relative; background: var(--nyt-background-tertiary); width: 100%; display: block; }
+.nyt-media::before { content: ""; display: block; padding-bottom: var(--ratio, 66.6667%); }
+.nyt-media > .nyt-ph { position: absolute; inset: 0; }
+.nyt-media.is-focus { outline: var(--nyt-focus); outline-offset: 2px; }
+.nyt-media .dur { position: absolute; left: 8px; bottom: 8px; background: var(--nyt-background-scrim); color: #FFFFFF; font: 600 11px/1 var(--nyt-franklin); padding: 4px 6px; }
+.nyt-media .nyt-iconbtn { position: absolute; right: 8px; bottom: 8px; }
+.nyt-fig { margin: 0; width: 100%; }
+.nyt-fig figcaption { font: 400 11px/15.4px var(--nyt-imperial); color: var(--nyt-content-secondary-dim); text-align: right; margin-top: 6px; }
+.nyt-skel { background: var(--nyt-background-tertiary); }
+.nyt-skelcard { display: grid; gap: 8px; width: 150px; }
+.nyt-skelcard .a { height: 115px; }
+.nyt-skelcard .b { height: 35px; }
+
+/* carousel ảnh: d3BmaG_card · nhãn & chú thích #F8F8F8 trên gradient */
+.nyt-slide { position: relative; width: 100%; max-width: 420px; background: var(--nyt-background-tertiary); }
+.nyt-slide::before { content: ""; display: block; padding-bottom: 66.6667%; }
+.nyt-slide > .nyt-ph { position: absolute; inset: 0; }
+.nyt-slide .label { position: absolute; left: 0; right: 0; top: 0; padding: 20px 20px 0; font: 400 16px/1.2rem var(--nyt-franklin); color: #F8F8F8; text-shadow: 0 0 10px #00000040, 1px 1px 1px #00000059; }
+.nyt-slide .cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 40px 20px 12px; font: 400 11px/15px var(--nyt-imperial); color: #F8F8F8; background: linear-gradient(transparent, var(--nyt-background-scrim)); }
+.nyt-carousel-ctl { display: flex; gap: 8px; align-items: center; margin-top: 10px; }
+.nyt-dots { display: flex; gap: 6px; margin-left: 8px; }
+.nyt-dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--nyt-stroke-tertiary); }
+.nyt-dots i.on { background: var(--nyt-content-primary); }
+
+/* thẻ promo podcast: zmvoWW_promoCard · r 4 · cao 229 · media 2/3 + nội dung nền --show-color */
+.nyt-promo { border-radius: 4px; overflow: hidden; display: flex; height: 229px; width: 300px; max-width: 100%; text-decoration: none; position: relative; }
+.nyt-promo .content { background-color: var(--show-color); background-image: radial-gradient(100% 100% at 50% 0, #0000 0%, #0000004d 100%); flex: 1; min-width: 0; padding: 12px; display: flex; flex-direction: column; }
+.nyt-promo .show { display: flex; align-items: center; gap: 8px; font: 400 16px/1.2 var(--nyt-cheltenham); color: #FFFFFF; margin-bottom: 12px; }
+.nyt-promo .show .nyt-ph { width: 24px; height: 24px; border-radius: 3px; padding: 0; font-size: 7px; }
+.nyt-promo .nyt-play { margin-top: auto; }
+.nyt-promo .media { aspect-ratio: 2/3; height: 100%; background: var(--nyt-background-tertiary); flex: none; }
+.nyt-promo .media .nyt-ph { height: 100%; }
+.nyt-promo.is-focus::after { content: ""; position: absolute; inset: 0; border: 3px solid var(--nyt-content-accent); border-radius: 4px; }
+
+/* promo slim (polls): g-promo-slim · grid hed/link/items/signup · rule trên 1px (site 1px tracking → kit .02em) */
+.nyt-slim { display: grid; grid-template-columns: auto 1fr auto; align-items: baseline; column-gap: 16px; row-gap: 10px; padding: 14px 0 0; border-top: var(--nyt-rule-tertiary); width: 100%; font-family: var(--nyt-franklin); color: var(--nyt-content-primary); }
+.nyt-slim .hed { font-weight: 700; font-size: 11px; line-height: 1; letter-spacing: .02em; text-transform: uppercase; color: var(--nyt-content-primary); text-decoration: none; }
+.nyt-slim .items { display: flex; gap: 18px; overflow-x: auto; scrollbar-width: none; min-width: 0; }
+.nyt-slim .item { font: 600 14px/18px var(--nyt-franklin); color: var(--nyt-content-primary); text-decoration: none; white-space: nowrap; transition: color .2s; }
+.nyt-slim .item:hover, .nyt-slim .item.is-hover { color: var(--nyt-content-secondary); }
+
+/* storyline nav: ZcdlOG_nav · tiêu đề franklin 16/700 · link franklin 13/500 · hover secondary-dim */
+.nyt-storyline { display: flex; align-items: center; gap: 1rem; padding: 2px 0 10px; white-space: nowrap; overflow-x: auto; scrollbar-width: none; background: var(--nyt-background-primary); width: 100%; }
+.nyt-storyline .title { font: 700 16px/1.3 var(--nyt-franklin); letter-spacing: .02em; color: var(--nyt-content-primary); margin: 0; }
+.nyt-storyline ul { display: flex; gap: 1rem; list-style: none; margin: 0; padding: 0; }
+.nyt-storyline a { font: 500 13px/15px var(--nyt-franklin); color: var(--nyt-content-primary); text-decoration: none; transition: color .6s; }
+.nyt-storyline a:hover, .nyt-storyline a.is-hover, .nyt-storyline a:active, .nyt-storyline a.is-active { color: var(--nyt-content-secondary-dim); }
+
+/* mega menu: Wr7_RG_miniNav · cột: nhãn h3 + link + newsletter */
+.nyt-mega { display: grid; grid-template-columns: repeat(4, minmax(150px, 1fr)); gap: 24px; width: 100%; background: var(--nyt-background-primary); border-top: var(--nyt-rule-secondary); padding: 16px 0; }
+.nyt-mega h3 { margin: 0 0 8px; font: 700 14px/18px var(--nyt-franklin); color: var(--nyt-content-primary); }
+.nyt-mega h4 { margin: 12px 0 6px; font: 500 11px/14px var(--nyt-franklin); letter-spacing: .02em; text-transform: uppercase; color: var(--nyt-content-secondary); }
+.nyt-mega ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.nyt-mega a { font: 400 14px/18px var(--nyt-franklin); color: var(--nyt-content-primary); text-decoration: none; }
+.nyt-mega a:hover { text-decoration: underline; }
+.nyt-nl { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 10px; align-items: start; margin-top: 8px; }
+.nyt-nl .nyt-ph { width: 56px; height: 56px; padding: 2px; font-size: 8px; line-height: 10px; }
+.nyt-nl b { display: block; font: 600 13px/16px var(--nyt-franklin); }
+.nyt-nl-desc { font: 400 12px/16px var(--nyt-imperial); color: var(--nyt-content-secondary); margin: 2px 0 0; max-width: 180px; }
+
+/* sticky header thu gọn: Wr7_RG_floatingMiniNavCover · nền primary · cao 120 desktop */
+.nyt-sticky { width: 100%; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 10px 12px; background: var(--nyt-background-primary); border-bottom: var(--nyt-rule-tertiary); box-shadow: 0 2px 4px rgba(0,0,0,.06); }
+.nyt-sticky .left, .nyt-sticky .right { display: flex; gap: 10px; align-items: center; }
+.nyt-sticky .right { justify-self: end; }
+.nyt-sticky .nyt-wordmark { font-size: 22px; }
+.nyt-sticky .nyt-wordmark small { display: none; }
+.nyt-ic { width: 32px; height: 32px; display: inline-grid; place-items: center; color: var(--nyt-content-primary); border: none; background: transparent; padding: 0; cursor: pointer; border-radius: 3px; }
+.nyt-ic:hover { background: var(--nyt-hover); }
+.nyt-ic svg { width: 18px; height: 18px; }
+
+/* gói free-to-read: U5yBoa_fdrPackage · viền 1px primary · pad 16 */
+.nyt-fdr { border: var(--nyt-rule-secondary); padding: 16px; width: 100%; max-width: 760px; }
+.nyt-fdr-lede { text-align: center; font: 500 16px/21px var(--nyt-franklin); color: var(--nyt-content-primary); margin: 0 0 18px; }
+.nyt-fdr-lede strong { font-weight: 700; }
+.nyt-fdr-lede::after { content: ""; display: block; width: 46px; margin: 8px auto 0; border-top: 1px solid var(--nyt-content-accent); }
+.nyt-fdr .cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+.nyt-fdr .more { margin-top: 16px; border-top: var(--nyt-rule-secondary); padding-top: 10px; }
+.nyt-fdr .more h3 { margin: 0 0 12px; font: 700 13px/16px var(--nyt-franklin); }
+.nyt-fdr .more .cols > * + * { border-left: var(--nyt-rule-tertiary); padding-left: 16px; }
+
+/* stack tin dọc: các câu chuyện ngăn bằng rule tertiary */
+.nyt-stack { display: flex; flex-direction: column; }
+.nyt-stack > * { padding: 14px 0; border-bottom: var(--nyt-rule-tertiary); }
+.nyt-stack > :first-child { padding-top: 0; }
+.nyt-stack > :last-child { border-bottom: none; }
+
+/* quảng cáo: css-pyqhjs · nền secondary · rule tertiary · nhãn franklin 10 secondary-dim */
+.nyt-ad { width: 100%; background: var(--nyt-background-secondary); border-top: var(--nyt-rule-tertiary); border-bottom: var(--nyt-rule-tertiary); padding: 0 0 32px; text-align: center; }
+.nyt-ad .lbl { font: 400 10px/1 var(--nyt-franklin); letter-spacing: .02em; text-transform: uppercase; color: var(--nyt-content-secondary-dim); padding: 11px 0 10px; margin: 0; }
+.nyt-ad .slot { width: min(728px, 90%); height: 90px; margin: 0 auto; }
+.nyt-ad .skip { display: block; margin-top: 10px; font: 400 10px/1 var(--nyt-franklin); letter-spacing: .02em; text-transform: uppercase; color: var(--nyt-content-secondary-dim); text-decoration: none; }
+
+/* đường dây tin mật: link cheltenham 16 */
+.nyt-tip { font: 400 16px/20px var(--nyt-cheltenham); color: var(--nyt-content-primary); text-decoration: none; display: inline-block; }
+.nyt-tip b { font-weight: 700; }
+
+/* site index + footer: css-1jmk4jh / css-1qa4qp6 · franklin 11 · link hover gạch chân */
+.nyt-index { width: 100%; border-top: var(--nyt-rule-secondary); padding-top: 10px; }
+.nyt-index h2 { font: 700 16px/1.3 var(--nyt-franklin); margin: 0 0 12px; }
+.nyt-index .cols { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 16px; }
+.nyt-index h3 { font: 700 11px/14px var(--nyt-franklin); letter-spacing: .02em; text-transform: uppercase; margin: 0 0 8px; color: var(--nyt-content-primary); }
+.nyt-index ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.nyt-index a { font: 400 13px/18px var(--nyt-franklin); color: var(--nyt-content-primary-dim); text-decoration: none; }
+.nyt-index a:hover { text-decoration: underline; }
+.nyt-footer { width: 100%; border-top: var(--nyt-rule-tertiary); padding-top: 9px; }
+.nyt-footer ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; column-gap: 14px; }
+.nyt-footer a { display: block; padding: 10px 0; font: 400 11px/13px var(--nyt-franklin); color: var(--nyt-content-secondary); text-decoration: none; }
+.nyt-footer a:hover, .nyt-footer a.is-hover { text-decoration: underline; }
+
+/* ---------- màn mẫu ---------- */
+.screens-wrap { overflow-x: auto; padding: 8px 0; }
+.screens { display: flex; gap: 32px; width: max-content; align-items: flex-start; }
+.phone { width: 390px; height: 844px; border-radius: 44px; box-shadow: 0 0 0 10px var(--nyt-content-primary); background: var(--nyt-background-primary); position: relative; overflow: hidden; margin: 10px; zoom: .66; }
+.phone .status { height: 44px; display: flex; align-items: center; justify-content: space-between; padding: 0 28px; font: 600 14px var(--nyt-franklin); }
+.phone .body { padding: 0 20px; display: flex; flex-direction: column; }
+.phone .nyt-sticky { padding: 6px 12px; }
+.phone .ribbon { display: flex; gap: 18px; overflow: hidden; padding: 10px 20px; border-bottom: var(--nyt-rule-tertiary); font: 500 13px var(--nyt-franklin); white-space: nowrap; }
+.phone .ribbon .on { font-weight: 700; border-bottom: 2px solid var(--nyt-content-primary); padding-bottom: 6px; }
+.desk { width: 1440px; height: 900px; background: var(--nyt-background-primary); overflow: hidden; margin: 10px; zoom: .55; box-shadow: 0 0 0 10px var(--nyt-content-primary); border-radius: 12px; }
+.desk .wrap { width: 1200px; margin: 0 auto; }
+.desk .grid3 { display: grid; grid-template-columns: 830px 1fr; gap: 0; margin-top: 18px; }
+.desk .main { padding-right: 20px; border-right: var(--nyt-rule-tertiary); }
+.desk .aside { padding-left: 20px; }
+.desk .lead { display: grid; grid-template-columns: 280px 1fr; gap: 20px; padding-bottom: 16px; border-bottom: var(--nyt-rule-tertiary); }
+.desk .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding-top: 16px; }
+.scr-cap { font-family: var(--mono); font-size: 12px; color: var(--nyt-content-secondary); margin: 4px 10px 0; width: 0; min-width: calc(100% - 20px); }
+
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; transition: opacity .25s ease, transform .25s ease; z-index: 20; background: var(--nyt-content-primary); color: var(--nyt-background-primary); padding: 10px 16px; border-radius: 3px; font: 500 13px var(--nyt-franklin); }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; }
+  .side { display: none; }
+  main { padding: 0 16px 80px; }
+  .grid, .grid.wide { grid-template-columns: 1fr; }
+  .intro h1 { font-size: 34px; line-height: 40px; }
+  .type-row { grid-template-columns: 1fr; gap: 2px; }
+  .nyt-mega { grid-template-columns: 1fr 1fr; }
+  .nyt-fdr .cols { grid-template-columns: 1fr; }
+  .nyt-fdr .more .cols > * + * { border-left: none; padding-left: 0; }
+  .nyt-masthead .top { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+  .nyt-masthead .ticker { justify-self: center; }
+  .nyt-slim { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <nav class="side" aria-label="Mục lục">
+    <div class="brand"><b>NYT UI Kit</b><small>Hệ token TPL · trang chủ</small></div>
+    <h6>Nền tảng</h6>
+    <a href="#color"><span class="ms">palette</span>Màu</a>
+    <a href="#type"><span class="ms">text_fields</span>Chữ</a>
+    <a href="#shape"><span class="ms">crop_square</span>Hình khối &amp; rule</a>
+    <a href="#layout"><span class="ms">straighten</span>Bố cục &amp; kích thước</a>
+    <h6>Thành phần</h6>
+    <a href="#navigation"><span class="ms">menu</span>Masthead &amp; điều hướng</a>
+    <a href="#story"><span class="ms">article</span>Câu chuyện</a>
+    <a href="#media"><span class="ms">image</span>Media</a>
+    <a href="#packages"><span class="ms">view_quilt</span>Gói &amp; promo</a>
+    <h6>Mẫu</h6>
+    <a href="#screens"><span class="ms">devices</span>Màn hình mẫu</a>
+  </nav>
+
+  <main>
+    <div class="bar" role="toolbar" aria-label="Chủ đề">
+      <div class="ctl"><span>Chế độ</span><div class="seg" id="mode">
+        <button data-v="light" aria-pressed="true"><span class="ms">light_mode</span>Sáng</button>
+        <button data-v="dark" aria-pressed="false"><span class="ms">dark_mode</span>Tối</button></div></div>
+      <div class="grow"></div>
+      <button class="copy" id="copy-tokens"><span class="ms">data_object</span>Copy CSS token</button>
+    </div>
+
+    <div class="intro">
+      <div class="eyebrow">nytimes.com (trang lưu) · global-*.css --tpl-* → docs/protected/nytimes-ui-kit.html</div>
+      <h1>Hệ thiết kế trang chủ The New York Times</h1>
+      <p>Toàn bộ token lấy từ hệ <code>--tpl-*</code> của NYT. Mình resolve giá trị bằng Playwright trên trang bạn đã lưu, chạy offline và tắt JS: màu đọc qua lớp <code>.tpl-always-light</code> / <code>.tpl-always-dark</code>, chữ đọc qua shorthand <code>--tpl-typography-*</code>. Số đo component lấy từ CSS module của trang (vd <code>CqtwdW_link</code>, <code>zmvoWW_promoCard</code>, <code>O8nPlG_packageTitle</code>). Trạng thái hover/focus/active đo bằng force-state.</p>
+      <p>Muốn dùng lại thì dán khối <code>--nyt-*</code> (nút <b>Copy CSS token</b>) cùng CSS <code>.nyt-*</code>. Cheltenham, Imperial, Franklin và Karnak là font độc quyền, nên kit thay bằng Newsreader, Source Serif 4, Libre Franklin và Roboto Slab. Nhãn in hoa của NYT giãn chữ .1em; kit hạ về .02em theo luật cấm giãn chữ của dự án. Chữ mẫu do kit tự viết; ảnh và logo chỉ là khối giữ chỗ.</p>
+      <div class="facts"><span class="fact">desktop 1440 · container 1200</span><span class="fact">cột chính 830 · rail phải 337</span><span class="fact">breakpoint 740 · 1024</span><span class="fact">gutter 20 · rule 1 / 2</span><span class="fact">r 0 · 3 · 4 · 50%</span><span class="fact">focus 2px content-accent</span></div>
+    </div>
+
+    <!-- ================= NỀN TẢNG ================= -->
+    <section class="block" id="color">
+      <header><h2>Màu</h2><p>19 vai trò <code>--tpl-color-*</code> resolve ở chế độ đang chọn, cộng thêm <code>--nyt-hover</code> (hex #f7f7f7 viết cứng trong <code>CqtwdW_link:hover</code>). Bấm một ô để copy mã hex. Ngoài ra mỗi vai trò còn có biến thể <code>-always-light</code>, <code>-always-dark</code>, <code>-user-inverse</code>, chỉ là bảng sáng hoặc tối cố định nên kit không liệt kê lại.</p></header>
+      <div class="roles" id="roles"></div>
+    </section>
+
+    <section class="block" id="type">
+      <header><h2>Chữ</h2><p>Các kiểu <code>--tpl-typography-*</code> chuẩn (đã bỏ các tên alias như <code>body-compact</code> hay <code>text-s</code>). Số đo là của font gốc NYT; chữ hiển thị là font thay thế. Cột phải ghi size / line-height · weight · tracking gốc. Chữ mẫu được giới hạn tracking ở .02em, nên các kiểu label (gốc 1.1px) hiển thị hẹp hơn bản thật.</p></header>
+      <div class="spec"><div class="stage col" id="typescale"></div></div>
+    </section>
+
+    <section class="block" id="shape">
+      <header><h2>Hình khối &amp; rule</h2><p>Hệ báo in gần như vuông góc: phần lớn khối có r 0, nút và link menu r 3, thẻ promo r 4, nút icon tròn. Trang không có thang shape nên kit không có nút đổi shape. Phân tầng nội dung dựa vào đường kẻ <code>--tpl-rule-*</code> thay vì đổ bóng.</p></header>
+      <div class="grid wide">
+        <div class="spec"><div class="stage" id="shapes" style="gap:28px"></div><div class="spec-f"><span class="note">0 · khối, ảnh · 3 · skip link, edition link, nút signup, badge ảnh 24 · 4 · thẻ promo podcast · 50% · nút carousel, nút play</span></div></div>
+        <div class="spec"><div class="stage col"><div class="rule-demo">
+          <div>horizontal-primary · 2px stroke-primary<span style="border-top:var(--nyt-rule-primary)"></span></div>
+          <div>horizontal-secondary · 1px stroke-primary<span style="border-top:var(--nyt-rule-secondary)"></span></div>
+          <div>horizontal-tertiary · 1px stroke-tertiary<span style="border-top:var(--nyt-rule-tertiary)"></span></div>
+          <div>vertical-secondary · 1px stroke-tertiary (ngăn cột)<span style="height:28px;border-left:var(--nyt-rule-tertiary)"></span></div>
+        </div></div></div>
+      </div>
+    </section>
+
+    <section class="block" id="layout">
+      <header><h2>Bố cục &amp; kích thước</h2><p>Thang khoảng cách <code>--tpl-size-spacing-*</code> (bậc 1 = .5rem), viền <code>--tpl-size-border-*</code> và các hằng số khung đo trên bản lưu ở viewport 1440.</p></header>
+      <div class="grid wide">
+        <div class="spec"><div class="stage col" id="spacing"></div></div>
+        <div class="spec"><div class="stage col"><div class="tbl">
+          <table class="tok"><thead><tr><th>Hằng số</th><th>px</th><th>Dùng cho</th></tr></thead><tbody>
+            <tr><td>container</td><td>1200</td><td>nav, mega menu, gói tin ở 1440</td></tr>
+            <tr><td>cột chính · rail</td><td>830 · 337</td><td>2 cột trang chủ, ngăn bằng rule dọc</td></tr>
+            <tr><td>gutter</td><td>20</td><td>khoảng cột, lề storyline (1.25rem)</td></tr>
+            <tr><td>breakpoint</td><td>740 · 1024</td><td>masthead đổi layout, date hiện ở ≥ 1024</td></tr>
+            <tr><td>media 3:2 · 1:1 · 2:3</td><td>522×348 · 213 · 275×413</td><td>padding-bottom 66.67% · 100% · 150%</td></tr>
+            <tr><td>promo podcast</td><td>h 229 · r 4</td><td>nội dung pad 12, media 2/3</td></tr>
+            <tr><td>border-1 · 1.5 · 2 · 3</td><td>1 · 1.5 · 2 · 3</td><td>rule thường · — · rule đậm · viền focus promo</td></tr>
+            <tr><td>ad slot</td><td>h 314 · pad-b 32</td><td>nền secondary, nhãn 10px</td></tr>
+            <tr><td>nút icon</td><td>26</td><td>carousel, mute, play</td></tr></tbody></table>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- ================= MASTHEAD & ĐIỀU HƯỚNG ================= -->
+    <section class="block" id="navigation">
+      <header><h2>Masthead &amp; điều hướng</h2><p>Phần đầu trang, menu và chân trang. Các link điều hướng dùng Franklin; chỉ logo dùng chữ kiểu blackletter (trong kit là khối giữ chỗ).</p></header>
+      <div class="grid">
+        <div class="spec" data-sig="1de3b46f60"><div class="spec-h"><b>Skip link</b><span class="kind">a.css-kgn7zc</span><span class="dp">11/700 · pad 11 12 8 · r 3</span></div>
+          <div class="stage">
+            <div class="st"><a class="nyt-skip" href="#color">Skip to content</a><small>Rest</small></div>
+            <div class="st" data-sig-state="1de3b46f60:hover"><a class="nyt-skip is-hover" href="#color">Skip to content</a><small>Hover · #f7f7f7</small></div>
+            <div class="st" data-sig-state="1de3b46f60:focus"><a class="nyt-skip is-focus" href="#color">Skip to content</a><small>Focus-visible</small></div>
+          </div><div class="spec-f"><span class="note">Bình thường bị ẩn, chỉ hiện khi nhận focus từ bàn phím. Có hai link: Skip to content và Skip to site index.</span></div></div>
+
+        <div class="spec" data-sig="6716c35319 848340002b cb02bdcce9"><div class="spec-h"><b>Edition menu</b><span class="kind">ul.CqtwdW_editionMenu</span><span class="dp">11 · pad 7 8 6 · r 3</span></div>
+          <div class="stage col">
+            <ul class="nyt-edition"><li><a href="#navigation">U.S.</a></li><li><a class="is-on" href="#navigation">International</a></li><li><a href="#navigation">Canada</a></li><li><a href="#navigation">Español</a></li><li><a href="#navigation">中文</a></li></ul>
+            <div style="display:flex;gap:14px;flex-wrap:wrap">
+              <div class="st" data-sig-state="848340002b:hover"><ul class="nyt-edition"><li><a class="is-hover" href="#navigation">U.S.</a></li></ul><small>Hover</small></div>
+              <div class="st" data-sig-state="848340002b:active"><ul class="nyt-edition"><li><a class="is-active" href="#navigation">U.S.</a></li></ul><small>Active</small></div>
+              <div class="st" data-sig-state="848340002b:focus"><ul class="nyt-edition"><li><a class="is-focus" href="#navigation">U.S.</a></li></ul><small>Focus</small></div>
+              <div class="st" data-sig-state="cb02bdcce9:hover"><ul class="nyt-edition"><li><a class="is-on is-hover" href="#navigation">International</a></li></ul><small>Đang chọn · hover</small></div>
+              <div class="st" data-sig-state="cb02bdcce9:active"><ul class="nyt-edition"><li><a class="is-on is-active" href="#navigation">International</a></li></ul><small>Đang chọn · active</small></div>
+              <div class="st" data-sig-state="cb02bdcce9:focus"><ul class="nyt-edition"><li><a class="is-on is-focus" href="#navigation">International</a></li></ul><small>Đang chọn · focus</small></div>
+            </div>
+          </div><div class="spec-f"><span class="note">Link thường màu content-secondary, weight 500. Edition đang chọn màu content-primary, weight 600. Khi hover hoặc active, nền chuyển dần sang #f7f7f7. Tracking gốc .1em (kit .02em).</span></div></div>
+
+        <div class="spec full" data-sig="c445f81a10 ca2347af07"><div class="spec-h"><b>Masthead</b><span class="kind">header.Wr7_RG_mastheadWrapper</span><span class="dp">date 14/20 · paper 11 · sections 14</span></div>
+          <div class="stage surface col">
+            <div class="nyt-masthead">
+              <ul class="nyt-edition"><li><a href="#navigation">U.S.</a></li><li><a class="is-on" href="#navigation">International</a></li><li><a href="#navigation">Canada</a></li></ul>
+              <div class="top">
+                <div><div class="date">Thursday, October 1, 2026</div><a class="paper" href="#navigation">Today’s Paper</a></div>
+                <div class="nyt-wordmark">The Times<small>Ảnh logo wordmark (không nhúng)</small></div>
+                <div class="ticker"><span><b>Index A</b> <span class="up">+0.24%</span></span><span><b>Index B</b> <span class="down">−0.25%</span></span></div>
+              </div>
+              <nav class="sections" aria-label="Sections"><a href="#navigation">U.S.</a><a href="#navigation">World</a><a href="#navigation">Business</a><a href="#navigation">Arts</a><a href="#navigation">Lifestyle</a><a href="#navigation">Opinion</a><a href="#navigation">Audio</a><a href="#navigation">Games</a><a href="#navigation">Cooking</a><a href="#navigation">Wirecutter</a><a href="#navigation">The Athletic</a></nav>
+            </div>
+            <div style="display:flex;gap:18px;flex-wrap:wrap">
+              <div class="st nyt-masthead" style="width:auto" data-sig-state="ca2347af07:hover"><a class="paper is-hover" href="#navigation">Today’s Paper</a><small>Hover → content-secondary</small></div>
+              <div class="st nyt-masthead" style="width:auto" data-sig-state="ca2347af07:active"><a class="paper is-active" href="#navigation">Today’s Paper</a><small>Active</small></div>
+              <div class="st nyt-masthead" style="width:auto" data-sig-state="ca2347af07:focus"><a class="paper is-focus" href="#navigation">Today’s Paper</a><small>Focus</small></div>
+            </div>
+          </div><div class="spec-f"><span class="note">Chỉ số thị trường dùng content-positive và content-negative. Lúc đo, màu hover của "Today’s Paper" vẫn đang chuyển (rgb 102 ở hover, 92 ở active), nên kit lấy điểm đích gần nhất là content-secondary #5A5A5A (suy luận). Rule của dải sections bị nạp bằng JS và không được lưu, nên kit dựng theo ảnh chụp.</span></div></div>
+
+        <div class="spec full" data-sig="1317f0ff3b d37188e728 a706c43bc5 421b38d049 9e91d8d7db 896edd95fa baa96d8f6d"><div class="spec-h"><b>Mega menu</b><span class="kind">div.Wr7_RG_miniNavContainer › nav</span><span class="dp">w 1200 · cột link + newsletter</span></div>
+          <div class="stage surface col">
+            <div class="nyt-mega">
+              <div><h3>U.S.</h3><h4>Sections</h4><ul><li><a href="#navigation">Politics</a></li><li><a href="#navigation">New York</a></li><li><a href="#navigation">Education</a></li><li><a href="#navigation">Climate</a></li></ul>
+                <h4>Newsletters</h4><div class="nyt-nl"><div class="nyt-ph">Ảnh logo bản tin</div><div><b>Bản tin buổi sáng</b><p class="nyt-nl-desc">Tóm tắt tin chính trong ngày và vài ý tưởng đáng đọc.</p></div></div></div>
+              <div><h3>World</h3><h4>Sections</h4><ul><li><a href="#navigation">Africa</a></li><li><a href="#navigation">Americas</a></li><li><a href="#navigation">Asia</a></li><li><a href="#navigation">Europe</a></li></ul></div>
+              <div><h3>Games</h3><h4>Play</h4><ul><li><a href="#navigation">Word puzzle</a></li><li><a href="#navigation">Crossword</a></li><li><a href="#navigation">Number grid</a></li></ul></div>
+              <div><h3>Opinion</h3><h4>Columnists</h4><ul><li><a href="#navigation">Columnist A</a></li><li><a href="#navigation">Columnist B</a></li><li><a href="#navigation">Guest Essays</a></li></ul></div>
+            </div>
+            <div class="st" data-sig-state="9e91d8d7db:focus"><div class="nyt-mega" style="display:block;border:none;padding:0"><a class="is-focus" href="#navigation">Politics</a></div><small>Link · focus</small></div>
+          </div><div class="spec-f"><span class="note">Khi tắt JS, trang lưu bung toàn bộ menu ra. Nhãn cột (h3 css-1p5s96h) và kiểu chữ của link bị nạp bằng JS nên không được lưu; kit dựng theo token franklin. Ảnh logo bản tin 114×114 (70 lần trong trang) thay bằng khối giữ chỗ.</span></div></div>
+
+        <div class="spec full" data-sig="a7b7e321bc"><div class="spec-h"><b>Sticky header thu gọn</b><span class="kind">div.Wr7_RG_floatingMiniNavCover</span><span class="dp">nền primary · h 120 @1440</span></div>
+          <div class="stage surface col">
+            <div class="nyt-sticky">
+              <div class="left"><button class="nyt-ic" aria-label="Mở menu"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 4h14M2 9h14M2 14h14"/></svg></button><button class="nyt-ic" aria-label="Tìm kiếm"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7.5" cy="7.5" r="5"/><path d="M11.5 11.5 16 16"/></svg></button></div>
+              <div class="nyt-wordmark">The Times<small>Logo</small></div>
+              <div class="right"><button class="nyt-btn v-solid">Subscribe</button><button class="nyt-btn v-ghost">Log in</button></div>
+            </div>
+          </div><div class="spec-f"><span class="note">Thanh này hiện khi người đọc cuộn qua masthead. Hai nút Subscribe / Log in bị nạp bằng JS nên không đo được: chúng được dựng theo token, nền content-accent, r 3, 11/700 (suy luận).</span></div></div>
+
+        <div class="spec full" data-sig="fdbdebc604 0429df1c9f"><div class="spec-h"><b>Storyline nav</b><span class="kind">nav.ZcdlOG_nav</span><span class="dp">title 16/700 · link 13/500 · gap 1rem</span></div>
+          <div class="stage surface col">
+            <nav class="nyt-storyline" aria-label="Storyline"><p class="title">Chủ đề nóng</p><ul><li><a href="#navigation">What We Know</a></li><li><a href="#navigation">Timeline</a></li><li><a href="#navigation">Responses</a></li><li><a href="#navigation">Background</a></li></ul></nav>
+            <div style="display:flex;gap:18px;flex-wrap:wrap">
+              <div class="st nyt-storyline" style="width:auto;overflow:visible" data-sig-state="0429df1c9f:hover"><a class="is-hover" href="#navigation">What We Know</a><small>Hover</small></div>
+              <div class="st nyt-storyline" style="width:auto;overflow:visible" data-sig-state="0429df1c9f:active"><a class="is-active" href="#navigation">What We Know</a><small>Active</small></div>
+              <div class="st nyt-storyline" style="width:auto;overflow:visible" data-sig-state="0429df1c9f:focus"><a class="is-focus" href="#navigation">What We Know</a><small>Focus</small></div>
+            </div>
+          </div><div class="spec-f"><span class="note">Thanh cuộn ngang, scrollbar bị ẩn. Hover và active chuyển màu sang content-secondary-dim trong .6s (ZcdlOG_menuTitleLink). Trên trang thật, link thứ nhất là logo SVG "2026 Elections", kit bỏ theo RULE-09.</span></div></div>
+
+        <div class="spec full" data-sig="872924dd0b e3263ccadf ff7c8dc307 d7ff808212"><div class="spec-h"><b>Site index &amp; footer</b><span class="kind">nav.css-1jmk4jh · footer.css-1e1s8k7</span><span class="dp">footer link 11 · pad 10 0</span></div>
+          <div class="stage surface col">
+            <nav class="nyt-index" aria-label="Site index"><h2>Site Index</h2><div class="cols">
+              <div><h3>News</h3><ul><li><a href="#navigation">Home Page</a></li><li><a href="#navigation">World</a></li><li><a href="#navigation">Business</a></li></ul></div>
+              <div><h3>Arts</h3><ul><li><a href="#navigation">Book Review</a></li><li><a href="#navigation">Movies</a></li><li><a href="#navigation">Music</a></li></ul></div>
+              <div><h3>Lifestyle</h3><ul><li><a href="#navigation">Health</a></li><li><a href="#navigation">Food</a></li><li><a href="#navigation">Travel</a></li></ul></div>
+              <div><h3>Opinion</h3><ul><li><a href="#navigation">Editorials</a></li><li><a href="#navigation">Letters</a></li></ul></div>
+            </div></nav>
+            <footer class="nyt-footer"><nav aria-label="Site information"><ul><li><a href="#navigation">© 2026 Tên công ty</a></li><li><a href="#navigation">Contact Us</a></li><li><a href="#navigation">Accessibility</a></li><li><a href="#navigation">Privacy Policy</a></li><li><a href="#navigation">Terms of Service</a></li><li><a href="#navigation">Help</a></li></ul></nav></footer>
+            <div style="display:flex;gap:18px">
+              <div class="st nyt-footer" style="width:auto;border:none;padding:0" data-sig-state="d7ff808212:hover"><a class="is-hover" href="#navigation">Contact Us</a><small>Hover · gạch chân</small></div>
+              <div class="st nyt-footer" style="width:auto;border:none;padding:0" data-sig-state="d7ff808212:focus"><a class="is-focus" href="#navigation">Contact Us</a><small>Focus</small></div>
+            </div>
+          </div><div class="spec-f"><span class="note">Màu link footer đo được là #666 (rgb 102), nằm giữa content-secondary và secondary-dim. Kit dùng content-secondary để chữ đổi theo dark mode. Kiểu chữ của site index bị nạp bằng JS, kit dựng theo token franklin.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= CÂU CHUYỆN ================= -->
+    <section class="block" id="story">
+      <header><h2>Câu chuyện</h2><p>Khối tin là phần lặp nhiều nhất trên trang: kicker, headline Cheltenham, summary Imperial, rồi dòng meta (thời gian đọc hoặc số bình luận). Khi hover, cả khối chuyển sang content-secondary.</p></header>
+      <div class="grid">
+        <div class="spec full" data-sig="26376e8bce abc9bda5ef 4beeb541e5 8b6502ae6d 5b1f9eaa18 b68b28d8c3"><div class="spec-h"><b>Thang headline thực dùng</b><span class="kind">p.indicate-hover</span><span class="dp">16 · 18 · 22 · op 20 · feat 24 · 28</span></div>
+          <div class="stage col" style="gap:14px">
+            <p class="nyt-hed n22">Thành phố thử nghiệm tuyến xe buýt chạy suốt đêm</p>
+            <p class="nyt-hed n18">Hội đồng thông qua ngân sách sửa cầu sau nhiều tháng tranh luận</p>
+            <p class="nyt-hed n16">Thư viện kéo dài giờ mở cửa vào mùa thi</p>
+            <p class="nyt-hed op20">Ý kiến: Vì sao phố đi bộ cần nhiều cây hơn</p>
+            <p class="nyt-hed f24">Những món đồ bền nhất sau mười năm thử nghiệm</p>
+            <p class="nyt-hed f28">Một mùa hè trên chiếc thuyền cũ</p>
+          </div><div class="spec-f"><span class="note">news 22/16/18 · 700 · opinion cheltenham-text-cond 20/700 (kit giả lập bản cond bằng font-stretch, Newsreader không có bản hẹp) · feature 24 và 28 · weight 300</span></div></div>
+
+        <div class="spec" data-sig="4609ce44ad b2057f55c4"><div class="spec-h"><b>Khối tin</b><span class="kind">a.tpl-lbl › p + p.summary-class</span><span class="dp">hed 18/700 · summary 14/1.39</span></div>
+          <div class="stage" style="align-items:flex-start">
+            <div class="st"><a class="nyt-story" href="#story"><p class="nyt-kicker">Analysis</p><p class="nyt-hed n18">Hội đồng thông qua ngân sách sửa cầu</p><p class="nyt-summary">Kế hoạch kéo dài ba năm và sẽ đóng một làn xe vào cuối tuần.</p><p class="nyt-readtime">5 min read</p></a><small>Rest</small></div>
+            <div class="st" data-sig-state="4609ce44ad:hover"><a class="nyt-story is-hover" href="#story"><p class="nyt-kicker">Analysis</p><p class="nyt-hed n18">Hội đồng thông qua ngân sách sửa cầu</p><p class="nyt-summary">Kế hoạch kéo dài ba năm và sẽ đóng một làn xe vào cuối tuần.</p><p class="nyt-readtime">5 min read</p></a><small>Hover · content-secondary</small></div>
+          </div><div class="spec-f"><span class="note">Toàn bộ khối là một link (tpl-lbl, có ::before phủ kín). Đo được: hover đổi màu chữ con sang #5A5A5A. Summary dùng imperial 14, màu content-secondary.</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Nhãn &amp; meta</b><span class="kind">css-18dz3rz · css-1a0ymrn · css-1b4m2b2</span><span class="dp">11/600 · 10 · tracking gốc .1em</span></div>
+          <div class="stage col" style="gap:12px">
+            <p class="nyt-kicker">Times Exclusive</p>
+            <p class="nyt-kicker breaking">Breaking</p>
+            <p class="nyt-readtime">4 min read</p>
+            <p class="nyt-source">From The Athletic</p>
+          </div><div class="spec-f"><span class="note">Quy tắc emotion của các nhãn này có lưu trong trang. Kicker breaking dùng content-breaking (vai trò có sẵn trong token, trang lưu không có tin breaking). Tracking .1em của site được hạ về .02em.</span></div></div>
+
+        <div class="spec" data-sig="44351a6314 2c1b016563"><div class="spec-h"><b>Số bình luận</b><span class="kind">a.css-vh8abo · a.css-ut44vn</span><span class="dp">11/500 · icon 12</span></div>
+          <div class="stage">
+            <a class="nyt-comments" href="#story"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor"><path d="M1.5 2h9v6H5L2.5 10V8h-1z"/></svg>626</a>
+            <a class="nyt-comments v-dark" href="#story"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor"><path d="M1.5 2h9v6H5L2.5 10V8h-1z"/></svg>51</a>
+            <div class="st" data-sig-state="44351a6314:focus"><a class="nyt-comments is-focus-ua" href="#story"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor"><path d="M1.5 2h9v6H5L2.5 10V8h-1z"/></svg>626</a><small>Focus · UA</small></div>
+            <div class="st" data-sig-state="2c1b016563:focus"><a class="nyt-comments v-dark is-focus-ua" href="#story"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor"><path d="M1.5 2h9v6H5L2.5 10V8h-1z"/></svg>51</a><small>Focus · UA</small></div>
+          </div><div class="spec-f"><span class="note">Có 2 biến thể màu: secondary (#5A5A5A) và primary. Focus là viền mặc định của trình duyệt (outline auto), site không style riêng.</span></div></div>
+
+        <div class="spec" data-sig="710a973732 fcb45b7be6 67d2e83e54"><div class="spec-h"><b>Byline cột Opinion</b><span class="kind">picture 40×40 · img 40×59</span><span class="dp">hed cheltenham 18/400</span></div>
+          <div class="stage" style="align-items:flex-start">
+            <div class="nyt-byline"><div><p class="who">Columnist Name</p><p class="nyt-hed">Đô thị nhỏ đang làm tốt hơn ta nghĩ</p><a class="nyt-comments" href="#story"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor"><path d="M1.5 2h9v6H5L2.5 10V8h-1z"/></svg>418</a></div><div class="nyt-ph">Ảnh chân dung</div></div>
+            <div class="nyt-byline"><div><p class="nyt-letters">Letters from our readers</p><p class="nyt-hed">Bạn đọc viết về giờ học muộn</p></div><div class="nyt-ph tall">Ảnh 40×59</div></div>
+          </div><div class="spec-f"><span class="note">Ảnh chân dung là picture 40×40, hoặc img 40×59 (ảnh dọc). Nhãn "Letters" dùng cheltenham-small 11/700 uppercase. Tên tác giả bị nạp bằng JS, kit dựng theo token label.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= MEDIA ================= -->
+    <section class="block" id="media">
+      <header><h2>Media</h2><p>Mọi ảnh và video đều nằm trong <code>media-container</code>: nền background-tertiary, giữ tỉ lệ bằng <code>--media-container-padding-bottom</code>. Trên trang thật, ảnh mờ dần từ nền tertiary trong 300ms.</p></header>
+      <div class="grid">
+        <div class="spec full" data-sig="1690168db1 cc6311cfa1 b58e23a228 61619f3e22 18c8e511c1 54a20ecddd d62cc2ad9e a0b05a91aa 9a6b3be624"><div class="spec-h"><b>Media container · tỉ lệ</b><span class="kind">div.media-container.ZzXvKG_container</span><span class="dp">3:2 · 1:1 · 2:3 · video</span></div>
+          <div class="stage" style="align-items:flex-start;flex-wrap:nowrap">
+            <div class="st" style="width:220px;flex:none"><div class="nyt-media" style="--ratio:66.6667%"><div class="nyt-ph">Ảnh 3:2 · 522×348</div></div><small>picture 3:2</small></div>
+            <div class="st" style="width:120px;flex:none"><div class="nyt-media" style="--ratio:100%"><div class="nyt-ph">Ảnh 1:1</div></div><small>picture 1:1 · 213</small></div>
+            <div class="st" style="width:110px;flex:none"><div class="nyt-media" style="--ratio:150.068%"><div class="nyt-ph">Video dọc 2:3</div><span class="dur">1:09</span></div><small>nyt-betamax 2:3</small></div>
+            <div class="st" style="width:200px;flex:none"><div class="nyt-media" style="--ratio:66.6667%"><div class="nyt-ph">Video cinemagraph (tự chạy, không tiếng)</div></div><small>video.cinemagraph</small></div>
+          </div>
+          <div class="stage" style="padding-top:6px;align-items:flex-start">
+            <div class="st" style="width:200px" data-sig-state="1690168db1:focus"><div class="nyt-media is-focus" tabindex="0" style="--ratio:66.6667%"><div class="nyt-ph">Ảnh 3:2</div></div><small>3:2 · focus</small></div>
+            <div class="st" style="width:110px" data-sig-state="cc6311cfa1:focus"><div class="nyt-media is-focus" tabindex="0" style="--ratio:100%"><div class="nyt-ph">Ảnh 1:1</div></div><small>1:1 · focus</small></div>
+            <div class="st" style="width:200px" data-sig-state="b58e23a228:focus"><div class="nyt-media is-focus" tabindex="0" style="--ratio:66.5%"><div class="nyt-ph">Ảnh 3:2 (347.5)</div></div><small>3:2 biến thể · focus</small></div>
+            <div class="st" style="width:200px" data-sig-state="61619f3e22:focus"><div class="nyt-media is-focus" tabindex="0" style="--ratio:66.6%"><div class="nyt-ph">Ảnh 3:2 (347.9)</div></div><small>3:2 biến thể · focus</small></div>
+          </div><div class="spec-f"><span class="note">Inventory tách 9 chữ ký chỉ vì padding-bottom lệch nhau dưới 1px, hoặc vì bên trong là picture, nyt-betamax hay video. Kit gộp chúng vào một class, đổi tỉ lệ bằng biến --ratio.</span></div></div>
+
+        <div class="spec" data-sig="7eab07ac6e"><div class="spec-h"><b>Figure + credit</b><span class="kind">figure.css-hurk9l › figcaption.css-1p5yz2j</span><span class="dp">credit imperial 11/15.4</span></div>
+          <div class="stage"><figure class="nyt-fig"><div class="nyt-media"><div class="nyt-ph">Ảnh bài viết</div></div><figcaption>Tên nhiếp ảnh gia cho tờ báo</figcaption></figure></div>
+          <div class="spec-f"><span class="note">Credit căn phải, màu content-secondary-dim.</span></div></div>
+
+        <div class="spec" data-sig="fc78f4c7eb"><div class="spec-h"><b>Skeleton</b><span class="kind">div.css-1ynm928</span><span class="dp">nền tertiary · ×160</span></div>
+          <div class="stage"><div class="nyt-skelcard"><div class="nyt-skel a"></div><div class="nyt-skel b"></div><div class="nyt-skel b"></div></div><div class="nyt-skelcard"><div class="nyt-skel a"></div><div class="nyt-skel b"></div><div class="nyt-skel b"></div></div></div>
+          <div class="spec-f"><span class="note">Đây là khối giữ chỗ của lưới đề xuất ở cuối trang, được JS lấp nội dung. Trang lưu tắt JS nên còn nguyên 160 ô xám.</span></div></div>
+
+        <div class="spec" data-sig="dec4274762 f33fcc94e3"><div class="spec-h"><b>Carousel ảnh</b><span class="kind">li.d3BmaG_card · button.eDsfzq_arrow</span><span class="dp">522×348 · nút 26</span></div>
+          <div class="stage col">
+            <div class="nyt-slide"><div class="nyt-ph">Ảnh phóng sự</div><span class="label">Địa danh, năm</span><span class="cap">Tên tác giả cho tờ báo</span></div>
+            <div class="nyt-carousel-ctl">
+              <button class="nyt-iconbtn" aria-label="Ảnh trước"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8.5 3 4.5 7l4 4"/></svg></button>
+              <button class="nyt-iconbtn" aria-label="Ảnh sau"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m5.5 3 4 4-4 4"/></svg></button>
+              <span class="st" data-sig-state="f33fcc94e3:focus" style="flex-direction:row;align-items:center"><button class="nyt-iconbtn is-focus" aria-label="Ảnh trước (focus)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8.5 3 4.5 7l4 4"/></svg></button><small>Focus</small></span>
+              <span class="nyt-dots"><i class="on"></i><i></i><i></i><i></i></span>
+            </div>
+          </div><div class="spec-f"><span class="note">Nhãn và chú thích màu #F8F8F8, có text-shadow. Mỗi slide hiện ra bằng cách đổi opacity trong .9s (urgoya_card). Các chấm chỉ vị trí được dựng thêm cho dễ hiểu (suy luận).</span></div></div>
+
+        <div class="spec" data-sig="27ccd1d52d"><div class="spec-h"><b>Nút tắt tiếng video</b><span class="kind">button.zmvoWW_muteButton</span><span class="dp">26 × 26</span></div>
+          <div class="stage">
+            <div class="st" style="width:160px"><div class="nyt-media"><div class="nyt-ph">Video</div><button class="nyt-iconbtn v-media" aria-label="Bật tiếng"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M2 5h2.5L8 2.5v9L4.5 9H2z"/><path d="m10 5.5 3 3m0-3-3 3"/></svg></button></div><small>Rest</small></div>
+            <div class="st" style="width:160px" data-sig-state="27ccd1d52d:focus"><div class="nyt-media"><div class="nyt-ph">Video</div><button class="nyt-iconbtn v-media is-focus" aria-label="Bật tiếng (focus)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M2 5h2.5L8 2.5v9L4.5 9H2z"/><path d="m10 5.5 3 3m0-3-3 3"/></svg></button></div><small>Focus · viền trắng</small></div>
+          </div><div class="spec-f"><span class="note">Viền focus màu trắng (khác với accent ở chỗ khác) để nổi trên nền video.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= GÓI & PROMO ================= -->
+    <section class="block" id="packages">
+      <header><h2>Gói &amp; promo</h2><p>Các khối gom nhiều tin hoặc quảng bá sản phẩm. Mỗi gói mở đầu bằng tiêu đề Franklin 16/700 nằm dưới một đường rule.</p></header>
+      <div class="grid">
+        <div class="spec"><div class="spec-h"><b>Tiêu đề gói</b><span class="kind">div.O8nPlG_packageTitle</span><span class="dp">16/700 · lh 1.3 · mb 12</span></div>
+          <div class="stage col">
+            <div class="nyt-pkg-title"><h2>More News</h2></div>
+            <div class="nyt-pkg-title"><h2>Watch Today’s Videos</h2><span class="desc">Mô tả nghiêng của gói</span></div>
+            <div class="nyt-pkg-title thick"><h2>In Case You Missed It</h2></div>
+          </div><div class="spec-f"><span class="note">Mô tả kèm theo (packageTitleDescription) dùng cheltenham 16 nghiêng, nằm cạnh tiêu đề. Độ dày rule đổi theo cấp của gói. Tracking gốc .5px (kit .02em).</span></div></div>
+
+        <div class="spec" data-sig="565b590a1b b89257c3f2"><div class="spec-h"><b>Ô quảng cáo</b><span class="kind">div.css-pyqhjs · p.css-bvk7sj</span><span class="dp">h 314 · nhãn 10</span></div>
+          <div class="stage"><div class="nyt-ad"><p class="lbl">Advertisement</p><div class="slot nyt-ph">Vùng quảng cáo bên thứ ba</div><a class="skip" href="#packages">Skip advertisement</a></div></div>
+          <div class="spec-f"><span class="note">Ô thật cao 314 và rộng hết 1440. Kit thu nhỏ vùng quảng cáo xuống 728×90.</span></div></div>
+
+        <div class="spec full" data-sig="02ef44ae14 3610bb8f66"><div class="spec-h"><b>Gói “free to read”</b><span class="kind">div.U5yBoa_fdrPackageWrapper</span><span class="dp">w 830 · viền 1 primary · pad 16</span></div>
+          <div class="stage surface">
+            <div class="nyt-fdr">
+              <p class="nyt-fdr-lede">These top stories are <strong>free to read</strong>.</p>
+              <div class="cols">
+                <div class="nyt-stack">
+                  <a class="nyt-story" href="#packages"><p class="nyt-hed n22">Thành phố thử nghiệm tuyến xe buýt chạy suốt đêm</p><p class="nyt-summary">Tuyến mới nối ba khu dân cư và chạy 15 phút một chuyến.</p><p class="nyt-readtime">4 min read</p></a>
+                  <a class="nyt-story" href="#packages"><p class="nyt-hed n16">Tài xế kể lại ca làm đầu tiên</p><p class="nyt-readtime">2 min read</p></a>
+                </div>
+                <div class="nyt-media"><div class="nyt-ph">Video 3:2</div></div>
+              </div>
+              <div class="more"><h3>More to read for free.</h3><div class="cols">
+                <a class="nyt-story" href="#packages"><p class="nyt-kicker">The Great Read</p><p class="nyt-hed n16">Người giữ hải đăng cuối cùng của vịnh</p><span class="nyt-comments"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor"><path d="M1.5 2h9v6H5L2.5 10V8h-1z"/></svg>626</span></a>
+                <a class="nyt-story" href="#packages"><p class="nyt-kicker">Opinion</p><p class="nyt-hed n16">Một từ quan trọng đến mức chỉ nên nói một lần</p><span class="nyt-comments"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor"><path d="M1.5 2h9v6H5L2.5 10V8h-1z"/></svg>387</span></a>
+              </div></div>
+            </div>
+          </div><div class="spec-f"><span class="note">Dòng tiêu đề franklin 16/500 có gạch accent 46px bên dưới (đo từ ảnh). Cột ngăn bằng rule dọc tertiary.</span></div></div>
+
+        <div class="spec full" data-sig="849bb9058b 04e2d7daaa d530b27a67 35f7fd99e4 90c7711ed3 6502d2a4ca 488b3e2222 33e1b4feeb"><div class="spec-h"><b>Thẻ promo podcast</b><span class="kind">div.zmvoWW_promoCard</span><span class="dp">h 229 · r 4 · pad 12 · badge 24 r 3 · play 26</span></div>
+          <div class="stage">
+            <a class="nyt-promo" href="#packages" style="--show-color:#4F6BA3"><div class="content"><div class="show"><span class="nyt-ph">Logo</span>Show A</div><p class="nyt-hed inv">Người dẫn chương trình kể về hai mươi năm làm nghề</p><span class="nyt-play"><svg viewBox="0 0 12 12" fill="currentColor"><path d="M3 1.5v9l7-4.5z"/></svg></span></div><div class="media"><div class="nyt-ph">Ảnh 2:3</div></div></a>
+            <a class="nyt-promo" href="#packages" style="--show-color:#839A94"><div class="content"><div class="show"><span class="nyt-ph">Logo</span>Show B</div><p class="nyt-hed inv">Những bộ phim truyền hình đáng xem lại</p><span class="nyt-play"><svg viewBox="0 0 12 12" fill="currentColor"><path d="M3 1.5v9l7-4.5z"/></svg></span></div><div class="media"><div class="nyt-ph">Ảnh 2:3</div></div></a>
+            <a class="nyt-promo is-focus" href="#packages" style="--show-color:#60788A"><div class="content"><div class="show"><span class="nyt-ph">Logo</span>Show C</div><p class="nyt-hed inv">Cuộc trò chuyện về khí hậu</p><span class="nyt-play"><svg viewBox="0 0 12 12" fill="currentColor"><path d="M3 1.5v9l7-4.5z"/></svg></span></div><div class="media"><div class="nyt-ph">Ảnh 2:3</div></div></a>
+          </div><div class="spec-f"><span class="note">Mỗi show có màu nền riêng, khai báo inline qua --show-color-light. Kit dùng 5 màu đo được: #4F6BA3 · #839A94 · #60788A · #53795B · #8890A5. Lớp gradient tối 30% đè lên nền. Khi có :focus-visible bên trong, thẻ có viền 3px accent (theo CSS, không đo; thẻ thứ 3 minh hoạ trạng thái này).</span></div></div>
+
+        <div class="spec full" data-sig="0389d5f6cf 16cea58a6b 58f36eaac7"><div class="spec-h"><b>Promo slim · thăm dò</b><span class="kind">div.g-promo-slim (svelte)</span><span class="dp">hed 11/700 · item 14/600 · gap 18</span></div>
+          <div class="stage surface col">
+            <div class="nyt-slim"><a class="hed" href="#packages">The Latest Polls</a><div class="items"><a class="item" href="#packages">Senate ›</a><a class="item" href="#packages">House ›</a><a class="item" href="#packages">Governor ›</a></div><button class="nyt-signup">Get the latest polls sent to your inbox</button></div>
+            <div style="display:flex;gap:18px;flex-wrap:wrap;align-items:flex-end">
+              <div class="st nyt-slim" style="display:flex;width:auto;border:none;padding:0" data-sig-state="0389d5f6cf:focus"><a class="hed is-focus" href="#packages">The Latest Polls</a><small>Hed · focus</small></div>
+              <div class="st nyt-slim" style="display:flex;width:auto;border:none;padding:0" data-sig-state="16cea58a6b:hover"><a class="item is-hover" href="#packages">Senate ›</a><small>Item · hover</small></div>
+              <div class="st nyt-slim" style="display:flex;width:auto;border:none;padding:0" data-sig-state="16cea58a6b:focus"><a class="item is-focus" href="#packages">Senate ›</a><small>Item · focus</small></div>
+              <div class="st" data-sig-state="58f36eaac7:hover"><button class="nyt-signup is-hover">Get the latest polls</button><small>Signup · hover</small></div>
+              <div class="st" data-sig-state="58f36eaac7:focus"><button class="nyt-signup is-focus">Get the latest polls</button><small>Signup · focus</small></div>
+            </div>
+          </div><div class="spec-f"><span class="note">Đây là đồ hoạ svelte nhúng của bàn tin (g-*), dùng token riêng --promo-color-*. Đo được: item hover → #5A5A5A, nút signup hover → #F8F8F8. Theo CSS gốc hed là 12/700 và tracking 1px; số đo trên trang lưu là 11 (kit .02em).</span></div></div>
+
+        <div class="spec" data-sig="da7bfb2cc7"><div class="spec-h"><b>Dòng gửi tin mật</b><span class="kind">a › b</span><span class="dp">cheltenham 16/20</span></div>
+          <div class="stage">
+            <a class="nyt-tip" href="#packages"><b>Got a Tip?</b> Gửi thông tin cho toà soạn một cách bảo mật ›</a>
+            <div class="st" data-sig-state="da7bfb2cc7:focus"><a class="nyt-tip is-focus" href="#packages"><b>Got a Tip?</b> Gửi thông tin bảo mật ›</a><small>Focus</small></div>
+          </div><div class="spec-f"><span class="note">Dòng này căn giữa, nằm giữa các gói tin, có rule tertiary ở trên và dưới.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= MÀN MẪU ================= -->
+    <section class="block" id="screens">
+      <header><h2>Màn hình mẫu</h2><p>Hai màn được ghép từ chính các class <code>.nyt-*</code> ở trên. Bố cục desktop gồm cột chính 830 và rail 337 trong container 1200 (đo trên bản lưu 1440). Bố cục mobile 390 là suy luận theo breakpoint &lt; 740 của CSS: một cột, header thu gọn, dải section cuộn ngang. Bản lưu chỉ có desktop nên màn mobile không đo trực tiếp.</p></header>
+      <div class="screens-wrap"><div class="screens">
+        <div>
+          <div class="phone">
+            <div class="status"><span>9:41</span><span class="ms">signal_cellular_alt</span></div>
+            <div class="nyt-sticky"><div class="left"><button class="nyt-ic" aria-label="Mở menu"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 4h14M2 9h14M2 14h14"/></svg></button></div><div class="nyt-wordmark">The Times<small>Logo</small></div><div class="right"><button class="nyt-btn v-solid">Subscribe</button></div></div>
+            <div class="ribbon"><span class="on">Home</span><span>U.S.</span><span>World</span><span>Business</span><span>Opinion</span></div>
+            <div class="body">
+              <nav class="nyt-storyline" aria-label="Storyline" style="padding-top:12px"><p class="title">Chủ đề nóng</p><ul><li><a href="#screens">What We Know</a></li><li><a href="#screens">Timeline</a></li></ul></nav>
+              <div class="nyt-media"><div class="nyt-ph">Ảnh 3:2</div></div>
+              <div class="nyt-stack" style="margin-top:12px">
+                <a class="nyt-story" style="max-width:none" href="#screens"><p class="nyt-kicker">Analysis</p><p class="nyt-hed n22">Thành phố thử nghiệm tuyến xe buýt chạy suốt đêm</p><p class="nyt-summary">Tuyến mới nối ba khu dân cư và chạy 15 phút một chuyến.</p><p class="nyt-readtime">5 min read</p></a>
+                <div><a class="nyt-story" style="max-width:none" href="#screens"><p class="nyt-hed n18">Hội đồng thông qua ngân sách sửa cầu</p></a><a class="nyt-comments" href="#screens"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor"><path d="M1.5 2h9v6H5L2.5 10V8h-1z"/></svg>203</a></div>
+                <div class="nyt-byline" style="max-width:none"><div><p class="who">Columnist Name</p><p class="nyt-hed">Đô thị nhỏ đang làm tốt hơn ta nghĩ</p></div><div class="nyt-ph">Ảnh</div></div>
+              </div>
+            </div>
+          </div>
+          <p class="scr-cap">mobile 390×844 · nyt-sticky · ribbon · nyt-storyline · nyt-media · nyt-story · nyt-kicker · nyt-comments · nyt-byline</p>
+        </div>
+        <div>
+          <div class="desk">
+            <div class="wrap nyt-masthead">
+              <ul class="nyt-edition" style="padding-top:8px"><li><a href="#screens">U.S.</a></li><li><a class="is-on" href="#screens">International</a></li><li><a href="#screens">Canada</a></li><li><a href="#screens">Español</a></li></ul>
+              <div class="top"><div><div class="date">Thursday, October 1, 2026</div><a class="paper" href="#screens">Today’s Paper</a></div><div class="nyt-wordmark" style="font-size:48px">The Times<small>Ảnh logo wordmark (không nhúng)</small></div><div class="ticker"><span><b>Index A</b> <span class="up">+0.24%</span></span><span><b>Index B</b> <span class="down">−0.25%</span></span></div></div>
+              <nav class="sections" aria-label="Sections"><a href="#screens">U.S.</a><a href="#screens">World</a><a href="#screens">Business</a><a href="#screens">Arts</a><a href="#screens">Lifestyle</a><a href="#screens">Opinion</a><a href="#screens">Audio</a><a href="#screens">Games</a><a href="#screens">Cooking</a><a href="#screens">Wirecutter</a><a href="#screens">The Athletic</a></nav>
+            </div>
+            <div class="wrap">
+              <nav class="nyt-storyline" aria-label="Storyline" style="padding-top:12px"><p class="title">Chủ đề nóng</p><ul><li><a href="#screens">What We Know</a></li><li><a href="#screens">Timeline</a></li><li><a href="#screens">Responses</a></li><li><a href="#screens">Background</a></li></ul></nav>
+              <div class="grid3">
+                <div class="main">
+                  <div class="lead">
+                    <div class="nyt-stack">
+                      <a class="nyt-story" href="#screens"><p class="nyt-kicker">Analysis</p><p class="nyt-hed n22">Thành phố thử nghiệm tuyến xe buýt chạy suốt đêm</p><p class="nyt-summary">Tuyến mới nối ba khu dân cư và chạy 15 phút một chuyến từ nửa đêm đến 5 giờ sáng.</p><p class="nyt-readtime">5 min read</p></a>
+                      <a class="nyt-story" href="#screens"><p class="nyt-hed n16">Tài xế kể lại ca làm đầu tiên</p><p class="nyt-readtime">2 min read</p></a>
+                    </div>
+                    <figure class="nyt-fig"><div class="nyt-media"><div class="nyt-ph">Ảnh 3:2 · 522×348</div></div><figcaption>Tên nhiếp ảnh gia cho tờ báo</figcaption></figure>
+                  </div>
+                  <div class="nyt-slim" style="margin-top:14px"><a class="hed" href="#screens">The Latest Polls</a><div class="items"><a class="item" href="#screens">Senate ›</a><a class="item" href="#screens">House ›</a><a class="item" href="#screens">Governor ›</a></div><button class="nyt-signup">Get the latest polls sent to your inbox</button></div>
+                  <div class="row2">
+                    <a class="nyt-story" href="#screens"><p class="nyt-kicker">The Great Read</p><p class="nyt-hed n18">Người giữ hải đăng cuối cùng của vịnh</p><p class="nyt-summary">Ông đã sống một mình ở đây suốt ba mươi năm.</p></a>
+                    <a class="nyt-story" href="#screens"><p class="nyt-kicker breaking">Breaking</p><p class="nyt-hed n18">Bão đổi hướng về phía bờ biển phía nam</p><p class="nyt-readtime">3 min read</p></a>
+                  </div>
+                </div>
+                <div class="aside">
+                  <div class="nyt-media" style="--ratio:150%;max-width:200px"><div class="nyt-ph">Video dọc 2:3</div><span class="dur">1:09</span></div>
+                  <div class="nyt-stack" style="margin-top:14px">
+                    <div class="nyt-byline" style="max-width:none"><div><p class="who">Columnist Name</p><p class="nyt-hed">Đô thị nhỏ đang làm tốt hơn ta nghĩ</p></div><div class="nyt-ph">Ảnh</div></div>
+                    <div class="nyt-byline" style="max-width:none"><div><p class="nyt-letters">Letters from our readers</p><p class="nyt-hed">Bạn đọc viết về giờ học muộn</p></div><div class="nyt-ph tall">Ảnh</div></div>
+                  </div>
+                  <a class="nyt-promo" href="#screens" style="--show-color:#53795B;width:100%;margin-top:12px"><div class="content"><div class="show"><span class="nyt-ph">Logo</span>Show D</div><p class="nyt-hed inv">Câu chuyện thể thao tuần này</p><span class="nyt-play"><svg viewBox="0 0 12 12" fill="currentColor"><path d="M3 1.5v9l7-4.5z"/></svg></span></div><div class="media"><div class="nyt-ph">Ảnh 2:3</div></div></a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="scr-cap">desktop 1440×900 · nyt-edition · nyt-masthead · nyt-storyline · nyt-story · nyt-fig · nyt-slim · nyt-signup · nyt-byline · nyt-promo · rule dọc 830 | 337</p>
+        </div>
+      </div></div>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status"><span id="toast-t">Đã copy</span></div>
+
+<script>
+/* token TPL resolve trên trang lưu (Playwright, .tpl-always-light / .tpl-always-dark); hover = #f7f7f7 viết cứng của site, tối = background-secondary (suy luận) */
+const ROLES=["background-primary","background-secondary","background-tertiary","background-elevated","background-highlight","background-scrim","content-primary","content-primary-dim","content-secondary","content-secondary-dim","content-placeholder","content-accent","content-accent-dim","content-breaking","content-negative","content-positive","stroke-primary","stroke-secondary","stroke-tertiary","hover"];
+const PALETTES={"tpl":{"label":"TPL","light":["#FFFFFF","#F8F8F8","#EBEBEB","#FFFFFF","#FEFAD1","rgba(18,18,18,.6)","#121212","#363636","#5A5A5A","#727272","#8B8B8B","#346EB7","#326891","#D0021B","#A90111","#267C30","#121212","#959595","#DFDFDF","#F7F7F7"],"dark":["#121212","#2A2A2A","#424242","#2A2A2A","#35352F","rgba(18,18,18,.6)","#F8F8F8","#DFDFDF","#BBBBBB","#A3A3A3","#8B8B8B","#6BA1DD","#7CA7C8","#E14E5B","#EA7980","#63A859","#F8F8F8","#959595","#424242","#2A2A2A"]}};
+(function () {
+  const root = document.documentElement;
+  const state = { pal: "tpl", mode: matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light" };
+  try { Object.assign(state, JSON.parse(localStorage.getItem("nyt-kit") || "{}")); } catch (e) {}
+  if (!PALETTES[state.pal]) state.pal = "tpl";
+  if (state.mode !== "dark") state.mode = "light";
+
+  const toast = (t) => {
+    const el = document.getElementById("toast");
+    document.getElementById("toast-t").textContent = t;
+    el.classList.add("show");
+    clearTimeout(toast.t);
+    toast.t = setTimeout(() => el.classList.remove("show"), 1600);
+  };
+  const copy = async (text, msg) => {
+    try { await navigator.clipboard.writeText(text); toast(msg); }
+    catch (e) { toast("Trình duyệt chặn clipboard, hãy copy tay"); }
+  };
+
+  function apply() {
+    const vals = PALETTES[state.pal][state.mode];
+    ROLES.forEach((r, i) => root.style.setProperty("--nyt-" + r, vals[i]));
+    root.dataset.mode = state.mode;
+    document.querySelectorAll("#mode button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === state.mode));
+    renderRoles(vals);
+    try { localStorage.setItem("nyt-kit", JSON.stringify(state)); } catch (e) {}
+  }
+  document.querySelectorAll("#mode button").forEach((b) => (b.onclick = () => { state.mode = b.dataset.v; apply(); }));
+
+  /* ô màu: vai trò "đậm" mang chữ background-primary, vai trò nền nhạt mang chữ content-primary */
+  const DARK_FG = ["content-primary","content-primary-dim","content-secondary","content-secondary-dim","content-placeholder","content-accent","content-accent-dim","content-breaking","content-negative","content-positive","stroke-primary","stroke-secondary","background-scrim"];
+  function renderRoles(vals) {
+    const box = document.getElementById("roles");
+    box.innerHTML = "";
+    const fgOn = vals[ROLES.indexOf("background-primary")], fgOff = vals[ROLES.indexOf("content-primary")];
+    ROLES.forEach((r, i) => {
+      const b = document.createElement("button");
+      b.className = "role"; b.style.background = vals[i]; b.style.color = DARK_FG.includes(r) ? fgOn : fgOff;
+      b.innerHTML = "<b>" + r + "</b><code>" + vals[i] + "</code>";
+      b.onclick = () => copy(vals[i], "Đã copy " + r + " " + vals[i]);
+      box.appendChild(b);
+    });
+  }
+
+  /* thang --tpl-typography-* (resolve trên trang lưu); tracking hiển thị kẹp ở .02em, cột phải ghi giá trị gốc */
+  const F = { chel: "var(--nyt-cheltenham)", imp: "var(--nyt-imperial)", fr: "var(--nyt-franklin)", kar: "var(--nyt-karnak)" };
+  const TYPE = [
+    ["Headline · news", [["headline-news-48","chel",48,52.8,700,0],["headline-news-40","chel",40,44,700,0],["headline-news-36","chel",36,41.4,700,0],["headline-news-32","chel",32,36.8,700,0],["headline-news-28","chel",28,32.2,700,0],["headline-news-22","chel",22,25.3,700,0],["headline-news-20","chel",20,23,700,.2],["headline-news-18","chel",18,21.6,700,.18],["headline-news-16","chel",16,19.2,700,.16]]],
+    ["Headline · thường / feature", [["headline-28","chel",28,32.2,400,0],["headline-24","chel",24,27.6,400,0],["headline-18","chel",18,21.6,400,.18],["headline-16","chel",16,19.2,500,.16],["headline-feature-56","chel",56,56,200,0],["headline-feature-48","chel",48,52.8,200,0],["headline-feature-32","chel",32,36.8,200,0],["headline-feature-28","chel",28,32.2,200,0],["headline-feature-24","chel",24,27.6,300,0]]],
+    ["Headline · opinion (cheltenham-cond)", [["headline-opinion-56","chel",56,61.6,700,0],["headline-opinion-36","chel",36,41.4,700,.09],["headline-opinion-24","chel",24,27.6,700,.06],["headline-opinion-22","chel",22,25.3,700,.055],["headline-opinion-20","chel",20,23,700,.05],["headline-opinion-18","chel",18,20.7,700,.045]]],
+    ["Body · imperial", [["body-20","imp",20,30,400,0],["body-18","imp",18,25.02,400,0],["body-16","imp",16,22.24,400,0],["body-14","imp",14,19.46,400,0]]],
+    ["Title · franklin", [["title-56","fr",56,56,600,0],["title-48","fr",48,52.8,600,0],["title-32","fr",32,38.4,600,0],["title-28","fr",28,33.6,600,0],["title-24","fr",24,28.8,600,0],["title-22","fr",22,26.4,600,0],["title-20","fr",20,24,600,0],["title-18","fr",18,23.4,600,0],["title-16","fr",16,20.8,600,0],["title-14","fr",14,18.2,600,0],["title-12","fr",12,15.6,600,0]]],
+    ["Text · franklin", [["text-20","fr",20,24,500,0],["text-18","fr",18,23.4,500,0],["text-16","fr",16,20.8,500,0],["text-14","fr",14,18.2,500,0],["text-12","fr",12,15.6,500,0]]],
+    ["Label · utility · karnak", [["label-emphasis","fr",11,13.75,800,1.1,1],["label-regular","fr",11,13.75,500,1.1,1],["utility-1","fr",20,24,600,0],["utility-2","fr",16,20.8,600,0],["utility-3","fr",14,18.2,600,0],["title-karnak-18","kar",18,20.7,700,0],["title-karnak-16","kar",16,18.4,700,0]]]
+  ];
+  const ts = document.getElementById("typescale");
+  TYPE.forEach(([group, rows]) => {
+    const g = document.createElement("div"); g.className = "type-group"; g.textContent = group; ts.appendChild(g);
+    rows.forEach(([name, fam, size, lh, w, ls, up]) => {
+      const row = document.createElement("div");
+      row.className = "type-row";
+      const shown = Math.min(ls, +(size * 0.02).toFixed(3));
+      const style = "font-family:" + F[fam] + ";font-size:" + size + "px;line-height:" + lh + "px;font-weight:" + w + ";letter-spacing:" + shown + "px" + (up ? ";text-transform:uppercase" : "") + (name.includes("opinion") ? ";font-stretch:85%" : "");
+      row.innerHTML = '<span class="meta">' + name + '</span><span class="t" style="' + style + '">Tin chính hôm nay trên trang nhất</span><span class="meta">' + size + " / " + lh + " · " + w + (ls ? " · " + ls + "px" : "") + "</span>";
+      ts.appendChild(row);
+    });
+  });
+
+  /* bo góc thực dùng */
+  const sh = document.getElementById("shapes");
+  [["0", "0"], ["3", "3px"], ["4", "4px"], ["50%", "50%"]].forEach(([n, r]) => {
+    const c = document.createElement("div");
+    c.className = "shape-cell";
+    c.innerHTML = '<i style="border-radius:' + r + '"></i>r ' + n;
+    sh.appendChild(c);
+  });
+
+  /* thang khoảng cách --tpl-size-spacing-* */
+  const sp = document.getElementById("spacing");
+  [["0-5", 4], ["1", 8], ["1-5", 12], ["2", 16], ["2-5", 20], ["3", 24], ["4", 32], ["5", 40], ["6", 48], ["7", 56], ["8", 64], ["9", 72], ["10", 80]].forEach(([n, px]) => {
+    const r = document.createElement("div");
+    r.className = "space-row";
+    r.innerHTML = "<span>spacing-" + n + " · " + px + "px</span><i style=\"width:" + px * 2 + "px\"></i>";
+    sp.appendChild(r);
+  });
+
+  /* nút copy HTML cho mỗi thẻ thành phần */
+  document.querySelectorAll(".spec").forEach((spec) => {
+    const stage = spec.querySelector(".stage");
+    if (!stage || !spec.querySelector(".spec-h")) return;
+    let foot = spec.querySelector(".spec-f");
+    if (!foot) { foot = document.createElement("div"); foot.className = "spec-f"; foot.innerHTML = '<span class="note"></span>'; spec.appendChild(foot); }
+    const b = document.createElement("button");
+    b.className = "copy"; b.innerHTML = '<span class="ms">content_copy</span>HTML';
+    b.onclick = () => copy(stage.innerHTML.trim().replace(/\n\s+/g, "\n"), "Đã copy HTML của " + spec.querySelector(".spec-h b").textContent);
+    foot.appendChild(b);
+  });
+
+  document.getElementById("copy-tokens").onclick = () => {
+    const vals = PALETTES[state.pal][state.mode];
+    const lines = ROLES.map((r, i) => "  --nyt-" + r + ": " + vals[i] + ";");
+    copy(":root {\n" + lines.join("\n") + "\n  --nyt-cheltenham: Newsreader, georgia, serif;\n  --nyt-imperial: \"Source Serif 4\", georgia, serif;\n  --nyt-franklin: \"Libre Franklin\", helvetica, arial, sans-serif;\n  --nyt-karnak: \"Roboto Slab\", georgia, serif;\n  --nyt-rule-primary: 2px solid var(--nyt-stroke-primary);\n  --nyt-rule-secondary: 1px solid var(--nyt-stroke-primary);\n  --nyt-rule-tertiary: 1px solid var(--nyt-stroke-tertiary);\n  --nyt-focus: 2px solid var(--nyt-content-accent);\n}", "Đã copy token TPL " + (state.mode === "dark" ? "tối" : "sáng"));
+  };
+
+  const links = [...document.querySelectorAll(".side a")];
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (e.isIntersecting) links.forEach((a) => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id));
+  }), { rootMargin: "-30% 0px -60% 0px" });
+  document.querySelectorAll("section.block").forEach((s) => io.observe(s));
+
+  apply();
+})();
+</script>
+</body>
+</html>
