@@ -19,7 +19,7 @@
     <button type="button" class="aw-btn aw-btn--small aw-btn--outline" id="aw-theme" aria-label="Đổi giao diện sáng/tối"><span class="ms"></span></button>
     <a class="aw-btn aw-btn--small" href="https://github.com/Rheinmir/uiux-asset" target="_blank" rel="noopener">GitHub</a></header>`;
   me.after(head);
-  const cs = document.createElement('script'); cs.src = R + 'cart.js'; document.head.append(cs);   // giỏ mẫu (nút "+ Giỏ" trên mọi thẻ)
+  const cs = document.createElement('script'); cs.src = R + 'cart.js' + new URL(me.src).search; document.head.append(cs);   // giỏ mẫu (nút "+ Giỏ" trên mọi thẻ)
 
   const btn = head.querySelector('#aw-theme'), ico = btn.firstChild;
   const paint = () => { ico.textContent = d.dataset.theme === 'dark' ? 'light_mode' : 'dark_mode'; };

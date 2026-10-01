@@ -2,8 +2,8 @@
 <title>UI kits — uiux-asset</title>
 <meta name="description" content="UI kit rút từ site thật bằng /ui-kit-from-code — mỗi kit là một trang HTML tham chiếu: token, component, màn mẫu.">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
-<link rel="stylesheet" href="../aw.css"></head><body>
-<main class="aw-wrap"><script src="../aw.js"></script>
+<link rel="stylesheet" href="../aw.css?v=0d09397d95"></head><body>
+<main class="aw-wrap"><script src="../aw.js?v=0d09397d95"></script>
 <div class="aw-filters"><label class="aw-search"><button type="button" aria-label="Tìm" tabindex="-1"><span class="ms">search</span></button><input id="q" type="search" placeholder="Lọc theo tên kit, site nguồn…" aria-label="Lọc kit"></label>
 <button type="button" class="aw-filter" data-sort="new" aria-pressed="true">Mới nhất</button><button type="button" class="aw-filter" data-sort="az" aria-pressed="false">A–Z</button>
 <span class="grow"></span><span class="aw-filter has-count" title="Số kit đang hiện"><span class="aw-count" id="n">0</span></span></div>
@@ -11,7 +11,7 @@
 <div class="aw-grid" id="g"></div>
 <p id="msg" role="status">Đang tải danh sách kit…</p>
 </main>
-<script src="kits.js"></script>
+<script src="kits.js?v=0d09397d95"></script>
 <script>
 (() => {
   const g = document.getElementById('g'), q = document.getElementById('q'), msg = document.getElementById('msg'), n = document.getElementById('n');
@@ -26,4 +26,4 @@
   awKits.load().then((k) => { kits = k; document.getElementById('total').textContent = k.length; draw(); })
     .catch((e) => { msg.hidden = false; msg.textContent = `Chưa đọc được danh sách kit (${e.message}). Tải lại trang sau ít phút.`; });
 })();
-</script><script src="/stats.js" defer></script></body></html>
+</script><script src="/stats.js?v=0d09397d95" defer></script></body></html>

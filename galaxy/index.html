@@ -2,7 +2,7 @@
 <title>Galaxy — uiux-asset</title>
 <meta name="description" content="3.800+ UI element của Uiverse.io (uiverse-io/galaxy, MIT) — chạy thật, copy nguyên code.">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
-<link rel="stylesheet" href="../aw.css">
+<link rel="stylesheet" href="../aw.css?v=0d09397d95">
 <style>
 .gx-prev { display: block; aspect-ratio: 16 / 12; overflow: hidden; border-radius: var(--aw-rounded-small); background: var(--aw-img); }
 .gx-prev iframe { display: block; width: 100%; height: 100%; border: 0; }
@@ -11,7 +11,7 @@
 .gx-k { margin-left: 6px; font-size: 11px; opacity: .65; font-variant-numeric: tabular-nums; }
 #more { align-self: center; }
 </style></head><body>
-<main class="aw-wrap"><script src="../aw.js"></script>
+<main class="aw-wrap"><script src="../aw.js?v=0d09397d95"></script>
 <div class="aw-filters"><label class="aw-search"><button type="button" aria-label="Tìm" tabindex="-1"><span class="ms">search</span></button><input id="q" type="search" placeholder="Lọc theo tác giả, tag (glass, neon, 3d…)" aria-label="Lọc element"></label>
 <span class="grow"></span><span class="aw-filter has-count" title="Số element khớp"><span class="aw-count" id="n">0</span></span></div>
 <div class="aw-filters gx-cats" id="cats" role="group" aria-label="Nhóm element"></div>
@@ -20,7 +20,7 @@
 <p id="msg" role="status">Đang tải danh sách element…</p>
 <button type="button" class="aw-btn aw-btn--outline" id="more" hidden>Xem thêm</button>
 </main>
-<script src="galaxy.js"></script>
+<script src="galaxy.js?v=0d09397d95"></script>
 <script>
 (() => {
   const PAGE = 48, $ = (id) => document.getElementById(id), esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -70,4 +70,4 @@
     apply();
   }).catch((e) => { $('msg').textContent = `Chưa đọc được danh sách element (${e.message}).`; });
 })();
-</script><script src="/stats.js" defer></script></body></html>
+</script><script src="/stats.js?v=0d09397d95" defer></script></body></html>
