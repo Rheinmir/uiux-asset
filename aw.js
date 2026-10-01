@@ -15,9 +15,11 @@
   head.className = 'aw-site-head';
   head.innerHTML = `<div class="aw-marquee" aria-hidden="true">${run.repeat(6)}</div>
     <header class="aw-header"><a class="aw-brand" href="${R}">UIUX.</a><nav class="aw-hnav" aria-label="Chuyên mục">${links}</nav><span class="grow"></span>
+    <button type="button" class="aw-btn aw-btn--small" id="aw-cart-btn" aria-label="Mở giỏ mẫu">Giỏ <span class="aw-count" id="aw-cart-n">0</span></button>
     <button type="button" class="aw-btn aw-btn--small aw-btn--outline" id="aw-theme" aria-label="Đổi giao diện sáng/tối"><span class="ms"></span></button>
     <a class="aw-btn aw-btn--small" href="https://github.com/Rheinmir/uiux-asset" target="_blank" rel="noopener">GitHub</a></header>`;
   me.after(head);
+  const cs = document.createElement('script'); cs.src = R + 'cart.js'; document.head.append(cs);   // giỏ mẫu (nút "+ Giỏ" trên mọi thẻ)
 
   const btn = head.querySelector('#aw-theme'), ico = btn.firstChild;
   const paint = () => { ico.textContent = d.dataset.theme === 'dark' ? 'light_mode' : 'dark_mode'; };

@@ -20,8 +20,9 @@ def card(i):
            f'<img loading="lazy" src="thumbs/{f[:-5]}.jpg" alt="">{hover}</a>') if f else '<div class="aw-fig"><div class="aw-ph">pen đã xoá</div></div>'
     code = (f'<a class="aw-tag aw-tag--medium" href="https://github.com/Rheinmir/uiux-asset/blob/main/{cat.name}/{e(f)}" target="_blank" rel="noopener" '
             f'title="{e(f)}">Code</a>') if f else ""
+    cart = (f'<button type="button" class="aw-tag aw-tag--medium aw-cart-add" data-k="scroll" data-id="{e(f)}" data-t="{e(i["title"])}">+ Giỏ</button>') if f else ""
     return f"""<article class="aw-card-site" data-q="{e((i['title'] + ' ' + i['desc'] + ' ' + i['user']).lower())}">{fig}
-<div class="aw-card-site__info"><h3 class="aw-av__title" style="font-size:15px">{e(i['title'])}</h3><span class="grow"></span>{badge}{code}</div>
+<div class="aw-card-site__info"><h3 class="aw-av__title" style="font-size:15px">{e(i['title'])}</h3><span class="grow"></span>{badge}{code}{cart}</div>
 <div class="aw-card-site__info" style="padding-top:4px"><a class="aw-av" href="{e(i['url'])}" target="_blank" rel="noopener" style="font-size:13px"><span class="aw-av__img">{e(i['user'][:1].upper())}</span><span>CodePen · {e(i['user'])}</span></a></div>
 <p class="aw-desc">{e(i['desc'])}</p></article>"""
 

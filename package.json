@@ -5,6 +5,6 @@
   },
   "scripts": {
     "deploy": "python3 tools/build-search-index.py && node tools/upload-search.mjs --if-changed && vercel deploy --prod --yes",
-    "test": "node tools/test-stats.js && node tools/test-search.js && python3 tools/build-search-index.py --check && python3 tools/build-aw-css.py --check"
+    "test": "node tools/test-stats.js && node tools/test-search.js && node tools/test-cart.js && python3 tools/build-search-index.py --check && python3 tools/build-aw-css.py --check"
   }
 }

@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/c/:id.md", "destination": "/api/cart?id=:id&format=md" },
+    { "source": "/c/:id", "destination": "/api/cart?id=:id" }
+  ]
+}

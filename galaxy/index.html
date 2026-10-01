@@ -36,7 +36,8 @@
         <span class="grow"></span>${tw ? '<span class="aw-tag aw-tag--medium aw-tag--dev" title="Dùng Tailwind CSS">TW</span>' : ''}
         <a class="aw-tag aw-tag--medium" href="https://uiverse.io/${esc(author)}/${esc(slug)}" target="_blank" rel="noopener" aria-label="Xem ${esc(slug)} trên Uiverse">Uiverse</a>
         <a class="aw-tag aw-tag--medium" href="https://github.com/Rheinmir/uiux-asset/blob/main/galaxy/${esc(c)}/${esc(file)}" target="_blank" rel="noopener" aria-label="Code gốc ${esc(file)}">Code</a>
-        <button type="button" class="aw-tag aw-tag--medium aw-tag--solid-black gx-copy">Copy</button></div>
+        <button type="button" class="aw-tag aw-tag--medium aw-tag--solid-black gx-copy">Copy</button>
+        <button type="button" class="aw-tag aw-tag--medium aw-cart-add" data-k="galaxy" data-id="${esc(c + '/' + file)}" data-t="${esc((NAME[c] || c) + ' · ' + slug)}">+ Giỏ</button></div>
       <p class="aw-desc">${esc(NAME[c] || c)} · ${esc(tags.join(', ') || slug)}</p>`;
     a.querySelector('.gx-prev').append(awGalaxy.frame(it));
     const b = a.querySelector('.gx-copy');

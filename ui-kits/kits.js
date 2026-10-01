@@ -15,7 +15,7 @@
       <a class="aw-fig" href="${url}" target="_blank" rel="noopener" aria-label="Mở UI kit ${esc(k.id)}"><span class="aw-shot"><iframe loading="lazy" src="${url}" title="Xem trước ${esc(k.id)}" tabindex="-1" aria-hidden="true"></iframe></span>
         <div class="aw-fig__hover" aria-hidden="true"><div><div class="aw-fig__row"><small>UI KIT</small></div><div class="aw-fig__row"><h3>${esc(k.id)}</h3></div></div><div class="aw-fig__bts"><span class="ms">open_in_new</span></div></div></a>
       <div class="aw-card-site__info"><a class="aw-av" href="${url}" target="_blank" rel="noopener" style="font-size:15px"><span class="aw-av__img">${esc(k.id[0].toUpperCase())}</span><h3 class="aw-av__title">${esc(k.id)}</h3></a>
-        <span class="grow"></span>${older}<span class="aw-tag aw-tag--medium aw-tag--dev">${day(k.date)}</span><span class="aw-tag aw-tag--medium aw-tag--sotd">v${k.latest}</span></div>
+        <span class="grow"></span>${older}<span class="aw-tag aw-tag--medium aw-tag--dev">${day(k.date)}</span><span class="aw-tag aw-tag--medium aw-tag--sotd">v${k.latest}</span><button type="button" class="aw-tag aw-tag--medium aw-cart-add" data-k="kit" data-id="${esc(k.id)}" data-v="${k.latest}" data-t="UI kit · ${esc(k.id)}">+ Giỏ</button></div>
       ${k.source ? `<p class="aw-desc">Rút từ ${src(k.source)}</p>` : ''}</article>`;
   }
 
