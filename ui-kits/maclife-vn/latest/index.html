@@ -1,0 +1,1553 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta name="ui-kit-id" content="maclife-vn">
+<!-- UI kit rút từ maclife.vn/open-source (thư viện ứng dụng Mac kiểu App Store) ngày 06/10/2026, theo skill ui-kit-from-code (nhánh B04: nguồn là URL).
+     Màu và số đo parse từ stylesheet thật của site (/toolkit/assets/store.css), đối chiếu getComputedStyle qua discover.mjs.
+     Không nhúng logo, icon ứng dụng, ảnh bìa hay ảnh bài viết của MacLife (RULE-09): chỗ có ảnh là khối giữ chỗ ghi "ảnh …". -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MacLife UI Kit</title>
+<meta name="ui-kit-skip" content="eff7aa3271:input bẫy bot .honeypot của form Gửi đề xuất, đặt ở left -10000px, người dùng không thấy">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..24,300..500,0..1,0&display=block">
+<style>
+/* Mọi màu của component là biến --ml-<tên biến gốc> (vd --ml-accent = --accent của site). Sáng/tối do script ghi lên :root,
+   giống site đổi :root[data-theme=dark]. Font là font hệ thống như site (-apple-system). Icon nét của site thay bằng Material Symbols Outlined. */
+:root {
+  --ml-bg:#fff; --ml-surface:#f5f5f7; --ml-sidebar:#ededee; --ml-sidebar-selected:#dcdcdf; --ml-text:#29292b; --ml-muted:#6f6f76;
+  --ml-line:#e6e6e9; --ml-accent:#006ee6; --ml-action-bg:#006ee6; --ml-pill:#f1f2f7; --ml-header-bg:#ffffffeb;
+  --ml-shadow:0 2px 7px #00000016;
+  /* hằng số không đổi theo theme (giá trị cứng trong store.css) */
+  --ml-on-accent:#fff; --ml-system-blue:#007aff; --ml-error:#db3227; --ml-error-bg:#ff3b3010; --ml-error-line:#ff3b3040;
+  --ml-notice-bg:#007aff0c; --ml-notice-line:#007aff30; --ml-active-tint:#007aff16; --ml-mark:#ffda6380;
+  --ml-scrim:#0006; --ml-backdrop:#000a; --ml-backdrop-soft:#0005;
+  --ml-fallback-a:#56b7ff; --ml-fallback-b:#007aff; --ml-avatar-a:#a3deff; --ml-avatar-b:#e7d0f4; --ml-avatar-ink:#356c95; --ml-author-b:#4abddd;
+  --ml-cat-productivity:#c18b3d; --ml-cat-photo:#74808a; --ml-cat-design:#ff9500; --ml-cat-video:#ff3b30; --ml-cat-music:#75c500; --ml-cat-utility:#007aff;
+  --ml-spot-bg:#081a36; --ml-spot-line:#3b82b633; --ml-spot-eyebrow:#a8d5ff; --ml-spot-copy:#d2e0f0; --ml-spot-small:#c6d9ee; --ml-spot-btn-ink:#0b3c80; --ml-spot-btn-hover:#e9f3ff;
+  --ml-feat-bg:#071d3b; --ml-feat-art:#072859; --ml-feat-copy:#d9e8ff; --ml-feat-action:#a6ceff;
+  --ml-art-bg:linear-gradient(135deg,#bddeef,#edf9fd 60%,#a4d1e9); --ml-art-ink:#0062a0;
+  --ml-focus:3px solid var(--ml-accent);
+  --ml-font:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --ml-mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --ml-sidebar-width:248px;
+  color-scheme: light;
+}
+:root[data-mode="dark"] { color-scheme: dark; }
+/* 6 bảng màu minh hoạ (.palette-0 … .palette-5 của site), dùng cho editorial-card, collection-card, collection-intro */
+.ml-p0 { --ml-art-bg:linear-gradient(135deg,#bddeef,#edf9fd 60%,#a4d1e9); --ml-art-ink:#0062a0; }
+.ml-p1 { --ml-art-bg:linear-gradient(135deg,#c9dfbb,#f0f5d7 65%,#a4c489); --ml-art-ink:#466c29; }
+.ml-p2 { --ml-art-bg:linear-gradient(135deg,#a2accf,#e6e3fa 65%,#a09ad1); --ml-art-ink:#3d387a; }
+.ml-p3 { --ml-art-bg:linear-gradient(135deg,#f0c6cb,#fae9db 60%,#eab1b3); --ml-art-ink:#ae4c4a; }
+.ml-p4 { --ml-art-bg:linear-gradient(135deg,#c4e8db,#eaf7f1 60%,#90cab2); --ml-art-ink:#27866c; }
+.ml-p5 { --ml-art-bg:linear-gradient(135deg,#f1d9a7,#fff3d8 60%,#e8c089); --ml-art-ink:#a77528; }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--ml-bg); color: var(--ml-text); font: 400 16px/1.45 var(--ml-font); -webkit-font-smoothing: antialiased; }
+.ms { font-family: "Material Symbols Outlined"; font-weight: 300; font-style: normal; font-size: 24px; line-height: 1; letter-spacing: normal; text-transform: none; display: inline-block; white-space: nowrap; direction: ltr; font-feature-settings: "liga"; -webkit-font-smoothing: antialiased; user-select: none; flex-shrink: 0; }
+code, .code { font-family: var(--ml-mono); font-size: 12px; }
+:focus-visible { outline: var(--ml-focus); outline-offset: 3px; border-radius: 6px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+/* ---------- vỏ trang (kit) — mặc token của site ---------- */
+.shell { display: grid; grid-template-columns: 232px minmax(0, 1fr); min-height: 100vh; }
+.side { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 22px 12px; background: var(--ml-sidebar); border-right: 1px solid var(--ml-line); display: flex; flex-direction: column; gap: 2px; }
+.brand { display: flex; align-items: center; gap: 10px; padding: 0 10px 18px; }
+.brand-mark { width: 32px; height: 32px; border-radius: 9px; background: var(--ml-action-bg); color: var(--ml-on-accent); display: grid; place-items: center; }
+.brand-mark .ms { font-size: 20px; }
+.brand b { font-size: 15px; font-weight: 650; display: block; }
+.brand small { color: var(--ml-muted); font-size: 12px; }
+.side h6 { margin: 14px 12px 6px; font-size: 12px; font-weight: 600; color: var(--ml-muted); }
+.side a { display: flex; align-items: center; gap: 10px; min-height: 36px; padding: 6px 12px; border-radius: 9px; color: var(--ml-text); text-decoration: none; font-size: 14px; }
+.side a .ms { font-size: 20px; color: var(--ml-accent); }
+.side a:hover, .side a.on { background: var(--ml-sidebar-selected); }
+.side a.on { font-weight: 600; }
+main.kit { padding: 0 36px 96px; min-width: 0; }
+
+.bar { position: sticky; top: 0; z-index: 30; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; padding: 12px 0; background: var(--ml-header-bg); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); border-bottom: 1px solid var(--ml-line); }
+.bar .grow { flex: 1; }
+.ctl { display: flex; align-items: center; gap: 8px; }
+.ctl > span { font-size: 12px; color: var(--ml-muted); }
+.seg { display: flex; align-items: center; gap: 2px; padding: 3px; border: 1px solid var(--ml-line); border-radius: 11px; background: var(--ml-sidebar-selected); }
+.seg button { height: 30px; padding: 0 12px; border: 0; border-radius: 7px; background: none; color: var(--ml-muted); font: 500 13px var(--ml-font); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.seg button:hover { color: var(--ml-text); }
+.seg button[aria-pressed="true"] { background: var(--ml-bg); color: var(--ml-text); box-shadow: 0 1px 4px #00000014; }
+.seg .ms { font-size: 17px; }
+.swatches { display: flex; gap: 6px; }
+.sw { width: 26px; height: 26px; border-radius: 50%; border: 2px solid transparent; padding: 0; cursor: pointer; background: var(--c); box-shadow: inset 0 0 0 1px var(--ml-line); }
+.sw[aria-pressed="true"] { border-color: var(--ml-text); }
+
+.intro { padding: 40px 0 8px; max-width: 800px; }
+.intro .eyebrow-src { font-family: var(--ml-mono); font-size: 12px; color: var(--ml-accent); overflow-wrap: anywhere; }
+.intro h1 { font: 700 34px/1.15 var(--ml-font); letter-spacing: -1px; margin: 10px 0 14px; text-wrap: balance; }
+.intro p { font-size: 15px; line-height: 1.6; color: var(--ml-muted); margin: 0 0 10px; max-width: 70ch; }
+.intro .facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.fact { font-family: var(--ml-mono); font-size: 12px; padding: 4px 10px; border-radius: 6px; background: var(--ml-surface); color: var(--ml-muted); }
+
+section.block { padding-top: 52px; scroll-margin-top: 64px; }
+section.block > header { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+section.block h2 { font: 700 23px/1.25 var(--ml-font); letter-spacing: -.45px; margin: 0; }
+section.block > header p { margin: 0; color: var(--ml-muted); max-width: 76ch; font-size: 14px; line-height: 1.55; }
+h3.sub { font: 700 17px/1.35 var(--ml-font); margin: 28px 0 10px; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+.grid.wide { grid-template-columns: repeat(auto-fill, minmax(min(100%, 480px), 1fr)); }
+.spec { background: var(--ml-surface); border-radius: 12px; display: flex; flex-direction: column; min-width: 0; }
+.spec.full { grid-column: 1 / -1; }
+.spec-h { display: flex; align-items: center; gap: 8px; padding: 14px 16px 0; flex-wrap: wrap; }
+.spec-h b { font-size: 15px; font-weight: 650; }
+.kind { font-family: var(--ml-mono); font-size: 11px; padding: 2px 8px; border-radius: 5px; background: var(--ml-pill); color: var(--ml-accent); }
+.spec-h .dp { margin-left: auto; font-family: var(--ml-mono); font-size: 11px; color: var(--ml-muted); font-variant-numeric: tabular-nums; }
+.stage { padding: 20px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 14px; min-height: 96px; overflow-x: auto; }
+.stage.col { flex-direction: column; align-items: stretch; }
+.stage.surface { background: var(--ml-bg); margin: 12px 12px 0; border-radius: 10px; }
+.cap { font-family: var(--ml-mono); font-size: 10px; color: var(--ml-muted); display: block; margin-top: 6px; text-align: center; }
+.fig { display: flex; flex-direction: column; align-items: center; }
+.fig.l { align-items: flex-start; }
+.fig.l .cap { text-align: left; }
+.spec-f { display: flex; align-items: center; gap: 8px; padding: 8px 12px 12px 16px; margin-top: auto; }
+.spec-f .note { font-size: 12px; line-height: 1.45; color: var(--ml-muted); flex: 1; }
+.copy { height: 28px; padding: 0 12px; border-radius: 14px; border: none; background: transparent; color: var(--ml-accent); font: 600 12px var(--ml-font); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; flex: none; }
+.copy:hover { background: var(--ml-pill); }
+.copy .ms { font-size: 16px; }
+.bar .copy { background: var(--ml-pill); }
+
+/* nền tảng */
+.roles { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; }
+.role { border-radius: 10px; padding: 10px 12px; min-height: 72px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: inset 0 0 0 1px var(--ml-line); cursor: pointer; border: none; text-align: left; font: inherit; position: relative; overflow: hidden; }
+.role::before { content: ""; position: absolute; inset: 0; background: repeating-conic-gradient(var(--ml-line) 0 25%, transparent 0 50%) 0 0 / 12px 12px; z-index: 0; }
+.role > i { position: absolute; inset: 0; z-index: 1; }
+.role b, .role code { position: relative; z-index: 2; }
+.role b { font-size: 12px; font-weight: 600; word-break: break-all; }
+.role code { font-size: 11px; }
+.type-row { display: grid; grid-template-columns: 200px minmax(0, 1fr) 150px; gap: 16px; align-items: baseline; padding: 10px 0; border-bottom: 1px solid var(--ml-line); }
+.type-row:last-child { border-bottom: none; }
+.type-row .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.type-row .meta { font-family: var(--ml-mono); font-size: 11px; color: var(--ml-muted); font-variant-numeric: tabular-nums; }
+.shape-cell { display: flex; flex-direction: column; align-items: center; gap: 6px; font-family: var(--ml-mono); font-size: 11px; color: var(--ml-muted); text-align: center; width: 92px; }
+.shape-cell i { display: block; width: 64px; height: 64px; background: var(--ml-sidebar-selected); }
+.scroll-x { overflow-x: auto; }
+table.tok { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+table.tok th, table.tok td { text-align: left; padding: 7px 12px 7px 0; border-bottom: 1px solid var(--ml-line); font-size: 13px; vertical-align: top; }
+table.tok th { font-weight: 600; color: var(--ml-muted); font-size: 12px; }
+table.tok td:first-child { font-family: var(--ml-mono); font-size: 12px; white-space: nowrap; }
+
+#toast-kit { position: fixed; left: 50%; bottom: 28px; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; z-index: 90; padding: 12px 22px; background: var(--ml-text); color: var(--ml-bg); border-radius: 30px; font-size: 14px; box-shadow: var(--ml-shadow); transition: opacity .2s, transform .2s; max-width: 90vw; }
+#toast-kit.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* ================= thành phần ml-* (tái dùng được: chỉ cần khối token --ml-*) ================= */
+.ml-root { font-family: var(--ml-font); color: var(--ml-text); font-size: 16px; line-height: 1.45; }
+.ml-root a, a.ml-a { color: var(--ml-accent); text-decoration: none; }
+.ml-root a:hover, .ml-root a.is-hover { text-decoration: underline; }
+.ml-root .is-focus { outline: var(--ml-focus); outline-offset: 3px; border-radius: 6px; }
+/* focus mà site không style: trình duyệt vẽ outline auto 1px (#005fcc) */
+.ml-root .is-focus-ua { outline: 1px auto #005fcc; outline: 1px auto -webkit-focus-ring-color; }
+.ml-root .ms { font-size: 24px; }
+.ml-muted { color: var(--ml-muted); }
+/* ảnh giữ chỗ — site nhúng ảnh/icon thật; kit không chép (RULE-09) */
+.ml-ph { display: grid; place-items: center; overflow: hidden; color: var(--ml-muted); font: 500 10px/1.2 var(--ml-font); text-align: center; background: repeating-linear-gradient(135deg, var(--ml-surface) 0 8px, var(--ml-pill) 8px 16px); }
+
+/* --- chữ: tiêu đề trang · eyebrow · đoạn phụ --- */
+.ml-h1 { font-size: 34px; line-height: 1.15; letter-spacing: -1px; font-weight: 700; margin: 0; }
+.ml-h2 { font-size: 23px; line-height: 1.25; letter-spacing: -.45px; font-weight: 700; margin: 0; }
+.ml-h3 { font-size: 18px; line-height: 1.35; font-weight: 700; margin: 0; }
+.ml-eyebrow { font-size: 12px; letter-spacing: .4px; font-weight: 700; color: var(--ml-accent); }
+.ml-page-heading p { color: var(--ml-muted); font-size: 17px; margin: 9px 0 0; }
+.ml-subtitle { color: var(--ml-muted); margin: 14px 0 0; font-size: 16px; }
+
+/* --- nút: .button (+ .secondary, .is-active), .pill, .icon-button, .quiet --- */
+.ml-button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--ml-action-bg); color: var(--ml-on-accent) !important; min-height: 38px; padding: 8px 20px; border-radius: 22px; border: 1px solid transparent; font: 600 14px var(--ml-font); cursor: pointer; text-decoration: none !important; }
+.ml-button:hover, .ml-button.is-hover { filter: brightness(.94); }
+.ml-button .ms { font-size: 17px; }
+.ml-button.secondary { background: var(--ml-pill); color: var(--ml-accent) !important; }
+.ml-button.is-active { background: var(--ml-active-tint); }
+.ml-button:disabled { opacity: .55; cursor: wait; }
+.ml-button.lg { min-height: 44px; }
+.ml-pill { display: inline-flex; align-items: center; justify-content: center; min-height: 30px; min-width: 74px; padding: 5px 15px; border-radius: 18px; background: var(--ml-pill); color: var(--ml-accent) !important; font: 650 13px var(--ml-font); white-space: nowrap; border: 0; cursor: pointer; text-decoration: none !important; }
+.ml-pill:hover, .ml-pill.is-hover { background: var(--ml-sidebar-selected); }
+.ml-pill[aria-current=page], .ml-pill.is-on { background: var(--ml-action-bg); color: var(--ml-on-accent) !important; }
+.ml-icon-button { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--ml-line); color: var(--ml-text) !important; background: var(--ml-bg); flex-shrink: 0; cursor: pointer; padding: 0; text-decoration: none !important; }
+.ml-icon-button:hover, .ml-icon-button.is-hover { background: var(--ml-surface); }
+.ml-icon-button.is-focus { border-radius: 50%; }
+.ml-icon-button .ms { font-size: 22px; }
+.ml-quiet { color: var(--ml-accent); display: inline-flex; gap: 7px; align-items: center; font-size: 15px; background: none; border: 0; padding: 0; cursor: pointer; font-family: var(--ml-font); }
+.ml-quiet:hover, .ml-quiet.is-hover { text-decoration: underline; }
+.ml-edit-icon { width: 32px; height: 32px; border: 0; background: transparent; color: var(--ml-muted) !important; border-radius: 50%; display: inline-grid; place-items: center; cursor: pointer; }
+.ml-edit-icon .ms { font-size: 17px; }
+.ml-edit-icon:hover, .ml-edit-icon.is-hover { background: var(--ml-pill); color: var(--ml-text) !important; }
+.ml-edit-link { display: inline-flex; align-items: center; gap: 5px; min-height: 32px; padding: 5px 8px; color: var(--ml-muted) !important; font-size: 12px; font-weight: 500; border-radius: 8px; text-decoration: none !important; }
+.ml-edit-link .ms { font-size: 15px; }
+.ml-edit-link:hover, .ml-edit-link.is-hover { background: var(--ml-pill); color: var(--ml-text) !important; }
+.ml-rail-arrow { width: 32px; height: 58px; border-radius: 16px; background: var(--ml-sidebar-selected); color: var(--ml-text); opacity: .96; display: grid; place-items: center; box-shadow: 0 1px 5px #0001; border: 0; cursor: pointer; padding: 0; }
+.ml-rail-arrow .ms { font-size: 21px; }
+.ml-verified { display: inline-flex; align-items: center; justify-content: center; gap: 5px; color: var(--ml-accent); background: var(--ml-pill); font-size: 11px; font-weight: 600; line-height: 1.4; padding: 5px 9px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; }
+.ml-verified .ms { font-size: 16px; font-variation-settings: "FILL" 0; }
+.ml-verified.compact { padding: 2px; background: none; min-width: 20px; min-height: 24px; }
+.ml-metadata-link { color: inherit !important; text-underline-offset: 3px; overflow-wrap: anywhere; }
+
+/* --- sidebar · .sidebar --- */
+.ml-sidebar { width: var(--ml-sidebar-width); background: var(--ml-sidebar); padding: 27px 12px 20px; display: flex; flex-direction: column; border-right: 1px solid var(--ml-line); min-height: 640px; }
+.ml-sidebar-top { display: flex; align-items: center; justify-content: space-between; padding: 0 14px 28px; }
+.ml-logo { width: 132px; height: 29px; border-radius: 4px; border: 1px dashed var(--ml-muted); color: var(--ml-muted); font: 500 10px/27px var(--ml-font); text-align: center; }
+.ml-sidebar-search { height: 33px; border: 1px solid #00000014; border-radius: 20px; background: linear-gradient(#ffffff54, #ffffff16); display: flex; align-items: center; gap: 6px; padding: 4px 11px; box-shadow: inset 0 1px 1px #ffffff9a; margin-bottom: 21px; }
+:root[data-mode="dark"] .ml-sidebar-search { border-color: #ffffff14; }
+.ml-sidebar-search .ms { font-size: 16px; color: var(--ml-muted); }
+.ml-sidebar-search input { width: 100%; min-width: 0; outline: none; border: 0; background: none; font: 14px var(--ml-font); color: var(--ml-text); padding: 0; }
+.ml-sidebar-search input::placeholder { color: var(--ml-muted); }
+.ml-sidebar-nav { display: flex; flex-direction: column; gap: 3px; padding: 3px; }
+.ml-sidebar-nav a { display: flex; align-items: center; gap: 12px; color: var(--ml-text) !important; padding: 11px 12px; border-radius: 9px; font-size: 15px; white-space: nowrap; text-decoration: none !important; }
+.ml-sidebar-nav .ms { color: var(--ml-accent); font-size: 22px; }
+.ml-sidebar-nav a[aria-current=page], .ml-sidebar-nav a.is-on { background: var(--ml-sidebar-selected); font-weight: 600; }
+.ml-sidebar-nav a:hover, .ml-sidebar-nav a.is-hover { background: var(--ml-sidebar-selected); }
+.ml-sidebar-nav .ml-sidebar-blog { margin-top: 8px; border-top: 1px solid var(--ml-line); border-radius: 0; padding-top: 15px; }
+.ml-sidebar-nav .ml-sidebar-blog.is-hover, .ml-sidebar-nav .ml-sidebar-blog:hover { border-radius: 0; }
+.ml-sidebar-bottom { margin-top: auto; padding-top: 20px; }
+.ml-sidebar-more summary { padding: 10px 13px; color: var(--ml-muted); font-size: 14px; cursor: pointer; list-style: none; display: flex; align-items: center; gap: 11px; }
+.ml-sidebar-more summary::-webkit-details-marker { display: none; }
+.ml-sidebar-more summary .ms { font-size: 19px; }
+.ml-sidebar-more > div { padding: 4px 16px 10px; display: flex; flex-direction: column; gap: 10px; }
+.ml-sidebar-more a { color: var(--ml-text) !important; font-size: 13px; }
+.ml-sidebar-controls { display: flex; justify-content: space-between; align-items: center; padding: 10px 9px; margin: 4px 0 14px; border-top: 1px solid var(--ml-line); }
+.ml-theme-label { font-size: 12px; color: var(--ml-muted); }
+.ml-theme-picker { display: flex; align-items: center; gap: 2px; padding: 3px; border: 1px solid var(--ml-line); border-radius: 11px; background: var(--ml-sidebar-selected); }
+.ml-theme-choice { display: grid; place-items: center; width: 32px; height: 30px; padding: 0; border: 0; background: none; border-radius: 7px; color: var(--ml-muted); cursor: pointer; }
+.ml-theme-choice .ms { font-size: 17px; }
+.ml-theme-choice:hover, .ml-theme-choice.is-hover { color: var(--ml-text); }
+.ml-theme-choice[aria-pressed=true] { background: var(--ml-bg); color: var(--ml-text); box-shadow: 0 1px 4px #00000014; }
+.ml-theme-choice.is-focus { outline-offset: 2px; }
+.ml-account { color: var(--ml-text) !important; display: flex; align-items: center; gap: 10px; padding: 8px 10px; font-size: 14px; font-weight: 600; text-decoration: none !important; }
+.ml-account small { display: block; font-size: 11px; color: var(--ml-muted); font-weight: 400; margin-top: 2px; }
+.ml-avatar { background: linear-gradient(135deg, var(--ml-avatar-a), var(--ml-avatar-b)); color: var(--ml-avatar-ink); display: grid; place-items: center; width: 37px; height: 37px; border-radius: 50%; flex-shrink: 0; }
+.ml-avatar .ms { font-size: 21px; }
+.ml-skip { display: inline-block; padding: 10px; background: var(--ml-bg); color: var(--ml-accent); font-size: 16px; }
+
+/* --- header mobile · .mobile-header, tab dưới · .bottom-tabs, thanh trên · .page-top --- */
+.ml-mobile-header { display: flex; align-items: center; justify-content: space-between; padding: 11px 18px; border-bottom: 1px solid var(--ml-line); height: 60px; background: var(--ml-bg); }
+.ml-wordmark { color: var(--ml-text) !important; font-size: 21px; font-weight: 750; letter-spacing: -.7px; text-decoration: none !important; }
+.ml-mobile-header > div { display: flex; gap: 9px; }
+.ml-mobile-header .ml-icon-button { width: 33px; height: 33px; }
+.ml-mobile-header .ms { font-size: 18px; }
+.ml-bottom-tabs { background: var(--ml-header-bg); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); border-top: 1px solid var(--ml-line); display: flex; align-items: center; justify-content: space-around; gap: 4px; padding: 8px 7px; }
+.ml-bottom-tabs a { display: flex; flex-direction: column; align-items: center; gap: 3px; flex: 1; min-width: 0; color: var(--ml-muted) !important; font-size: 9px; padding: 1px 0; white-space: nowrap; text-decoration: none !important; }
+.ml-bottom-tabs a[aria-current=page] { color: var(--ml-accent) !important; }
+.ml-bottom-tabs .ms { font-size: 22px; }
+.ml-page-top { height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 8px 16px; background: var(--ml-header-bg); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); border-bottom: 1px solid var(--ml-line); font-weight: 600; color: var(--ml-muted); }
+.ml-sticky-product { display: flex; align-items: center; gap: 10px; font-size: 15px; min-width: 0; color: var(--ml-text); transition: opacity .15s; }
+.ml-sticky-product .ml-ph { width: 24px; height: 24px; border-radius: 5px; font-size: 7px; }
+.ml-sticky-product strong { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ml-page-top:not(.is-sticky) .ml-sticky-product { opacity: 0; }
+.ml-page-top:not(.is-sticky) .ml-sticky-cta { display: none; }
+.ml-top-actions { display: flex; align-items: center; gap: 8px; }
+.ml-page-top.compact { height: 54px; padding: 6px 12px; }
+.ml-page-top.compact .ml-icon-button { width: 36px; height: 36px; }
+
+/* --- footer · .compact-footer · phân trang · chip blog · member-nav --- */
+.ml-footer { padding: 23px 44px; display: flex; align-items: center; flex-wrap: wrap; gap: 12px 22px; border-top: 1px solid var(--ml-line); color: var(--ml-muted); font-size: 11px; }
+.ml-footer a { color: var(--ml-muted) !important; }
+.ml-footer > span:last-child { margin-left: auto; }
+.ml-pagination { display: flex; justify-content: center; gap: 10px; padding: 28px 0; }
+.ml-pagination .ml-pill { min-width: 36px; }
+.ml-chips { display: flex; flex-wrap: wrap; gap: 9px; }
+.ml-chips .ml-pill { min-height: 34px; padding-inline: 16px; color: var(--ml-muted) !important; }
+.ml-chips .ml-pill[aria-current=page] { color: var(--ml-on-accent) !important; }
+.ml-member-nav { display: flex; gap: 20px; border-bottom: 1px solid var(--ml-line); padding-bottom: 13px; font-size: 14px; }
+.ml-member-nav a[aria-current=page] { font-weight: 650; color: var(--ml-text) !important; }
+
+/* --- section + rail · .app-section .section-heading .app-rail --- */
+.ml-section { border-top: 1px solid var(--ml-line); padding: 25px 0; }
+.ml-section-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; margin-bottom: 18px; }
+.ml-section-heading > a, .ml-section-heading > button { font-size: 15px; flex-shrink: 0; }
+.ml-rail-wrap { position: relative; }
+.ml-rail { display: flex; gap: 24px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding: 3px 2px 9px; }
+.ml-rail::-webkit-scrollbar { display: none; }
+.ml-rail-wrap > .ml-rail-arrow { position: absolute; right: -10px; top: 50%; transform: translateY(-50%); z-index: 3; }
+.ml-rail-wrap > .ml-rail-arrow.prev { left: -10px; right: auto; }
+.ml-app-column { flex: 0 0 calc((100% - 48px) / 3); min-width: 280px; scroll-snap-align: start; }
+
+/* --- app row · .app-row .app-icon .app-copy .app-action --- */
+.ml-app-row { display: grid; grid-template-columns: 64px minmax(0, 1fr) 74px; gap: 12px; align-items: center; min-height: 98px; position: relative; padding: 12px 0; }
+.ml-app-row::after { content: ""; position: absolute; left: 76px; bottom: 0; right: 0; border-bottom: 1px solid var(--ml-line); }
+.ml-app-row:last-child::after, .ml-app-row.no-line::after { border: 0; }
+.ml-app-icon { height: 64px; width: 64px; border-radius: 15px; display: grid; place-items: center; position: relative; isolation: isolate; background: var(--ml-surface); box-shadow: var(--ml-shadow); overflow: hidden; }
+.ml-app-icon .ml-ph { position: absolute; inset: 0; z-index: 1; font-size: 8px; }
+.ml-icon-fallback { position: absolute; inset: 0; display: grid; place-items: center; background: linear-gradient(135deg, var(--ml-fallback-a), var(--ml-fallback-b)); color: #fff; font-size: 28px; font-weight: 650; z-index: 1; }
+.ml-app-copy { min-width: 0; }
+.ml-app-name { display: flex; align-items: center; gap: 5px; min-width: 0; }
+.ml-app-title { font-size: 15px; line-height: 1.3; color: var(--ml-text) !important; font-weight: 600; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; letter-spacing: -.15px; min-width: 0; }
+.ml-app-copy p { margin: 3px 0 0; font-size: 13px; color: var(--ml-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ml-app-action { text-align: center; align-self: center; }
+.ml-app-action small { font-size: 9px; color: var(--ml-muted); display: block; margin-top: 4px; }
+.ml-catalog-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 26px; }
+.ml-catalog-grid .ml-app-row::after { border-bottom: 1px solid var(--ml-line); }
+.ml-results-heading { display: flex; justify-content: space-between; font-size: 12px; color: var(--ml-muted); margin: 0 0 12px; }
+
+/* --- danh mục · .category-row --- */
+.ml-category-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 30px; }
+.ml-category-row { display: flex; align-items: center; gap: 15px; min-height: 61px; color: var(--ml-text) !important; position: relative; text-decoration: none !important; }
+.ml-category-row > span:nth-child(2) { flex: 1; padding: 19px 0; border-bottom: 1px solid var(--ml-line); font-size: 16px; }
+.ml-category-row:hover > span:nth-child(2), .ml-category-row.is-hover > span:nth-child(2) { text-decoration: underline; }
+.ml-category-row > small { color: var(--ml-muted); font-size: 12px; }
+.ml-category-glyph .ms { font-size: 31px; font-variation-settings: "wght" 400; }
+.ml-cat-productivity .ml-category-glyph { color: var(--ml-cat-productivity); }
+.ml-cat-photo .ml-category-glyph { color: var(--ml-cat-photo); }
+.ml-cat-design .ml-category-glyph { color: var(--ml-cat-design); }
+.ml-cat-video .ml-category-glyph { color: var(--ml-cat-video); }
+.ml-cat-music .ml-category-glyph { color: var(--ml-cat-music); }
+.ml-cat-utility .ml-category-glyph { color: var(--ml-cat-utility); }
+
+/* --- editorial · .editorial-card .editorial-art .art-orb --- */
+.ml-editorial-card { flex: 0 0 calc((100% - 24px) / 2); min-width: 300px; scroll-snap-align: start; display: block; color: var(--ml-text) !important; text-decoration: none !important; }
+.ml-editorial-copy { padding: 2px 2px 12px; }
+.ml-editorial-copy h2 { font-size: 20px; line-height: 1.2; margin: 5px 0; font-weight: 500; letter-spacing: -.2px; }
+.ml-editorial-copy p { font-size: 17px; line-height: 1.3; color: var(--ml-muted); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 1; overflow: hidden; margin: 0; }
+.ml-editorial-art { position: relative; aspect-ratio: 1.58; border-radius: 13px; background: var(--ml-art-bg); overflow: hidden; isolation: isolate; border: 1px solid #00000008; }
+:root[data-mode="dark"] .ml-editorial-art, :root[data-mode="dark"] .ml-collection-art, :root[data-mode="dark"] .ml-collection-intro { filter: brightness(.78); }
+.ml-art-orb { position: absolute; width: 75%; aspect-ratio: 1; border-radius: 50%; right: -12%; top: -32%; background: #ffffff5c; box-shadow: -40px 110px 0 12px #ffffff35; transform: rotate(-30deg); }
+.ml-art-apps { position: absolute; inset: 13% 14% 32%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 8%; align-items: center; justify-items: center; transform: rotate(-9deg); }
+.ml-art-apps i { height: 100%; aspect-ratio: 1; border-radius: 24%; background: #ffffffb0; box-shadow: 0 10px 12px #0003; display: grid; place-items: center; font: 500 8px var(--ml-font); font-style: normal; color: var(--ml-art-ink); }
+.ml-art-apps i:nth-child(2n) { transform: translateY(6px); }
+.ml-art-symbol { position: absolute; inset: 0; display: grid; place-items: center; color: var(--ml-art-ink); opacity: .85; }
+.ml-art-symbol .ms { font-size: 110px; font-variation-settings: "wght" 200; transform: rotate(-9deg); }
+.ml-art-label { position: absolute; bottom: 17px; left: 22px; right: 22px; display: flex; align-items: center; gap: 7px; color: var(--ml-art-ink); font-size: 12px; font-weight: 600; }
+.ml-art-label .ms { font-size: 16px; }
+
+/* --- bộ sưu tập · .collection-card .collection-intro --- */
+.ml-collection-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
+.ml-collection-card { color: var(--ml-text) !important; min-width: 0; display: block; text-decoration: none !important; }
+.ml-collection-art { aspect-ratio: 1.58; background: var(--ml-art-bg); border-radius: 12px; display: grid; place-items: center; overflow: hidden; margin-bottom: 12px; }
+.ml-collection-apps { display: flex; align-items: center; justify-content: center; gap: 8%; padding: 11%; width: 100%; height: 100%; }
+.ml-collection-apps i { width: 24%; max-width: 80px; aspect-ratio: 1; border-radius: 22%; background: #ffffffb0; box-shadow: 0 8px 8px #0002; }
+.ml-collection-card h3 { margin: 4px 0; font-size: 18px; line-height: 1.35; }
+.ml-collection-card p { font-size: 14px; color: var(--ml-muted); line-height: 1.4; margin: 0; }
+.ml-collection-intro { background: var(--ml-art-bg); padding: 36px; border-radius: 14px; color: var(--ml-art-ink); }
+.ml-collection-intro .ml-eyebrow { color: inherit; }
+.ml-collection-intro h1 { margin: 10px 0 12px; max-width: 650px; }
+.ml-collection-intro p { max-width: 800px; margin: 0; }
+
+/* --- spotlight · .product-spotlight --- */
+.ml-spotlight { position: relative; isolation: isolate; overflow: hidden; background: var(--ml-spot-bg); color: #fff; border-radius: 20px; min-height: 390px; border: 1px solid var(--ml-spot-line); box-shadow: 0 16px 40px #04162d10; }
+.ml-spotlight-art { position: absolute; inset: 0; z-index: -2; background: radial-gradient(circle at 78% 50%, #1f5aa0 0, transparent 45%), var(--ml-spot-bg); color: #ffffff66; display: grid; place-items: center end; padding-right: 12%; font-size: 11px; }
+.ml-spotlight::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: linear-gradient(90deg, #06172ed9 0%, #07192cb3 35%, #06182e00 63%); }
+.ml-spotlight-copy { width: 48%; padding: 42px 0 42px 42px; }
+.ml-spotlight-identity { display: inline-flex; align-items: center; gap: 12px; color: #fff !important; text-decoration: none !important; }
+.ml-spotlight-identity .ml-ph { width: 52px; height: 52px; border-radius: 12px; font-size: 8px; background: #ffffff26; color: #ffffffaa; }
+.ml-spotlight-identity span { display: grid; gap: 3px; }
+.ml-spotlight-identity small { font-size: 10px; font-weight: 650; letter-spacing: 1.3px; color: var(--ml-spot-eyebrow); }
+.ml-spotlight-identity strong { font-size: 19px; line-height: 1.2; }
+.ml-spotlight-copy h2 { font-size: clamp(27px, 2.5vw, 42px); line-height: 1.12; letter-spacing: -1px; margin: 22px 0 14px; font-weight: 700; text-wrap: balance; }
+.ml-spotlight-copy > p { font-size: 15px; line-height: 1.55; max-width: 460px; color: var(--ml-spot-copy); margin: 0; }
+.ml-spotlight-actions { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; margin-top: 26px; }
+.ml-spotlight-actions .ml-button { background: #fff; color: var(--ml-spot-btn-ink) !important; font-size: 14px; padding: 11px 17px; }
+.ml-spotlight-actions .ml-button:hover, .ml-spotlight-actions .ml-button.is-hover { background: var(--ml-spot-btn-hover); }
+.ml-spotlight-actions > span { font-size: 14px; font-weight: 650; line-height: 1.4; color: #fff; }
+.ml-spotlight-actions small { display: block; font-weight: 400; font-size: 12px; color: var(--ml-spot-small); margin-top: 3px; }
+
+/* --- trang sản phẩm · .product-hero .product-facts .detail-section --- */
+.ml-product-hero { display: flex; gap: 28px; padding: 12px 0 32px; align-items: center; }
+.ml-product-icon { width: 128px; height: 128px; flex-shrink: 0; position: relative; isolation: isolate; border-radius: 27px; background: var(--ml-surface); box-shadow: var(--ml-shadow); overflow: hidden; }
+.ml-product-icon .ml-ph { position: absolute; inset: 0; }
+.ml-product-heading { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.ml-product-title h1 { font-size: 29px; letter-spacing: -.8px; margin: 0 0 6px; line-height: 1.15; }
+.ml-product-title > p { font-size: 17px; color: var(--ml-muted); margin: 0; }
+.ml-product-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 23px; }
+.ml-product-facts { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px; border-block: 1px solid var(--ml-line); padding: 22px 0; text-align: center; align-items: start; }
+.ml-product-facts small { display: block; font-size: 10px; color: var(--ml-muted); font-weight: 600; margin-bottom: 7px; letter-spacing: .15px; }
+.ml-product-facts strong { display: block; font-size: 16px; font-weight: 650; color: var(--ml-muted); line-height: 1.4; }
+.ml-detail-section { border-bottom: 1px solid var(--ml-line); padding: 27px 0; }
+.ml-detail-section > h2 { margin: 0 0 17px; font-size: 23px; line-height: 1.25; letter-spacing: -.45px; }
+.ml-release-summary { display: flex; align-items: flex-start; gap: 32px; font-size: 14px; }
+.ml-release-summary > .ml-prose { flex: 1; }
+.ml-release-summary aside { color: var(--ml-muted); display: flex; flex-direction: column; gap: 5px; text-align: right; flex-shrink: 0; font-size: 13px; }
+.ml-detail-section details { margin-top: 16px; font-size: 14px; }
+.ml-detail-section summary { color: var(--ml-accent); cursor: pointer; }
+.ml-history-item { padding: 15px 0; border-bottom: 1px solid var(--ml-line); }
+.ml-history-item h3 { margin: 0; font-size: 18px; }
+.ml-history-item p { margin: 8px 0 0; }
+.ml-prose { font-size: 15px; line-height: 1.7; max-width: 1100px; }
+.ml-expandable-content { max-height: 155px; overflow: hidden; }
+.ml-expandable [data-expand] { float: right; background: var(--ml-bg); padding-left: 16px; margin-top: 6px; }
+.ml-expandable::after { content: ""; display: block; clear: both; }
+.ml-feature-block { margin-top: 23px; font-size: 14px; }
+.ml-feature-block h3 { font-size: 16px; margin: 0; }
+.ml-feature-block ul { padding-left: 22px; margin: 8px 0 0; }
+.ml-feature-block li + li { margin-top: 6px; }
+.ml-info-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 25px 32px; font-size: 14px; margin: 0; }
+.ml-info-grid dt { color: var(--ml-muted); margin-bottom: 4px; }
+.ml-info-grid dd { margin: 0; line-height: 1.6; overflow-wrap: anywhere; }
+.ml-official-links { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 26px; }
+.ml-official-links a { display: flex; gap: 7px; font-size: 14px; align-items: center; }
+.ml-official-links .ms { font-size: 18px; }
+.ml-preview-item { padding: 0; flex: 0 0 calc((100% - 24px) / 2); min-width: 260px; scroll-snap-align: start; aspect-ratio: 1.6; display: flex; align-items: center; justify-content: center; border: 1px solid var(--ml-line); background: var(--ml-surface); border-radius: 8px; overflow: hidden; }
+.ml-preview-item .ml-ph { width: 100%; height: 100%; }
+.ml-preview-platform { display: flex; align-items: center; gap: 8px; font-size: 12px; margin-top: 14px; }
+.ml-preview-platform .ms { font-size: 16px; }
+.ml-update-card { display: flex; gap: 16px; padding: 26px 0; border-bottom: 1px solid var(--ml-line); }
+.ml-update-card > .ml-ph { width: 56px; height: 56px; border-radius: 12px; flex-shrink: 0; font-size: 8px; }
+.ml-update-card p { margin: 7px 0; font-size: 14px; }
+.ml-unavailable { max-width: 620px; padding: 16px; border: 1px dashed var(--ml-line); border-radius: 10px; background: var(--ml-surface); font-size: 14px; }
+
+/* --- blog · .blog-feature .blog-card .blog-reader .blog-prose .blog-aside --- */
+.ml-blog-feature { display: grid; grid-template-columns: 1fr 1.1fr; min-height: 320px; border-radius: 18px; overflow: hidden; background: var(--ml-surface); color: var(--ml-text) !important; border: 1px solid var(--ml-line); text-decoration: none !important; }
+.ml-blog-feature-copy { padding: 32px; align-self: center; }
+.ml-blog-feature h2 { font-size: clamp(25px, 2.5vw, 38px); letter-spacing: -1px; margin: 12px 0; line-height: 1.25; }
+.ml-blog-feature p { color: var(--ml-muted); font-size: 15px; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin: 0; }
+.ml-blog-feature small { display: block; margin: 16px 0; color: var(--ml-muted); font-size: 12px; }
+.ml-blog-feature-image { display: flex; align-items: stretch; min-width: 0; }
+.ml-blog-feature-image .ml-ph { width: 100%; min-height: 200px; }
+.ml-blog-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 34px 24px; }
+.ml-blog-card { min-width: 0; }
+.ml-blog-card-cover { display: block; aspect-ratio: 1.7; background: var(--ml-surface); border-radius: 13px; overflow: hidden; border: 1px solid var(--ml-line); }
+.ml-blog-card-cover .ml-ph { width: 100%; height: 100%; transition: transform .2s; }
+.ml-blog-card-cover:hover .ml-ph, .ml-blog-card-cover.is-hover .ml-ph { transform: scale(1.025); }
+.ml-blog-card-copy { padding-top: 14px; }
+.ml-blog-card-copy > .ml-eyebrow { font-size: 10px; letter-spacing: .7px; text-transform: uppercase; }
+.ml-blog-card h3 { font-size: 19px; line-height: 1.35; margin: 6px 0 8px; letter-spacing: -.2px; }
+.ml-blog-card h3 a { display: block; color: var(--ml-text) !important; }
+.ml-blog-card p { color: var(--ml-muted); font-size: 13px; line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin: 0 0 13px; }
+.ml-blog-card small { font-size: 11px; color: var(--ml-muted); }
+.ml-blog-card small span { padding-inline: 6px; }
+.ml-blog-head h1 { font-size: clamp(29px, 2.5vw, 36px); line-height: 1.18; margin: 12px 0 16px; letter-spacing: -.9px; }
+.ml-blog-deck { font-size: 15px; line-height: 1.65; color: var(--ml-muted); margin: 0; }
+.ml-byline { display: flex; gap: 11px; align-items: center; margin-top: 24px; font-size: 13px; }
+.ml-author-mark { width: 37px; height: 37px; background: linear-gradient(135deg, var(--ml-system-blue), var(--ml-author-b)); color: #fff; border-radius: 50%; display: grid; place-items: center; font-weight: 750; flex-shrink: 0; }
+.ml-byline small { display: block; color: var(--ml-muted); margin-top: 3px; font-size: 11px; }
+.ml-byline .ml-edit-link { margin-left: auto; }
+.ml-blog-prose { font-size: 16px; line-height: 1.8; min-width: 0; overflow-wrap: anywhere; }
+.ml-blog-prose > * { margin: 0 0 1.25em; }
+.ml-blog-prose h2 { font-size: 27px; line-height: 1.35; margin: 1.7em 0 .7em; letter-spacing: -.35px; }
+.ml-blog-prose h3 { font-size: 23px; line-height: 1.35; margin: 1.7em 0 .7em; letter-spacing: -.35px; }
+.ml-blog-prose h2:first-child { margin-top: 0; }
+.ml-blog-prose a { text-decoration: underline; text-underline-offset: 3px; }
+.ml-blog-prose blockquote { border-left: 3px solid var(--ml-accent); padding: 16px 20px; background: var(--ml-surface); border-radius: 0; margin-block: 20px; margin-inline: 0; }
+.ml-blog-prose pre { white-space: pre-wrap; overflow-wrap: anywhere; max-width: 100%; padding: 18px; border-radius: 10px; background: var(--ml-surface); border: 1px solid var(--ml-line); font: 14px/1.6 var(--ml-mono); }
+.ml-blog-prose code { background: var(--ml-surface); border-radius: 4px; padding: 2px 4px; font-size: .85em; font-family: var(--ml-mono); }
+.ml-blog-prose pre code { padding: 0; font-size: inherit; }
+.ml-blog-prose figure { margin: 24px 0; }
+.ml-blog-prose figure .ml-ph { aspect-ratio: 16 / 9; border-radius: 10px; margin: 0 auto 12px; }
+.ml-blog-prose figcaption { color: var(--ml-muted); font-size: 13px; text-align: center; line-height: 1.5; }
+.ml-blog-prose table { display: block; overflow-x: auto; max-width: 100%; border-collapse: collapse; font-size: 15px; }
+.ml-blog-prose td, .ml-blog-prose th { padding: 10px 14px; border: 1px solid var(--ml-line); }
+.ml-blog-prose mark { background: var(--ml-mark); color: inherit; }
+.ml-blog-prose hr { border: 0; border-top: 1px solid var(--ml-line); margin: 30px 0; }
+.ml-toc summary { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 13px; font-weight: 650; cursor: pointer; list-style: none; }
+.ml-toc summary::-webkit-details-marker { display: none; }
+.ml-toc summary > span { font-size: 10px; font-weight: 400; color: var(--ml-muted); white-space: nowrap; }
+.ml-toc nav { display: grid; gap: 2px; margin-top: 12px; max-height: 180px; overflow-y: auto; }
+.ml-toc nav a { display: block; padding: 7px 9px; border-left: 2px solid transparent; border-radius: 0; font-size: 11px; color: var(--ml-muted) !important; line-height: 1.5; text-decoration: none !important; }
+.ml-toc nav a:hover, .ml-toc nav a.is-hover { color: var(--ml-accent) !important; }
+.ml-toc nav a[aria-current=location] { color: var(--ml-accent) !important; border-left-color: var(--ml-accent); background: var(--ml-pill); font-weight: 600; }
+.ml-aside { font-size: 13px; min-width: 0; }
+.ml-aside-section { border-top: 1px solid var(--ml-line); padding-top: 19px; margin: 20px 0 0; }
+.ml-aside-section:first-child { border-top: 0; padding-top: 0; margin-top: 0; }
+.ml-aside-section h2 { font-size: 12px; line-height: 1.4; margin: 0 0 12px; font-weight: 650; }
+.ml-aside-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 4px; }
+.ml-aside-heading h2 { margin-bottom: 0; }
+.ml-aside-heading a { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; color: var(--ml-muted) !important; text-decoration: none !important; }
+.ml-aside-heading a:hover, .ml-aside-heading a.is-hover { background: var(--ml-surface); color: var(--ml-accent) !important; }
+.ml-aside-heading .ms { font-size: 14px; }
+.ml-next-story { display: flex; align-items: center; gap: 11px; padding: 11px 0; color: var(--ml-text) !important; border-bottom: 1px solid var(--ml-line); text-decoration: none !important; }
+.ml-next-story:last-child { border-bottom: 0; padding-bottom: 0; }
+.ml-next-story:hover strong, .ml-next-story.is-hover strong { color: var(--ml-accent); }
+.ml-next-thumb { display: grid; place-items: center; width: 62px; height: 49px; flex-shrink: 0; border-radius: 7px; overflow: hidden; background: var(--ml-surface); }
+.ml-next-thumb .ml-ph { width: 100%; height: 100%; font-size: 7px; }
+.ml-next-story > span:last-child { min-width: 0; }
+.ml-next-story strong { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; font-size: 12px; font-weight: 600; line-height: 1.45; }
+.ml-next-story small { display: block; color: var(--ml-muted); font-size: 10px; line-height: 1.5; margin-top: 4px; }
+.ml-blog-apps > a { display: flex; align-items: center; gap: 10px; color: var(--ml-text) !important; margin: 13px 0 0; text-decoration: none !important; }
+.ml-blog-apps > a > .ml-ph { width: 40px; height: 40px; border-radius: 9px; border: 1px solid var(--ml-line); flex-shrink: 0; font-size: 7px; }
+.ml-blog-apps strong { font-size: 12px; font-weight: 600; }
+.ml-blog-apps small { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; color: var(--ml-muted); font-size: 10px; line-height: 1.5; margin-top: 3px; }
+.ml-blog-apps > a:hover strong, .ml-blog-apps > a.is-hover strong { color: var(--ml-accent); }
+.ml-featured-app { display: block; background: var(--ml-feat-bg); color: #fff !important; border-radius: 12px; overflow: hidden; text-decoration: none !important; max-width: 300px; }
+.ml-featured-app:hover, .ml-featured-app.is-hover { box-shadow: 0 4px 15px #007aff22; }
+.ml-featured-app-art { display: block; height: 79px; background: var(--ml-feat-art); color: #ffffff66; font-size: 10px; display: grid; place-items: center; }
+.ml-featured-app-copy { display: block; padding: 13px 14px; }
+.ml-featured-app-name { display: flex; align-items: center; gap: 9px; }
+.ml-featured-app-name .ml-ph { width: 34px; height: 34px; border-radius: 8px; font-size: 6px; background: #ffffff26; color: #ffffffaa; }
+.ml-featured-app-name strong { font-size: 15px; font-weight: 650; }
+.ml-featured-app-tagline { display: block; font-size: 12px; line-height: 1.5; color: var(--ml-feat-copy); margin-top: 9px; }
+.ml-featured-app-action { display: flex; align-items: center; gap: 3px; margin-top: 13px; font-size: 11px; color: var(--ml-feat-action); font-weight: 550; }
+.ml-featured-app-action .ms { font-size: 12px; }
+.ml-featured-app-action small { margin-left: auto; font-size: 10px; font-weight: 400; color: var(--ml-feat-copy); }
+.ml-all-stories { display: flex; gap: 7px; align-items: center; font-size: 11px; line-height: 1.5; margin-top: 20px; border-top: 1px solid var(--ml-line); padding-top: 15px; }
+.ml-all-stories > .ms { font-size: 16px; }
+.ml-all-stories > .ms:last-child { margin-left: auto; font-size: 12px; }
+.ml-article-footer { border-top: 1px solid var(--ml-line); padding-top: 22px; }
+.ml-article-footer p { font-size: 12px; color: var(--ml-muted); line-height: 1.6; margin: 0 0 16px; }
+.ml-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* --- nhập liệu · .search-field .catalog-filters .filter-fields .check-label .form-card --- */
+.ml-search-field { display: flex; align-items: center; gap: 10px; border: 1px solid var(--ml-line); border-radius: 12px; padding: 8px 12px; max-width: 640px; background: var(--ml-surface); }
+.ml-search-field > .ms { color: var(--ml-muted); font-size: 19px; }
+.ml-search-field input { border: 0; background: none; min-width: 0; flex: 1; color: var(--ml-text); font: 14px var(--ml-font); outline: none; padding: 0; }
+.ml-search-field input::placeholder { color: var(--ml-muted); opacity: 1; }
+.ml-search-field.blog { border: 0; padding: 9px 12px; max-width: 100%; }
+.ml-filters summary { display: flex; align-items: center; gap: 7px; cursor: pointer; color: var(--ml-accent); font-size: 14px; list-style: none; }
+.ml-filters summary::-webkit-details-marker { display: none; }
+.ml-filters summary .ms { font-size: 20px; }
+.ml-filters summary > span { color: var(--ml-muted); margin-left: 8px; font-size: 12px; }
+.ml-filter-fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 15px; padding: 18px; background: var(--ml-surface); border-radius: 12px; }
+.ml-filter-fields label { font-size: 12px; color: var(--ml-muted); }
+.ml-filter-actions { display: flex; gap: 14px; align-items: center; grid-column: 1 / -1; }
+.ml-input, .ml-select, .ml-textarea { color: var(--ml-text); border: 1px solid var(--ml-line); background: var(--ml-bg); padding: 9px 11px; border-radius: 8px; width: 100%; max-width: 100%; font: 16px var(--ml-font); display: block; }
+.ml-select { font-size: 14px; margin-top: 4px; }
+.ml-input::placeholder, .ml-textarea::placeholder { color: var(--ml-muted); opacity: 1; }
+.ml-input:focus-visible, .ml-select:focus-visible, .ml-textarea:focus-visible, .ml-input.is-focus, .ml-select.is-focus { outline: var(--ml-focus); outline-offset: 3px; border-radius: 6px; }
+.ml-check { display: flex; align-items: center; gap: 8px; color: var(--ml-text) !important; font-size: 12px; }
+.ml-check input { accent-color: var(--ml-accent); margin: 0; }
+.ml-form-card { max-width: 820px; padding: 26px; border: 1px solid var(--ml-line); border-radius: 13px; background: var(--ml-bg); }
+.ml-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.ml-form-grid > label, .ml-field { display: block; font-size: 13px; font-weight: 500; min-width: 0; }
+.ml-form-grid > label > .ml-input, .ml-form-grid > label > .ml-select, .ml-form-grid > label > .ml-textarea { margin-top: 6px; min-height: 42px; }
+.ml-full { grid-column: 1 / -1; }
+.ml-form-hint { display: block; font-size: 12px; color: var(--ml-muted); margin-top: 5px; font-weight: 400; }
+.ml-form-actions { display: flex; align-items: center; gap: 12px; margin-top: 22px; }
+.ml-platform-field { min-width: 0; margin: 0; padding: 12px 16px 16px; border: 1px solid var(--ml-line); border-radius: 10px; }
+.ml-platform-field legend { padding: 0 6px; font-size: 13px; font-weight: 500; }
+.ml-platform-field .ml-form-hint { margin: 0 0 10px; }
+.ml-platform-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.ml-platform-options .ml-check { gap: 10px; min-height: 42px; padding: 8px 10px; border-radius: 8px; background: var(--ml-surface); cursor: pointer; font-size: 14px; }
+.ml-platform-options .ml-check:has(:checked) { background: var(--ml-pill); box-shadow: inset 0 0 0 1px var(--ml-accent); }
+.ml-platform-options input { width: 18px; height: 18px; flex-shrink: 0; }
+
+/* --- phản hồi · .notice .empty-state #toast .image-dialog .share-dialog .login-card --- */
+.ml-notice { padding: 12px 16px; background: var(--ml-notice-bg); border: 1px solid var(--ml-notice-line); border-radius: 9px; font-size: 14px; }
+.ml-notice.error { background: var(--ml-error-bg); border-color: var(--ml-error-line); color: var(--ml-error); }
+.ml-empty { text-align: center; padding: 50px 20px; max-width: 640px; margin: auto; }
+.ml-empty > .ms { color: var(--ml-muted); font-size: 46px; margin-bottom: 18px; }
+.ml-empty h2 { font-size: 25px; line-height: 1.35; margin: 0; }
+.ml-empty p { margin: 12px 0 21px; color: var(--ml-muted); }
+.ml-toast { display: inline-block; padding: 12px 22px; background: var(--ml-text); color: var(--ml-bg); border-radius: 30px; font-size: 14px; box-shadow: var(--ml-shadow); }
+.ml-dialog-backdrop { position: relative; border-radius: 12px; padding: 28px; display: grid; place-items: center; width: 100%; }
+.ml-dialog-backdrop.image { background: var(--ml-backdrop); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+.ml-dialog-backdrop.share { background: var(--ml-backdrop-soft); }
+.ml-image-dialog { background: var(--ml-bg); color: var(--ml-text); border-radius: 16px; padding: 18px; box-shadow: 0 20px 100px #0005; position: relative; width: min(100%, 440px); }
+.ml-image-dialog > .ml-icon-button { position: absolute; right: 14px; top: 14px; z-index: 2; }
+.ml-image-dialog > .ml-ph { aspect-ratio: 1.6; border-radius: 6px; }
+.ml-image-dialog > p { font-size: 13px; color: var(--ml-muted); padding: 12px 4px 0; margin: 0; }
+.ml-share-dialog { width: 460px; max-width: 100%; padding: 24px; border: 1px solid var(--ml-line); border-radius: 20px; background: var(--ml-bg); color: var(--ml-text); box-shadow: 0 20px 80px #0003; }
+.ml-share-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 12px; }
+.ml-share-heading h2 { font-size: 21px; margin: 0; }
+.ml-share-heading .ml-icon-button { width: 32px; height: 32px; border: 0; background: var(--ml-pill); }
+.ml-share-heading .ms { font-size: 18px; }
+.ml-share-dialog > p { font-size: 14px; color: var(--ml-muted); margin: 0; }
+.ml-share-dialog > label { display: block; font-size: 12px; font-weight: 600; margin: 20px 0 7px; }
+.ml-share-dialog > input { display: block; width: 100%; min-width: 0; border: 1px solid var(--ml-line); border-radius: 10px; padding: 11px 12px; background: var(--ml-surface); color: var(--ml-text); font: 13px var(--ml-font); }
+.ml-share-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+.ml-share-status { margin: 12px 0 0; font-size: 12px; min-height: 18px; color: var(--ml-muted); }
+.ml-login-card { max-width: 500px; margin: 0 auto; padding: 40px; border: 1px solid var(--ml-line); border-radius: 16px; text-align: center; background: var(--ml-bg); }
+.ml-login-card h1 { font-size: 27px; margin: 0; line-height: 1.15; letter-spacing: -1px; }
+.ml-login-card p { margin: 15px 0 24px; color: var(--ml-muted); font-size: 15px; }
+.ml-login-card .ml-button { width: 100%; }
+.ml-scrim-demo { position: relative; height: 140px; border-radius: 10px; overflow: hidden; background: var(--ml-bg); width: 100%; }
+.ml-scrim-demo .ml-scrim { position: absolute; inset: 0; background: var(--ml-scrim); }
+.ml-scrim-demo .ml-sheet { position: absolute; top: 0; bottom: 0; left: 0; width: 46%; background: var(--ml-sidebar); border-right: 1px solid var(--ml-line); padding: 14px; font-size: 12px; }
+
+/* --- kit-card (Tủ đồ · trang thành viên, chỉ có trong CSS) --- */
+.ml-kit-card { display: block; padding: 23px; background: var(--ml-surface); border-radius: 12px; color: var(--ml-text) !important; text-decoration: none !important; min-width: 220px; }
+.ml-kit-card .ms { color: var(--ml-accent); margin-bottom: 15px; display: block; }
+.ml-kit-card h3 { margin: 0; font-size: 18px; }
+.ml-kit-card p { font-size: 13px; color: var(--ml-muted); margin: 7px 0 0; }
+
+/* ---------- màn mẫu ---------- */
+.screens { display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-start; }
+.frame-wrap { min-width: 0; max-width: 100%; }
+.frame-scroll { overflow-x: auto; max-width: 100%; }
+.frame-cap { font-size: 12px; color: var(--ml-muted); margin-top: 10px; max-width: 760px; line-height: 1.5; }
+.frame-cap b { color: var(--ml-text); }
+.phone { width: 390px; height: 844px; zoom: .62; border-radius: 48px; border: 10px solid #1d1d1f; overflow: hidden; background: var(--ml-bg); position: relative; display: flex; flex-direction: column; flex-shrink: 0; }
+.phone .scroll { flex: 1; overflow: hidden; }
+.phone .ml-bottom-tabs { padding-bottom: 24px; }
+.desk { width: 1440px; height: 900px; zoom: .5; border-radius: 14px; border: 1px solid var(--ml-line); overflow: hidden; background: var(--ml-bg); display: flex; box-shadow: 0 20px 60px #0002; flex-shrink: 0; }
+.desk .ml-sidebar { min-height: 0; height: 100%; flex-shrink: 0; }
+.desk .main { flex: 1; min-width: 0; overflow: hidden; display: flex; flex-direction: column; }
+.desk .page { padding: 38px 44px 28px; }
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; }
+  .side { display: none; }
+  main.kit { padding: 0 16px 80px; }
+  .type-row { grid-template-columns: 1fr; gap: 4px; }
+  .grid { grid-template-columns: 1fr; }
+  .phone { zoom: .55; }
+  .desk { zoom: .24; }
+  .ml-catalog-grid, .ml-collection-grid, .ml-category-grid, .ml-blog-grid, .ml-info-grid, .ml-form-grid, .ml-filter-fields { grid-template-columns: 1fr; }
+  .ml-product-facts { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .ml-spotlight-copy { width: 100%; padding: 26px 22px; }
+  .ml-spotlight::before { display: none; }
+  .ml-blog-feature { display: flex; flex-direction: column-reverse; }
+  .ml-platform-options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ml-editorial-card { min-width: 0; flex-basis: calc(100% - 12px); }
+  .ml-app-column { min-width: 0; flex-basis: calc(100% - 18px); }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <nav class="side" aria-label="Mục lục">
+    <div class="brand"><div class="brand-mark"><span class="ms">laptop_mac</span></div><div><b>MacLife</b><small>UI kit tham chiếu</small></div></div>
+    <h6>Nền tảng</h6>
+    <a href="#color"><span class="ms">palette</span>Màu</a>
+    <a href="#type"><span class="ms">text_fields</span>Chữ</a>
+    <a href="#shape"><span class="ms">rounded_corner</span>Bo góc &amp; bóng</a>
+    <a href="#layout"><span class="ms">straighten</span>Bố cục &amp; kích thước</a>
+    <h6>Thành phần</h6>
+    <a href="#navigation"><span class="ms">side_navigation</span>Điều hướng</a>
+    <a href="#actions"><span class="ms">touch_app</span>Hành động</a>
+    <a href="#catalog"><span class="ms">apps</span>Danh sách ứng dụng</a>
+    <a href="#editorial"><span class="ms">auto_awesome_mosaic</span>Tuyển chọn &amp; bộ sưu tập</a>
+    <a href="#detail"><span class="ms">info</span>Trang sản phẩm</a>
+    <a href="#blog"><span class="ms">article</span>Blog</a>
+    <a href="#inputs"><span class="ms">edit_note</span>Nhập liệu</a>
+    <a href="#feedback"><span class="ms">campaign</span>Phản hồi &amp; hộp thoại</a>
+    <h6>Mẫu</h6>
+    <a href="#screens"><span class="ms">devices</span>Màn hình mẫu</a>
+  </nav>
+
+  <main class="kit">
+    <div class="bar" role="toolbar" aria-label="Chủ đề">
+      <div class="ctl"><span>Giao diện</span><div class="seg" id="mode">
+        <button data-v="light" aria-pressed="true"><span class="ms">light_mode</span>Sáng</button>
+        <button data-v="dark" aria-pressed="false"><span class="ms">dark_mode</span>Tối</button></div></div>
+      <div class="ctl"><span>Bảng minh hoạ</span><div class="swatches" id="swatches"></div></div>
+      <div class="grow"></div>
+      <button class="copy" id="copy-tokens"><span class="ms">data_object</span>Copy CSS token</button>
+    </div>
+
+    <div class="intro">
+      <div class="eyebrow-src">maclife.vn/open-source · /toolkit/assets/store.css → docs/maclife-ui-kit.html</div>
+      <h1>Bộ thành phần của thư viện ứng dụng MacLife</h1>
+      <p>MacLife là thư viện ứng dụng Mac dựng theo dáng App Store: sidebar xám bên trái, hàng ứng dụng ba cột, thẻ tuyển chọn có nền gradient, trang chi tiết với dải thông số. Kit chép lại hệ đó bằng HTML/CSS thuần. 11 biến màu lấy thẳng từ <code>:root</code> và <code>:root[data-theme=dark]</code> trong stylesheet của site, kể cả lớp ghi đè cuối file (<code>--muted</code>, <code>--accent</code>, <code>--action-bg</code>). Số đo lấy từ chính các rule CSS, đối chiếu với <code>getComputedStyle</code> do <code>discover.mjs</code> đo trên trang thật.</p>
+      <p>Muốn dùng lại: dán khối <code>--ml-*</code> (nút Copy CSS token) cùng phần CSS <code>.ml-*</code>. Logo, icon ứng dụng, ảnh bìa và ảnh bài viết của MacLife không được chép. Chỗ có ảnh thật thì kit để khối giữ chỗ ghi "ảnh …".</p>
+      <div class="facts"><span class="fact">sidebar 248 · 224 ≤1100 · ẩn ≤767</span><span class="fact">page-content 38/44 · 26/18 mobile</span><span class="fact">page-top 64 · mobile-header 60</span><span class="fact">app-row 64 | 1fr | 74 · cao 98</span><span class="fact">app-icon 64 r15 · product-icon 128 r27</span><span class="fact">focus 3px solid accent · offset 3</span><span class="fact">breakpoint 767 · 900 · 1100 · 1680</span></div>
+    </div>
+
+    <!-- ================= NỀN TẢNG ================= -->
+    <section class="block" id="color">
+      <header><h2>Màu</h2><p>Site chỉ có 11 biến màu đổi theo theme. Mọi màu khác là giá trị cứng trong từng rule: nền spotlight xanh đêm, sáu gradient minh hoạ, màu icon danh mục. Kit đặt tên cho chúng ở nhóm "Hằng số" để component chỉ tham chiếu biến. Bấm một ô để copy giá trị. Lưu ý: dòng đầu file khai <code>--accent:#007aff</code>, nhưng cuối file ghi đè thành <code>#006ee6</code> để chữ phụ và nhãn nút đủ tương phản. Kit dùng giá trị sau cùng.</p></header>
+      <div id="roles-groups"></div>
+    </section>
+
+    <section class="block" id="type">
+      <header><h2>Chữ</h2><p>Site không khai thang chữ bằng biến. Mọi cỡ chữ nằm thẳng trong từng rule, trên font hệ thống <code>-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif</code> (máy Apple ra SF Pro). Bảng thứ nhất là thang tiêu đề và thân bài khai cho thẻ gốc. Bảng thứ hai là các kiểu thực dùng của component, kèm cỡ ở khung mobile ≤767.</p></header>
+      <div class="spec"><div class="stage col" id="typescale"></div></div>
+      <h3 class="sub">Kiểu chữ thực dùng</h3>
+      <div class="spec"><div class="stage col" id="typeused"></div></div>
+    </section>
+
+    <section class="block" id="shape">
+      <header><h2>Bo góc &amp; bóng</h2><p>Site không có thang shape hay hệ số bo góc chung, nên kit cũng không có điều khiển shape. Mỗi component tự đặt bán kính: 22 cho nút, 18 cho pill, 15 cho icon ứng dụng (dáng squircle của macOS), 27 cho icon lớn ở trang sản phẩm. Dưới đây là mọi bán kính trong stylesheet, kèm nơi dùng.</p></header>
+      <div class="spec"><div class="stage" id="shapes" style="gap:18px;align-items:flex-start"></div></div>
+      <div class="grid wide" style="margin-top:16px">
+        <div class="spec"><div class="stage col"><div class="scroll-x">
+          <table class="tok"><thead><tr><th>Bóng</th><th>giá trị</th><th>dùng cho</th></tr></thead><tbody>
+            <tr><td>--shadow (sáng)</td><td>0 2px 7px #00000016</td><td>app-icon, product-icon, toast</td></tr>
+            <tr><td>--shadow (tối)</td><td>0 2px 9px #0005</td><td>như trên</td></tr>
+            <tr><td>theme-choice bật</td><td>0 1px 4px #00000014</td><td>nút đang chọn trong theme-picker</td></tr>
+            <tr><td>rail-arrow</td><td>0 1px 5px #0001</td><td>mũi tên cuộn rail</td></tr>
+            <tr><td>product-spotlight</td><td>0 16px 40px #04162d10</td><td>khối giới thiệu đầu trang chủ</td></tr>
+            <tr><td>image-dialog</td><td>0 20px 100px #0005</td><td>hộp xem ảnh</td></tr>
+            <tr><td>share-dialog</td><td>0 20px 80px #0003</td><td>hộp chia sẻ</td></tr>
+            <tr><td>art-apps img</td><td>drop-shadow(0 10px 12px #0003)</td><td>icon trong editorial-art</td></tr></tbody></table>
+        </div></div></div>
+        <div class="spec"><div class="stage col"><div class="scroll-x">
+          <table class="tok"><thead><tr><th>Vật liệu &amp; chuyển động</th><th>giá trị</th><th>dùng cho</th></tr></thead><tbody>
+            <tr><td>--header-bg + blur(18px)</td><td>#ffffffeb / #1c1c1eeb</td><td>page-top dính</td></tr>
+            <tr><td>bottom-tabs</td><td>--header-bg + blur(20px)</td><td>thanh tab mobile</td></tr>
+            <tr><td>sidebar-search</td><td>linear-gradient(#ffffff54,#ffffff16) · inset 0 1px 1px #ffffff9a</td><td>ô tìm trong sidebar</td></tr>
+            <tr><td>.button:hover</td><td>filter: brightness(.94)</td><td>mọi nút đặc</td></tr>
+            <tr><td>tối: art</td><td>filter: brightness(.78)</td><td>editorial-art, collection-art</td></tr>
+            <tr><td>sidebar mobile</td><td>transform .2s</td><td>trượt menu</td></tr>
+            <tr><td>sticky-product</td><td>opacity .15s</td><td>tên app hiện khi cuộn qua hero</td></tr>
+            <tr><td>blog-card-cover img</td><td>transform .2s · scale(1.025)</td><td>hover ảnh bài</td></tr></tbody></table>
+        </div></div></div>
+      </div>
+    </section>
+
+    <section class="block" id="layout">
+      <header><h2>Bố cục &amp; kích thước</h2><p>Hằng số khung đọc từ <code>--sidebar-width</code> và các media query của site. Có bốn mốc chiều rộng: ≥1680 phóng to, ≤1100 thu sidebar và chia 2 cột, ≤900 xếp blog thành một cột, ≤767 bỏ sidebar để dùng header 60 và tab dưới. Sidebar còn có hai mốc chiều cao (≤900, ≤680) để rút khoảng đệm cho vừa màn thấp.</p></header>
+      <div class="grid wide">
+        <div class="spec"><div class="stage col"><div class="scroll-x">
+          <table class="tok"><thead><tr><th>Hằng số</th><th>≥1680</th><th>mặc định</th><th>≤1100</th><th>≤767</th></tr></thead><tbody>
+            <tr><td>--sidebar-width</td><td>248</td><td>248</td><td>224</td><td>248 (ngăn kéo)</td></tr>
+            <tr><td>.page-content padding</td><td>48 / 52</td><td>38 / 44</td><td>30 / 28</td><td>26 / 18</td></tr>
+            <tr><td>max-width nội dung</td><td colspan="4">2100 · blog-reader 1120 (1320 ≥1101, 1920 ≥1680)</td></tr>
+            <tr><td>h1</td><td>38</td><td>34</td><td>34</td><td>30</td></tr>
+            <tr><td>page-top</td><td colspan="3">64, sticky, z 20</td><td>54</td></tr>
+            <tr><td>mobile-header</td><td colspan="3">ẩn</td><td>60</td></tr>
+            <tr><td>catalog-grid</td><td>3</td><td>3</td><td>2</td><td>1</td></tr>
+            <tr><td>category-grid</td><td>4</td><td>3</td><td>2</td><td>2</td></tr>
+            <tr><td>collection · blog-grid</td><td>3 · 3</td><td>3 · 3</td><td>2 · 3 (2 ≤900)</td><td>2 · 2</td></tr>
+            <tr><td>product-facts · info-grid</td><td>6 · 3</td><td>6 · 3</td><td>3 · 2</td><td>3 · 2</td></tr>
+            <tr><td>z-index</td><td colspan="4">page-top 20 · sidebar 40 · bottom-tabs 45 · scrim 55 · sidebar mở 60 · toast 90 · skip-link 99</td></tr></tbody></table>
+        </div></div></div>
+        <div class="spec"><div class="stage col"><div class="scroll-x">
+          <table class="tok"><thead><tr><th>Thành phần</th><th>mặc định</th><th>≤767</th></tr></thead><tbody>
+            <tr><td>app-row (lưới cột)</td><td>64 | 1fr | 74 · gap 12 · cao ≥98</td><td>60 | 1fr | 70 · gap 10 · ≥93</td></tr>
+            <tr><td>app-row ≥1680</td><td colspan="2">70 | 1fr | 80 · cao ≥109 · tên 17 · mô tả 14</td></tr>
+            <tr><td>app-icon</td><td>64 × 64 · r 15</td><td>60 × 60 · r 13</td></tr>
+            <tr><td>app-column (rail)</td><td>(100% − 48) / 3 · min 280</td><td>100% − 18</td></tr>
+            <tr><td>editorial-card</td><td>(100% − 24) / 2 · min 370 · art 1.58</td><td>100% − 12 · art 1.55</td></tr>
+            <tr><td>product-icon</td><td>128 · r 27 (110 ≤1100)</td><td>86 · r 20</td></tr>
+            <tr><td>product-spotlight</td><td>min-h 390 (440 ≥1680) · r 20 · chữ 48%</td><td>cột dọc · ảnh 230</td></tr>
+            <tr><td>sidebar-nav a</td><td>padding 11/12 · r 9 · 15px</td><td>—</td></tr>
+            <tr><td>pill · button</td><td>30 · min 74 / 38 · padding 8/20</td><td>pill 12px · min 67</td></tr>
+            <tr><td>icon-button</td><td>40 × 40</td><td>header 33 · page-top 36</td></tr>
+            <tr><td>blog aside</td><td>220 · gap 36 (clamp 240–300 ≥1101)</td><td>xếp dưới bài</td></tr></tbody></table>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- ================= ĐIỀU HƯỚNG ================= -->
+    <section class="block" id="navigation">
+      <header><h2>Điều hướng</h2><p>Desktop dùng sidebar cố định 248px. Dưới 767px sidebar thành ngăn kéo trượt từ trái, kèm header 60 và năm tab dưới. Trang sản phẩm và bài viết thay tiêu đề bằng thanh <code>page-top</code> dính, có nút quay lại và nút chia sẻ.</p></header>
+      <div class="grid wide">
+        <div class="spec" id="c-sidebar" data-sig="62c152b8e9 21b0fed955 898eb03f78 10f976f8c7 771eda1567 9189cd3c8b">
+          <div class="spec-h"><b>Sidebar</b><span class="kind">.sidebar</span><span class="kind">.sidebar-nav</span><span class="dp">248 × 100vh · padding 27/12/20</span></div>
+          <div class="stage surface ml-root" style="padding:0;justify-content:center;background:var(--ml-surface)">
+            <aside class="ml-sidebar">
+              <div class="ml-sidebar-top"><div class="ml-logo">logo MacLife</div></div>
+              <form class="ml-sidebar-search" role="search" onsubmit="return false"><span class="ms">search</span><input type="search" aria-label="Tìm ứng dụng" placeholder="Tìm kiếm"></form>
+              <nav class="ml-sidebar-nav" aria-label="Thư viện">
+                <a href="#c-sidebar"><span class="ms">star</span><span>Khám phá</span></a>
+                <a href="#c-sidebar"><span class="ms">apps</span><span>Ứng dụng</span></a>
+                <a href="#c-sidebar"><span class="ms">language</span><span>Công cụ web</span></a>
+                <a href="#c-sidebar" aria-current="page"><span class="ms">code</span><span>Mã nguồn mở</span></a>
+                <a href="#c-sidebar"><span class="ms">change_history</span><span>MacLife phát triển</span></a>
+                <a href="#c-sidebar"><span class="ms">verified</span><span>Verified by MacLife</span></a>
+                <a href="#c-sidebar"><span class="ms">grid_view</span><span>Danh mục</span></a>
+                <a href="#c-sidebar"><span class="ms">bookmarks</span><span>Bộ sưu tập</span></a>
+                <a href="#c-sidebar"><span class="ms">download</span><span>Cập nhật</span></a>
+                <a class="ml-sidebar-blog" href="#c-sidebar"><span class="ms">menu_book</span><span>Blog</span></a>
+              </nav>
+              <div class="ml-sidebar-bottom">
+                <details class="ml-sidebar-more" open><summary><span class="ms">menu</span> Thêm</summary>
+                  <div><a href="#c-sidebar">Cộng đồng</a><a href="#c-sidebar">Gửi đề xuất</a><a href="#c-sidebar">Quản trị</a></div></details>
+                <div class="ml-sidebar-controls"><span class="ml-theme-label">Giao diện</span>
+                  <div class="ml-theme-picker" role="group" aria-label="Giao diện">
+                    <button type="button" class="ml-theme-choice" aria-pressed="true" aria-label="Theo hệ thống"><span class="ms">desktop_windows</span></button>
+                    <button type="button" class="ml-theme-choice" aria-pressed="false" aria-label="Giao diện sáng"><span class="ms">light_mode</span></button>
+                    <button type="button" class="ml-theme-choice" aria-pressed="false" aria-label="Giao diện tối"><span class="ms">dark_mode</span></button></div></div>
+                <a class="ml-account" href="#c-sidebar"><span class="ml-avatar"><span class="ms">person</span></span><span>Đăng nhập<small>Lưu những app yêu thích</small></span></a>
+              </div>
+            </aside>
+          </div>
+          <div class="spec-f"><span class="note">Mục đang mở mang <code>aria-current="page"</code>: nền <code>--sidebar-selected</code>, chữ 600. Mục Blog có đường kẻ trên và bo góc 0. Icon gốc là SVG nét 1.7 của site, kit thay bằng Material Symbols.</span></div>
+        </div>
+
+        <div class="spec" id="c-navstates" data-sig="4d6c8f2e62 ed1bd30d7d c8a802a35f 67ec7390b9 5b8fa8d9a8 f28d18088e">
+          <div class="spec-h"><b>Mục sidebar · trạng thái</b><span class="kind">.sidebar-nav a</span><span class="dp">padding 11/12 · r 9 · 15px · icon 22</span></div>
+          <div class="stage col surface ml-root" style="background:var(--ml-sidebar)">
+            <div class="ml-sidebar-nav" style="max-width:224px">
+              <div class="fig l"><a href="#c-navstates"><span class="ms">apps</span><span>Ứng dụng</span></a><span class="cap">nghỉ</span></div>
+              <div class="fig l"><a class="is-hover" data-sig-state="ed1bd30d7d:hover" href="#c-navstates"><span class="ms">apps</span><span>Ứng dụng</span></a><span class="cap">hover · nền sidebar-selected</span></div>
+              <div class="fig l"><a class="is-on" aria-current="page" href="#c-navstates"><span class="ms">code</span><span>Mã nguồn mở</span></a><span class="cap">đang mở · aria-current=page</span></div>
+              <div class="fig l"><a class="is-on is-focus" data-sig-state="5b8fa8d9a8:focus" aria-current="page" href="#c-navstates"><span class="ms">code</span><span>Mã nguồn mở</span></a><span class="cap">đang mở + focus</span></div>
+              <div class="fig l"><a class="is-focus" data-sig-state="ed1bd30d7d:focus" href="#c-navstates"><span class="ms">apps</span><span>Ứng dụng</span></a><span class="cap">focus-visible · 3px accent, offset 3</span></div>
+              <div class="fig l"><a class="ml-sidebar-blog is-hover" data-sig-state="4d6c8f2e62:hover" href="#c-navstates"><span class="ms">menu_book</span><span>Blog</span></a><span class="cap">sidebar-blog hover</span></div>
+              <div class="fig l"><a class="ml-sidebar-blog is-focus" data-sig-state="4d6c8f2e62:focus" href="#c-navstates"><span class="ms">menu_book</span><span>Blog</span></a><span class="cap">sidebar-blog focus</span></div>
+              <div class="fig l"><a class="ml-sidebar-blog is-on is-focus" data-sig-state="f28d18088e:focus" aria-current="page" href="#c-navstates"><span class="ms">menu_book</span><span>Blog</span></a><span class="cap">sidebar-blog đang mở (trang Blog) + focus</span></div>
+            </div>
+            <div class="ml-sidebar-more" style="max-width:224px">
+              <div class="fig l"><details><summary class="is-focus" data-sig-state="67ec7390b9:focus"><span class="ms">menu</span> Thêm</summary></details><span class="cap">summary "Thêm" · focus</span></div>
+              <div class="fig l"><a class="is-hover" data-sig-state="c8a802a35f:hover" style="color:var(--ml-text);font-size:13px;margin:0 16px" href="#c-navstates">Cộng đồng</a><span class="cap" style="padding-left:16px">link trong "Thêm" · hover gạch chân</span></div>
+              <div class="fig l"><a class="is-focus" data-sig-state="c8a802a35f:focus" style="color:var(--ml-text);font-size:13px;margin:0 16px" href="#c-navstates">Cộng đồng</a><span class="cap" style="padding-left:16px">focus</span></div>
+              <div class="fig l"><details><summary class="is-focus-ua" data-sig-state="10f976f8c7:focus"><span class="ms">menu</span> Thêm</summary></details><span class="cap" style="padding-left:16px">details.sidebar-more · focus mặc định trình duyệt, site không style riêng</span></div>
+              <div class="fig l"><a class="is-hover" data-sig-state="9189cd3c8b:hover" href="#c-navstates" style="margin:0 16px"><span class="ml-logo" style="display:block">logo</span></a><span class="cap" style="padding-left:16px">link logo · hover chỉ gạch chân, không thấy trên ảnh</span></div>
+              <div class="fig l"><a class="is-focus" data-sig-state="9189cd3c8b:focus" href="#c-navstates" style="margin:0 16px;display:inline-block"><span class="ml-logo" style="display:block">logo</span></a><span class="cap" style="padding-left:16px">link logo · focus</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="spec" id="c-theme" data-sig="ba88af348a 1592fbac79">
+          <div class="spec-h"><b>Chọn giao diện</b><span class="kind">.theme-picker</span><span class="kind">.theme-choice</span><span class="dp">32 × 30 · r 7 (40 × 40 ≤767)</span></div>
+          <div class="stage surface ml-root">
+            <div class="fig"><div class="ml-theme-picker"><button class="ml-theme-choice" aria-pressed="true" aria-label="Theo hệ thống"><span class="ms">desktop_windows</span></button><button class="ml-theme-choice" aria-pressed="false" aria-label="Sáng"><span class="ms">light_mode</span></button><button class="ml-theme-choice" aria-pressed="false" aria-label="Tối"><span class="ms">dark_mode</span></button></div><span class="cap">aria-pressed=true · nền bg + bóng</span></div>
+            <div class="fig"><div class="ml-theme-picker"><button class="ml-theme-choice is-focus" data-sig-state="1592fbac79:focus" aria-pressed="true" aria-label="Theo hệ thống"><span class="ms">desktop_windows</span></button><button class="ml-theme-choice" aria-pressed="false" aria-label="Sáng"><span class="ms">light_mode</span></button><button class="ml-theme-choice" aria-pressed="false" aria-label="Tối"><span class="ms">dark_mode</span></button></div><span class="cap">nút đang chọn + focus</span></div>
+            <div class="fig"><div class="ml-theme-picker"><button class="ml-theme-choice" aria-pressed="false" aria-label="Theo hệ thống"><span class="ms">desktop_windows</span></button><button class="ml-theme-choice is-hover" data-sig-state="ba88af348a:hover" aria-pressed="false" aria-label="Sáng"><span class="ms">light_mode</span></button><button class="ml-theme-choice is-focus" data-sig-state="ba88af348a:focus" aria-pressed="false" aria-label="Tối"><span class="ms">dark_mode</span></button></div><span class="cap">hover (chữ text) · focus (offset 2)</span></div>
+          </div>
+          <div class="spec-f"><span class="note">Mobile có thêm một nút tròn <code>data-theme-toggle</code> trên header để đổi nhanh sáng/tối.</span></div>
+        </div>
+
+        <div class="spec" id="c-mobile">
+          <div class="spec-h"><b>Header &amp; tab mobile</b><span class="kind">.mobile-header</span><span class="kind">.bottom-tabs</span><span class="dp">60 · tab 9px · icon 22</span></div>
+          <div class="stage col surface ml-root" style="padding:0;overflow:hidden">
+            <header class="ml-mobile-header"><a class="ml-wordmark" href="#c-mobile">MacLife</a><div><button class="ml-icon-button" type="button" aria-label="Đổi sáng tối"><span class="ms">dark_mode</span></button><button class="ml-icon-button" type="button" aria-label="Mở menu"><span class="ms">menu</span></button></div></header>
+            <div style="height:56px"></div>
+            <nav class="ml-bottom-tabs" aria-label="Điều hướng chính"><a href="#c-mobile" aria-current="page"><span class="ms">star</span><span>Khám phá</span></a><a href="#c-mobile"><span class="ms">grid_view</span><span>Danh mục</span></a><a href="#c-mobile"><span class="ms">search</span><span>Tìm kiếm</span></a><a href="#c-mobile"><span class="ms">download</span><span>Cập nhật</span></a><a href="#c-mobile"><span class="ms">inventory_2</span><span>Tủ đồ</span></a></nav>
+          </div>
+          <div class="spec-f"><span class="note">Wordmark mobile là chữ (21px, 750, tracking −.7), không phải ảnh logo. Tab dưới cố định, nền <code>--header-bg</code> mờ, cộng thêm <code>safe-area-inset-bottom</code>.</span></div>
+        </div>
+
+        <div class="spec" id="c-drawer">
+          <div class="spec-h"><b>Ngăn kéo menu (mobile)</b><span class="kind">.sidebar.is-open</span><span class="kind">.menu-scrim</span><span class="dp">scrim #0006 · z 55/60</span></div>
+          <div class="stage surface ml-root">
+            <div class="ml-scrim-demo"><div class="ml-scrim"></div><div class="ml-sheet"><div style="display:flex;justify-content:space-between;align-items:center"><span class="ml-logo" style="width:80px">logo</span><button class="ml-icon-button" style="width:30px;height:30px" aria-label="Đóng menu"><span class="ms" style="font-size:18px">close</span></button></div><p style="margin:12px 0 0;color:var(--ml-muted)">nội dung sidebar…</p></div></div>
+          </div>
+          <div class="spec-f"><span class="note">Dưới 767px sidebar nằm ngoài màn (<code>translateX(-100%)</code>), mở bằng <code>.is-open</code> với <code>transition: transform .2s</code>, nút đóng 30 × 30 hiện ở góc. Kit vẽ khung tĩnh.</span></div>
+        </div>
+
+        <div class="spec" id="c-pagetop" data-sig="c37c73db77 a9547e63a1 c81069251b">
+          <div class="spec-h"><b>Thanh trên trang con</b><span class="kind">.page-top</span><span class="kind">.product-top.is-sticky</span><span class="dp">64 · 54 ≤767</span></div>
+          <div class="stage col surface ml-root" style="padding:0;overflow:hidden;gap:0">
+            <header class="ml-page-top"><a class="ml-icon-button" href="#c-pagetop" aria-label="Quay lại"><span class="ms">chevron_left</span></a><div class="ml-sticky-product"><span class="ml-ph">icon</span><strong>Tên ứng dụng</strong></div><div class="ml-top-actions"><a class="ml-pill ml-sticky-cta" href="#c-pagetop">Tải</a><button class="ml-icon-button" type="button" aria-label="Chia sẻ"><span class="ms">ios_share</span></button></div></header>
+            <header class="ml-page-top is-sticky"><a class="ml-icon-button" href="#c-pagetop" aria-label="Quay lại"><span class="ms">chevron_left</span></a><div class="ml-sticky-product"><span class="ml-ph">icon</span><strong>Tên ứng dụng</strong></div><div class="ml-top-actions"><button class="ml-edit-icon" type="button" aria-label="Sửa"><span class="ms">edit</span></button><a class="ml-pill ml-sticky-cta" href="#c-pagetop">Tải</a><button class="ml-icon-button" type="button" aria-label="Chia sẻ"><span class="ms">ios_share</span></button></div></header>
+            <header class="ml-page-top"><a class="ml-icon-button" href="#c-pagetop" aria-label="Quay lại Blog"><span class="ms">chevron_left</span></a><span style="font-size:13px">Blog MacLife</span><div class="ml-top-actions"><button class="ml-icon-button" type="button" aria-label="Chia sẻ bài viết"><span class="ms">ios_share</span></button></div></header>
+          </div>
+          <div class="spec-f"><span class="note">Trên: lúc hero còn trong màn, tên app ẩn (opacity 0). Giữa: cuộn qua hero thì thêm <code>.is-sticky</code>, hiện tên và nút Tải (quản trị viên thấy thêm nút sửa 32). Dưới: biến thể <code>.blog-top</code> của bài viết.</span></div>
+        </div>
+
+        <div class="spec" id="c-pagination" data-sig="8f5b415438 000ca84cab 43616cb49c 7c2b4db870">
+          <div class="spec-h"><b>Phân trang &amp; chip chủ đề</b><span class="kind">.pagination</span><span class="kind">.blog-chips</span><span class="dp">pill 30 · min 36 · gap 10</span></div>
+          <div class="stage col surface ml-root">
+            <nav class="ml-pagination" aria-label="Phân trang" style="padding:6px 0"><a class="ml-pill" href="#c-pagination" aria-current="page">1</a><a class="ml-pill" href="#c-pagination">2</a><a class="ml-pill is-hover" href="#c-pagination">3</a><a class="ml-pill is-focus" href="#c-pagination">4</a><a class="ml-pill is-focus" data-sig-state="000ca84cab:focus" aria-current="page" href="#c-pagination">1</a></nav>
+            <span class="cap">trang hiện tại · thường · hover · focus · trang hiện tại + focus</span>
+            <nav class="ml-chips" aria-label="Chủ đề Blog"><a class="ml-pill" href="#c-pagination" aria-current="page">Tất cả</a><a class="ml-pill" href="#c-pagination">Hướng dẫn</a><a class="ml-pill is-hover" data-sig-state="43616cb49c:hover" href="#c-pagination">Tips</a><a class="ml-pill is-focus" data-sig-state="43616cb49c:focus" href="#c-pagination">Hướng dẫn</a><a class="ml-pill is-focus" data-sig-state="7c2b4db870:focus" aria-current="page" href="#c-pagination">Tất cả</a></nav>
+            <span class="cap">blog-chips · đang chọn · thường · hover · focus · đang chọn + focus · cao 34, chữ muted</span>
+          </div>
+        </div>
+
+        <div class="spec" id="c-member">
+          <div class="spec-h"><b>Tab thành viên</b><span class="kind">.member-nav</span><span class="dp">gap 20 · 14px</span></div>
+          <div class="stage col surface ml-root">
+            <nav class="ml-member-nav"><a href="#c-member" aria-current="page">Đã lưu</a><a href="#c-member">Theo dõi</a><a href="#c-member">Bộ công cụ</a><a href="#c-member">Tài khoản</a></nav>
+          </div>
+          <div class="spec-f"><span class="note">Chỉ có ở khu thành viên <code>/toolkit/my</code>. robots.txt chặn khu này nên kit dựng theo CSS, không đo trên trang. Tên tab là chữ mẫu.</span></div>
+        </div>
+
+        <div class="spec" id="c-footer" data-sig="3e5822dae4 285d58746a 6cc147e62c">
+          <div class="spec-h"><b>Footer &amp; skip link</b><span class="kind">.compact-footer</span><span class="kind">.skip-link</span><span class="dp">11px · padding 23/44</span></div>
+          <div class="stage col surface ml-root" style="padding:0;gap:0">
+            <footer class="ml-footer" style="border-top:0"><a href="#c-footer">Blog</a><span>© 2026 MacLife</span><a href="#c-footer" class="is-hover" data-sig-state="285d58746a:hover">Gửi đề xuất</a><a href="#c-footer" class="is-focus" data-sig-state="285d58746a:focus">Hỗ trợ</a><span>Khám phá. Chọn công cụ phù hợp.</span></footer>
+            <div style="padding:12px 16px;display:flex;gap:16px;flex-wrap:wrap;align-items:center"><a class="ml-skip is-hover" data-sig-state="6cc147e62c:hover" href="#c-footer">Đến nội dung chính</a><a class="ml-skip is-focus" data-sig-state="6cc147e62c:focus" href="#c-footer">Đến nội dung chính</a></div>
+          </div>
+          <div class="spec-f"><span class="note">Link footer: "Gửi đề xuất" ở trạng thái hover (gạch chân, rule chung <code>a:hover</code>), "Hỗ trợ" ở trạng thái focus. Skip link trái: hover, phải: focus. Skip link nằm ở <code>top:-100px</code>, chỉ hiện ở <code>top:10px</code> khi nhận focus.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= HÀNH ĐỘNG ================= -->
+    <section class="block" id="actions">
+      <header><h2>Hành động</h2><p>Site có ít loại nút. <code>.button</code> là viên thuốc 38 cao, nền <code>--action-bg</code>, hover chỉ tối đi 6%. <code>.pill</code> là nút nhỏ nền nhạt chữ xanh, dùng cho Tải / Mở / GitHub, nút Tìm và phân trang. Còn lại là nút tròn viền 40 và link "quiet".</p></header>
+      <div class="grid wide">
+        <div class="spec" id="c-button" data-sig="77e9847fab 5176bb6966 18a54d2f75">
+          <div class="spec-h"><b>Nút chính</b><span class="kind">.button</span><span class="kind">.button.secondary</span><span class="dp">min-h 38 · padding 8/20 · r 22 · 14/600</span></div>
+          <div class="stage surface ml-root">
+            <div class="fig"><button class="ml-button">Áp dụng</button><span class="cap">nghỉ</span></div>
+            <div class="fig"><button class="ml-button is-hover" data-sig-state="77e9847fab:hover ade6409aea:hover">Áp dụng</button><span class="cap">hover · brightness .94</span></div>
+            <div class="fig"><button class="ml-button is-focus" data-sig-state="77e9847fab:focus">Áp dụng</button><span class="cap">focus</span></div>
+            <div class="fig"><a class="ml-button" href="#c-button">Tải <span class="ms">download</span></a><span class="cap">kèm icon 17</span></div>
+            <div class="fig"><button class="ml-button" disabled>Đang gửi</button><span class="cap">disabled · .55</span></div>
+          </div>
+          <div class="stage surface ml-root" style="margin-top:8px">
+            <div class="fig"><button class="ml-button secondary" aria-pressed="false"><span class="ms">bookmark</span> <span>Lưu</span></button><span class="cap">secondary</span></div>
+            <div class="fig"><button class="ml-button secondary is-hover" data-sig-state="5176bb6966:hover 18a54d2f75:hover"><span class="ms">notifications</span> <span>Theo dõi</span></button><span class="cap">secondary hover</span></div>
+            <div class="fig"><button class="ml-button secondary is-focus" data-sig-state="5176bb6966:focus 18a54d2f75:focus"><span class="ms">ios_share</span> <span>Chia sẻ bài viết</span></button><span class="cap">secondary focus</span></div>
+            <div class="fig"><button class="ml-button secondary is-active" aria-pressed="true"><span class="ms" style="font-variation-settings:'FILL' 1">bookmark</span> <span>Đã lưu</span></button><span class="cap">.is-active · #007aff16</span></div>
+            <div class="fig"><button class="ml-button lg">Gửi đề xuất</button><span class="cap">form-actions · 44</span></div>
+            <div class="fig"><button class="ml-button lg is-focus" data-sig-state="ade6409aea:focus">Gửi đề xuất</button><span class="cap">44 · focus</span></div>
+          </div>
+          <div class="spec-f"><span class="note">Lưu / Theo dõi ở trang sản phẩm là form POST, trạng thái bật ghi bằng <code>aria-pressed</code> và lớp <code>is-active</code>. Ở mobile hai nút này thu còn 11px, padding 6/10, cao 30.</span></div>
+        </div>
+
+        <div class="spec" id="c-pill" data-sig="7dd4f19143">
+          <div class="spec-h"><b>Pill hành động</b><span class="kind">.pill</span><span class="dp">min-h 30 · min-w 74 · r 18 · 13/650</span></div>
+          <div class="stage surface ml-root">
+            <div class="fig"><a class="ml-pill" href="#c-pill">Tải</a><span class="cap">nghỉ</span></div>
+            <div class="fig"><a class="ml-pill is-hover" data-sig-state="7dd4f19143:hover" href="#c-pill">Tải</a><span class="cap">hover · sidebar-selected</span></div>
+            <div class="fig"><a class="ml-pill is-focus" data-sig-state="7dd4f19143:focus" href="#c-pill">Tải</a><span class="cap">focus</span></div>
+            <div class="fig"><a class="ml-pill" href="#c-pill">Mở</a><span class="cap">công cụ web</span></div>
+            <div class="fig"><a class="ml-pill" href="#c-pill">GitHub</a><span class="cap">repo</span></div>
+            <div class="fig"><button class="ml-pill" type="submit">Tìm</button><span class="cap">trong search-field</span></div>
+            <div class="fig"><a class="ml-pill is-on" aria-current="page" href="#c-pill">1</a><span class="cap">aria-current · action-bg</span></div>
+          </div>
+          <div class="spec-f"><span class="note">Nhãn đổi theo loại sản phẩm: "Tải" cho app, "Mở" cho công cụ web, "GitHub" cho repo chỉ có mã nguồn. Mobile: 12px, min-width 67.</span></div>
+        </div>
+
+        <div class="spec" id="c-iconbutton" data-sig="29d4d32966 8fedda14ea 54f14cef7d">
+          <div class="spec-h"><b>Nút tròn &amp; mũi tên rail</b><span class="kind">.icon-button</span><span class="kind">.rail-arrow</span><span class="dp">40 · viền line / 32 × 58 r 16</span></div>
+          <div class="stage surface ml-root">
+            <div class="fig"><button class="ml-icon-button" aria-label="Quay lại"><span class="ms">chevron_left</span></button><span class="cap">nghỉ</span></div>
+            <div class="fig"><button class="ml-icon-button is-hover" data-sig-state="8fedda14ea:hover 54f14cef7d:hover" aria-label="Chia sẻ"><span class="ms">ios_share</span></button><span class="cap">hover · surface</span></div>
+            <div class="fig"><button class="ml-icon-button is-focus" data-sig-state="8fedda14ea:focus 54f14cef7d:focus" aria-label="Đóng"><span class="ms">close</span></button><span class="cap">focus</span></div>
+            <div class="fig"><button class="ml-rail-arrow" aria-label="Sau"><span class="ms">chevron_right</span></button><span class="cap">rail-arrow</span></div>
+            <div class="fig"><button class="ml-rail-arrow is-focus" data-sig-state="29d4d32966:focus" aria-label="Sau" style="outline-offset:3px;border-radius:16px"><span class="ms">chevron_right</span></button><span class="cap">rail-arrow focus</span></div>
+            <div class="fig"><button class="ml-edit-icon" aria-label="Sửa"><span class="ms">edit</span></button><span class="cap">product-edit-icon 32</span></div>
+            <div class="fig"><button class="ml-edit-icon is-hover" aria-label="Sửa"><span class="ms">edit</span></button><span class="cap">hover · nền pill</span></div>
+          </div>
+          <div class="spec-f"><span class="note">Mũi tên rail không có rule hover riêng. Biến thể <code>.rail-arrow-prev</code> nằm bên trái (left −10).</span></div>
+        </div>
+
+        <div class="spec" id="c-links" data-sig="b98018b68b">
+          <div class="spec-h"><b>Link</b><span class="kind">a · .quiet · .metadata-link · .product-edit-link</span><span class="dp">accent · hover gạch chân</span></div>
+          <div class="stage col surface ml-root" style="align-items:flex-start">
+            <div style="display:flex;gap:22px;flex-wrap:wrap;align-items:center">
+              <div class="fig l"><a href="#c-links">Xem tất cả</a><span class="cap">a · nghỉ</span></div>
+              <div class="fig l"><a href="#c-links" class="is-hover">Xem tất cả</a><span class="cap">a:hover</span></div>
+              <div class="fig l"><a class="ml-quiet" href="#c-links">Đặt lại</a><span class="cap">.quiet 15px</span></div>
+              <div class="fig l"><a class="ml-quiet is-hover" data-sig-state="b98018b68b:hover" href="#c-links">Đặt lại</a><span class="cap">.quiet hover</span></div>
+              <div class="fig l"><a class="ml-quiet is-focus" data-sig-state="b98018b68b:focus" href="#c-links">Đặt lại</a><span class="cap">.quiet focus</span></div>
+            </div>
+            <div style="display:flex;gap:22px;flex-wrap:wrap;align-items:center">
+              <div class="fig l"><span>Danh mục: <a class="ml-metadata-link" href="#c-links">Năng suất</a></span><span class="cap">metadata-link · màu chữ</span></div>
+              <div class="fig l"><a class="ml-metadata-link is-hover" href="#c-links">Năng suất</a><span class="cap">hover · offset 3</span></div>
+              <div class="fig l"><a class="ml-edit-link" href="#c-links"><span class="ms">edit</span> Sửa bài</a><span class="cap">product-edit-link 12</span></div>
+              <div class="fig l"><a class="ml-edit-link is-hover" href="#c-links"><span class="ms">edit</span> Sửa bài</a><span class="cap">hover</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="spec" id="c-verified" data-sig="5cbeb483dc">
+          <div class="spec-h"><b>Huy hiệu Verified</b><span class="kind">.verified-badge</span><span class="kind">.verified-badge-compact</span><span class="dp">11/600 · r 20 · icon 16</span></div>
+          <div class="stage surface ml-root">
+            <div class="fig"><span class="ml-verified"><span class="ms">verified</span> Verified by MacLife</span><span class="cap">trang sản phẩm</span></div>
+            <div class="fig"><div class="ml-app-name"><a class="ml-app-title" href="#c-verified">Tên ứng dụng</a><a class="ml-verified compact" href="#c-verified" aria-label="Verified by MacLife"><span class="ms">verified</span></a></div><span class="cap">compact cạnh tên app</span></div>
+            <div class="fig"><a class="ml-verified compact is-hover" data-sig-state="5cbeb483dc:hover" href="#c-verified" aria-label="Verified by MacLife"><span class="ms">verified</span></a><span class="cap">compact · hover (gạch chân vô hình)</span></div>
+            <div class="fig"><a class="ml-verified compact is-focus" data-sig-state="5cbeb483dc:focus" href="#c-verified" aria-label="Verified by MacLife"><span class="ms">verified</span></a><span class="cap">compact · focus</span></div>
+          </div>
+          <div class="spec-f"><span class="note">Bản compact là một link (20 × 24, không nền). Hover chỉ có gạch chân theo rule <code>a:hover</code> chung, không thấy được vì link không có chữ.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= DANH SÁCH ỨNG DỤNG ================= -->
+    <section class="block" id="catalog">
+      <header><h2>Danh sách ứng dụng</h2><p>Đơn vị cơ bản của site là <code>.app-row</code>: icon 64 bo 15 có bóng, tên 15/600 cắt 2 dòng, mô tả 13 một dòng, cột hành động 74 gồm pill và nhãn giá 9px. Các hàng xếp thành cột trong rail cuộn ngang (trang chủ) hoặc lưới ba cột (trang danh mục).</p></header>
+      <div class="grid wide">
+        <div class="spec full" id="c-heading" data-sig="3ae770f564 2102e3351f 43f4d893ec b33cd09794">
+          <div class="spec-h"><b>Tiêu đề trang &amp; section</b><span class="kind">.page-heading</span><span class="kind">.page-subtitle</span><span class="kind">.section-heading</span><span class="dp">h1 34/700 · p 17 muted · h2 23</span></div>
+          <div class="stage col surface ml-root">
+            <div class="ml-page-heading"><h1 class="ml-h1">Mã nguồn mở</h1><p>Chọn công cụ phù hợp với cách bạn làm việc.</p></div>
+            <div><h1 class="ml-h1">Gửi đề xuất</h1><p class="ml-subtitle">Chia sẻ một ứng dụng hoặc công cụ hữu ích. MacLife sẽ xem xét trước khi công khai.</p></div>
+            <div class="ml-section" style="padding-bottom:0"><div class="ml-section-heading" style="margin:0"><h2 class="ml-h2">MacLife tuyển chọn</h2><a href="#c-heading">Xem tất cả</a></div></div>
+          </div>
+          <div class="spec-f"><span class="note">Trang danh mục dùng <code>.page-heading</code> (mô tả 17, cách 9). Trang form và cập nhật dùng <code>.page-subtitle</code> (16, cách 14). Section mở bằng đường kẻ trên và h2 23 kèm link "Xem tất cả" 15. Mobile: h1 30, mô tả 15, h2 section 20, link 13.</span></div>
+        </div>
+
+        <div class="spec full" id="c-approw" data-sig="6eb0541259 b2e7b67eeb d7e128c9f4">
+          <div class="spec-h"><b>Hàng ứng dụng</b><span class="kind">.app-row</span><span class="kind">.app-icon</span><span class="kind">.app-title</span><span class="dp">64 | 1fr | 74 · gap 12 · ≥98</span></div>
+          <div class="stage surface ml-root" style="align-items:flex-start;gap:26px">
+            <div style="flex:1 1 300px;min-width:0">
+              <article class="ml-app-row"><a class="ml-app-icon" href="#c-approw" tabindex="-1" aria-hidden="true"><span class="ml-ph">icon app</span></a><div class="ml-app-copy"><div class="ml-app-name"><a class="ml-app-title" href="#c-approw">Tên ứng dụng</a></div><p>Một câu mô tả ngắn về việc ứng dụng làm được.</p></div><div class="ml-app-action"><a class="ml-pill" href="#c-approw">Tải</a><small>Miễn phí</small></div></article>
+              <article class="ml-app-row"><a class="ml-app-icon" href="#c-approw" tabindex="-1" aria-hidden="true"><span class="ml-icon-fallback">B</span></a><div class="ml-app-copy"><div class="ml-app-name"><a class="ml-app-title" href="#c-approw">Biến thể không có ảnh</a><a class="ml-verified compact" href="#c-approw" aria-label="Verified by MacLife"><span class="ms">verified</span></a></div><p>Ảnh icon lỗi thì hiện chữ cái đầu trên gradient xanh.</p></div><div class="ml-app-action"><a class="ml-pill" href="#c-approw">Mở</a><small>Có bản miễn phí</small></div></article>
+              <article class="ml-app-row"><a class="ml-app-icon" data-sig-state="6eb0541259:hover" href="#c-approw" tabindex="-1" aria-hidden="true"><span class="ml-ph">icon app</span></a><div class="ml-app-copy"><div class="ml-app-name"><a class="ml-app-title is-hover" data-sig-state="b2e7b67eeb:hover" href="#c-approw">Tên ứng dụng khi hover</a></div><p>Tên gạch chân khi hover (rule a:hover chung). Icon hover cũng chỉ gạch chân nên không thấy gì.</p></div><div class="ml-app-action"><a class="ml-pill is-hover" href="#c-approw">GitHub</a><small>Miễn phí</small></div></article>
+            </div>
+            <div style="flex:1 1 300px;min-width:0">
+              <div class="fig l" style="width:100%"><article class="ml-app-row no-line" style="width:100%"><a class="ml-app-icon is-focus" data-sig-state="6eb0541259:focus" href="#c-approw" style="border-radius:15px"><span class="ml-ph">icon app</span></a><div class="ml-app-copy"><div class="ml-app-name"><a class="ml-app-title is-focus" data-sig-state="b2e7b67eeb:focus" href="#c-approw">Focus trên tên</a></div><p>Icon có tabindex −1, chỉ tên và pill nhận focus từ bàn phím.</p></div><div class="ml-app-action"><a class="ml-pill is-focus" href="#c-approw">Tải</a><small>Trả phí</small></div></article><span class="cap">focus-visible · outline 3px accent (icon focus khi bấm chuột)</span></div>
+              <div class="fig l" style="width:100%"><div class="ml-unavailable">Ứng dụng này tạm ẩn khỏi thư viện. <a href="#c-approw">Xem các lựa chọn khác</a></div><span class="cap">.unavailable-app · viền đứt</span></div>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Đường kẻ dưới hàng là <code>::after</code> bắt đầu từ 76px (thẳng mép chữ), hàng cuối cột thì bỏ. Nhãn giá: Miễn phí · Có bản miễn phí · Trả phí · Chưa xác nhận.</span></div>
+        </div>
+
+        <div class="spec full" id="c-appsection" data-sig="0330fcb97f 161dbe520e">
+          <div class="spec-h"><b>Section có rail</b><span class="kind">.app-section</span><span class="kind">.app-rail</span><span class="kind">.app-column</span><span class="dp">cột (100% − 48)/3 · gap 24 · snap</span></div>
+          <div class="stage col surface ml-root">
+            <section class="ml-section" style="border-top:0;padding-top:0">
+              <div class="ml-section-heading"><h2 class="ml-h2">MacLife tuyển chọn</h2><a href="#c-appsection">Xem tất cả</a></div>
+              <div class="ml-rail-wrap">
+                <div class="ml-rail" tabindex="0" aria-label="MacLife tuyển chọn">
+                  <div class="ml-app-column">
+                    <article class="ml-app-row"><span class="ml-app-icon"><span class="ml-ph">icon</span></span><div class="ml-app-copy"><div class="ml-app-name"><a class="ml-app-title" href="#c-appsection">Ứng dụng một</a></div><p>Mô tả ngắn một dòng.</p></div><div class="ml-app-action"><a class="ml-pill" href="#c-appsection">Tải</a><small>Miễn phí</small></div></article>
+                    <article class="ml-app-row"><span class="ml-app-icon"><span class="ml-ph">icon</span></span><div class="ml-app-copy"><div class="ml-app-name"><a class="ml-app-title" href="#c-appsection">Ứng dụng hai</a></div><p>Mô tả ngắn một dòng.</p></div><div class="ml-app-action"><a class="ml-pill" href="#c-appsection">Tải</a><small>Miễn phí</small></div></article>
+                    <article class="ml-app-row"><span class="ml-app-icon"><span class="ml-ph">icon</span></span><div class="ml-app-copy"><div class="ml-app-name"><a class="ml-app-title" href="#c-appsection">Ứng dụng ba</a></div><p>Mô tả ngắn một dòng.</p></div><div class="ml-app-action"><a class="ml-pill" href="#c-appsection">Tải</a><small>Trả phí</small></div></article>
+                  </div>
+                  <div class="ml-app-column">
+                    <article class="ml-app-row"><span class="ml-app-icon"><span class="ml-ph">icon</span></span><div class="ml-app-copy"><div class="ml-app-name"><a class="ml-app-title" href="#c-appsection">Ứng dụng bốn</a></div><p>Mô tả ngắn một dòng.</p></div><div class="ml-app-action"><a class="ml-pill" href="#c-appsection">Mở</a><small>Miễn phí</small></div></article>
+                    <article class="ml-app-row"><span class="ml-app-icon"><span class="ml-ph">icon</span></span><div class="ml-app-copy"><div class="ml-app-name"><a class="ml-app-title" href="#c-appsection">Ứng dụng năm</a></div><p>Mô tả ngắn một dòng.</p></div><div class="ml-app-action"><a class="ml-pill" href="#c-appsection">Tải</a><small>Miễn phí</small></div></article>
+                    <article class="ml-app-row"><span class="ml-app-icon"><span class="ml-ph">icon</span></span><div class="ml-app-copy"><div class="ml-app-name"><a class="ml-app-title" href="#c-appsection">Ứng dụng sáu</a></div><p>Mô tả ngắn một dòng.</p></div><div class="ml-app-action"><a class="ml-pill" href="#c-appsection">GitHub</a><small>Miễn phí</small></div></article>
+                  </div>
+                  <div class="ml-app-column">
+                    <article class="ml-app-row"><span class="ml-app-icon"><span class="ml-ph">icon</span></span><div class="ml-app-copy"><div class="ml-app-name"><a class="ml-app-title" href="#c-appsection">Ứng dụng bảy</a></div><p>Mô tả ngắn một dòng.</p></div><div class="ml-app-action"><a class="ml-pill" href="#c-appsection">Tải</a><small>Miễn phí</small></div></article>
+                    <article class="ml-app-row"><span class="ml-app-icon"><span class="ml-ph">icon</span></span><div class="ml-app-copy"><div class="ml-app-name"><a class="ml-app-title" href="#c-appsection">Ứng dụng tám</a></div><p>Mô tả ngắn một dòng.</p></div><div class="ml-app-action"><a class="ml-pill" href="#c-appsection">Tải</a><small>Có bản miễn phí</small></div></article>
+                    <article class="ml-app-row"><span class="ml-app-icon"><span class="ml-ph">icon</span></span><div class="ml-app-copy"><div class="ml-app-name"><a class="ml-app-title" href="#c-appsection">Ứng dụng chín</a></div><p>Mô tả ngắn một dòng.</p></div><div class="ml-app-action"><a class="ml-pill" href="#c-appsection">Tải</a><small>Miễn phí</small></div></article>
+                  </div>
+                  <div class="ml-app-column">
+                    <article class="ml-app-row"><span class="ml-app-icon"><span class="ml-ph">icon</span></span><div class="ml-app-copy"><div class="ml-app-name"><a class="ml-app-title" href="#c-appsection">Ứng dụng mười</a></div><p>Cột thứ tư, cuộn ngang để thấy.</p></div><div class="ml-app-action"><a class="ml-pill" href="#c-appsection">Tải</a><small>Miễn phí</small></div></article>
+                  </div>
+                </div>
+                <button class="ml-rail-arrow" aria-label="Cuộn sang phải"><span class="ms">chevron_right</span></button>
+              </div>
+            </section>
+          </div>
+          <div class="spec-f"><span class="note">Mỗi cột 3 hàng, rail ẩn thanh cuộn, snap theo cột. Mũi tên rail chỉ hiện khi còn nội dung bị che. Rail nhận focus (<code>tabindex=0</code>): outline 2px accent, offset 3, bo 8.</span></div>
+        </div>
+
+        <div class="spec full" id="c-catalog">
+          <div class="spec-h"><b>Lưới danh mục</b><span class="kind">.catalog-grid</span><span class="kind">.results-heading</span><span class="dp">3 cột · gap 0/26 · 2 ≤1100 · 1 ≤767</span></div>
+          <div class="stage col surface ml-root">
+            <div class="ml-results-heading"><span>49 sản phẩm</span><span>Trang 1 / 3</span></div>
+            <div class="ml-catalog-grid">
+              <article class="ml-app-row"><span class="ml-app-icon"><span class="ml-ph">icon</span></span><div class="ml-app-copy"><div class="ml-app-name"><a class="ml-app-title" href="#c-catalog">Bộ gõ</a></div><p>Gõ tiếng Việt trên Mac.</p></div><div class="ml-app-action"><a class="ml-pill" href="#c-catalog">Tải</a><small>Miễn phí</small></div></article>
+              <article class="ml-app-row"><span class="ml-app-icon"><span class="ml-ph">icon</span></span><div class="ml-app-copy"><div class="ml-app-name"><a class="ml-app-title" href="#c-catalog">Trình nghe nhạc</a></div><p>Nghe nhạc với lời bài hát đồng bộ.</p></div><div class="ml-app-action"><a class="ml-pill" href="#c-catalog">Tải</a><small>Miễn phí</small></div></article>
+              <article class="ml-app-row"><span class="ml-app-icon"><span class="ml-ph">icon</span></span><div class="ml-app-copy"><div class="ml-app-name"><a class="ml-app-title" href="#c-catalog">Dọn dẹp</a></div><p>Dọn dữ liệu dư, gỡ ứng dụng.</p></div><div class="ml-app-action"><a class="ml-pill" href="#c-catalog">Tải</a><small>Miễn phí</small></div></article>
+              <article class="ml-app-row"><span class="ml-app-icon"><span class="ml-ph">icon</span></span><div class="ml-app-copy"><div class="ml-app-name"><a class="ml-app-title" href="#c-catalog">Sức khoẻ ổ đĩa</a></div><p>Đọc SMART, theo dõi ổ.</p></div><div class="ml-app-action"><a class="ml-pill" href="#c-catalog">Tải</a><small>Miễn phí</small></div></article>
+              <article class="ml-app-row"><span class="ml-app-icon"><span class="ml-ph">icon</span></span><div class="ml-app-copy"><div class="ml-app-name"><a class="ml-app-title" href="#c-catalog">Ghi NTFS</a></div><p>Đọc và ghi ổ NTFS.</p></div><div class="ml-app-action"><a class="ml-pill" href="#c-catalog">Tải</a><small>Miễn phí</small></div></article>
+              <article class="ml-app-row"><span class="ml-app-icon"><span class="ml-ph">icon</span></span><div class="ml-app-copy"><div class="ml-app-name"><a class="ml-app-title" href="#c-catalog">Xử lý ảnh RAW</a></div><p>Quản lý thư viện và xử lý ảnh.</p></div><div class="ml-app-action"><a class="ml-pill" href="#c-catalog">GitHub</a><small>Miễn phí</small></div></article>
+            </div>
+          </div>
+        </div>
+
+        <div class="spec" id="c-category" data-sig="5ab3cd976c">
+          <div class="spec-h"><b>Hàng danh mục</b><span class="kind">.category-row</span><span class="kind">.category-glyph</span><span class="dp">≥61 · icon 31 · 16px</span></div>
+          <div class="stage col surface ml-root">
+            <div class="ml-category-grid" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+              <a class="ml-category-row ml-cat-productivity" href="#c-category"><span class="ml-category-glyph"><span class="ms">bolt</span></span><span>Năng suất</span><small>18</small></a>
+              <a class="ml-category-row ml-cat-photo" href="#c-category"><span class="ml-category-glyph"><span class="ms">photo_camera</span></span><span>Ảnh &amp; nhiếp ảnh</span><small>10</small></a>
+              <a class="ml-category-row ml-cat-design" href="#c-category"><span class="ml-category-glyph"><span class="ms">brush</span></span><span>Thiết kế</span><small>5</small></a>
+              <a class="ml-category-row ml-cat-video" href="#c-category"><span class="ml-category-glyph"><span class="ms">movie</span></span><span>Video</span><small>10</small></a>
+              <a class="ml-category-row ml-cat-music" href="#c-category"><span class="ml-category-glyph"><span class="ms">music_note</span></span><span>Âm thanh</span><small>5</small></a>
+              <a class="ml-category-row ml-cat-utility is-hover" href="#c-category"><span class="ml-category-glyph"><span class="ms">build</span></span><span>Tiện ích</span><small>26</small></a>
+              <a class="ml-category-row" href="#c-category"><span class="ml-category-glyph"><span class="ms">smart_toy</span></span><span>AI</span><small>2</small></a>
+              <a class="ml-category-row is-focus-ua" data-sig-state="5ab3cd976c:focus" href="#c-category"><span class="ml-category-glyph"><span class="ms">terminal</span></span><span>Công cụ lập trình</span><small>4</small></a>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Sáu danh mục có màu icon riêng. AI, Tài liệu, Bảo mật, Lập trình, Self-hosted không có rule màu nên icon theo màu chữ. Hàng "Tiện ích" ở trạng thái hover, "Công cụ lập trình" ở trạng thái focus: viền mặc định của trình duyệt, site không style riêng (đo trên trang Danh mục).</span></div>
+        </div>
+
+        <div class="spec" id="c-update" data-sig="168669ca82 9b39d796ad">
+          <div class="spec-h"><b>Thẻ cập nhật</b><span class="kind">.update-card</span><span class="dp">icon 56 r 12 · padding 26/0</span></div>
+          <div class="stage col surface ml-root">
+            <article class="ml-update-card" style="padding-top:0"><span class="ml-ph">icon</span><div><a class="ml-app-title" href="#c-update">Tên ứng dụng</a><p class="ml-muted">Phiên bản 1.7.0 · 05/10/2026</p><p>Phiên bản 1.7.0 đã được nhà phát triển phát hành. Ghi chú phát hành đầy đủ hiện ngay dưới dòng này, giữ nguyên xuống dòng của bản gốc.</p></div></article>
+            <article class="ml-update-card" style="border-bottom:0"><span class="ml-ph">icon</span><div><a class="ml-app-title is-hover" href="#c-update">Ứng dụng khác</a><p class="ml-muted">Phiên bản 2.0 · 01/10/2026</p><p>Tên app hover thì gạch chân.</p></div></article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= TUYỂN CHỌN ================= -->
+    <section class="block" id="editorial">
+      <header><h2>Tuyển chọn &amp; bộ sưu tập</h2><p>Trang chủ mở bằng một khối giới thiệu nền xanh đêm, sau đó là rail thẻ tuyển chọn. Mỗi thẻ và bộ sưu tập nhận một trong sáu bảng minh hoạ (<code>.palette-0</code> … <code>.palette-5</code>): gradient nhạt kèm một màu mực cùng tông. Đổi bảng ở thanh trên để xem cả nhóm này đổi theo.</p></header>
+      <div class="grid wide">
+        <div class="spec full" id="c-spotlight" data-sig="819b4b0c1c 6698d0b99d 52b2be0e30 9f4f160fb6 be664efc11">
+          <div class="spec-h"><b>Khối giới thiệu</b><span class="kind">.product-spotlight</span><span class="kind">.spotlight-single-line</span><span class="dp">min-h 390 · r 20 · chữ 48% · padding 42</span></div>
+          <div class="stage col surface ml-root">
+            <section class="ml-spotlight" aria-label="Ứng dụng nổi bật">
+              <span class="ml-spotlight-art" aria-hidden="true">ảnh bìa sản phẩm</span>
+              <div class="ml-spotlight-copy">
+                <a class="ml-spotlight-identity" href="#c-spotlight"><span class="ml-ph">icon</span><span><small>MACLIFE GIỚI THIỆU</small><strong>Tên ứng dụng</strong></span></a>
+                <h2>Gần 50 tính năng trong 1 app</h2>
+                <p>Tăng sức mạnh cho Finder, tích hợp xử lý ảnh, PDF và media. Cùng nhiều tiện ích chọn lọc khác.</p>
+                <div class="ml-spotlight-actions"><a class="ml-button" href="#c-spotlight">Khám phá <span class="ms">arrow_forward</span></a><span>199.000đ<small>Dùng thử 7 ngày</small></span></div>
+                <div class="ml-spotlight-actions" style="margin-top:14px"><a class="ml-button is-hover" data-sig-state="6698d0b99d:hover" href="#c-spotlight">Khám phá <span class="ms">arrow_forward</span></a><span style="font-weight:400;color:var(--ml-spot-small);font-size:12px">hover · #e9f3ff + brightness .94</span><a class="ml-button is-focus" data-sig-state="6698d0b99d:focus" href="#c-spotlight">Khám phá <span class="ms">arrow_forward</span></a><span style="font-weight:400;color:var(--ml-spot-small);font-size:12px">focus</span></div>
+              </div>
+            </section>
+          </div>
+          <div class="spec-f"><span class="note">Ảnh bìa thật phủ toàn khối, lớp <code>::before</code> phủ gradient tối từ trái sang để chữ trắng đọc được. Biến thể <code>.spotlight-single-line</code> giữ tiêu đề một dòng bằng container query (<code>clamp(16px, 6.5cqi, 42px)</code>). Mobile: xếp dọc, ảnh 230 cao nằm dưới chữ. Màu cố định, không đổi theo theme.</span></div>
+        </div>
+
+        <div class="spec full" id="c-editorial" data-sig="545b0e74b4 fbbc9d28ef dfcb8b5d07">
+          <div class="spec-h"><b>Thẻ tuyển chọn</b><span class="kind">.editorial-card</span><span class="kind">.editorial-art</span><span class="kind">.palette-N</span><span class="dp">(100% − 24)/2 · art 1.58 · r 13</span></div>
+          <div class="stage surface ml-root" style="align-items:flex-start">
+            <div class="ml-rail" style="width:100%">
+              <a class="ml-editorial-card ml-pal" href="#c-editorial"><div class="ml-editorial-copy"><span class="ml-eyebrow">MACLIFE TUYỂN CHỌN</span><h2>Thiết lập và chăm sóc Mac</h2><p>Bộ gõ, tiện ích cửa sổ, dọn dung lượng và kiểm tra thiết bị.</p></div><div class="ml-editorial-art"><span class="ml-art-orb"></span><div class="ml-art-apps"><i>icon</i><i>icon</i><i>icon</i><i>icon</i><i>icon</i><i>icon</i></div><span class="ml-art-label"><span class="ms">folder</span> Thiết lập và chăm sóc Mac</span></div></a>
+              <a class="ml-editorial-card ml-p2" href="#c-editorial"><div class="ml-editorial-copy"><span class="ml-eyebrow">MACLIFE TUYỂN CHỌN</span><h2>Mã nguồn mở cho Mac</h2><p>Các app MacLife và những dự án Open Source được giữ lại trong thư viện.</p></div><div class="ml-editorial-art is-focus-ua" data-sig-state="545b0e74b4:focus"><span class="ml-art-orb"></span><div class="ml-art-symbol"><span class="ms">code</span></div><span class="ml-art-label"><span class="ms">folder</span> Biến thể không có icon app · art-symbol 110</span></div></a>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Thẻ trái theo bảng đang chọn ở thanh trên, thẻ phải cố định <code>.palette-2</code>, phần art đang ở trạng thái focus. Ở chế độ tối, phần art bị <code>brightness(.78)</code>. Icon ứng dụng trong art (6 ô, xoay −9°, ô chẵn lệch 6px) là khối giữ chỗ. Thẻ là link: hover không đổi gì (bỏ gạch chân), focus là viền mặc định của trình duyệt (đo được <code>outline: auto 1px</code>), site không style riêng.</span></div>
+        </div>
+
+        <div class="spec full" id="c-palettes">
+          <div class="spec-h"><b>Sáu bảng minh hoạ</b><span class="kind">.palette-0 … .palette-5</span><span class="dp">--art-bg · --art-ink</span></div>
+          <div class="stage surface ml-root" id="palette-strip" style="gap:12px"></div>
+        </div>
+
+        <div class="spec full" id="c-collection" data-sig="d4dc5dbe54 658d3139f9 095516c9ba afe541876a 9b02aaef2f d8e4794e72">
+          <div class="spec-h"><b>Thẻ bộ sưu tập</b><span class="kind">.collection-card</span><span class="kind">.collection-art</span><span class="dp">3 cột · gap 28 · art 1.58 r 12</span></div>
+          <div class="stage col surface ml-root">
+            <div class="ml-collection-grid">
+              <a class="ml-collection-card ml-pal" href="#c-collection"><div class="ml-collection-art"><div class="ml-collection-apps"><i></i><i></i><i></i></div></div><span class="ml-eyebrow">BỘ SƯU TẬP</span><h3>Thiết lập và chăm sóc Mac</h3><p>Bộ gõ, tiện ích cửa sổ, dọn dung lượng và kiểm tra thiết bị.</p></a>
+              <a class="ml-collection-card ml-p1" href="#c-collection"><div class="ml-collection-art"><div class="ml-collection-apps"><i></i><i></i><i></i></div></div><span class="ml-eyebrow">BỘ SƯU TẬP</span><h3>Chọn ảnh, chỉnh ảnh, làm album</h3><p>Từ chọn ảnh đến khung EXIF, watermark và album.</p></a>
+              <a class="ml-collection-card ml-p4" href="#c-collection"><div class="ml-collection-art is-focus-ua" data-sig-state="d4dc5dbe54:focus"><span class="ms" style="color:var(--ml-art-ink);font-size:64px;font-variation-settings:'wght' 200">bookmarks</span></div><span class="ml-eyebrow">BỘ SƯU TẬP</span><h3>Biến thể icon</h3><p>Không có icon app thì hiện một icon 64 màu mực. Art đang ở focus mặc định trình duyệt.</p></a>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Ba icon app (24% rộng, tối đa 80, bo 22%) là khối giữ chỗ. Mobile: 2 cột, tiêu đề 15, mô tả 12, eyebrow 10.</span></div>
+        </div>
+
+        <div class="spec full" id="c-collintro">
+          <div class="spec-h"><b>Đầu trang bộ sưu tập</b><span class="kind">.collection-intro</span><span class="dp">padding 36 · r 14 · mực art-ink</span></div>
+          <div class="stage col surface ml-root">
+            <div class="ml-collection-intro ml-pal"><span class="ml-eyebrow">BỘ SƯU TẬP</span><h1 class="ml-h1">Thiết lập và chăm sóc Mac</h1><p>Bộ gõ, tiện ích cửa sổ, dọn dung lượng và kiểm tra thiết bị. Một nhóm công cụ dùng tốt cùng nhau cho máy Mac mới.</p></div>
+          </div>
+        </div>
+
+        <div class="spec" id="c-kitcard">
+          <div class="spec-h"><b>Thẻ bộ công cụ</b><span class="kind">.kit-card</span><span class="dp">padding 23 · r 12 · 3 cột</span></div>
+          <div class="stage surface ml-root">
+            <a class="ml-kit-card" href="#c-kitcard"><span class="ms">construction</span><h3>Bộ công cụ của tôi</h3><p>Gom các app bạn đã lưu thành một bộ để chia sẻ.</p></a>
+          </div>
+          <div class="spec-f"><span class="note">Nằm trong khu thành viên (robots.txt chặn), dựng theo CSS, không đo. Chữ là chữ mẫu.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= TRANG SẢN PHẨM ================= -->
+    <section class="block" id="detail">
+      <header><h2>Trang sản phẩm</h2><p>Trang <code>/product/&lt;id&gt;</code> xếp từ trên xuống: hero (icon 128, tên, mô tả, ba nút), dải sáu thông số, rồi các <code>.detail-section</code> cách nhau bằng đường kẻ: Có gì mới, Ảnh xem trước, Giới thiệu, Thông tin, Có trong bộ sưu tập, Thêm từ nhà phát triển.</p></header>
+      <div class="grid wide">
+        <div class="spec full" id="c-hero" data-sig="7c23a64fd7 1b6767e87a 1a17d9a4ad">
+          <div class="spec-h"><b>Hero sản phẩm</b><span class="kind">.product-hero</span><span class="kind">.product-icon</span><span class="kind">.product-actions</span><span class="dp">icon 128 r 27 · gap 28 · h1 29</span></div>
+          <div class="stage col surface ml-root">
+            <section class="ml-product-hero"><div class="ml-product-icon"><span class="ml-ph">icon app 128</span></div><div class="ml-product-title"><div class="ml-product-heading"><h1>Tên ứng dụng</h1><span class="ml-verified"><span class="ms">verified</span> Verified by MacLife</span></div><p>Một câu mô tả việc ứng dụng làm được.</p><div class="ml-product-actions"><a class="ml-button" href="#c-hero">Tải <span class="ms">download</span></a><button class="ml-button secondary" aria-pressed="false"><span class="ms">bookmark</span> <span>Lưu</span></button><button class="ml-button secondary" aria-pressed="false"><span class="ms">notifications</span> <span>Theo dõi</span></button></div></div></section>
+          </div>
+          <div class="spec-f"><span class="note">Mobile: icon 86 r 20, h1 24, mô tả 13, nút Tải cao 32, hai nút phụ 30 cao chữ 11.</span></div>
+        </div>
+
+        <div class="spec full" id="c-facts" data-sig="0baed013bc f5965a6823">
+          <div class="spec-h"><b>Dải thông số</b><span class="kind">.product-facts</span><span class="dp">6 cột · nhãn 10/600 · giá trị 16/650</span></div>
+          <div class="stage col surface ml-root">
+            <div class="ml-product-facts"><div><small>NỀN TẢNG</small><strong>macOS</strong></div><div><small>GIÁ</small><strong>Miễn phí</strong></div><div><small>DANH MỤC</small><strong><a class="ml-metadata-link is-hover" data-sig-state="f5965a6823:hover" href="#c-facts">Năng suất</a></strong></div><div><small>NHÀ PHÁT TRIỂN</small><strong><a class="ml-metadata-link is-focus" data-sig-state="f5965a6823:focus" href="#c-facts">Nhà phát triển</a></strong></div><div><small>NGÔN NGỮ</small><strong>Tiếng Việt · Tiếng Anh</strong></div><div><small>PHIÊN BẢN</small><strong>1.6.1</strong></div></div>
+          </div>
+          <div class="spec-f"><span class="note">Link danh mục ở trạng thái hover, link nhà phát triển ở focus. Giá trị dùng màu muted, link danh mục và nhà phát triển giữ màu đó (<code>.metadata-link</code> = <code>color: inherit</code>). ≤1100: 3 cột. ≤767: nhãn 8px, giá trị 12px.</span></div>
+        </div>
+
+        <div class="spec full" id="c-release" data-sig="8956cc099d 2579f98a02 0e0fce6915 1c4e61deef 3599ff9da8">
+          <div class="spec-h"><b>Có gì mới &amp; lịch sử</b><span class="kind">.detail-section</span><span class="kind">.release-summary</span><span class="kind">details#version-history</span><span class="dp">padding 27/0 · aside 13 phải</span></div>
+          <div class="stage col surface ml-root">
+            <section class="ml-detail-section" style="padding-top:0"><div class="ml-section-heading"><h2 class="ml-h2">Có gì mới</h2><button class="ml-quiet is-hover" data-sig-state="1c4e61deef:hover" type="button">Lịch sử phiên bản</button></div>
+              <div class="ml-release-summary"><div class="ml-prose">Thêm kiểm tra cập nhật ngay trong ứng dụng. Sửa lỗi bộ gõ khi chuyển cửa sổ nhanh.</div><aside><span>21/09/2026</span><span>Phiên bản 1.6.1</span></aside></div>
+              <details open><summary class="is-focus-ua" data-sig-state="0e0fce6915:focus">Lịch sử phiên bản</summary><article class="ml-history-item"><h3>1.6.1</h3><p>Thêm kiểm tra cập nhật ngay trong ứng dụng.</p></article><article class="ml-history-item"><h3>1.6.0</h3><p>Giao diện cài đặt mới, hỗ trợ giao diện tối.</p></article></details>
+            </section>
+          </div>
+          <div class="spec-f"><button class="ml-quiet is-focus" data-sig-state="1c4e61deef:focus" type="button" style="font-size:12px">Lịch sử phiên bản · focus</button><span class="note">Nút "Lịch sử phiên bản" trên đang hover (gạch chân), nút bên cạnh đang focus. Summary dùng màu accent, đang ở focus mặc định trình duyệt (site không style riêng). Mobile: aside xếp thành một hàng ngang 11px dưới đoạn chữ.</span></div>
+        </div>
+
+        <div class="spec full" id="c-about" data-sig="8e4e8cd4b2 980c5c2f47 bf5042df0e 9f639eb524 0ef6ea334c">
+          <div class="spec-h"><b>Giới thiệu (thu gọn được)</b><span class="kind">.expandable</span><span class="kind">.feature-block</span><span class="dp">prose 15/1.7 · cao tối đa 155</span></div>
+          <div class="stage col surface ml-root">
+            <section class="ml-detail-section" style="padding-top:0;border-bottom:0"><h2>Giới thiệu</h2>
+              <div class="ml-expandable ml-prose"><div class="ml-expandable-content">Ứng dụng dành cho người thường xuyên gõ tiếng Việt trên Mac và muốn chuyển nhanh giữa tiếng Việt và tiếng Anh. Giao diện cài đặt hỗ trợ giao diện tối, có menu chuyển ngôn ngữ trên thanh menu.<br><br>Bản mới hỗ trợ cả Apple Silicon và Intel trên macOS 14 trở lên. Người dùng có thể kiểm tra và cài cập nhật ngay trong ứng dụng.<br><br>Ứng dụng cần quyền Trợ năng để hoạt động. Đoạn này bị cắt ở 155px, bấm "Xem thêm" để mở hết.</div><button type="button" class="ml-quiet" data-expand aria-expanded="false">Xem thêm</button></div>
+              <div style="display:flex;gap:18px;align-items:center;margin-top:10px"><button type="button" class="ml-quiet is-hover" data-sig-state="980c5c2f47:hover">Thu gọn</button><button type="button" class="ml-quiet is-focus" data-sig-state="980c5c2f47:focus">Thu gọn</button><span class="cap" style="margin:0">nút sau khi mở · hover · focus</span></div>
+              <div class="ml-feature-block"><h3>Tính năng</h3><ul><li>Telex/VNI, gõ tắt và chuyển mã</li><li>Menu VI/EN, chạy cùng macOS</li></ul></div>
+              <div class="ml-feature-block"><h3>Giới hạn</h3><ul><li>Bản cũ chưa có cập nhật tự động.</li></ul></div>
+            </section>
+          </div>
+          <div class="spec-f"><span class="note">Nút "Xem thêm" nổi bên phải, nền <code>--bg</code> để che chữ bị cắt. Lớp <code>.expanded</code> bỏ giới hạn chiều cao.</span></div>
+        </div>
+
+        <div class="spec full" id="c-preview">
+          <div class="spec-h"><b>Ảnh xem trước</b><span class="kind">.preview-rail</span><span class="kind">.preview-item</span><span class="dp">(100% − 24)/2 · min 320 · 1.6 · r 8</span></div>
+          <div class="stage col surface ml-root">
+            <div class="ml-rail"><button class="ml-preview-item" aria-label="Phóng ảnh 1"><span class="ml-ph">ảnh chụp màn hình</span></button><button class="ml-preview-item" aria-label="Phóng ảnh 2"><span class="ml-ph">ảnh chụp màn hình</span></button><button class="ml-preview-item" aria-label="Phóng ảnh 3"><span class="ml-ph">ảnh chụp màn hình</span></button></div>
+            <div class="ml-preview-platform"><span class="ms">laptop_mac</span> Mac</div>
+          </div>
+          <div class="spec-f"><span class="note">Bấm một ảnh mở <code>.image-dialog</code> (xem phần Phản hồi). Mobile: 100% − 15, tỉ lệ 1.5.</span></div>
+        </div>
+
+        <div class="spec full" id="c-info" data-sig="8bc881609e 50ecdc3619 168387e397">
+          <div class="spec-h"><b>Thông tin &amp; liên kết chính thức</b><span class="kind">.information-grid</span><span class="kind">.official-links</span><span class="kind">details.sources</span><span class="dp">3 cột · gap 25/32 · 14px</span></div>
+          <div class="stage col surface ml-root">
+            <dl class="ml-info-grid"><div><dt>Nhà phát triển</dt><dd><a class="ml-metadata-link is-hover" data-sig-state="168387e397:hover" href="#c-info">Nhà phát triển</a></dd></div><div><dt>Danh mục</dt><dd><a class="ml-metadata-link is-focus" data-sig-state="168387e397:focus" href="#c-info">Năng suất</a></dd></div><div><dt>Yêu cầu hệ thống</dt><dd>macOS 14+; Apple Silicon hoặc Intel.</dd></div><div><dt>Giấy phép</dt><dd>GPL-3.0</dd></div><div><dt>Phiên bản</dt><dd>1.6.1</dd></div><div><dt>Ngày cập nhật</dt><dd>21/09/2026</dd></div></dl>
+            <div class="ml-official-links"><a href="#c-info"><span class="ms">public</span> Website chính thức</a><a href="#c-info" class="is-hover" data-sig-state="50ecdc3619:hover"><span class="ms">download</span> Tải về</a><a href="#c-info" class="is-focus" data-sig-state="50ecdc3619:focus"><span class="ms">code</span> Mã nguồn</a></div>
+            <div class="ml-detail-section" style="border:0;padding:0"><details><summary>Nguồn thông tin</summary><ul style="margin:8px 0 0;padding-left:22px"><li><a href="#c-info">github.com</a></li></ul></details></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= BLOG ================= -->
+    <section class="block" id="blog">
+      <header><h2>Blog</h2><p>Blog dùng chung sidebar với thư viện. Trang danh sách gồm ô tìm, chip chủ đề, một bài nổi bật và lưới ba cột. Trang bài có cột đọc rộng tối đa 80ch cùng cột phụ 220–360 bám dính: mục lục, Đọc tiếp, Công cụ phù hợp và một thẻ giới thiệu ứng dụng.</p></header>
+      <div class="grid wide">
+        <div class="spec full" id="c-blogfeature" data-sig="99dce8e17e 7d55481374">
+          <div class="spec-h"><b>Bài nổi bật</b><span class="kind">.blog-feature</span><span class="dp">1fr | 1.1fr · min-h 320 · r 18</span></div>
+          <div class="stage col surface ml-root">
+            <a class="ml-blog-feature" href="#c-blogfeature"><div class="ml-blog-feature-copy"><span class="ml-eyebrow">MACLIFE CHỌN ĐỌC</span><h2>Những website miễn phí rất hữu ích</h2><p>Tổng hợp các website với công cụ online hữu ích và hoàn toàn miễn phí, chia theo nhu cầu.</p><small>Tips · 4 phút đọc</small><span class="ml-button">Đọc bài viết <span class="ms">arrow_forward</span></span></div><div class="ml-blog-feature-image"><span class="ml-ph">ảnh bìa bài viết</span></div></a>
+          </div>
+          <div class="stage col surface ml-root" style="margin-top:8px"><a class="ml-blog-feature is-focus" data-sig-state="99dce8e17e:focus" href="#c-blogfeature" style="min-height:0;border-radius:18px"><div class="ml-blog-feature-copy" style="padding:20px"><span class="ml-eyebrow">MACLIFE CHỌN ĐỌC</span><h2 style="font-size:22px;margin:8px 0 0">Trạng thái focus</h2></div><div class="ml-blog-feature-image"><span class="ml-ph" style="min-height:90px">ảnh bìa</span></div></a></div>
+          <div class="spec-f"><span class="note">≤900: xếp dọc, ảnh lên trên (<code>column-reverse</code>). Cả khối là một link, hover không đổi gì.</span></div>
+        </div>
+
+        <div class="spec full" id="c-blogcard" data-sig="ba7655853c 11a59fafa6 ced39b91f0 66e4db42c2 2730790f66">
+          <div class="spec-h"><b>Thẻ bài viết</b><span class="kind">.blog-card</span><span class="kind">.blog-card-cover</span><span class="dp">3 cột · gap 34/24 · ảnh 1.7 r 13</span></div>
+          <div class="stage col surface ml-root">
+            <div class="ml-blog-grid">
+              <article class="ml-blog-card"><a class="ml-blog-card-cover" href="#c-blogcard"><span class="ml-ph">ảnh bài viết</span></a><div class="ml-blog-card-copy"><a class="ml-eyebrow" href="#c-blogcard">Tips</a><h3><a href="#c-blogcard">Những website miễn phí rất hữu ích</a></h3><p>Tổng hợp các website với công cụ online hữu ích và hoàn toàn miễn phí.</p><small>23/07/2026 <span>·</span> 4 phút đọc</small></div></article>
+              <article class="ml-blog-card"><a class="ml-blog-card-cover is-hover" data-sig-state="ba7655853c:hover" href="#c-blogcard"><span class="ml-ph">ảnh bài viết</span></a><div class="ml-blog-card-copy"><a class="ml-eyebrow is-hover" data-sig-state="ced39b91f0:hover" href="#c-blogcard">Hướng dẫn</a><h3><a class="is-hover" data-sig-state="66e4db42c2:hover" href="#c-blogcard">Hover: ảnh phóng 1.025, tiêu đề gạch chân</a></h3><p>Ảnh trong khung phóng nhẹ trong .2s khi rê chuột lên ảnh.</p><small>12/07/2026 <span>·</span> 2 phút đọc</small></div></article>
+              <article class="ml-blog-card"><a class="ml-blog-card-cover is-focus" data-sig-state="ba7655853c:focus" href="#c-blogcard" style="display:grid;place-items:center;border-radius:13px"><span class="ms" style="font-size:72px;color:var(--ml-accent);font-variation-settings:'wght' 200">article</span></a><div class="ml-blog-card-copy"><a class="ml-eyebrow is-focus" data-sig-state="ced39b91f0:focus" href="#c-blogcard">Hướng dẫn</a><h3><a class="is-focus" data-sig-state="66e4db42c2:focus" href="#c-blogcard">Bài không có ảnh bìa</a></h3><p>Khung ảnh hiện icon accent thay ảnh. Ảnh, eyebrow và tiêu đề đều ở trạng thái focus.</p><small>01/07/2026 <span>·</span> 1 phút đọc</small></div></article>
+            </div>
+          </div>
+        </div>
+
+        <div class="spec full" id="c-article" data-sig="eb5b2ff104 5ddb7823ed e26607b4d1 1af09d81f3 35b51abb7a 51bf7589f0 95c82b8ef6 6a1e946f00 1c82c0ca2e">
+          <div class="spec-h"><b>Đầu bài &amp; nội dung</b><span class="kind">.blog-article-head</span><span class="kind">.blog-byline</span><span class="kind">.blog-prose</span><span class="dp">h1 clamp(29–36) · prose 16/1.8 (17 ≥1101)</span></div>
+          <div class="stage col surface ml-root" style="max-width:780px">
+            <header class="ml-blog-head"><div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><a class="ml-eyebrow" href="#c-article">Tips</a> <a class="ml-eyebrow is-hover" data-sig-state="1af09d81f3:hover" href="#c-article">Tips</a> <a class="ml-eyebrow is-focus" data-sig-state="1af09d81f3:focus" href="#c-article">Tips</a> <span class="cap" style="margin:0">eyebrow · hover · focus</span></div><h1>Những website miễn phí rất hữu ích</h1><p class="ml-blog-deck">Tổng hợp các website với công cụ online hữu ích và hoàn toàn miễn phí, chia theo nhu cầu.</p><div class="ml-byline"><span class="ml-author-mark">M</span><div><strong>MacLife</strong><small>23/07/2026 · 4 phút đọc</small></div><a class="ml-edit-link" href="#c-article"><span class="ms">edit</span> Sửa bài</a></div></header>
+            <figure style="margin:8px 0 0"><span class="ml-ph" style="display:grid;aspect-ratio:16/9;border-radius:12px">ảnh bìa bài viết</span></figure>
+            <article class="ml-blog-prose" aria-label="Nội dung mẫu">
+              <h2>Tải và chuyển đổi</h2>
+              <p><strong><a href="#c-article">ví-dụ.tools</a></strong> — Tải video từ hầu hết các nền tảng mạng xã hội. Đoạn văn có <code>mã nội dòng</code> và <mark>chữ được đánh dấu</mark>.</p>
+              <p><strong><a class="is-focus" data-sig-state="e26607b4d1:focus" href="#c-article">link-trong-bài.tools</a></strong> — Link trong bài khi nhận focus.</p>
+              <blockquote>Khối trích dẫn: viền trái 3px accent, nền surface.</blockquote>
+              <pre><code>brew install --cask ten-ung-dung</code></pre>
+              <h3>Bảng so sánh</h3>
+              <table><thead><tr><th>Công cụ</th><th>Giá</th><th>Nền tảng</th></tr></thead><tbody><tr><td>Công cụ A</td><td>Miễn phí</td><td>Web</td></tr><tr><td>Công cụ B</td><td>Có bản miễn phí</td><td>macOS</td></tr></tbody></table>
+              <figure><span class="ml-ph">ảnh minh hoạ trong bài</span><figcaption>Chú thích ảnh 13px, căn giữa, màu muted.</figcaption></figure>
+              <hr>
+            </article>
+            <footer class="ml-article-footer"><p>Nội dung được đăng ngày 23/07/2026. Giao diện và tính năng của phần mềm có thể thay đổi theo phiên bản.</p><button class="ml-button secondary" type="button"><span class="ms">ios_share</span> Chia sẻ bài viết</button></footer>
+          </div>
+          <div class="spec-f"><span class="note">Ảnh trong bài có lớp bố cục <code>.blog-image-small/medium/full</code> (50 / 75 / 100%) và <code>-left/-center/-right</code>, ảnh <code>cursor: zoom-in</code> mở image-dialog. Tiêu đề trong bài: h2 27, h3 23, h4 20 (mobile 24 / 21 / 19). Lệch khỏi site: site bo blockquote <code>0 10px 10px 0</code>, kit để vuông vì luật R22 của repo cấm cạnh màu trên khối bo góc.</span></div>
+        </div>
+
+        <div class="spec" id="c-toc">
+          <div class="spec-h"><b>Mục lục bài</b><span class="kind">.blog-toc</span><span class="dp">mục 11px · đang đọc: viền trái 2 accent</span></div>
+          <div class="stage col surface ml-root">
+            <details class="ml-toc" open><summary>Trong bài này <span>5 mục</span></summary><nav><a href="#c-toc">Tải và chuyển đổi</a><a href="#c-toc" aria-current="location">Chỉnh ảnh và thiết kế</a><a href="#c-toc" class="is-hover">Tài liệu và PDF</a><a href="#c-toc">Bảo mật</a><a href="#c-toc">Học tập</a></nav></details>
+          </div>
+          <div class="spec-f"><span class="note">Mục đang đọc mang <code>aria-current="location"</code> (site bo <code>0 5px 5px 0</code>, kit để vuông theo luật R22). Mục thứ ba ở trạng thái hover (chữ accent). ≤1100: mục lục vào khung viền r 10 phía trên bài, summary có dấu ⌄ / ⌃.</span></div>
+        </div>
+
+        <div class="spec" id="c-aside" data-sig="b3c1bbbfc3 c3e82afa87 1a8ce69ed1 2a97ac2290 9606970728 5bf33e0654">
+          <div class="spec-h"><b>Cột phụ bài viết</b><span class="kind">.blog-sidebar-section</span><span class="kind">.blog-next-story</span><span class="kind">.blog-apps</span><span class="dp">thumb 62 × 49 · icon 40</span></div>
+          <div class="stage col surface ml-root">
+            <aside class="ml-aside">
+              <section class="ml-aside-section"><div class="ml-aside-heading"><h2>Đọc tiếp</h2><span style="display:flex;gap:6px"><a href="#c-aside" aria-label="Xem tất cả bài Tips"><span class="ms">arrow_forward</span></a><a class="is-hover" data-sig-state="9606970728:hover" href="#c-aside" aria-label="Xem tất cả, hover"><span class="ms">arrow_forward</span></a><a class="is-focus" data-sig-state="9606970728:focus" href="#c-aside" aria-label="Xem tất cả, focus" style="border-radius:50%"><span class="ms">arrow_forward</span></a></span></div>
+                <a class="ml-next-story" href="#c-aside"><span class="ml-next-thumb"><span class="ml-ph">ảnh</span></span><span><strong>Một số phần mềm miễn phí nên cài trên Mac</strong><small>Hướng dẫn · 10 phút đọc</small></span></a>
+                <a class="ml-next-story is-hover" data-sig-state="1a8ce69ed1:hover" href="#c-aside"><span class="ml-next-thumb"><span class="ml-ph">ảnh</span></span><span><strong>Hover: tiêu đề chuyển màu accent</strong><small>Tips · 1 phút đọc</small></span></a>
+                <a class="ml-next-story is-focus" data-sig-state="1a8ce69ed1:focus" href="#c-aside"><span class="ml-next-thumb"><span class="ml-ph">ảnh</span></span><span><strong>Focus trên cả hàng</strong><small>Tips · 3 phút đọc</small></span></a></section>
+              <section class="ml-aside-section ml-blog-apps"><h2>Công cụ phù hợp</h2>
+                <a href="#c-aside"><span class="ml-ph">icon</span><span><strong>Bộ văn phòng</strong><small>Văn bản, bảng tính và trình chiếu miễn phí.</small></span></a>
+                <a href="#c-aside" class="is-hover"><span class="ml-ph">icon</span><span><strong>Tường lửa</strong><small>Kiểm soát kết nối mạng đi ra.</small></span></a></section>
+            </aside>
+          </div>
+        </div>
+
+        <div class="spec" id="c-featured" data-sig="1d4c5bd833 ae7a9e4b58 792ce16484 5e0e7cfddc 62bbb31091 10e38b84ff">
+          <div class="spec-h"><b>Thẻ giới thiệu ứng dụng</b><span class="kind">.blog-featured-app</span><span class="kind">.blog-all-stories</span><span class="dp">r 12 · art 79 (115 ≥1101)</span></div>
+          <div class="stage surface ml-root" style="align-items:flex-start">
+            <div class="fig l"><a class="ml-featured-app" href="#c-featured"><span class="ml-featured-app-art">ảnh bìa sản phẩm</span><span class="ml-featured-app-copy"><span class="ml-featured-app-name"><span class="ml-ph">icon</span><strong>Tên ứng dụng</strong></span><span class="ml-featured-app-tagline">Tăng sức mạnh cho Finder với gần 50 tính năng.</span><span class="ml-featured-app-action">Xem ứng dụng <span class="ms">arrow_forward</span><small>199.000đ</small></span></span></a><span class="cap">nghỉ</span></div>
+            <div class="fig l"><a class="ml-featured-app is-hover" data-sig-state="62bbb31091:hover" href="#c-featured"><span class="ml-featured-app-art">ảnh bìa sản phẩm</span><span class="ml-featured-app-copy"><span class="ml-featured-app-name"><span class="ml-ph">icon</span><strong>Tên ứng dụng</strong></span><span class="ml-featured-app-tagline">Hover: bóng xanh 0 4px 15px.</span></span></a><span class="cap">hover</span></div>
+            <div class="fig l"><a class="ml-featured-app is-focus" data-sig-state="62bbb31091:focus" href="#c-featured" style="border-radius:12px"><span class="ml-featured-app-art is-focus-ua" data-sig-state="5e0e7cfddc:focus" style="outline-offset:-3px">ảnh bìa sản phẩm</span><span class="ml-featured-app-copy"><span class="ml-featured-app-name"><span class="ml-ph">icon</span><strong>Tên ứng dụng</strong></span></span></a><span class="cap">thẻ focus · art bên trong: focus mặc định trình duyệt</span></div>
+            <a class="ml-all-stories" href="#c-featured" style="width:100%"><span class="ms">menu_book</span>Xem tất cả bài viết<span class="ms">arrow_forward</span></a>
+            <a class="ml-all-stories is-hover" data-sig-state="ae7a9e4b58:hover" href="#c-featured" style="width:100%"><span class="ms">menu_book</span>Hover: gạch chân<span class="ms">arrow_forward</span></a>
+            <a class="ml-all-stories is-focus" data-sig-state="ae7a9e4b58:focus" href="#c-featured" style="width:100%"><span class="ms">menu_book</span>Focus<span class="ms">arrow_forward</span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= NHẬP LIỆU ================= -->
+    <section class="block" id="inputs">
+      <header><h2>Nhập liệu</h2><p>Ô nhập dùng chung một rule: viền <code>--line</code>, nền <code>--bg</code>, padding 9/11, bo 8. Ô tìm của thư viện là khối nền surface bo 12 có pill "Tìm" bên trong. Bộ lọc nằm trong <code>&lt;details&gt;</code> mở ra lưới ba cột. Trên mobile, input trong form lên 16px để iOS không tự phóng to.</p></header>
+      <div class="grid wide">
+        <div class="spec" id="c-search" data-sig="e1bcf88010 7184601b0a e070741688">
+          <div class="spec-h"><b>Ô tìm</b><span class="kind">.search-field</span><span class="kind">.sidebar-search</span><span class="kind">.blog-search</span><span class="dp">max 640 · r 12 / cao 33 r 20</span></div>
+          <div class="stage col surface ml-root">
+            <form class="ml-search-field" role="search" onsubmit="return false"><span class="ms">search</span><input type="search" aria-label="Tìm trong thư viện" placeholder="Tìm tên, tính năng, nhà phát triển…"><button class="ml-pill" type="submit">Tìm</button></form>
+            <form class="ml-search-field blog" role="search" onsubmit="return false"><span class="ms">search</span><input type="search" aria-label="Tìm bài viết" placeholder="Tìm hướng dẫn, mẹo và kinh nghiệm…"><button class="ml-pill" type="submit">Tìm</button></form>
+            <div style="background:var(--ml-sidebar);padding:12px;border-radius:10px;max-width:248px"><form class="ml-sidebar-search" style="margin:0" role="search" onsubmit="return false"><span class="ms">search</span><input type="search" aria-label="Tìm ứng dụng" placeholder="Tìm kiếm"></form></div>
+          </div>
+          <div class="spec-f"><span class="note">Input bên trong không có viền và tắt outline. Site không style focus riêng cho khối ô tìm: khi gõ chỉ thấy con trỏ.</span></div>
+        </div>
+
+        <div class="spec" id="c-filters" data-sig="251d7d99f0 e23e181670 6b585bc816 3fe1b012bc">
+          <div class="spec-h"><b>Bộ lọc</b><span class="kind">.catalog-filters</span><span class="kind">.filter-fields</span><span class="dp">3 cột · gap 14 · padding 18 · r 12</span></div>
+          <div class="stage col surface ml-root">
+            <details class="ml-filters" open><summary class="is-focus" data-sig-state="e23e181670:focus"><span class="ms">filter_list</span> Bộ lọc <span>49 sản phẩm</span></summary>
+              <div class="ml-filter-fields">
+                <label>Danh mục<select class="ml-select"><option>Tất cả</option><option>Năng suất</option></select></label>
+                <label>Nền tảng<select class="ml-select"><option>Tất cả</option><option>macOS</option></select></label>
+                <label>Giá<select class="ml-select is-focus" data-sig-state="6b585bc816:focus"><option>Tất cả</option><option>Miễn phí</option></select></label>
+                <label class="ml-check"><input type="checkbox" checked> Có mã nguồn mở</label>
+                <label class="ml-check"><input type="checkbox" class="is-focus" data-sig-state="3fe1b012bc:focus"> Verified by MacLife</label>
+                <div class="ml-filter-actions"><button class="ml-button">Áp dụng</button><a class="ml-quiet" href="#c-filters">Đặt lại</a></div>
+              </div></details>
+          </div>
+          <div class="spec-f"><span class="note">Summary "Bộ lọc", ô "Giá" và checkbox "Verified" ở trạng thái focus. Checkbox là control gốc tô <code>accent-color</code>. Mobile: 2 cột, padding 14, gap 12, số kết quả đẩy sang phải.</span></div>
+        </div>
+
+        <div class="spec full" id="c-form" data-sig="ade6409aea f33c2551fd a87bb3c6d2 7dea27f3c3 28c701f148">
+          <div class="spec-h"><b>Form gửi đề xuất</b><span class="kind">.form-card.submission-form</span><span class="kind">.platform-field</span><span class="dp">max 820 · padding 26 · r 13 · ô 42</span></div>
+          <div class="stage col surface ml-root" style="background:var(--ml-surface)">
+            <form class="ml-form-card" onsubmit="return false">
+              <p class="ml-form-hint" style="margin:0 0 20px">Các trường có dấu * là bắt buộc.</p>
+              <div class="ml-form-grid">
+                <label>Tên sản phẩm <span aria-hidden="true">*</span><input class="ml-input" type="text" required></label>
+                <label>Nhà phát triển<input class="ml-input" type="text"></label>
+                <label>Website chính thức <span aria-hidden="true">*</span><input class="ml-input is-focus" data-sig-state="7dea27f3c3:focus" type="url" value="https://"></label>
+                <label>Loại sản phẩm<select class="ml-select"><option>Ứng dụng</option><option>Công cụ web</option><option>Mã nguồn mở</option></select></label>
+                <fieldset class="ml-platform-field ml-full"><legend>Nền tảng</legend><p class="ml-form-hint">Chọn mọi nền tảng sản phẩm hỗ trợ.</p>
+                  <div class="ml-platform-options"><label class="ml-check"><input type="checkbox" checked> macOS</label><label class="ml-check"><input type="checkbox" checked> iOS</label><label class="ml-check"><input type="checkbox" class="is-focus" data-sig-state="28c701f148:focus"> Windows</label><label class="ml-check"><input type="checkbox"> Linux</label><label class="ml-check"><input type="checkbox"> Android</label><label class="ml-check"><input type="checkbox"> Web</label></div></fieldset>
+                <label class="ml-full">Mô tả ngắn<textarea class="ml-textarea" rows="3" placeholder="Sản phẩm giúp được gì?"></textarea><span class="ml-form-hint">Tối đa 300 ký tự.</span></label>
+              </div>
+              <div class="ml-form-actions"><button class="ml-button lg">Gửi đề xuất</button></div>
+            </form>
+          </div>
+          <div class="spec-f"><span class="note">Ô nền tảng đã chọn đổi nền sang <code>--pill</code> kèm viền trong 1px accent (<code>:has(:checked)</code>). Ô "Website" và checkbox "Windows" đang focus. Form còn một trường bẫy bot <code>.honeypot</code> đặt ở left −10000px, kit bỏ qua.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= PHẢN HỒI ================= -->
+    <section class="block" id="feedback">
+      <header><h2>Phản hồi &amp; hộp thoại</h2><p>Thông báo dạng dải viền nhạt, toast viên thuốc đảo màu chữ/nền, hai <code>&lt;dialog&gt;</code> gốc (xem ảnh và chia sẻ) và trạng thái trống. Hộp thoại dùng <code>::backdrop</code> mờ, kit vẽ lại backdrop thành khối tĩnh.</p></header>
+      <div class="grid wide">
+        <div class="spec" id="c-notice">
+          <div class="spec-h"><b>Thông báo</b><span class="kind">.notice</span><span class="kind">.notice.error</span><span class="dp">padding 12/16 · r 9 · 14px</span></div>
+          <div class="stage col surface ml-root">
+            <div class="ml-notice">Cảm ơn bạn. Đề xuất đã được gửi và đang chờ xem xét.</div>
+            <div class="ml-notice error">Vui lòng nhập website chính thức hợp lệ.</div>
+          </div>
+        </div>
+
+        <div class="spec" id="c-toast">
+          <div class="spec-h"><b>Toast</b><span class="kind">#toast</span><span class="dp">padding 12/22 · r 30 · đáy 28 (87 mobile)</span></div>
+          <div class="stage surface ml-root" style="justify-content:center"><span class="ml-toast" role="status">Đã sao chép liên kết</span></div>
+          <div class="spec-f"><span class="note">Nền <code>--text</code>, chữ <code>--bg</code> nên tự đảo khi đổi theme. Desktop căn giữa vùng nội dung (lệch 124px bù sidebar).</span></div>
+        </div>
+
+        <div class="spec" id="c-empty">
+          <div class="spec-h"><b>Trạng thái trống</b><span class="kind">.empty-state</span><span class="dp">icon 46 · h 25 · max 640</span></div>
+          <div class="stage surface ml-root">
+            <div class="ml-empty"><span class="ms">search_off</span><h2>Không tìm thấy sản phẩm</h2><p>Thử từ khoá khác hoặc bỏ bớt bộ lọc.</p><a class="ml-button" href="#c-empty">Xem tất cả</a></div>
+          </div>
+        </div>
+
+        <div class="spec" id="c-login">
+          <div class="spec-h"><b>Thẻ đăng nhập</b><span class="kind">.login-card</span><span class="dp">max 500 · padding 40 · r 16</span></div>
+          <div class="stage surface ml-root">
+            <div class="ml-login-card"><h1>Đăng nhập</h1><p>Lưu những app yêu thích và nhận thông báo cập nhật.</p><a class="ml-button" href="#c-login">Tiếp tục</a></div>
+          </div>
+          <div class="spec-f"><span class="note">Trang đăng nhập nằm trong <code>/toolkit/my</code> (robots.txt chặn), dựng theo CSS, không đo.</span></div>
+        </div>
+
+        <div class="spec" id="c-imagedialog">
+          <div class="spec-h"><b>Hộp xem ảnh</b><span class="kind">dialog.image-dialog</span><span class="dp">r 16 · padding 18 · backdrop #000a blur 8</span></div>
+          <div class="stage surface ml-root">
+            <div class="ml-dialog-backdrop image"><div class="ml-image-dialog" role="dialog" aria-label="Ảnh xem trước phóng lớn"><button class="ml-icon-button" aria-label="Đóng ảnh"><span class="ms">close</span></button><span class="ml-ph">ảnh chụp màn hình phóng lớn</span><p>Chú thích ảnh 13px.</p></div></div>
+          </div>
+        </div>
+
+        <div class="spec" id="c-sharedialog">
+          <div class="spec-h"><b>Hộp chia sẻ</b><span class="kind">dialog.share-dialog</span><span class="dp">460 · padding 24 · r 20 · backdrop #0005 blur 4</span></div>
+          <div class="stage surface ml-root">
+            <div class="ml-dialog-backdrop share"><div class="ml-share-dialog" role="dialog" aria-labelledby="share-title-kit"><div class="ml-share-heading"><h2 id="share-title-kit">Chia sẻ</h2><button class="ml-icon-button" aria-label="Đóng chia sẻ"><span class="ms">close</span></button></div><p>Gửi liên kết cho bạn bè.</p><label for="share-url-kit">Liên kết</label><input id="share-url-kit" type="url" readonly value="https://example.com/product/ten-ung-dung"><div class="ml-share-actions"><button class="ml-button">Sao chép liên kết</button><button class="ml-button secondary"><span class="ms">ios_share</span> Chia sẻ qua thiết bị</button></div><p class="ml-share-status" role="status">Đã sao chép.</p></div></div>
+          </div>
+          <div class="spec-f"><span class="note">Nút "Chia sẻ qua thiết bị" chỉ hiện khi trình duyệt có <code>navigator.share</code>. Mobile: padding 20, tiêu đề 19, nút 12px.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= MÀN MẪU ================= -->
+    <section class="block" id="screens">
+      <header><h2>Màn hình mẫu</h2><p>Hai màn ghép từ chính class <code>.ml-*</code> ở trên, theo quy tắc bố cục của site: dưới 767px bỏ sidebar để dùng header 60 + tab dưới, lưới còn một cột. Desktop 1440 × 900 giữ sidebar 248 và lưới ba cột. Khung thu nhỏ bằng <code>zoom</code>.</p></header>
+      <div class="screens">
+        <div class="frame-wrap"><div class="frame-scroll">
+          <div class="phone ml-root" aria-label="Màn mobile: Mã nguồn mở">
+            <header class="ml-mobile-header"><a class="ml-wordmark" href="#screens">MacLife</a><div><button class="ml-icon-button" aria-label="Đổi sáng tối"><span class="ms">dark_mode</span></button><button class="ml-icon-button" aria-label="Mở menu"><span class="ms">menu</span></button></div></header>
+            <div class="scroll"><div style="padding:26px 18px 20px">
+              <div class="ml-page-heading" style="margin-bottom:22px"><h1 class="ml-h1" style="font-size:30px">Mã nguồn mở</h1><p style="font-size:15px">Chọn công cụ phù hợp với cách bạn làm việc.</p></div>
+              <a class="ml-editorial-card ml-pal" href="#screens" style="min-width:0"><div class="ml-editorial-copy"><span class="ml-eyebrow">MACLIFE TUYỂN CHỌN</span><h2 style="font-size:19px">Mã nguồn mở cho Mac</h2><p style="font-size:15px">Các app MacLife và dự án Open Source.</p></div><div class="ml-editorial-art" style="aspect-ratio:1.55"><span class="ml-art-orb"></span><div class="ml-art-apps"><i>icon</i><i>icon</i><i>icon</i><i>icon</i><i>icon</i><i>icon</i></div><span class="ml-art-label"><span class="ms">folder</span> Mã nguồn mở cho Mac</span></div></a>
+              <form class="ml-search-field" style="margin:24px 0 14px" onsubmit="return false"><span class="ms">search</span><input type="search" aria-label="Tìm" placeholder="Tìm tên, tính năng…" style="font-size:13px"><button class="ml-pill" style="min-width:67px;font-size:12px">Tìm</button></form>
+              <div class="ml-filters"><div style="display:flex;align-items:center;gap:7px;color:var(--ml-accent);font-size:14px"><span class="ms" style="font-size:20px">filter_list</span> Bộ lọc <span style="margin-left:auto;color:var(--ml-muted);font-size:12px">49 sản phẩm</span></div></div>
+              <div style="margin-top:14px">
+                <article class="ml-app-row" style="grid-template-columns:60px minmax(0,1fr) 70px;gap:10px;min-height:93px"><span class="ml-app-icon" style="width:60px;height:60px;border-radius:13px"><span class="ml-ph">icon</span></span><div class="ml-app-copy"><div class="ml-app-name"><a class="ml-app-title" href="#screens">Bộ gõ</a></div><p style="font-size:12px">Gõ tiếng Việt trên Mac.</p></div><div class="ml-app-action"><a class="ml-pill" style="min-width:67px;font-size:12px" href="#screens">Tải</a><small>Miễn phí</small></div></article>
+                <article class="ml-app-row" style="grid-template-columns:60px minmax(0,1fr) 70px;gap:10px;min-height:93px"><span class="ml-app-icon" style="width:60px;height:60px;border-radius:13px"><span class="ml-ph">icon</span></span><div class="ml-app-copy"><div class="ml-app-name"><a class="ml-app-title" href="#screens">Trình nghe nhạc</a></div><p style="font-size:12px">Nghe nhạc với lời đồng bộ.</p></div><div class="ml-app-action"><a class="ml-pill" style="min-width:67px;font-size:12px" href="#screens">Tải</a><small>Miễn phí</small></div></article>
+                <article class="ml-app-row" style="grid-template-columns:60px minmax(0,1fr) 70px;gap:10px;min-height:93px"><span class="ml-app-icon" style="width:60px;height:60px;border-radius:13px"><span class="ml-icon-fallback">X</span></span><div class="ml-app-copy"><div class="ml-app-name"><a class="ml-app-title" href="#screens">Xử lý ảnh RAW</a><span class="ml-verified compact"><span class="ms">verified</span></span></div><p style="font-size:12px">Quản lý thư viện ảnh.</p></div><div class="ml-app-action"><a class="ml-pill" style="min-width:67px;font-size:12px" href="#screens">GitHub</a><small>Miễn phí</small></div></article>
+              </div>
+            </div></div>
+            <nav class="ml-bottom-tabs" aria-label="Điều hướng chính"><a href="#screens"><span class="ms">star</span><span>Khám phá</span></a><a href="#screens" aria-current="page"><span class="ms">grid_view</span><span>Danh mục</span></a><a href="#screens"><span class="ms">search</span><span>Tìm kiếm</span></a><a href="#screens"><span class="ms">download</span><span>Cập nhật</span></a><a href="#screens"><span class="ms">inventory_2</span><span>Tủ đồ</span></a></nav>
+          </div></div>
+          <p class="frame-cap"><b>Mobile 390 × 844 · Mã nguồn mở.</b> mobile-header · page-heading (h1 30) · editorial-card (art 1.55) · search-field + pill · catalog-filters summary · app-row (60 | 1fr | 70) · icon-fallback · verified-badge-compact · bottom-tabs.</p>
+        </div>
+
+        <div class="frame-wrap"><div class="frame-scroll">
+          <div class="desk ml-root" aria-label="Màn desktop: Mã nguồn mở">
+            <aside class="ml-sidebar">
+              <div class="ml-sidebar-top"><div class="ml-logo">logo MacLife</div></div>
+              <div class="ml-sidebar-search"><span class="ms">search</span><input type="search" aria-label="Tìm" placeholder="Tìm kiếm"></div>
+              <nav class="ml-sidebar-nav"><a href="#screens"><span class="ms">star</span><span>Khám phá</span></a><a href="#screens"><span class="ms">apps</span><span>Ứng dụng</span></a><a href="#screens"><span class="ms">language</span><span>Công cụ web</span></a><a href="#screens" aria-current="page"><span class="ms">code</span><span>Mã nguồn mở</span></a><a href="#screens"><span class="ms">change_history</span><span>MacLife phát triển</span></a><a href="#screens"><span class="ms">verified</span><span>Verified by MacLife</span></a><a href="#screens"><span class="ms">grid_view</span><span>Danh mục</span></a><a href="#screens"><span class="ms">bookmarks</span><span>Bộ sưu tập</span></a><a href="#screens"><span class="ms">download</span><span>Cập nhật</span></a><a class="ml-sidebar-blog" href="#screens"><span class="ms">menu_book</span><span>Blog</span></a></nav>
+              <div class="ml-sidebar-bottom"><div class="ml-sidebar-controls"><span class="ml-theme-label">Giao diện</span><div class="ml-theme-picker"><button class="ml-theme-choice" aria-pressed="true" aria-label="Hệ thống"><span class="ms">desktop_windows</span></button><button class="ml-theme-choice" aria-pressed="false" aria-label="Sáng"><span class="ms">light_mode</span></button><button class="ml-theme-choice" aria-pressed="false" aria-label="Tối"><span class="ms">dark_mode</span></button></div></div><a class="ml-account" href="#screens"><span class="ml-avatar"><span class="ms">person</span></span><span>Đăng nhập<small>Lưu những app yêu thích</small></span></a></div>
+            </aside>
+            <div class="main"><div class="page">
+              <div class="ml-page-heading" style="margin-bottom:26px"><h1 class="ml-h1">Mã nguồn mở</h1><p>Chọn công cụ phù hợp với cách bạn làm việc.</p></div>
+              <div class="ml-rail-wrap"><div class="ml-rail">
+                <a class="ml-editorial-card ml-pal" href="#screens"><div class="ml-editorial-copy"><span class="ml-eyebrow">MACLIFE TUYỂN CHỌN</span><h2>Mã nguồn mở cho Mac</h2><p>Các app MacLife và những dự án Open Source được giữ lại trong thư viện.</p></div><div class="ml-editorial-art" style="aspect-ratio:2.4"><span class="ml-art-orb"></span><div class="ml-art-apps"><i>icon</i><i>icon</i><i>icon</i><i>icon</i><i>icon</i><i>icon</i></div><span class="ml-art-label"><span class="ms">folder</span> Mã nguồn mở cho Mac</span></div></a>
+                <a class="ml-editorial-card ml-p1" href="#screens"><div class="ml-editorial-copy"><span class="ml-eyebrow">MACLIFE TUYỂN CHỌN</span><h2>Thiết lập và chăm sóc Mac</h2><p>Bộ gõ, tiện ích cửa sổ, dọn dung lượng và kiểm tra thiết bị.</p></div><div class="ml-editorial-art" style="aspect-ratio:2.4"><span class="ml-art-orb"></span><div class="ml-art-apps"><i>icon</i><i>icon</i><i>icon</i><i>icon</i><i>icon</i><i>icon</i></div><span class="ml-art-label"><span class="ms">folder</span> Thiết lập và chăm sóc Mac</span></div></a>
+              </div><button class="ml-rail-arrow" aria-label="Sau"><span class="ms">chevron_right</span></button></div>
+              <form class="ml-search-field" style="margin:27px 0 14px" onsubmit="return false"><span class="ms">search</span><input type="search" aria-label="Tìm" placeholder="Tìm tên, tính năng, nhà phát triển…"><button class="ml-pill">Tìm</button></form>
+              <div class="ml-filters" style="margin-bottom:24px"><div style="display:flex;align-items:center;gap:7px;color:var(--ml-accent);font-size:14px"><span class="ms" style="font-size:20px">filter_list</span> Bộ lọc <span style="margin-left:8px;color:var(--ml-muted);font-size:12px">49 sản phẩm</span></div></div>
+              <div class="ml-results-heading"><span>49 sản phẩm</span><span>Trang 1 / 3</span></div>
+              <div class="ml-catalog-grid">
+                <article class="ml-app-row"><span class="ml-app-icon"><span class="ml-ph">icon</span></span><div class="ml-app-copy"><div class="ml-app-name"><a class="ml-app-title" href="#screens">Bộ gõ</a></div><p>Gõ tiếng Việt trên Mac, theo cách của bạn.</p></div><div class="ml-app-action"><a class="ml-pill" href="#screens">Tải</a><small>Miễn phí</small></div></article>
+                <article class="ml-app-row"><span class="ml-app-icon"><span class="ml-ph">icon</span></span><div class="ml-app-copy"><div class="ml-app-name"><a class="ml-app-title" href="#screens">Trình nghe nhạc</a></div><p>Nghe nhạc với plugin và lời bài hát.</p></div><div class="ml-app-action"><a class="ml-pill" href="#screens">Tải</a><small>Miễn phí</small></div></article>
+                <article class="ml-app-row"><span class="ml-app-icon"><span class="ml-ph">icon</span></span><div class="ml-app-copy"><div class="ml-app-name"><a class="ml-app-title" href="#screens">Dọn dẹp</a></div><p>Dọn dữ liệu dư, gỡ ứng dụng.</p></div><div class="ml-app-action"><a class="ml-pill" href="#screens">Tải</a><small>Miễn phí</small></div></article>
+                <article class="ml-app-row"><span class="ml-app-icon"><span class="ml-ph">icon</span></span><div class="ml-app-copy"><div class="ml-app-name"><a class="ml-app-title" href="#screens">Sức khoẻ ổ đĩa</a></div><p>Đọc SMART, theo dõi sức khoẻ ổ.</p></div><div class="ml-app-action"><a class="ml-pill" href="#screens">Tải</a><small>Miễn phí</small></div></article>
+                <article class="ml-app-row"><span class="ml-app-icon"><span class="ml-ph">icon</span></span><div class="ml-app-copy"><div class="ml-app-name"><a class="ml-app-title" href="#screens">Ghi NTFS</a></div><p>Đọc và ghi ổ NTFS trên Mac.</p></div><div class="ml-app-action"><a class="ml-pill" href="#screens">Tải</a><small>Miễn phí</small></div></article>
+                <article class="ml-app-row"><span class="ml-app-icon"><span class="ml-ph">icon</span></span><div class="ml-app-copy"><div class="ml-app-name"><a class="ml-app-title" href="#screens">Xử lý ảnh RAW</a></div><p>Quản lý thư viện và xử lý ảnh.</p></div><div class="ml-app-action"><a class="ml-pill" href="#screens">GitHub</a><small>Miễn phí</small></div></article>
+              </div>
+              <nav class="ml-pagination"><a class="ml-pill" aria-current="page" href="#screens">1</a><a class="ml-pill" href="#screens">2</a><a class="ml-pill" href="#screens">3</a></nav>
+            </div></div>
+          </div></div>
+          <p class="frame-cap"><b>Desktop 1440 × 900 · Mã nguồn mở.</b> sidebar (search · nav · theme-picker · account) · page-heading · banner-rail + editorial-card × 2 + rail-arrow · search-field · catalog-filters · results-heading · catalog-grid 3 cột · app-row · pagination. Art của thẻ tuyển chọn được ép thấp lại (2.4) để khung vừa 900px.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+<div id="toast-kit" role="status" aria-live="polite"></div>
+
+<script>
+/* 11 biến màu đổi theo theme, parse từ :root và :root[data-theme=dark] của /toolkit/assets/store.css
+   (giá trị sau cùng, tức đã tính lớp ghi đè --muted / --accent / --action-bg ở cuối file). */
+const ROLES=["bg","surface","sidebar","sidebar-selected","text","muted","line","accent","action-bg","pill","header-bg"];
+const PALETTES={site:{label:"MacLife",light:["#fff","#f5f5f7","#ededee","#dcdcdf","#29292b","#6f6f76","#e6e6e9","#006ee6","#006ee6","#f1f2f7","#ffffffeb"],
+  dark:["#1c1c1e","#252527","#252527","#3a3a3d","#f2f2f4","#9b9ba3","#38383c","#3899ff","#0071eb","#303035","#1c1c1eeb"]}};
+const SHADOW={light:"0 2px 7px #00000016",dark:"0 2px 9px #0005"};
+/* chữ đặt trên vai trò (cặp "on"): nền nào thì chữ gì, như site dùng */
+const ON={bg:"text",surface:"text",sidebar:"text","sidebar-selected":"text",pill:"accent","header-bg":"text","action-bg":"#fff",accent:"#fff",text:"bg",muted:"bg",line:"text"};
+/* hằng số cứng trong store.css (không đổi theo theme) */
+const CONST=[["on-accent","#fff","chữ trên nút đặc"],["system-blue","#007aff","accent gốc, tint nút is-active"],["error","#db3227","notice.error"],["error-bg","#ff3b3010","nền notice.error"],["error-line","#ff3b3040","viền notice.error"],
+  ["notice-bg","#007aff0c","nền notice"],["notice-line","#007aff30","viền notice"],["active-tint","#007aff16","button.is-active"],["mark","#ffda6380","mark trong bài"],["scrim","#0006","menu-scrim"],["backdrop","#000a","image-dialog"],["backdrop-soft","#0005","share-dialog"],
+  ["fallback-a","#56b7ff","icon-fallback"],["fallback-b","#007aff","icon-fallback"],["avatar-a","#a3deff","avatar"],["avatar-b","#e7d0f4","avatar"],["avatar-ink","#356c95","icon avatar"],["author-b","#4abddd","blog-author-mark"],
+  ["cat-productivity","#c18b3d","Năng suất"],["cat-photo","#74808a","Ảnh"],["cat-design","#ff9500","Thiết kế"],["cat-video","#ff3b30","Video"],["cat-music","#75c500","Âm thanh"],["cat-utility","#007aff","Tiện ích"],
+  ["spot-bg","#081a36","nền spotlight"],["spot-eyebrow","#a8d5ff","eyebrow spotlight"],["spot-copy","#d2e0f0","đoạn spotlight"],["spot-small","#c6d9ee","giá spotlight"],["spot-btn-ink","#0b3c80","chữ nút spotlight"],["spot-btn-hover","#e9f3ff","nút spotlight hover"],
+  ["feat-bg","#071d3b","blog-featured-app"],["feat-art","#072859","ảnh featured-app"],["feat-copy","#d9e8ff","tagline featured-app"],["feat-action","#a6ceff","link featured-app"]];
+const ARTS=[["#bddeef","#edf9fd","#a4d1e9","#0062a0",60],["#c9dfbb","#f0f5d7","#a4c489","#466c29",65],["#a2accf","#e6e3fa","#a09ad1","#3d387a",65],["#f0c6cb","#fae9db","#eab1b3","#ae4c4a",60],["#c4e8db","#eaf7f1","#90cab2","#27866c",60],["#f1d9a7","#fff3d8","#e8c089","#a77528",60]];
+const ART_NAMES=["xanh trời","xanh lá","tím lam","hồng đào","xanh ngọc","vàng cát"];
+(function () {
+  const root = document.documentElement;
+  const state = { mode: matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light", art: 0 };
+  try { Object.assign(state, JSON.parse(localStorage.getItem("ml-kit") || "{}")); } catch (e) {}
+  if (!ARTS[state.art]) state.art = 0;
+
+  const toast = (t) => { const el = document.getElementById("toast-kit"); el.textContent = t; el.classList.add("show"); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove("show"), 1600); };
+  const copy = async (text, msg) => { try { await navigator.clipboard.writeText(text); toast(msg); } catch (e) { toast("Trình duyệt chặn clipboard, hãy copy tay"); } };
+  const artBg = (a) => "linear-gradient(135deg," + a[0] + "," + a[1] + " " + a[4] + "%," + a[2] + ")";
+
+  function apply() {
+    const vals = PALETTES.site[state.mode];
+    ROLES.forEach((r, i) => root.style.setProperty("--ml-" + r, vals[i]));
+    root.style.setProperty("--ml-shadow", SHADOW[state.mode]);
+    const a = ARTS[state.art];
+    document.querySelectorAll(".ml-pal").forEach((el) => { el.style.setProperty("--ml-art-bg", artBg(a)); el.style.setProperty("--ml-art-ink", a[3]); });
+    root.dataset.mode = state.mode;
+    document.querySelectorAll("#mode button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === state.mode));
+    document.querySelectorAll("#swatches .sw").forEach((b) => b.setAttribute("aria-pressed", +b.dataset.v === state.art));
+    renderRoles(vals);
+    try { localStorage.setItem("ml-kit", JSON.stringify(state)); } catch (e) {}
+  }
+
+  const sw = document.getElementById("swatches");
+  ARTS.forEach((a, i) => {
+    const b = document.createElement("button");
+    b.className = "sw"; b.dataset.v = i; b.title = ".palette-" + i + " · " + ART_NAMES[i]; b.setAttribute("aria-label", "Bảng minh hoạ " + i + ", " + ART_NAMES[i]);
+    b.style.setProperty("--c", artBg(a));
+    b.onclick = () => { state.art = i; apply(); };
+    sw.appendChild(b);
+  });
+  document.querySelectorAll("#mode button").forEach((b) => (b.onclick = () => { state.mode = b.dataset.v; apply(); }));
+
+  /* dải 6 bảng minh hoạ */
+  const strip = document.getElementById("palette-strip");
+  ARTS.forEach((a, i) => {
+    const c = document.createElement("button");
+    c.className = "role"; c.style.cssText = "flex:1 1 140px;min-height:96px;color:" + a[3];
+    c.innerHTML = '<i style="background:' + artBg(a) + '"></i><b>.palette-' + i + '</b><code>ink ' + a[3] + "</code>";
+    c.onclick = () => copy("--art-bg: " + artBg(a) + ";\n--art-ink: " + a[3] + ";", "Đã copy .palette-" + i);
+    strip.appendChild(c);
+  });
+
+  function cell(name, v, fg, note) {
+    const b = document.createElement("button");
+    b.className = "role"; b.style.color = fg;
+    b.innerHTML = '<i style="background:' + v + '"></i><b>--' + name + "</b><code>" + v + (note ? " · " + note : "") + "</code>";
+    b.onclick = () => copy(v, "Đã copy --" + name + " " + v);
+    return b;
+  }
+  function renderRoles(vals) {
+    const box = document.getElementById("roles-groups");
+    box.innerHTML = "";
+    const val = (r) => vals[ROLES.indexOf(r)];
+    const groups = [["Bề mặt", ["bg", "surface", "sidebar", "sidebar-selected", "pill", "header-bg"]], ["Chữ & đường kẻ", ["text", "muted", "line"]], ["Màu nhấn", ["accent", "action-bg"]]];
+    groups.forEach(([name, list]) => {
+      const h = document.createElement("h3"); h.className = "sub"; h.textContent = name; box.appendChild(h);
+      const g = document.createElement("div"); g.className = "roles"; box.appendChild(g);
+      list.forEach((r) => { const on = ON[r]; g.appendChild(cell(r, val(r), on && on[0] === "#" ? on : "var(--ml-" + on + ")")); });
+    });
+    const h = document.createElement("h3"); h.className = "sub"; h.textContent = "Hằng số (giá trị cứng trong rule)"; box.appendChild(h);
+    const g = document.createElement("div"); g.className = "roles"; box.appendChild(g);
+    CONST.forEach(([n, v, note]) => {
+      const dark = /^#(0|[0-3][0-9a-f]{5}|db|ff3b30$|c18|74|35|007aff$|0b3)/i.test(v) && v.length <= 7;
+      g.appendChild(cell(n, v, v.length > 7 ? "var(--ml-text)" : (dark ? "#fff" : "#29292b"), note));
+    });
+  }
+
+  /* thang chữ gốc khai trong CSS cho thẻ HTML */
+  const TYPE = [["h1", 34, "1.15", 700, "-1px"], ["h1 ≥1680 / ≤767", 38, "1.15", 700, "-1px"], ["h2", 23, "1.25", 700, "-.45px"], ["h3", 18, "1.35", 700, "0"], ["body", 16, "1.45", 400, "0"], [".prose", 15, "1.7", 400, "0"], [".blog-prose", 16, "1.8", 400, "0"]];
+  const ts = document.getElementById("typescale");
+  TYPE.forEach(([name, size, lh, w, ls]) => {
+    const row = document.createElement("div"); row.className = "type-row";
+    row.innerHTML = '<span class="meta">' + name + '</span><span class="t" style="font-size:' + size + "px;line-height:" + lh + ";font-weight:" + w + ";letter-spacing:" + ls + '">Chọn công cụ phù hợp</span><span class="meta">' + size + " / " + lh + " · " + w + (ls !== "0" ? " · " + ls : "") + "</span>";
+    ts.appendChild(row);
+  });
+  const USED = [["product-spotlight h2", "clamp(27–42)", 34, "1.12", 700, "-1px", "", "31"], ["blog-feature h2", "clamp(25–38)", 32, "1.25", 700, "-1px", "", "25"], ["product-title h1", 29, 29, "1.15", 700, "-.8px", "", "24"],
+    ["empty-state h2", 25, 25, "1.35", 700, "0", "", ""], ["editorial-copy h2", 20, 20, "1.2", 500, "-.2px", "", "19"], ["blog-card h3", 19, 19, "1.35", 700, "-.2px", "", "15"], ["spotlight-identity strong", 19, 19, "1.2", 700, "0", "", "18"],
+    ["page-heading p · editorial p", 17, 17, "1.3", 400, "0", "muted", "15"], ["product-facts strong", 16, 16, "1.4", 650, "0", "muted", "12"], ["category-row", 16, 16, "1.45", 400, "0", "", "13"],
+    ["app-title", 15, 15, "1.3", 600, "-.15px", "", "15"], ["sidebar-nav a", 15, 15, "1.45", 400, "0", "", "14 ≤1100"], [".quiet · section link", 15, 15, "1.45", 400, "0", "accent", "13"],
+    [".button", 14, 14, "1.45", 600, "0", "", ""], ["search-field input · select", 14, 14, "1.45", 400, "0", "", "16 form"], ["app-copy p", 13, 13, "1.45", 400, "0", "muted", "12"], [".pill", 13, 13, "1.45", 650, "0", "accent", "12"],
+    [".eyebrow", 12, 12, "1.45", 700, ".4px", "accent upper", "10"], ["results-heading · filter label", 12, 12, "1.45", 400, "0", "muted", ""], ["compact-footer", 11, 11, "1.45", 400, "0", "muted", "10"],
+    ["product-facts small", 10, 10, "1.45", 600, ".15px", "muted upper", "8"], ["app-action small · bottom-tabs", 9, 9, "1.45", 400, "0", "muted", ""]];
+  const tu = document.getElementById("typeused");
+  USED.forEach(([name, label, size, lh, w, ls, x, mob]) => {
+    const row = document.createElement("div"); row.className = "type-row";
+    const style = "font-size:" + size + "px;line-height:" + lh + ";font-weight:" + w + ";letter-spacing:" + ls + (/upper/.test(x) ? ";text-transform:uppercase" : "") + (/muted/.test(x) ? ";color:var(--ml-muted)" : "") + (/accent/.test(x) ? ";color:var(--ml-accent)" : "");
+    row.innerHTML = '<span class="meta">' + name + '</span><span class="t" style="' + style + '">Mã nguồn mở cho Mac</span><span class="meta">' + label + " / " + lh + " · " + w + (mob ? " · ≤767: " + mob : "") + "</span>";
+    tu.appendChild(row);
+  });
+
+  /* bán kính trong store.css */
+  const sh = document.getElementById("shapes");
+  [["4", "code"], ["5", "sticky icon"], ["7", "theme-choice, thumb"], ["8", "input, preview"], ["9", "nav, notice, blog-app"], ["10", "platform, pre, trích dẫn"], ["11", "theme-picker"], ["12", "search, kit-card, art"], ["13", "editorial-art, form, cover"], ["14", "collection-intro"], ["15", "app-icon"], ["16", "dialog, login, rail-arrow"], ["18", "pill, blog-feature"], ["20", "spotlight, share, search"], ["22", "button"], ["27", "product-icon"]].forEach(([r, use]) => {
+    const c = document.createElement("div"); c.className = "shape-cell";
+    c.innerHTML = '<i style="border-radius:' + r + 'px"></i>' + r + "<br>" + use; sh.appendChild(c);
+  });
+  [["24%", "icon trong art"], ["50%", "icon-button, avatar"]].forEach(([r, use]) => {
+    const c = document.createElement("div"); c.className = "shape-cell";
+    c.innerHTML = '<i style="border-radius:' + r + '"></i>' + r + "<br>" + use; sh.appendChild(c);
+  });
+
+  /* "Xem thêm" của khối thu gọn */
+  document.querySelectorAll(".ml-expandable [data-expand]").forEach((b) => (b.onclick = () => {
+    const box = b.parentElement, c = box.querySelector(".ml-expandable-content"), open = b.getAttribute("aria-expanded") !== "true";
+    c.style.maxHeight = open ? "none" : ""; b.setAttribute("aria-expanded", open); b.textContent = open ? "Thu gọn" : "Xem thêm";
+  }));
+
+  /* mỗi thẻ thành phần có nút copy HTML của phần trình diễn */
+  document.querySelectorAll(".spec").forEach((spec) => {
+    const stage = spec.querySelector(".stage");
+    if (!stage || !spec.querySelector(".spec-h")) return;
+    let foot = spec.querySelector(".spec-f");
+    if (!foot) { foot = document.createElement("div"); foot.className = "spec-f"; foot.innerHTML = '<span class="note"></span>'; spec.appendChild(foot); }
+    const b = document.createElement("button");
+    b.className = "copy"; b.innerHTML = '<span class="ms">content_copy</span>HTML';
+    b.onclick = () => copy([...spec.querySelectorAll(".stage")].map((s) => s.innerHTML.trim()).join("\n").replace(/\n\s+/g, "\n"), "Đã copy HTML của " + spec.querySelector(".spec-h b").textContent);
+    foot.appendChild(b);
+  });
+
+  /* token hiện tại dưới dạng khối :root */
+  document.getElementById("copy-tokens").onclick = () => {
+    const vals = PALETTES.site[state.mode], a = ARTS[state.art];
+    const lines = ROLES.map((r, i) => "  --ml-" + r + ": " + vals[i] + ";");
+    lines.push("  --ml-shadow: " + SHADOW[state.mode] + ";");
+    CONST.forEach(([n, v]) => lines.push("  --ml-" + n + ": " + v + ";"));
+    lines.push("  --ml-art-bg: " + artBg(a) + ";", "  --ml-art-ink: " + a[3] + ";", "  --ml-spot-line: #3b82b633;", "  --ml-focus: 3px solid var(--ml-accent);",
+      '  --ml-font: -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;', "  --ml-sidebar-width: 248px;");
+    copy(":root {\n" + lines.join("\n") + "\n}", "Đã copy token " + (state.mode === "dark" ? "tối" : "sáng") + " · .palette-" + state.art);
+  };
+
+  /* làm nổi mục đang xem trong mục lục */
+  const links = [...document.querySelectorAll(".side a")];
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (e.isIntersecting) links.forEach((x) => x.classList.toggle("on", x.getAttribute("href") === "#" + e.target.id));
+  }), { rootMargin: "-30% 0px -60% 0px" });
+  document.querySelectorAll("section.block").forEach((s) => io.observe(s));
+
+  apply();
+})();
+</script>
+</body>
+</html>
