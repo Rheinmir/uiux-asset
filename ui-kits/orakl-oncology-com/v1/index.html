@@ -1,0 +1,851 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta name="ui-kit-id" content="orakl-oncology-com">
+<!-- UI kit rút từ https://www.orakl-oncology.com/ (Nuxt + Roadiz), 06/10/2026, skill ui-kit-from-code (B04: site đang chạy, không có code).
+     Token đọc bằng Playwright từ CSS :root + getComputedStyle; khám phá discover.mjs trên / và /legals (2/2 trang trong sitemap). -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Orakl Oncology UI Kit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&display=block">
+<style>
+/* Token của site: --theme-color-* ở :root (bản thường = nền sáng, bản -inverted = section tối).
+   Kit đổi tên thành --ok-<role>; chế độ "tối" nạp bản inverted + theme-light của nút (đúng như site dùng trên nền đen). */
+:root {
+  --ok-content-primary:#ffffff; --ok-content-secondary:#ffffffcc; --ok-content-tertiary:#ffffff80; --ok-content-highlight:#6390c1;
+  --ok-content-highlight-blue:#0959aa; --ok-content-highlight-blue-alt:#198cff; --ok-content-link-hover:#616161;
+  --ok-surface-page:#000000; --ok-surface-block:#0d0d0d; --ok-surface-secondary:#fafafa; --ok-surface-tertiary:#f5f6f7;
+  --ok-surface-quaternary:#dad7d7; --ok-surface-hero:#f5f3f7; --ok-surface-overlay:#00000080; --ok-surface-overlay-media:#f6f2ef59;
+  --ok-line-primary:#ffffff66; --ok-line-secondary:#ffffff26; --ok-line-chapter:#0b26414d;
+  --ok-btn-high-bg:#ffffff; --ok-btn-high-content:#000000; --ok-btn-high-bg-hover:#6390c1; --ok-btn-high-bg-disabled:#efefef; --ok-btn-high-content-disabled:#898989;
+  --ok-btn-medium-content:#ffffff; --ok-btn-medium-border:#ffffff80; --ok-btn-medium-border-hover:#ffffff; --ok-btn-carousel-border:#ffffff4d;
+  --ok-btn-low-bg:#efece4; --ok-btn-low-content:#000000; --ok-icon-disabled:#d3d3d3;
+  --ok-content-on-media:#ffffff; --ok-menu-surface:#ffffff; --ok-menu-content:#172d2f; --ok-menu-line:#00000026; --ok-on-highlight:#ffffff;
+  --ok-focus-ua:#005fcc; --ok-ph-media:#141414;
+  --ok-shadow-card: 0 4px 24px 0 #0b26411a;
+  --ok-r-btn-sm: 16px; --ok-r-btn-md: 24px; --ok-r-media: 12px; --ok-r-block: 32px;
+  --ok-ease-reveal: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ok-ease-header: cubic-bezier(0.38, 0.69, 0.33, 0.99);
+  --ok-ease-icon: cubic-bezier(0.46, 0.45, 0.17, 0.99);
+  --ok-font: "Inter Tight", "plain", Arial, sans-serif;
+  --ok-mono: "IBM Plex Mono", "simplon bp mono", ui-monospace, monospace;
+  --ok-track: -0.04em;
+  color-scheme: dark;
+}
+:root[data-mode="light"] { color-scheme: light; }
+@media (max-width: 1023px) { :root { --ok-r-block: 16px; } }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--ok-surface-page); color: var(--ok-content-primary); font: 400 16px/1.35 var(--ok-font); -webkit-font-smoothing: antialiased; }
+.ms { font-family: "Material Symbols Rounded"; font-weight: normal; font-style: normal; font-size: 20px; line-height: 1; letter-spacing: normal; text-transform: none; display: inline-block; white-space: nowrap; direction: ltr; font-feature-settings: "liga"; -webkit-font-smoothing: antialiased; user-select: none; }
+code, .code { font-family: var(--ok-mono); font-size: 12px; }
+:focus-visible { outline: 2px solid var(--ok-content-highlight); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+/* ---------- vỏ trang ---------- */
+.shell { display: grid; grid-template-columns: 232px minmax(0, 1fr); min-height: 100vh; }
+.side { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 20px 12px; background: var(--ok-surface-block); border-right: 1px solid var(--ok-line-secondary); display: flex; flex-direction: column; gap: 2px; }
+.brand { display: flex; align-items: center; gap: 10px; padding: 4px 12px 16px; }
+.brand-mark { width: 32px; height: 32px; border-radius: 50%; background: var(--ok-content-highlight); color: var(--ok-on-highlight); display: grid; place-items: center; font-weight: 500; font-size: 14px; }
+.brand b { font-size: 16px; font-weight: 500; display: block; }
+.brand small { color: var(--ok-content-secondary); font-size: 12px; }
+.side h6 { margin: 14px 12px 6px; font-size: 12px; font-weight: 500; color: var(--ok-content-tertiary); }
+.side a { display: flex; align-items: center; gap: 12px; height: 38px; padding: 0 12px; border-radius: 19px; color: var(--ok-content-secondary); text-decoration: none; font-size: 14px; }
+.side a:hover { background: var(--ok-line-secondary); color: var(--ok-content-primary); }
+.side a.on { background: var(--ok-content-primary); color: var(--ok-surface-page); }
+main { padding: 0 32px 96px; min-width: 0; }
+
+.bar { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; padding: 14px 0; background: var(--ok-surface-page); border-bottom: 1px solid var(--ok-line-secondary); }
+.bar .grow { flex: 1; }
+.ctl { display: flex; align-items: center; gap: 8px; }
+.ctl > span { font-size: 12px; font-weight: 500; color: var(--ok-content-secondary); }
+.seg { display: inline-flex; gap: 2px; }
+.seg button { height: 32px; padding: 0 12px; border: 1px solid var(--ok-line-primary); background: transparent; color: var(--ok-content-primary); font: 500 13px var(--ok-font); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.seg button:first-child { border-radius: 16px 4px 4px 16px; }
+.seg button:last-child { border-radius: 4px 16px 16px 4px; }
+.seg button[aria-pressed="true"] { background: var(--ok-content-primary); color: var(--ok-surface-page); border-color: transparent; }
+.seg .ms { font-size: 18px; }
+
+.intro { padding: 40px 0 8px; max-width: 800px; }
+.intro .eyebrow { font-family: var(--ok-mono); font-size: 12px; color: var(--ok-content-highlight); }
+.intro h1 { font-size: 56px; line-height: 1.1; font-weight: 400; margin: 8px 0 14px; letter-spacing: var(--ok-track); text-wrap: balance; }
+.intro p { font-size: 17px; line-height: 1.5; color: var(--ok-content-secondary); margin: 0; max-width: 66ch; }
+.intro .facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.fact { font-family: var(--ok-mono); font-size: 12px; padding: 4px 10px; border-radius: 6px; border: 1px solid var(--ok-line-secondary); color: var(--ok-content-secondary); }
+
+section.block { padding-top: 56px; scroll-margin-top: 64px; }
+section.block > header { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+section.block h2 { font-size: 36px; line-height: 1.3; font-weight: 400; margin: 0; letter-spacing: var(--ok-track); }
+section.block > header p { margin: 0; color: var(--ok-content-secondary); max-width: 72ch; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 16px; }
+.grid.wide { grid-template-columns: repeat(auto-fill, minmax(480px, 1fr)); }
+.spec { background: var(--ok-surface-block); border: 1px solid var(--ok-line-secondary); border-radius: 16px; display: flex; flex-direction: column; min-width: 0; }
+.spec.full { grid-column: 1 / -1; }
+.spec-h { display: flex; align-items: center; gap: 8px; padding: 14px 16px 0; flex-wrap: wrap; }
+.spec-h b { font-size: 15px; font-weight: 500; }
+.kind { font-family: var(--ok-mono); font-size: 11px; padding: 2px 8px; border-radius: 6px; border: 1px solid var(--ok-line-primary); color: var(--ok-content-primary); }
+.spec-h .dp { margin-left: auto; font-family: var(--ok-mono); font-size: 11px; color: var(--ok-content-secondary); font-variant-numeric: tabular-nums; }
+.stage { padding: 24px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 14px; min-height: 96px; overflow-x: auto; }
+.stage.col { flex-direction: column; flex-wrap: nowrap; align-items: stretch; }
+.stage.center { justify-content: center; }
+.stage.page { background: var(--ok-surface-page); margin: 12px 12px 0; border-radius: 10px; }
+.stage.photo { background: linear-gradient(135deg, var(--ok-surface-overlay), var(--ok-surface-page)), repeating-linear-gradient(45deg, var(--ok-line-secondary) 0 1px, transparent 1px 12px); margin: 12px 12px 0; border-radius: 10px; }
+.fig { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; max-width: 100%; min-width: 0; }
+.fig > * { max-width: 100%; }
+.cap { font-family: var(--ok-mono); font-size: 11px; color: var(--ok-content-secondary); }
+.spec-f { display: flex; align-items: center; gap: 8px; padding: 8px 12px 12px 16px; margin-top: auto; }
+.spec-f .note { font-size: 12px; line-height: 1.45; color: var(--ok-content-secondary); flex: 1; }
+.copy { height: 32px; padding: 0 12px; border-radius: 16px; border: none; background: transparent; color: var(--ok-content-highlight); font: 500 13px var(--ok-font); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; flex: none; }
+.copy:hover { background: var(--ok-line-secondary); }
+.copy .ms { font-size: 18px; }
+
+/* nền tảng */
+.roles { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
+.role { border-radius: 10px; padding: 12px; min-height: 78px; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid var(--ok-line-secondary); cursor: pointer; text-align: left; font: inherit; position: relative; overflow: hidden;
+  background-image: linear-gradient(45deg, #8884 25%, transparent 25% 75%, #8884 75%), linear-gradient(45deg, #8884 25%, transparent 25% 75%, #8884 75%); background-size: 12px 12px; background-position: 0 0, 6px 6px; }
+.role::before { content: ""; position: absolute; inset: 0; background: var(--sw); }
+.role > * { position: relative; }
+.role b { font-size: 13px; font-weight: 500; }
+.role code { font-size: 11px; opacity: .85; }
+.type-row { display: grid; grid-template-columns: 170px minmax(0, 1fr) 190px; gap: 16px; align-items: baseline; padding: 12px 0; border-bottom: 1px solid var(--ok-line-secondary); }
+.type-row:last-child { border-bottom: none; }
+.type-row .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.type-row .meta { font-family: var(--ok-mono); font-size: 11px; color: var(--ok-content-secondary); font-variant-numeric: tabular-nums; }
+.shape-cell { display: flex; flex-direction: column; align-items: center; gap: 6px; font-family: var(--ok-mono); font-size: 11px; color: var(--ok-content-secondary); text-align: center; }
+.shape-cell i { display: block; width: 72px; height: 72px; background: var(--ok-surface-quaternary); }
+.tbl { overflow-x: auto; }
+table.tok { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+table.tok th, table.tok td { text-align: left; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--ok-line-secondary); font-size: 13px; white-space: nowrap; }
+table.tok th { font-weight: 500; color: var(--ok-content-secondary); font-size: 12px; }
+table.tok td:first-child { font-family: var(--ok-mono); font-size: 12px; }
+
+/* ================= các thành phần ok-* (tái dùng được: chỉ cần khối token --ok-*) ================= */
+/* giữ chỗ cho ảnh / video / logo của site (RULE-09) */
+.ok-ph { display: grid; place-items: center; text-align: center; padding: 8px; font: 500 12px/1.3 var(--ok-mono); color: var(--ok-content-tertiary);
+  background: repeating-linear-gradient(135deg, var(--ok-line-secondary) 0 1px, transparent 1px 10px), var(--ok-surface-block); border: 1px dashed var(--ok-line-primary); }
+.ok-ph.light { background: repeating-linear-gradient(135deg, var(--ok-menu-line) 0 1px, transparent 1px 10px), var(--ok-surface-secondary); color: var(--ok-menu-content); border-color: var(--ok-menu-line); }
+
+/* nút: VButton (_root_13q6d) · size sm/md · filled/outlined */
+.ok-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid transparent; cursor: pointer; white-space: nowrap; text-decoration: none;
+  font: 400 14px/1 var(--ok-font); text-transform: uppercase; padding: 12px 20px; border-radius: var(--ok-r-btn-md);
+  transition: background-color .3s, border-color .3s, color .3s; }
+.ok-btn.sm { font-size: 12px; padding: 8px 16px; border-radius: var(--ok-r-btn-sm); }
+.ok-btn svg { width: 16px; height: 16px; margin: -2px -4px -2px 0; flex: none; }
+.ok-btn.filled { background: var(--ok-btn-high-bg); color: var(--ok-btn-high-content); }
+.ok-btn.filled:hover, .ok-btn.filled.is-hover { background: var(--ok-btn-high-bg-hover); }
+.ok-btn.filled:disabled, .ok-btn.filled.is-disabled { background: var(--ok-btn-high-bg-disabled); color: var(--ok-btn-high-content-disabled); cursor: default; }
+.ok-btn.outlined { background: transparent; color: var(--ok-btn-medium-content); border-color: var(--ok-btn-medium-border); }
+.ok-btn.outlined:hover, .ok-btn.outlined.is-hover { border-color: var(--ok-btn-medium-border-hover); }
+.ok-btn.low { background: var(--ok-btn-low-bg); color: var(--ok-btn-low-content); }
+.ok-btn.is-focus, .ok-icon-btn.is-focus, .ok-link.is-focus, .ok-logo-link.is-focus { outline: 1px auto var(--ok-focus-ua); outline-offset: 0; }
+:root[data-mode="light"] .ok-btn.filled:not(:hover):not(.is-hover) { box-shadow: inset 0 0 0 1px var(--ok-line-secondary); }
+
+/* nút tròn của carousel (_button_1q6j6): 48 × 48, viền trắng 30% */
+.ok-icon-btn { width: 48px; height: 48px; border-radius: var(--ok-r-btn-md); border: 1px solid var(--ok-btn-carousel-border); background: transparent; color: var(--ok-content-primary);
+  display: inline-grid; place-items: center; cursor: pointer; transition: background-color .3s, border-color .3s, color .3s; }
+.ok-icon-btn svg { width: 24px; height: 24px; }
+.ok-icon-btn:hover, .ok-icon-btn.is-hover { border-color: var(--ok-btn-medium-border-hover); background: var(--ok-btn-high-bg); color: var(--ok-btn-high-content); }
+.ok-icon-btn:disabled, .ok-icon-btn.is-disabled { color: var(--ok-icon-disabled); cursor: default; }
+.ok-icon-btn:disabled:hover { background: transparent; border-color: var(--ok-btn-carousel-border); }
+.ok-icon { width: 24px; height: 24px; display: inline-block; color: var(--ok-content-primary); }
+.ok-cross { width: 28px; height: 28px; display: inline-block; color: var(--ok-content-primary); }
+
+/* header nổi: thẻ trắng 400 rộng, bo 12 (_root_6go2s) */
+.ok-header { width: 400px; max-width: 100%; background: var(--ok-menu-surface); color: var(--ok-menu-content); border-radius: var(--ok-r-media); overflow: hidden; }
+.ok-header.shadow { box-shadow: var(--ok-shadow-card); }
+.ok-header .logo-row { height: 72px; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.ok-header .logo-row + .menu-row, .ok-header .logo-row + .ok-menu-list { border-top: 1px solid var(--ok-menu-line); }
+.ok-header .menu-row { height: 64px; padding: 0 24px; display: flex; align-items: center; }
+.ok-logo-link { display: inline-flex; color: inherit; text-decoration: none; }
+.ok-logo { width: 205px; height: 28px; padding: 0; font-size: 11px; }
+.ok-menu-btn { all: unset; box-sizing: border-box; flex: 1; display: flex; align-items: center; justify-content: space-between; cursor: pointer; font: 400 13px/1 var(--ok-font); text-transform: uppercase; color: var(--ok-menu-content); }
+.ok-burger { width: 16px; height: 10px; display: inline-flex; flex-direction: column; justify-content: space-between; }
+.ok-burger i { display: block; height: 2px; background: var(--ok-btn-high-content); transition: transform .2s var(--ok-ease-icon); }
+.ok-menu-list { margin: 0; padding: 32px 32px 32px 52px; display: flex; flex-direction: column; gap: 20px; position: relative; }
+.ok-menu-list li { font: 400 14px/20px var(--ok-font); letter-spacing: .7px; text-transform: uppercase; color: var(--ok-menu-content); padding-left: 0; max-width: 270px; }
+.ok-menu-wrap { position: relative; border-top: 1px solid var(--ok-menu-line); }
+.ok-menu-wrap .close { position: absolute; right: 32px; bottom: 24px; color: var(--ok-btn-low-content); border-color: color-mix(in srgb, var(--ok-btn-low-content) 50%, transparent); }
+.ok-skip { display: inline-flex; flex-direction: column; background: var(--ok-menu-surface); border-radius: 8px; overflow: hidden; }
+.ok-skip span, .ok-skip a { font: 400 18px/1.35 var(--ok-font); padding: 8px 16px; color: var(--ok-menu-content); text-decoration: none; }
+.ok-skip span { font-weight: 700; }
+
+/* chữ & liên kết */
+.ok-link { font: 400 20px/1.15 var(--ok-font); color: var(--ok-content-primary); text-decoration: underline; text-underline-offset: 2px; transition: opacity .3s; }
+.ok-link:hover, .ok-link.is-hover { opacity: .6; }
+.ok-cats { list-style: none; margin: 0; padding: 0; display: flex; gap: 12px; font: 400 16px/1.35 var(--ok-font); color: var(--ok-content-highlight); }
+.ok-eyebrow { font: 500 12px/1.3 var(--ok-font); letter-spacing: 1.2px; text-transform: uppercase; color: var(--ok-content-secondary); }
+.ok-label { font: 500 14px/1.7 var(--ok-font); text-transform: uppercase; color: var(--ok-content-secondary); margin: 0; }
+.ok-spinner { width: 23px; height: 24px; color: var(--ok-content-highlight); }
+
+/* ngoặc góc: viền trái 1px + hai gạch ngang ở đầu/cuối (dùng ở stat, thẻ người, bước, logo, footer) */
+.ok-bracket { position: relative; border-left: 1px solid var(--ok-line-primary); }
+.ok-bracket::before, .ok-bracket::after { content: ""; position: absolute; left: -1px; width: 8px; height: 1px; background: var(--ok-line-primary); }
+.ok-bracket::before { top: 0; }
+.ok-bracket::after { bottom: 0; }
+.ok-bracket.r { border-left: none; border-right: 1px solid var(--ok-line-primary); }
+.ok-bracket.r::before, .ok-bracket.r::after { left: auto; right: -1px; }
+
+/* hero (_root_hrlcu): 100vh, video nền, h1 72/72 */
+.ok-hero { position: relative; height: 900px; max-height: 100%; background: var(--ok-surface-hero); overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 72px 16px; text-align: center; }
+.ok-hero { color: var(--ok-content-on-media); }
+.ok-hero > .ok-ph { position: absolute; inset: 0; border: none; place-items: end start; padding: 16px; color: var(--ok-content-on-media); background: repeating-linear-gradient(135deg, var(--ok-line-secondary) 0 1px, transparent 1px 10px), var(--ok-ph-media); }
+.ok-hero h1 { position: relative; margin: 0; font: 400 72px/1 var(--ok-font); letter-spacing: var(--ok-track); color: var(--ok-content-on-media); max-width: 820px; text-wrap: balance; }
+.ok-hero .ok-eyebrow { position: absolute; bottom: 56px; color: var(--ok-content-on-media); opacity: .8; }
+.ok-hero .ok-cross { position: absolute; color: var(--ok-content-on-media); }
+.ok-hero.demo { height: 420px; }
+.ok-hero.demo h1 { font-size: 48px; }
+
+/* đầu section (_root_6xjrl): căn giữa, 120 / 72, gạch dưới */
+.ok-section-head { padding: 120px 16px 72px; display: flex; flex-direction: column; align-items: center; gap: 24px; text-align: center; border-bottom: 1px solid var(--ok-line-primary); }
+.ok-section-head.chapter { border-bottom-color: var(--ok-line-chapter); }
+.ok-section-head h2 { margin: 0; font: 400 56px/1.3 var(--ok-font); letter-spacing: var(--ok-track); max-width: 688px; text-wrap: balance; }
+.ok-section-head p { margin: 0; font: 400 20px/1.35 var(--ok-font); max-width: 688px; }
+.ok-section-head p.xl { font-size: 24px; }
+.ok-section-head.demo { padding: 48px 16px 40px; }
+.ok-section-head.demo h2 { font-size: 40px; }
+
+/* khối nền + bo trên (VDefaultPage .block): #0d0d0d, r 32 ≥ 1024 */
+.ok-block { background: var(--ok-surface-block); color: var(--ok-content-primary); border-radius: var(--ok-r-block) var(--ok-r-block) 0 0; padding: 24px; }
+.ok-block.flat { border-radius: 0; }
+.ok-block.page { background: var(--ok-surface-page); }
+
+/* khối tách đôi (_root_cle0y): chữ 437 · ảnh 672×600 r12 */
+.ok-split { display: grid; grid-template-columns: minmax(0, 437px) minmax(0, 672px); justify-content: space-between; gap: 32px; padding: 72px 0; align-items: start; }
+.ok-split.rev { grid-template-columns: minmax(0, 672px) minmax(0, 437px); }
+.ok-split h2 { margin: 0 0 24px; font: 400 36px/1.3 var(--ok-font); letter-spacing: var(--ok-track); color: var(--ok-content-highlight); }
+.ok-split p { margin: 0 0 16px; font: 400 16px/1.35 var(--ok-font); }
+.ok-split .media { aspect-ratio: 672 / 600; border-radius: var(--ok-r-media); }
+.ok-split.demo { padding: 24px 0; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); }
+
+/* số liệu (_content_1sc5n): 44 / 1.28 + nhãn 14 caps */
+.ok-stat { padding: 16px 0 16px 32px; display: flex; flex-direction: column; gap: 4px; }
+.ok-stat .n { margin: 0; font: 400 44px/1.28 var(--ok-font); letter-spacing: var(--ok-track); }
+.ok-stats { display: flex; gap: 24px; flex-wrap: wrap; }
+.ok-stats .ok-stat { padding-left: 20px; min-width: 120px; }
+
+/* bước tính năng (_root_dt3sc): ngoặc trái, huy hiệu số 36 */
+.ok-step { padding: 0 0 0 40px; display: flex; flex-direction: column; gap: 24px; max-width: 487px; }
+.ok-step .t { display: flex; align-items: center; gap: 32px; font: 400 36px/1.35 var(--ok-font); letter-spacing: var(--ok-track); }
+.ok-badge { width: 36px; height: 36px; border-radius: 50%; background: var(--ok-content-highlight); color: var(--ok-on-highlight); display: inline-grid; place-items: center; flex: none; font: 500 14px/1 var(--ok-font); }
+.ok-step p { margin: 0; font: 400 16px/1.35 var(--ok-font); }
+
+/* số lớn trong vòng (_root_1pjhc): 120/120 */
+.ok-bigstat { position: relative; display: grid; place-items: center; aspect-ratio: 1; width: 560px; max-width: 100%; border-radius: 50%; }
+.ok-bigstat .inner { position: relative; width: 532px; max-width: 95%; padding: 0 48px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; border-right: 1px solid var(--ok-line-primary); }
+.ok-bigstat .k { font: 400 14px/1.7 var(--ok-font); text-transform: uppercase; }
+.ok-bigstat .n { font: 400 120px/1 var(--ok-font); }
+.ok-bigstat p { margin: 0; font: 400 20px/1.35 var(--ok-font); }
+.ok-bigstat > .ok-ph { position: absolute; inset: 0; border-radius: 50%; place-items: end center; padding-bottom: 18px; }
+
+/* tiêu đề carousel + điều hướng */
+.ok-carousel-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.ok-carousel-head h3 { margin: 0; font: 400 36px/1.3 var(--ok-font); letter-spacing: var(--ok-track); color: var(--ok-content-highlight); }
+.ok-carousel-head .nav { display: flex; gap: 8px; }
+.ok-progress { width: 48px; height: 2px; background: var(--ok-content-primary); margin: 0 auto; }
+
+/* thẻ người (_root_x13ee): ảnh 380×463 r12 + nội dung có ngoặc */
+.ok-person { width: 380px; max-width: 100%; display: flex; flex-direction: column; gap: 16px; }
+.ok-person .media { aspect-ratio: 380 / 463; border-radius: var(--ok-r-media); }
+.ok-person .media.light { color: var(--ok-menu-content); }
+.ok-person .body { padding: 20px 24px; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.ok-name { margin: 0; font: 400 24px/1.35 var(--ok-font); letter-spacing: var(--ok-track); }
+.ok-person .ok-btn { margin-top: 8px; }
+.ok-person-row { display: grid; grid-template-columns: 1fr 1fr auto; align-items: center; gap: 16px; padding: 20px 0; border-bottom: 1px solid var(--ok-line-primary); }
+.ok-person-row:first-child { border-top: 1px solid var(--ok-line-primary); }
+
+/* dòng tin (_root_1dhj1): ảnh 209×134 · nhóm · tiêu đề 24 · READ */
+.ok-news { display: grid; grid-template-columns: 209px minmax(0, 1fr) auto; gap: 32px; align-items: center; padding: 32px 0; border-top: 1px solid var(--ok-line-primary); }
+.ok-news .thumb { width: 209px; height: 134px; border-radius: 8px; }
+.ok-news .info { display: flex; flex-direction: column; gap: 12px; max-width: 443px; justify-self: center; width: 100%; }
+.ok-news h3 { margin: 0; font: 400 24px/1.35 var(--ok-font); letter-spacing: var(--ok-track); }
+
+/* dải logo nhà đầu tư: ô 202 cao, ngoặc trái */
+.ok-logos { display: grid; grid-template-columns: repeat(7, minmax(110px, 1fr)); overflow-x: auto; }
+.ok-logos > div { height: 202px; display: grid; place-items: center; padding: 0 16px; }
+.ok-logos .ok-ph { width: 110px; height: 40px; font-size: 10px; }
+
+/* câu tuyên bố 40/40 */
+.ok-statement { margin: 0; font: 400 40px/1 var(--ok-font); letter-spacing: var(--ok-track); max-width: 632px; text-wrap: balance; }
+
+/* footer (_root_1u41g): 586 cao, hai cột, chữ mono cho địa chỉ */
+.ok-footer { position: relative; display: grid; grid-template-columns: 1fr 1fr; min-height: 586px; background: var(--ok-surface-page); color: var(--ok-content-primary); overflow: hidden; }
+.ok-footer > .ok-ph.bg { position: absolute; inset: 0; border: none; place-items: start end; padding: 12px; opacity: .6; }
+.ok-footer .col-l { position: relative; padding: 16px 32px 48px; display: flex; flex-direction: column; justify-content: space-between; gap: 32px; }
+.ok-footer .cta { margin: 0 0 32px; font: 400 36px/1.35 var(--ok-font); letter-spacing: var(--ok-track); max-width: 400px; }
+.ok-footer .addr-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.ok-addr { margin: 0; font: 500 14px/1.7 var(--ok-mono); text-transform: uppercase; color: var(--ok-content-secondary); }
+.ok-footer .col-r { position: relative; margin: 16px 0 48px; display: flex; flex-direction: column; }
+.ok-footer .col-r .big { flex: 1; display: grid; place-items: center; }
+.ok-footer .col-r .big .ok-ph { width: 352px; max-width: 80%; height: 52px; }
+.ok-footer .bottom { padding: 0 32px 0 22px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.ok-copy { font: 500 14px/1.35 var(--ok-mono); text-transform: uppercase; color: var(--ok-content-secondary); }
+
+/* trang văn bản pháp lý */
+.ok-legal { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+.ok-legal .txt { display: flex; flex-direction: column; gap: 16px; }
+.ok-legal h3 { margin: 0; font: 400 36px/1.35 var(--ok-font); letter-spacing: var(--ok-track); }
+.ok-legal p { margin: 0; font: 400 20px/1.35 var(--ok-font); }
+
+/* màn mẫu: desktop 1440 × 900, mobile 390 × 844 (viewport đo của site) */
+.screen-wrap { overflow-x: auto; padding: 8px 0; }
+.screens { display: flex; gap: 32px; width: max-content; align-items: flex-start; }
+.frame { position: relative; overflow: hidden; background: var(--ok-surface-page); box-shadow: 0 0 0 1px var(--ok-line-primary); margin: 4px; }
+.frame.desk { width: 1440px; height: 900px; border-radius: 12px; zoom: .5; }
+.frame.mob { width: 390px; height: 844px; border-radius: 36px; zoom: .7; }
+.frame .scroll { position: absolute; inset: 0; overflow: hidden; }
+.frame .ok-header.fixed { position: absolute; top: 20px; left: 32px; z-index: 2; }
+.frame.mob .ok-header.fixed { top: auto; left: 16px; right: 16px; bottom: 16px; width: auto; }
+.frame.mob .ok-header .logo-row { height: 64px; padding: 0 24px; }
+.frame.mob .ok-logo { width: 176px; height: 24px; }
+.frame .ok-hero { height: 100%; }
+.frame.mob .ok-hero h1 { font-size: 44.5px; line-height: 1; }
+.frame.mob .ok-section-head { padding: 64px 16px 40px; }
+.frame.mob .ok-section-head h2 { font-size: 36.4px; }
+.frame.mob .ok-person-row { grid-template-columns: 1fr auto; padding: 20px 0; }
+.frame.mob .ok-person-row .ok-label { grid-column: 1; grid-row: 2; }
+.frame.mob .ok-person-row .ok-btn { grid-column: 2; grid-row: 1 / 3; }
+.frame.mob .ok-name { font-size: 20.2px; }
+.frame-cap { font-family: var(--ok-mono); font-size: 12px; color: var(--ok-content-secondary); margin: 6px 4px 0; max-width: 720px; }
+
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; transition: all .25s var(--ok-ease-reveal); z-index: 20;
+  background: var(--ok-menu-surface); color: var(--ok-menu-content); border-radius: var(--ok-r-media); padding: 12px 18px; font-size: 14px; box-shadow: var(--ok-shadow-card); max-width: calc(100vw - 32px); }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; }
+  .side { display: none; }
+  main { padding: 0 16px 80px; }
+  .grid, .grid.wide { grid-template-columns: 1fr; }
+  .intro h1 { font-size: 36px; }
+  .type-row { grid-template-columns: 1fr; gap: 2px; }
+  .ok-split, .ok-split.rev, .ok-split.demo { grid-template-columns: 1fr; }
+  .ok-news { grid-template-columns: 1fr; }
+  .ok-news .info { justify-self: start; }
+  .ok-person-row { grid-template-columns: 1fr auto; }
+  .ok-person-row .ok-label { grid-column: 1; }
+  .ok-footer, .ok-legal { grid-template-columns: 1fr; }
+  .ok-hero h1 { font-size: 44.5px; }
+  .ok-section-head h2 { font-size: 36.4px; }
+  .ok-bigstat .n { font-size: 72.9px; }
+  .ok-bigstat .inner { padding: 0 16px; }
+  .ok-statement { font-size: 28px; }
+}
+</style>
+<meta name="ui-kit-skip" content="">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <!-- icon của site (iconify i-icon:*, nét 1.5 square), chép hình học từ CSS --svg -->
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="square" stroke-width="1.5" d="M9.764 8H16m0 0v6.236M16 8l-8 8"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="square" stroke-width="1.5" d="m14 8-4 4 4 4"/></symbol>
+  <symbol id="i-right" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="square" stroke-width="1.5" d="m11 16 4-4-4-4"/></symbol>
+  <symbol id="i-cross" viewBox="0 0 28 28"><path fill="none" stroke="currentColor" d="M0 14H12M14 28V16M14 12V0M16 14H28"/></symbol>
+  <symbol id="i-spin" viewBox="0 0 23 24"><path fill="none" stroke="currentColor" stroke-width="1.5" d="M11.5 2.5a9.5 9.5 0 1 1-8.6 5.5"/></symbol>
+</svg>
+<div class="shell">
+  <nav class="side" aria-label="Mục lục">
+    <div class="brand"><div class="brand-mark">O</div><div><b>Orakl UI Kit</b><small>orakl-oncology.com</small></div></div>
+    <h6>Nền tảng</h6>
+    <a href="#color"><span class="ms">palette</span>Màu</a>
+    <a href="#type"><span class="ms">text_fields</span>Chữ</a>
+    <a href="#shape"><span class="ms">rounded_corner</span>Bo góc &amp; nét</a>
+    <a href="#layout"><span class="ms">straighten</span>Bố cục &amp; kích thước</a>
+    <h6>Thành phần</h6>
+    <a href="#actions"><span class="ms">touch_app</span>Hành động</a>
+    <a href="#navigation"><span class="ms">explore</span>Điều hướng</a>
+    <a href="#sections"><span class="ms">view_agenda</span>Khối trang</a>
+    <a href="#data"><span class="ms">monitoring</span>Số liệu &amp; bước</a>
+    <a href="#lists"><span class="ms">group</span>Người &amp; tin</a>
+    <a href="#footer"><span class="ms">bottom_navigation</span>Chân trang &amp; pháp lý</a>
+    <h6>Mẫu</h6>
+    <a href="#screens"><span class="ms">devices</span>Màn hình mẫu</a>
+  </nav>
+
+  <main>
+    <div class="bar" role="toolbar" aria-label="Chủ đề">
+      <div class="ctl"><span>Chế độ</span><div class="seg" id="mode">
+        <button data-v="dark" aria-pressed="true"><span class="ms">dark_mode</span>Tối · section site</button>
+        <button data-v="light" aria-pressed="false"><span class="ms">light_mode</span>Sáng · token gốc</button></div></div>
+      <div class="grow"></div>
+      <button class="copy" id="copy-tokens"><span class="ms">data_object</span>Copy CSS token</button>
+    </div>
+
+    <div class="intro">
+      <div class="eyebrow">orakl-oncology.com :root --theme-color-* → docs/orakl-oncology-ui-kit.html</div>
+      <h1>Hệ giao diện của Orakl Oncology</h1>
+      <p>Site một trang (Nuxt + Roadiz) dựng trên nền đen, chữ trắng, một màu nhấn xanh <code>#6390c1</code> và các viền mảnh có ngoặc góc. Kit này đọc token thẳng từ CSS của site bằng Playwright và đo số đo của từng phần tử thật ở 1440 và 390 px. Mỗi thẻ ghi tên class gốc (CSS module của site) và có nút copy HTML. Dán khối <code>--ok-*</code> cùng CSS <code>.ok-*</code> là dùng lại được.</p>
+      <div class="facts"><span class="fact">grid 4 · 8 · 12 cột</span><span class="fact">gutter 16 · 24 · 32</span><span class="fact">bo khối 16 → 32 từ 1024</span><span class="fact">section 120 / 72</span><span class="fact">tracking hiển thị −0.04em</span><span class="fact">reveal 0.7s cubic-bezier(.25,.46,.45,.94)</span></div>
+    </div>
+
+    <!-- ================= NỀN TẢNG ================= -->
+    <section class="block" id="color">
+      <header><h2>Màu</h2><p>Vai trò lấy từ <code>--theme-color-*</code> (<code>content-on-media</code> = <code>content-primary-inverted</code> gốc, chữ trắng luôn đè lên video) ở <code>:root</code> của site. Chế độ tối dùng bản <code>-inverted</code> và bộ nút <code>_root--theme-light</code> (nút sáng trên nền đen), đúng cách trang thật hiển thị. Ô có caro là màu có độ trong. Bấm một ô để copy mã.</p></header>
+      <div class="roles" id="roles"></div>
+    </section>
+
+    <section class="block" id="type">
+      <header><h2>Chữ</h2><p>Site dùng font thương mại <b>plain</b> (Optimo) cho mọi thứ và <b>Simplon BP Mono</b> cho địa chỉ, bản quyền. Hai font này không có trên Google Fonts nên kit thay bằng <b>Inter Tight</b> và <b>IBM Plex Mono</b>; cỡ, line-height và tracking giữ đúng số đo. Cỡ chữ co theo viewport: cột cuối ghi cỡ đo ở 390 px.</p></header>
+      <div class="spec"><div class="stage col" id="typescale"></div></div>
+    </section>
+
+    <section class="block" id="shape">
+      <header><h2>Bo góc &amp; nét</h2><p>Site không có thang shape; mỗi loại phần tử có một bán kính cố định. Viền luôn 1 px, màu theo <code>line-primary</code>. Riêng ngoặc góc là chữ ký thị giác của site.</p></header>
+      <div class="spec"><div class="stage" id="shapes" style="gap:28px"></div>
+        <div class="stage" style="padding-top:0">
+          <div class="fig"><div class="ok-bracket" style="width:120px;height:72px"></div><span class="cap">.ok-bracket · trái</span></div>
+          <div class="fig"><div class="ok-bracket r" style="width:120px;height:72px"></div><span class="cap">.ok-bracket.r · phải</span></div>
+          <div class="fig"><div style="width:200px;border-top:1px solid var(--ok-line-primary)"></div><span class="cap">gạch section · line-primary</span></div>
+        </div>
+        <div class="spec-f"><span class="note">Ngoặc góc: viền trái 1 px và hai gạch ngang ở đầu, cuối. Độ dài gạch (8 px) đo theo ảnh chụp, site vẽ bằng phần tử riêng không đo được tên class.</span></div></div>
+    </section>
+
+    <section class="block" id="layout">
+      <header><h2>Bố cục &amp; kích thước</h2><p>Biến <code>--size</code>, <code>--grid-columns</code>, <code>--gutter</code>, <code>--block-border-radius</code> đổi theo breakpoint; các kích thước còn lại đo bằng <code>getBoundingClientRect</code> ở 1440 × 900.</p></header>
+      <div class="grid wide">
+        <div class="spec"><div class="stage col"><div class="tbl">
+          <table class="tok"><thead><tr><th>min-width</th><th>--size</th><th>cột</th><th>gutter</th><th>bo khối</th></tr></thead><tbody>
+            <tr><td>0</td><td>480</td><td>4</td><td>16</td><td>16</td></tr>
+            <tr><td>375</td><td>375</td><td>4</td><td>16</td><td>16</td></tr>
+            <tr><td>768</td><td>768</td><td>8</td><td>24</td><td>16</td></tr>
+            <tr><td>1024</td><td>1024</td><td>12</td><td>32</td><td>32</td></tr>
+            <tr><td>1280 · 1440 · 1600</td><td>= min-width</td><td>12</td><td>32</td><td>32</td></tr></tbody></table>
+        </div></div><div class="spec-f"><span class="note"><code>--grid-width: calc(100% - var(--gutter))</code>. Cỡ chữ suy từ <code>--size</code> (đo: chữ 16 ở 1440 thành 16.19 ở 390).</span></div></div>
+        <div class="spec"><div class="stage col"><div class="tbl">
+          <table class="tok"><thead><tr><th>Phần tử</th><th>px</th><th>Ghi chú</th></tr></thead><tbody>
+            <tr><td>lề trang · lề nội dung</td><td>16 · 32</td><td>container 1408, nội dung 1376</td></tr>
+            <tr><td>header card</td><td>400 × 136</td><td>top 20 · left 32 · logo 72 + menu 64</td></tr>
+            <tr><td>header mobile</td><td>358 × 64</td><td>nổi dưới đáy, cách 16</td></tr>
+            <tr><td>section head pad</td><td>120 / 72</td><td>split, team: 72 / 72</td></tr>
+            <tr><td>split</td><td>437 · 672 × 600</td><td>chữ · ảnh r 12</td></tr>
+            <tr><td>thẻ người</td><td>380 × 463</td><td>nội dung pad 20 24</td></tr>
+            <tr><td>dòng tin · dòng người</td><td>pad 32 · 20</td><td>ảnh tin 209 × 134</td></tr>
+            <tr><td>nút sm · md · tròn</td><td>30 · 40 · 48</td><td>pad 8/16 · 12/20</td></tr>
+            <tr><td>huy hiệu · spinner</td><td>36 · 23 × 24</td><td>bước tính năng, đầu section</td></tr>
+            <tr><td>footer</td><td>1440 × 586</td><td>2 cột, cột phải có ngoặc</td></tr></tbody></table>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- ================= HÀNH ĐỘNG ================= -->
+    <section class="block" id="actions">
+      <header><h2>Hành động</h2><p>Mọi nút là một <code>VButton</code> (<code>_root_13q6d</code>): chữ hoa, weight 400, hai cỡ và hai kiểu. Focus chỉ là viền mặc định của trình duyệt (<code>outline: auto 1px</code>, xanh <code>#005fcc</code>); site không style focus riêng.</p></header>
+      <div class="grid">
+        <div class="spec full"><div class="spec-h"><b>Nút filled · md</b><span class="kind">VButton[filled] size-md</span><span class="dp">h 40 · pad 12/20 · r 24 · 14</span></div>
+          <div class="stage page" data-sig="4dd9a0f550">
+            <div class="fig"><a class="ok-btn filled" href="#actions">Contact us</a><span class="cap">nghỉ</span></div>
+            <div class="fig"><a class="ok-btn filled is-hover" href="#actions" data-sig-state="4dd9a0f550:hover">Contact us</a><span class="cap">hover · nền #6390c1</span></div>
+            <div class="fig"><a class="ok-btn filled is-focus" href="#actions" data-sig-state="4dd9a0f550:focus">Contact us</a><span class="cap">focus · trình duyệt</span></div>
+            <div class="fig"><button class="ok-btn filled is-disabled" disabled>Contact us</button><span class="cap">disabled · token</span></div>
+            <div class="fig"><a class="ok-btn low" href="#actions">Contact us</a><span class="cap">low · token, không thấy dùng</span></div>
+          </div><div class="spec-f"><span class="note">Hover đổi nền sang <code>buttons-high-bg-hover</code>. Disabled và low lấy từ token, trang thật không có nút ở hai trạng thái này. Ở chế độ sáng kit thêm viền mảnh để thấy nút; site không đặt nút filled trên nền trắng.</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Nút filled · sm có icon</b><span class="kind">VButton[filled] size-sm icon-last</span><span class="dp">h 30 · pad 8/16 · r 16 · 12</span></div>
+          <div class="stage page" data-sig="3f5c75709e">
+            <div class="fig"><a class="ok-btn filled sm" href="#actions">Read<svg aria-hidden="true"><use href="#i-arrow"/></svg></a><span class="cap">nghỉ</span></div>
+            <div class="fig"><a class="ok-btn filled sm is-hover" href="#actions" data-sig-state="3f5c75709e:hover">Read<svg aria-hidden="true"><use href="#i-arrow"/></svg></a><span class="cap">hover</span></div>
+            <div class="fig"><a class="ok-btn filled sm is-focus" href="#actions" data-sig-state="3f5c75709e:focus">Read<svg aria-hidden="true"><use href="#i-arrow"/></svg></a><span class="cap">focus</span></div>
+          </div><div class="spec-f"><span class="note">Icon arrow-up-right của site (nét 1.5). Kit vẽ icon 16 px; site khai khung 24 px nhưng nút vẫn cao 30.</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Nút outlined · sm</b><span class="kind">VButton[outlined] size-sm</span><span class="dp">h 30 · viền 1 · trắng 50%</span></div>
+          <div class="stage page" data-sig="044078a203 a713a16ee4">
+            <div class="fig"><a class="ok-btn outlined sm" href="#actions">Connect</a><span class="cap">nghỉ</span></div>
+            <div class="fig"><a class="ok-btn outlined sm is-hover" href="#actions" data-sig-state="044078a203:hover">Connect</a><span class="cap">hover · viền trắng</span></div>
+            <div class="fig"><a class="ok-btn outlined sm is-focus" href="#actions" data-sig-state="044078a203:focus">Connect</a><span class="cap">focus</span></div>
+            <div class="fig"><a class="ok-btn outlined sm" href="#actions">LinkedIn<svg aria-hidden="true"><use href="#i-arrow"/></svg></a><span class="cap">có icon · footer</span></div>
+            <div class="fig"><a class="ok-btn outlined sm is-hover" href="#footer" data-sig-state="a713a16ee4:hover">Legals</a><span class="cap">Legals · hover</span></div>
+            <div class="fig"><a class="ok-btn outlined sm is-focus" href="#footer" data-sig-state="a713a16ee4:focus">Legals</a><span class="cap">Legals · focus</span></div>
+          </div><div class="spec-f"><span class="note">Nút Legals ở footer bị bộ phân loại gọi là "tabs" nhưng có cùng style với Connect.</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Nút outlined · md</b><span class="kind">VButton[outlined] size-md</span><span class="dp">h 40 · r 24 · 14</span></div>
+          <div class="stage page" data-sig="4f5131e5a1">
+            <div class="fig"><button class="ok-btn outlined">See more talents</button><span class="cap">nghỉ</span></div>
+            <div class="fig"><button class="ok-btn outlined is-hover" data-sig-state="4f5131e5a1:hover">See more talents</button><span class="cap">hover</span></div>
+            <div class="fig"><button class="ok-btn outlined is-focus" data-sig-state="4f5131e5a1:focus">See more talents</button><span class="cap">focus</span></div>
+          </div></div>
+
+        <div class="spec"><div class="spec-h"><b>Nút tròn carousel</b><span class="kind">_button_1q6j6 · icon-last</span><span class="dp">48 × 48 · r 24</span></div>
+          <div class="stage page" data-sig="e06acdde23 477b1e9d8e">
+            <div class="fig"><button class="ok-icon-btn is-disabled" aria-label="Trước"><svg aria-hidden="true"><use href="#i-left"/></svg></button><span class="cap">đầu danh sách · #d3d3d3</span></div>
+            <div class="fig"><button class="ok-icon-btn is-focus" aria-label="Trước" data-sig-state="e06acdde23:focus"><svg aria-hidden="true"><use href="#i-left"/></svg></button><span class="cap">focus</span></div>
+            <div class="fig"><button class="ok-icon-btn" aria-label="Sau"><svg aria-hidden="true"><use href="#i-right"/></svg></button><span class="cap">nghỉ</span></div>
+            <div class="fig"><button class="ok-icon-btn is-hover" aria-label="Sau" data-sig-state="477b1e9d8e:hover"><svg aria-hidden="true"><use href="#i-right"/></svg></button><span class="cap">hover</span></div>
+            <div class="fig"><button class="ok-icon-btn is-focus" aria-label="Sau" data-sig-state="477b1e9d8e:focus"><svg aria-hidden="true"><use href="#i-right"/></svg></button><span class="cap">focus</span></div>
+          </div><div class="spec-f"><span class="note">Đo được khi hover: chữ đổi đen, viền đổi trắng. Nền trắng là suy luận (icon đen trên nền đen sẽ biến mất); chỉ hiện từ 1024 px.</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Icon</b><span class="kind">iconify i-icon:*</span><span class="dp">24 · nét 1.5</span></div>
+          <div class="stage page" data-sig="94a579f27b 4f33d094dd 5c80e23fb2 02b316cbc3">
+            <div class="fig"><svg class="ok-icon" style="color:var(--ok-icon-disabled)" aria-hidden="true"><use href="#i-left"/></svg><span class="cap">chevron-left</span></div>
+            <div class="fig"><svg class="ok-icon" aria-hidden="true"><use href="#i-right"/></svg><span class="cap">chevron-right</span></div>
+            <div class="fig"><svg class="ok-icon" aria-hidden="true"><use href="#i-arrow"/></svg><span class="cap">arrow-up-right</span></div>
+            <div class="fig"><svg class="ok-cross" aria-hidden="true"><use href="#i-cross"/></svg><span class="cap">cross 28 · hero</span></div>
+            <div class="fig"><svg class="ok-spinner" aria-hidden="true"><use href="#i-spin"/></svg><span class="cap">vòng · đầu section</span></div>
+          </div><div class="spec-f"><span class="note">Bốn icon đầu chép hình học từ CSS <code>--svg</code> của site. Icon vòng xanh ở đầu section vẽ theo ảnh chụp (đường dẫn gốc không lấy đủ).</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= ĐIỀU HƯỚNG ================= -->
+    <section class="block" id="navigation">
+      <header><h2>Điều hướng</h2><p>Site không có thanh nav cố định. Điều hướng chỉ là thẻ header nổi màu trắng: góc trên trái trên desktop, dưới đáy trên mobile. Bấm MENU thì thẻ mở rộng thành mục lục các section.</p></header>
+      <div class="grid">
+        <div class="spec"><div class="spec-h"><b>Header nổi · đóng</b><span class="kind">_root_6go2s</span><span class="dp">400 × 136 · r 12</span></div>
+          <div class="stage photo center" data-sig="d8dc3ce3d6 5f25441f0c aa5845b9b4">
+            <div class="ok-header">
+              <div class="logo-row"><a class="ok-logo-link" href="#navigation" aria-label="Trang chủ"><span class="ok-ph light ok-logo">logo Orakl Oncology</span></a></div>
+              <div class="menu-row"><button class="ok-menu-btn" aria-expanded="false">Menu<span class="ok-burger" aria-hidden="true"><i></i><i></i></span></button></div>
+            </div>
+          </div><div class="spec-f"><span class="note">Hamburger là hai gạch 16 × 2, chuyển động 0.2s cubic-bezier(.46,.45,.17,.99). Cả thẻ trượt vào với 0.6s cubic-bezier(.38,.69,.33,.99).</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Header nổi · mở menu</b><span class="kind">_root_6go2s · _close_6go2s</span><span class="dp">mục 14 · tracking .7</span></div>
+          <div class="stage photo center">
+            <div class="ok-header">
+              <div class="logo-row"><span class="ok-ph light ok-logo">logo Orakl Oncology</span></div>
+              <div class="ok-menu-wrap"><ol class="ok-menu-list">
+                <li>What we build</li><li>The platform, by design</li><li>Partnerships</li><li>The team</li><li>Latest news</li>
+              </ol><a class="ok-btn outlined sm close" href="#navigation">Close</a></div>
+            </div>
+          </div><div class="spec-f"><span class="note">Mục lục là <code>ol</code> đánh số, chữ hoa 14, màu <code>#172d2f</code>. Nút CLOSE dùng VButton outlined bản <code>theme-dark</code> (viền đen 50%). Panel menu không có trong inventory vì chỉ hiện sau khi bấm; kit dựng theo ảnh chụp lúc mở.</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Header trang phụ</b><span class="kind">/legals header</span><span class="dp">400 × 72 · bóng 0 4 24</span></div>
+          <div class="stage page center" data-sig="d972c15c3f e0b9826588">
+            <div class="fig"><div class="ok-header shadow"><div class="logo-row"><a class="ok-logo-link" href="#navigation" aria-label="Trang chủ"><span class="ok-ph light ok-logo">logo Orakl Oncology</span></a></div></div><span class="cap">nghỉ · bóng #0b26411a</span></div>
+            <div class="fig"><div class="ok-header shadow"><div class="logo-row"><a class="ok-logo-link is-focus" href="#navigation" aria-label="Trang chủ" data-sig-state="e0b9826588:focus"><span class="ok-ph light ok-logo">logo Orakl Oncology</span></a></div></div><span class="cap">logo · focus trình duyệt</span></div>
+          </div></div>
+
+        <div class="spec"><div class="spec-h"><b>Liên kết &amp; nhóm tin</b><span class="kind">a · _category_1dhj1</span><span class="dp">20 gạch chân · 16 xanh</span></div>
+          <div class="stage page" data-sig="0263be1a2a a475f0342e">
+            <div class="fig"><a class="ok-link" href="#navigation">www.example-lab.com</a><span class="cap">nghỉ</span></div>
+            <div class="fig"><a class="ok-link is-hover" href="#navigation" data-sig-state="0263be1a2a:hover">www.example-lab.com</a><span class="cap">hover · opacity .6</span></div>
+            <div class="fig"><a class="ok-link is-focus" href="#navigation" data-sig-state="0263be1a2a:focus">www.example-lab.com</a><span class="cap">focus</span></div>
+            <div class="fig"><ul class="ok-cats"><li>Press release</li></ul><span class="cap">nhóm tin · highlight</span></div>
+          </div></div>
+
+        <div class="spec"><div class="spec-h"><b>Skip link</b><span class="kind">vue-skip-to</span><span class="dp">18 · pad 8/16</span></div>
+          <div class="stage page">
+            <nav class="ok-skip" aria-label="Bỏ qua"><span>Skip to</span><a href="#actions">Main content</a><a href="#footer">Footer</a></nav>
+          </div><div class="spec-f"><span class="note">Chỉ hiện khi nhấn Tab. Site dùng chữ <code>#333</code>; kit lấy <code>menu-content</code> cho gần.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= KHỐI TRANG ================= -->
+    <section class="block" id="sections">
+      <header><h2>Khối trang</h2><p>Trang là chuỗi khối ghép dọc. Khối mở chương có nền <code>#0d0d0d</code> và bo trên 32 px, chồng lên khối đen trước đó.</p></header>
+      <div class="grid">
+        <div class="spec full"><div class="spec-h"><b>Hero</b><span class="kind">_root_hrlcu</span><span class="dp">100vh · h1 72/72 · −0.04em</span></div>
+          <div class="stage col" style="padding:12px">
+            <div class="ok-hero demo" data-sig="09305883a1 9045c50cc3 48a0e13ba6">
+              <div class="ok-ph">video nền (hero)</div>
+              <svg class="ok-cross" style="left:18%;top:28%" aria-hidden="true"><use href="#i-cross"/></svg>
+              <svg class="ok-cross" style="right:18%;top:56%" aria-hidden="true"><use href="#i-cross"/></svg>
+              <h1>Biology-first intelligence for the next era of care</h1>
+              <div class="ok-eyebrow">Scroll to discover</div>
+            </div>
+          </div><div class="spec-f"><span class="note">Chữ trắng luôn đè lên video (nền chờ <code>#f5f3f7</code>). Eyebrow 12/1.3, weight 500, tracking 1.2 px. Demo thu chiều cao còn 420 và chữ còn 48.</span></div></div>
+
+        <div class="spec full"><div class="spec-h"><b>Đầu section</b><span class="kind">_root_6xjrl</span><span class="dp">pad 120/72 · h2 56/1.3</span></div>
+          <div class="stage col page" style="padding:0" data-sig="b642847b29 9e185abee1 06c77d70b7 8c705147c4">
+            <div class="ok-section-head demo chapter">
+              <svg class="ok-spinner" aria-hidden="true"><use href="#i-spin"/></svg>
+              <h2>What we are building</h2>
+              <p class="xl">A living dataset grown from patient samples, read by models that learn how disease responds to new treatments.</p>
+            </div>
+            <div class="ok-section-head demo">
+              <svg class="ok-spinner" aria-hidden="true"><use href="#i-spin"/></svg>
+              <h2>The platform, by design</h2>
+            </div>
+          </div><div class="spec-f"><span class="note">Đoạn dẫn 24 (mở trang) hoặc 20 (team, news), tối đa 688. Gạch dưới đầu tiên dùng <code>line-chapter</code>, các gạch sau dùng <code>line-primary</code>. Demo thu pad và cỡ chữ.</span></div></div>
+
+        <div class="spec full"><div class="spec-h"><b>Khối tách đôi</b><span class="kind">_root_cle0y</span><span class="dp">chữ 437 · ảnh 672 × 600 r 12</span></div>
+          <div class="stage col page" style="padding:0 24px" data-sig="19603a5a89 50c49dc736 bdf8c35907 48d3953866 254cee53bb 69d7d65f06">
+            <div class="ok-split demo">
+              <div><h2>Hospital alliances</h2><p>We work with a network of clinical centres to grow a shared, standardised collection of matched samples and outcome data for research and development.</p><a class="ok-btn filled" href="#sections">Contact us</a></div>
+              <div class="ok-ph media">ảnh minh hoạ 672 × 600</div>
+            </div>
+          </div><div class="spec-f"><span class="note">Tiêu đề 36/1.3 màu highlight. Biến thể <code>.rev</code> đảo ảnh sang trái. Mobile xếp dọc, ảnh rộng hết cột.</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Khối nền chương</b><span class="kind">.block · --block-color</span><span class="dp">#0d0d0d · r 32 trên</span></div>
+          <div class="stage col page" data-sig="399ee4ccaa 34463e511e 3ac1a91aa9">
+            <div class="ok-block"><span class="cap">The team · bo trên 32</span></div>
+            <div class="ok-block flat"><span class="cap">News, Careers · nối tiếp, bo 0</span></div>
+          </div></div>
+
+        <div class="spec"><div class="spec-h"><b>Câu tuyên bố</b><span class="kind">p · 40/40</span><span class="dp">−0.04em · 632 rộng</span></div>
+          <div class="stage page" data-sig="a17d7b5f40">
+            <p class="ok-statement">Turn hard diseases into treatable ones</p>
+          </div></div>
+      </div>
+    </section>
+
+    <!-- ================= SỐ LIỆU & BƯỚC ================= -->
+    <section class="block" id="data">
+      <header><h2>Số liệu &amp; bước</h2><p>Con số đếm lên khi cuộn tới (đo lúc chưa chạy thấy "0%"). Mọi số liệu nằm trong ngoặc góc.</p></header>
+      <div class="grid">
+        <div class="spec"><div class="spec-h"><b>Số liệu</b><span class="kind">_content_1sc5n</span><span class="dp">44/1.28 · nhãn 14/1.7</span></div>
+          <div class="stage page col" data-sig="51ba00b089 46bf25f46e">
+            <div class="ok-stat ok-bracket"><p class="n">82%</p><p class="ok-label">Of trial outcomes anticipated</p></div>
+            <div class="ok-stats">
+              <div class="ok-stat ok-bracket"><p class="n">30+</p><p class="ok-label">People</p></div>
+              <div class="ok-stat ok-bracket"><p class="n">9</p><p class="ok-label">Countries</p></div>
+            </div>
+          </div><div class="spec-f"><span class="note">Dạng dọc (pad trái 32) trong khối tách đôi; dạng hàng ngang ở mục Careers.</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Bước tính năng</b><span class="kind">_root_dt3sc</span><span class="dp">huy hiệu 36 · tiêu đề 36/1.35</span></div>
+          <div class="stage page">
+            <div class="ok-step ok-bracket">
+              <div class="ok-eyebrow" style="letter-spacing:normal">Platform layer</div>
+              <div class="t"><span class="ok-badge">1</span>Living biology</div>
+              <p>Patient-derived models are grown at scale and screened against candidate drugs, producing a new data point every day.</p>
+            </div>
+          </div><div class="spec-f"><span class="note">Bộ phân loại bỏ sót mẫu này (W01c). Ở 1440, cột chữ lệch trái 82.66 px theo grid; kit dùng 40 px. Ảnh 3D đi kèm bên trái được bỏ.</span></div></div>
+
+        <div class="spec full"><div class="spec-h"><b>Số lớn trong vòng</b><span class="kind">_root_1pjhc</span><span class="dp">120/120 · nhãn 14 · text 20</span></div>
+          <div class="stage page center" data-sig="ca18ec226c">
+            <div class="ok-bigstat"><div class="ok-ph">ảnh vòng kính (petri)</div>
+              <div class="inner ok-bracket"><span class="k">Funding</span><span class="n">×10</span><p>More therapeutic options brought within reach of patients.</p></div></div>
+          </div><div class="spec-f"><span class="note">Khung chữ có ngoặc hai bên (trái và phải); số đếm lên. Ở 390 px số còn 72.9.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= NGƯỜI & TIN ================= -->
+    <section class="block" id="lists">
+      <header><h2>Người &amp; tin</h2><p>Tên và nội dung dưới đây là mẫu. Ảnh chân dung, ảnh tin và logo của site được thay bằng khối giữ chỗ.</p></header>
+      <div class="grid">
+        <div class="spec full"><div class="spec-h"><b>Carousel lãnh đạo</b><span class="kind">_root_1lad2 · _root_x13ee</span><span class="dp">thẻ 380 · ảnh 380 × 463 r 12</span></div>
+          <div class="stage page col" data-sig="8cc44a580e 7027b33b2f d0a8f09aa8 c965fdc6e3 4b8abffc96 3a2ca7d801 4ece9a3380 18f724a0d6 241081e6a3 30f18b8c0d 32153fabb6">
+            <div class="ok-carousel-head"><h3>Leadership</h3><div class="nav"><button class="ok-icon-btn is-disabled" aria-label="Trước"><svg aria-hidden="true"><use href="#i-left"/></svg></button><button class="ok-icon-btn" aria-label="Sau"><svg aria-hidden="true"><use href="#i-right"/></svg></button></div></div>
+            <div style="display:flex;gap:16px;overflow-x:auto">
+              <div class="ok-person"><div class="ok-ph light media">ảnh chân dung</div><div class="body ok-bracket"><p class="ok-name">Claire Martin</p><p class="ok-label">PhD, CEO</p><a class="ok-btn outlined sm" href="#lists">Connect</a></div></div>
+              <div class="ok-person"><div class="ok-ph light media">ảnh chân dung</div><div class="body ok-bracket"><p class="ok-name">Hugo Lefèvre</p><p class="ok-label">PhD, CTO</p><a class="ok-btn outlined sm" href="#lists">Connect</a></div></div>
+              <div class="ok-person"><div class="ok-ph light media">ảnh chân dung</div><div class="body ok-bracket"><p class="ok-name">Inès Robert</p><p class="ok-label">Principal scientist</p><a class="ok-btn outlined sm" href="#lists">Connect</a></div></div>
+            </div>
+            <div class="ok-progress" aria-hidden="true"></div>
+          </div><div class="spec-f"><span class="note">Nền chờ ảnh <code>#fafafa</code>. Dưới 1024 px hai nút tròn bị ẩn, thay bằng gạch tiến độ 48 × 2 (vẽ theo ảnh chụp mobile, không đo được class).</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Dòng người</b><span class="kind">_list-item_1lad2</span><span class="dp">pad 20 · gạch 1</span></div>
+          <div class="stage page col" data-sig="023dae365d">
+            <div><div class="ok-person-row"><p class="ok-name">Paul Girard</p><p class="ok-label">Head of partnerships</p><a class="ok-btn outlined sm" href="#lists">Connect</a></div>
+            <div class="ok-person-row"><p class="ok-name">Léa Moreau</p><p class="ok-label">Data scientist</p><a class="ok-btn outlined sm" href="#lists">Connect</a></div></div>
+          </div></div>
+
+        <div class="spec full"><div class="spec-h"><b>Dòng tin</b><span class="kind">_root_1dhj1</span><span class="dp">pad 32 · ảnh 209 × 134 · 24</span></div>
+          <div class="stage page col" data-sig="8005e7cbdb f5a4b93fc9 c4d4dc3271 9dc66af0d7 172c689572">
+            <article class="ok-news"><div class="ok-ph light thumb">ảnh tin</div><div class="info"><ul class="ok-cats"><li>Press release</li></ul><h3>Seed round closes to scale the prediction platform</h3></div><a class="ok-btn filled sm" href="#lists">Read<svg aria-hidden="true"><use href="#i-arrow"/></svg></a></article>
+          </div><div class="spec-f"><span class="note">Ảnh tin đo <code>border-radius: 0</code> trên img nhưng trông bo nhẹ; kit để 8.</span></div></div>
+
+        <div class="spec full"><div class="spec-h"><b>Dải logo nhà đầu tư</b><span class="kind">investors</span><span class="dp">ô 202 cao · logo 110</span></div>
+          <div class="stage page col" data-sig="e2378ecfc4 efebbe8284 e66fb5bcfc a1c5cdf988">
+            <div class="ok-logos">
+              <div class="ok-bracket"><span class="ok-ph">logo</span></div><div class="ok-bracket"><span class="ok-ph">logo</span></div><div class="ok-bracket"><span class="ok-ph">logo</span></div><div class="ok-bracket"><span class="ok-ph">logo</span></div><div class="ok-bracket"><span class="ok-ph">logo</span></div><div class="ok-bracket"><span class="ok-ph">logo</span></div><div class="ok-bracket"><span class="ok-ph">logo</span></div>
+            </div>
+          </div><div class="spec-f"><span class="note">Logo của bên thứ ba không chép vào kit.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= CHÂN TRANG ================= -->
+    <section class="block" id="footer">
+      <header><h2>Chân trang &amp; pháp lý</h2></header>
+      <div class="grid">
+        <div class="spec full"><div class="spec-h"><b>Footer</b><span class="kind">_root_1u41g</span><span class="dp">586 cao · CTA 36 · mono 14</span></div>
+          <div class="stage col" style="padding:12px" data-sig="79e3d282b9 54862b7456 0d56e927fd">
+            <footer class="ok-footer">
+              <div class="ok-ph bg">ảnh nền footer</div>
+              <div class="col-l">
+                <div><p class="cta">Have a question or an idea? Let's talk.</p><a class="ok-btn filled" href="#footer">Contact us</a></div>
+                <div class="addr-row"><p class="ok-addr">Example Bio SAS<br>12 rue de l'Exemple<br>75000 Paris<br>France</p><a class="ok-btn outlined sm" href="#footer">LinkedIn<svg aria-hidden="true"><use href="#i-arrow"/></svg></a></div>
+              </div>
+              <div class="col-r ok-bracket">
+                <div class="big"><span class="ok-ph">logo lớn</span></div>
+                <div class="bottom"><span class="ok-copy">©Example 2026</span><a class="ok-btn outlined sm" href="#footer">Legals</a></div>
+              </div>
+            </footer>
+          </div><div class="spec-f"><span class="note">Địa chỉ và bản quyền dùng font mono (site: Simplon BP Mono 500).</span></div></div>
+
+        <div class="spec full"><div class="spec-h"><b>Trang văn bản pháp lý</b><span class="kind">/legals</span><span class="dp">h3 36/1.35 · thân 20</span></div>
+          <div class="stage page col" data-sig="ebfc7b7b12">
+            <div class="ok-legal"><div></div><div class="txt">
+              <h3>Site publisher</h3>
+              <p>Website: <a class="ok-link" href="#footer">www.example-lab.com</a></p>
+              <p>Publisher: Example Bio SAS<br>Legal form: simplified joint-stock company</p>
+              <h3>Hosting</h3><p>Example Hosting, 1 rue du Serveur, 69000 Lyon</p>
+            </div></div>
+          </div><div class="spec-f"><span class="note">Nội dung nằm ở nửa phải lưới 12 cột (x = 853 ở 1440).</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= MÀN MẪU ================= -->
+    <section class="block" id="screens">
+      <header><h2>Màn hình mẫu</h2><p>Ghép lại từ các class <code>.ok-*</code> ở trên. Desktop 1440 × 900 thu nhỏ 50%, mobile 390 × 844 thu nhỏ 70%.</p></header>
+      <div class="screen-wrap"><div class="screens">
+        <div>
+          <div class="frame desk"><div class="scroll">
+            <div class="ok-header fixed"><div class="logo-row"><span class="ok-ph light ok-logo">logo Orakl Oncology</span></div><div class="menu-row"><button class="ok-menu-btn">Menu<span class="ok-burger" aria-hidden="true"><i></i><i></i></span></button></div></div>
+            <div class="ok-hero"><div class="ok-ph">video nền (hero)</div>
+              <svg class="ok-cross" style="left:19%;top:26%" aria-hidden="true"><use href="#i-cross"/></svg><svg class="ok-cross" style="right:19%;top:40%" aria-hidden="true"><use href="#i-cross"/></svg>
+              <h1>Biology-first intelligence for the next era of care</h1><div class="ok-eyebrow">Scroll to discover</div></div>
+          </div></div>
+          <div class="frame-cap">desktop · hero · header nổi 400 × 136 tại (32, 20)</div>
+        </div>
+        <div>
+          <div class="frame desk"><div class="scroll" style="padding:0 16px">
+            <div class="ok-header fixed"><div class="logo-row"><span class="ok-ph light ok-logo">logo Orakl Oncology</span></div><div class="menu-row"><button class="ok-menu-btn">Menu<span class="ok-burger" aria-hidden="true"><i></i><i></i></span></button></div></div>
+            <div class="ok-block" style="margin-top:40px;padding:0 0 0">
+              <div class="ok-section-head" style="padding:64px 16px 56px"><svg class="ok-spinner" aria-hidden="true"><use href="#i-spin"/></svg><h2>The team</h2><p>Biologists, engineers and oncologists working on one shared problem.</p></div>
+              <div style="padding:56px 16px 0">
+                <div class="ok-carousel-head"><h3>Leadership</h3><div class="nav"><button class="ok-icon-btn is-disabled" aria-label="Trước"><svg aria-hidden="true"><use href="#i-left"/></svg></button><button class="ok-icon-btn" aria-label="Sau"><svg aria-hidden="true"><use href="#i-right"/></svg></button></div></div>
+                <div style="display:flex;gap:32px;margin-top:32px">
+                  <div class="ok-person"><div class="ok-ph light media">ảnh chân dung</div><div class="body ok-bracket"><p class="ok-name">Claire Martin</p><p class="ok-label">PhD, CEO</p><a class="ok-btn outlined sm" href="#screens">Connect</a></div></div>
+                  <div class="ok-person"><div class="ok-ph light media">ảnh chân dung</div><div class="body ok-bracket"><p class="ok-name">Hugo Lefèvre</p><p class="ok-label">PhD, CTO</p><a class="ok-btn outlined sm" href="#screens">Connect</a></div></div>
+                  <div class="ok-person"><div class="ok-ph light media">ảnh chân dung</div><div class="body ok-bracket"><p class="ok-name">Inès Robert</p><p class="ok-label">Principal scientist</p><a class="ok-btn outlined sm" href="#screens">Connect</a></div></div>
+                  <div class="ok-person"><div class="ok-ph light media">ảnh chân dung</div><div class="body ok-bracket"><p class="ok-name">Nora Petit</p><p class="ok-label">Head of biology</p><a class="ok-btn outlined sm" href="#screens">Connect</a></div></div>
+                </div>
+              </div>
+            </div>
+          </div></div>
+          <div class="frame-cap">desktop · cuộn tới The team: khối #0d0d0d bo trên 32, đầu section, carousel thẻ người 380</div>
+        </div>
+        <div>
+          <div class="frame mob"><div class="scroll">
+            <div class="ok-hero"><div class="ok-ph">video nền</div>
+              <svg class="ok-cross" style="left:6%;top:27%" aria-hidden="true"><use href="#i-cross"/></svg><svg class="ok-cross" style="right:6%;top:52%" aria-hidden="true"><use href="#i-cross"/></svg>
+              <h1>Biology-first intelligence for the next era of care</h1><div class="ok-eyebrow" style="bottom:120px">Scroll to discover</div></div>
+            <div class="ok-header fixed"><div class="logo-row"><span class="ok-ph light ok-logo">logo</span><span class="ok-burger" aria-hidden="true"><i></i><i></i></span></div></div>
+          </div></div>
+          <div class="frame-cap">mobile · hero 44.5 · header nổi dưới đáy</div>
+        </div>
+        <div>
+          <div class="frame mob"><div class="scroll" style="background:var(--ok-surface-block);padding:0 16px">
+            <div class="ok-section-head" style="margin:0 -16px"><svg class="ok-spinner" aria-hidden="true"><use href="#i-spin"/></svg><h2>The team</h2></div>
+            <div style="padding-top:8px">
+              <div class="ok-person-row"><p class="ok-name">Paul Girard</p><p class="ok-label">Head of partnerships</p><a class="ok-btn outlined sm" href="#screens">Connect</a></div>
+              <div class="ok-person-row"><p class="ok-name">Léa Moreau</p><p class="ok-label">Data scientist</p><a class="ok-btn outlined sm" href="#screens">Connect</a></div>
+              <div class="ok-person-row"><p class="ok-name">Tom Lambert</p><p class="ok-label">Data engineer</p><a class="ok-btn outlined sm" href="#screens">Connect</a></div>
+              <div style="display:flex;justify-content:center;padding:28px 0"><button class="ok-btn outlined">See more talents</button></div>
+            </div>
+            <div class="ok-header fixed"><div class="logo-row"><span class="ok-ph light ok-logo">logo</span><span class="ok-burger" aria-hidden="true"><i></i><i></i></span></div></div>
+          </div></div>
+          <div class="frame-cap">mobile · dòng người xếp 2 hàng, nút bên phải</div>
+        </div>
+      </div></div>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status"><span id="toast-t">Đã copy</span></div>
+
+<script>
+/* token đọc từ :root của orakl-oncology.com (Playwright, 06/10/2026). light = --theme-color-* + buttons theme-dark; dark = bản -inverted + buttons theme-light */
+const ROLES=["content-primary","content-secondary","content-tertiary","content-highlight","content-highlight-blue","content-highlight-blue-alt","content-link-hover","surface-page","surface-block","surface-secondary","surface-tertiary","surface-quaternary","surface-hero","surface-overlay","surface-overlay-media","line-primary","line-secondary","line-chapter","btn-high-bg","btn-high-content","btn-high-bg-hover","btn-high-bg-disabled","btn-high-content-disabled","btn-medium-content","btn-medium-border","btn-medium-border-hover","btn-carousel-border","btn-low-bg","btn-low-content","icon-disabled","content-on-media","menu-surface","menu-content","menu-line","on-highlight"];
+const PALETTES={"orakl":{"label":"Orakl",
+ "light":["#000000","#000000cc","#00000080","#6390c1","#0959aa","#198cff","#616161","#ffffff","#fafafa","#fafafa","#f5f6f7","#dad7d7","#f5f3f7","#00000080","#f6f2ef59","#0000004d","#00000026","#0b26414d","#ffffff","#000000","#6390c1","#efefef","#898989","#000000","#00000080","#000000","#0000004d","#efece4","#000000","#d3d3d3","#ffffff","#ffffff","#172d2f","#00000026","#ffffff"],
+ "dark":["#ffffff","#ffffffcc","#ffffff80","#6390c1","#0959aa","#198cff","#616161","#000000","#0d0d0d","#fafafa","#f5f6f7","#dad7d7","#f5f3f7","#00000080","#f6f2ef59","#ffffff66","#ffffff26","#0b26414d","#ffffff","#000000","#6390c1","#efefef","#898989","#ffffff","#ffffff80","#ffffff","#ffffff4d","#efece4","#000000","#d3d3d3","#ffffff","#ffffff","#172d2f","#00000026","#ffffff"]}};
+(function () {
+  const root = document.documentElement;
+  const state = { pal: "orakl", mode: matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark" };
+  try { Object.assign(state, JSON.parse(localStorage.getItem("orakl-kit") || "{}")); } catch (e) {}
+  if (!PALETTES[state.pal]) state.pal = "orakl";
+
+  const toast = (t) => {
+    const el = document.getElementById("toast");
+    document.getElementById("toast-t").textContent = t;
+    el.classList.add("show");
+    clearTimeout(toast.t);
+    toast.t = setTimeout(() => el.classList.remove("show"), 1600);
+  };
+  const copy = async (text, msg) => {
+    try { await navigator.clipboard.writeText(text); toast(msg); }
+    catch (e) { toast("Trình duyệt chặn clipboard, hãy copy tay"); }
+  };
+
+  function apply() {
+    const vals = PALETTES[state.pal][state.mode];
+    ROLES.forEach((r, i) => root.style.setProperty("--ok-" + r, vals[i]));
+    root.dataset.mode = state.mode;
+    document.querySelectorAll("#mode button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === state.mode));
+    renderRoles(vals);
+    try { localStorage.setItem("orakl-kit", JSON.stringify(state)); } catch (e) {}
+  }
+  document.querySelectorAll("#mode button").forEach((b) => (b.onclick = () => { state.mode = b.dataset.v; apply(); }));
+
+  /* ô màu: chữ đen hoặc trắng theo độ sáng sau khi trộn alpha lên nền trang */
+  const rgb = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+  function ink(hex, page) {
+    const a = hex.length > 7 ? parseInt(hex.slice(7), 16) / 255 : 1;
+    const c = rgb(hex), p = rgb(page);
+    const m = c.map((v, i) => v * a + p[i] * (1 - a));
+    return (0.299 * m[0] + 0.587 * m[1] + 0.114 * m[2]) > 150 ? "#000000" : "#ffffff";
+  }
+  function renderRoles(vals) {
+    const box = document.getElementById("roles");
+    const page = vals[ROLES.indexOf("surface-page")];
+    box.innerHTML = "";
+    ROLES.forEach((r, i) => {
+      const b = document.createElement("button");
+      b.className = "role"; b.style.setProperty("--sw", vals[i]); b.style.color = ink(vals[i], page);
+      b.innerHTML = "<b>" + r + "</b><code>" + vals[i] + "</code>";
+      b.onclick = () => copy(vals[i], "Đã copy " + r + " " + vals[i]);
+      box.appendChild(b);
+    });
+  }
+
+  /* thang chữ đo trên site: [tên, cỡ, line-height, tracking, weight, hoa?, mono?, cỡ ở 390] */
+  const TYPE = [["Số lớn · bigstat", 120, "120px", "normal", 400, 0, 0, "72.9"], ["Hero · h1", 72, "72px", "-0.04em", 400, 0, 0, "44.5"],
+    ["Section · h2", 56, "1.3", "-0.04em", 400, 0, 0, "36.4"], ["Số liệu · h1", 44, "1.28", "-0.04em", 400, 0, 0, "36.4"],
+    ["Tuyên bố", 40, "40px", "-0.04em", 400, 0, 0, "—"], ["Tiêu đề tách đôi · h2/h3", 36, "1.3", "-0.04em", 400, 0, 0, "28.3"],
+    ["CTA footer", 36, "1.35", "-0.04em", 400, 0, 0, "—"], ["Tên · tiêu đề tin", 24, "1.35", "-0.04em", 400, 0, 0, "20.2"],
+    ["Đoạn dẫn XL", 24, "1.35", "normal", 400, 0, 0, "20.2"], ["Đoạn dẫn", 20, "1.35", "normal", 400, 0, 0, "20.2"],
+    ["Thân", 16, "1.35", "normal", 400, 0, 0, "16.2"], ["Nhãn hoa", 14, "1.7", "normal", 500, 1, 0, "14.2"],
+    ["Mục menu", 14, "20px", "0.7px", 400, 1, 0, "14.2"], ["Nút md", 14, "1", "normal", 400, 1, 0, "14.2"],
+    ["Nút sm", 12, "1", "normal", 400, 1, 0, "12.1"], ["Eyebrow", 12, "1.3", "1.2px", 500, 1, 0, "12.1"],
+    ["Mono · địa chỉ", 14, "1.7", "normal", 500, 1, 1, "14.2"]];
+  const ts = document.getElementById("typescale");
+  TYPE.forEach(([name, size, lh, ls, w, up, mono, m]) => {
+    const row = document.createElement("div");
+    row.className = "type-row";
+    const st = "font-size:" + size + "px;line-height:" + lh + ";letter-spacing:" + ls + ";font-weight:" + w + (up ? ";text-transform:uppercase" : "") + (mono ? ";font-family:var(--ok-mono)" : "");
+    row.innerHTML = '<span class="meta">' + name + '</span><span class="t" style="' + st + '">' + (size > 60 ? "×10 data" : "Living biology, read at scale") + '</span><span class="meta">' + size + " / " + lh + " · " + ls + " · " + w + " · 390: " + m + "</span>";
+    ts.appendChild(row);
+  });
+
+  /* bán kính cố định theo loại phần tử */
+  const sh = document.getElementById("shapes");
+  [["nút sm", "var(--ok-r-btn-sm)", "16"], ["nút md · tròn", "var(--ok-r-btn-md)", "24"], ["ảnh · header", "var(--ok-r-media)", "12"], ["khối < 1024", "16px", "16"], ["khối ≥ 1024", "32px", "32"], ["huy hiệu", "50%", "50%"]].forEach(([n, r, v]) => {
+    const c = document.createElement("div");
+    c.className = "shape-cell";
+    c.innerHTML = '<i style="border-radius:' + r + '"></i>' + n + "<br>" + v;
+    sh.appendChild(c);
+  });
+
+  /* mỗi thẻ thành phần có nút copy HTML của phần trình diễn */
+  document.querySelectorAll(".spec").forEach((spec) => {
+    const stage = spec.querySelector(".stage");
+    if (!stage || !spec.querySelector(".spec-h")) return;
+    let foot = spec.querySelector(".spec-f");
+    if (!foot) { foot = document.createElement("div"); foot.className = "spec-f"; foot.innerHTML = '<span class="note"></span>'; spec.appendChild(foot); }
+    const b = document.createElement("button");
+    b.className = "copy"; b.innerHTML = '<span class="ms">content_copy</span>HTML';
+    b.onclick = () => copy(stage.innerHTML.trim().replace(/\n\s+/g, "\n"), "Đã copy HTML của " + spec.querySelector(".spec-h b").textContent);
+    foot.appendChild(b);
+  });
+
+  /* token hiện tại dưới dạng khối :root */
+  document.getElementById("copy-tokens").onclick = () => {
+    const vals = PALETTES[state.pal][state.mode];
+    const lines = ROLES.map((r, i) => "  --ok-" + r + ": " + vals[i] + ";");
+    copy(":root {\n" + lines.join("\n") + "\n  --ok-focus-ua: #005fcc;\n  --ok-shadow-card: 0 4px 24px 0 #0b26411a;\n  --ok-r-btn-sm: 16px;\n  --ok-r-btn-md: 24px;\n  --ok-r-media: 12px;\n  --ok-r-block: 32px;\n  --ok-ease-reveal: cubic-bezier(0.25, 0.46, 0.45, 0.94);\n  --ok-font: \"plain\", \"Inter Tight\", Arial, sans-serif;\n  --ok-mono: \"simplon bp mono\", \"IBM Plex Mono\", monospace;\n  --ok-track: -0.04em;\n}", "Đã copy token " + (state.mode === "dark" ? "tối" : "sáng"));
+  };
+
+  /* làm nổi mục đang xem trong mục lục */
+  const links = [...document.querySelectorAll(".side a")];
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (e.isIntersecting) links.forEach((a) => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id));
+  }), { rootMargin: "-30% 0px -60% 0px" });
+  document.querySelectorAll("section.block").forEach((s) => io.observe(s));
+
+  apply();
+})();
+</script>
+</body>
+</html>
