@@ -1,0 +1,1158 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta name="ui-kit-id" content="claude-dev">
+<!-- UI kit rút từ claude.dev (site đang chạy, không có code nguồn) ngày 06/10/2026, theo skill ui-kit-from-code, nhánh B04.
+     robots.txt cho phép (User-agent: * / Allow: /). discover.mjs đi theo link từ https://claude.dev, gom pattern, ép hover/focus qua CDP.
+     Màu: biến CSS ở :root của site, đọc bằng getComputedStyle ở colorScheme dark (mặc định) và light (@media prefers-color-scheme:light).
+     Số đo: getComputedStyle của phần tử thật ở viewport 1440 × 900 (html font-size 112.5% = 18px, nên 1rem = 18px).
+     Không nhúng ảnh, logo Clawd/Anthropic, wordmark ASCII, poster video hay nội dung bài viết (RULE-09): tất cả là khối giữ chỗ hoặc chữ mẫu.
+     Font Anthropic Sans / Anthropic Mono là font riêng, thay bằng Inter / IBM Plex Mono từ Google Fonts. -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>claude.dev UI Kit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<meta name="ui-kit-skip" content="6dc9fd8807:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;eb1068add4:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;10813d8b9e:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;7e100c67dd:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;85dd5cf683:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;04ff933e69:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;94667d2b6e:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;678e563399:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;ff33df980e:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;8dc5669184:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;688db860ef:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;37dbeb3feb:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;87ef3a90d0:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;213cb9ea1f:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;eb755abfc7:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;b57eb7fe4c:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;e28ae9e911:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;da1e6bae3e:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;1003896f1f:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;15391f4ecb:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;33820ac450:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;fdc14e544f:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;6989711705:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;b3235866c7:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;e1a69b8838:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;a852aaf23b:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;df51684fc5:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;419153864a:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;f91fdf675c:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;3c6fef5a2c:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;6770f1299a:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;0107f30d6a:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;1e37f89a21:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;79b02f418e:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;f872f3d228:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;385ba8d853:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;524796c3cf:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;59c11566fd:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;9a435bd7f6:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;1709948f97:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;38381b06ec:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;2355c5b744:UI của app demo LiftLog/IronLog mà Claude dựng trong hình bài spending-your-effort, không thuộc hệ claude.dev;57f30b9aad:logo Anthropic SVG ở chân trang (RULE-09), thay bằng khối giữ chỗ trong thẻ Chân trang;94f2722958:ảnh đại diện thật trong thread Slack (RULE-09), thẻ Slack dùng chữ viết tắt;fe5cbb6737:bản .md của bài viết: trình duyệt hiện văn bản thô, không có style của site;6dc9fd8807:hover:thuộc pattern đã bỏ qua;6dc9fd8807:focus:thuộc pattern đã bỏ qua;94667d2b6e:focus:thuộc pattern đã bỏ qua;419153864a:focus:thuộc pattern đã bỏ qua;6770f1299a:focus:thuộc pattern đã bỏ qua;57f30b9aad:focus:thuộc pattern đã bỏ qua">
+<style>
+/* Kit mặc chính token của claude.dev: mọi màu là --cd-<tên biến của site> (bg, ink-2, line-soft, cli-add…).
+   Site mặc định tối; bản sáng là khối @media (prefers-color-scheme:light) của site. Script bên dưới đổi sáng/tối.
+   Site không bo góc ở đâu cả (--fig-radius: 0), nên kit không có thang shape. */
+:root {
+  --cd-bg:#141413; --cd-bg-raised:#1a1a18; --cd-bg-panel:#1e1d1b; --cd-panel:#161514; --cd-panel-2:#121110; --cd-thread-card:#1e1d1b;
+  --cd-ink:#faf9f5; --cd-ink-2:#b0aea5; --cd-ink-3:#87867f; --cd-ink-4:#5e5d59; --cd-accent:#d97757; --cd-accent-deep:#c15f3c;
+  --cd-paper:#faf9f5; --cd-paper-2:#e3dacc; --cd-line:#faf9f529; --cd-line-soft:#faf9f517; --cd-hover-row:#faf9f50b;
+  --cd-fig-cap-ink:#87867f; --cd-fig-cap-ink-raised:#87867f; --cd-space-dot:#87867f; --cd-space-shot:#a8a294;
+  --cd-syn-purple:#c792ea; --cd-syn-blue:#82aaff; --cd-syn-green:#c3e88d; --cd-syn-cyan:#89ddff;
+  --cd-diff-add:#9ac29a; --cd-diff-del:#c29a9a; --cd-diff-add-bg:#78be7812; --cd-diff-del-bg:#be787812;
+  --cd-cli-bg:#1a1a18; --cd-cli-bar:#1a1a18; --cd-cli-bar-rule:#faf9f517; --cd-cli-ink:#faf9f5; --cd-cli-dim:#b0aea5; --cd-cli-hl:#faf9f51a;
+  --cd-cli-add:#0a3d14; --cd-cli-del:#55101a; --cd-cli-green:#7fd18b; --cd-cli-blue:#9ac8ff; --cd-cli-clay:#e0886a; --cd-cli-cyan:#4fc3e8; --cd-cli-pick:#0f7e9b; --cd-cli-dot:#5e5d59;
+  --cd-white:#fff; /* chữ trên nền accent của avatar Slack: site viết cứng #fff */
+  --cd-cli-dot-1:#ff5f57; --cd-cli-dot-2:#febc2e; --cd-cli-dot-3:#28c840;
+  --cd-sans: "Inter", "Anthropic Sans", -apple-system, "Helvetica Neue", sans-serif;
+  --cd-mono: "IBM Plex Mono", "Anthropic Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --cd-ease-out: cubic-bezier(.19, 1, .22, 1);
+  --cd-ease-swift: cubic-bezier(.55, 0, .1, 1);
+  --cd-gutter: 2rem; --cd-nav-h: 95px;
+  --cd-type-h1: clamp(1.5rem, 1.1rem + 1vw, 2rem); --cd-type-h5: 18px; --cd-type-sub: 1rem; --cd-type-p: 1rem; --cd-type-p-sm: 15px;
+  --cd-type-data: .875rem; --cd-type-chrome: 12px; --cd-type-tree: .75rem; --cd-type-figcaption: .875rem; --cd-type-caption: 12px;
+  --cd-fig-pad: 16px; --cd-fig-gap: 32px; --cd-fig-max: 660px; --cd-fig-meta: .6667rem; --cd-fig-code: .75rem;
+  color-scheme: dark;
+}
+:root[data-mode="light"] { color-scheme: light; }
+
+* { box-sizing: border-box; }
+html { font-size: 112.5%; }
+html, body { margin: 0; }
+body { background: var(--cd-bg); color: var(--cd-ink); font: 400 1rem/1.5 var(--cd-sans); -webkit-font-smoothing: antialiased; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+a { color: inherit; text-decoration: none; }
+code, .code { font-family: var(--cd-mono); }
+/* focus của site: viền 1px liền màu ink, không bo (đo được ở mọi phần tử bấm được, không phải viền mặc định trình duyệt) */
+:focus-visible, .is-focus { outline: 1px solid var(--cd-ink); outline-offset: 0; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+/* ---------- vỏ trang ---------- */
+.shell { display: grid; grid-template-columns: 232px minmax(0, 1fr); min-height: 100vh; }
+.side { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 24px 20px; border-right: 1px solid var(--cd-line-soft); display: flex; flex-direction: column; gap: 2px; font-family: var(--cd-mono); }
+.brand { display: flex; align-items: center; gap: 10px; padding: 0 0 20px; }
+.brand-mark { width: 34px; height: 26px; background: var(--cd-accent); display: grid; place-items: center; color: var(--cd-bg); font-size: 10px; }
+.brand b { font-weight: 400; font-size: 15px; display: block; }
+.brand small { color: var(--cd-ink-3); font-size: 11px; }
+.side h6 { margin: 18px 0 6px; font-size: 11px; font-weight: 400; text-transform: uppercase; color: var(--cd-ink-3); letter-spacing: .02em; }
+.side a { display: block; padding: 5px 0; font-size: 13px; color: var(--cd-ink-2); transition: color .12s, transform .2s var(--cd-ease-out); }
+.side a::before { content: "└ "; color: var(--cd-ink-4); }
+.side a:hover { color: var(--cd-ink); transform: translateX(4px); }
+.side a.on { color: var(--cd-ink); }
+.side a.on::before { color: var(--cd-accent); }
+main { padding: 0 36px 96px; min-width: 0; }
+
+.bar { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; padding: 14px 0; background: var(--cd-bg); border-bottom: 1px solid var(--cd-line-soft); font-family: var(--cd-mono); font-size: 12px; }
+.bar .grow { flex: 1; }
+.ctl { display: flex; align-items: center; gap: 10px; }
+.ctl > span { color: var(--cd-ink-3); text-transform: uppercase; letter-spacing: .02em; }
+.seg { display: inline-flex; border: 1px solid var(--cd-line); }
+.seg button { height: 30px; padding: 0 12px; color: var(--cd-ink-3); text-transform: uppercase; letter-spacing: .02em; }
+.seg button:hover { color: var(--cd-ink-2); }
+.seg button[aria-pressed="true"] { background: var(--cd-paper); color: var(--cd-bg); }
+.copy { height: 30px; padding: 0 2px; color: var(--cd-ink-2); font-family: var(--cd-mono); font-size: 12px; text-transform: uppercase; letter-spacing: .02em; display: inline-flex; align-items: center; gap: 6px; }
+.copy:hover { color: var(--cd-ink); }
+
+.intro { padding: 44px 0 8px; max-width: 780px; }
+.intro .eyebrow { font-family: var(--cd-mono); font-size: 12px; color: var(--cd-accent); }
+.intro h1 { font-family: var(--cd-mono); font-size: 1.75rem; line-height: 1.2; font-weight: 400; margin: 12px 0 14px; text-wrap: balance; }
+.intro p { font-size: 1rem; line-height: 1.6; color: var(--cd-ink-2); margin: 0; max-width: 64ch; }
+.intro .facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+.fact { font-family: var(--cd-mono); font-size: 12px; padding: 2px 8px; border: 1px solid var(--cd-line-soft); color: var(--cd-ink-3); }
+
+section.block { padding-top: 56px; scroll-margin-top: 64px; }
+section.block > header { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
+section.block h2 { font-family: var(--cd-mono); font-size: 1rem; line-height: 1.4; font-weight: 400; margin: 0; text-transform: uppercase; letter-spacing: .02em; }
+section.block > header p { margin: 0; color: var(--cd-ink-2); max-width: 72ch; font-size: 15px; line-height: 1.6; }
+.grp { font-family: var(--cd-mono); font-size: 12px; color: var(--cd-ink-3); text-transform: uppercase; letter-spacing: .02em; margin: 28px 0 10px; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 16px; }
+.grid.wide { grid-template-columns: repeat(auto-fill, minmax(480px, 1fr)); }
+.spec { border: 1px solid var(--cd-line-soft); display: flex; flex-direction: column; min-width: 0; }
+.spec.full { grid-column: 1 / -1; }
+.spec-h { display: flex; align-items: baseline; gap: 8px; padding: 12px 14px 0; flex-wrap: wrap; }
+.spec-h b { font-size: 15px; font-weight: 500; }
+.kind { font-family: var(--cd-mono); font-size: 11px; padding: 0 6px; border: 1px solid var(--cd-line-soft); background: var(--cd-hover-row); color: var(--cd-ink-2); }
+.spec-h .dp { margin-left: auto; font-family: var(--cd-mono); font-size: 11px; color: var(--cd-ink-3); font-variant-numeric: tabular-nums; }
+.stage { padding: 22px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 14px 18px; min-height: 96px; overflow-x: auto; }
+.stage.col { flex-direction: column; align-items: stretch; }
+.stage.top { align-items: flex-start; }
+.st { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+.st > small { font-family: var(--cd-mono); font-size: 10px; color: var(--cd-ink-4); text-transform: uppercase; letter-spacing: .02em; }
+.spec-f { display: flex; align-items: center; gap: 8px; padding: 8px 12px 12px 14px; margin-top: auto; border-top: 1px solid var(--cd-line-soft); }
+.spec-f .note { font-size: 12px; line-height: 1.5; color: var(--cd-ink-3); flex: 1; }
+.ph-img { background: color-mix(in srgb, var(--cd-ink) 7%, transparent); color: var(--cd-ink-3); font-family: var(--cd-mono); font-size: 11px; display: grid; place-items: center; text-align: center; }
+
+/* nền tảng */
+.roles { display: grid; grid-template-columns: repeat(auto-fill, minmax(176px, 1fr)); gap: 8px; }
+.role { padding: 10px 12px; min-height: 74px; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid var(--cd-line-soft); text-align: left; cursor: pointer; font-family: var(--cd-mono); }
+.role b { font-size: 12px; font-weight: 500; }
+.role code { font-size: 11px; opacity: .85; }
+.type-row { display: grid; grid-template-columns: 170px minmax(0, 1fr) 170px; gap: 16px; align-items: baseline; padding: 12px 0; border-bottom: 1px solid var(--cd-line-soft); }
+.type-row:last-child { border-bottom: none; }
+.type-row .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.type-row .meta { font-family: var(--cd-mono); font-size: 11px; color: var(--cd-ink-3); font-variant-numeric: tabular-nums; }
+table.tok { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+table.tok th, table.tok td { text-align: left; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--cd-line-soft); font-size: 13px; vertical-align: top; }
+table.tok th { font-weight: 400; color: var(--cd-ink-3); font-family: var(--cd-mono); font-size: 11px; text-transform: uppercase; letter-spacing: .02em; }
+table.tok td:first-child { font-family: var(--cd-mono); font-size: 12px; white-space: nowrap; }
+.tbl-wrap { overflow-x: auto; }
+
+/* ================= thành phần cd-* (tái dùng được: chỉ cần khối token --cd-*) ================= */
+/* nút đặc "Try Claude Code": nền paper, chữ bg, hover viền 2px cùng màu (box-shadow) */
+.cd-btn { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 8px 12px 8px 16px; background: var(--cd-paper); color: var(--cd-bg); font: 400 16px/1 var(--cd-sans); box-shadow: 0 0 0 0 var(--cd-paper); transition: box-shadow .2s ease-in-out; white-space: nowrap; }
+.cd-btn:hover, .cd-btn.is-hover { box-shadow: 0 0 0 2px var(--cd-paper); }
+.cd-btn.mono { font: 400 .875rem/1.65 var(--cd-mono); padding: 8px 12px; }
+.cd-btn .caret { width: 18px; height: 18px; margin: -6px 0 -6px -1px; opacity: .8; transition: transform .28s var(--cd-ease-out); }
+.cd-btn.open .caret { transform: rotate(180deg); }
+.cd-dd { display: inline-flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+.cd-dd-menu { background: var(--cd-panel-2); border: 1px solid var(--cd-line-soft); padding: 8px; min-width: 178px; }
+.cd-dd-menu a { display: flex; align-items: center; gap: 8px; padding: 8px 12px; font: 400 1rem/1.5 var(--cd-sans); color: var(--cd-ink); white-space: nowrap; transition: background-color .15s; }
+.cd-dd-menu a:hover, .cd-dd-menu a.is-hover { background: var(--cd-hover-row); }
+.cd-dd-menu a .ext { color: var(--cd-ink-4); margin-left: auto; padding-left: 14px; }
+
+/* liên kết phím tắt [H] HOME của thanh nav */
+.cd-key { font-family: var(--cd-mono); font-size: .75rem; line-height: 1.5; letter-spacing: .02em; color: var(--cd-ink-3); text-transform: uppercase; transition: color .15s; white-space: nowrap; }
+.cd-key .k { color: var(--cd-ink-4); margin-right: 6px; }
+.cd-key:hover, .cd-key.is-hover { color: var(--cd-ink); }
+.cd-key.on { color: var(--cd-ink); }
+.cd-key.on .k { color: var(--cd-ink-2); }
+
+/* liên kết gạch chân mono: BUILD YOUR FIRST MOD →, SOURCE ↗ */
+.cd-ulink { font-family: var(--cd-mono); font-size: var(--cd-type-chrome); letter-spacing: .02em; color: var(--cd-ink-2); text-decoration: underline 1px; text-underline-offset: 4px; text-decoration-color: currentColor; transition: color .15s, text-decoration-color .15s; text-transform: uppercase; white-space: nowrap; }
+.cd-ulink:hover, .cd-ulink.is-hover { color: var(--cd-ink); text-decoration-color: transparent; }
+/* nút chữ mono nhỏ: LOAD MORE, PLAY, COPY, WATCH MORE ON YOUTUBE ↗ */
+.cd-tbtn { font-family: var(--cd-mono); font-size: .75rem; line-height: 1.5; letter-spacing: .02em; text-transform: uppercase; color: var(--cd-ink-2); transition: color .15s; white-space: nowrap; }
+.cd-tbtn:hover, .cd-tbtn.is-hover { color: var(--cd-ink); }
+.cd-tbtn.dim { color: var(--cd-ink-3); }
+.cd-tbtn.on { color: var(--cd-accent); }
+/* liên kết chân trang sans */
+.cd-flink { font: 400 1rem/1.5 var(--cd-sans); color: var(--cd-ink); transition: color .15s; }
+.cd-slink { font: 400 12px/1.5 var(--cd-sans); color: var(--cd-ink-3); text-decoration: underline 1px; text-underline-offset: 2px; transition: color .15s; }
+.cd-slink:hover, .cd-slink.is-hover { color: var(--cd-ink); }
+/* liên kết trong thân bài */
+.cd-plink { color: var(--cd-ink-2); text-decoration: underline 1px; text-underline-offset: 3px; text-decoration-color: var(--cd-ink-4); transition: color .15s, text-decoration-color .15s; }
+.cd-plink:hover, .cd-plink.is-hover { color: var(--cd-ink); text-decoration-color: var(--cd-ink-2); }
+
+/* thanh nav trên cùng: lưới 12 cột, cao 95 (73 khi ≤ 640) */
+.cd-nav { width: 100%; height: var(--cd-nav-h); padding: 14px var(--cd-gutter) 0; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: center; background: color-mix(in srgb, var(--cd-bg) 86%, transparent); backdrop-filter: blur(12px); }
+.cd-nav .brand-ph { grid-column: 1 / 3; width: 59px; height: 45px; }
+.cd-nav .links { grid-column: 3 / 11; display: grid; grid-template-columns: repeat(4, 1fr); }
+.cd-nav .cta { grid-column: 11 / 13; justify-self: end; }
+.cd-nav .burger { display: none; width: 34px; height: 34px; position: relative; margin-right: -7px; justify-self: end; }
+.cd-nav .burger i { position: absolute; left: 7px; right: 7px; height: 2px; background: var(--cd-ink); }
+.cd-nav .burger i:nth-child(1) { top: 11px; } .cd-nav .burger i:nth-child(2) { top: 17px; } .cd-nav .burger i:nth-child(3) { top: 23px; }
+.cd-nav.collapsed { --cd-nav-h: 73px; --cd-gutter: 1.5rem; grid-template-columns: auto 1fr; }
+.cd-nav.collapsed .links, .cd-nav.collapsed .cta { display: none; }
+.cd-nav.collapsed .burger { display: block; grid-column: 2; }
+.cd-nav.collapsed .brand-ph { grid-column: 1; width: 44px; height: 34px; }
+.cd-navpanel { padding: 8px var(--cd-gutter) 20px; border-bottom: 1px solid var(--cd-line-soft); }
+.cd-navpanel a { display: block; padding: 10px 0; font-family: var(--cd-mono); font-size: .875rem; letter-spacing: .02em; color: var(--cd-ink-2); }
+.cd-navpanel a .k { color: var(--cd-ink-3); margin-right: 8px; }
+
+/* menu bên trái của /terminal */
+.cd-tside { width: 243px; padding: 36px; border-right: 1px solid var(--cd-line-soft); display: flex; flex-direction: column; }
+.cd-tside .menu { display: flex; flex-direction: column; gap: 4px; font-family: var(--cd-mono); font-size: .875rem; }
+.cd-tside .menu a { padding: 5px 0; letter-spacing: .02em; color: var(--cd-ink-2); transition: color .12s, transform .2s var(--cd-ease-out); }
+.cd-tside .menu a .k { color: var(--cd-ink-3); margin-right: 6px; }
+.cd-tside .menu a:hover, .cd-tside .menu a.is-hover { color: var(--cd-ink); transform: translateX(4px); }
+.cd-tside .menu a:hover .k, .cd-tside .menu a.is-hover .k, .cd-tside .menu a.on .k { color: var(--cd-ink-2); }
+.cd-tside .menu a.on { color: var(--cd-ink); }
+.cd-tside .cd-btn { align-self: flex-start; margin-top: 18px; }
+
+/* tab lọc chuyên mục: ALL · AGENTS · … */
+.cd-tabs { display: flex; flex-wrap: wrap; gap: 6px 18px; font-family: var(--cd-mono); font-size: .75rem; line-height: 1.5; }
+.cd-tabs button { text-transform: uppercase; padding: 2px 0; color: var(--cd-ink-3); transition: color .15s; }
+.cd-tabs button:hover, .cd-tabs button.is-hover { color: var(--cd-ink-2); }
+.cd-tabs button.on { color: var(--cd-ink); }
+.cd-tabs-line { width: 100%; border-top: 1px solid var(--cd-line-soft); border-bottom: 1px solid var(--cd-line-soft); padding: 12px 2px; }
+/* tab bề mặt trong hình: TERMINAL · DESKTOP */
+.cd-figtabs { display: flex; gap: 18px; font-family: var(--cd-mono); font-size: var(--cd-fig-meta); letter-spacing: .03em; text-transform: uppercase; }
+.cd-figtabs button { color: var(--cd-fig-cap-ink); padding: 2px 0; transition: color .15s; }
+.cd-figtabs button:hover, .cd-figtabs button.is-hover { color: var(--cd-ink-2); }
+.cd-figtabs button[aria-selected="true"] { color: var(--cd-ink); }
+
+/* nút tìm kiếm [S] SEARCH mở ô nhập */
+.cd-search { display: flex; align-items: baseline; gap: 10px; font-family: var(--cd-mono); font-size: .75rem; }
+.cd-search .s-toggle { color: var(--cd-ink-2); letter-spacing: .02em; transition: color .15s; white-space: nowrap; }
+.cd-search .s-toggle .sk { color: var(--cd-ink-3); }
+.cd-search .s-toggle:hover, .cd-search .s-toggle.is-hover { color: var(--cd-ink); }
+.cd-search .s-toggle:hover .sk, .cd-search .s-toggle.is-hover .sk { color: var(--cd-ink-2); }
+.cd-search .lbl { color: var(--cd-ink); letter-spacing: .02em; }
+.cd-search input { width: 220px; color: var(--cd-ink); font: 400 .875rem var(--cd-sans); background: none; border: 0; outline: none; padding: 0; }
+.cd-search input::placeholder { color: var(--cd-ink-4); }
+
+/* hàng bài viết (home): lưới 8 cột, viền dưới line-soft, hover làm sáng viền trên */
+.cd-list { width: 100%; }
+.cd-post { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); align-items: baseline; padding: 1rem 0; border-bottom: 1px solid var(--cd-line-soft); position: relative; cursor: pointer; transition: opacity .25s; }
+.cd-post::before, .cd-row::before { background: color-mix(in srgb, var(--cd-ink) 9%, var(--cd-bg)); height: 1px; position: absolute; top: -1px; left: 0; right: 0; }
+.cd-post:hover::before, .cd-post.is-hover::before, .cd-row:hover::before, .cd-row.is-hover::before { content: ""; }
+.cd-list:hover > .cd-post:not(:hover) { opacity: .97; }
+.cd-post .p-date, .cd-post .p-time { font-family: var(--cd-mono); font-size: .875rem; color: var(--cd-ink-3); }
+.cd-post .p-date { grid-column: 1 / 3; }
+.cd-post .p-body { grid-column: 3 / 8; }
+.cd-post .p-time { grid-column: 8 / 9; text-align: right; }
+.cd-post .p-title { font: 400 var(--cd-type-h5)/1.5 var(--cd-sans); text-wrap: balance; }
+.cd-post .p-meta { font-family: var(--cd-mono); font-size: .75rem; color: var(--cd-ink-3); display: flex; gap: 1rem; margin-top: 8px; }
+.cd-post .feat-art { grid-column: 1 / 2; width: min(80px, 100%); aspect-ratio: 1; }
+/* ≤ 900 (site): hàng thành flex wrap, tiêu đề lên đầu, ngày + thời lượng nằm dưới; .m ép kiểu này ở mọi bề rộng */
+.cd-post.m { display: flex; flex-wrap: wrap; gap: 8px 1rem; }
+.cd-post.m .p-body { order: 1; width: 100%; }
+.cd-post.m .p-date { order: 2; }
+.cd-post.m .p-time { order: 3; text-align: left; }
+.cd-post.m .feat-art { width: 64px; margin-bottom: 4px; }
+.cd-chip { width: fit-content; display: inline-block; font-family: var(--cd-mono); font-size: .75rem; line-height: 1.5; padding: 2px 8px; border: 1px solid var(--cd-line-soft); color: var(--cd-ink-3); }
+.cd-post .cd-chip { display: block; margin-bottom: 8px; }
+/* hàng bài viết kiểu terminal (.frow): mono, sát nhau */
+.cd-frow { display: grid; grid-template-columns: 150px minmax(0, 1fr) auto; gap: 0 20px; padding: 4px 2px; font-family: var(--cd-mono); font-size: .875rem; line-height: 1.65; }
+.cd-frow .d, .cd-frow .m { color: var(--cd-ink-3); }
+.cd-frow .m { text-align: right; }
+.cd-vm { display: flex; justify-content: space-between; padding: 18px 0 0; font-family: var(--cd-mono); font-size: .75rem; letter-spacing: .02em; color: var(--cd-ink-2); cursor: pointer; width: 100%; }
+.cd-vm .vm-l { color: var(--cd-ink-2); transition: color .15s; }
+.cd-vm:hover .vm-l, .cd-vm.is-hover .vm-l { color: var(--cd-ink); }
+.cd-vm .vm-r { color: var(--cd-ink-3); text-transform: none; }
+
+/* danh sách video (cl-item): mục đang phát có mũi tên → */
+.cd-cl { width: 100%; }
+.cd-cl-h { font-family: var(--cd-mono); font-size: 1rem; line-height: 1.4; margin-bottom: 1.5rem; }
+.cd-cl-item { display: block; border-bottom: 1px solid var(--cd-line-soft); padding: 1rem 2px; position: relative; cursor: pointer; text-align: left; width: 100%; }
+.cd-cl-item:first-of-type { border-top: 1px solid var(--cd-line-soft); }
+.cd-cl-item .t { display: block; font: 400 1rem/1.5 var(--cd-sans); color: var(--cd-ink); padding-right: 2.5rem; transition: transform .24s var(--cd-ease-out); }
+.cd-cl-item .m { display: flex; gap: 1.25rem; margin-top: 6px; font-family: var(--cd-mono); font-size: .875rem; color: var(--cd-ink-3); }
+.cd-cl-item::after { content: "→"; position: absolute; right: 12px; top: 1rem; color: var(--cd-ink-3); opacity: 0; transition: opacity .2s, transform .24s var(--cd-ease-out); }
+.cd-cl-item:hover::after, .cd-cl-item.is-hover::after { opacity: 1; }
+.cd-cl-item.on::after { opacity: 1; color: var(--cd-ink); }
+.cd-cl-item:hover .t, .cd-cl-item.is-hover .t { transform: translateX(4px); }
+
+/* trình phát video */
+.cd-player { background: var(--cd-panel-2); border: 1px solid var(--cd-line-soft); width: 100%; max-width: 684px; }
+.cd-player .ph { aspect-ratio: 16 / 9; position: relative; cursor: pointer; }
+.cd-player .ph.ph-img { place-items: start; padding: 10px 12px; }
+.cd-player .pill { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); height: 36px; padding: 8px 12px; display: inline-flex; align-items: center; gap: 8px; background: var(--cd-paper); color: var(--cd-bg); font: 400 1rem/1 var(--cd-sans); transition: box-shadow .2s ease-in-out; white-space: nowrap; }
+.cd-player .ph:hover .pill, .cd-player .ph.is-hover .pill { box-shadow: 0 0 0 2px var(--cd-paper); }
+.cd-chrome { display: flex; align-items: center; gap: 16px; padding: 10px 14px; font-family: var(--cd-mono); font-size: .625rem; letter-spacing: .02em; color: var(--cd-ink-2); border-top: 1px solid var(--cd-line-soft); }
+.cd-chrome .cd-tbtn { font-size: .625rem; }
+.cd-chrome .track { flex: 1; overflow: hidden; white-space: nowrap; color: var(--cd-ink-4); }
+
+/* cửa sổ CLI có 3 chấm (mods) */
+.cd-cli { width: 100%; max-width: 570px; aspect-ratio: 4 / 3; background: var(--cd-cli-bg); color: var(--cd-cli-ink); border: 1px solid var(--cd-line-soft); font-family: var(--cd-mono); display: flex; flex-direction: column; overflow: hidden; }
+.cd-cli-bar { flex: none; height: 28px; padding: 0 12px; display: flex; align-items: center; gap: 7px; position: relative; background: var(--cd-cli-bar); border-bottom: 1px solid var(--cd-cli-bar-rule); }
+.cd-cli-bar i { width: 11px; height: 11px; border-radius: 50%; background: var(--cd-cli-dot); transition: background-color .15s; }
+.cd-cli-bar.live i:nth-child(1) { background: var(--cd-cli-dot-1); } .cd-cli-bar.live i:nth-child(2) { background: var(--cd-cli-dot-2); } .cd-cli-bar.live i:nth-child(3) { background: var(--cd-cli-dot-3); }
+.cd-cli-bar span { position: absolute; left: 70px; right: 70px; text-align: center; font-size: 12px; color: var(--cd-cli-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cd-cli-bar .toggle { position: absolute; right: 12px; font-size: 10px; letter-spacing: .02em; text-transform: uppercase; color: var(--cd-cli-dim); transition: color .15s; }
+.cd-cli-bar .toggle:hover, .cd-cli-bar .toggle.is-hover { color: var(--cd-cli-ink); }
+.cd-cli-screen { flex: 1; min-height: 0; padding: 12px 16px; font-size: 11.6px; line-height: 1.5; overflow: hidden; display: flex; flex-direction: column; }
+.cd-cli-screen p { margin: 0 0 .9em; }
+.cd-cli-screen .dim { color: var(--cd-cli-dim); }
+.cd-cli-screen .clay { color: var(--cd-cli-clay); } .cd-cli-screen .grn { color: var(--cd-cli-green); } .cd-cli-screen .blu { color: var(--cd-cli-blue); } .cd-cli-screen .cyn { color: var(--cd-cli-cyan); }
+.cd-cli-screen .hl { background: var(--cd-cli-hl); padding: 2px 4px; }
+.cd-cli-diff { display: grid; grid-template-columns: 4ch 2ch minmax(0, 1fr); white-space: pre-wrap; }
+.cd-cli-diff .n { text-align: right; padding-right: 1ch; color: var(--cd-cli-dim); }
+.cd-cli-add { background: var(--cd-cli-add); }
+.cd-cli-del { background: var(--cd-cli-del); }
+.cd-cli-input { margin-top: auto; border-top: 1px solid var(--cd-line-soft); border-bottom: 1px solid var(--cd-line-soft); padding: 6px 0; }
+.cd-cli-foot { padding-top: 8px; color: var(--cd-cli-dim); }
+
+/* khối mod: cửa sổ CLI + cột thông tin (HOOKS / DRAWS) */
+.cd-mod { display: grid; grid-template-columns: minmax(0, 570fr) minmax(0, 342fr); width: 100%; }
+.cd-mod-body { padding-left: 36px; display: flex; flex-direction: column; }
+.cd-mod-body h3 { font: 400 var(--cd-type-h1)/1.3 var(--cd-sans); margin: 0; }
+.cd-mod-body > p { font-size: 1rem; line-height: 1.6; color: var(--cd-ink-2); margin: 10px 0 0; }
+.cd-mod-meta { margin: 24px 0 0; }
+.cd-mod-meta dt { font-family: var(--cd-mono); font-size: .75rem; letter-spacing: .02em; color: var(--cd-ink-3); text-transform: uppercase; margin-top: 16px; display: flex; justify-content: space-between; }
+.cd-mod-meta dd { margin: 6px 0 0; font-size: 15px; line-height: 1.6; }
+.cd-mod-meta dd::before { content: "└ "; color: var(--cd-ink-4); font-family: var(--cd-mono); }
+.cd-hook { display: inline-block; margin-right: 4px; padding: 0 .25em; font-family: var(--cd-mono); font-size: .875em; line-height: 1.4; color: var(--cd-ink); background: color-mix(in srgb, var(--cd-ink) 5%, transparent); border: 1px solid var(--cd-line-soft); white-space: nowrap; vertical-align: top; }
+.cd-pkg { font-family: var(--cd-mono); font-size: .875rem; line-height: 1.6; }
+.cd-mod-body .cd-ulink { margin-top: auto; padding-top: 27px; }
+/* hàng mod dựng sẵn (bmod) */
+.cd-row { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); align-items: baseline; padding: 1rem 0; border-bottom: 1px solid var(--cd-line-soft); position: relative; width: 100%; }
+.cd-row .name { grid-column: 1 / 3; font-family: var(--cd-mono); font-size: .875rem; color: var(--cd-ink); }
+.cd-row .desc { grid-column: 3 / 8; font-size: 1rem; line-height: 1.5; color: var(--cd-ink-2); }
+.cd-row .src { grid-column: 8 / 9; justify-self: end; }
+.cd-row:hover .src, .cd-row.is-hover .src { color: var(--cd-ink); text-decoration-color: transparent; }
+.cd-sechead { display: flex; justify-content: space-between; width: 100%; font-family: var(--cd-mono); font-size: .75rem; letter-spacing: .02em; color: var(--cd-ink); text-transform: uppercase; padding-bottom: 12px; border-bottom: 1px solid var(--cd-line-soft); }
+.cd-sechead .n { color: var(--cd-ink-3); }
+.cd-yours { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 36px 0; border-top: 1px solid var(--cd-line-soft); border-bottom: 1px solid var(--cd-line-soft); color: var(--cd-ink-3); width: 100%; font-size: 1rem; }
+
+/* thẻ thông báo nổi của /terminal (feature-card) */
+.cd-fcard { width: 292px; border: 1px solid var(--cd-line); background: var(--cd-bg); }
+.cd-fcard .fc-body { padding: 16px; }
+.cd-fcard .fc-ico { width: 32px; height: 32px; margin-bottom: 12px; }
+.cd-fcard .fc-t { font-family: var(--cd-mono); font-size: .875rem; line-height: 1.4; color: var(--cd-ink); }
+.cd-fcard .fc-x { font-family: var(--cd-mono); font-size: .875rem; line-height: 1.4; color: var(--cd-ink-3); margin-top: 4px; }
+.cd-fcard .fc-ctas { display: grid; grid-template-columns: auto 1fr; border-top: 1px solid var(--cd-line-soft); }
+.cd-fcard .fc-ctas > * { padding: 12px 16px; font-family: var(--cd-mono); font-size: .75rem; letter-spacing: .02em; text-transform: uppercase; color: var(--cd-ink-3); text-align: left; transition: color .15s; }
+.cd-fcard .fc-ctas > * + * { border-left: 1px solid var(--cd-line-soft); color: var(--cd-ink-2); display: flex; justify-content: space-between; }
+.cd-fcard .fc-ctas > *:hover, .cd-fcard .fc-ctas > .is-hover { color: var(--cd-ink); }
+/* dòng lệnh của /terminal */
+.cd-term { width: 100%; border-top: 1px solid var(--cd-line-soft); border-bottom: 1px solid var(--cd-line-soft); padding: 14px 2px; font-family: var(--cd-mono); font-size: .875rem; display: flex; gap: 1ch; align-items: baseline; }
+.cd-term .who { color: var(--cd-ink); }
+.cd-term .gt { color: var(--cd-ink-3); }
+.cd-term input { flex: 1; min-width: 0; background: none; border: 0; outline: none; color: var(--cd-ink); font: inherit; padding: 0; }
+.cd-term input::placeholder { color: var(--cd-ink-4); }
+.cd-caret { display: inline-block; width: .52em; height: .86em; background: var(--cd-ink); transform: translateY(.08em); margin-left: 4px; animation: cd-blink 1s step-end infinite; }
+@keyframes cd-blink { 50% { opacity: 0; } }
+.cd-wordmark { font-family: var(--cd-mono); font-size: 1.75rem; line-height: 1.1; display: flex; align-items: baseline; }
+.cd-tsub { font-family: var(--cd-mono); font-size: .875rem; line-height: 1.65; color: var(--cd-ink-2); max-width: 46ch; margin: 0; }
+.cd-tsub b { color: var(--cd-ink); font-weight: 400; }
+
+/* ---------- bài viết ---------- */
+.cd-ahero { max-width: 720px; }
+.cd-ahero .ico { width: 64px; height: 64px; margin-bottom: 20px; }
+.cd-ahero h1 { font: 500 1.9rem/1.3 var(--cd-sans); margin: 16px 0 0; text-wrap: balance; }
+.cd-ahero .standfirst { font-size: 1rem; line-height: 1.6; color: var(--cd-ink-2); margin: 16px 0 0; }
+.cd-ameta { display: grid; grid-template-columns: repeat(3, auto); justify-content: start; gap: 0 48px; margin-top: 28px; font-family: var(--cd-mono); }
+.cd-ameta dt { font-size: .625rem; letter-spacing: .02em; color: var(--cd-ink-3); text-transform: uppercase; }
+.cd-ameta dd { margin: 4px 0 0; font-size: .75rem; color: var(--cd-ink); }
+.cd-toc { font-family: var(--cd-mono); font-size: var(--cd-type-tree); width: 260px; }
+.cd-toc .toc-h { font-size: .625rem; letter-spacing: .02em; color: var(--cd-ink-3); margin-bottom: 14px; text-transform: uppercase; }
+.cd-toc a { display: block; padding: 3px 0; line-height: 1.45; color: var(--cd-ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: color .15s, transform .25s var(--cd-ease-out); }
+.cd-toc a::before { content: "└ "; color: var(--cd-ink-4); }
+.cd-toc a.sub { padding-left: 16px; }
+.cd-toc a.on { color: var(--cd-ink); }
+.cd-toc a.on::before { color: var(--cd-ink-2); }
+.cd-toc a:hover, .cd-toc a.is-hover { color: var(--cd-ink); transform: translateX(3px); }
+.cd-prog { margin-top: 18px; font-family: var(--cd-mono); font-size: .75rem; color: var(--cd-ink-4); }
+.cd-prog b { color: var(--cd-ink-2); font-weight: 400; }
+.cd-share { display: flex; flex-direction: column; gap: 4px; font-family: var(--cd-mono); padding-top: 26px; }
+.cd-share .h { font-size: .625rem; letter-spacing: .02em; color: var(--cd-ink-3); text-transform: uppercase; margin-bottom: 6px; }
+.cd-share button, .cd-share a { text-align: left; font-size: .75rem; color: var(--cd-ink-2); transition: color .15s; }
+.cd-share button:hover, .cd-share button.is-hover, .cd-share a:hover { color: var(--cd-ink); }
+.cd-share button::before, .cd-share a::before { content: "└ "; color: var(--cd-ink-4); }
+.cd-prose { max-width: var(--cd-fig-max); }
+.cd-prose p { font-size: var(--cd-type-p); line-height: 1.7; color: var(--cd-ink-2); margin: 0 0 1.1em; }
+.cd-prose h2 { font-family: var(--cd-mono); font-size: .875rem; line-height: 1.5; font-weight: 500; letter-spacing: .02em; color: var(--cd-ink); text-transform: uppercase; margin: 2.2em 0 1em; }
+.cd-prose h3 { font-family: var(--cd-mono); font-size: .875rem; line-height: 1.5; font-weight: 500; letter-spacing: .02em; color: var(--cd-ink); margin: 1.8em 0 .8em; }
+.cd-prose ul, .cd-prose ol { margin: 0 0 1.1em; padding-left: 1.2em; color: var(--cd-ink-2); line-height: 1.7; }
+.cd-prose li { margin: .3em 0; }
+.cd-prose li::marker { color: var(--cd-ink-4); }
+.cd-icode { font-family: var(--cd-mono); font-size: .85em; color: var(--cd-ink); background: color-mix(in srgb, var(--cd-ink) 6%, transparent); padding: .05em .3em; }
+.cd-qb { max-width: 660px; padding-left: 2rem; margin: 2.5rem 0; }
+.cd-qb p { font-size: var(--cd-type-p); line-height: 1.7; color: var(--cd-ink); margin: 0; text-indent: -.45em; }
+.cd-qb .q-name { font-size: var(--cd-type-p); line-height: 1.7; color: var(--cd-ink); margin-top: .75rem; }
+.cd-qb .q-role { font-family: var(--cd-mono); font-size: var(--cd-type-data); color: var(--cd-ink-3); }
+/* hình trong bài: viền line-soft, chú thích FIG A */
+.cd-fig { width: 100%; max-width: var(--cd-fig-max); border: 1px solid var(--cd-line-soft); margin: 0; }
+.cd-fig .fig-head { padding: var(--cd-fig-pad) var(--cd-fig-pad) 0; display: flex; justify-content: space-between; align-items: baseline; }
+.cd-fig .fg { aspect-ratio: 16 / 9; margin: var(--cd-fig-pad); }
+.cd-cap { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding: 10px var(--cd-fig-pad); border-top: 1px solid var(--cd-line-soft); font-family: var(--cd-sans); font-size: var(--cd-type-figcaption); line-height: 1.5; color: var(--cd-fig-cap-ink); }
+.cd-cap b { font-family: var(--cd-mono); font-size: var(--cd-fig-meta); letter-spacing: .03em; color: var(--cd-ink-2); white-space: nowrap; min-width: 3rem; font-weight: 500; text-transform: uppercase; }
+.cd-cap .txt { flex: 1; }
+.cd-cap.stack { flex-direction: column; gap: 6px; }
+.cd-cap .acts { display: flex; gap: 14px; }
+.cd-figbtn { font-family: var(--cd-mono); font-size: var(--cd-fig-meta); letter-spacing: .03em; text-transform: uppercase; color: var(--cd-fig-cap-ink); transition: color .15s; }
+.cd-figbtn:hover, .cd-figbtn.is-hover { color: var(--cd-ink); }
+/* khối code: đầu CODE · ngôn ngữ · COPY */
+.cd-code { width: 100%; max-width: var(--cd-fig-max); border: 1px solid var(--cd-line-soft); background: var(--cd-bg-raised); }
+.cd-code .ch { display: flex; justify-content: space-between; align-items: baseline; padding: 8px var(--cd-fig-pad); border-bottom: 1px solid var(--cd-line-soft); font-family: var(--cd-mono); font-size: var(--cd-fig-meta); letter-spacing: .03em; text-transform: uppercase; color: var(--cd-ink); }
+.cd-code .ch .lang { color: var(--cd-fig-cap-ink-raised); text-transform: none; margin-left: 12px; }
+.cd-code .ch button { color: var(--cd-fig-cap-ink-raised); text-transform: inherit; letter-spacing: inherit; transition: color .15s; }
+.cd-code .ch button:hover, .cd-code .ch button.is-hover { color: var(--cd-ink); }
+.cd-code pre { margin: 0; padding: var(--cd-fig-pad); font-family: var(--cd-mono); font-size: var(--cd-fig-code); line-height: 1.75; color: var(--cd-ink-2); overflow-x: auto; }
+.cd-code .kw { color: var(--cd-syn-purple); } .cd-code .fn { color: var(--cd-syn-blue); } .cd-code .nm { color: var(--cd-syn-green); } .cd-code .ar { color: var(--cd-syn-cyan); } .cd-code .cm { color: var(--cd-fig-cap-ink-raised); }
+/* bảng trong bài */
+.cd-table { width: 100%; max-width: var(--cd-fig-max); border: 1px solid var(--cd-line-soft); background: var(--cd-bg-raised); overflow-x: auto; }
+.cd-table table { border-collapse: collapse; width: 100%; font-size: .875rem; }
+.cd-table th { text-align: left; font-family: var(--cd-mono); font-size: var(--cd-fig-meta); letter-spacing: .03em; text-transform: uppercase; color: var(--cd-ink-3); font-weight: 400; padding: 10px var(--cd-fig-pad); border-bottom: 1px solid var(--cd-line-soft); }
+.cd-table td { padding: 12px var(--cd-fig-pad); border-bottom: 1px solid var(--cd-line-soft); color: var(--cd-ink-2); line-height: 1.6; vertical-align: top; }
+.cd-table tr:last-child td { border-bottom: 0; }
+.cd-table td strong { color: var(--cd-ink); font-weight: 500; }
+.cd-table td.nw { white-space: nowrap; }
+/* hình tương tác: slider, ô kết quả, dòng chi phí, lệnh copy, tooltip ghim, thread Slack */
+.cd-range { appearance: none; -webkit-appearance: none; width: 100%; height: 32px; margin: 0; background: none; cursor: pointer; display: block; }
+.cd-range::-webkit-slider-runnable-track { height: 1px; background: var(--cd-ink-3); }
+.cd-range::-moz-range-track { height: 1px; background: var(--cd-ink-3); }
+.cd-range::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; margin-top: -8.5px; border: 0; border-radius: 50%; background: var(--cd-ink); }
+.cd-range::-moz-range-thumb { width: 18px; height: 18px; border: 0; border-radius: 50%; background: var(--cd-ink); }
+.cd-calc { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1px; background: var(--cd-line-soft); border: 1px solid var(--cd-line-soft); max-width: 287px; }
+.cd-calc .cell { background: var(--cd-bg); display: grid; gap: 6px; padding: 12px 14px 14px; align-content: start; }
+.cd-calc .k { font-family: var(--cd-mono); font-size: var(--cd-fig-meta); letter-spacing: .03em; text-transform: uppercase; color: var(--cd-ink-2); }
+.cd-calc b { font-family: var(--cd-mono); font-size: 1.5rem; font-weight: 500; line-height: 1.1; color: var(--cd-ink); font-variant-numeric: tabular-nums; }
+.cd-calc b.d { color: var(--cd-accent); }
+.cd-calc .m { font-family: var(--cd-sans); font-size: var(--cd-type-chrome); color: var(--cd-ink-2); line-height: 1.5; }
+.cd-cost { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.cd-cost li { display: flex; align-items: baseline; gap: 8px; font-size: var(--cd-type-p-sm); line-height: 1.5; color: var(--cd-ink-2); }
+.cd-cost .sw { display: inline-block; width: 10px; height: 10px; margin-right: 2px; vertical-align: -1px; }
+.cd-cost .tk { font-family: var(--cd-mono); font-size: var(--cd-fig-meta); letter-spacing: .03em; margin-left: 4px; }
+.cd-cost .dots { flex: auto; min-width: 1rem; border-bottom: 1px dotted var(--cd-line); transform: translateY(-4px); }
+.cd-cmds { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--cd-line-soft); width: 100%; }
+.cd-cmds li { min-height: 40px; padding: 4px 12px 4px var(--cd-fig-pad); display: flex; justify-content: space-between; align-items: center; gap: 12px; font-family: var(--cd-mono); font-size: .875rem; }
+.cd-cmds li + li { border-top: 1px solid var(--cd-line-soft); }
+.cd-cmds .cd-figbtn { color: var(--cd-ink-2); min-height: 32px; padding: 0 4px; }
+.cd-cmds .cd-figbtn:hover, .cd-cmds .cd-figbtn.is-hover { color: var(--cd-ink); }
+.cd-vtip { width: min(460px, 100%); background: var(--cd-bg-panel); border: 1px solid var(--cd-line); padding: 10px 14px 12px; font-size: 14px; line-height: 1.45; color: var(--cd-ink-2); }
+.cd-vtip .hd { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.cd-vtip b { color: var(--cd-ink); font-weight: 500; }
+.cd-vtip p { margin: 4px 0 8px; }
+.cd-vtip ol { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; }
+.cd-vtip li { display: flex; justify-content: space-between; gap: 12px; }
+.cd-vtip .lo { color: var(--cd-ink-3); }
+.cd-vrow { width: 100%; min-height: 68px; text-align: left; padding: 0 12px; font-family: var(--cd-mono); font-size: 11px; color: var(--cd-ink-3); background: var(--cd-hover-row); }
+.cd-vrow.is-focus, .cd-vrow:focus-visible { outline-offset: -1px; }
+.cd-slack { width: 100%; max-width: 658px; border: 1px solid var(--cd-line-soft); background: var(--cd-thread-card); border-radius: 10px; overflow: hidden; }
+.cd-slack .sh { display: flex; justify-content: space-between; padding: 10px 14px; border-bottom: 1px solid var(--cd-line-soft); font-size: .875rem; font-weight: 600; color: var(--cd-ink-2); }
+.cd-slack .sh .rep { color: var(--cd-ink-4); font-weight: 400; }
+.cd-slack .msg { display: grid; grid-template-columns: 34px 1fr; gap: 12px; padding: 12px 14px 4px; }
+.cd-slack .av { width: 34px; height: 34px; border-radius: 7px; background: var(--cd-panel); border: 1px solid var(--cd-line-soft); display: flex; align-items: center; justify-content: center; font-family: var(--cd-mono); font-size: .625rem; color: var(--cd-ink-2); }
+.cd-slack .av.spark { background: var(--cd-accent); color: var(--cd-white); border-color: transparent; }
+.cd-slack .mh { font-size: .875rem; }
+.cd-slack .mh b { color: var(--cd-ink); font-weight: 700; }
+.cd-slack .mh .tag { font-size: .625rem; letter-spacing: .02em; text-transform: uppercase; color: var(--cd-ink-2); border: 1px solid var(--cd-line); border-radius: 3px; margin-left: 6px; padding: 1px 4px; }
+.cd-slack .mh .tm { font-size: .625rem; color: var(--cd-ink-4); margin-left: 8px; }
+.cd-slack p { margin: 2px 0 8px; font-size: .875rem; line-height: 1.5; color: var(--cd-ink); }
+
+/* bài liên quan */
+.cd-related { width: 100%; border-top: 1px solid var(--cd-line-soft); padding-top: 26px; }
+.cd-related .rel-h { font-family: var(--cd-mono); font-size: .625rem; letter-spacing: .02em; color: var(--cd-ink-3); margin-bottom: 20px; text-transform: uppercase; }
+
+/* chân trang */
+.cd-footer { width: 100%; border-top: 1px solid var(--cd-line-soft); padding: 44px 36px 54px; display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 0 16px; }
+.cd-footer .fb-brand { grid-column: 1 / 3; display: flex; flex-direction: column; justify-content: space-between; min-height: 224px; }
+.cd-footer .fb-brand .wm { font-family: var(--cd-mono); font-size: 1rem; }
+.cd-footer .fb-brand small { font-size: 11px; color: var(--cd-ink-3); display: block; margin: 8px 0 4px; }
+.cd-footer .fb-brand .legal { display: flex; gap: 10px; flex-wrap: wrap; }
+.cd-fcol { display: flex; flex-direction: column; gap: 6px; }
+.cd-fcol .fh { font-family: var(--cd-mono); font-size: .625rem; letter-spacing: .02em; color: var(--cd-ink-3); text-transform: uppercase; margin-bottom: 10px; }
+.cd-fcol.c1 { grid-column: 3 / 5; } .cd-fcol.c2 { grid-column: 5 / 6; }
+.cd-fnews { grid-column: 6 / 9; }
+.cd-fnews .fn-sub { font-size: 1rem; line-height: 1.5; margin: 0 0 18px; }
+.cd-email { position: relative; }
+.cd-email input { width: 100%; height: 40px; padding: 8px 28px 8px 0; background: none; border: 0; border-bottom: 1px solid var(--cd-line-soft); color: var(--cd-ink); font: 400 1rem var(--cd-sans); outline: none; transition: border-color .25s; }
+.cd-email input::placeholder { color: var(--cd-ink-4); }
+.cd-email input:focus, .cd-email input.is-focus { border-color: var(--cd-ink-2); outline: none; }
+.cd-email .arr { position: absolute; right: 0; bottom: 8px; color: var(--cd-ink-3); font-family: var(--cd-mono); transition: color .15s, transform .2s var(--cd-ease-out); }
+.cd-email .arr:hover, .cd-email .arr.is-hover { color: var(--cd-ink); transform: translateX(4px); }
+.cd-email .arr:disabled { opacity: .3; cursor: not-allowed; }
+.cd-fnews .fn-note { font-size: 11px; line-height: 1.55; color: var(--cd-ink-3); margin: 14px 0 0; }
+/* bảng cookie (consent) */
+.cd-consent { width: min(26rem, 100%); border: 1px solid var(--cd-line); background: var(--cd-bg); color: var(--cd-ink); padding: 18px; font-size: .875rem; line-height: 1.5; }
+.cd-consent .head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 12px; }
+.cd-consent h4 { margin: 0; font-family: var(--cd-mono); font-size: .75rem; font-weight: 400; letter-spacing: .02em; text-transform: uppercase; }
+.cd-consent p { margin: 0 0 8px; color: var(--cd-ink-2); }
+.cd-consent .acts { display: flex; gap: 8px; margin-top: 14px; }
+.cd-consent .ghost { height: 36px; padding: 8px 12px; border: 1px solid var(--cd-line); font-family: var(--cd-mono); font-size: .75rem; letter-spacing: .02em; text-transform: uppercase; color: var(--cd-ink-2); }
+.cd-consent .ghost:hover { color: var(--cd-ink); border-color: var(--cd-ink-3); }
+
+/* ---------- màn mẫu ---------- */
+.scr-wrap { overflow-x: auto; padding: 8px 0; }
+.scrs { display: flex; gap: 32px; width: max-content; align-items: flex-start; }
+.phone { width: 390px; height: 844px; border: 10px solid var(--cd-ink-4); background: var(--cd-bg); position: relative; overflow: hidden; zoom: .7; }
+.desk { width: 1440px; height: 900px; border: 10px solid var(--cd-ink-4); background: var(--cd-bg); overflow: hidden; zoom: .5; position: relative; }
+.phone + .scr-cap { max-width: 290px; }
+.scr-cap { font-family: var(--cd-mono); font-size: 12px; color: var(--cd-ink-3); margin: 8px 0 0; max-width: 560px; line-height: 1.5; }
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; transition: all .25s var(--cd-ease-out); z-index: 20; background: var(--cd-paper); color: var(--cd-bg); font-family: var(--cd-mono); font-size: 12px; padding: 10px 14px; }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; }
+  .side { display: none; }
+  main { padding: 0 16px 80px; }
+  .grid, .grid.wide { grid-template-columns: minmax(0, 1fr); }
+  .type-row { grid-template-columns: 1fr; gap: 2px; }
+  .cd-mod { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .cd-post { display: flex; flex-wrap: wrap; gap: 8px 1rem; }
+  .cd-post .p-body { order: 1; width: 100%; }
+  .cd-post .p-date { order: 2; }
+  .cd-post .p-time { order: 3; text-align: left; }
+  .cd-row .name { grid-column: 1 / -1; }
+  .cd-row .desc { grid-column: 1 / 8; margin-top: .5rem; padding-right: 1rem; }
+  .cd-frow { grid-template-columns: minmax(0, 1fr) auto; }
+  .cd-frow .d { grid-column: 1 / -1; }
+  .cd-mod-body { padding-left: 0; }
+  .cd-footer { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 16px; padding: 36px 0; }
+  .cd-footer .fb-brand, .cd-fnews { grid-column: 1 / -1; min-height: 0; }
+  .cd-fcol.c1, .cd-fcol.c2 { grid-column: auto; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <nav class="side" aria-label="Mục lục">
+    <div class="brand"><div class="brand-mark" aria-hidden="true">ảnh</div><div><b>claude.dev</b><small>UI kit · B04</small></div></div>
+    <h6>Nền tảng</h6>
+    <a href="#color">Màu</a>
+    <a href="#type">Chữ</a>
+    <a href="#lines">Đường kẻ &amp; bo góc</a>
+    <a href="#layout">Bố cục &amp; kích thước</a>
+    <h6>Thành phần</h6>
+    <a href="#actions">Hành động</a>
+    <a href="#navigation">Điều hướng</a>
+    <a href="#lists">Danh sách &amp; hàng</a>
+    <a href="#containment">Khung &amp; thẻ</a>
+    <a href="#article">Bài viết</a>
+    <a href="#figures">Hình tương tác</a>
+    <a href="#inputs">Nhập liệu</a>
+    <h6>Mẫu</h6>
+    <a href="#screens">Màn hình mẫu</a>
+  </nav>
+
+  <main>
+    <div class="bar" role="toolbar" aria-label="Chủ đề">
+      <div class="ctl"><span>Chế độ</span><div class="seg" id="mode">
+        <button data-v="dark" aria-pressed="true">Tối</button>
+        <button data-v="light" aria-pressed="false">Sáng</button></div></div>
+      <div class="grow"></div>
+      <button class="copy" id="copy-tokens">{ } Copy CSS token</button>
+    </div>
+
+    <div class="intro">
+      <div class="eyebrow">https://claude.dev (:root CSS vars + getComputedStyle) → docs/claude-dev-ui-kit.html</div>
+      <h1>Hệ giao diện của claude.dev<span class="cd-caret" aria-hidden="true"></span></h1>
+      <p>Blog kỹ thuật của Anthropic dựng như một terminal: nền gần đen, chữ mono cho mọi nhãn, không bo góc, đường kẻ mảnh ở độ mờ 9–16%. Kit gom 170 pattern mà vòng khám phá tìm thấy trên 18 trang (home, mods, terminal, 11 bài viết và bản .md). Màu đọc từ biến CSS thật của site ở cả hai chế độ, số đo lấy bằng <code>getComputedStyle</code>. Dán khối <code>--cd-*</code> cùng CSS <code>.cd-*</code> vào dự án khác là dùng được.</p>
+      <div class="facts"><span class="fact">html 112.5% → 1rem = 18px</span><span class="fact">gutter 2rem · 1.5rem ≤ 640</span><span class="fact">nav 95 · 73 ≤ 640</span><span class="fact">list 8 cột · nav 12 cột</span><span class="fact">fig max 660 · pad 16 · gap 32</span><span class="fact">ease-out cubic-bezier(.19,1,.22,1)</span><span class="fact">radius 0</span></div>
+    </div>
+
+    <!-- ================= NỀN TẢNG ================= -->
+    <section class="block" id="color">
+      <header><h2>Màu</h2><p>43 biến màu của site (tên giữ nguyên, thêm tiền tố <code>--cd-</code>). Mặc định là tối; bản sáng là khối <code>@media (prefers-color-scheme: light)</code> của site. Nhóm <code>cli-*</code> chỉ có trong khung CLI của trang mods. Bấm một ô để copy mã.</p></header>
+      <div class="roles" id="roles"></div>
+    </section>
+
+    <section class="block" id="type">
+      <header><h2>Chữ</h2><p>Hai họ chữ: Anthropic Sans cho đoạn văn, Anthropic Mono cho mọi nhãn, ngày tháng, tab và nút chữ. Kit thay bằng Inter và IBM Plex Mono (font gốc không có trên Google Fonts). Số đo ở viewport 1440 với 1rem = 18px; ≤ 640 thân bài xuống <code>.8889rem</code> (16px).</p></header>
+      <div class="spec"><div class="stage col" id="typescale"></div></div>
+    </section>
+
+    <section class="block" id="lines">
+      <header><h2>Đường kẻ &amp; bo góc</h2><p>Site không bo góc ở đâu (<code>--fig-radius: 0</code>, mọi nút và thẻ vuông). Ngoại lệ duy nhất: chấm cửa sổ CLI, núm slider và avatar trong thread Slack. Cấu trúc trang dựa vào đường kẻ 1px thay cho nền khối.</p></header>
+      <div class="spec"><div class="stage" id="lines-demo" style="gap:28px;align-items:flex-start">
+        <div class="st"><small>line-soft · 1px</small><i style="display:block;width:140px;height:64px;border:1px solid var(--cd-line-soft)"></i></div>
+        <div class="st"><small>line · 1px</small><i style="display:block;width:140px;height:64px;border:1px solid var(--cd-line)"></i></div>
+        <div class="st"><small>hover viền trên · ink 9%</small><i style="display:block;width:140px;height:64px;border-top:1px solid color-mix(in srgb, var(--cd-ink) 9%, var(--cd-bg))"></i></div>
+        <div class="st"><small>dotted line · cost-lines</small><i style="display:block;width:140px;height:64px;border-bottom:1px dotted var(--cd-line)"></i></div>
+        <div class="st"><small>radius 0 · mặc định</small><i style="display:block;width:64px;height:64px;background:var(--cd-paper)"></i></div>
+        <div class="st"><small>50% · chấm CLI 11</small><i style="display:block;width:11px;height:11px;border-radius:50%;background:var(--cd-cli-dot)"></i></div>
+        <div class="st"><small>50% · núm slider 18</small><i style="display:block;width:18px;height:18px;border-radius:50%;background:var(--cd-ink)"></i></div>
+        <div class="st"><small>slack · 10 / av 7 / tag 3</small><i style="display:block;width:64px;height:64px;border-radius:10px;border:1px solid var(--cd-line-soft);background:var(--cd-thread-card)"></i></div>
+      </div></div>
+    </section>
+
+    <section class="block" id="layout">
+      <header><h2>Bố cục &amp; kích thước</h2><p>Hằng số khung lấy từ biến <code>:root</code> và kích thước đo được của phần tử thật.</p></header>
+      <div class="grid wide">
+        <div class="spec"><div class="stage col"><div class="tbl-wrap">
+          <table class="tok"><thead><tr><th>Hằng số</th><th>Giá trị</th><th>Dùng cho</th></tr></thead><tbody>
+            <tr><td>--gutter</td><td>2rem (36) · 1.5rem ≤ 640</td><td>lề trái phải của trang</td></tr>
+            <tr><td>--nav-h</td><td>95 · 73 ≤ 640</td><td>thanh nav, padding-top 14 / 22</td></tr>
+            <tr><td>nav grid</td><td>12 cột</td><td>brand 1–2 · links 3–10 · CTA 11–12</td></tr>
+            <tr><td>list grid</td><td>8 cột</td><td>ngày 1–2 · tiêu đề 3–7 · thời lượng 8</td></tr>
+            <tr><td>--fig-max · pad · gap</td><td>660 · 16 · 32</td><td>hình, code, bảng trong bài</td></tr>
+            <tr><td>breakpoint</td><td>640 · 900 · 1100</td><td>@media max-width</td></tr></tbody></table>
+        </div></div></div>
+        <div class="spec"><div class="stage col"><div class="tbl-wrap">
+          <table class="tok"><thead><tr><th>Thành phần</th><th>px (1440)</th><th>Ghi chú</th></tr></thead><tbody>
+            <tr><td>.btn.solid</td><td>h 36 · pad 8 12 8 16</td><td>hover box-shadow 0 0 0 2px</td></tr>
+            <tr><td>.post</td><td>pad 18 0 · h 47–127</td><td>viền dưới line-soft</td></tr>
+            <tr><td>.cc-player</td><td>684 × 507 · 16:9</td><td>pill Play h 36</td></tr>
+            <tr><td>.cli</td><td>570 × 428 · 4:3</td><td>cli-bar h 28, chấm 11 gap 7</td></tr>
+            <tr><td>.feature-card</td><td>292 · fixed top 22 right 26</td><td>chỉ ở /terminal</td></tr>
+            <tr><td>.side (/terminal)</td><td>243 · pad 36</td><td>menu đáy, Try ở dưới</td></tr>
+            <tr><td>.mod-body</td><td>pad-left 36</td><td>cột 570 : 342</td></tr></tbody></table>
+        </div></div></div>
+      </div>
+    </section>
+
+    <!-- ================= HÀNH ĐỘNG ================= -->
+    <section class="block" id="actions">
+      <header><h2>Hành động</h2><p>Chỉ một kiểu nút đặc (nền paper). Mọi hành động phụ là chữ mono viết hoa, sáng dần từ <code>ink-3</code>/<code>ink-2</code> lên <code>ink</code> khi hover. Focus ở mọi nơi là viền 1px liền màu <code>ink</code>.</p></header>
+      <div class="grid">
+        <div class="spec full" data-sig="7f5d8f46de 568cc408d6 dca49680c2"><div class="spec-h"><b>Nút đặc · Try Claude Code</b><span class="kind">.btn.solid · .dd</span><span class="dp">h 36 · pad 8 12 8 16 · r 0</span></div>
+          <div class="stage top">
+            <div class="st"><small>nghỉ</small><button class="cd-btn">Try Claude Code<svg class="caret" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 10l5 5 5-5z"/></svg></button></div>
+            <div class="st"><small>hover</small><button class="cd-btn is-hover" data-sig-state="7f5d8f46de:hover">Try Claude Code<svg class="caret" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 10l5 5 5-5z"/></svg></button></div>
+            <div class="st"><small>focus</small><button class="cd-btn is-focus" data-sig-state="7f5d8f46de:focus">Try Claude Code<svg class="caret" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 10l5 5 5-5z"/></svg></button></div>
+            <div class="st"><small>mono · /terminal</small><button class="cd-btn mono">Try Claude Code</button></div>
+            <div class="st"><small>mono hover</small><button class="cd-btn mono is-hover" data-sig-state="568cc408d6:hover">Try Claude Code</button></div>
+            <div class="st"><small>mono focus</small><button class="cd-btn mono is-focus" data-sig-state="568cc408d6:focus">Try Claude Code</button></div>
+            <div class="st"><small>mở · .dd-menu</small><div class="cd-dd"><button class="cd-btn open" aria-expanded="true">Try Claude Code<svg class="caret" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 10l5 5 5-5z"/></svg></button>
+              <div class="cd-dd-menu" role="menu"><a href="#" role="menuitem">Desktop</a><a href="#" role="menuitem" class="is-hover">VS Code<span class="ext">↗</span></a><a href="#" role="menuitem">JetBrains<span class="ext">↗</span></a><a href="#" role="menuitem">Web<span class="ext">↗</span></a><a href="#" role="menuitem">Slack<span class="ext">↗</span></a></div></div></div>
+          </div>
+          <div class="spec-f"><span class="note">Caret xoay 180° khi mở (.28s ease-out). Menu: nền <code>panel-2</code>, viền line-soft, mục hover nền <code>hover-row</code>, mũi tên ↗ màu ink-4 cho link ngoài.</span></div></div>
+
+        <div class="spec" data-sig="bf94754261 6cd1271f75 9fbc032f72"><div class="spec-h"><b>Liên kết gạch chân mono</b><span class="kind">.mods-links a · .mod-cta · .bmod-src</span><span class="dp">12 · ls .02em · offset 4</span></div>
+          <div class="stage top">
+            <div class="st"><small>nghỉ</small><a class="cd-ulink" href="#">Build your first mod →</a></div>
+            <div class="st"><small>hover</small><a class="cd-ulink is-hover" href="#" data-sig-state="bf94754261:hover 6cd1271f75:hover 9fbc032f72:hover">Read the docs ↗</a></div>
+            <div class="st"><small>focus</small><a class="cd-ulink is-focus" href="#" data-sig-state="bf94754261:focus 6cd1271f75:focus 9fbc032f72:focus">Source ↗</a></div>
+          </div>
+          <div class="spec-f"><span class="note">Hover: chữ lên ink, gạch chân mờ về trong suốt. Cùng kiểu cho "Privacy Policy" trong ghi chú newsletter và link repo trong bài.</span></div></div>
+
+        <div class="spec" data-sig="01d536e0c8 bce2bbcb90 d5c1594be5 c20aa41ec6 680ae79147 810e289371 34301370f8 339fa85083 1e983fe571"><div class="spec-h"><b>Nút chữ mono</b><span class="kind">.vm-row · .btn-t · .cli-play-toggle · COPY</span><span class="dp">.75rem · uppercase</span></div>
+          <div class="stage top">
+            <div class="st"><small>nghỉ</small><button class="cd-tbtn">Watch more on YouTube ↗</button></div>
+            <div class="st"><small>hover</small><button class="cd-tbtn is-hover" data-sig-state="d5c1594be5:hover c20aa41ec6:hover 810e289371:hover 34301370f8:hover 339fa85083:hover 1e983fe571:hover">Copy</button></div>
+            <div class="st"><small>focus</small><button class="cd-tbtn is-focus" data-sig-state="c20aa41ec6:focus 810e289371:focus 34301370f8:focus 339fa85083:focus 1e983fe571:focus 680ae79147:focus">Play</button></div>
+            <div class="st"><small>đang bật · btn-t.on</small><button class="cd-tbtn on" aria-pressed="true">Mute</button></div>
+            <div class="st"><small>mờ · ink-3</small><button class="cd-tbtn dim">Dismiss</button></div>
+            <div class="st" style="width:100%"><small>load more · .vm-row</small><div class="cd-vm"><span class="vm-l">Load more</span><span class="vm-r">Press R to load more</span></div></div>
+            <div class="st" style="width:100%"><small>load more hover</small><div class="cd-vm is-hover" data-sig-state="01d536e0c8:hover bce2bbcb90:hover"><span class="vm-l">Load more</span><span class="vm-r">Press R to load more</span></div></div>
+            <div class="st"><small>trong cửa sổ CLI · hover</small><div class="cd-cli-bar" style="width:220px;background:var(--cd-cli-bar)"><i></i><i></i><i></i><button class="toggle is-hover" data-sig-state="680ae79147:hover">Pause</button></div></div>
+          </div>
+          <div class="spec-f"><span class="note">Mọi nút chữ: ink-2 → ink. Nút của player khi bật chuyển <code>accent</code>. Toggle trong khung CLI dùng <code>cli-dim → cli-ink</code>.</span></div></div>
+
+        <div class="spec" data-sig="6420273612 fa8edd9466 d44619e43e"><div class="spec-h"><b>Liên kết nhỏ &amp; mũi tên gửi</b><span class="kind">.fb-legal a · .fn-arr</span><span class="dp">12 sans · mũi tên mono</span></div>
+          <div class="stage top">
+            <div class="st"><small>nghỉ</small><a class="cd-slink" href="#">Privacy Policy</a></div>
+            <div class="st"><small>hover</small><a class="cd-slink is-hover" href="#" data-sig-state="fa8edd9466:hover 6420273612:hover">Terms of Use</a></div>
+            <div class="st"><small>focus</small><button class="cd-slink is-focus" data-sig-state="fa8edd9466:focus 6420273612:focus">Privacy choices</button></div>
+            <div class="st"><small>mũi tên · hover</small><span class="cd-email" style="width:60px;height:44px;display:block"><button class="arr is-hover" aria-label="Gửi">→</button></span></div>
+            <div class="st"><small>mũi tên · focus</small><span class="cd-email" style="width:60px;height:44px;display:block"><button class="arr is-focus" aria-label="Gửi" data-sig-state="d44619e43e:focus">→</button></span></div>
+          </div></div>
+      </div>
+    </section>
+
+    <!-- ================= ĐIỀU HƯỚNG ================= -->
+    <section class="block" id="navigation">
+      <header><h2>Điều hướng</h2><p>Điều hướng chính là "phím tắt": mỗi mục có chữ cái trong ngoặc vuông (<code>[H] HOME</code>) và site bắt phím đó. Tab lọc, mục lục và menu /terminal cùng một ngôn ngữ: mono nhỏ, mục đang chọn sáng nhất.</p></header>
+      <div class="grid">
+        <div class="spec full" data-sig="dd641dc09d 2d01a832ab fef04c151c 2852da029b"><div class="spec-h"><b>Thanh nav trên cùng</b><span class="kind">nav.keyboard-nav.grid-nav</span><span class="dp">h 95 · lưới 12 · links .75rem</span></div>
+          <div class="stage col" style="padding:0;background:var(--cd-bg)">
+            <div class="cd-nav">
+              <div class="brand-ph ph-img">ảnh Clawd</div>
+              <div class="links"><a class="cd-key on" href="#" aria-current="page"><span class="k">[H]</span>Home</a><a class="cd-key" href="#"><span class="k">[M]</span>Mods</a><a class="cd-key" href="#"><span class="k">[D]</span>Docs</a><a class="cd-key" href="#"><span class="k">[T]</span>Terminal</a></div>
+              <div class="cta"><button class="cd-btn">Try Claude Code<svg class="caret" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 10l5 5 5-5z"/></svg></button></div>
+            </div>
+          </div>
+          <div class="stage">
+            <div class="st"><small>nghỉ</small><a class="cd-key" href="#"><span class="k">[M]</span>Mods</a></div>
+            <div class="st"><small>hover</small><a class="cd-key is-hover" href="#" data-sig-state="2d01a832ab:hover"><span class="k">[M]</span>Mods</a></div>
+            <div class="st"><small>focus</small><a class="cd-key is-focus" href="#" data-sig-state="2d01a832ab:focus"><span class="k">[D]</span>Docs</a></div>
+            <div class="st"><small>đang ở · aria-current</small><a class="cd-key on" href="#"><span class="k">[H]</span>Home</a></div>
+            <div class="st"><small>đang ở · focus</small><a class="cd-key on is-focus" href="#" data-sig-state="fef04c151c:focus 2852da029b:focus"><span class="k">[H]</span>Home</a></div>
+          </div>
+          <div class="spec-f"><span class="note">Nền nav là <code>bg</code> 86% + blur. Logo Clawd (ảnh pixel có canvas động) thay bằng khối giữ chỗ.</span></div></div>
+
+        <div class="spec" data-sig="5a1140d0a3"><div class="spec-h"><b>Nav thu gọn (mobile)</b><span class="kind">.nav-burger · .nav-panel</span><span class="dp">h 73 · burger 34 · mục pad 10</span></div>
+          <div class="stage col" style="padding:0">
+            <div class="cd-nav collapsed" style="max-width:390px"><div class="brand-ph ph-img">ảnh</div><button class="burger" aria-label="Mở menu"><i></i><i></i><i></i></button></div>
+            <div class="cd-navpanel" style="max-width:390px"><a href="#"><span class="k">[H]</span>HOME</a><a href="#"><span class="k">[M]</span>MODS</a><a href="#"><span class="k">[D]</span>DOCS</a><a href="#"><span class="k">[T]</span>TERMINAL</a></div>
+          </div></div>
+
+        <div class="spec" data-sig="5f31fea77f 39e762f1b0 95a23918c8"><div class="spec-h"><b>Menu bên của /terminal</b><span class="kind">.side .menu</span><span class="dp">w 243 · .875rem · gap 4</span></div>
+          <div class="stage top">
+            <div class="cd-tside" style="width:220px;padding:8px 0;border:0">
+              <div class="menu">
+                <a href="#"><span class="k">[H]</span>HOME</a>
+                <a href="#" class="is-hover" data-sig-state="39e762f1b0:hover"><span class="k">[M]</span>MODS</a>
+                <a href="#" class="is-focus" data-sig-state="39e762f1b0:focus"><span class="k">[C]</span>CHANGELOG</a>
+                <a href="#"><span class="k">[D]</span>DOCS</a>
+                <a href="#" class="on"><span class="k">[T]</span>TERMINAL</a>
+                <a href="#" class="on is-hover" data-sig-state="95a23918c8:hover"><span class="k">[T]</span>TERMINAL</a>
+                <a href="#" class="on is-focus" data-sig-state="95a23918c8:focus"><span class="k">[T]</span>TERMINAL</a>
+              </div>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Hover: lên ink và trượt phải 4px (.2s ease-out). Mục 2–3 và 6–7 bày trạng thái hover/focus.</span></div></div>
+
+        <div class="spec" data-sig="1df16c91ee 5482e1af00 78526994f7 569744582e ca1259b6c3 6e075653bd"><div class="spec-h"><b>Tab lọc chuyên mục</b><span class="kind">.tabs button · .tabs-line</span><span class="dp">.75rem · pad 2 0 · gap 18</span></div>
+          <div class="stage col">
+            <div class="cd-tabs" role="tablist"><button class="on" role="tab" aria-selected="true">All</button><button role="tab">Agents</button><button role="tab">Engineering</button><button role="tab">Playbooks</button><button role="tab">Skills</button><button role="tab">Tutorials</button></div>
+            <div class="cd-tabs"><button class="is-hover" data-sig-state="5482e1af00:hover 569744582e:hover">Agents · hover</button><button class="is-focus" data-sig-state="5482e1af00:focus 569744582e:focus">Skills · focus</button><button class="on is-focus" data-sig-state="1df16c91ee:focus 78526994f7:focus">All · on focus</button></div>
+            <div class="cd-tabs-line"><div class="cd-tabs"><button class="on">All</button><button>Agents</button><button>Engineering</button><button>Playbooks</button><button>Skills</button></div></div>
+          </div>
+          <div class="spec-f"><span class="note">ink-3 → hover ink-2 → chọn ink. Bản <code>.tabs-line</code> (/terminal, cuối bài) kẹp giữa hai đường line-soft, pad 12 2.</span></div></div>
+
+        <div class="spec" data-sig="284a16691e dddf703e72"><div class="spec-h"><b>Mục lục bài viết</b><span class="kind">.toc</span><span class="dp">.75rem · lh 1.45 · sub +16</span></div>
+          <div class="stage top">
+            <nav class="cd-toc" aria-label="Mục lục mẫu">
+              <div class="toc-h">TOC</div>
+              <a href="#" class="on">Mod hoạt động thế nào</a>
+              <a href="#" class="sub">Một hook nhận gì</a>
+              <a href="#" class="sub is-hover" data-sig-state="dddf703e72:hover">Vẽ UI riêng</a>
+              <a href="#" class="is-focus" data-sig-state="dddf703e72:focus">Viết mod đầu tiên</a>
+              <a href="#" class="on is-focus" data-sig-state="284a16691e:focus">Mục đang đọc · focus</a>
+              <a href="#">Chia sẻ một mod</a>
+              <div class="cd-prog"><b>▮▮▮▮▮▮</b>▯▯▯▯▯▯▯▯ 42%</div>
+            </nav>
+          </div>
+          <div class="spec-f"><span class="note">Mỗi mục có "└ " ink-4 đứng trước; hover trượt 3px. Thanh tiến độ đọc là ký tự khối mono ink-4/ink-2.</span></div></div>
+
+        <div class="spec" data-sig="1bef1353ac"><div class="spec-h"><b>Tìm kiếm [S]</b><span class="kind">.search .s-toggle</span><span class="dp">.75rem mono · input .875rem sans</span></div>
+          <div class="stage top">
+            <div class="st"><small>đóng</small><div class="cd-search"><button class="s-toggle"><span class="sk">[S]</span> SEARCH</button></div></div>
+            <div class="st"><small>hover</small><div class="cd-search"><button class="s-toggle is-hover" data-sig-state="1bef1353ac:hover"><span class="sk">[S]</span> SEARCH</button></div></div>
+            <div class="st"><small>focus</small><div class="cd-search"><button class="s-toggle is-focus" data-sig-state="1bef1353ac:focus"><span class="sk">[S]</span> SEARCH</button></div></div>
+            <div class="st"><small>mở</small><div class="cd-search"><span class="lbl">SEARCH</span><input type="search" placeholder="Tìm bài viết…" aria-label="Tìm bài viết"></div></div>
+          </div>
+          <div class="spec-f"><span class="note">Khi mở, ô nhập giãn từ 0 (.38s ease-out) và che các tab bằng bóng màu bg.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= DANH SÁCH & HÀNG ================= -->
+    <section class="block" id="lists">
+      <header><h2>Danh sách &amp; hàng</h2><p>Nội dung chính của site là danh sách hàng trên lưới 8 cột, ngăn bằng đường line-soft. Hover làm đậm đường trên của hàng (ink 9% trộn vào bg) và làm mờ nhẹ các hàng còn lại.</p></header>
+      <div class="grid">
+        <div class="spec full" data-sig="3d9d03991c 8c91bc136f e08be8172f 38b1d07048"><div class="spec-h"><b>Hàng bài viết (home)</b><span class="kind">.post · .feat-chip</span><span class="dp">pad 18 0 · ngày .875rem mono · tiêu đề 18 sans</span></div>
+          <div class="stage col">
+            <div class="cd-list">
+              <div class="cd-post"><div class="feat-art ph-img">ảnh</div><div class="p-body"><span class="cd-chip">Featured</span><div class="p-title">Tiêu đề bài nổi bật mẫu</div><div class="p-meta"><span>Tên tác giả</span><span>Tutorials</span></div></div><div class="p-time">11 minutes</div></div>
+              <div class="cd-post"><div class="p-date">Sep 28, 2026</div><div class="p-body"><div class="p-title">Tiêu đề bài viết mẫu thứ nhất</div></div><div class="p-time">12 minutes</div></div>
+              <div class="cd-post is-hover" data-sig-state="8c91bc136f:hover"><div class="p-date">Sep 25, 2026</div><div class="p-body"><div class="p-title">Hàng đang hover: viền trên đậm lên</div></div><div class="p-time">8 minutes</div></div>
+              <div class="cd-post is-focus" data-sig-state="8c91bc136f:focus"><div class="p-date">Sep 23, 2026</div><div class="p-body"><div class="p-title">Hàng đang focus</div></div><div class="p-time">15 minutes</div></div>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Ảnh pixelgram của bài nổi bật là khối giữ chỗ 80 × 80. Hàng vào trang lần lượt (rowpop .45s, trễ 70ms mỗi hàng).</span></div></div>
+
+        <div class="spec full" data-sig="9c352cfa29"><div class="spec-h"><b>Hàng bài viết kiểu terminal</b><span class="kind">.frow</span><span class="dp">.875rem mono · pad 4 2</span></div>
+          <div class="stage col">
+            <div class="cd-frow"><span class="d">Featured</span><span>Tiêu đề bài nổi bật mẫu</span><span class="m">11m 09s</span></div>
+            <div class="cd-frow"><span class="d">Sep 25, 2026</span><span>Tiêu đề bài viết mẫu</span><span class="m">8m 54s</span></div>
+            <div class="cd-frow"><span class="d">Sep 22, 2026</span><span>Một tiêu đề dài hơn để thấy cột giữa co giãn</span><span class="m">21m 15s</span></div>
+            <div class="cd-frow"><span class="d"></span><span>LOAD MORE</span><span class="m">/posts for more</span></div>
+          </div></div>
+
+        <div class="spec full" data-sig="2d8f900b46"><div class="spec-h"><b>Hàng mod dựng sẵn</b><span class="kind">.bmod</span><span class="dp">lưới 8 · pad 18 0</span></div>
+          <div class="stage col">
+            <div class="cd-sechead"><span>Built into Claude Code</span><span class="n">3</span></div>
+            <div class="cd-row"><span class="name">/diff</span><span class="desc">Mô tả ngắn của mod dựng sẵn thứ nhất.</span><a class="src cd-ulink" href="#">Source ↗</a></div>
+            <div class="cd-row is-hover" data-sig-state="2d8f900b46:hover"><span class="name">AGENTS.md</span><span class="desc">Hàng đang hover: SOURCE lên ink.</span><a class="src cd-ulink" href="#">Source ↗</a></div>
+            <div class="cd-row is-focus" data-sig-state="2d8f900b46:focus"><span class="name">sec-default</span><span class="desc">Hàng đang focus.</span><a class="src cd-ulink" href="#">Source ↗</a></div>
+          </div></div>
+
+        <div class="spec" data-sig="d5f68d2a16 7ee2fb0130"><div class="spec-h"><b>Danh sách video</b><span class="kind">.cl-item.vid-item</span><span class="dp">pad 18 2 · tiêu đề 18 · meta .875rem</span></div>
+          <div class="stage col">
+            <div class="cd-cl">
+              <div class="cd-cl-h">Featured videos</div>
+              <button class="cd-cl-item on" aria-current="true" data-sig-state="7ee2fb0130:selected"><span class="t">Video đang phát (có mũi tên →)</span><span class="m"><span>Sep 08, 2026</span><span>34m 42s</span></span></button>
+              <button class="cd-cl-item"><span class="t">Video mẫu thứ hai</span><span class="m"><span>Sep 02, 2026</span><span>22m 23s</span></span></button>
+              <button class="cd-cl-item is-hover" data-sig-state="7ee2fb0130:hover"><span class="t">Video đang hover</span><span class="m"><span>Aug 06, 2026</span><span>21m 59s</span></span></button>
+              <button class="cd-cl-item is-focus" data-sig-state="7ee2fb0130:focus"><span class="t">Video đang focus</span><span class="m"><span>Jul 07, 2026</span><span>25m 11s</span></span></button>
+            </div>
+          </div></div>
+      </div>
+    </section>
+
+    <!-- ================= KHUNG & THẺ ================= -->
+    <section class="block" id="containment">
+      <header><h2>Khung &amp; thẻ</h2><p>Không thẻ nào có bóng hay bo góc. Khung là đường viền 1px; khung nổi (feature card, consent) dùng <code>line</code> đậm hơn <code>line-soft</code>.</p></header>
+      <div class="grid">
+        <div class="spec" data-sig="5c7749adf8 f0f8bd18e6 4611505647"><div class="spec-h"><b>Trình phát video</b><span class="kind">.cc-player · .cc-chrome</span><span class="dp">684 × 507 · 16:9 · pill h 36</span></div>
+          <div class="stage col">
+            <div class="cd-player">
+              <div class="ph ph-img">ảnh poster / video<span class="pill">Play video</span></div>
+              <div class="cd-chrome"><button class="cd-tbtn">Play</button><button class="cd-tbtn">Mute</button><span>00:00 / 34:42</span><span class="track">▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯</span><button class="cd-tbtn">Expand</button></div>
+            </div>
+            <div class="cd-player" style="max-width:260px"><div class="ph ph-img is-focus" data-sig-state="f0f8bd18e6:focus">focus<span class="pill">Play video</span></div></div>
+          </div>
+          <div class="spec-f"><span class="note">Nền <code>panel-2</code>. Hover vùng ảnh làm pill có viền 2px cùng màu như nút đặc. Video và poster không nhúng (RULE-09).</span></div></div>
+
+        <div class="spec" data-sig="6c06a943ba 661153a294 08288601ba 3e269bfcd0 6789d2aa58 69ef7989ff"><div class="spec-h"><b>Cửa sổ CLI</b><span class="kind">.cli · .cli-bar · .cli-diff</span><span class="dp">4:3 · bar 28 · chấm 11</span></div>
+          <div class="stage col">
+            <div class="cd-cli">
+              <div class="cd-cli-bar live"><i></i><i></i><i></i><span>Replay theater</span><button class="toggle">Play</button></div>
+              <div class="cd-cli-screen">
+                <p><span class="hl">❯ Đọc file mẫu và tóm tắt một câu</span></p>
+                <p class="dim">Read 1 file</p>
+                <p><span class="grn">●</span> <b>Update</b>(README.md)<br><span class="dim">└ Added 1 line, removed 1 line</span></p>
+                <div class="cd-cli-diff"><span class="n">3</span><span>-</span><span class="cd-cli-del">Dòng bị xoá trong diff</span><span class="n">3</span><span>+</span><span class="cd-cli-add">Dòng được thêm trong diff</span></div>
+                <p style="margin-top:.9em"><span class="clay">✻</span> <span class="dim">Baked for 11s · done 4:20 PM</span></p>
+                <div class="cd-cli-input">❯ <span class="cd-caret" aria-hidden="true"></span></div>
+                <div class="cd-cli-foot">manual mode on · ← for agents</div>
+              </div>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Chấm xám <code>cli-dot</code> lúc nghỉ, đổi đỏ/vàng/xanh (.live) khi phát. Màu cú pháp từ <code>cli-green/blue/clay/cyan</code>.</span></div></div>
+
+        <div class="spec full" data-sig="a22a64bf51 100aa7c56c"><div class="spec-h"><b>Khối mod</b><span class="kind">.mod · .mod-body · .mod-meta</span><span class="dp">570 : 342 · body pad-left 36</span></div>
+          <div class="stage col">
+            <div class="cd-mod">
+              <div class="cd-cli" style="max-width:none">
+                <div class="cd-cli-bar"><i></i><i></i><i></i><span>Token weather</span><button class="toggle">Pause</button></div>
+                <div class="cd-cli-screen"><p><span class="hl">❯ Câu lệnh mẫu gửi cho Claude</span></p><p><span class="grn">●</span> Câu trả lời mẫu trong khung CLI.</p><p><span class="clay">▪ Clear</span> <span class="dim">18% of context · 36.1k / 200k</span></p><div class="cd-cli-input">❯</div><div class="cd-cli-foot">manual mode on · ← for agents</div></div>
+              </div>
+              <div class="cd-mod-body">
+                <h3>Tên mod mẫu</h3>
+                <p>Một câu mô tả mod làm gì, ngắn gọn trong ba dòng.</p>
+                <dl class="cd-mod-meta">
+                  <dt>Hooks</dt><dd><span class="cd-hook">turn.complete</span><span class="cd-hook">ui.render</span></dd>
+                  <dt>Draws</dt><dd>Một dải phía trên ô prompt</dd>
+                  <dt>Install <button class="cd-tbtn dim">Copy</button></dt><dd><span class="cd-pkg">claude plugin install ten-mod@cong-dong</span></dd>
+                </dl>
+                <a class="cd-ulink" href="#">See how it works →</a>
+              </div>
+            </div>
+            <div class="cd-yours"><span>Đã dựng một mod? Mod là plugin, chia sẻ theo cùng cách.</span><a class="cd-ulink" href="#">Share your mod →</a></div>
+          </div>
+          <div class="spec-f"><span class="note">Chip hook: mono .875em, nền ink 5%, viền line-soft, pad 0 .25em. Mục nhãn (HOOKS, DRAWS) mono .75rem ink-3.</span></div></div>
+
+        <div class="spec" data-sig="ea1c841ccd"><div class="spec-h"><b>Thẻ thông báo nổi</b><span class="kind">.feature-card</span><span class="dp">292 · fixed · body pad 16</span></div>
+          <div class="stage">
+            <div class="cd-fcard"><div class="fc-body"><div class="fc-ico ph-img">ảnh</div><div class="fc-t">Giới thiệu tính năng mới</div><div class="fc-x">Hai câu tóm tắt thông báo, chữ mono ink-3, xuống dòng tự nhiên.</div></div>
+              <div class="fc-ctas"><button>Dismiss</button><button class="is-hover" data-sig-state="1e983fe571:hover">Read more <span>→</span></button></div></div>
+          </div>
+          <div class="spec-f"><span class="note">Kéo được (cursor grab). Viền <code>line</code>, nền <code>bg</code>. Nút bên phải đang hover.</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Bảng cookie</b><span class="kind">.consent</span><span class="dp">min(26rem) · viền line</span></div>
+          <div class="stage">
+            <div class="cd-consent" role="dialog" aria-label="Cookie mẫu"><div class="head"><h4>Cookie settings</h4><button class="cd-tbtn dim">Close</button></div><p>Đoạn giải thích ngắn về cookie, chữ ink-2.</p><div class="acts"><button class="cd-btn mono">Accept all</button><button class="ghost">Reject</button></div></div>
+          </div>
+          <div class="spec-f"><span class="note">Không có trong inventory (bảng này chỉ hiện khi chưa chọn cookie); dựng theo CSS <code>.consent</code> của site, nút ghost vẽ theo spec.</span></div></div>
+
+        <div class="spec full" data-sig="a7fd6da58c 8f9068d4a0 d9db9cd21f aae9762d70 b6d2a68ee1 929a54569d"><div class="spec-h"><b>Chân trang</b><span class="kind">.site-footer · .footer-bar · .fnews</span><span class="dp">pad 44 36 54 · lưới 8</span></div>
+          <div class="stage col" style="padding:0">
+            <footer class="cd-footer">
+              <div class="fb-brand"><span class="wm">claude.dev</span><div><span class="ph-img" style="width:107px;height:12px;display:block">ảnh logo</span><small>© 2026 Tên công ty</small><div class="legal"><a class="cd-slink" href="#">Privacy Policy</a><a class="cd-slink" href="#">Terms of Use</a><button class="cd-slink">Privacy choices</button></div></div></div>
+              <nav class="cd-fcol c1" aria-label="Resources"><div class="fh">Resources</div><a class="cd-flink" href="#">Academy</a><a class="cd-flink" href="#">Claude Code</a><a class="cd-flink" href="#">Community</a><a class="cd-flink" href="#">Developer docs</a></nav>
+              <nav class="cd-fcol c2" aria-label="Connect"><div class="fh">Connect</div><a class="cd-flink" href="#">Discord</a><a class="cd-flink" href="#">Meetups</a><a class="cd-flink" href="#">Reddit</a></nav>
+              <div class="cd-fnews"><div class="cd-fcol"><div class="fh">Get the newsletter</div></div><p class="fn-sub">Một câu mời đăng ký bản tin hằng tháng.</p><div class="cd-email"><input type="email" placeholder="Enter your email" aria-label="Email"><button class="arr" aria-label="Gửi" disabled>→</button></div><p class="fn-note">Ghi chú nhỏ về cách dùng email, kèm <a class="cd-ulink" style="text-transform:none" href="#">Privacy Policy</a>.</p></div>
+            </footer>
+          </div>
+          <div class="spec-f"><span class="note">Logo Anthropic (SVG) thay bằng khối giữ chỗ. Mũi tên gửi mờ .3 khi chưa nhập email.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= BÀI VIẾT ================= -->
+    <section class="block" id="article">
+      <header><h2>Bài viết</h2><p>Trang bài: hero 720 rộng, thân 660 (<code>--fig-max</code>), cột trái có mục lục + chia sẻ dính. Tiêu đề mục là mono viết hoa, đoạn văn sans ink-2 lh 1.7.</p></header>
+      <div class="grid">
+        <div class="spec full"><div class="spec-h"><b>Hero bài viết</b><span class="kind">.hero · .standfirst · .meta</span><span class="dp">h1 1.9rem / 500 · meta 3 cột</span></div>
+          <div class="stage col">
+            <div class="cd-ahero"><div class="ico ph-img">ảnh</div><span class="cd-chip">Agents</span><h1>Tiêu đề bài viết mẫu dài hai dòng để thấy cách cân dòng</h1><p class="standfirst">Đoạn dẫn một hai câu, sans 1rem, lh 1.6, màu ink-2.</p>
+              <dl class="cd-ameta"><div><dt>Author</dt><dd>Tên tác giả</dd></div><div><dt>Published</dt><dd>Apr 10, 2026</dd></div><div><dt>Reading time</dt><dd>7 min</dd></div></dl></div>
+          </div></div>
+
+        <div class="spec" data-sig="0691a8651a"><div class="spec-h"><b>Chia sẻ</b><span class="kind">.share</span><span class="dp">.75rem mono · pad-top 26</span></div>
+          <div class="stage top">
+            <div class="cd-share"><div class="h">Share</div><a href="#">X.com</a><a href="#">LinkedIn</a><button>Email</button><button class="is-hover" data-sig-state="0691a8651a:hover">Copy URL · hover</button><button class="is-focus" data-sig-state="0691a8651a:focus">Copy markdown · focus</button></div>
+          </div></div>
+
+        <div class="spec" data-sig="32a88ee210 5707670d7a 234ff9acaa 6c333ba8c4 d08519d7b7 7a8378aa4f b7f84b5fb8 1f6b2b60c5 2401827ab5 dcd32f5db3 3f030cd776"><div class="spec-h"><b>Thân bài</b><span class="kind">.prose p · h2 · h4 · ul · code</span><span class="dp">p 1rem / 1.7 · h2 .875rem mono</span></div>
+          <div class="stage col">
+            <div class="cd-prose">
+              <h2>Tiêu đề mục mẫu</h2>
+              <p>Đoạn văn mẫu có <a class="cd-plink" href="#">liên kết trong bài</a>, có mã nội dòng như <code class="cd-icode">next</code>, <code class="cd-icode">$</code> hay <code class="cd-icode">/goal</code>, và <a class="cd-plink is-hover" href="#" data-sig-state="d08519d7b7:hover b7f84b5fb8:hover">liên kết đang hover</a>, <a class="cd-plink is-focus" href="#" data-sig-state="d08519d7b7:focus b7f84b5fb8:focus 7a8378aa4f:focus">liên kết đang focus</a>.</p>
+              <h3>Tiêu đề phụ (h3/h4)</h3>
+              <ul><li>Ý thứ nhất của danh sách.</li><li>Ý thứ hai, dài hơn để thấy dòng xuống.</li></ul>
+            </div>
+          </div></div>
+
+        <div class="spec" data-sig="ca2a6d6058"><div class="spec-h"><b>Trích dẫn</b><span class="kind">.q-block.q-excerpt</span><span class="dp">pad-left 2rem · indent −.45em</span></div>
+          <div class="stage col"><blockquote class="cd-qb" style="margin:0"><p>"Câu trích dẫn mẫu của một khách hàng, chữ ink, lh 1.7."</p><div class="q-name">Tên người nói</div><div class="q-role">Chức danh, Công ty</div></blockquote></div></div>
+
+        <div class="spec" data-sig="7596b7e73c 11ed636436 d9b133ce89"><div class="spec-h"><b>Bài đăng X nhúng</b><span class="kind">.art-xpost</span><span class="dp">pad 16 · chân mono</span></div>
+          <div class="stage col">
+            <div class="cd-fig" style="padding:16px">
+              <div style="display:flex;justify-content:space-between;align-items:baseline"><span><b style="font-weight:500">Tên tài khoản</b> <span style="color:var(--cd-ink-3)">@handle</span></span><span class="ph-img" style="width:14px;height:14px">X</span></div>
+              <p style="margin:14px 0 0;line-height:1.6">Nội dung bài đăng mẫu, một hai câu.</p>
+              <div style="display:flex;justify-content:space-between;margin-top:18px;padding-top:12px;border-top:1px solid var(--cd-line-soft)"><span class="cd-figbtn">Aug 24, 2026</span><span style="display:flex;gap:16px"><a class="cd-ulink" href="#">View on X</a><a class="cd-ulink is-hover" href="#" data-sig-state="d9b133ce89:hover">hover</a><a class="cd-ulink is-focus" href="#" data-sig-state="d9b133ce89:focus">focus</a></span></div>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Logo X thay bằng chữ giữ chỗ.</span></div></div>
+
+        <div class="spec" data-sig="0889426e65 b01ada5d30 5605068495"><div class="spec-h"><b>Khối code</b><span class="kind">.art-code</span><span class="dp">nền bg-raised · code .75rem / 1.75</span></div>
+          <div class="stage col">
+            <div class="cd-code"><div class="ch"><span>Code<span class="lang">JavaScript</span></span><button>Copy</button></div>
+<pre><span class="fn">on</span>(<span class="nm">"tool.call"</span>, { tool: <span class="nm">"Bash"</span> }, <span class="kw">async</span> ($, e, next) <span class="ar">=&gt;</span> {
+  <span class="kw">const</span> r = <span class="kw">await</span> <span class="fn">next</span>(e); <span class="cm">/* xem kết quả */</span>
+  <span class="kw">return</span> r;
+});</pre></div>
+            <div class="cd-code" style="max-width:280px"><div class="ch"><span>Code</span><button class="is-hover">Copy · hover</button></div><pre>claude --version</pre></div>
+          </div></div>
+
+        <div class="spec" data-sig="36a08c90df 971e120098 252a435a95 2206d3ac1d 1508e8d9e1 ff7dedd0a8 92e7be226c 49ab542224 9d90c78d1d 5a2a7daa86"><div class="spec-h"><b>Bảng trong bài</b><span class="kind">.art-table</span><span class="dp">th .6667rem mono · td .875rem</span></div>
+          <div class="stage col">
+            <div class="cd-table"><table><thead><tr><th>Move</th><th>How</th><th>Example</th></tr></thead><tbody>
+              <tr><td class="nw"><strong>Observe</strong></td><td><code class="cd-icode">const r = await next(e)</code></td><td>Mô tả ví dụ ngắn.</td></tr>
+              <tr><td class="nw"><strong>Model ID</strong></td><td><code class="cd-icode">model-id-mau</code> trên API</td><td>Ô dài xuống dòng, lh 1.6, màu ink-2.</td></tr></tbody></table></div>
+          </div></div>
+
+        <div class="spec"><div class="spec-h"><b>Bài liên quan</b><span class="kind">.related</span><span class="dp">margin-top 70 · pad-top 26</span></div>
+          <div class="stage col">
+            <div class="cd-related"><div class="cd-cl-h" style="font-size:.875rem">Related posts</div>
+              <div class="cd-tabs-line"><div class="cd-tabs"><button class="on">All</button><button>Agents</button><button>Skills</button></div></div>
+              <div class="cd-list"><div class="cd-post"><div class="p-date">Oct 01, 2026</div><div class="p-body"><div class="p-title">Bài liên quan mẫu</div></div><div class="p-time">11 min</div></div></div></div>
+          </div>
+          <div class="spec-f"><span class="note">Cuối bài dùng lại .tabs-line và .post.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= HÌNH TƯƠNG TÁC ================= -->
+    <section class="block" id="figures">
+      <header><h2>Hình tương tác</h2><p>Hình trong bài có khung chung (<code>.art-fig</code>: viền line-soft, chú thích FIG A ở đáy) và bộ điều khiển chung: tab bề mặt, nút PLAY/REPLAY/PNG, chọn mức effort, slider. Nội dung bên trong mỗi hình là riêng từng bài.</p></header>
+      <div class="grid">
+        <div class="spec full" data-sig="b2b9999511 514bb68974 cd9250447f 8361ec0eec 1a7ca99f81 e66c04ce79 559508efaf 3ff68f4b6e a4df707e22 ae15022cb5"><div class="spec-h"><b>Khung hình + chú thích</b><span class="kind">.art-fig · .fig-tabs · .cap</span><span class="dp">max 660 · cap pad 10 16</span></div>
+          <div class="stage top">
+            <figure class="cd-fig">
+              <div class="fig-head"><div class="cd-figtabs" role="tablist"><button role="tab" aria-selected="true">Terminal</button><button role="tab" aria-selected="false">Desktop</button><button role="tab" class="is-hover" data-sig-state="cd9250447f:hover">hover</button><button role="tab" class="is-focus" data-sig-state="cd9250447f:focus 8361ec0eec:focus 514bb68974:focus">focus</button></div></div>
+              <div class="fg ph-img">ảnh / video minh hoạ</div>
+              <figcaption class="cd-cap"><b>Fig A</b><span class="txt">Chú thích hình, sans .875rem, màu fig-cap-ink.</span><span class="acts"><button class="cd-figbtn">PNG</button></span></figcaption>
+            </figure>
+            <figure class="cd-fig" style="max-width:320px">
+              <figcaption class="cd-cap stack"><b>Fig B</b><span class="acts"><button class="cd-figbtn">Play</button><button class="cd-figbtn is-hover" data-sig-state="3ff68f4b6e:hover a4df707e22:hover ae15022cb5:hover">Play · hover</button><button class="cd-figbtn is-focus" data-sig-state="3ff68f4b6e:focus a4df707e22:focus ae15022cb5:focus">PNG · focus</button></span><span class="txt">Chú thích xếp chồng (.cap.stack) cho hình hẹp.</span></figcaption>
+            </figure>
+          </div></div>
+
+        <div class="spec" data-sig="1a358a64d1 4d1383cf90 d49e1d6fa3 d87108bb76 00e34c1d41 2d25441d43"><div class="spec-h"><b>Chọn mức &amp; điều khiển phát</b><span class="kind">role=radio · .efx-word · .viz-play</span><span class="dp">.6667rem · ls .03em · h 32</span></div>
+          <div class="stage col">
+            <div class="cd-figtabs" role="radiogroup" aria-label="Effort" style="font-size:.75rem;border-bottom:1px solid var(--cd-line-soft);gap:20px">
+              <button role="radio" aria-checked="true" aria-selected="true" style="border-bottom:1px solid var(--cd-ink);padding:6px 0">Low (1.5 min)</button>
+              <button role="radio" aria-checked="false" style="padding:6px 0">Medium (4 min)</button>
+              <button role="radio" aria-checked="false" class="is-hover" data-sig-state="1a358a64d1:hover" style="padding:6px 0">High · hover</button>
+              <button role="radio" aria-checked="false" class="is-focus" data-sig-state="1a358a64d1:focus 4d1383cf90:focus" style="padding:6px 0">Max · focus</button>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <button class="cd-figbtn">Previous</button>
+              <span style="display:flex;gap:4px" aria-label="Bước"><i style="width:13px;height:2px;background:var(--cd-ink)"></i><i style="width:13px;height:2px;background:var(--cd-ink-4)"></i><i style="width:13px;height:2px;background:var(--cd-ink-4)"></i></span>
+              <button class="cd-figbtn">Next</button>
+              <button class="cd-figbtn" style="margin-left:auto">Replay</button>
+              <button class="cd-figbtn">Close</button>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Mức đang chọn có gạch dưới ink (đo theo ảnh, không có diff số). Dải chấm bước là nút 13 px; vẽ đơn giản hoá bằng vạch.</span></div></div>
+
+        <div class="spec" data-sig="fafd5772c1 2a216f1cdb e3c11b559e 4f6349417c 132c7ef393 c99f4f53a9"><div class="spec-h"><b>Máy tính chi phí</b><span class="kind">.calc-lab · .viz-range · .calc-out · .cost-lines</span><span class="dp">núm 18 · ô pad 12 14 14</span></div>
+          <div class="stage col">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px"><label for="r1" style="font-size:15px;color:var(--cd-ink-2)">Input tokens</label><span style="font-family:var(--cd-mono);font-size:.875rem">2.2M</span></div>
+            <input id="r1" class="cd-range" type="range" min="0" max="100" value="18">
+            <div class="cd-calc"><div class="cell"><span class="k">Mẫu A, these tokens</span><b>$3.50</b><span class="m">$770 a month</span></div><div class="cell"><span class="k">Mẫu B, these tokens</span><b>$2.40</b><span class="m">$528 a month</span></div><div class="cell"><span class="k">Change</span><b class="d">−31%</b><span class="m">$242 less a month</span></div></div>
+            <ul class="cd-cost"><li><i class="sw" style="background:color-mix(in srgb, var(--cd-ink) 65%, var(--cd-bg))"></i><span class="nm">Read from cache</span><span class="tk">2.0M</span><span class="dots"></span><span>$1.00</span></li><li><i class="sw" style="background:color-mix(in srgb, var(--cd-ink) 50%, var(--cd-bg))"></i><span class="nm">Fresh input</span><span class="tk">200K</span><span class="dots"></span><span>$1.00</span></li><li><i class="sw" style="background:color-mix(in srgb, var(--cd-ink) 35%, var(--cd-bg))"></i><span class="nm">Output</span><span class="tk">60K</span><span class="dots"></span><span>$1.50</span></li></ul>
+          </div>
+          <div class="spec-f"><span class="note">Ô kết quả cách nhau 1px nền line-soft; số âm màu <code>accent</code>. Ô màu chú giải (sw s0–s2) là ink trộn bg, tỉ lệ ước theo ảnh.</span></div></div>
+
+        <div class="spec" data-sig="80ebc20b8f"><div class="spec-h"><b>Danh sách lệnh copy được</b><span class="kind">.eff-cmds</span><span class="dp">hàng min-h 40 · pad 4 12 4 16</span></div>
+          <div class="stage col">
+            <ul class="cd-cmds"><li><code>/effort medium</code><button class="cd-figbtn">Copy</button></li><li><code>/effort status</code><button class="cd-figbtn is-hover">Copy · hover</button></li><li><code>/model</code><button class="cd-figbtn">Copy</button></li></ul>
+          </div></div>
+
+        <div class="spec" data-sig="de019beb25 f727a23d30 059a989106"><div class="spec-h"><b>Tooltip ghim của biểu đồ</b><span class="kind">.viz-tip.tasks · .viz-rowbtn</span><span class="dp">w ≤ 460 · pad 10 14 12 · 14px</span></div>
+          <div class="stage col">
+            <div class="cd-vtip"><div class="hd"><b>Nhóm mẫu: 18% → 30%</b><button class="cd-figbtn">Close</button></div><p>Tỉ lệ đạt theo từng tác vụ, mức thấp → mức cao.</p>
+              <ol><li><span>Tác vụ mẫu thứ nhất</span><span class="n"><span class="lo">70%</span> → <b>100%</b></span></li><li><span>Tác vụ mẫu thứ hai</span><span class="n"><span class="lo">0%</span> → <b>40%</b></span></li></ol></div>
+            <button class="cd-vrow is-focus" aria-label="Hàng biểu đồ mẫu, bấm Enter để xem tác vụ">hàng biểu đồ bấm được (.viz-rowbtn) · focus viền −1px</button>
+          </div></div>
+
+        <div class="spec" data-sig="656b42a44c 7daf9ddbfd 32625849a7 3597c73d04"><div class="spec-h"><b>Thread Slack minh hoạ</b><span class="kind">.slack</span><span class="dp">r 10 · av 34 r 7 · tag r 3</span></div>
+          <div class="stage col">
+            <div class="cd-slack"><div class="sh"><span>#kenh-mau · thread</span><span class="rep">3 replies</span></div>
+              <div class="msg"><span class="av">AB</span><div><div class="mh"><b>Người dùng</b><span class="tm">12:34 PM</span></div><p>Câu hỏi mẫu trong thread, có <code class="cd-icode">mã nội dòng</code>.</p></div></div>
+              <div class="msg"><span class="av spark">✻</span><div><div class="mh"><b>Claude</b><span class="tag">App</span><span class="tm">12:42 PM</span></div><p>Câu trả lời mẫu, hai dòng.</p></div></div></div>
+          </div>
+          <div class="spec-f"><span class="note">Ảnh đại diện thật thay bằng chữ viết tắt. Nền <code>thread-card</code> (trắng ở bản sáng).</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= NHẬP LIỆU ================= -->
+    <section class="block" id="inputs">
+      <header><h2>Nhập liệu</h2><p>Ô nhập không có hộp: chỉ một đường kẻ dưới (newsletter) hoặc dấu nhắc kiểu shell (/terminal).</p></header>
+      <div class="grid">
+        <div class="spec" data-sig="82b04edcbd"><div class="spec-h"><b>Ô email newsletter</b><span class="kind">.fnews input</span><span class="dp">h 40 · pad 8 28 8 0 · 1rem</span></div>
+          <div class="stage col">
+            <div class="cd-email"><input type="email" placeholder="Enter your email" aria-label="Email mẫu"><button class="arr" aria-label="Gửi" disabled>→</button></div>
+            <div class="cd-email"><input type="email" class="is-focus" value="ten@vidu.com" aria-label="Email đang focus" data-sig-state="82b04edcbd:focus"><button class="arr" aria-label="Gửi">→</button></div>
+          </div>
+          <div class="spec-f"><span class="note">Focus: đường dưới chuyển ink-2, không có viền ngoài.</span></div></div>
+
+        <div class="spec" data-sig="ee52d22533 0273fe4b3c 50bbcb02fb e1f6551790"><div class="spec-h"><b>Dòng lệnh /terminal</b><span class="kind">.term-dock · .term-input</span><span class="dp">pad 14 2 · .875rem mono</span></div>
+          <div class="stage col">
+            <div class="cd-wordmark ph-img" style="height:72px">wordmark ASCII</div>
+            <p class="cd-tsub">Câu giới thiệu kiểu terminal. Gõ <b>/help</b> để xem các lệnh khác.</p>
+            <label class="cd-term"><span class="who">guest@claude.dev</span><span class="gt">&gt;</span><input placeholder="/posts" aria-label="Lệnh"></label>
+          </div>
+          <div class="spec-f"><span class="note">Wordmark ASCII của site không chép (RULE-09). Lệnh gõ vào hiện kết quả dạng hàng .frow phía trên.</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Slider</b><span class="kind">.viz-range</span><span class="dp">h 32 · ray 1px ink-3 · núm 18 ink</span></div>
+          <div class="stage col"><input class="cd-range" type="range" min="0" max="100" value="91" aria-label="Slider mẫu"><input class="cd-range" type="range" min="0" max="100" value="50" aria-label="Slider mẫu 2"></div></div>
+      </div>
+    </section>
+
+    <!-- ================= MÀN MẪU ================= -->
+    <section class="block" id="screens">
+      <header><h2>Màn hình mẫu</h2><p>Ghép lại từ class <code>.cd-*</code> theo bố cục site: desktop 1440 × 900 (nav 12 cột, cột trái giới thiệu 2/8, danh sách 6/8) và mobile 390 × 844 (nav thu gọn, gutter 1.5rem, danh sách một cột). Khung thu nhỏ bằng <code>zoom</code>.</p></header>
+      <div class="scr-wrap"><div class="scrs">
+        <div>
+          <div class="desk">
+            <div class="cd-nav"><div class="brand-ph ph-img">ảnh</div><div class="links"><a class="cd-key on" href="#"><span class="k">[H]</span>Home</a><a class="cd-key" href="#"><span class="k">[M]</span>Mods</a><a class="cd-key" href="#"><span class="k">[D]</span>Docs</a><a class="cd-key" href="#"><span class="k">[T]</span>Terminal</a></div><div class="cta"><button class="cd-btn">Try Claude Code<svg class="caret" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 10l5 5 5-5z"/></svg></button></div></div>
+            <div style="display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:0 0;padding:44px 36px 0">
+              <div style="grid-column:1/3;padding-right:40px"><div class="cd-wordmark">claude.dev</div><p style="color:var(--cd-ink-2);line-height:1.6;margin:1rem 0 0">Câu giới thiệu ngắn của blog, hai dòng.</p></div>
+              <div style="grid-column:3/9">
+                <div style="display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid var(--cd-line-soft);padding-bottom:12px"><div class="cd-tabs"><button class="on">All</button><button>Agents</button><button>Engineering</button><button>Playbooks</button><button>Skills</button><button>Tutorials</button></div><div class="cd-search"><button class="s-toggle"><span class="sk">[S]</span> SEARCH</button></div></div>
+                <div class="cd-list">
+                  <div class="cd-post" style="grid-template-columns:repeat(6,minmax(0,1fr))"><div class="feat-art ph-img">ảnh</div><div class="p-body" style="grid-column:3/6"><span class="cd-chip">Featured</span><div class="p-title">Tiêu đề bài nổi bật mẫu</div><div class="p-meta"><span>Tác giả</span><span>Tutorials</span></div></div><div class="p-time" style="grid-column:6/7">11 minutes</div></div>
+                  <div class="cd-post" style="grid-template-columns:repeat(6,minmax(0,1fr))"><div class="p-date">Sep 28, 2026</div><div class="p-body" style="grid-column:3/6"><div class="p-title">Tiêu đề bài viết mẫu thứ nhất</div></div><div class="p-time" style="grid-column:6/7">12 minutes</div></div>
+                  <div class="cd-post" style="grid-template-columns:repeat(6,minmax(0,1fr))"><div class="p-date">Sep 25, 2026</div><div class="p-body" style="grid-column:3/6"><div class="p-title">Tiêu đề bài viết mẫu thứ hai</div></div><div class="p-time" style="grid-column:6/7">8 minutes</div></div>
+                  <div class="cd-post" style="grid-template-columns:repeat(6,minmax(0,1fr))"><div class="p-date">Sep 23, 2026</div><div class="p-body" style="grid-column:3/6"><div class="p-title">Tiêu đề bài viết mẫu thứ ba</div></div><div class="p-time" style="grid-column:6/7">15 minutes</div></div>
+                  <div class="cd-post" style="grid-template-columns:repeat(6,minmax(0,1fr))"><div class="p-date">Sep 22, 2026</div><div class="p-body" style="grid-column:3/6"><div class="p-title">Tiêu đề bài viết mẫu thứ tư</div></div><div class="p-time" style="grid-column:6/7">9 minutes</div></div>
+                </div>
+                <div class="cd-vm"><span class="vm-l">LOAD MORE</span><span class="vm-r">Press R to load more</span></div>
+              </div>
+              <div style="grid-column:1/5;padding:84px 40px 0 0"><div class="cd-cl"><div class="cd-cl-h">Featured videos</div><button class="cd-cl-item on"><span class="t">Video đang phát</span><span class="m"><span>Sep 08, 2026</span><span>34m 42s</span></span></button><button class="cd-cl-item"><span class="t">Video mẫu thứ hai</span><span class="m"><span>Sep 02, 2026</span><span>22m 23s</span></span></button></div></div>
+              <div style="grid-column:5/9;padding-top:130px"><div class="cd-player"><div class="ph ph-img">ảnh poster<span class="pill">Play video</span></div><div class="cd-chrome"><button class="cd-tbtn">Play</button><button class="cd-tbtn">Mute</button><span>00:00 / 34:42</span><span class="track">▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯▯</span><button class="cd-tbtn">Expand</button></div></div></div>
+            </div>
+          </div>
+          <p class="scr-cap">Desktop · home: .cd-nav · .cd-tabs · .cd-search · .cd-post · .cd-chip · .cd-vm · .cd-cl-item · .cd-player · .cd-chrome</p>
+        </div>
+        <div>
+          <div class="phone">
+            <div class="cd-nav collapsed"><div class="brand-ph ph-img">ảnh</div><button class="burger" aria-label="Mở menu"><i></i><i></i><i></i></button></div>
+            <div style="padding:24px 1.5rem 0">
+              <div class="cd-wordmark" style="font-size:1.5rem">claude.dev</div>
+              <p style="color:var(--cd-ink-2);font-size:.8889rem;line-height:1.6;margin:.75rem 0 1.5rem">Câu giới thiệu ngắn của blog.</p>
+              <div style="border-bottom:1px solid var(--cd-line-soft);padding-bottom:12px"><div class="cd-tabs"><button class="on">All</button><button>Agents</button><button>Engineering</button><button>Skills</button></div></div>
+              <div class="cd-list">
+                <div class="cd-post m"><div class="p-date">Sep 28, 2026</div><div class="p-body"><div class="p-title" style="font-size:.8889rem">Tiêu đề bài viết mẫu thứ nhất</div></div><div class="p-time">12 min</div></div>
+                <div class="cd-post m"><div class="p-date">Sep 25, 2026</div><div class="p-body"><div class="p-title" style="font-size:.8889rem">Tiêu đề bài viết mẫu thứ hai, dài hơn một chút</div></div><div class="p-time">8 min</div></div>
+                <div class="cd-post m"><div class="p-date">Sep 23, 2026</div><div class="p-body"><div class="p-title" style="font-size:.8889rem">Tiêu đề bài viết mẫu thứ ba</div></div><div class="p-time">15 min</div></div>
+                <div class="cd-post m"><div class="p-date">Sep 22, 2026</div><div class="p-body"><div class="p-title" style="font-size:.8889rem">Tiêu đề bài viết mẫu thứ tư</div></div><div class="p-time">9 min</div></div>
+              </div>
+              <div class="cd-vm"><span class="vm-l">LOAD MORE</span></div>
+              <div style="margin-top:36px"><div class="cd-email"><input type="email" placeholder="Enter your email" aria-label="Email"><button class="arr" aria-label="Gửi" disabled>→</button></div></div>
+            </div>
+          </div>
+          <p class="scr-cap">Mobile · home: .cd-nav.collapsed · .cd-tabs · .cd-post.m (tiêu đề trên, ngày + thời lượng dưới, như site ≤ 900) · .cd-vm · .cd-email</p>
+        </div>
+        <div>
+          <div class="phone">
+            <div class="cd-nav collapsed"><div class="brand-ph ph-img">ảnh</div><button class="burger" aria-label="Mở menu"><i></i><i></i><i></i></button></div>
+            <div style="padding:24px 1.5rem 0">
+              <div class="cd-ahero"><span class="cd-chip">Agents</span><h1 style="font-size:1.5rem">Tiêu đề bài viết mẫu hai dòng</h1><p class="standfirst" style="font-size:.8889rem">Đoạn dẫn ngắn của bài.</p><dl class="cd-ameta" style="gap:0 24px"><div><dt>Author</dt><dd>Tác giả</dd></div><div><dt>Published</dt><dd>Apr 10</dd></div><div><dt>Read</dt><dd>7 min</dd></div></dl></div>
+              <div class="cd-prose" style="margin-top:28px"><h2>Tiêu đề mục mẫu</h2><p style="font-size:.8889rem">Đoạn văn mẫu có <a class="cd-plink" href="#">liên kết</a> và <code class="cd-icode">mã nội dòng</code>, xuống dòng tự nhiên trên màn hẹp.</p></div>
+              <div class="cd-code"><div class="ch"><span>Code<span class="lang">Shell</span></span><button>Copy</button></div><pre>claude plugin install ten-mod</pre></div>
+              <figure class="cd-fig" style="margin-top:24px"><div class="fg ph-img">ảnh minh hoạ</div><figcaption class="cd-cap" style="font-size:.7778rem"><b>Fig A</b><span class="txt">Chú thích hình.</span></figcaption></figure>
+            </div>
+          </div>
+          <p class="scr-cap">Mobile · bài viết: .cd-ahero · .cd-ameta · .cd-prose · .cd-code · .cd-fig · .cd-cap</p>
+        </div>
+      </div></div>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status"><span id="toast-t">Đã copy</span></div>
+<script>
+/* 43 biến màu của claude.dev, đọc bằng getComputedStyle ở colorScheme dark / light (dump bằng Playwright 06/10/2026) */
+const ROLES=["bg", "bg-raised", "bg-panel", "panel", "panel-2", "thread-card", "ink", "ink-2", "ink-3", "ink-4", "accent", "accent-deep", "paper", "paper-2", "line", "line-soft", "hover-row", "fig-cap-ink", "fig-cap-ink-raised", "space-dot", "space-shot", "syn-purple", "syn-blue", "syn-green", "syn-cyan", "diff-add", "diff-del", "diff-add-bg", "diff-del-bg", "cli-bg", "cli-bar", "cli-bar-rule", "cli-ink", "cli-dim", "cli-hl", "cli-add", "cli-del", "cli-green", "cli-blue", "cli-clay", "cli-cyan", "cli-pick", "cli-dot"];
+const MODES={"dark": ["#141413", "#1a1a18", "#1e1d1b", "#161514", "#121110", "#1e1d1b", "#faf9f5", "#b0aea5", "#87867f", "#5e5d59", "#d97757", "#c15f3c", "#faf9f5", "#e3dacc", "#faf9f529", "#faf9f517", "#faf9f50b", "#87867f", "#87867f", "#87867f", "#a8a294", "#c792ea", "#82aaff", "#c3e88d", "#89ddff", "#9ac29a", "#c29a9a", "#78be7812", "#be787812", "#1a1a18", "#1a1a18", "#faf9f517", "#faf9f5", "#b0aea5", "#faf9f51a", "#0a3d14", "#55101a", "#7fd18b", "#9ac8ff", "#e0886a", "#4fc3e8", "#0f7e9b", "#5e5d59"], "light": ["#faf9f5", "#f1efe8", "#ece9e0", "#f2f0ea", "#edeae2", "#ffffff", "#141413", "#4c4b45", "#7b7a72", "#a8a69d", "#c15f3c", "#a94e2f", "#141413", "#2a2927", "#14141338", "#1414131c", "#1414130d", "#73726b", "#6b6a64", "#87867f", "#d2cdbf", "#914dbe", "#3065d7", "#567527", "#16749a", "#3e7a3e", "#a04545", "#50965017", "#b45a5a17", "#ffffff", "#ecebe6", "#00000000", "#1f1e1c", "#625f58", "#eeece6", "#e4f5e4", "#fde9eb", "#256a30", "#2a62c9", "#a94e2f", "#16749a", "#16749a", "#cfcdc6"]};
+(function () {
+  const root = document.documentElement;
+  /* lần đầu theo chế độ của máy (như site); sau đó nhớ lựa chọn */
+  const state = { mode: matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark" };
+  try { Object.assign(state, JSON.parse(localStorage.getItem("cd-kit") || "{}")); } catch (e) {}
+  if (!MODES[state.mode]) state.mode = "dark";
+
+  const toast = (t) => {
+    const el = document.getElementById("toast");
+    document.getElementById("toast-t").textContent = t;
+    el.classList.add("show");
+    clearTimeout(toast.t);
+    toast.t = setTimeout(() => el.classList.remove("show"), 1600);
+  };
+  const copy = async (text, msg) => {
+    try { await navigator.clipboard.writeText(text); toast(msg); }
+    catch (e) { toast("Trình duyệt chặn clipboard, hãy copy tay"); }
+  };
+
+  function apply() {
+    const vals = MODES[state.mode];
+    ROLES.forEach((r, i) => root.style.setProperty("--cd-" + r, vals[i]));
+    root.dataset.mode = state.mode;
+    document.querySelectorAll("#mode button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === state.mode));
+    renderRoles(vals);
+    try { localStorage.setItem("cd-kit", JSON.stringify(state)); } catch (e) {}
+  }
+  document.querySelectorAll("#mode button").forEach((b) => (b.onclick = () => { state.mode = b.dataset.v; apply(); }));
+
+  /* ô màu: chữ trên nền tối dùng ink sáng, nền sáng dùng ink tối (đo độ sáng của màu nền trộn với bg) */
+  const hexRgb = (h) => { h = h.replace("#", ""); return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16)).concat(h.length === 8 ? parseInt(h.slice(6, 8), 16) / 255 : 1); };
+  function renderRoles(vals) {
+    const box = document.getElementById("roles");
+    const bg = hexRgb(vals[0]);
+    box.innerHTML = "";
+    ROLES.forEach((r, i) => {
+      const [cr, cg, cb, a] = hexRgb(vals[i]);
+      const mix = [cr, cg, cb].map((c, k) => c * a + bg[k] * (1 - a));
+      const lum = (0.299 * mix[0] + 0.587 * mix[1] + 0.114 * mix[2]) / 255;
+      const b = document.createElement("button");
+      b.className = "role"; b.style.background = vals[i]; b.style.color = lum > 0.55 ? "#141413" : "#faf9f5";
+      b.innerHTML = "<b>--" + r + "</b><code>" + vals[i] + "</code>";
+      b.onclick = () => copy(vals[i], "Đã copy --" + r + " " + vals[i]);
+      box.appendChild(b);
+    });
+  }
+
+  /* thang chữ thực dùng: [tên, họ, size px ở 1rem=18, line-height, weight, uppercase, nguồn] */
+  const TYPE = [
+    ["Wordmark hero", "mono", 31.5, 1.1, 400, 0, ".hero h1 · 1.75rem"],
+    ["Article H1", "sans", 34.2, 1.3, 500, 0, ".hero h1 · --type-h1 clamp(1.5rem, 1.1rem+1vw, 2rem)"],
+    ["Mod title", "sans", 34.2, 1.3, 400, 0, ".mod-info h2 · --type-h1"],
+    ["Post title", "sans", 18, 1.5, 400, 0, ".p-title · --type-h5"],
+    ["Prose", "sans", 18, 1.7, 400, 0, ".prose p · --type-p 1rem (.8889 ≤ 640)"],
+    ["Sub / standfirst", "sans", 18, 1.6, 400, 0, ".rail-sub · --type-sub"],
+    ["Section label", "mono", 18, 1.4, 400, 0, ".cc-lbl · 1rem"],
+    ["Prose H2", "mono", 15.75, 1.5, 500, 1, ".prose h2 · .875rem"],
+    ["Data", "mono", 15.75, 1.5, 400, 0, ".p-date · --type-data .875rem"],
+    ["Fig caption", "sans", 15.75, 1.5, 400, 0, ".cap · --type-figcaption .875rem"],
+    ["Nav key / tab", "mono", 13.5, 1.5, 400, 1, ".nav-links a · .75rem · ls .02em"],
+    ["Chrome link", "mono", 12, 1.5, 400, 1, ".mod-cta · --type-chrome 12px"],
+    ["Fig meta", "mono", 12, 1.5, 400, 1, ".cap b · --fig-meta .6667rem · ls .03em"],
+    ["Footer note", "sans", 11, 1.55, 400, 0, ".fn-note"]];
+  const ts = document.getElementById("typescale");
+  TYPE.forEach(([name, fam, size, lh, w, up, src]) => {
+    const row = document.createElement("div");
+    row.className = "type-row";
+    row.innerHTML = '<span class="meta">' + name + '</span><span class="t" style="font-family:var(--cd-' + fam + ');font-size:' + size + 'px;line-height:' + lh + ';font-weight:' + w + (up ? ';text-transform:uppercase;letter-spacing:.02em' : '') + '">Hướng dẫn dựng mod đầu tiên</span><span class="meta">' + fam + " " + size + " / " + lh + " · " + w + "<br>" + src + "</span>";
+    ts.appendChild(row);
+  });
+
+  /* mỗi thẻ thành phần có nút copy HTML của phần trình diễn */
+  document.querySelectorAll(".spec").forEach((spec) => {
+    const stage = spec.querySelector(".stage");
+    if (!stage || !spec.querySelector(".spec-h")) return;
+    let foot = spec.querySelector(".spec-f");
+    if (!foot) { foot = document.createElement("div"); foot.className = "spec-f"; foot.innerHTML = '<span class="note"></span>'; spec.appendChild(foot); }
+    const b = document.createElement("button");
+    b.className = "copy"; b.textContent = "Copy HTML";
+    b.onclick = () => copy(stage.innerHTML.trim().replace(/\n\s+/g, "\n"), "Đã copy HTML của " + spec.querySelector(".spec-h b").textContent);
+    foot.appendChild(b);
+  });
+
+  /* token chế độ hiện tại dưới dạng khối :root */
+  document.getElementById("copy-tokens").onclick = () => {
+    const vals = MODES[state.mode];
+    const lines = ROLES.map((r, i) => "  --cd-" + r + ": " + vals[i] + ";");
+    copy(":root {\n" + lines.join("\n") + "\n  --cd-white: #fff;\n  --cd-cli-dot-1: #ff5f57; --cd-cli-dot-2: #febc2e; --cd-cli-dot-3: #28c840;\n  --cd-ease-out: cubic-bezier(.19, 1, .22, 1);\n  --cd-ease-swift: cubic-bezier(.55, 0, .1, 1);\n  --cd-gutter: 2rem; --cd-nav-h: 95px;\n}", "Đã copy token " + (state.mode === "dark" ? "tối" : "sáng"));
+  };
+
+  /* làm nổi mục đang xem trong mục lục */
+  const links = [...document.querySelectorAll(".side a")];
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (e.isIntersecting) links.forEach((a) => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id));
+  }), { rootMargin: "-30% 0px -60% 0px" });
+  document.querySelectorAll("section.block").forEach((s) => io.observe(s));
+
+  /* link mẫu không nhảy trang */
+  document.addEventListener("click", (e) => { const a = e.target.closest('main a[href="#"]'); if (a) e.preventDefault(); });
+
+  apply();
+})();
+</script>
+
+
+</body>
+</html>
