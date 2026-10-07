@@ -1,0 +1,974 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta name="ui-kit-id" content="getartcraft-com">
+<!-- UI kit rút từ getartcraft.com (ArtCraft, Next.js + Tailwind v4), 07/10/2026, bằng skill ui-kit-from-code.
+     Token: biến :root / [data-theme=dark] đọc từ /_next/static/chunks/3rsoae9dq-c5i.css. Component: số đo lấy từ getComputedStyle qua discover.mjs (123 pattern, 14 trang).
+     Ảnh, logo, icon app của ArtCraft KHÔNG nhúng: thay bằng khối giữ chỗ (RULE-09). -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="ui-kit-skip" content="1a4a05a28a:khung div.absolute rỗng chứa HUD cuộn (JS), không phải component;6d6decb29b:khung div.absolute rỗng của animation reveal, không có style riêng">
+<title>ArtCraft UI Kit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,400..700;1,62..125,400..700&family=Inter:wght@400;500;600&family=Geist+Mono:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap">
+<style>
+/* ================= TOKEN (từ :root của site; script bên dưới đổi sáng/tối và màu app) ================= */
+:root {
+  --ac-bg:#f2f1ee; --ac-bgRaised:#faf9f7; --ac-bgSunken:#e9e8e4; --ac-ink:#101014; --ac-inkStrong:#000;
+  --ac-muted:#1010149e; --ac-faint:#1010146b; --ac-line:#10101429; --ac-lineStrong:#10101466;
+  --ac-accent:#2d81ff; --ac-accentInk:#1659c4; --ac-invertBg:#101014; --ac-invertFg:#f2f1ee; --ac-danger:#b3261e; --ac-scanline:#10101408;
+  --ac-app:#2d81ff; --ac-appInk:#1659c4;              /* màu app đang chọn (.app-photocraft … trên site) */
+  --font-display: "Archivo", system-ui, sans-serif;     /* --font-display: weight 620, stretch 118% */
+  --font-body: "Inter", system-ui, sans-serif;          /* --font-body */
+  --font-mono: "Geist Mono", ui-monospace, Menlo, monospace; /* --font-mono */
+  --font-serif: "Instrument Serif", Georgia, serif;     /* --font-serif, chỉ dùng italic trong tiêu đề */
+  --k: 0; /* site: rounded-none ở mọi nơi; giữ --k để class .ac-* bê sang dự án khác vẫn chạy */
+  color-scheme: light;
+}
+:root[data-mode="dark"] { color-scheme: dark; }
+/* plan (pricing): --plan / --plan-ink, sáng và tối, đúng .plan-* trên site */
+.plan-basic{--plan:#00a873;--plan-ink:#007a54} .plan-pro{--plan:#9d4cff;--plan-ink:#7a2fe0} .plan-max{--plan:#d97700;--plan-ink:#b35f00} .plan-enterprise{--plan:#3568c9;--plan-ink:#2a55a8}
+:root[data-mode="dark"] .plan-basic{--plan-ink:#2fd39c} :root[data-mode="dark"] .plan-pro{--plan-ink:#c08fff} :root[data-mode="dark"] .plan-max{--plan-ink:#ffb347} :root[data-mode="dark"] .plan-enterprise{--plan-ink:#7ea3ee}
+/* app (lineup): --app / --app-ink, đúng .app-* trên site; class .ac-app đổi theo swatch */
+.app-photocraft{--app:#2f7bf5;--app-ink:#1a5bc4} .app-vectorcraft{--app:#e8573f;--app-ink:#b83a24} .app-filmcraft{--app:#8b5cf6;--app-ink:#6a3fd6} .app-lightcraft{--app:#f2a516;--app-ink:#8a5800} .app-printcraft{--app:#12a58a;--app-ink:#0a7563} .app-effectcraft{--app:#e0368f;--app-ink:#b0206c} .app-designcraft{--app:#7bb51c;--app-ink:#457008}
+:root[data-mode="dark"] .app-photocraft{--app-ink:#7fb0ff} :root[data-mode="dark"] .app-vectorcraft{--app-ink:#ff8a70} :root[data-mode="dark"] .app-filmcraft{--app-ink:#b69cff} :root[data-mode="dark"] .app-lightcraft{--app-ink:#ffc14d} :root[data-mode="dark"] .app-printcraft{--app-ink:#3fd6b8} :root[data-mode="dark"] .app-effectcraft{--app-ink:#ff7ab8} :root[data-mode="dark"] .app-designcraft{--app-ink:#a6e04a}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--ac-bg); color: var(--ac-ink); font: 400 16px/24px var(--font-body); -webkit-font-smoothing: antialiased; overflow-x: clip; }
+code, .code { font-family: var(--font-mono); font-size: 12px; }
+:focus-visible { outline: 2px solid var(--ac-accentInk); outline-offset: 2px; } /* đúng rule toàn cục của site */
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+svg.i { width: 14px; height: 14px; flex: none; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---------- vỏ trang (mặc chính token ArtCraft) ---------- */
+.shell { display: grid; grid-template-columns: 232px minmax(0, 1fr); min-height: 100vh; }
+.side { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 16px 0; background: var(--ac-bg); border-right: 1px solid var(--ac-line); display: flex; flex-direction: column; }
+.brand { display: flex; align-items: center; gap: 10px; padding: 8px 16px 16px; border-bottom: 1px solid var(--ac-line); }
+.brand-mark { width: 32px; height: 32px; background: var(--ac-invertBg); color: var(--ac-invertFg); display: grid; place-items: center; font: 700 14px var(--font-mono); }
+.brand b { font-family: var(--font-display); font-weight: 620; font-stretch: 118%; font-size: 15px; display: block; letter-spacing: -.02em; }
+.brand small { color: var(--ac-faint); font: 500 10px var(--font-mono); letter-spacing: .1em; text-transform: uppercase; }
+.side h6 { margin: 18px 16px 6px; font: 500 10px var(--font-mono); letter-spacing: .15em; text-transform: uppercase; color: var(--ac-faint); }
+.side a { display: block; padding: 7px 16px; color: var(--ac-muted); text-decoration: none; font: 500 11px var(--font-mono); letter-spacing: .12em; text-transform: uppercase; }
+.side a:hover { color: var(--ac-ink); }
+.side a.on { background: var(--ac-invertBg); color: var(--ac-invertFg); }
+main { padding: 0 32px 96px; min-width: 0; }
+
+.bar { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; padding: 12px 0; background: color-mix(in srgb, var(--ac-bg) 95%, transparent); backdrop-filter: blur(4px); border-bottom: 1px solid var(--ac-line); }
+.bar .grow { flex: 1; }
+.ctl { display: flex; align-items: center; gap: 8px; }
+.ctl > span { font: 500 10px var(--font-mono); letter-spacing: .15em; text-transform: uppercase; color: var(--ac-faint); }
+.swatches { display: flex; gap: 4px; }
+.sw { width: 24px; height: 24px; border: 1px solid var(--ac-line); padding: 0; cursor: pointer; background: var(--c); }
+.sw[aria-pressed="true"] { outline: 2px solid var(--ac-ink); outline-offset: 1px; }
+.seg { display: inline-flex; border: 1px solid var(--ac-line); background: var(--ac-bgRaised); padding: 4px 2px; }
+.seg button { height: 21px; padding: 0 16px; margin: 0 2px; border: 0; background: transparent; color: var(--ac-muted); font: 600 11px var(--font-mono); letter-spacing: .1em; text-transform: uppercase; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ac-invertBg); color: var(--ac-invertFg); }
+.copy { height: 32px; padding: 0 12px; border: 1px solid var(--ac-lineStrong); background: var(--ac-bg); color: var(--ac-ink); font: 700 11px var(--font-mono); letter-spacing: .12em; text-transform: uppercase; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; transition: background-color .12s linear, color .12s linear; }
+.copy:hover { background: var(--ac-invertBg); color: var(--ac-invertFg); border-color: transparent; }
+
+.intro { padding: 40px 0 8px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 32px; align-items: center; }
+.kit-hero { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 0; }
+.kit-hero .desk { zoom: .42; }
+.kit-hero a { font: 500 11px var(--font-mono); letter-spacing: .15em; text-transform: uppercase; color: var(--ac-accentInk); text-decoration: none; }
+.intro .eyebrow { font: 500 11px var(--font-mono); letter-spacing: .15em; text-transform: uppercase; color: var(--ac-faint); }
+.intro h1 { font-family: var(--font-display); font-weight: 620; font-stretch: 118%; font-size: 48px; line-height: 1.02; letter-spacing: -.035em; color: var(--ac-inkStrong); margin: 10px 0 14px; text-wrap: balance; }
+.intro h1 em { font-family: var(--font-serif); font-style: italic; font-weight: 400; font-stretch: 100%; letter-spacing: 0; }
+.intro p { font-size: 16px; line-height: 26px; color: var(--ac-muted); margin: 0; max-width: 60ch; }
+.intro .facts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 18px; }
+.fact { font: 500 10px var(--font-mono); letter-spacing: .1em; text-transform: uppercase; padding: 3px 6px; border: 1px solid var(--ac-line); background: var(--ac-bgSunken); color: var(--ac-muted); }
+
+section.block { padding-top: 48px; scroll-margin-top: 64px; }
+section.block > header { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; padding-top: 14px; border-top: 1px solid var(--ac-line); }
+section.block h2 { font-family: var(--font-display); font-weight: 620; font-stretch: 118%; font-size: 26px; line-height: 1.1; letter-spacing: -.02em; color: var(--ac-inkStrong); margin: 0; }
+section.block > header p { margin: 0; color: var(--ac-muted); max-width: 70ch; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1px; background: var(--ac-line); border: 1px solid var(--ac-line); }
+.grid.wide { grid-template-columns: repeat(auto-fill, minmax(480px, 1fr)); }
+.spec { background: var(--ac-bg); display: flex; flex-direction: column; min-width: 0; }
+.spec.full { grid-column: 1 / -1; }
+.spec-h { display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-bottom: 1px solid var(--ac-line); flex-wrap: wrap; }
+.spec-h b { font-family: var(--font-display); font-weight: 620; font-stretch: 118%; font-size: 15px; letter-spacing: -.01em; }
+.kind { font: 500 10px var(--font-mono); letter-spacing: .1em; text-transform: none; padding: 1px 6px; border: 1px solid var(--ac-line); background: var(--ac-bgSunken); color: var(--ac-muted); }
+.spec-h .dp { margin-left: auto; font: 500 10px var(--font-mono); color: var(--ac-faint); letter-spacing: .08em; font-variant-numeric: tabular-nums; }
+.stage { padding: 20px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; min-height: 96px; overflow-x: auto; }
+.stage.col { flex-direction: column; align-items: stretch; flex-wrap: nowrap; }
+.stage.sunken { background: var(--ac-bgSunken); }
+.lab { width: 100%; font: 500 10px var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ac-faint); margin: 4px 0 -6px; }
+.spec-f { display: flex; align-items: center; gap: 8px; padding: 8px 12px 12px 16px; margin-top: auto; border-top: 1px solid var(--ac-line); }
+.spec-f .note { font-size: 12px; line-height: 18px; color: var(--ac-muted); flex: 1; }
+
+/* nền tảng */
+.roles { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 1px; background: var(--ac-line); border: 1px solid var(--ac-line); }
+.role { padding: 12px; min-height: 76px; display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; border: 0; text-align: left; font: inherit; }
+.role b { font: 500 12px var(--font-mono); }
+.role code { font-size: 11px; opacity: .8; }
+.type-row { display: grid; grid-template-columns: 170px minmax(0, 1fr) 190px; gap: 16px; align-items: baseline; padding: 10px 0; border-bottom: 1px solid var(--ac-line); }
+.type-row:last-child { border-bottom: none; }
+.type-row .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.type-row .meta { font: 500 10px var(--font-mono); letter-spacing: .08em; color: var(--ac-muted); font-variant-numeric: tabular-nums; }
+.shape-cell { display: flex; flex-direction: column; align-items: center; gap: 6px; font: 500 10px var(--font-mono); letter-spacing: .1em; color: var(--ac-muted); }
+.shape-cell i { display: block; width: 64px; height: 64px; background: var(--ac-bgSunken); border: 1px solid var(--ac-lineStrong); }
+table.tok { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+table.tok th, table.tok td { text-align: left; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--ac-line); font-size: 13px; }
+table.tok th { font: 500 10px var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ac-faint); }
+table.tok td:first-child { font-family: var(--font-mono); font-size: 12px; }
+.tbl { overflow-x: auto; }
+
+/* ================= THÀNH PHẦN ac-* (tái dùng: chỉ cần khối :root --ac-*) ================= */
+/* chữ */
+.ac-display { font-family: var(--font-display); font-weight: 620; font-stretch: 118%; color: var(--ac-inkStrong); margin: 0; }
+.ac-display em { font-family: var(--font-serif); font-style: italic; font-weight: 400; font-stretch: 100%; letter-spacing: 0; }
+.ac-display .acc { color: var(--app-ink, var(--ac-accentInk)); }
+.ac-h-5xl { font-size: 72px; line-height: .98; letter-spacing: -.04em; }
+.ac-h-4xl { font-size: 60px; line-height: 1.02; letter-spacing: -.035em; }
+.ac-h-48  { font-size: 48px; line-height: 1.02; letter-spacing: -.035em; }
+.ac-h-3xl { font-size: 36px; line-height: 1.05; letter-spacing: -.03em; }
+.ac-h-30  { font-size: 30px; line-height: 1.05; letter-spacing: -.03em; }
+.ac-h-2xl { font-size: 24px; line-height: 32px; letter-spacing: -.02em; }
+.ac-h-xl  { font-size: 20px; line-height: 28px; letter-spacing: -.02em; }
+.ac-lead { font-size: 18px; line-height: 1.625; color: var(--ac-muted); margin: 0; }
+.ac-body { font-size: 16px; line-height: 1.625; color: var(--ac-muted); margin: 0; }
+.ac-sm { font-size: 14px; line-height: 1.625; color: var(--ac-muted); margin: 0; }
+.hud-label { font-family: var(--font-mono); letter-spacing: .15em; text-transform: uppercase; font-size: 11px; line-height: 1.5; font-weight: 500; }
+.t-muted { color: var(--ac-muted); } .t-faint { color: var(--ac-faint); } .t-ink { color: var(--ac-ink); } .t-accent { color: var(--ac-accentInk); }
+
+/* nút: inline-flex · mono 11px 700 · tracking .12em · uppercase · rounded-none */
+.ac-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 48px; padding: 0 24px; border: 0; cursor: pointer; white-space: nowrap; text-decoration: none;
+  font: 700 11px/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; background: var(--ac-invertBg); color: var(--ac-invertFg); transition: opacity .15s, background-color .15s, color .15s; }
+.ac-btn .i { width: 16px; height: 16px; }
+.ac-btn:hover, .ac-btn.is-hover { opacity: .8; }
+.ac-btn.sm { height: 33px; padding: 0 16px; }
+.ac-btn.outline { background: var(--ac-bg); color: var(--ac-ink); border: 1px solid var(--ac-lineStrong); opacity: 1; height: 48px; }
+.ac-btn.outline.md { height: 35px; padding: 0 16px; width: 100%; }
+.ac-btn.outline.xs { height: 31px; padding: 0 12px; font-weight: 500; gap: 6px; }
+.ac-btn.outline:hover, .ac-btn.outline.is-hover { background: var(--ac-invertBg); color: var(--ac-invertFg); border-color: transparent; opacity: 1; }
+.ac-btn.ghost { background: var(--ac-bg); color: var(--ac-muted); height: 36px; padding: 0 12px; opacity: 1; }
+.ac-btn.ghost.bl { background: transparent; border-left: 1px solid var(--ac-line); }
+.ac-btn.ghost:hover, .ac-btn.ghost.is-hover { background: var(--ac-invertBg); color: var(--ac-invertFg); opacity: 1; }
+.ac-btn.plan { background: var(--plan); color: #fff; width: 100%; }
+.ac-btn.plan:hover, .ac-btn.plan.is-hover { opacity: .9; }
+.ac-btn.plan.ic { width: 48px; padding: 0; }
+.ac-btn.ic-nav { width: 48px; height: 48px; padding: 0; background: transparent; color: var(--ac-muted); border-left: 1px solid var(--ac-line); opacity: 1; transition: background-color .12s linear, color .12s linear; }
+.ac-btn.ic-nav:hover, .ac-btn.ic-nav.is-hover { background: var(--ac-invertBg); color: var(--ac-invertFg); }
+.ac-btn .dim { font-weight: 400; opacity: .6; }
+.ac-btn.w-full { width: 100%; }
+.is-focus { outline: 2px solid var(--ac-accentInk); outline-offset: 2px; }
+.ac-split { display: flex; gap: 1px; background: rgba(255,255,255,.3); }
+.ac-split .ac-btn:first-child { flex: 1; }
+/* link */
+.ac-link { color: var(--ac-muted); text-decoration: none; }
+.ac-link:hover, .ac-link.is-hover { color: var(--ac-ink); }
+.ac-link.hud { font: 500 11px/1.5 var(--font-mono); letter-spacing: .15em; text-transform: uppercase; display: inline-flex; align-items: center; gap: 6px; }
+.ac-link.faint { color: var(--ac-faint); }
+.ac-link.faint:hover, .ac-link.faint.is-hover { color: var(--ac-ink); }
+.ac-explore { font: 700 11px/1.5 var(--font-mono); letter-spacing: .15em; text-transform: uppercase; color: var(--ac-ink); display: inline-flex; align-items: center; gap: 6px; }
+/* play / watch badge trên video */
+.ac-play { position: absolute; bottom: 12px; left: 12px; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: var(--ac-invertBg); color: var(--ac-invertFg); font: 700 11px/1.5 var(--font-mono); letter-spacing: .15em; text-transform: uppercase; }
+
+/* điều hướng */
+.ac-nav { position: sticky; top: 0; z-index: 2; display: flex; height: 48px; align-items: stretch; justify-content: space-between; border-bottom: 1px solid var(--ac-line); background: color-mix(in srgb, var(--ac-bg) 95%, transparent); backdrop-filter: blur(4px); }
+.ac-nav .L, .ac-nav .R { display: flex; align-items: stretch; min-width: 0; }
+.ac-nav .logo { display: flex; align-items: center; padding: 0 20px; border-right: 1px solid var(--ac-line); color: var(--ac-ink); }
+.ac-nav .logo:hover { opacity: .7; }
+.ac-nav ul { display: flex; list-style: none; margin: 0; padding: 0; height: 100%; }
+.ac-nav ul li { display: flex; align-items: stretch; }
+.ac-navlink { display: flex; align-items: center; height: 100%; padding: 0 10px; color: var(--ac-muted); text-decoration: none; background: none; border: 0; cursor: pointer; font: 500 11px/1.5 var(--font-mono); letter-spacing: .15em; text-transform: uppercase; white-space: nowrap; }
+.ac-navlink > span { display: flex; align-items: center; gap: 6px; padding: 2px 6px; }
+.ac-navlink:hover, .ac-navlink.is-hover { color: var(--ac-ink); }
+.ac-navlink:hover > span, .ac-navlink.is-hover > span, .ac-navlink.is-on > span { background: var(--ac-invertBg); color: var(--ac-invertFg); }
+.ac-navlink.is-on { color: var(--ac-ink); }
+.ac-nav .cta { display: flex; align-items: stretch; }
+.ac-nav .ac-btn.ic-nav { height: auto; }
+.ac-nav .ac-btn.launch { height: auto; border-left: 1px solid var(--ac-line); }
+.ac-menu { position: relative; display: inline-block; }
+.ac-dropdown { position: absolute; top: 100%; left: 0; border: 1px solid var(--ac-line); border-top: 0; background: var(--ac-bg); min-width: 200px; display: flex; flex-direction: column; list-style: none; margin: 0; padding: 0; z-index: 3; }
+.ac-dropdown .ac-navlink { height: auto; padding: 10px 12px; }
+.ac-dropdown.static { position: static; border-top: 1px solid var(--ac-line); }
+/* mobile nav */
+.ac-nav.mobile .L .logo { padding: 0 16px; }
+/* tabs segmented */
+.ac-tabs { position: relative; display: inline-flex; border: 1px solid var(--ac-line); background: var(--ac-bgRaised); padding: 4px 2px; }
+.ac-tab { position: relative; z-index: 1; margin: 0 2px; min-width: max-content; padding: 2px 16px; border: 0; background: transparent; color: var(--ac-muted); cursor: pointer; font: 600 11px/1.5 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; transition: color .2s ease-in-out; }
+.ac-tab:hover, .ac-tab.is-hover { color: var(--ac-ink); }
+.ac-tab[aria-selected="true"] { background: var(--ac-invertBg); color: var(--ac-invertFg); } /* site: thumb div tuyệt đối trượt (transition-all .2s); kit vẽ tĩnh */
+.ac-tab-thumb { position: absolute; top: 4px; height: calc(100% - 8px); background: var(--ac-invertBg); transition: all .2s ease-in-out; }
+/* eyebrow mục (sticky dưới nav) */
+.ac-eyebrow { position: sticky; top: 48px; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 40px; border-top: 1px solid var(--ac-line); border-bottom: 1px solid var(--ac-line); background: color-mix(in srgb, var(--ac-bg) 60%, transparent); backdrop-filter: blur(12px); }
+.ac-eyebrow p { margin: 0; }
+.ac-eyebrow .n { color: var(--ac-faint); } .ac-eyebrow .sl { margin: 0 8px; color: var(--ac-faint); }
+/* khung mục */
+.ac-section { position: relative; border-top: 1px solid var(--ac-line); }
+.ac-container { position: relative; margin: 0 auto; max-width: 1280px; border-left: 1px solid var(--ac-line); border-right: 1px solid var(--ac-line); }
+.tick { pointer-events: none; width: 11px; height: 11px; position: absolute; }
+.tick::before, .tick::after { content: ""; background: var(--ac-lineStrong); position: absolute; }
+.tick::before { width: 1px; top: 0; bottom: 0; left: 5px; }
+.tick-half::before { top: 5px; }
+.tick::after { height: 1px; top: 5px; left: 0; right: 0; }
+.tick.tl { top: -5px; left: -6px; } .tick.tr { top: -5px; right: -5px; }
+.ac-pad { padding: 80px 40px; }
+.ac-pad.sm { padding: 56px 24px; }
+/* lưới gap-px bg-line */
+.ac-grid { display: grid; gap: 1px; background: var(--ac-line); }
+.ac-grid > * { background: var(--ac-bg); }
+.ac-grid.c2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .ac-grid.c3 { grid-template-columns: repeat(3, minmax(0, 1fr)); } .ac-grid.c4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.ac-grid.bt { border-top: 1px solid var(--ac-line); }
+/* footer */
+.ac-footer { border-top: 1px solid var(--ac-line); }
+.ac-footer .cols { display: grid; gap: 1px; background: var(--ac-line); grid-template-columns: 2fr 1fr 1fr 1fr 1fr; }
+.ac-footer .cols > * { background: var(--ac-bg); padding: 32px; }
+.ac-footer .cols > .brandcell { padding: 40px; }
+.ac-footer nav ul { list-style: none; margin: 16px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.ac-footer .bottom { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 16px 40px; border-top: 1px solid var(--ac-line); flex-wrap: wrap; }
+/* marquee */
+.ac-marquee { overflow: hidden; border-top: 1px solid var(--ac-line); border-bottom: 1px solid var(--ac-line); }
+.ac-marquee ul { display: flex; align-items: center; list-style: none; margin: 0; padding: 0; width: max-content; animation: marquee-scroll 30s linear infinite; }
+.ac-marquee li { display: flex; align-items: center; white-space: nowrap; padding: 12px 24px; color: var(--ac-muted); }
+.ac-marquee li .dot { margin-right: 24px; color: var(--ac-accentInk); }
+@keyframes marquee-scroll { to { transform: translateX(-50%); } }
+/* HUD cuộn (vẽ theo spec: site tính vị trí bằng JS) */
+.ac-hud { position: relative; height: 220px; border: 1px solid var(--ac-line); overflow: hidden; background: var(--ac-bg); }
+.ac-hud .word { position: absolute; top: 24px; right: 60px; font-family: var(--font-display); font-weight: 620; font-stretch: 118%; font-size: 34px; line-height: 1; color: var(--ac-inkStrong); text-shadow: 0 0 4px var(--ac-bg), 0 0 10px var(--ac-bg); letter-spacing: .02em; }
+.ac-hud .ghost { color: var(--ac-faint); font-size: 16px; right: 60px; }
+.ac-hud .rail { position: absolute; top: 0; right: 0; width: 60px; height: 100%; border-left: 1px solid var(--ac-line); }
+.ac-hud .rail i { position: absolute; right: 0; height: 1px; background: var(--ac-lineStrong); width: 8px; }
+.ac-hud .rail i.maj { width: 16px; }
+.ac-hud .rail i::after { content: attr(data-n); position: absolute; right: 20px; top: -7px; font: 400 9px var(--font-mono); color: var(--ac-faint); letter-spacing: .08em; }
+.ac-hud .scan { position: absolute; left: 0; right: 0; height: 1px; background: var(--ac-accent); box-shadow: 0 0 6px var(--ac-accent); }
+.ac-hud .pct { position: absolute; right: 2px; margin-top: 4px; font: 400 9px var(--font-mono); letter-spacing: .08em; color: var(--ac-accentInk); }
+.ac-hud .rot { position: absolute; right: 18px; bottom: 16px; writing-mode: vertical-rl; transform: rotate(180deg); font: 500 11px var(--font-mono); letter-spacing: .15em; text-transform: uppercase; color: var(--ac-faint); }
+.ac-hud .jump { position: absolute; top: 18px; right: 56px; width: 180px; height: 44px; }
+
+/* chứa nội dung */
+.ac-card { background: var(--ac-bg); display: flex; flex-direction: column; min-width: 0; }
+.ac-card.p6 { padding: 24px; } .ac-card.p8 { padding: 32px; } .ac-card.p10 { padding: 40px; }
+.ac-card-h { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 24px; border-bottom: 1px solid var(--ac-line); }
+.ac-card-h.sm { padding: 10px 24px; }
+.ac-card-h p { margin: 0; }
+.ac-img { position: relative; overflow: hidden; background: var(--ac-bgSunken); display: grid; place-items: center; color: var(--ac-faint); font: 500 10px var(--font-mono); letter-spacing: .12em; text-transform: uppercase; }
+.ac-img.r16-10 { aspect-ratio: 16 / 10; } .ac-img.r16-9 { aspect-ratio: 16 / 9; } .ac-img.sq { aspect-ratio: 1; }
+.ac-img.bb { border-bottom: 1px solid var(--ac-line); }
+.ac-img .pic { transition: transform .5s ease-out; width: 100%; height: 100%; position: absolute; inset: 0; background: repeating-linear-gradient(135deg, transparent 0 14px, var(--ac-line) 14px 15px); }
+.ac-cardlink { position: relative; display: flex; flex-direction: column; height: 100%; text-decoration: none; color: inherit; background: var(--ac-bg); }
+.ac-cardlink .bar2 { position: absolute; inset: 0 0 auto 0; z-index: 1; height: 2px; background: var(--app); transform: scaleX(0); transform-origin: left; transition: transform .3s; }
+.ac-cardlink:hover .bar2, .ac-cardlink.is-hover .bar2, .ac-cardlink.is-active .bar2 { transform: scaleX(1); }
+.ac-cardlink:hover .pic, .ac-cardlink.is-hover .pic { transform: scale(1.03); }
+.ac-cardlink .body { display: flex; flex: 1; flex-direction: column; padding: 0 32px 32px; }
+.ac-icon { width: 56px; height: 56px; flex: none; filter: drop-shadow(0 6px 14px rgba(0,0,0,.28)); background: var(--app, var(--ac-accent)); display: grid; place-items: center; color: #fff; font: 500 9px var(--font-mono); letter-spacing: .08em; text-transform: uppercase; transition: transform .3s ease-out; }
+.ac-icon.lg { width: 72px; height: 72px; margin-top: -36px; position: relative; }
+.ac-cardlink:hover .ac-icon.lg, .ac-cardlink.is-hover .ac-icon.lg { transform: translateY(-4px); }
+.ac-appname { font-family: var(--font-display); font-weight: 620; font-stretch: 118%; font-size: 30px; line-height: 1; letter-spacing: -.03em; color: var(--ac-inkStrong); margin: 16px 0 0; }
+.ac-appname .acc { color: var(--app-ink, var(--ac-accentInk)); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.ac-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--ac-line); text-decoration: none; color: inherit; }
+.ac-row:hover { background: var(--ac-bgSunken); }
+.ac-row .f1 { display: block; font-size: 14px; line-height: 1.5; color: var(--ac-ink); } .ac-row .f2 { display: block; font-size: 14px; line-height: 1.5; color: var(--ac-muted); } .ac-row .f3 { display: block; margin-top: 4px; font: 400 11px var(--font-mono); color: var(--ac-faint); }
+.ac-list { list-style: none; margin: 8px 0 0; padding: 0; border-top: 1px solid var(--ac-line); }
+.ac-terminal { border: 1px solid var(--ac-line); background: var(--ac-bgSunken); margin: 0; }
+.ac-terminal .th { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--ac-line); padding-left: 16px; }
+.ac-terminal pre { margin: 0; padding: 16px; overflow-x: auto; font: 400 13px/1.625 var(--font-mono); color: var(--ac-ink); }
+.ac-newsrow { display: grid; grid-template-columns: 160px 1fr; gap: 16px; padding: 32px; text-decoration: none; color: inherit; }
+.ac-newsrow:hover { background: var(--ac-bgRaised); }
+.ac-plan { display: flex; flex-direction: column; background: linear-gradient(to bottom, color-mix(in srgb, var(--plan) 14%, transparent), transparent 50%), var(--ac-bg); }
+.ac-plan[data-highlight] { box-shadow: inset 0 0 0 2px var(--plan); background: linear-gradient(to bottom, color-mix(in srgb, var(--plan) 22%, transparent), color-mix(in srgb, var(--plan) 4%, transparent)), var(--ac-bg); }
+.ac-plan .ph { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 10px 32px; background: var(--plan); color: #fff; }
+.ac-plan .pb { display: flex; flex: 1; flex-direction: column; padding: 32px; }
+.ac-plan .price { display: flex; align-items: baseline; gap: 8px; margin-top: 20px; }
+.ac-plan .strike { font: 400 16px var(--font-mono); color: color-mix(in srgb, var(--ac-danger) 80%, transparent); text-decoration: line-through; }
+.ac-plan .amt { font-family: var(--font-display); font-weight: 620; font-stretch: 118%; font-size: 48px; letter-spacing: -.03em; color: var(--ac-inkStrong); line-height: 1; }
+.ac-plan ul { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.ac-plan li { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; line-height: 1.5; color: var(--ac-ink); }
+.plan-check { margin-top: 1px; display: inline-flex; width: 16px; height: 16px; flex: none; align-items: center; justify-content: center; background: color-mix(in srgb, var(--plan) 16%, transparent); color: var(--plan-ink); }
+.plan-check .i { width: 10px; height: 10px; stroke-width: 3; }
+.ac-launch { display: flex; flex-direction: column; text-decoration: none; color: inherit; background: var(--ac-bg); }
+.ac-launch .box { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; aspect-ratio: 16 / 9; background: var(--ac-bgSunken); overflow: hidden; }
+.ac-launch .sq { display: flex; width: 56px; height: 56px; align-items: center; justify-content: center; border: 1px solid var(--ac-lineStrong); color: var(--ac-ink); transition: background-color .15s, color .15s; }
+.ac-launch:hover .sq, .ac-launch.is-hover .sq { background: var(--ac-invertBg); color: var(--ac-invertFg); }
+.ac-launch .sq .i { width: 18px; height: 18px; }
+.ac-launch .box .tick.a { top: 8px; left: 8px; opacity: .6; } .ac-launch .box .tick.b { bottom: 8px; right: 8px; opacity: .6; }
+.ac-videobtn { position: relative; aspect-ratio: 16 / 9; width: 100%; overflow: hidden; background: var(--ac-bgSunken); border: 0; padding: 0; cursor: pointer; display: block; }
+.ac-videobtn .pic { transition: transform .5s; }
+.ac-videobtn:hover .pic, .ac-videobtn.is-hover .pic { transform: scale(1.02); }
+.ac-videobtn.is-active .pic { transform: scale(.99); }
+.ac-shot { position: relative; display: block; overflow: hidden; background: var(--ac-bgSunken); aspect-ratio: 16 / 10; text-decoration: none; }
+.ac-shot .fs { position: absolute; bottom: 12px; right: 12px; display: inline-flex; gap: 6px; align-items: center; padding: 6px 12px; background: var(--ac-invertBg); color: var(--ac-invertFg); font: 700 11px/1.5 var(--font-mono); letter-spacing: .15em; text-transform: uppercase; opacity: 0; transition: opacity .2s; }
+.ac-shot:hover .fs, .ac-shot.is-hover .fs { opacity: 1; }
+.ac-spec li { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--ac-muted); }
+.ac-spec { list-style: none; margin: 16px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.ac-oslogo { width: 32px; height: 32px; border: 1px solid var(--ac-line); display: grid; place-items: center; color: var(--ac-ink); }
+.ac-bigletter { width: 32px; height: 32px; border: 1px solid var(--ac-line); display: grid; place-items: center; font: 500 11px var(--font-mono); color: var(--ac-ink); }
+
+/* tag / chip */
+.ac-chip { display: inline-flex; width: fit-content; align-items: center; gap: 4px; border: 1px solid var(--ac-line); background: var(--ac-bgSunken); padding: 1px 6px; font: 500 10px/1.5 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ac-muted); }
+.ac-chip.accent { border-color: transparent; background: var(--ac-accent); color: #fff; }
+.ac-chip.app { border-color: transparent; background: color-mix(in srgb, var(--app, var(--ac-accent)) 16%, transparent); color: var(--app-ink, var(--ac-accentInk)); }
+.ac-num { display: inline-block; padding: 4px 8px; background: var(--app, var(--ac-accent)); color: #000; font: 700 11px/1.5 var(--font-mono); letter-spacing: .15em; }
+.ac-pill { display: inline-flex; align-items: center; gap: 6px; padding: 2px 6px; background: var(--ac-invertBg); color: var(--ac-invertFg); font: 500 11px/1.5 var(--font-mono); letter-spacing: .15em; text-transform: uppercase; }
+.ac-badge { display: inline-block; padding: 4px 8px; background: var(--plan); color: #fff; font: 700 11px/1.5 var(--font-mono); letter-spacing: .15em; text-transform: uppercase; }
+.ac-perks { display: flex; flex-wrap: wrap; gap: 8px 32px; list-style: none; margin: 0; padding: 16px 40px; border-top: 1px solid var(--ac-line); }
+.ac-perks li { display: flex; align-items: center; gap: 8px; color: var(--ac-muted); }
+.ac-perks .i { color: var(--ac-accentInk); }
+.ac-banner { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 8px 24px; background: var(--ac-accent); color: #fff; }
+.ac-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 40px; border-bottom: 1px solid var(--ac-line); }
+.ac-toolbar .L { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.ac-share { display: inline-flex; align-items: stretch; border: 1px solid var(--ac-line); }
+.ac-share .lbl { display: flex; align-items: center; padding: 0 12px; color: var(--ac-faint); border-right: 1px solid var(--ac-line); }
+.ac-share .ac-btn.ghost { height: 36px; border-right: 1px solid var(--ac-line); } .ac-share .ac-btn.ghost:last-child { border-right: 0; }
+
+/* màn mẫu */
+.screens { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
+.screen-wrap { display: flex; flex-direction: column; gap: 8px; min-width: 0; max-width: 100%; }
+.screen-wrap .cap { font-size: 12px; line-height: 18px; color: var(--ac-muted); max-width: 640px; }
+.screen-wrap .cap b { font: 500 10px var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ac-faint); display: block; margin-bottom: 2px; }
+.desk { width: 1280px; height: 800px; background: var(--ac-bg); color: var(--ac-ink); overflow: hidden; border: 1px solid var(--ac-lineStrong); zoom: .6; position: relative; display: flex; flex-direction: column; font-size: 16px; line-height: 24px; }
+.desk .ac-nav { position: static; }
+.desk .ac-eyebrow { position: static; }
+.phone { width: 390px; height: 844px; background: var(--ac-bg); color: var(--ac-ink); overflow: hidden; border: 1px solid var(--ac-lineStrong); zoom: .6; position: relative; display: flex; flex-direction: column; }
+.phone .ac-nav, .phone .ac-eyebrow { position: static; }
+.phone .ac-eyebrow { padding: 12px 24px; }
+.scrollbox { overflow: hidden; flex: 1; min-height: 0; }
+.scrolln { overflow-x: auto; min-width: 0; max-width: 100%; }
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 16px); opacity: 0; pointer-events: none; transition: .2s; z-index: 50; background: var(--ac-invertBg); color: var(--ac-invertFg); padding: 10px 16px; font: 500 11px var(--font-mono); letter-spacing: .12em; text-transform: uppercase; }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; }
+  .side { display: none; }
+  main { padding: 0 16px 64px; }
+  .intro { grid-template-columns: 1fr; gap: 24px; }
+  .intro h1 { font-size: 36px; }
+  .kit-hero { align-items: flex-start; overflow-x: auto; max-width: 100%; }
+  .kit-hero .desk { zoom: .27; }
+  .grid, .grid.wide { grid-template-columns: 1fr; }
+  .type-row { grid-template-columns: 1fr; gap: 2px; }
+  .screens { flex-direction: column; }
+  .desk { zoom: .27; }
+  .phone { zoom: .8; }
+  .ac-footer .cols { grid-template-columns: 1fr 1fr; }
+}
+</style>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%27-18 -786 815 815%27%3E%3Cstyle%3Epath%7Bfill:%23111%7D%40media %28prefers-color-scheme:dark%29%7Bpath%7Bfill:%23f2f2f2%7D%7D%3C/style%3E%3Cpath transform=%27scale%281,-1%29%27 d=%27M199.31210327148438 603.3731842041016 260.95220947265625 628.9676971435547C260.95220947265625 521.2086181640625 260.9541015625 413.4495391845703 260.9541015625 305.69044494628906L191.6516571044922 276.154541015625C174.88037109375 323.5634002685547 165.92764282226562 376.11016845703125 165.92764282226562 429.61871337890625C165.92764282226562 493.5791931152344 178.068359375 552.0941772460938 199.31211853027344 603.3731842041016ZM217.31954956054688 641.2168426513672C245.6704559326172 693.5884704589844 284.15870666503906 736.5945434570312 328.7041015625 767.8300933837891L314.201171875 786.3330230712891C163.14163208007812 725.0359954833984 42.342010498046875 572.3384246826172 42.342010498046875 366.32122802734375C42.342010498046875 140.77476501464844 182.31382751464844 -28.564682006835938 350.0135955810547 -28.564682006835938C525.0232086181641 -28.564682006835938 735.9516143798828 190.85427856445312 735.9516143798828 419.0563049316406C735.9516143798828 589.1531829833984 628.3419952392578 711.2011108398438 505.201171875 765.0000152587891ZM201.3350067138672 251.3717803955078 389.9521484375 330.75392150878906 390.0164031982422 682.5583801269531 392.2841796875 683.5000152587891C407.72547912597656 676.7563018798828 422.4015197753906 669.4654998779297 436.3193054199219 661.6544036865234C436.3193054199219 468.28440856933594 436.31842041015625 274.91441345214844 436.31842041015625 81.54443359375C432.765869140625 81.34140014648438 429.2063751220703 81.23924255371094 425.64381408691406 81.23924255371094C322.53656005859375 81.23924255371094 243.85682678222656 152.3477325439453 201.3350067138672 251.3717803955078ZM464.98326110839844 85.39506530761719C464.9832458496094 148.83770751953125 464.982666015625 212.2803497314453 464.982666015625 275.7229919433594L631.7685241699219 359.9234161376953C633.0531921386719 345.6885070800781 633.6924133300781 331.1865692138672 633.6924133300781 316.4414367675781C633.6924133300781 188.89947509765625 555.1638641357422 104.55381774902344 464.9832305908203 85.39506530761719ZM464.9815216064453 644.1320648193359C529.1327514648438 601.4556884765625 574.4758453369141 546.26611328125 601.8828735351562 481.90708923339844L464.9822235107422 412.7901916503906C464.9822235107422 489.90415954589844 464.98150634765625 567.0181274414062 464.98150634765625 644.132080078125ZM464.98231506347656 380.68263244628906 612.1320343017578 454.96990966796875C619.1414947509766 434.1694030761719 624.4237823486328 412.52435302734375 628.0052337646484 390.1357116699219L464.9825439453125 307.8305969238281C464.98255920410156 332.11460876464844 464.9823303222656 356.39862060546875 464.9823303222656 380.68263244628906Z%27/%3E%3C/svg%3E"></head>
+<body>
+<div class="shell">
+  <nav class="side" aria-label="Mục lục">
+    <div class="brand"><div class="brand-mark">AC</div><div><b>ArtCraft UI Kit</b><small>getartcraft.com</small></div></div>
+    <h6>Nền tảng</h6>
+    <a href="#color">Màu</a>
+    <a href="#type">Chữ</a>
+    <a href="#shape">Hình khối</a>
+    <a href="#layout">Bố cục &amp; kích thước</a>
+    <h6>Thành phần</h6>
+    <a href="#actions">Hành động</a>
+    <a href="#navigation">Điều hướng</a>
+    <a href="#containment">Chứa nội dung</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#inputs">Nhập liệu</a>
+    <a href="#feedback">Phản hồi</a>
+    <h6>Mẫu</h6>
+    <a href="#screens">Màn hình mẫu</a>
+  </nav>
+
+  <main>
+    <div class="bar" role="toolbar" aria-label="Chủ đề">
+      <div class="ctl"><span>Màu app</span><div class="swatches" id="swatches"></div></div>
+      <div class="ctl"><span>Chế độ</span><div class="seg" id="mode">
+        <button data-v="light" aria-pressed="true">Sáng</button>
+        <button data-v="dark" aria-pressed="false">Tối</button></div></div>
+      <div class="grow"></div>
+      <button class="copy" id="copy-tokens"><svg class="i" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>Copy CSS token</button>
+    </div>
+
+    <div class="intro">
+      <div>
+      <div class="eyebrow">getartcraft.com · 3rsoae9dq-c5i.css → docs/artcraft-ui-kit.html</div>
+      <h1>Hệ thiết kế ArtCraft, <em>bóc ra</em> thành kit.</h1>
+      <p>Trang marketing của ArtCraft (Crafting Apps, Download, Pricing, Tutorials, FAQ…) dựng trên Tailwind v4 với 15 biến màu ở <code>:root</code>, ba họ chữ (Archivo kéo rộng 118% cho tiêu đề, Inter cho thân, Geist Mono cho nhãn HUD) và không một góc bo nào. Kit chép lại đúng số đo đã đọc bằng <code>getComputedStyle</code> trên 14 trang; dán khối <code>--ac-*</code> cùng CSS <code>.ac-*</code> là dùng được ở dự án khác.</p>
+      <div class="facts"><span class="fact">nav 48</span><span class="fact">container 1280 · border-x</span><span class="fact">section pad 40/80 · mobile 24/56</span><span class="fact">grid gap 1px bg-line</span><span class="fact">card pad 24 · 32 · 40</span><span class="fact">radius 0</span><span class="fact">focus 2px accent-ink · offset 2</span></div>
+      </div>
+      <div class="kit-hero" data-kit-hero><a href="#screens">Xem tất cả màn mẫu ↓</a></div>
+    </div>
+
+    <!-- ================= NỀN TẢNG ================= -->
+    <section class="block" id="color">
+      <header><h2>Màu</h2><p>15 vai trò màu của site theo chế độ đang chọn, cộng cặp <code>--app / --app-ink</code> của app đang chọn. Chữ trên ô là màu đi cặp đúng như site dùng. Bấm một ô để copy hex.</p></header>
+      <div class="roles" id="roles"></div>
+      <p class="lab" style="margin-top:16px">7 màu app (.app-*) và 4 màu plan (.plan-*) · sáng → tối chỉ đổi *-ink</p>
+      <div class="roles" id="roles-app"></div>
+    </section>
+
+    <section class="block" id="type">
+      <header><h2>Chữ</h2><p>Ba họ: <b>Archivo</b> (weight 620, font-stretch 118%, tracking âm) cho tiêu đề; <b>Inter</b> 16/24 cho thân (leading-relaxed = 1.625); <b>Geist Mono</b> viết hoa, tracking .10–.15em cho nhãn HUD, nút, chip; <b>Instrument Serif</b> italic chỉ để nhấn một từ trong tiêu đề.</p></header>
+      <div id="typescale"></div>
+    </section>
+
+    <section class="block" id="shape">
+      <header><h2>Hình khối</h2><p>Site dùng <code>rounded-none</code> ở mọi nơi (border-radius đo được: 0px trên 4 000 phần tử). Thay vào đó chiều sâu đến từ viền 1px <code>--line</code>, góc tick 11px và lưới gap 1px. Không có thang shape để chuyển.</p></header>
+      <div class="stage" style="padding-left:0">
+        <div class="shape-cell"><i></i>radius 0 · border --line</div>
+        <div class="shape-cell"><i style="border-color:var(--ac-lineStrong);box-shadow:inset 0 0 0 1px var(--ac-lineStrong)"></i>--line-strong</div>
+        <div class="shape-cell"><i style="position:relative;border:0"><span class="tick tick-half tl" style="top:-5px;left:-6px"></span><span class="tick tick-half tr"></span></i>.tick 11px · 1px</div>
+        <div class="shape-cell"><i style="background:var(--ac-invertBg)"></i>invert-block</div>
+        <div class="shape-cell"><i style="box-shadow:0 0 6px var(--ac-accent);background:var(--ac-bg);border-color:var(--ac-accent)"></i>glow accent 6px</div>
+        <div class="shape-cell"><i style="filter:drop-shadow(0 6px 14px rgba(0,0,0,.28));background:var(--ac-accent);border:0"></i>icon shadow 0 6 14 · .28</div>
+      </div>
+    </section>
+
+    <section class="block" id="layout">
+      <header><h2>Bố cục &amp; kích thước</h2><p>Mọi mục nằm trong khung 1280px có viền hai bên; nội dung xếp lưới <code>gap-px bg-line</code> nên đường kẻ 1px chính là khoảng cách. Số đo đọc từ class Tailwind và computed style.</p></header>
+      <div class="tbl"><table class="tok">
+        <tr><th>Phần tử</th><th>Số đo</th><th>Class trên site</th></tr>
+        <tr><td>Site nav</td><td>cao 48 · sticky top 0 · bg-bg/95 blur 4</td><td>h-12 border-b bg-bg/95 backdrop-blur-sm</td></tr>
+        <tr><td>Nav item</td><td>px 10 · pill px 6 py 2 · mono 11/.15em</td><td>px-2.5 hud-label → span px-1.5 py-0.5</td></tr>
+        <tr><td>Container</td><td>max 1280 · border-x · tick 11 ở hai góc trên</td><td>max-w-[1280px] border-x border-line</td></tr>
+        <tr><td>Eyebrow mục</td><td>sticky top 48 · py 12 · px 24 / 40 · bg-bg/60 blur 12</td><td>sticky top-12 border-y px-6 py-3 md:px-10</td></tr>
+        <tr><td>Hero mục</td><td>px 24 py 56 · desktop px 40 py 80</td><td>px-6 py-14 md:px-10 md:py-20</td></tr>
+        <tr><td>Lưới thẻ</td><td>gap 1 · 1 → 2 → 3/4 cột</td><td>grid gap-px bg-line sm:grid-cols-2 xl:grid-cols-4</td></tr>
+        <tr><td>Thẻ</td><td>pad 24 · md 32 · section 40</td><td>p-6 md:p-8 · p-6 md:p-10</td></tr>
+        <tr><td>Nút</td><td>cao 48 px 24 · sm 33 px 16 · outline 35/31 · ghost 36 px 12 · icon 48</td><td>h-12 px-6 · h-9 px-3 · w-12</td></tr>
+        <tr><td>Icon app</td><td>56 (14) · lớn 72, lệch lên 36 trên ảnh</td><td>h-14 w-14 · h-18 w-18 -mt-9</td></tr>
+        <tr><td>Ảnh thẻ app</td><td>16:10 · video 16:9</td><td>aspect-[16/10] · aspect-video</td></tr>
+        <tr><td>Tabs</td><td>viền 1 · pad 4/2 · tab py 2 px 16 · thumb trượt .2s</td><td>p-0.5 py-1 · px-4 py-0.5 · transition-all duration-200</td></tr>
+        <tr><td>Footer</td><td>cột 2fr 1fr 1fr 1fr 1fr · pad 32/40 · bottom py 16</td><td>lg:grid-cols-[2fr_1fr_1fr_1fr_1fr]</td></tr>
+        <tr><td>Chuyển động</td><td>màu .12–.15s linear · opacity .15s · ảnh scale 1.02–1.03 .5s · thanh 2px scaleX .3s · ruler digit .28s cubic-bezier(.2,.9,.2,1)</td><td>invert-block · transition-transform duration-500</td></tr>
+      </table></div>
+    </section>
+
+    <!-- ================= THÀNH PHẦN ================= -->
+    <section class="block" id="actions">
+      <header><h2>Hành động</h2><p>Một kiểu nút duy nhất: mono 11px đậm, tracking .12em, viết hoa, không bo góc. Biến thể khác nhau ở nền và chiều cao.</p></header>
+      <div class="grid wide">
+
+        <div class="spec" data-sig="6a3993c1f5 7ad8918421 5f78482830" data-sig-state="6a3993c1f5:hover 6a3993c1f5:focus 7ad8918421:hover 7ad8918421:focus 5f78482830:hover 5f78482830:focus">
+          <div class="spec-h"><b>Nút chính (invert)</b><span class="kind">bg-invert-bg text-invert-fg</span><span class="dp">h 48 · px 24 · sm h 33</span></div>
+          <div class="stage">
+            <a class="ac-btn" href="#"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/></svg>Join the Discord</a>
+            <a class="ac-btn" href="#">Launch app</a>
+            <a class="ac-btn sm" href="#"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/></svg>Join Discord</a>
+            <span class="lab">hover · focus-visible</span>
+            <a class="ac-btn is-hover" href="#">Hover · opacity .8</a>
+            <a class="ac-btn is-focus" href="#">Focus · outline accent-ink</a>
+          </div>
+          <div class="spec-f"><span class="note">Hover chỉ giảm opacity xuống .8 (transition-opacity 150ms). Focus là rule toàn cục <code>:focus-visible</code> 2px <code>--accent-ink</code>, offset 2px.</span></div>
+        </div>
+
+        <div class="spec" data-sig="171e4b994c cc37795714 cf056d5804" data-sig-state="171e4b994c:hover 171e4b994c:focus cc37795714:hover cc37795714:focus cf056d5804:hover cf056d5804:focus">
+          <div class="spec-h"><b>Nút viền (invert-block)</b><span class="kind">border-line-strong bg-bg invert-block</span><span class="dp">h 48 · md 35 · xs 31</span></div>
+          <div class="stage">
+            <a class="ac-btn outline" href="#"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/></svg>Browse on GitHub</a>
+            <a class="ac-btn outline xs" href="#"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/></svg>View source</a>
+            <a class="ac-btn outline md" href="#" style="width:260px"><svg class="i" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 21h16"/></svg>Download <span class="dim">125 MB</span></a>
+            <span class="lab">hover · focus-visible</span>
+            <a class="ac-btn outline is-hover" href="#">Hover · đảo màu</a>
+            <a class="ac-btn outline xs is-focus" href="#">Focus</a>
+          </div>
+          <div class="spec-f"><span class="note">Hover đảo nền/chữ theo <code>.invert-block</code> (120ms linear) và viền trong suốt. Cỡ xs dùng weight 500 thay vì 700.</span></div>
+        </div>
+
+        <div class="spec" data-sig="71f3afe745 592f033c8b" data-sig-state="71f3afe745:hover 71f3afe745:focus 592f033c8b:hover 592f033c8b:focus">
+          <div class="spec-h"><b>Nút mờ (ghost)</b><span class="kind">text-muted hover:bg-invert-bg h-9 px-3</span><span class="dp">h 36 · px 12</span></div>
+          <div class="stage">
+            <button class="ac-btn ghost"><svg class="i" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span aria-live="polite">Copy link</span></button>
+            <button class="ac-btn ghost bl"><svg class="i" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>Copy</button>
+            <button class="ac-btn ghost is-hover">Hover</button>
+            <button class="ac-btn ghost is-focus">Focus</button>
+          </div>
+          <div class="spec-f"><span class="note">Dùng trong share bar và header terminal; biến thể <code>border-l border-line</code> khi đứng cuối một hàng.</span></div>
+        </div>
+
+        <div class="spec" data-sig="6517f2f74a d0a49152c8 43a21c708c 62f5dcd09b 49ca088b28 44bc79f443" data-sig-state="6517f2f74a:hover 6517f2f74a:focus d0a49152c8:hover d0a49152c8:focus 43a21c708c:hover 43a21c708c:focus 62f5dcd09b:hover 62f5dcd09b:focus 49ca088b28:hover 49ca088b28:focus">
+          <div class="spec-h"><b>Nút plan</b><span class="kind">bg-(--plan) text-white w-full</span><span class="dp">h 48 · icon 48 · gap 1</span></div>
+          <div class="stage col">
+            <div class="ac-grid c4" style="gap:12px;background:transparent">
+              <span class="plan-basic"><button class="ac-btn plan">Get Basic <svg class="i" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button></span>
+              <span class="plan-pro"><button class="ac-btn plan">Get Pro <svg class="i" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button></span>
+              <span class="plan-max"><button class="ac-btn plan is-hover">Get Max · hover</button></span>
+              <span class="plan-enterprise"><button class="ac-btn plan is-focus">Contact · focus</button></span>
+            </div>
+            <div class="plan-enterprise" style="max-width:256px"><div class="ac-split"><a class="ac-btn plan" href="#"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14"/><path d="m3 7 9 6 9-6"/></svg>Contact us</a><button class="ac-btn plan ic" aria-label="Copy email address"><svg class="i" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg></button></div></div>
+          </div>
+          <div class="spec-f"><span class="note">Màu lấy từ <code>--plan</code> của thẻ cha (.plan-basic/pro/max/enterprise). Hover opacity .9. Nút đôi: hai nút cách 1px nền trắng 30%.</span></div>
+        </div>
+
+        <div class="spec" data-sig="e3fe16dcbf" data-sig-state="e3fe16dcbf:hover e3fe16dcbf:focus">
+          <div class="spec-h"><b>Nút icon trên nav</b><span class="kind">invert-block w-12 border-l text-muted</span><span class="dp">48 × 48</span></div>
+          <div class="stage" style="gap:0;border:1px solid var(--ac-line);width:fit-content;padding:0">
+            <button class="ac-btn ic-nav" aria-label="Discord"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/></svg></button>
+            <button class="ac-btn ic-nav" aria-label="Switch to dark theme"><svg class="i" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></button>
+            <button class="ac-btn ic-nav is-hover" aria-label="Hover"><svg class="i" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></button>
+            <button class="ac-btn ic-nav is-focus" aria-label="Focus"><svg class="i" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+          </div>
+          <div class="spec-f"><span class="note">Ô vuông 48, viền trái 1px; hover đảo màu như invert-block. Cùng kiểu cho nút hamburger trên mobile.</span></div>
+        </div>
+
+        <div class="spec" data-sig="f303a28507 2e1fe3c3ea 9d6a5088ad" data-sig-state="f303a28507:hover f303a28507:focus 2e1fe3c3ea:hover 2e1fe3c3ea:focus 9d6a5088ad:hover 9d6a5088ad:focus">
+          <div class="spec-h"><b>Liên kết</b><span class="kind">text-muted hover:text-ink · hud-label</span><span class="dp">16/24 · mono 11</span></div>
+          <div class="stage col">
+            <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:center"><a class="ac-link" href="#">Download</a><a class="ac-link is-hover" href="#">Hover → ink</a><a class="ac-link is-focus" href="#">Focus</a></div>
+            <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:center"><a class="ac-link hud" href="#">Other platforms and downloads <svg class="i" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></a><a class="ac-link hud is-hover" href="#">Release notes on GitHub ↗</a></div>
+            <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:center"><a class="ac-link hud faint" href="#">hello@example.com</a><a class="ac-link hud faint is-hover" href="#">hover → ink</a><a class="ac-link hud faint is-focus" href="#">focus</a></div>
+            <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:center"><span class="ac-explore">Explore PhotoCraft <svg class="i" viewBox="0 0 24 24"><path d="M7 7h10v10M7 17 17 7"/></svg></span><span class="ac-explore" style="color:var(--ac-muted)">Open Discord <svg class="i" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span></div>
+          </div>
+          <div class="spec-f"><span class="note">Ba cấp: link thân (muted → ink), link HUD mono (muted/faint → ink), và "Explore …" đậm ở chân thẻ app; mũi tên dịch 2px khi hover thẻ cha.</span></div>
+        </div>
+
+        <div class="spec" data-sig="0fb734b311 51f5827126 177261adfc 9cb53b7132 add7eb93b3" data-sig-state="0fb734b311:hover 0fb734b311:active 0fb734b311:focus 51f5827126:hover 51f5827126:focus 9cb53b7132:focus">
+          <div class="spec-h"><b>Nút video (play / watch)</b><span class="kind">group aspect-video bg-bg-sunken · hud-label bg-invert-bg</span><span class="dp">16:9 · badge px 12 py 6</span></div>
+          <div class="stage">
+            <button class="ac-videobtn" style="width:220px"><span class="pic"></span><span class="ac-play"><svg class="i" viewBox="0 0 24 24"><path d="m6 4 14 8-14 8z"/></svg>Play</span></button>
+            <button class="ac-videobtn is-hover" style="width:220px"><span class="pic"></span><span class="ac-play">Hover · scale 1.02</span></button>
+            <button class="ac-videobtn is-active" style="width:220px"><span class="pic"></span><span class="ac-play">Active</span></button>
+            <button class="ac-videobtn is-focus" style="width:220px"><span class="pic"></span><span class="ac-play"><svg class="i" viewBox="0 0 24 24"><path d="m6 4 14 8-14 8z"/></svg>Watch</span></button>
+          </div>
+          <div class="spec-f"><span class="note">Ảnh thumbnail thay bằng khối giữ chỗ (ảnh của ArtCraft). Hover phóng ảnh 1.02 trong 500ms; active thu nhẹ (đo trên children).</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="navigation">
+      <header><h2>Điều hướng</h2></header>
+      <div class="grid wide">
+
+        <div class="spec full" data-sig="e8d384d6fb b0a832d763 54574c8be7 50f9dfadef fcb7b6145f 990a825f6c ad53e292dc" data-sig-state="50f9dfadef:focus 50f9dfadef:SEL 990a825f6c:hover 990a825f6c:focus 990a825f6c:SEL ad53e292dc:focus ad53e292dc:SEL">
+          <div class="spec-h"><b>Site nav</b><span class="kind">nav#site-nav sticky h-12 bg-bg/95 backdrop-blur-sm</span><span class="dp">cao 48 · logo px 20 · item px 10</span></div>
+          <div class="stage col" style="padding:0;overflow:visible">
+            <div class="scrolln"><nav class="ac-nav" style="position:static;min-width:max-content" aria-label="Main">
+              <div class="L"><a class="logo" href="#" aria-label="ArtCraft"><span class="ac-bigletter" style="border:0;background:var(--ac-invertBg);color:var(--ac-invertFg);width:24px;height:24px;font-size:12px">A</span></a>
+                <ul>
+                  <li><a class="ac-navlink" href="#"><span>Home</span></a></li>
+                  <li><a class="ac-navlink is-hover" href="#"><span>Image · hover</span></a></li>
+                  <li><a class="ac-navlink" href="#"><span>Video</span></a></li>
+                  <li><button class="ac-navlink" aria-expanded="false"><span>Resources <svg class="i" viewBox="0 0 24 24" style="width:12px;height:12px"><path d="m6 9 6 6 6-6"/></svg></span></button></li>
+                  <li><button class="ac-navlink is-on" aria-expanded="true"><span>Resources · mở <svg class="i" viewBox="0 0 24 24" style="width:12px;height:12px;transform:rotate(180deg)"><path d="m6 9 6 6 6-6"/></svg></span></button></li>
+                  <li><a class="ac-navlink is-focus" href="#"><span>Download · focus</span></a></li>
+                  <li><a class="ac-navlink" href="#"><span>Support</span></a></li>
+                  <li><a class="ac-navlink is-on" href="#" aria-current="page"><span>Craft Apps</span></a></li>
+                </ul></div>
+              <div class="R"><a class="ac-navlink" href="#"><span>Pricing</span></a>
+                <button class="ac-btn ic-nav" aria-label="Discord"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/></svg></button>
+                <button class="ac-btn ic-nav" aria-label="Switch to dark theme"><svg class="i" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></button>
+                <a class="ac-btn launch" href="#">Launch app</a></div>
+            </nav></div>
+          </div>
+          <div class="spec-f"><span class="note">Mục đang xem (<code>aria-current="page"</code>) và mục hover cùng dùng pill đảo màu; nút Resources là trigger dropdown (Radix), khi mở cũng mang pill. Logo của ArtCraft thay bằng ô chữ A.</span></div>
+        </div>
+
+        <div class="spec" data-sig="b5029f5b5a fd69a5b097" data-sig-state="b5029f5b5a:SEL fd69a5b097:focus fd69a5b097:SEL">
+          <div class="spec-h"><b>Dropdown Resources</b><span class="kind">absolute top-full border border-t-0 min-w-[200px]</span><span class="dp">item px 12 py 10</span></div>
+          <div class="stage">
+            <ul class="ac-dropdown static">
+              <li><a class="ac-navlink is-on" href="#" aria-current="page"><span>Tutorials</span></a></li>
+              <li><a class="ac-navlink" href="#"><span>News</span></a></li>
+              <li><a class="ac-navlink is-focus" href="#"><span>FAQ · focus</span></a></li>
+              <li><a class="ac-navlink" href="#"><span>Press kit</span></a></li>
+            </ul>
+          </div>
+          <div class="spec-f"><span class="note">Nằm sát dưới nav, viền ba cạnh (bỏ viền trên để nối với nav). Mục trang hiện tại mang pill đảo màu.</span></div>
+        </div>
+
+        <div class="spec" data-sig="ea588b5592 0f1e128133 1b04e0792e 5cd40b115d 0bfd281e4a" data-sig-state="ea588b5592:focus 0f1e128133:hover 0f1e128133:focus 1b04e0792e:focus 1b04e0792e:SEL 0f1e128133:selected">
+          <div class="spec-h"><b>Tabs (segmented)</b><span class="kind">role=tablist border bg-bg-raised p-0.5 py-1</span><span class="dp">tab py 2 px 16 · mono 11/600</span></div>
+          <div class="stage col">
+            <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center">
+              <div class="ac-tabs" role="tablist"><button class="ac-tab" role="tab" aria-selected="false">All</button><button class="ac-tab" role="tab" aria-selected="false">2D</button><button class="ac-tab" role="tab" aria-selected="true">3D</button></div>
+              <div class="ac-tabs" role="tablist"><button class="ac-tab is-hover" role="tab" aria-selected="false">Hover</button><button class="ac-tab is-focus" role="tab" aria-selected="false">Focus</button><button class="ac-tab" role="tab" aria-selected="true" style="width:96px">Monthly</button></div>
+            </div>
+            <div class="ac-toolbar" style="padding:16px 0;border-top:1px solid var(--ac-line)"><div class="L"><div class="ac-tabs" role="tablist"><button class="ac-tab" role="tab" aria-selected="true">All</button><button class="ac-tab" role="tab" aria-selected="false">2D</button><button class="ac-tab" role="tab" aria-selected="false">3D</button></div></div><p class="hud-label t-faint" style="margin:0">2 videos</p></div>
+          </div>
+          <div class="spec-f"><span class="note">Trên site tab được chọn không tự đổi nền: một div "thumb" tuyệt đối (bg-invert-bg, top 4, cao 100%−8) trượt tới tab đang chọn trong 200ms; kit vẽ nền thẳng lên tab (đơn giản hoá). Thanh lọc: tabs trái, đếm phải, py 16 px 40.</span></div>
+        </div>
+
+        <div class="spec" data-sig="72b283a92a" data-sig-state="72b283a92a:focus">
+          <div class="spec-h"><b>Eyebrow mục (sticky)</b><span class="kind">sticky top-12 border-y bg-bg/60 backdrop-blur-md</span><span class="dp">py 12 · px 40</span></div>
+          <div class="stage col" style="padding:0">
+            <div class="ac-eyebrow" style="position:static"><p class="hud-label t-muted"><span class="n">02</span><span class="sl">/</span>The lineup</p><p class="hud-label t-faint">Pick a craft to explore</p></div>
+            <div class="ac-card-h"><span class="ac-num">01</span><p class="hud-label t-faint">Image editor</p></div>
+            <div class="ac-card-h is-focus" style="margin:4px"><span class="ac-num app-filmcraft" style="background:var(--app)">03</span><p class="hud-label t-faint">Video editor · focus</p></div>
+          </div>
+          <div class="spec-f"><span class="note">Hai cấp header: eyebrow mục (số thứ tự / tên mục · ghi chú phải) dính dưới nav, và header thẻ (ô số màu app + nhãn). Mọi chữ là <code>hud-label</code>.</span></div>
+        </div>
+
+        <div class="spec full" data-sig="e545a08f38 55d28b4a28 6aaee42d35 4375438ac9 0df900079a">
+          <div class="spec-h"><b>Footer</b><span class="kind">footer border-t · grid gap-px bg-line lg:grid-cols-[2fr_1fr_1fr_1fr_1fr]</span><span class="dp">cột pad 32 · brand 40 · bottom py 16</span></div>
+          <div class="stage col" style="padding:0">
+            <div class="scrolln"><footer class="ac-footer" style="min-width:900px">
+              <div class="cols">
+                <div class="brandcell"><span class="ac-bigletter" style="border:0;background:var(--ac-invertBg);color:var(--ac-invertFg)">A</span><p class="ac-body" style="margin-top:16px;max-width:30ch">The open-source studio for controllable AI image and video.</p><a class="ac-link hud faint" href="#" style="margin-top:24px">hello@example.com</a></div>
+                <nav aria-label="Product"><p class="hud-label t-faint" style="margin:0">Product</p><ul><li><a class="ac-link" href="#">Download</a></li><li><a class="ac-link" href="#">Pricing</a></li><li><a class="ac-link" href="#">Launch App</a></li></ul></nav>
+                <nav aria-label="Craft apps"><p class="hud-label t-faint" style="margin:0">Craft apps</p><ul><li><a class="ac-link" href="#">All Craft Apps</a></li><li><a class="ac-link" href="#">PhotoCraft</a></li><li><a class="ac-link" href="#">VectorCraft</a></li><li><a class="ac-link" href="#">FilmCraft</a></li></ul></nav>
+                <nav aria-label="Resources"><p class="hud-label t-faint" style="margin:0">Resources</p><ul><li><a class="ac-link" href="#">Tutorials</a></li><li><a class="ac-link" href="#">News</a></li><li><a class="ac-link" href="#">FAQ</a></li><li><a class="ac-link" href="#">Press Kit</a></li></ul></nav>
+                <nav aria-label="Community"><p class="hud-label t-faint" style="margin:0">Community</p><ul><li><a class="ac-link" href="#">Discord</a></li><li><a class="ac-link" href="#">GitHub</a></li><li><a class="ac-link" href="#">YouTube</a></li><li><a class="ac-link" href="#">Instagram</a></li></ul></nav>
+              </div>
+              <div class="bottom"><p class="hud-label t-faint" style="margin:0">© 2026 ArtCraft</p><p class="hud-label t-faint" style="margin:0">Made by artists, for artists</p></div>
+            </footer></div>
+          </div>
+          <div class="spec-f"><span class="note">Dưới md các cột xếp 4 cột rồi 1 cột; dòng cuối xếp dọc. Logo thay bằng ô chữ A.</span></div>
+        </div>
+
+        <div class="spec" data-sig="d0d1ce90b4">
+          <div class="spec-h"><b>Marquee</b><span class="kind">ul.marquee-track · @keyframes marquee-scroll</span><span class="dp">item px 24 py 12</span></div>
+          <div class="stage col" style="padding:0">
+            <div class="ac-marquee"><ul><li><span class="dot">▪</span><span class="hud-label">Seedance 2.5</span></li><li><span class="dot">▪</span><span class="hud-label">Nano Banana 2</span></li><li><span class="dot">▪</span><span class="hud-label">Image to Location</span></li><li><span class="dot">▪</span><span class="hud-label">3D Compositing</span></li><li><span class="dot">▪</span><span class="hud-label">Seedance 2.5</span></li><li><span class="dot">▪</span><span class="hud-label">Nano Banana 2</span></li><li><span class="dot">▪</span><span class="hud-label">Image to Location</span></li><li><span class="dot">▪</span><span class="hud-label">3D Compositing</span></li></ul></div>
+          </div>
+          <div class="spec-f"><span class="note">Site: <code>to { transform: translate(-100%) }</code> trên track nhân đôi; kit lặp danh sách 2 lần và dịch −50%. Dấu ▪ màu accent-ink cách 24px.</span></div>
+        </div>
+
+        <div class="spec" data-sig="9fcd4c03f8" data-sig-state="9fcd4c03f8:focus">
+          <div class="spec-h"><b>HUD cuộn (vẽ theo spec)</b><span class="kind">div.fixed inset-0 z-40 · .ruler-digits · font-display 34px</span><span class="dp">rail 60 · 9px mono</span></div>
+          <div class="stage col" style="padding:0">
+            <div class="ac-hud" aria-hidden="true">
+              <span class="word ghost" style="top:8px">Crafting apps</span>
+              <span class="word" style="top:34px">Lineup</span>
+              <span class="word ghost" style="top:78px">Principles</span>
+              <a class="jump is-focus" href="#screens" aria-label="Jump to Lineup" style="top:30px;width:120px;height:40px"></a>
+              <span class="scan" style="top:60px"></span><span class="pct" style="top:60px;right:4px">042%</span>
+              <div class="rail"><i class="maj" style="top:20px" data-n="5"></i><i style="top:40px"></i><i class="maj" style="top:60px" data-n="10"></i><i style="top:80px"></i><i class="maj" style="top:100px" data-n="15"></i><i style="top:120px"></i><i class="maj" style="top:140px" data-n="20"></i><i style="top:160px"></i><i class="maj" style="top:180px" data-n="25"></i><span class="rot">Lineup</span></div>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Trên site: lớp phủ cố định, tên mục hiện từng chữ 34px Archivo (text-shadow 4/10px màu nền) và trượt theo cuộn; thước phải có vạch, số % 9px mono và vạch accent phát sáng 6px; số chạy bằng cột digit (.28s cubic-bezier(.2,.9,.2,1)). Kit vẽ tĩnh một khung, không tái hiện animation. Link nhảy mục là vùng trong suốt, chỉ thấy khi focus.</span></div>
+        </div>
+
+        <div class="spec" data-sig="b96cd59382">
+          <div class="spec-h"><b>Thẻ hướng dẫn (FAQ)</b><span class="kind">li.bg-bg › a.group grid p-6 md:p-8</span><span class="dp">số 11 mono · h2 24 · mũi tên</span></div>
+          <div class="stage col" style="padding:0">
+            <div class="ac-grid c2 bt">
+              <a class="ac-card p8" href="#" style="text-decoration:none"><p class="hud-label t-faint" style="margin:0">01</p><div style="display:flex;align-items:flex-start;gap:8px;margin-top:24px"><h3 class="ac-display ac-h-2xl" style="flex:1">2D Canvas — Draw and Generate</h3><svg class="i" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></div><p class="ac-body" style="margin-top:8px">Draw, lay out references, and inpaint precisely to get the image you intended.</p></a>
+              <a class="ac-card p8" href="#" style="text-decoration:none"><p class="hud-label t-faint" style="margin:0">02</p><div style="display:flex;align-items:flex-start;gap:8px;margin-top:24px"><h3 class="ac-display ac-h-2xl" style="flex:1">3D Editor — Pose, Compose, and Generate</h3><svg class="i" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></div><p class="ac-body" style="margin-top:8px">Build shots like a game, then render them consistently.</p></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="containment">
+      <header><h2>Chứa nội dung</h2><p>Thẻ không có nền nổi hay bóng: mỗi ô là một mảng <code>bg-bg</code> trong lưới nền <code>--line</code>, header thẻ kẻ dưới 1px, ảnh ở ô <code>bg-bg-sunken</code>.</p></header>
+      <div class="grid wide">
+
+        <div class="spec full" data-sig="e9cdf31c8d b8979f4919 dfb37678af ad81962971 45973473a0 b283975104 9a199f9c27 70ad35da60 a951153f85 078116d8b2" data-sig-state="e9cdf31c8d:hover e9cdf31c8d:active e9cdf31c8d:focus b8979f4919:hover b8979f4919:active b8979f4919:focus dfb37678af:focus">
+          <div class="spec-h"><b>Thẻ app (lineup)</b><span class="kind">a.group.app-photocraft › header · aspect-[16/10] · icon -mt-9 h-18</span><span class="dp">319 × 567 · pad 32</span></div>
+          <div class="stage col" style="padding:0">
+            <div class="scrolln"><div class="ac-grid c4 bt" style="min-width:1000px">
+              <a class="ac-cardlink app-photocraft" href="#"><span class="bar2"></span><div class="ac-card-h"><span class="ac-num">01</span><p class="hud-label t-faint">Image editor</p></div><div class="ac-img r16-10 bb"><span class="pic"></span><span style="position:relative">ảnh màn hình PhotoCraft</span></div><div class="body"><div class="ac-icon lg">icon</div><h3 class="ac-appname">Photo<span class="acc">Craft</span></h3><p class="ac-body" style="margin-top:12px">The open-source image editor you already know how to use.</p><div class="chips" style="margin-top:16px"><span class="ac-chip app">Early alpha</span><span class="ac-chip app">Installers ready</span><span class="ac-chip">macOS</span><span class="ac-chip">Windows</span><span class="ac-chip">Linux</span><span class="ac-chip">Web</span></div><span class="ac-explore" style="margin-top:auto;padding-top:24px">Explore PhotoCraft <svg class="i" viewBox="0 0 24 24"><path d="M7 7h10v10M7 17 17 7"/></svg></span></div></a>
+              <a class="ac-cardlink app-vectorcraft is-hover" href="#"><span class="bar2"></span><div class="ac-card-h"><span class="ac-num">02</span><p class="hud-label t-faint">Vector · hover</p></div><div class="ac-img r16-10 bb"><span class="pic"></span><span style="position:relative">ảnh · scale 1.03</span></div><div class="body"><div class="ac-icon lg">icon</div><h3 class="ac-appname">Vector<span class="acc">Craft</span></h3><p class="ac-body" style="margin-top:12px">Fast, open-source vector illustration, reimagined in pure Rust.</p><div class="chips" style="margin-top:16px"><span class="ac-chip app">In development</span><span class="ac-chip">macOS</span><span class="ac-chip">Web</span></div><span class="ac-explore" style="margin-top:auto;padding-top:24px">Explore VectorCraft <svg class="i" viewBox="0 0 24 24"><path d="M7 7h10v10M7 17 17 7"/></svg></span></div></a>
+              <a class="ac-cardlink app-filmcraft is-focus" href="#" style="outline-offset:-2px"><span class="bar2"></span><div class="ac-card-h"><span class="ac-num">03</span><p class="hud-label t-faint">Video · focus</p></div><div class="ac-img r16-10 bb"><span class="pic"></span><span style="position:relative">ảnh FilmCraft</span></div><div class="body"><div class="ac-icon lg">icon</div><h3 class="ac-appname">Film<span class="acc">Craft</span></h3><p class="ac-body" style="margin-top:12px">Professional, open-source video editing, rebuilt from scratch in Rust.</p><div class="chips" style="margin-top:16px"><span class="ac-chip app">In development</span><span class="ac-chip">macOS</span><span class="ac-chip">Linux</span></div><span class="ac-explore" style="margin-top:auto;padding-top:24px">Explore FilmCraft <svg class="i" viewBox="0 0 24 24"><path d="M7 7h10v10M7 17 17 7"/></svg></span></div></a>
+              <div class="ac-card p8" style="display:flex;flex-direction:column"><p class="hud-label t-faint" style="margin:0">Next up</p><h3 class="ac-display ac-h-30" style="margin-top:16px">More crafts <span class="acc">on the way</span>.</h3><p class="ac-body" style="margin-top:12px">Tell us what to rebuild next, test early builds and follow development with the team.</p><a class="ac-btn sm" href="#" style="margin-top:auto;width:fit-content">Join Discord</a></div>
+            </div></div>
+          </div>
+          <div class="spec-f"><span class="note">Hover (và active, đo giống hover): thanh 2px màu app trượt từ trái (scaleX 0→1, 300ms), ảnh phóng 1.03 (500ms), icon nhô lên 4px. Màu lấy từ <code>.app-*</code> của chính thẻ. Lưới 4 cột xl, 2 cột sm; biến thể 3 cột trên trang app con. Ảnh và icon của ArtCraft thay bằng khối giữ chỗ.</span></div>
+        </div>
+
+        <div class="spec" data-sig="0a76a46e13 b97620f9a5 9a1347fd22 6d06721e30 8a26ce2863 2040ff9fdf">
+          <div class="spec-h"><b>Thẻ nguyên tắc (principles)</b><span class="kind">li.bg-bg p-6 md:p-8 · h3 font-display text-2xl</span><span class="dp">số/chữ cái hud · h3 24 · lưới 3 cột</span></div>
+          <div class="stage col" style="padding:0">
+            <div class="ac-grid c3 bt">
+              <div class="ac-card p8"><div style="display:flex;justify-content:space-between;align-items:center"><span class="ac-bigletter" style="color:var(--ac-accentInk)"><svg class="i" viewBox="0 0 24 24"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span><span class="hud-label t-faint">01</span></div><h3 class="ac-display ac-h-2xl" style="margin-top:24px">Open source</h3><p class="ac-body" style="margin-top:8px">Every line is on GitHub under permissive licenses.</p></div>
+              <div class="ac-card p8"><p class="hud-label t-faint" style="margin:0">A</p><h3 class="ac-display ac-h-2xl" style="margin-top:24px">Open source</h3><p class="ac-body" style="margin-top:8px">The whole studio is on GitHub. Read it, fork it, make it yours.</p><a class="ac-btn outline xs" href="#" style="margin-top:24px;width:fit-content">View source</a></div>
+              <div class="ac-card p8"><p class="hud-label t-faint" style="margin:0">B</p><h3 class="ac-display ac-h-2xl" style="margin-top:24px">Yours forever</h3><p class="ac-body" style="margin-top:8px">ArtCraft is yours to own and keep, forever. No rent payments.</p></div>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Hai biến thể header: icon trong ô 32 + số thứ tự, hoặc chỉ chữ cái A/B. Nội dung: h3 24px (mt 24) + đoạn muted (mt 8).</span></div>
+        </div>
+
+        <div class="spec" data-sig="36c9a13e34 a4d0ef7bdb">
+          <div class="spec-h"><b>Thẻ bước · thẻ hỗ trợ</b><span class="kind">li.bg-bg p-6 md:p-8 · "Step N"</span><span class="dp">pad 32 · h3 24/36</span></div>
+          <div class="stage col" style="padding:0">
+            <div class="ac-grid c2 bt">
+              <div class="ac-card p8"><p class="hud-label t-faint" style="margin:0">Step 1</p><h3 class="ac-display ac-h-2xl" style="margin-top:24px">Download</h3><p class="ac-body" style="margin-top:8px">Grab the installer for your platform.</p></div>
+              <div class="ac-card p8"><div style="display:flex;justify-content:space-between;align-items:center"><span class="ac-oslogo" style="width:40px;height:40px"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/></svg></span><span class="hud-label t-faint">A</span></div><h3 class="ac-display ac-h-3xl" style="margin-top:24px;font-size:30px">Join our Discord</h3><p class="ac-lead" style="margin-top:12px">The fastest way to reach us. Quick replies from the team.</p><a class="ac-link hud" href="#" style="margin-top:24px;color:var(--ac-ink)">Open Discord <svg class="i" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="spec" data-sig="e56a8c9a55 3bf12d3ba5 d012b19513">
+          <div class="spec-h"><b>Thẻ tutorial</b><span class="kind">li.bg-bg › a.group › header py-2.5 · aspect-video · h2 text-xl + chip</span><span class="dp">425 × 345 · body px 24 py 20</span></div>
+          <div class="stage col" style="padding:0">
+            <div class="ac-grid c2 bt">
+              <a class="ac-cardlink" href="#"><div class="ac-card-h sm"><p class="hud-label t-muted">3D</p><p class="hud-label t-faint">01</p></div><div class="ac-img r16-9"><span class="pic"></span><span style="position:relative">ảnh thumbnail</span><span class="ac-play"><svg class="i" viewBox="0 0 24 24"><path d="m6 4 14 8-14 8z"/></svg>Watch</span></div><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:20px 24px"><h2 class="ac-display ac-h-xl">3D Editor Basics</h2><span class="ac-chip">3D</span></div></a>
+              <a class="ac-cardlink is-hover" href="#"><div class="ac-card-h sm"><p class="hud-label t-muted">3D</p><p class="hud-label t-faint">02</p></div><div class="ac-img r16-9"><span class="pic"></span><span style="position:relative">hover · scale 1.02</span><span class="ac-play"><svg class="i" viewBox="0 0 24 24"><path d="m6 4 14 8-14 8z"/></svg>Watch</span></div><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:20px 24px"><h2 class="ac-display ac-h-xl">Turn Images into 3D Objects</h2><span class="ac-chip">3D</span></div></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="spec" data-sig="ab6d35bfce 1ffd85ec99">
+          <div class="spec-h"><b>Dòng tin (news)</b><span class="kind">a.group grid md:grid-cols-[10rem_1fr] p-8 hover:bg-bg-raised</span><span class="dp">cột ngày 160 · h2 24</span></div>
+          <div class="stage col" style="padding:0">
+            <a class="ac-newsrow" href="#"><p class="hud-label t-faint" style="margin:0">2026-01-30</p><div><h2 class="ac-display ac-h-2xl" style="display:flex;gap:8px;align-items:flex-start"><span style="flex:1">Machinima 2.0: World Models for Consistent AI Filmmaking</span><svg class="i" viewBox="0 0 24 24"><path d="M7 7h10v10M7 17 17 7"/></svg></h2><p class="ac-body" style="margin-top:8px;max-width:42rem">How to use World Models and 3D Rendering to get consistent AI film locations.</p></div></a>
+          </div>
+          <div class="spec-f"><span class="note">Hover đổi nền sang <code>--bg-raised</code> (sáng hơn nền một bậc).</span></div>
+        </div>
+
+        <div class="spec" data-sig="d595cdc568 b700b8b523 4204dac2ee 8c39968afd e79817e68e 52a9207943 d27c2176a0 158e532e16 38daf8637e 83c836c812 972aad81d3" data-sig-state="d27c2176a0:hover d27c2176a0:focus">
+          <div class="spec-h"><b>Thẻ ảnh / video · screenshot</b><span class="kind">aspect-video bg-bg-sunken · a.group aspect-[16/10] "Full size"</span><span class="dp">16:9 · 16:10 · lưới 2–3 cột</span></div>
+          <div class="stage col" style="padding:0">
+            <div class="ac-grid c3 bt">
+              <div class="ac-card"><div class="ac-card-h sm"><p class="hud-label t-muted">Worlds</p><p class="hud-label t-faint">01</p></div><div class="ac-img r16-9 bb"><span class="pic"></span><span style="position:relative">ảnh tính năng</span></div><div style="padding:20px 24px"><h3 class="ac-display ac-h-xl">Image to Location</h3><p class="ac-sm" style="margin-top:6px">Place virtual actors into physical environments.</p></div></div>
+              <div class="ac-card"><div class="ac-card-h sm"><p class="hud-label t-muted">Community film</p><p class="hud-label t-faint">02</p></div><div class="ac-img r16-9"><span class="pic"></span><span style="position:relative">video</span><span class="ac-play"><svg class="i" viewBox="0 0 24 24"><path d="m6 4 14 8-14 8z"/></svg>Play</span></div><div style="padding:20px 24px"><h3 class="ac-display ac-h-xl">ArtCraft Commercial</h3><p class="ac-sm" style="margin-top:6px">Official ArtCraft commercial showcasing the app</p><a class="ac-btn outline md" href="#" style="margin-top:16px"><svg class="i" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 21h16"/></svg>Download <span class="dim">125 MB</span></a></div></div>
+              <div class="ac-card"><div class="ac-card-h sm"><p class="hud-label t-muted">Screenshot</p><p class="hud-label t-faint">03</p></div><a class="ac-shot is-hover" href="#"><span class="pic"></span><span class="fs"><svg class="i" viewBox="0 0 24 24"><path d="M8 3H3v5M16 3h5v5M3 16v5h5M21 16v5h-5"/></svg>Full size</span></a><div style="padding:12px 24px"><p class="hud-label t-faint" style="margin:0">Curves and type layers — hover hiện "Full size"</p></div></div>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Mọi ảnh/video của ArtCraft thay bằng khối sọc giữ chỗ. Ảnh screenshot lớn (w-full) và lưới 2 cột screenshot dùng chung ô <code>bg-bg-sunken</code>; link "Full size" hiện khi hover.</span></div>
+        </div>
+
+        <div class="spec" data-sig="4af41530d8 18033a695a d97d911c89 ea708b8645 c4cd9d89bf f8b527ac4b">
+          <div class="spec-h"><b>Thẻ nền tảng · danh sách file tải</b><span class="kind">li.flex-col bg-bg · ul.border-t › li.border-b › a hover:bg-bg-sunken</span><span class="dp">pad 32 · row py 12 · 14px</span></div>
+          <div class="stage col" style="padding:0">
+            <div class="ac-grid c2 bt">
+              <div class="ac-card"><div class="ac-card-h"><p class="hud-label t-faint">Platform</p><p class="hud-label t-faint">01</p></div><div style="padding:32px"><div style="display:flex;align-items:center;gap:12px"><span class="ac-oslogo"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18"/></svg></span><h3 class="ac-display ac-h-2xl">Windows</h3></div><ul class="ac-spec"><li><svg class="i" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="14"/></svg>Windows 10 (64-bit) or newer</li><li><svg class="i" viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="8"/></svg>8 GB RAM recommended</li><li><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/></svg>2 GB available storage</li></ul><a class="ac-btn outline md" href="#" style="margin-top:24px"><svg class="i" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 21h16"/></svg>Download for Windows</a></div></div>
+              <div class="ac-card" style="padding:32px"><p class="hud-label t-faint" style="margin:0">Other macOS downloads</p><ul class="ac-list"><li><a class="ac-row" href="#"><span><span class="f1">Command-line tool (Universal)</span><span class="f2">The headless CLI for scripts and agents.</span><span class="f3">photocraft-cli-0.2.0-macos-universal.zip</span></span><svg class="i" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 21h16"/></svg></a></li><li><a class="ac-row" href="#" style="background:var(--ac-bgSunken)"><span><span class="f1">Web build · hover</span><span class="f2">The WebAssembly app, to host yourself.</span><span class="f3">photocraft-web-0.2.0.zip</span></span><svg class="i" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 21h16"/></svg></a></li></ul></div>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Trang Download: ô "Your system" dùng nút invert đầy chiều ngang thay cho nút viền. Dòng file: tên 14 ink · mô tả 14 muted · tên file mono 11 faint · icon tải phải.</span></div>
+        </div>
+
+        <div class="spec" data-sig="e0185cd0f6 e437864d83 be7b6a0fb5 f6c1b01d18 6519d68a6b a9b74c1591">
+          <div class="spec-h"><b>Thẻ release · Terminal</b><span class="kind">figure.border.bg-bg-sunken › figcaption.hud-label + pre.text-[13px]</span><span class="dp">pad 40 · code 13/1.625</span></div>
+          <div class="stage col" style="padding:0">
+            <div class="ac-grid c2 bt">
+              <div class="ac-card p10"><p class="hud-label t-faint" style="margin:0">Release</p><h3 class="ac-display ac-h-3xl" style="margin-top:24px;font-size:30px">Version <span class="acc">0.2.0</span>.</h3><p class="ac-body" style="margin-top:12px">Free for every platform above. Questions or feedback? The team is in the ArtCraft Discord.</p><div class="chips" style="margin-top:24px"><span class="ac-chip">macOS</span><span class="ac-chip">Windows</span><span class="ac-chip">Linux</span><span class="ac-chip">Web</span></div></div>
+              <div class="ac-card p10" style="min-width:0"><p class="hud-label t-faint" style="margin:0">Build from source</p><h3 class="ac-display ac-h-3xl" style="margin-top:24px;font-size:30px">Run it <span class="acc">today</span>.</h3><figure class="ac-terminal" style="margin-top:24px"><div class="th"><figcaption class="hud-label t-faint" style="display:flex;align-items:center;gap:8px"><svg class="i" viewBox="0 0 24 24"><path d="m4 17 6-6-6-6M12 19h8"/></svg>Terminal</figcaption><button class="ac-btn ghost bl"><svg class="i" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span aria-live="polite">Copy</span></button></div><pre><code>git clone https://github.com/storytold/photocraft.git
+cd photocraft
+cargo run --release -p photocraft</code></pre></figure></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="spec" data-sig="7f3c761223 037ca7eec8 a0c018c3ba" data-sig-state="037ca7eec8:hover 037ca7eec8:focus a0c018c3ba:focus">
+          <div class="spec-h"><b>Thẻ tài sản (press kit) · Launch the studio</b><span class="kind">a.group › div.aspect-video bg-bg-sunken + span.tick</span><span class="dp">ô icon 56 · tick 11 ở hai góc</span></div>
+          <div class="stage col" style="padding:0">
+            <div class="ac-grid c2 bt">
+              <div class="ac-card"><div class="ac-card-h sm"><p class="hud-label t-muted" style="display:flex;gap:6px;align-items:center"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18"/></svg>Image</p><p class="hud-label t-faint">01</p></div><div class="ac-img r16-9 bb"><span class="pic"></span><span style="position:relative">logo ArtCraft (PNG) — không nhúng</span></div><div style="padding:20px 24px"><h3 class="ac-display ac-h-xl">ArtCraft Logo (PNG)</h3><a class="ac-btn outline md" href="#" style="margin-top:16px"><svg class="i" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 21h16"/></svg>Download</a></div></div>
+              <a class="ac-launch is-hover" href="#"><div class="ac-card-h sm"><p class="hud-label t-muted">More in the app</p><p class="hud-label t-faint">08</p></div><div class="box"><span class="sq"><svg class="i" viewBox="0 0 24 24"><path d="M7 17 17 7M7 7h10v10"/></svg></span><p class="hud-label t-faint" style="margin:0">app.getartcraft.com</p><span class="tick a"></span><span class="tick b"></span></div><div style="padding:20px 24px"><h3 class="ac-display ac-h-xl">Launch the studio</h3><p class="ac-sm" style="margin-top:6px">Generate, edit, and compose — right in your browser, no install needed.</p></div></a>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Thẻ Launch đang ở trạng thái hover: ô mũi tên 56px đảo màu. Tick 11px opacity .6 ở góc trên-trái và dưới-phải của ô.</span></div>
+        </div>
+
+        <div class="spec full" data-sig="2619df4d16 c6924c97a9 6e4a4daf30 2d8fa0b267 225019b338 0e97efecd7">
+          <div class="spec-h"><b>Hero mục</b><span class="kind">h1 font-display text-4xl md:text-6xl leading-[1.02] tracking-[-0.035em] · p.text-lg leading-relaxed text-muted</span><span class="dp">h1 60–72 · lead 18/29 · max-w 36/42rem</span></div>
+          <div class="stage col" style="padding:0">
+            <div class="ac-container" style="border-top:1px solid var(--ac-line)"><span class="tick tick-half tl"></span><span class="tick tick-half tr"></span>
+              <div class="ac-eyebrow" style="position:static"><p class="hud-label t-muted"><span class="n">01</span><span class="sl">/</span>Crafting apps</p><p class="hud-label t-faint">Seven apps · Open source · Pure Rust</p></div>
+              <div class="ac-pad"><h1 class="ac-display ac-h-4xl" style="max-width:48rem">Seven apps. One <span class="acc">craft</span>.</h1><p class="ac-lead" style="margin-top:20px;max-width:36rem">Image editing, vector illustration, video, photography, PDFs, motion graphics and page layout. Native, open-source apps from the ArtCraft team, built in Rust and free to use.</p><div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:32px"><a class="ac-btn" href="#">Join the Discord</a><a class="ac-btn outline" href="#">Browse on GitHub</a></div></div>
+            </div>
+            <div style="display:grid;gap:24px;padding:24px 16px">
+              <h2 class="ac-display ac-h-5xl">Build it <span class="acc">with us</span>.</h2>
+              <h2 class="ac-display ac-h-48">Talk to a <em>human</em>.</h2>
+              <h2 class="ac-display ac-h-3xl">Capable tools <em>for artists</em>.</h2>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Từ nhấn hoặc là màu app/accent-ink (<code>text-(--app-ink,var(--accent-ink))</code>), hoặc là Instrument Serif italic. Tiêu đề to nhất 72px/0.98 tracking −.04em.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="pricing">
+      <header><h2>Pricing</h2><p>Trang pricing có nhóm component riêng: thanh chọn kỳ, thẻ plan gradient theo màu plan, dải perks, thẻ credit.</p></header>
+      <div class="grid wide">
+        <div class="spec full" data-sig="16daea5a47 aa8ebc6ec6 62fd0fe7d5 68bafcaedd 60d5c4e523 e93f45ec8b 0167149c5a 50674a9186 c930370b82 c8ec47670a 5725b10a1c 2ebee5335d">
+          <div class="spec-h"><b>Thẻ plan · thanh kỳ · perks</b><span class="kind">article.plan-card.plan-pro[data-highlight] · span.plan-check</span><span class="dp">319 × 648 · header py 10 · body pad 32 · giá 48</span></div>
+          <div class="stage col" style="padding:0">
+            <div class="ac-toolbar"><div class="L"><div class="ac-tabs" role="tablist"><button class="ac-tab" role="tab" aria-selected="false" style="width:96px">Yearly</button><button class="ac-tab" role="tab" aria-selected="true" style="width:96px">Monthly</button></div><span class="ac-chip accent">20% off · ends soon</span><p class="hud-label t-accent" style="margin:0">Switch to yearly, save 20%</p></div><p class="hud-label t-faint" style="margin:0">Prices in USD</p></div>
+            <div class="scrolln"><div class="ac-grid c4" style="min-width:1000px">
+              <article class="ac-plan plan-basic"><div class="ph"><p class="hud-label" style="margin:0;font-weight:700">Plan</p><p class="hud-label" style="margin:0;opacity:.7">01</p></div><div class="pb"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><h3 class="ac-display ac-h-2xl">Basic</h3><span class="ac-badge">20% off</span></div><p class="ac-sm" style="margin-top:4px">For getting started</p><div class="price"><span class="strike">$13</span><span class="amt">$10</span><span class="t-muted">/mo</span></div><p class="hud-label t-faint" style="margin:8px 0 0">Billed monthly · cancel anytime</p><button class="ac-btn plan" style="margin-top:24px">Get Basic <svg class="i" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button><p class="hud-label t-faint" style="margin:32px 0 0">What you get</p><ul><li><span class="plan-check"><svg class="i" viewBox="0 0 24 24"><path d="m5 12 5 5L20 7"/></svg></span>1,000 credits / month</li><li><span class="plan-check"><svg class="i" viewBox="0 0 24 24"><path d="m5 12 5 5L20 7"/></svg></span>~250 Nano Banana images</li><li><span class="plan-check"><svg class="i" viewBox="0 0 24 24"><path d="m5 12 5 5L20 7"/></svg></span>You own ArtCraft forever</li></ul></div></article>
+              <article class="ac-plan plan-pro" data-highlight><div class="ph"><p class="hud-label" style="margin:0;font-weight:700;display:flex;gap:6px;align-items:center"><svg class="i" viewBox="0 0 24 24" style="width:12px;height:12px"><path d="m12 3 2.5 6 6.5.5-5 4.3 1.6 6.4L12 16.8 6.4 20.2 8 13.8 3 9.5 9.5 9z"/></svg>Most popular</p><p class="hud-label" style="margin:0;opacity:.7">02</p></div><div class="pb"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><h3 class="ac-display ac-h-2xl">Pro</h3><span class="ac-badge">20% off</span></div><p class="ac-sm" style="margin-top:4px">For serious creators</p><div class="price"><span class="strike">$44</span><span class="amt">$35</span><span class="t-muted">/mo</span></div><p class="hud-label t-faint" style="margin:8px 0 0">Billed monthly · cancel anytime</p><button class="ac-btn plan" style="margin-top:24px">Get Pro <svg class="i" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button><p class="hud-label t-faint" style="margin:32px 0 0">What you get</p><ul><li><span class="plan-check"><svg class="i" viewBox="0 0 24 24"><path d="m5 12 5 5L20 7"/></svg></span>3,750 credits / month</li><li><span class="plan-check"><svg class="i" viewBox="0 0 24 24"><path d="m5 12 5 5L20 7"/></svg></span>~938 Nano Banana images</li><li><span class="plan-check"><svg class="i" viewBox="0 0 24 24"><path d="m5 12 5 5L20 7"/></svg></span>You own ArtCraft forever</li></ul></div></article>
+              <article class="ac-plan plan-max"><div class="ph"><p class="hud-label" style="margin:0;font-weight:700">Best value</p><p class="hud-label" style="margin:0;opacity:.7">03</p></div><div class="pb"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><h3 class="ac-display ac-h-2xl">Max</h3><span class="ac-badge">20% off</span></div><p class="ac-sm" style="margin-top:4px">For studios and power users</p><div class="price"><span class="strike">$75</span><span class="amt">$60</span><span class="t-muted">/mo</span></div><p class="hud-label t-faint" style="margin:8px 0 0">Billed monthly · cancel anytime</p><button class="ac-btn plan" style="margin-top:24px">Get Max <svg class="i" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button><p class="hud-label t-faint" style="margin:32px 0 0">What you get</p><ul><li><span class="plan-check"><svg class="i" viewBox="0 0 24 24"><path d="m5 12 5 5L20 7"/></svg></span>6,600 credits / month</li><li><span class="plan-check"><svg class="i" viewBox="0 0 24 24"><path d="m5 12 5 5L20 7"/></svg></span>~1,650 Nano Banana images</li></ul></div></article>
+              <article class="ac-plan plan-enterprise"><div class="ph"><p class="hud-label" style="margin:0;font-weight:700">For teams</p><p class="hud-label" style="margin:0;opacity:.7">04</p></div><div class="pb"><h3 class="ac-display ac-h-2xl">Enterprise</h3><div class="price"><span class="amt">Custom</span></div><p class="hud-label t-faint" style="margin:8px 0 0">Bespoke volume &amp; teams</p><div class="ac-split" style="margin-top:24px"><a class="ac-btn plan" href="#"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14"/><path d="m3 7 9 6 9-6"/></svg>Contact us</a><button class="ac-btn plan ic" aria-label="Copy email address"><svg class="i" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg></button></div><p class="hud-label t-faint" style="margin:32px 0 0">Everything in Max, plus</p><ul><li><span class="plan-check"><svg class="i" viewBox="0 0 24 24"><path d="m5 12 5 5L20 7"/></svg></span>Bespoke credit allocation</li><li><span class="plan-check"><svg class="i" viewBox="0 0 24 24"><path d="m5 12 5 5L20 7"/></svg></span>Secure models</li><li><span class="plan-check"><svg class="i" viewBox="0 0 24 24"><path d="m5 12 5 5L20 7"/></svg></span>Support SLAs</li></ul></div></article>
+            </div></div>
+            <ul class="ac-perks"><li class="hud-label"><svg class="i" viewBox="0 0 24 24"><path d="m5 12 5 5L20 7"/></svg>Cancel anytime</li><li class="hud-label"><svg class="i" viewBox="0 0 24 24"><path d="m5 12 5 5L20 7"/></svg>Secure checkout via Stripe</li><li class="hud-label"><svg class="i" viewBox="0 0 24 24"><path d="m5 12 5 5L20 7"/></svg>Credits refunded if a generation fails</li><li class="hud-label"><svg class="i" viewBox="0 0 24 24"><path d="m5 12 5 5L20 7"/></svg>Open source — yours forever</li></ul>
+            <div class="ac-grid c2 bt">
+              <div class="ac-card p10"><p class="hud-label t-faint" style="margin:0">Already have an account?</p><h3 class="ac-display ac-h-2xl" style="margin-top:24px">One-time credit packs</h3><p class="ac-body" style="margin-top:8px">Top up without changing your plan. Credit packs never expire.</p><a class="ac-btn outline xs" href="#" style="margin-top:24px;width:fit-content">Sign in to buy credits</a></div>
+              <div class="ac-card p10"><p class="hud-label t-faint" style="margin:0">† Footnote</p><p class="ac-body" style="margin-top:12px">ArtCraft can be used without paying for a subscription. You can bring your own compute and third-party subscriptions.</p></div>
+            </div>
+          </div>
+          <div class="spec-f"><span class="note">Thẻ plan: nền gradient từ <code>--plan</code> 14% xuống trong suốt ở 50%; thẻ nổi bật (<code>data-highlight</code>) viền trong 2px màu plan và gradient 22% → 4%. Giá cũ gạch ngang màu danger 80%. Ô check 16px nền plan 16%, dấu check màu <code>--plan-ink</code>.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="inputs">
+      <header><h2>Nhập liệu</h2><p>Site marketing gần như không có form; đầu vào duy nhất là nhóm nút share và tabs chọn (xem Điều hướng).</p></header>
+      <div class="grid wide">
+        <div class="spec">
+          <div class="spec-h"><b>Share bar</b><span class="kind">div.border › span.hud-label + button.ghost h-9</span><span class="dp">cao 36 · nhãn px 12</span></div>
+          <div class="stage">
+            <div class="ac-share"><span class="lbl hud-label">Share</span><button class="ac-btn ghost"><svg class="i" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span aria-live="polite">Copy link</span></button><a class="ac-btn ghost" href="#" aria-label="Share on X">X</a><a class="ac-btn ghost" href="#">Reddit</a><a class="ac-btn ghost" href="#">Bluesky</a><a class="ac-btn ghost is-hover" href="#">LinkedIn</a></div>
+          </div>
+          <div class="spec-f"><span class="note">Sau khi copy, chữ "Copy link" đổi thành "Copied" trong vùng <code>aria-live="polite"</code>. Dưới 640px bar bọc dòng.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="feedback">
+      <header><h2>Phản hồi &amp; nhãn</h2></header>
+      <div class="grid wide">
+        <div class="spec" data-sig="97c851f52b 9b957705da 2615133084 c36a2e6493 13ba20736d 6eb4490c62 e6199eaf6a ca8de94d80">
+          <div class="spec-h"><b>Chip · số thứ tự app</b><span class="kind">border-line bg-bg-sunken px-1.5 py-px text-[10px] · hud-label bg-(--app) text-black</span><span class="dp">chip 19 cao · số 25 cao</span></div>
+          <div class="stage col">
+            <div class="chips"><span class="ac-chip">macOS</span><span class="ac-chip">Windows</span><span class="ac-chip">Linux</span><span class="ac-chip">Web</span><span class="ac-chip app-photocraft app">Early alpha</span><span class="ac-chip app-vectorcraft app">In development</span><span class="ac-chip accent">20% off · ends soon</span></div>
+            <div class="chips"><span class="ac-num app-photocraft">01</span><span class="ac-num app-vectorcraft">02</span><span class="ac-num app-filmcraft">03</span><span class="ac-num app-lightcraft">04</span><span class="ac-num app-printcraft">05</span><span class="ac-num app-effectcraft">06</span><span class="ac-num app-designcraft">07</span></div>
+            <div class="chips"><span class="ac-pill">Home</span><span class="ac-pill">Craft apps</span><span class="plan-pro"><span class="ac-badge">20% off</span></span><span class="plan-basic"><span class="ac-badge">Most popular</span></span></div>
+          </div>
+          <div class="spec-f"><span class="note">Số thứ tự app luôn chữ đen trên màu app (cả chế độ tối). Pill đảo màu là nhãn mục nav đang chọn. Badge plan chữ trắng trên <code>--plan</code>.</span></div>
+        </div>
+
+        <div class="spec">
+          <div class="spec-h"><b>Banner · trạng thái copy</b><span class="kind">bg-accent text-white · aria-live="polite"</span><span class="dp">py 8 · px 24</span></div>
+          <div class="stage col" style="padding:0">
+            <div class="ac-banner"><span class="hud-label" style="font-weight:700;display:flex;gap:8px;align-items:center"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/></svg>Limited-time offer</span><span class="hud-label">Save 20% on every plan, monthly or yearly</span></div>
+            <div style="display:flex;gap:12px;flex-wrap:wrap;padding:16px"><button class="ac-btn ghost" style="border:1px solid var(--ac-line)"><span aria-live="polite">Copy link</span></button><button class="ac-btn ghost" style="border:1px solid var(--ac-line);color:var(--ac-ink)"><svg class="i" viewBox="0 0 24 24"><path d="m5 12 5 5L20 7"/></svg><span aria-live="polite">Copied</span></button><span class="hud-label" style="color:var(--ac-danger);align-self:center">Danger · --danger</span></div>
+          </div>
+          <div class="spec-f"><span class="note">Banner khuyến mãi (trang Pricing) vẽ theo ảnh chụp: nền <code>--accent</code>, chữ trắng mono. Trạng thái "Copied" đọc từ markup aria-live.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= MÀN MẪU ================= -->
+    <section class="block" id="screens">
+      <header><h2>Màn hình mẫu</h2><p>Ghép từ chính các class ở trên theo bố cục site: nav 48 → eyebrow mục → hero → lưới thẻ app. Desktop 1280 × 800 (khung nội dung đúng max-w 1280), mobile 390 × 844. Ảnh thay bằng khối giữ chỗ.</p></header>
+      <div class="screens">
+        <div class="screen-wrap">
+          <div class="desk" data-kit-rep>
+            <nav class="ac-nav" aria-label="Main"><div class="L"><a class="logo" href="#" aria-label="ArtCraft"><span class="ac-bigletter" style="border:0;background:var(--ac-invertBg);color:var(--ac-invertFg);width:24px;height:24px;font-size:12px">A</span></a><ul><li><a class="ac-navlink" href="#"><span>Home</span></a></li><li><a class="ac-navlink" href="#"><span>Image</span></a></li><li><a class="ac-navlink" href="#"><span>Video</span></a></li><li><button class="ac-navlink"><span>Resources <svg class="i" viewBox="0 0 24 24" style="width:12px;height:12px"><path d="m6 9 6 6 6-6"/></svg></span></button></li><li><a class="ac-navlink" href="#"><span>Download</span></a></li><li><a class="ac-navlink" href="#"><span>Support</span></a></li><li><a class="ac-navlink is-on" href="#" aria-current="page"><span>Craft Apps</span></a></li></ul></div><div class="R"><a class="ac-navlink" href="#"><span>Pricing</span></a><button class="ac-btn ic-nav" aria-label="Discord"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/></svg></button><button class="ac-btn ic-nav" aria-label="Theme"><svg class="i" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></button><a class="ac-btn launch" href="#">Launch app</a></div></nav>
+            <div class="scrollbox"><div class="ac-section" style="border-top:0"><div class="ac-container" style="border-left:0;border-right:0;max-width:none;margin:0 80px;border-left:1px solid var(--ac-line);border-right:1px solid var(--ac-line)"><span class="tick tick-half tl"></span><span class="tick tick-half tr"></span>
+              <div class="ac-eyebrow"><p class="hud-label t-muted"><span class="n">01</span><span class="sl">/</span>Crafting apps</p><p class="hud-label t-faint">Seven apps · Open source · Pure Rust</p></div>
+              <div class="ac-pad" style="padding:56px 40px 40px"><h1 class="ac-display ac-h-4xl" style="max-width:48rem">Seven apps. One <span class="acc">craft</span>.</h1><p class="ac-lead" style="margin-top:20px;max-width:36rem">Image editing, vector illustration, video, photography, PDFs, motion graphics and page layout. Native, open-source apps from the ArtCraft team, built in Rust and free to use.</p><div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:32px"><a class="ac-btn" href="#"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/></svg>Join the Discord</a><a class="ac-btn outline" href="#">Browse on GitHub</a></div><div class="ac-share" style="margin-top:24px"><span class="lbl hud-label">Share</span><button class="ac-btn ghost">Copy link</button><a class="ac-btn ghost" href="#">X</a><a class="ac-btn ghost" href="#">Reddit</a></div>
+                <div style="display:flex;gap:24px;margin-top:32px"><div class="app-photocraft" style="text-align:center"><div class="ac-icon">icon</div><p class="ac-sm" style="margin-top:6px;font-size:12px">PhotoCraft</p></div><div class="app-vectorcraft" style="text-align:center"><div class="ac-icon">icon</div><p class="ac-sm" style="margin-top:6px;font-size:12px">VectorCraft</p></div><div class="app-filmcraft" style="text-align:center"><div class="ac-icon">icon</div><p class="ac-sm" style="margin-top:6px;font-size:12px">FilmCraft</p></div><div class="app-lightcraft" style="text-align:center"><div class="ac-icon">icon</div><p class="ac-sm" style="margin-top:6px;font-size:12px">LightCraft</p></div><div class="app-printcraft" style="text-align:center"><div class="ac-icon">icon</div><p class="ac-sm" style="margin-top:6px;font-size:12px">PrintCraft</p></div><div class="app-effectcraft" style="text-align:center"><div class="ac-icon">icon</div><p class="ac-sm" style="margin-top:6px;font-size:12px">EffectCraft</p></div><div class="app-designcraft" style="text-align:center"><div class="ac-icon">icon</div><p class="ac-sm" style="margin-top:6px;font-size:12px">DesignCraft</p></div></div>
+              </div>
+              <div class="ac-eyebrow"><p class="hud-label t-muted"><span class="n">02</span><span class="sl">/</span>The lineup</p><p class="hud-label t-faint">Pick a craft to explore</p></div>
+              <div class="ac-grid c4">
+                <a class="ac-cardlink app-photocraft" href="#"><span class="bar2"></span><div class="ac-card-h"><span class="ac-num">01</span><p class="hud-label t-faint">Image editor</p></div><div class="ac-img r16-10 bb"><span class="pic"></span></div><div class="body"><div class="ac-icon lg">icon</div><h3 class="ac-appname">Photo<span class="acc">Craft</span></h3><p class="ac-body" style="margin-top:12px">The open-source image editor you already know how to use.</p></div></a>
+                <a class="ac-cardlink app-vectorcraft" href="#"><span class="bar2"></span><div class="ac-card-h"><span class="ac-num">02</span><p class="hud-label t-faint">Vector illustration</p></div><div class="ac-img r16-10 bb"><span class="pic"></span></div><div class="body"><div class="ac-icon lg">icon</div><h3 class="ac-appname">Vector<span class="acc">Craft</span></h3><p class="ac-body" style="margin-top:12px">Fast, open-source vector illustration, reimagined in pure Rust.</p></div></a>
+                <a class="ac-cardlink app-filmcraft" href="#"><span class="bar2"></span><div class="ac-card-h"><span class="ac-num">03</span><p class="hud-label t-faint">Video editor</p></div><div class="ac-img r16-10 bb"><span class="pic"></span></div><div class="body"><div class="ac-icon lg">icon</div><h3 class="ac-appname">Film<span class="acc">Craft</span></h3><p class="ac-body" style="margin-top:12px">Professional, open-source video editing, rebuilt from scratch in Rust.</p></div></a>
+                <a class="ac-cardlink app-lightcraft" href="#"><span class="bar2"></span><div class="ac-card-h"><span class="ac-num">04</span><p class="hud-label t-faint">Photo library</p></div><div class="ac-img r16-10 bb"><span class="pic"></span></div><div class="body"><div class="ac-icon lg">icon</div><h3 class="ac-appname">Light<span class="acc">Craft</span></h3><p class="ac-body" style="margin-top:12px">An open-source photo library and raw developer that runs on your machine.</p></div></a>
+              </div>
+            </div></div></div>
+            <div class="ac-hud" aria-hidden="true" style="position:absolute;top:48px;right:0;width:60px;height:calc(100% - 48px);border:0;border-left:1px solid var(--ac-line);background:transparent;overflow:visible"><div class="rail" style="border:0"><i class="maj" style="top:40px" data-n="5"></i><i style="top:80px"></i><i class="maj" style="top:120px" data-n="10"></i><i style="top:160px"></i><i class="maj" style="top:200px" data-n="15"></i><i style="top:240px"></i><i class="maj" style="top:280px" data-n="20"></i><i style="top:320px"></i><i class="maj" style="top:360px" data-n="25"></i><i style="top:400px"></i><i class="maj" style="top:440px" data-n="30"></i><span class="rot" style="bottom:120px">Lineup</span></div><span class="word" style="top:64px;right:70px;font-size:34px;white-space:nowrap">Crafting apps</span></div>
+          </div>
+          <div class="cap"><b>Desktop 1280 × 800 — /apps (màn đại diện)</b>ac-nav · ac-eyebrow · ac-display 60 · ac-lead · ac-btn + outline · ac-share · ac-icon ×7 · ac-grid c4 · ac-cardlink · ac-num · ac-chip · HUD tĩnh. Site chủ yếu dùng desktop nên màn này làm đại diện.</div>
+        </div>
+
+        <div class="screen-wrap">
+          <div class="phone">
+            <nav class="ac-nav mobile" aria-label="Main"><div class="L"><a class="logo" href="#" aria-label="ArtCraft"><span class="ac-bigletter" style="border:0;background:var(--ac-invertBg);color:var(--ac-invertFg);width:24px;height:24px;font-size:12px">A</span></a></div><div class="R"><button class="ac-btn ic-nav" aria-label="Theme"><svg class="i" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></button><button class="ac-btn ic-nav" aria-label="Menu"><svg class="i" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button></div></nav>
+            <div class="scrollbox"><div class="ac-container" style="margin:0 16px"><span class="tick tick-half tl"></span><span class="tick tick-half tr"></span>
+              <div class="ac-eyebrow"><p class="hud-label t-muted"><span class="n">01</span><span class="sl">/</span>Crafting apps</p></div>
+              <div class="ac-pad sm"><h1 class="ac-display ac-h-3xl">Seven apps. One <span class="acc">craft</span>.</h1><p class="ac-lead" style="margin-top:20px">Image editing, vector illustration, video, photography, PDFs, motion graphics and page layout.</p><div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:32px"><a class="ac-btn" href="#">Join the Discord</a><a class="ac-btn outline" href="#">Browse on GitHub</a></div><div class="ac-share" style="margin-top:24px;flex-wrap:wrap"><span class="lbl hud-label">Share</span><button class="ac-btn ghost">Copy link</button><a class="ac-btn ghost" href="#">X</a></div>
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:32px"><div class="app-photocraft" style="text-align:center"><div class="ac-icon" style="margin:0 auto">icon</div><p class="ac-sm" style="margin-top:6px;font-size:12px">PhotoCraft</p></div><div class="app-vectorcraft" style="text-align:center"><div class="ac-icon" style="margin:0 auto">icon</div><p class="ac-sm" style="margin-top:6px;font-size:12px">VectorCraft</p></div><div class="app-filmcraft" style="text-align:center"><div class="ac-icon" style="margin:0 auto">icon</div><p class="ac-sm" style="margin-top:6px;font-size:12px">FilmCraft</p></div><div class="app-lightcraft" style="text-align:center"><div class="ac-icon" style="margin:0 auto">icon</div><p class="ac-sm" style="margin-top:6px;font-size:12px">LightCraft</p></div></div>
+              </div>
+              <div class="ac-eyebrow"><p class="hud-label t-muted"><span class="n">02</span><span class="sl">/</span>The lineup</p></div>
+              <div class="ac-grid"><a class="ac-cardlink app-photocraft" href="#"><span class="bar2"></span><div class="ac-card-h"><span class="ac-num">01</span><p class="hud-label t-faint">Image editor</p></div><div class="ac-img r16-10 bb"><span class="pic"></span></div><div class="body" style="padding:0 24px 24px"><div class="ac-icon lg">icon</div><h3 class="ac-appname">Photo<span class="acc">Craft</span></h3><p class="ac-body" style="margin-top:12px">The open-source image editor you already know how to use.</p><div class="chips" style="margin-top:16px"><span class="ac-chip app">Early alpha</span><span class="ac-chip">macOS</span><span class="ac-chip">Windows</span></div></div></a></div>
+            </div></div>
+          </div>
+          <div class="cap"><b>Mobile 390 × 844 — /apps</b>ac-nav.mobile (logo + theme + hamburger) · ac-eyebrow px 24 · ac-display 36 · ac-pad.sm 24/56 · lưới icon 4 cột · ac-cardlink 1 cột.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status"><span id="toast-t">Đã copy</span></div>
+
+<script>
+/* màn đại diện: clone màn [data-kit-rep] lên đầu trang, một nguồn markup duy nhất */
+{ const rep = document.querySelector("[data-kit-rep]").cloneNode(true); rep.removeAttribute("data-kit-rep"); document.querySelector("[data-kit-hero]").prepend(rep); }
+/* token: 15 biến :root của site, sáng và tối, đọc từ 3rsoae9dq-c5i.css */
+const ROLES=["bg","bgRaised","bgSunken","ink","inkStrong","muted","faint","line","lineStrong","accent","accentInk","invertBg","invertFg","danger","scanline"];
+const THEME={light:["#f2f1ee","#faf9f7","#e9e8e4","#101014","#000000","#1010149e","#1010146b","#10101429","#10101466","#2d81ff","#1659c4","#101014","#f2f1ee","#b3261e","#10101408"],
+             dark:["#121316","#101014","#060607","#f2f1ee","#ffffff","#f2f1ee99","#f2f1ee61","#f2f1ee26","#f2f1ee66","#2d81ff","#74aaff","#ffffff","#0b0b0c","#ff6259","#ffffff06"]};
+/* màu app (.app-*) và plan (.plan-*): [--app, --app-ink sáng, --app-ink tối] */
+const APPS={none:{label:"Mặc định (accent)",light:["#2d81ff","#1659c4"],dark:["#2d81ff","#74aaff"]},
+  photocraft:{label:"PhotoCraft",light:["#2f7bf5","#1a5bc4"],dark:["#2f7bf5","#7fb0ff"]},vectorcraft:{label:"VectorCraft",light:["#e8573f","#b83a24"],dark:["#e8573f","#ff8a70"]},
+  filmcraft:{label:"FilmCraft",light:["#8b5cf6","#6a3fd6"],dark:["#8b5cf6","#b69cff"]},lightcraft:{label:"LightCraft",light:["#f2a516","#8a5800"],dark:["#f2a516","#ffc14d"]},
+  printcraft:{label:"PrintCraft",light:["#12a58a","#0a7563"],dark:["#12a58a","#3fd6b8"]},effectcraft:{label:"EffectCraft",light:["#e0368f","#b0206c"],dark:["#e0368f","#ff7ab8"]},
+  designcraft:{label:"DesignCraft",light:["#7bb51c","#457008"],dark:["#7bb51c","#a6e04a"]}};
+const PLANS={basic:{light:["#00a873","#007a54"],dark:["#00a873","#2fd39c"]},pro:{light:["#9d4cff","#7a2fe0"],dark:["#9d4cff","#c08fff"]},max:{light:["#d97700","#b35f00"],dark:["#d97700","#ffb347"]},enterprise:{light:["#3568c9","#2a55a8"],dark:["#3568c9","#7ea3ee"]}};
+(function () {
+  const root = document.documentElement;
+  const state = { app: "none", mode: matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light" };
+  try { Object.assign(state, JSON.parse(localStorage.getItem("artcraft-kit") || "{}")); } catch (e) {}
+  const toast = (t) => { const el = document.getElementById("toast"); document.getElementById("toast-t").textContent = t; el.classList.add("show"); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove("show"), 1600); };
+  const copy = async (text, msg) => { try { await navigator.clipboard.writeText(text); toast(msg); } catch (e) { toast("Trình duyệt chặn clipboard, hãy copy tay"); } };
+
+  function apply() {
+    const vals = THEME[state.mode];
+    ROLES.forEach((r, i) => root.style.setProperty("--ac-" + r, vals[i]));
+    const a = (APPS[state.app] || APPS.none)[state.mode];
+    root.style.setProperty("--ac-app", a[0]); root.style.setProperty("--ac-appInk", a[1]);
+    /* khối không mang .app-* (hero, tiêu đề) nhận màu app đang chọn qua --app/--app-ink */
+    root.style.setProperty("--app", a[0]); root.style.setProperty("--app-ink", a[1]);
+    root.dataset.mode = state.mode;
+    document.querySelectorAll("#swatches .sw").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === state.app));
+    document.querySelectorAll("#mode button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === state.mode));
+    renderRoles(vals);
+    try { localStorage.setItem("artcraft-kit", JSON.stringify(state)); } catch (e) {}
+  }
+  const sw = document.getElementById("swatches");
+  Object.entries(APPS).forEach(([key, p]) => { const b = document.createElement("button"); b.className = "sw"; b.dataset.v = key; b.title = p.label; b.setAttribute("aria-label", p.label); b.style.setProperty("--c", p.light[0]); b.onclick = () => { state.app = key; apply(); }; sw.appendChild(b); });
+  document.querySelectorAll("#mode button").forEach((b) => (b.onclick = () => { state.mode = b.dataset.v; apply(); }));
+
+  /* ô màu: cặp nền/chữ đúng như site dùng */
+  const PAIRS = { bg: "ink", bgRaised: "ink", bgSunken: "ink", ink: "bg", inkStrong: "bg", muted: "bg", faint: "bg", line: "ink", lineStrong: "bg", accent: "bg", accentInk: "bg", invertBg: "invertFg", invertFg: "invertBg", danger: "bg", scanline: "ink" };
+  function cell(box, name, bg, fg, note) { const b = document.createElement("button"); b.className = "role"; b.style.background = bg; b.style.color = fg; b.innerHTML = "<b>" + name + "</b><code>" + bg + (note ? " · " + note : "") + "</code>"; b.onclick = () => copy(bg, "Đã copy " + name + " " + bg); box.appendChild(b); }
+  function renderRoles(vals) {
+    const box = document.getElementById("roles"); box.innerHTML = "";
+    ROLES.forEach((r, i) => cell(box, "--" + r.replace(/([A-Z])/g, (m) => "-" + m.toLowerCase()), vals[i], vals[ROLES.indexOf(PAIRS[r])]));
+    const box2 = document.getElementById("roles-app"); box2.innerHTML = "";
+    Object.entries(APPS).forEach(([k, p]) => { if (k === "none") return; const a = p[state.mode]; cell(box2, ".app-" + k + " --app", a[0], "#000", "ink " + a[1]); });
+    Object.entries(PLANS).forEach(([k, p]) => { const a = p[state.mode]; cell(box2, ".plan-" + k + " --plan", a[0], "#fff", "ink " + a[1]); });
+  }
+
+  /* thang chữ đo trên site (computed style, 14 trang) */
+  const TYPE = [
+    ["Display 5xl", "display", "72px/.98", "-.04em", "Build it with us.", "text-5xl font-display tracking-[-0.04em]"],
+    ["Display 4xl", "display", "60px/1.02", "-.035em", "Seven apps. One craft.", "md:text-6xl leading-[1.02] tracking-[-0.035em]"],
+    ["Display 48", "display", "48px/1.02", "-.035em", "Talk to a human.", "text-4xl tracking-[-0.035em]"],
+    ["Display 3xl", "display", "36px/1.05", "-.03em", "Capable tools for artists.", "text-3xl leading-[1.05] tracking-[-0.03em]"],
+    ["App name", "display", "30px/1", "-.03em", "PhotoCraft", "text-3xl leading-none tracking-[-0.03em]"],
+    ["Heading 2xl", "display", "24px/32px", "-.02em", "Open source", "text-2xl tracking-[-0.02em]"],
+    ["Heading xl", "display", "20px/28px", "-.02em", "3D Editor Basics", "text-xl tracking-[-0.02em]"],
+    ["Lead", "body", "18px/29px", "0", "Image editing, vector illustration, video…", "text-lg leading-relaxed text-muted"],
+    ["Body", "body", "16px/24px", "0", "The open-source image editor you already know.", "text-base · leading-relaxed = 26px"],
+    ["Body sm", "body", "14px/23px", "0", "Official ArtCraft commercial showcasing the app", "text-sm leading-relaxed text-muted"],
+    ["HUD label", "mono", "11px/16.5px", ".15em", "01 / CRAFTING APPS", ".hud-label uppercase 500"],
+    ["Button", "mono", "11px/1", ".12em", "JOIN THE DISCORD", "font-mono font-bold uppercase tracking-[0.12em]"],
+    ["Tab", "mono", "11px/16.5px", ".10em", "MONTHLY", "font-mono font-semibold uppercase tracking-[0.1em]"],
+    ["Chip", "mono", "10px/15px", ".10em", "INSTALLERS READY", "text-[10px] font-medium uppercase tracking-[0.1em]"],
+    ["Code", "mono", "13px/21px", "0", "cargo run --release -p photocraft", "font-mono text-[13px] leading-relaxed"],
+    ["Ruler", "mono", "9px/1", ".08em", "042%", "font-size 9px · ruler-digits"],
+    ["Serif accent", "serif", "48px/1.02", "0", "limits.", "Instrument Serif italic trong tiêu đề"]];
+  const ts = document.getElementById("typescale");
+  TYPE.forEach(([name, fam, size, ls, sample, cls]) => {
+    const [fs, lh] = size.split("/"); const row = document.createElement("div"); row.className = "type-row";
+    const font = fam === "display" ? "font-family:var(--font-display);font-weight:620;font-stretch:118%;color:var(--ac-inkStrong)" : fam === "mono" ? "font-family:var(--font-mono);font-weight:500;text-transform:uppercase" : fam === "serif" ? "font-family:var(--font-serif);font-style:italic" : "font-family:var(--font-body);color:var(--ac-muted)";
+    row.innerHTML = '<span class="meta">' + name + "</span><span class=\"t\" style=\"" + font + ";font-size:" + fs + ";line-height:" + lh + ";letter-spacing:" + ls + '">' + sample + '</span><span class="meta">' + size + " · " + ls + "<br>" + cls + "</span>";
+    ts.appendChild(row);
+  });
+
+  /* mỗi thẻ thành phần có nút copy HTML của phần trình diễn */
+  document.querySelectorAll(".spec").forEach((spec) => {
+    const stage = spec.querySelector(".stage"); if (!stage || !spec.querySelector(".spec-h")) return;
+    let foot = spec.querySelector(".spec-f");
+    if (!foot) { foot = document.createElement("div"); foot.className = "spec-f"; foot.innerHTML = '<span class="note"></span>'; spec.appendChild(foot); }
+    const b = document.createElement("button"); b.className = "copy"; b.innerHTML = '<svg class="i" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>HTML';
+    b.onclick = () => copy(stage.innerHTML.trim().replace(/\n\s+/g, "\n"), "Đã copy HTML của " + spec.querySelector(".spec-h b").textContent);
+    foot.appendChild(b);
+  });
+
+  /* token hiện tại dưới dạng khối :root để dán vào dự án khác */
+  document.getElementById("copy-tokens").onclick = () => {
+    const vals = THEME[state.mode]; const a = (APPS[state.app] || APPS.none)[state.mode];
+    const lines = ROLES.map((r, i) => "  --ac-" + r + ": " + vals[i] + ";");
+    copy(":root {\n" + lines.join("\n") + "\n  --ac-app: " + a[0] + ";\n  --ac-appInk: " + a[1] + ";\n  --font-display: \"Archivo\", system-ui, sans-serif; /* weight 620 · stretch 118% */\n  --font-body: \"Inter\", system-ui, sans-serif;\n  --font-mono: \"Geist Mono\", ui-monospace, Menlo, monospace;\n  --font-serif: \"Instrument Serif\", Georgia, serif;\n  --k: 0;\n}", "Đã copy token " + (state.mode === "dark" ? "tối" : "sáng") + " · " + APPS[state.app].label);
+  };
+
+  /* làm nổi mục đang xem trong mục lục */
+  const links = [...document.querySelectorAll(".side a")];
+  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) links.forEach((a) => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id)); }), { rootMargin: "-30% 0px -60% 0px" });
+  document.querySelectorAll("section.block").forEach((s) => io.observe(s));
+
+  /* tabs bấm được */
+  document.addEventListener("click", (e) => { const t = e.target.closest(".ac-tab"); if (!t) return; t.parentElement.querySelectorAll(".ac-tab").forEach((x) => x.setAttribute("aria-selected", x === t)); });
+  apply();
+})();
+</script>
+</body>
+</html>
