@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Thư viện UI — uiux-asset</title>
+<meta name="description" content="{{N}} repo thư viện UI miễn phí (React, Vue, Svelte, Angular, Web Components, CSS) — số sao, license, ngày cập nhật lấy thẳng từ GitHub.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css">
+<style>
+.ul-row { align-items: flex-start; }
+.ul-row img { width: 48px; height: 48px; border-radius: var(--aw-rounded-small); flex: none; background: var(--aw-img); }
+.ul-row .ul-body { flex: 1; min-width: 0; }
+.ul-row .aw-desc { margin: 4px 0 8px; }
+.ul-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.ul-num { font-variant-numeric: tabular-nums; }
+.ul-k { margin-left: 6px; font-size: 11px; opacity: .65; font-variant-numeric: tabular-nums; }
+.ul-signals { line-height: 1.6; padding-left: 20px; }
+.ul-signals li { margin-bottom: 8px; }
+#fws, #kinds { flex-wrap: nowrap; }   /* chip lọc: 1 hàng cuộn ngang trên mobile thay vì xuống 5 dòng */
+.ul-sort { font: inherit; background: var(--aw-nf-bg-2); color: var(--aw-color-primary); border: 0; border-radius: var(--aw-rounded-normal); height: 42px; padding: 0 16px; }
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js"></script>
+<div class="aw-crumb">
+<h1>Thư viện UI miễn phí <span class="aw-tag aw-tag--bold" id="total">{{N}}</span></h1>
+<span>Repo mã nguồn mở trên GitHub, xếp theo số sao. Sao, license, ngày push lấy trực tiếp từ GitHub API lúc build (<span id="built"></span>). Thẻ đỏ = license cần đọc kỹ trước khi dùng.</span>
+</div>
+
+<h2 class="aw-heading-hr">Tín hiệu 30 ngày qua</h2>
+<ul class="ul-signals">
+<li><b>shadcn/ui đổi nền mặc định sang Base UI</b> - từ 07/2026 dự án mới dùng <a href="https://github.com/mui/base-ui" target="_blank" rel="noopener">Base UI</a>, Radix vẫn được hỗ trợ, thêm React Aria làm lựa chọn thứ ba (<a href="https://ui.shadcn.com/docs/changelog/2026-07-base-ui-default" target="_blank" rel="noopener">changelog</a>). Các registry như ReUI ship song song cả bản Base UI lẫn Radix.</li>
+<li><b>Component WebGPU lên Hacker News</b> - <a href="https://github.com/shader-effects-inc/shaders" target="_blank" rel="noopener">shader-effects-inc/shaders</a> (React, Vue, Svelte, Solid, JS) được 64 điểm, 28 bình luận ngày 07/10.</li>
+<li><b>Khối Tailwind HTML thuần vẫn được chia sẻ đều</b> - ví dụ hero SaaS dark-mode free trên <a href="https://www.reddit.com/r/tailwindcss/comments/1wzw3mg/free_darkmode_saas_hero_component_pure_html/" target="_blank" rel="noopener">r/tailwindcss</a>.</li>
+<li><b>Cẩn thận chữ "free"</b> - nhiều bài "best of" 2026 trộn gói trả phí (Aceternity Pro, Tailwind Plus, TailGrids Pro). Trang này chỉ liệt kê repo có mã công khai; vẫn phải xem license.</li>
+</ul>
+
+<h2 class="aw-heading-hr">Danh mục</h2>
+<div class="aw-filters">
+<label class="aw-search"><button type="button" aria-label="Tìm" tabindex="-1"><span class="ms">search</span></button>
+<input id="q" type="search" placeholder="Lọc theo tên, mô tả (table, chart, motion…)" aria-label="Lọc thư viện"></label>
+<span class="grow"></span>
+<select class="ul-sort" id="sort" aria-label="Sắp xếp"><option value="stars">Nhiều sao</option><option value="pushed">Mới cập nhật</option><option value="created">Mới tạo</option></select>
+<span class="aw-filter has-count" title="Số repo khớp"><span class="aw-count" id="n">0</span></span>
+</div>
+<div class="aw-filters" id="fws" role="group" aria-label="Framework" style="margin-top:8px"></div>
+<div class="aw-filters" id="kinds" role="group" aria-label="Loại" style="margin-top:8px"></div>
+<div id="list"></div>
+<p id="msg" role="status" hidden>Không có repo nào khớp.</p>
+</main>
+<script>
+(() => {
+  const META = /*DATA*/null, $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const KIND = { full: 'Bộ đầy đủ', copy: 'Copy-paste', headless: 'Headless', motion: 'Hiệu ứng', css: 'CSS / Tailwind', ds: 'Design system', wc: 'Web Components', mobile: 'Mobile' };
+  const OSI = /^(MIT|Apache-2\.0|BSD-[23]-Clause|ISC|MPL-2\.0|0BSD|Unlicense|CC0-1\.0|LGPL|GPL|AGPL)/;
+  const p = new URLSearchParams(location.search);
+  let fw = p.get('fw') || '', kind = p.get('k') || '';
+  const libs = META.libs, now = Date.now(), DAY = 864e5;
+  $('built').textContent = META.built;
+  const k = (n) => n >= 1000 ? (n / 1000).toFixed(n >= 1e4 ? 0 : 1) + 'K' : String(n);
+
+  function chips(el, key, label, cur) {
+    const counts = {}; libs.forEach((x) => { counts[x[key]] = (counts[x[key]] || 0) + 1; });
+    el.innerHTML = [['', 'Tất cả', libs.length], ...Object.keys(counts).sort((a, b) => counts[b] - counts[a]).map((c) => [c, label(c), counts[c]])]
+      .map(([c, l, n]) => `<button type="button" class="aw-filter" data-v="${esc(c)}" aria-pressed="${c === cur}">${esc(l)}<span class="ul-k">${n}</span></button>`).join('');
+  }
+  function row(x) {
+    const owner = x.repo.split('/')[0], age = (now - Date.parse(x.pushed)) / DAY, fresh = (now - Date.parse(x.created)) / DAY < 365;
+    const lic = OSI.test(x.license) ? `<span class="aw-tag aw-tag--small">${esc(x.license)}</span>`
+      : `<span class="aw-tag aw-tag--small aw-tag--red" title="Không có license chuẩn OSI trên GitHub — đọc LICENSE trước khi dùng">${esc(x.license === '?' ? 'chưa rõ license' : x.license === 'NOASSERTION' ? 'license tuỳ biến' : x.license)}</span>`;
+    return `<div class="aw-list-site ul-row"><img src="https://github.com/${esc(owner)}.png?size=96" alt="" loading="lazy" width="48" height="48">
+      <div class="ul-body"><span class="aw-list-site__label">${esc(x.fw)} · ${esc(KIND[x.kind])}</span>
+      <h3 class="aw-list-site__title"><a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.repo)}</a></h3>
+      <p class="aw-desc">${esc(x.desc || '—')}</p>
+      <div class="ul-tags"><span class="aw-tag aw-tag--small aw-tag--bold ul-num" title="${x.stars.toLocaleString('vi-VN')} sao">★ ${k(x.stars)}</span>${lic}
+      <span class="aw-tag aw-tag--small ul-num" title="Lần push gần nhất">push ${esc(x.pushed)}</span>
+      ${age <= 30 ? '<span class="aw-tag aw-tag--small aw-tag--solid-green">hoạt động 30 ngày</span>' : ''}
+      ${fresh ? '<span class="aw-tag aw-tag--small aw-tag--solid-yellow">repo dưới 1 năm</span>' : ''}
+      ${x.archived ? '<span class="aw-tag aw-tag--small aw-tag--red">đã lưu trữ</span>' : ''}
+      ${x.home ? `<a class="aw-tag aw-tag--small" href="${esc(x.home)}" target="_blank" rel="noopener">Docs</a>` : ''}</div></div></div>`;
+  }
+  function apply() {
+    const v = $('q').value.trim().toLowerCase(), s = $('sort').value;
+    const list = libs.filter((x) => (!fw || x.fw === fw) && (!kind || x.kind === kind) && (!v || (x.repo + ' ' + x.desc).toLowerCase().includes(v)))
+      .sort((a, b) => s === 'stars' ? b.stars - a.stars : b[s].localeCompare(a[s]));
+    $('list').innerHTML = list.map(row).join('');
+    $('n').textContent = list.length; $('msg').hidden = list.length > 0;
+    document.querySelectorAll('#fws button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.v === fw));
+    document.querySelectorAll('#kinds button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.v === kind));
+    const q = new URLSearchParams(); if (fw) q.set('fw', fw); if (kind) q.set('k', kind);
+    history.replaceState(null, '', q.size ? '?' + q : location.pathname);
+  }
+  chips($('fws'), 'fw', (c) => c, fw); chips($('kinds'), 'kind', (c) => KIND[c] || c, kind);
+  $('fws').onclick = (e) => { const b = e.target.closest('button'); if (b) { fw = b.dataset.v; apply(); } };
+  $('kinds').onclick = (e) => { const b = e.target.closest('button'); if (b) { kind = b.dataset.v; apply(); } };
+  let t; $('q').oninput = () => { clearTimeout(t); t = setTimeout(apply, 150); };
+  $('sort').onchange = apply;
+  apply();
+})();
+</script><script src="/stats.js" defer></script></body></html>
