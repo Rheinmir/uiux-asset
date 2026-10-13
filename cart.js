@@ -20,7 +20,7 @@
 
   // ---------- bong bóng giỏ nổi góc dưới: menu nổi .aw-float của kit (màn mẫu mobile) ----------
   const fab = document.createElement('div');
-  fab.className = 'aw-float aw-cart-fab';
+  fab.className = 'aw-float aw-cart-fab'; fab.hidden = true;
   fab.innerHTML = `<button type="button" class="aw-float__logo" data-open aria-label="Mở giỏ mẫu"><span class="ms">shopping_bag</span><i class="aw-count" id="aw-fab-n">0</i></button>
     <button type="button" class="aw-float__item aw-float__item--anchor is-on" data-open id="aw-fab-t">Giỏ trống</button>
     <button type="button" class="aw-btn aw-btn--medium aw-btn--ch" data-open data-checkout id="aw-fab-go">Chốt sổ</button>`;
@@ -37,7 +37,7 @@
     const n = $('#aw-cart-n'); if (n) n.textContent = st.items.length;
     const c = st.items.length;
     $('#aw-fab-n', fab).textContent = c; $('#aw-fab-n', fab).hidden = !c;
-    $('#aw-fab-t', fab).textContent = c ? `Giỏ mẫu · ${c} mục` : 'Giỏ trống'; $('#aw-fab-go', fab).hidden = !c;
+    $('#aw-fab-t', fab).textContent = c ? `Giỏ mẫu · ${c} mục` : 'Giỏ trống'; $('#aw-fab-go', fab).hidden = !c; fab.hidden = !c;   // giỏ trống: đã có nút Giỏ ở header, bong bóng không che nội dung
   }
   let q = 0; new MutationObserver((rs) => { if (rs.every((r) => drawer?.contains(r.target))) return; if (!q) q = requestAnimationFrame(() => { q = 0; sync(); }); }).observe(document.documentElement, { childList: true, subtree: true });
 
