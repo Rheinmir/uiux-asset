@@ -79,6 +79,15 @@ LIBS = [
     ("kevquirk/simple.css", "CSS", "css"), ("kognise/water.css", "CSS", "css"), ("oxalorg/sakura", "CSS", "css"),
     ("argyleink/open-props", "CSS", "css"), ("jdan/98.css", "CSS", "css"), ("botoxparty/XP.css", "CSS", "css"),
     ("nostalgic-css/NES.css", "CSS", "css"),
+    # Motion studio — 20 mục từ bài X của @e1genqq (2026-11-01); ngoài web gán fw "Công cụ"
+    ("remotion-dev/remotion", "JS", "motion"), ("remotion-dev/skills", "JS", "motion"), ("juliangarnier/anime", "JS", "motion"),
+    ("motiondivision/motion", "JS", "motion"), ("ManimCommunity/manim", "Công cụ", "motion"), ("airbnb/lottie-web", "JS", "motion"),
+    ("ahujasid/mcp-for-blender", "Công cụ", "motion"), ("mrdoob/three.js", "JS", "motion"),
+    ("gkjohnson/three-gpu-pathtracer", "JS", "motion"), ("jrouwe/JoltPhysics", "Công cụ", "motion"),
+    ("pmndrs/postprocessing", "JS", "motion"), ("Alchemist0823/three.quarks", "JS", "motion"), ("cocopon/tweakpane", "JS", "motion"),
+    ("Comfy-Org/ComfyUI", "Công cụ", "motion"), ("QwenAudio/CosyVoice", "Công cụ", "motion"), ("librosa/librosa", "Công cụ", "motion"),
+    ("m-bain/whisperX", "Công cụ", "motion"), ("obsproject/obs-studio", "Công cụ", "motion"), ("mifi/lossless-cut", "Công cụ", "motion"),
+    ("FFmpeg/FFmpeg", "Công cụ", "motion"),
 ]
 
 Q = """repository(owner:%s,name:%s){nameWithOwner description stargazerCount forkCount pushedAt createdAt isArchived
