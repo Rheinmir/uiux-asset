@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sample Manim — uiux-asset</title>
+<link rel="stylesheet" href="../aw.css?v=559582af29">
+<link rel="stylesheet" href="_m.css">
+<style>
+.m-bar [role=tab] { padding: 6px 12px; font-size: 14px; }
+.m-bar [role=tab][aria-selected=true] { background: color-mix(in srgb, currentColor 16%, transparent); font-weight: 700; }
+.m-code { max-height: 360px; }
+
+.mn { width: min(100%, 800px); aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; }
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=559582af29"></script>
+<div class="aw-crumb">
+<h1>Manim <span class="aw-tag aw-tag--small aw-tag--solid-yellow m-badge" id="badge">MÔ PHỎNG</span></h1>
+<span><code>ManimCommunity/manim</code> là Python, không chạy được trong trình duyệt. Mỗi tab chạy cảnh tương đương bằng <code>manim-web@0.40.1</code>, một bản port JS (three.js) của bên thứ ba có cùng API Scene/Create/Write/Transform, nên đây là MÔ PHỎNG chứ không phải Manim Python thật. Mã Python dưới mỗi tab là mã Manim CE tương ứng. · <a href="https://github.com/ManimCommunity/manim" target="_blank" rel="noopener">ManimCommunity/manim</a> · <a href="./">← Motion</a></span>
+</div>
+<div class="m-bar" id="tabs"></div>
+<div class="m-bar"><span class="m-status" id="st">đang nạp thư viện…</span></div>
+<div class="m-stage" id="stage" style="min-height:480px;display:block"></div>
+<p class="m-note" id="note"></p>
+<pre class="m-code" id="code"></pre>
+</main>
+<script type="module">
+import * as MW from 'https://cdn.jsdelivr.net/npm/manim-web@0.40.1/dist/manim-web.browser.js';
+const { Scene, Square, Circle, Triangle, Dot, Arrow, Line, Text, MathTex, Axes, FunctionGraph, Create, Uncreate, Write, Transform, ReplacementTransform, FadeIn, FadeOut, GrowFromCenter, LaggedStart, AnimationGroup, Succession, Indicate, Flash, Circumscribe, Wiggle } = MW;
+// --- khung tab dùng chung (hash #tên-tab chọn tab) ---
+function initTabs(TABS) {
+  const $ = (i) => document.getElementById(i), bar = $('tabs'), stage = $('stage'), note = $('note'), code = $('code'), st = $('st'), badge = $('badge');
+  const names = Object.keys(TABS); let cur = null, cleanup = null, token = 0;
+  bar.setAttribute('role', 'tablist');
+  names.forEach((n) => { const b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'tab'); b.dataset.tab = n; b.id = 'tab-' + n; b.textContent = TABS[n].label; b.onclick = () => select(n); bar.append(b); });
+  async function select(n, fromHash) {
+    if (!TABS[n]) n = names[0];
+    if (cur === n && fromHash !== 'force') return;
+    const my = ++token, T = TABS[n];
+    if (cleanup) { try { cleanup(); } catch (e) { console.warn(e); } cleanup = null; }
+    stage.replaceChildren(); cur = n;
+    bar.querySelectorAll('[role=tab]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === n)));
+    note.textContent = T.note; code.textContent = T.code;
+    if (badge) { badge.textContent = T.sim ? 'MÔ PHỎNG' : 'THƯ VIỆN THẬT'; badge.className = 'aw-tag aw-tag--small m-badge ' + (T.sim ? 'aw-tag--solid-yellow' : 'aw-tag--solid-green'); }
+    if (!fromHash) try { history.replaceState(null, '', '#' + n); } catch (e) {}
+    st.textContent = 'đang nạp…';
+    const c = await T.mount(stage, st);
+    if (my !== token) { try { c && c(); } catch (e) {} return; }
+    cleanup = c || null;
+  }
+  addEventListener('hashchange', () => select(location.hash.slice(1), true));
+  select(location.hash.slice(1) || names[0], true);
+}
+// khung con: thanh nút + sân khấu cao cố định (không phụ thuộc cuộn trang)
+function mkBox(stage, { h = 380, btns = [] } = {}) {
+  const w = document.createElement('div'); w.style.cssText = 'width:100%;display:flex;flex-direction:column;gap:10px;padding:12px;box-sizing:border-box';
+  const bar = document.createElement('div'); bar.className = 'm-bar'; bar.style.margin = '0';
+  const arena = document.createElement('div'); arena.style.cssText = 'position:relative;width:100%;height:' + h + 'px;overflow:hidden;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,currentColor 5%,transparent)';
+  const add = (label, fn) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = label; b.onclick = () => fn(b); bar.append(b); return b; };
+  btns.forEach(([l, f]) => add(l, f)); w.append(bar, arena); stage.append(w); if (!btns.length) bar.remove();
+  return { arena, bar, add };
+}
+const el = (tag, css, parent, txt) => { const e = document.createElement(tag); if (css) e.style.cssText = css; if (txt != null) e.textContent = txt; if (parent) parent.append(e); return e; };
+
+const BLUE = '#58C4DD', YEL = '#FFFF00', RED = '#FC6255', GRN = '#83C167', PNK = '#D147BD';
+// tab cảnh: script(scene, ctx) chạy tuần tự như construct(); nút Render/Replay dựng lại cảnh từ đầu
+function scene(stage, st, script, label) {
+  const { arena, add } = mkBox(stage, { h: 440 }); arena.style.background = 'transparent'; const box = el('div', '', arena); box.className = 'mn'; let sc = null, token = 0;
+  const render = async () => { const my = ++token; if (sc) { try { sc.dispose(); } catch (e) {} box.replaceChildren(); } sc = new Scene(box, { width: 800, height: 450 }); st.textContent = 'đang render: ' + label; const alive = () => my === token; try { await script(sc, alive); } catch (e) { if (alive()) { console.error(e); st.textContent = 'lỗi: ' + e.message; } return; } if (alive()) st.textContent = 'xong · ' + label + ' (bấm Render để chạy lại)'; };
+  add('Render / Replay', render); render(); return () => { token++; try { sc && sc.dispose(); } catch (e) {} };
+}
+const play = async (sc, alive, ...a) => { if (alive()) await sc.play(...a); };
+
+const TABS = {
+  write: { label: 'Write', sim: true, note: 'Write() vẽ chữ nét theo nét như viết tay: ở đây một dòng Text rồi một công thức MathTex (KaTeX). FadeOut dọn cảnh.',
+    code: "# Manim Community (Python) — không chạy trong trình duyệt\nclass WriteDemo(Scene):\n    def construct(self):\n        t = Text(\"Hello Manim\").shift(UP)\n        m = MathTex(r\"e^{i\\pi} + 1 = 0\").shift(DOWN)\n        self.play(Write(t))\n        self.play(Write(m))\n        self.wait()\n\n// tương đương manim-web\nawait scene.play(new Write(text)); await scene.play(new Write(tex));",
+    mount: (s, st) => scene(s, st, async (sc, ok) => { const t = new Text({ text: 'Hello Manim', fontSize: 64 }).shift([0, 1.2, 0]), m = new MathTex({ latex: 'e^{i\\pi} + 1 = 0', fontSize: 72 }).shift([0, -1, 0]); await play(sc, ok, new Write(t)); await play(sc, ok, new Write(m)); }, 'Write') },
+  create: { label: 'Create', sim: true, note: 'Create() vẽ viền hình dần ra theo đường biên; Uncreate() xoá ngược lại. Ba hình vẽ lần lượt rồi biến mất.',
+    code: "class CreateDemo(Scene):\n    def construct(self):\n        sq, ci, tr = Square(), Circle(), Triangle()\n        VGroup(sq, ci, tr).arrange(RIGHT, buff=1)\n        self.play(Create(sq)); self.play(Create(ci)); self.play(Create(tr))\n        self.play(Uncreate(sq), Uncreate(ci), Uncreate(tr))\n\n// manim-web\nawait scene.play(new Create(sq)); ... await scene.play(new Uncreate(sq), new Uncreate(ci), new Uncreate(tr));",
+    mount: (s, st) => scene(s, st, async (sc, ok) => { const sq = new Square({ sideLength: 2, color: BLUE }).shift([-3.2, 0, 0]), ci = new Circle({ radius: 1, color: RED }), tr = new Triangle({ color: GRN }).shift([3.2, 0, 0]); await play(sc, ok, new Create(sq)); await play(sc, ok, new Create(ci)); await play(sc, ok, new Create(tr)); await sc.wait(0.6); await play(sc, ok, new Uncreate(sq), new Uncreate(ci), new Uncreate(tr)); }, 'Create') },
+  transform: { label: 'Transform', sim: true, note: 'Cảnh kinh điển SquareToCircle: Create hình vuông xoay 45°, Transform thành hình tròn (tô hồng). Transform nội suy các điểm Bézier giữa hai hình.',
+    code: "class SquareToCircle(Scene):\n    def construct(self):\n        circle = Circle(); circle.set_fill(PINK, opacity=0.5)\n        square = Square(); square.rotate(PI / 4)\n        self.play(Create(square))\n        self.play(Transform(square, circle))\n        self.wait()\n\n// manim-web\nawait scene.play(new Create(square)); await scene.play(new Transform(square, circle));",
+    mount: (s, st) => scene(s, st, async (sc, ok) => { const ci = new Circle({ radius: 1.5, color: PNK, fillOpacity: 0.5 }), sq = new Square({ sideLength: 3, color: BLUE }); sq.rotate(Math.PI / 4); await play(sc, ok, new Create(sq)); await play(sc, ok, new Transform(sq, ci)); await sc.wait(0.4); }, 'Transform') },
+  fade: { label: 'Fade & Grow', sim: true, note: 'FadeIn có hướng trượt (shift), GrowFromCenter nở từ tâm, LaggedStart cho các chấm bật lên lệch nhịp, FadeOut chỉ hình vuông.',
+    code: "class FadeGrow(Scene):\n    def construct(self):\n        sq = Square(color=BLUE).shift(LEFT * 3)\n        dots = VGroup(*[Dot(color=YELLOW).shift(RIGHT * i * 0.7) for i in range(-3, 4)])\n        self.play(FadeIn(sq, shift=UP))\n        self.play(LaggedStart(*[GrowFromCenter(d) for d in dots], lag_ratio=0.2))\n        self.play(FadeOut(sq))\n\n// manim-web: new FadeIn(sq, { shift: [0,1,0] }), new LaggedStart(dots.map(d => new GrowFromCenter(d)), { lagRatio: .2 })",
+    mount: (s, st) => scene(s, st, async (sc, ok) => { const sq = new Square({ sideLength: 2, color: BLUE }).shift([-3.5, 0, 0]); const dots = [-2, -1, 0, 1, 2, 3].map((i) => new Dot({ color: YEL, radius: 0.16 }).shift([i * 0.9 + 1, 0, 0])); await play(sc, ok, new FadeIn(sq, { shift: [0, 1, 0] })); await play(sc, ok, new LaggedStart(dots.map((d) => new GrowFromCenter(d)), { lagRatio: 0.25 })); await sc.wait(0.5); await play(sc, ok, new FadeOut(sq)); }, 'Fade & Grow') },
+  indicate: { label: 'Indication', sim: true, note: 'Nhóm animation nhấn mạnh: Indicate phóng nhẹ đổi màu, Flash bắn tia, Circumscribe vẽ khung quanh, Wiggle lắc.',
+    code: "class Emphasis(Scene):\n    def construct(self):\n        d = Dot(); t = Text(\"Chú ý\").next_to(d, DOWN)\n        self.add(d, t)\n        self.play(Indicate(t))\n        self.play(Flash(d))\n        self.play(Circumscribe(t))\n        self.play(Wiggle(t))\n\n// manim-web: Indicate, Flash, Circumscribe, Wiggle cùng tên",
+    mount: (s, st) => scene(s, st, async (sc, ok) => { const d = new Dot({ color: BLUE, radius: 0.18 }).shift([0, 1, 0]), t = new Text({ text: 'Chú ý', fontSize: 64 }).shift([0, -1, 0]); sc.add(d, t); await play(sc, ok, new Indicate(t)); await play(sc, ok, new Flash(d)); await play(sc, ok, new Circumscribe(t)); await play(sc, ok, new Wiggle(t)); }, 'Indication') },
+  graph: { label: 'Axes & Graph', sim: true, note: 'Axes vẽ hệ trục, FunctionGraph vẽ đồ thị hàm y = sin(x) bằng Create. Một dấu chấm Dot chạy dọc đồ thị.',
+    code: "class GraphDemo(Scene):\n    def construct(self):\n        ax = Axes(x_range=[-4, 4, 1], y_range=[-2, 2, 1])\n        g = ax.plot(lambda x: np.sin(x), color=YELLOW)\n        self.play(Create(ax)); self.play(Create(g))\n        dot = Dot(ax.c2p(-4, np.sin(-4))); self.play(FadeIn(dot))\n\n// manim-web\nconst ax = new Axes({ xRange: [-4,4,1], yRange: [-2,2,1] }); const g = new FunctionGraph({ func: Math.sin, xRange: [-4,4], axes: ax, color: '#FFFF00' });",
+    mount: (s, st) => scene(s, st, async (sc, ok) => { const ax = new Axes({ xRange: [-4, 4, 1], yRange: [-2, 2, 1], xLength: 9, yLength: 4.5 }); const g = new FunctionGraph({ func: Math.sin, xRange: [-4, 4], axes: ax, color: YEL, strokeWidth: 4 }); await play(sc, ok, new Create(ax)); await play(sc, ok, new Create(g, { duration: 2 })); const dot = new Dot({ color: RED, radius: 0.14 }); dot.moveTo(ax.coordsToPoint ? ax.coordsToPoint(0, 0) : [0, 0, 0]); await play(sc, ok, new FadeIn(dot)); }, 'Axes + FunctionGraph') },
+  math: { label: 'MathTex', sim: true, note: 'MathTex dựng công thức LaTeX (KaTeX) thành đường nét; Write viết ra, rồi FadeOut và Write công thức thứ hai (Transform giữa hai công thức MathTex khác cấu trúc cho kết quả xấu nên không dùng).',
+    code: "class MathDemo(Scene):\n    def construct(self):\n        a = MathTex(r\"a^2 + b^2 = c^2\")\n        b = MathTex(r\"\\int_0^1 x^2\\,dx = \\tfrac{1}{3}\")\n        self.play(Write(a)); self.wait()\n        self.play(FadeOut(a)); self.play(Write(b)); self.wait()\n\n// manim-web: new MathTex({ latex: 'a^2 + b^2 = c^2' }) ; Write ; FadeOut",
+    mount: (s, st) => scene(s, st, async (sc, ok) => { const a = new MathTex({ latex: 'a^2 + b^2 = c^2', fontSize: 72 }), b = new MathTex({ latex: '\\int_0^1 x^2\\,dx = \\tfrac{1}{3}', fontSize: 72 }); await play(sc, ok, new Write(a)); await sc.wait(0.6); await play(sc, ok, new FadeOut(a)); await play(sc, ok, new Write(b)); }, 'MathTex') },
+};
+initTabs(TABS);
+</script>
+</body></html>

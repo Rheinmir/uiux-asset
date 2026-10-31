@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sample Remotion Skills — uiux-asset</title>
+<link rel="stylesheet" href="../aw.css?v=559582af29">
+<link rel="stylesheet" href="_m.css">
+<style>
+.m-bar [role=tab] { padding: 6px 12px; font-size: 14px; }
+.m-bar [role=tab][aria-selected=true] { background: color-mix(in srgb, currentColor 16%, transparent); font-weight: 700; }
+.m-code { max-height: 360px; }
+
+</style>
+<script type="importmap">
+{ "imports": {
+  "react": "https://esm.sh/react@18.3.1",
+  "react/jsx-runtime": "https://esm.sh/react@18.3.1/jsx-runtime",
+  "react/jsx-dev-runtime": "https://esm.sh/react@18.3.1/jsx-dev-runtime",
+  "react-dom": "https://esm.sh/react-dom@18.3.1?external=react",
+  "react-dom/client": "https://esm.sh/react-dom@18.3.1/client?external=react",
+  "remotion": "https://esm.sh/remotion@4.0.539?external=react,react-dom",
+  "remotion/no-react": "https://esm.sh/remotion@4.0.539/no-react",
+  "@remotion/player": "https://esm.sh/@remotion/player@4.0.539?external=react,react-dom,remotion",
+  "@remotion/transitions": "https://esm.sh/@remotion/transitions@4.0.539?external=react,react-dom,remotion",
+  "@remotion/transitions/fade": "https://esm.sh/@remotion/transitions@4.0.539/fade?external=react,react-dom,remotion",
+  "@remotion/transitions/slide": "https://esm.sh/@remotion/transitions@4.0.539/slide?external=react,react-dom,remotion",
+  "@remotion/transitions/wipe": "https://esm.sh/@remotion/transitions@4.0.539/wipe?external=react,react-dom,remotion",
+  "@remotion/shapes": "https://esm.sh/@remotion/shapes@4.0.539?external=react,react-dom,remotion",
+  "@remotion/paths": "https://esm.sh/@remotion/paths@4.0.539?external=react,react-dom,remotion",
+  "@remotion/noise": "https://esm.sh/@remotion/noise@4.0.539?external=react,react-dom,remotion",
+  "@remotion/rough-notation": "https://esm.sh/@remotion/rough-notation@4.0.539?external=react,react-dom,remotion",
+  "@remotion/effects/light-leak": "https://esm.sh/@remotion/effects@4.0.539/light-leak?external=react,react-dom,remotion",
+  "@remotion/captions": "https://esm.sh/@remotion/captions@4.0.539?external=react,react-dom,remotion",
+  "@remotion/motion-blur": "https://esm.sh/@remotion/motion-blur@4.0.539?external=react,react-dom,remotion",
+  "@remotion/layout-utils": "https://esm.sh/@remotion/layout-utils@4.0.539?external=react,react-dom,remotion"
+} }
+</script>
+
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=559582af29"></script>
+<div class="aw-crumb">
+<h1>Remotion Skills <span class="aw-tag aw-tag--small aw-tag--solid-green m-badge" id="badge">THƯ VIỆN THẬT</span></h1>
+<span><code>remotion-dev/skills</code> là bộ SKILL.md cho agent (tài liệu, không phải mã chạy). Mỗi tab chạy <code>@remotion/player@4.0.539</code> thật phát một composition viết đúng quy tắc trong một file skill của <code>skills/remotion-markup</code>. · <a href="https://github.com/remotion-dev/skills" target="_blank" rel="noopener">remotion-dev/skills</a> · <a href="./">← Motion</a></span>
+</div>
+<div class="m-bar" id="tabs"></div>
+<div class="m-bar"><span class="m-status" id="st">đang nạp thư viện…</span></div>
+<div class="m-stage" id="stage" style="min-height:440px;display:block"></div>
+<p class="m-note" id="note"></p>
+<pre class="m-code" id="code"></pre>
+</main>
+<script type="module">
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import { Player } from '@remotion/player';
+import { AbsoluteFill, Sequence, Solid, useCurrentFrame, useVideoConfig, interpolate, spring, Easing } from 'remotion';
+import { TransitionSeries, linearTiming, springTiming } from '@remotion/transitions';
+import { fade } from '@remotion/transitions/fade';
+import { slide } from '@remotion/transitions/slide';
+import { wipe } from '@remotion/transitions/wipe';
+import { Highlight, Circle as RnCircle, Underline, Box, StrikeThrough } from '@remotion/rough-notation';
+import { lightLeak } from '@remotion/effects/light-leak';
+import { createTikTokStyleCaptions } from '@remotion/captions';
+import { Trail } from '@remotion/motion-blur';
+import { fitText } from '@remotion/layout-utils';
+const h = React.createElement;
+// --- khung tab dùng chung (hash #tên-tab chọn tab) ---
+function initTabs(TABS) {
+  const $ = (i) => document.getElementById(i), bar = $('tabs'), stage = $('stage'), note = $('note'), code = $('code'), st = $('st'), badge = $('badge');
+  const names = Object.keys(TABS); let cur = null, cleanup = null, token = 0;
+  bar.setAttribute('role', 'tablist');
+  names.forEach((n) => { const b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'tab'); b.dataset.tab = n; b.id = 'tab-' + n; b.textContent = TABS[n].label; b.onclick = () => select(n); bar.append(b); });
+  async function select(n, fromHash) {
+    if (!TABS[n]) n = names[0];
+    if (cur === n && fromHash !== 'force') return;
+    const my = ++token, T = TABS[n];
+    if (cleanup) { try { cleanup(); } catch (e) { console.warn(e); } cleanup = null; }
+    stage.replaceChildren(); cur = n;
+    bar.querySelectorAll('[role=tab]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === n)));
+    note.textContent = T.note; code.textContent = T.code;
+    if (badge) { badge.textContent = T.sim ? 'MÔ PHỎNG' : 'THƯ VIỆN THẬT'; badge.className = 'aw-tag aw-tag--small m-badge ' + (T.sim ? 'aw-tag--solid-yellow' : 'aw-tag--solid-green'); }
+    if (!fromHash) try { history.replaceState(null, '', '#' + n); } catch (e) {}
+    st.textContent = 'đang nạp…';
+    const c = await T.mount(stage, st);
+    if (my !== token) { try { c && c(); } catch (e) {} return; }
+    cleanup = c || null;
+  }
+  addEventListener('hashchange', () => select(location.hash.slice(1), true));
+  select(location.hash.slice(1) || names[0], true);
+}
+// khung con: thanh nút + sân khấu cao cố định (không phụ thuộc cuộn trang)
+function mkBox(stage, { h = 380, btns = [] } = {}) {
+  const w = document.createElement('div'); w.style.cssText = 'width:100%;display:flex;flex-direction:column;gap:10px;padding:12px;box-sizing:border-box';
+  const bar = document.createElement('div'); bar.className = 'm-bar'; bar.style.margin = '0';
+  const arena = document.createElement('div'); arena.style.cssText = 'position:relative;width:100%;height:' + h + 'px;overflow:hidden;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,currentColor 5%,transparent)';
+  const add = (label, fn) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = label; b.onclick = () => fn(b); bar.append(b); return b; };
+  btns.forEach(([l, f]) => add(l, f)); w.append(bar, arena); stage.append(w); if (!btns.length) bar.remove();
+  return { arena, bar, add };
+}
+const el = (tag, css, parent, txt) => { const e = document.createElement(tag); if (css) e.style.cssText = css; if (txt != null) e.textContent = txt; if (parent) parent.append(e); return e; };
+
+const clamp = { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' };
+const abs = (o) => ({ position: 'absolute', ...o });
+const mountPlayer = (stage, component, { dur = 150, fps = 30 } = {}) => {
+  const w = el('div', 'padding:12px;box-sizing:border-box;width:100%', stage), root = createRoot(w);
+  root.render(h(Player, { component, durationInFrames: dur, fps, compositionWidth: 1280, compositionHeight: 720, controls: true, loop: true, autoPlay: true, acknowledgeRemotionLicense: true, style: { width: '100%', maxWidth: 720, margin: '0 auto', display: 'block' } }));
+  return () => root.unmount();
+};
+const LIGHT = 'linear-gradient(160deg,#fff7ed,#fed7aa)', INK = '#1c1917', DARK = 'linear-gradient(135deg,#0f172a,#312e81)';
+const Lab = ({ children, dark }) => h('div', { style: { fontFamily: 'ui-monospace,Menlo,monospace', fontSize: 26, color: dark ? '#fff' : INK, opacity: .8 } }, children);
+
+// ---- rules: tiêu đề -> phụ đề -> 4 quy tắc (quy tắc từ remotion-markup/REFERENCE.md) ----
+const RULES = [['useCurrentFrame()', 'ở component nhỏ nhất cần nó'], ['fps từ useVideoConfig()', 'đổi giây ra khung bằng 2 * fps'], ['interpolate() + clamp', 'không dùng CSS transition'], ['scale · translate · rotate', 'thay cho chuỗi transform']];
+const RTitle = () => { const f = useCurrentFrame(), { fps } = useVideoConfig(); const s = spring({ frame: f, fps, config: { damping: 12 } });
+  return h('div', { style: { position: 'absolute', left: 80, top: 70, fontSize: 70, fontWeight: 800, letterSpacing: -2, opacity: interpolate(f, [0, 12], [0, 1], clamp), scale: String(interpolate(s, [0, 1], [0.8, 1])), transformOrigin: 'left center' } }, 'Remotion best practices'); };
+const RSub = () => { const f = useCurrentFrame(); return h('div', { style: { position: 'absolute', left: 84, top: 165, fontSize: 30, color: '#9a3412', opacity: interpolate(f, [0, 20], [0, 1], { ...clamp, easing: Easing.bezier(0.16, 1, 0.3, 1) }), translate: '0px ' + interpolate(f, [0, 20], [24, 0], { ...clamp, easing: Easing.bezier(0.16, 1, 0.3, 1) }) + 'px' } }, 'bộ quy tắc cho agent viết video bằng React'); };
+const RCard = ({ i }) => { const f = useCurrentFrame(), { fps } = useVideoConfig(); const s = spring({ frame: f - i * 10, fps, config: { damping: 14, stiffness: 120 } });
+  return h('div', { style: { position: 'absolute', left: 80 + (i % 2) * 560, top: 270 + Math.floor(i / 2) * 190, width: 520, height: 150, borderRadius: 24, background: '#fff', boxShadow: '0 12px 30px rgba(154,52,18,.18)', padding: '28px 32px', boxSizing: 'border-box', opacity: interpolate(s, [0, 1], [0, 1], clamp), translate: '0px ' + interpolate(s, [0, 1], [60, 0]) + 'px', rotate: interpolate(s, [0, 1], [-4, 0]) + 'deg' } },
+    h('div', { style: { fontSize: 22, color: '#ea580c', fontWeight: 700 } }, 'Quy tắc ' + (i + 1)), h('div', { style: { fontSize: 34, fontWeight: 800, marginTop: 6, color: INK } }, RULES[i][0]), h('div', { style: { fontSize: 24, color: '#57534e', marginTop: 4 } }, RULES[i][1])); };
+const CRules = () => { const { fps } = useVideoConfig(); return h(AbsoluteFill, { style: { background: LIGHT, color: INK, fontFamily: 'system-ui,sans-serif' } },
+  h(Sequence, { from: 0, layout: 'none' }, h(RTitle)), h(Sequence, { from: 1 * fps, layout: 'none' }, h(RSub)), h(Sequence, { from: Math.round(2.5 * fps), layout: 'none' }, ...RULES.map((_, i) => h(RCard, { key: i, i })))); };
+
+// ---- timing.md: linear vs Easing.bezier vs Easing.spring, clamp ----
+const CTiming = () => { const f = useCurrentFrame(), fps = 30;
+  const rows = [['linear', undefined], ['Easing.bezier(0.16, 1, 0.3, 1)', Easing.bezier(0.16, 1, 0.3, 1)], ['Easing.spring({ damping: 200 })', Easing.spring({ damping: 200 })], ['Easing.spring({ damping: 10 })', Easing.spring({ damping: 10 })]];
+  return h(AbsoluteFill, { style: { background: LIGHT } }, h('div', { style: abs({ left: 70, top: 40 }) }, h('div', { style: { fontSize: 46, fontWeight: 800, color: INK, fontFamily: 'system-ui' } }, 'interpolate(frame, [0, 1 * fps], [0, 1], { easing })')),
+    rows.map(([l, e], i) => { const v = interpolate(f, [15, 15 + 1.2 * fps], [0, 1], { ...clamp, easing: e }); return h('div', { key: i, style: abs({ left: 70, top: 150 + i * 135 }) }, h(Lab, null, l), h('div', { style: { width: 1140, height: 4, background: 'rgba(0,0,0,.15)', marginTop: 52 } }), h('div', { style: abs({ top: 40, left: 0, width: 66, height: 66, borderRadius: 16, background: ['#64748b', '#ea580c', '#0d9488', '#7c3aed'][i], translate: (v * 1070) + 'px 0px' }) })); })); };
+// ---- transitions.md ----
+const Scn = ({ c, t }) => h(AbsoluteFill, { style: { background: c, color: '#fff', fontFamily: 'system-ui', justifyContent: 'center', alignItems: 'center' } }, h('div', { style: { fontSize: 88, fontWeight: 800 } }, t));
+const CTrans = () => h(TransitionSeries, null,
+  h(TransitionSeries.Sequence, { durationInFrames: 60 }, h(Scn, { c: '#111111', t: 'Introduction' })),
+  h(TransitionSeries.Transition, { presentation: fade(), timing: linearTiming({ durationInFrames: 15 }) }),
+  h(TransitionSeries.Sequence, { durationInFrames: 60 }, h(Scn, { c: '#243b53', t: 'New features' })),
+  h(TransitionSeries.Transition, { presentation: slide({ direction: 'from-left' }), timing: springTiming({ config: { damping: 200 }, durationInFrames: 22 }) }),
+  h(TransitionSeries.Sequence, { durationInFrames: 60 }, h(Scn, { c: '#7c2d12', t: 'Wrap up' })),
+  h(TransitionSeries.Transition, { presentation: wipe({ direction: 'from-bottom' }), timing: linearTiming({ durationInFrames: 20 }) }),
+  h(TransitionSeries.Sequence, { durationInFrames: 50 }, h(Scn, { c: '#064e3b', t: 'The end' })));
+// ---- light-leaks.md ----
+const LeakOverlay = () => { const f = useCurrentFrame(), { durationInFrames, height, width } = useVideoConfig(); return h(Solid, { width, height, effects: [lightLeak({ seed: 3, hueShift: 0, progress: interpolate(f, [0, durationInFrames - 1], [0, 1], clamp) })] }); };
+const CLeak = () => h(TransitionSeries, null,
+  h(TransitionSeries.Sequence, { durationInFrames: 60 }, h(Scn, { c: '#1e3a8a', t: 'Cảnh A' })),
+  h(TransitionSeries.Overlay, { durationInFrames: 30 }, h(LeakOverlay)),
+  h(TransitionSeries.Sequence, { durationInFrames: 60 }, h(Scn, { c: '#831843', t: 'Cảnh B' })));
+// ---- text-highlights.md ----
+const CHi = () => { const f = useCurrentFrame(); const p = (a) => interpolate(f, [a, a + 25], [0, 1], clamp);
+  return h(AbsoluteFill, { style: { background: LIGHT, color: INK, fontFamily: 'Georgia,serif', padding: 80, justifyContent: 'center' } }, h('div', { style: { fontSize: 62, lineHeight: 1.9 } },
+    'Đây là ', h(Highlight, { color: 'rgba(255, 220, 40, 0.7)', progress: p(10) }, 'điểm quan trọng'), ', còn đây là ', h(RnCircle, { color: '#2563eb', progress: p(40) }, 'được khoanh'), ', ', h(Underline, { color: '#16a34a', progress: p(70) }, 'gạch chân'), ', ', h(Box, { color: '#9333ea', progress: p(95) }, 'đóng khung'), ' và ', h(StrikeThrough, { color: '#dc2626', progress: p(120) }, 'gạch bỏ'), '.')); };
+// ---- captions: createTikTokStyleCaptions ----
+const CAPS = 'Remotion cho phép dựng video bằng React với phụ đề từng từ sáng lên theo thời gian'.split(' ').map((t, i) => ({ text: (i ? ' ' : '') + t, startMs: i * 330, endMs: i * 330 + 330, timestampMs: i * 330 + 165, confidence: 1 }));
+const CCap = () => { const f = useCurrentFrame(), { fps } = useVideoConfig(), ms = f / fps * 1000; const { pages } = createTikTokStyleCaptions({ captions: CAPS, combineTokensWithinMilliseconds: 1200 });
+  const page = pages.find((p) => ms >= p.startMs && ms < p.startMs + (p.durationMs || 1200)) || pages[pages.length - 1];
+  return h(AbsoluteFill, { style: { background: DARK, justifyContent: 'center', alignItems: 'center', fontFamily: 'system-ui', padding: 80 } }, h('div', { style: { fontSize: 76, fontWeight: 800, textAlign: 'center', lineHeight: 1.25, whiteSpace: 'pre-wrap' } },
+    page.tokens.map((t, i) => { const on = ms >= t.fromMs && ms < t.toMs; return h('span', { key: i, style: { color: on ? '#facc15' : '#fff', opacity: ms >= t.fromMs ? 1 : .35 } }, t.text); })), h('div', { style: abs({ bottom: 40, color: '#fff', opacity: .6, fontFamily: 'ui-monospace,monospace', fontSize: 24 }) }, 'trang ' + (pages.indexOf(page) + 1) + '/' + pages.length + ' · ' + Math.round(ms) + 'ms')); };
+// ---- motion-blur.md (Trail) ----
+const Ball = () => { const f = useCurrentFrame(); const x = interpolate(f, [0, 45, 90], [80, 1000, 80], { easing: Easing.inOut(Easing.cubic) }); return h('div', { style: abs({ left: x, top: 260, width: 160, height: 160, borderRadius: '50%', background: '#fb7185' }) }); };
+const CBlur = () => h(AbsoluteFill, { style: { background: DARK } }, h('div', { style: abs({ left: 60, top: 40 }) }, h(Lab, { dark: true }, '<Trail layers={24} lagInFrames={0.12} trailOpacity={1}>')), h(Trail, { layers: 24, lagInFrames: 0.12, trailOpacity: 1 }, h(Ball)));
+// ---- fitText (@remotion/layout-utils) ----
+const CFit = () => { const f = useCurrentFrame(); const w = interpolate(f, [0, 60, 120], [300, 1100, 300], { easing: Easing.inOut(Easing.quad) }); const { fontSize } = fitText({ text: 'Vừa khít khung', withinWidth: w, fontFamily: 'system-ui', fontWeight: 800 });
+  return h(AbsoluteFill, { style: { background: LIGHT, justifyContent: 'center', alignItems: 'center', fontFamily: 'system-ui' } }, h('div', { style: { width: w, border: '4px dashed #ea580c', borderRadius: 12, padding: 8, boxSizing: 'content-box', color: INK, fontWeight: 800, fontSize, whiteSpace: 'nowrap', textAlign: 'center' } }, 'Vừa khít khung'), h('div', { style: abs({ bottom: 50, fontFamily: 'ui-monospace,monospace', fontSize: 28, color: '#57534e' }) }, 'withinWidth ' + Math.round(w) + 'px → fontSize ' + Math.round(fontSize) + 'px')); };
+
+const TABS = {
+  rules: { label: 'Quy tắc cốt lõi', note: 'Composition tiêu đề → phụ đề → bốn quy tắc, đúng mạch skill remotion-markup: useCurrentFrame() ở component nhỏ nhất, fps từ useVideoConfig(), nội suy inline, dùng scale/translate/rotate thay transform, không CSS transition.',
+    code: "// Rút từ remotion-dev/skills · skills/remotion-markup/REFERENCE.md\n1. useCurrentFrame() ở component nhỏ nhất cần nó (đừng bắt cả composition render mỗi khung).\n2. fps lấy từ useVideoConfig(); 2 * fps thay vì số khung cứng.\n3. Chỉ dùng useCurrentFrame() + interpolate() để animate; CSS transition/animation KHÔNG render đúng.\n4. Easing.bezier() / Easing.spring() chỉnh nhịp; luôn extrapolate 'clamp'.\n5. interpolate() inline trong style; scale / translate / rotate thay cho chuỗi transform.\n\n<Sequence from={0} layout=\"none\"><Title /></Sequence>\n<Sequence from={1 * fps} layout=\"none\"><Subtitle /></Sequence>\n<Sequence from={Math.round(2.5 * fps)} layout=\"none\">{RULES.map((r, i) => <RuleCard i={i} />)}</Sequence>",
+    mount: (s, st) => (st.textContent = 'skill remotion-markup · quy tắc cốt lõi', mountPlayer(s, CRules, { dur: 240 })) },
+  timing: { label: 'timing', note: 'Quy tắc timing.md: dẫn chuyển động bằng interpolate() trên dải khung rõ ràng; chỉnh nhịp bằng Easing.bezier hoặc Easing.spring. Bốn ô cùng đi 1 giây nhưng nhịp khác nhau.',
+    code: "// skills/remotion-markup/timing.md\nconst v = interpolate(frame, [0, 0.3 * fps], [0, 1], {\n  easing: Easing.bezier(0.16, 1, 0.3, 1),\n  extrapolateLeft: 'clamp', extrapolateRight: 'clamp',\n});\nconst push = interpolate(frame, [0, 0.3 * fps], [0, 1], { easing: Easing.spring({ damping: 200 }), ...clamp }); // đẩy êm, không nảy",
+    mount: (s, st) => (st.textContent = 'skill timing.md', mountPlayer(s, CTiming, { dur: 100 })) },
+  transitions: { label: 'transitions', note: 'Quy tắc transitions.md: <TransitionSeries> với <TransitionSeries.Transition presentation timing>, các scene tuyệt đối vị trí. Fade, slide (spring timing) và wipe trên cùng một chuỗi.',
+    code: "// skills/remotion-markup/transitions.md\n<TransitionSeries>\n  <TransitionSeries.Sequence name=\"Opening\" durationInFrames={60}><Chapter title=\"Introduction\" /></TransitionSeries.Sequence>\n  <TransitionSeries.Transition presentation={fade()} timing={linearTiming({ durationInFrames: 15 })} />\n  <TransitionSeries.Sequence name=\"Feature\" durationInFrames={60}><Chapter title=\"New features\" /></TransitionSeries.Sequence>\n</TransitionSeries>",
+    mount: (s, st) => (st.textContent = 'skill transitions.md', mountPlayer(s, CTrans, { dur: 205 })) },
+  'light-leaks': { label: 'light-leaks', note: 'Quy tắc light-leaks.md: lightLeak() từ @remotion/effects áp lên <Solid> trong <TransitionSeries.Overlay> phủ lên điểm cắt giữa hai cảnh mà không rút ngắn timeline. Cần WebGL; nếu trình duyệt không có thì lớp phủ không hiện.',
+    code: "// skills/remotion-markup/light-leaks.md\nconst LightLeakOverlay = () => {\n  const frame = useCurrentFrame(); const { durationInFrames, height, width } = useVideoConfig();\n  return <Solid width={width} height={height} effects={[lightLeak({ seed: 3, hueShift: 0,\n    progress: interpolate(frame, [0, durationInFrames - 1], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }) })]} />;\n};\n<TransitionSeries.Overlay durationInFrames={30}><LightLeakOverlay /></TransitionSeries.Overlay>",
+    mount: (s, st) => (st.textContent = 'skill light-leaks.md · @remotion/effects', mountPlayer(s, CLeak, { dur: 120 })) },
+  highlights: { label: 'text-highlights', note: 'Quy tắc text-highlights.md: @remotion/rough-notation vẽ chú thích tay lên chữ; truyền progress lấy từ interpolate(frame) nên xác định theo khung. Năm kiểu: Highlight, Circle, Underline, Box, StrikeThrough.',
+    code: "// skills/remotion-markup/text-highlights.md\nimport { Circle, Highlight } from '@remotion/rough-notation';\n<Highlight color=\"rgba(255, 236, 79, 0.62)\" progress={interpolate(frame, [15, 40], [0, 1], clamp)}>important</Highlight>\n<Circle color=\"#2563eb\" progress={interpolate(frame, [15, 40], [0, 1], clamp)}>connected</Circle>",
+    mount: (s, st) => (st.textContent = 'skill text-highlights.md', mountPlayer(s, CHi, { dur: 180 })) },
+  captions: { label: 'captions', note: 'Nhóm skill remotion-captions: dữ liệu phụ đề dạng {text, startMs, endMs, timestampMs} được gom thành trang bằng createTikTokStyleCaptions() rồi tô sáng từng từ theo thời gian. Dữ liệu ở đây tự soạn, không phải kết quả nhận dạng giọng nói.',
+    code: "// skills/remotion-captions (display-captions.md)\nimport { createTikTokStyleCaptions } from '@remotion/captions';\nconst { pages } = createTikTokStyleCaptions({ captions, combineTokensWithinMilliseconds: 1200 });\nconst page = pages.find((p) => ms >= p.startMs && ms < p.startMs + p.durationMs);\npage.tokens.map((t) => <span style={{ color: ms >= t.fromMs && ms < t.toMs ? '#facc15' : '#fff' }}>{t.text}</span>)",
+    mount: (s, st) => (st.textContent = 'skill remotion-captions', mountPlayer(s, CCap, { dur: 120 })) },
+  'motion-blur': { label: 'motion-blur', note: 'Quy tắc motion-blur.md: @remotion/motion-blur. Ở đây dùng <Trail> (nhiều lớp trễ khung, chạy được ở mọi trình duyệt). <HtmlInCanvasMotionBlur> trong skill cần cờ Chrome 149+ nên không chạy ở đây.',
+    code: "// skills/remotion-markup/motion-blur.md\nimport { Trail } from '@remotion/motion-blur';\n<Trail layers={24} lagInFrames={0.12} trailOpacity={1}><Ball /></Trail>\n// HtmlInCanvasMotionBlur: <HtmlInCanvasMotionBlur width={width} height={height} samples={8} shutterAngle={180}>",
+    mount: (s, st) => (st.textContent = 'skill motion-blur.md · Trail', mountPlayer(s, CBlur, { dur: 90 })) },
+  fit: { label: 'fit-text', note: 'Quy tắc đo chữ (measuring-text.md): fitText() trong @remotion/layout-utils tính fontSize vừa khít bề rộng cho trước, đổi theo khung hình khi khung đổi kích thước.',
+    code: "// skills/remotion-markup/measuring-text.md\nimport { fitText } from '@remotion/layout-utils';\nconst { fontSize } = fitText({ text: 'Vừa khít khung', withinWidth: width, fontFamily: 'system-ui', fontWeight: 800 });\n<div style={{ width, fontSize, whiteSpace: 'nowrap' }}>Vừa khít khung</div>",
+    mount: (s, st) => (st.textContent = 'skill measuring-text.md', mountPlayer(s, CFit, { dur: 120 })) },
+};
+initTabs(TABS);
+</script>
+</body></html>

@@ -1,0 +1,10 @@
+/* Khung dùng chung cho 20 sample motion: sân khấu + nhãn Thật/Mô phỏng + ô điều khiển. Màu theo token của aw.css (sáng/tối). */
+.m-badge { font-size: 12px; vertical-align: middle; margin-left: 8px; }
+.m-stage { position: relative; width: 100%; min-height: 360px; border-radius: var(--aw-rounded-normal, 12px); background: var(--aw-nf-bg-2, #f2f2f2); overflow: hidden; display: grid; place-items: center; }
+.m-stage canvas, .m-stage video, .m-stage svg { max-width: 100%; display: block; }
+.m-bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 12px 0; }
+.m-bar button, .m-bar select, .m-bar input[type=text] { font: inherit; padding: 8px 14px; border-radius: 999px; border: 1px solid currentColor; background: transparent; color: inherit; cursor: pointer; }
+.m-bar button:hover { opacity: .75; }
+.m-note { margin-top: 16px; line-height: 1.6; opacity: .8; max-width: 70ch; }
+.m-code { margin-top: 16px; padding: 14px 16px; border-radius: 12px; background: var(--aw-nf-bg-2, #f2f2f2); font: 13px/1.55 ui-monospace, Menlo, monospace; overflow: auto; white-space: pre; }
+.m-status { font: 13px ui-monospace, Menlo, monospace; opacity: .7; }

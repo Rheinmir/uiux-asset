@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sample Motion Primitives — uiux-asset</title>
+<link rel="stylesheet" href="../aw.css?v=559582af29">
+<link rel="stylesheet" href="_m.css">
+<style>
+.m-bar[role=tablist] button[aria-selected=true] { font-weight: 700; box-shadow: inset 0 0 0 1px currentColor; }
+.m-bar[role=tablist] button { padding: 6px 12px; font-size: 13px; }
+.m-stage { min-height: 420px; }
+#mount { width: 100%; min-height: 420px; display: grid; place-items: center; position: relative; }
+#mount > * { max-width: 100%; }
+.m-err { padding: 16px; font: 13px/1.5 ui-monospace, Menlo, monospace; color: #c0392b; white-space: pre-wrap; }
+
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.1.11/dist/index.global.js"></script>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=559582af29"></script>
+<div class="aw-crumb">
+<h1>Motion Primitives <span class="aw-tag aw-tag--small m-badge" id="badge">…</span></h1>
+<span>Chạy ĐÚNG component + demo của repo (React 19 + Tailwind v4 + motion), nạp từ GitHub ghim commit và biên dịch tại trình duyệt · <a href="https://github.com/ibelick/motion-primitives" target="_blank" rel="noopener">ibelick/motion-primitives</a> · <a href="./">← Motion</a></span>
+</div>
+<div class="m-bar" role="tablist" id="tabs" aria-label="Hiệu ứng của Motion Primitives"></div>
+<div class="m-bar"><button id="replay" type="button">Chạy lại</button><span class="m-status" id="st">đang nạp thư viện…</span></div>
+<div class="m-stage rt-scope" id="stage"><div id="mount"></div></div>
+<p class="m-note" id="note"></p>
+<pre class="m-code" id="code"></pre>
+</main>
+<script type="importmap">{"imports":{"react":"https://esm.sh/react@19.1.0","react/jsx-runtime":"https://esm.sh/react@19.1.0/jsx-runtime","react-dom":"https://esm.sh/react-dom@19.1.0?external=react","react-dom/client":"https://esm.sh/react-dom@19.1.0/client?external=react"}}</script>
+<script type="module">
+// ===== cấu hình thư viện + danh sách tab (mỗi tab: id, nhãn, thật/mô phỏng, nguồn, mã dùng) =====
+const CFG = {
+  files: ["app/docs/accordion/accordion-basic.tsx","app/docs/accordion/accordion-icons.tsx","app/docs/accordion/accordion-variant.tsx","app/docs/animated-background/animated-card-background-hover.tsx","app/docs/animated-background/animated-tabs-hover.tsx","app/docs/animated-background/animated-tabs.tsx","app/docs/animated-background/segmented-control.tsx","app/docs/animated-group/animated-group-custom-variants-2.tsx","app/docs/animated-group/animated-group-custom-variants.tsx","app/docs/animated-group/animated-group-preset.tsx","app/docs/animated-number/animated-number-basic.tsx","app/docs/animated-number/animated-number-counter.tsx","app/docs/animated-number/animated-number-in-view.tsx","app/docs/border-trail/border-trail-card-1.tsx","app/docs/border-trail/border-trail-card-2.tsx","app/docs/border-trail/border-trail-textarea.tsx","app/docs/carousel/carousel-basic.tsx","app/docs/carousel/carousel-custom-indicator.tsx","app/docs/carousel/carousel-custom-sizes.tsx","app/docs/carousel/carousel-spacing.tsx","app/docs/cursor/cursor-1.tsx","app/docs/cursor/cursor-2.tsx","app/docs/cursor/cursor-3.tsx","app/docs/dialog/dialog-basic.tsx","app/docs/dialog/dialog-controlled.tsx","app/docs/dialog/dialog-custom-backdrop.tsx","app/docs/dialog/dialog-custom-exit.tsx","app/docs/dialog/dialog-custom-variants-transtion.tsx","app/docs/disclosure/disclosure-basic.tsx","app/docs/disclosure/disclosure-card.tsx","app/docs/dock/apple-style-dock.tsx","app/docs/glow-effect/glow-effect-button.tsx","app/docs/glow-effect/glow-effect-card-background.tsx","app/docs/glow-effect/glow-effect-card-mode.tsx","app/docs/image-comparison/image-comparison-basic.tsx","app/docs/image-comparison/image-comparison-custom-slider.tsx","app/docs/image-comparison/image-comparison-hover.tsx","app/docs/image-comparison/image-comparison-spring.tsx","app/docs/in-view/in-view-basic-multiple.tsx","app/docs/in-view/in-view-basic.tsx","app/docs/in-view/in-view-images-grid.tsx","app/docs/infinite-slider/infinite-slider-basic.tsx","app/docs/infinite-slider/infinite-slider-hover-speed.tsx","app/docs/infinite-slider/infinite-slider-vertical.tsx","app/docs/layout.tsx","app/docs/magnetic/magnetic-basic.tsx","app/docs/magnetic/magnetic-nested.tsx","app/docs/morphing-dialog/morphing-dialog-basic-1.tsx","app/docs/morphing-dialog/morphing-dialog-basic-2.tsx","app/docs/morphing-dialog/morphing-dialog-image.tsx","app/docs/morphing-popover/morphing-popover-basic.tsx","app/docs/morphing-popover/morphing-popover-custom-transition-variants.tsx","app/docs/morphing-popover/morphing-popover-textarea.tsx","app/docs/navigation.ts","app/docs/progressive-blur/progressive-blur-basic.tsx","app/docs/progressive-blur/progressive-blur-hover.tsx","app/docs/progressive-blur/progressive-blur-slider.tsx","app/docs/scroll-progress/scroll-progress-basic-1.tsx","app/docs/scroll-progress/scroll-progress-basic-2.tsx","app/docs/scroll-progress/scroll-progress-basic-3.tsx","app/docs/sliding-number/clock.tsx","app/docs/sliding-number/sliding-basic.tsx","app/docs/sliding-number/sliding-slider.tsx","app/docs/spinning-text/spinning-text-basic.tsx","app/docs/spinning-text/spinning-text-custom-transition.tsx","app/docs/spinning-text/spinning-text-custom-variants.tsx","app/docs/spotlight/spotlight-basic.tsx","app/docs/spotlight/spotlight-border.tsx","app/docs/spotlight/spotlight-custom-color.tsx","app/docs/text-effect/text-effect-custom-delay.tsx","app/docs/text-effect/text-effect-exit.tsx","app/docs/text-effect/text-effect-line.tsx","app/docs/text-effect/text-effect-per-char.tsx","app/docs/text-effect/text-effect-per-word.tsx","app/docs/text-effect/text-effect-preset.tsx","app/docs/text-effect/text-effect-speed.tsx","app/docs/text-effect/text-effect-variants.tsx","app/docs/text-loop/text-loop-basic.tsx","app/docs/text-loop/text-loop-custom-variants-transition.tsx","app/docs/text-loop/text-loop-on-index.tsx","app/docs/text-morph/text-morph-button.tsx","app/docs/text-morph/text-morph-input.tsx","app/docs/text-roll/text-roll-basic.tsx","app/docs/text-roll/text-roll-custom-transition-delay.tsx","app/docs/text-roll/text-roll-custom-variants.tsx","app/docs/text-scramble/text-scramble-basic.tsx","app/docs/text-scramble/text-scramble-custom-char-duration.tsx","app/docs/text-scramble/text-scramble-custom-trigger.tsx","app/docs/text-shimmer-wave/text-shimmer-wave-basic.tsx","app/docs/text-shimmer-wave/text-shimmer-wave-color.tsx","app/docs/text-shimmer/text-shimmer-basic.tsx","app/docs/text-shimmer/text-shimmer-color.tsx","app/docs/tilt/tilt-card-1.tsx","app/docs/tilt/tilt-spotlight.tsx","app/docs/transition-panel/transition-panel-card.tsx","app/docs/transition-panel/transition-panel-tabs.tsx","components/core/accordion.tsx","components/core/animated-background.tsx","components/core/animated-group.tsx","components/core/animated-number.tsx","components/core/border-trail.tsx","components/core/carousel.tsx","components/core/cursor.tsx","components/core/dialog.tsx","components/core/disclosure.tsx","components/core/dock.tsx","components/core/glow-effect.tsx","components/core/image-comparison.tsx","components/core/in-view.tsx","components/core/infinite-slider.tsx","components/core/magnetic.tsx","components/core/morphing-dialog.tsx","components/core/morphing-popover.tsx","components/core/progressive-blur.tsx","components/core/scroll-progress.tsx","components/core/sliding-number.tsx","components/core/spinning-text.tsx","components/core/spotlight.tsx","components/core/text-effect.tsx","components/core/text-loop.tsx","components/core/text-morph.tsx","components/core/text-roll.tsx","components/core/text-scramble.tsx","components/core/text-shimmer-wave.tsx","components/core/text-shimmer.tsx","components/core/tilt.tsx","components/core/toolbar-dynamic.tsx","components/core/toolbar-expandable.tsx","components/core/transition-panel.tsx","components/ui/button.tsx","components/ui/input.tsx","components/ui/label.tsx","components/ui/tooltip.tsx","components/website/card-example-landing.tsx","components/website/code-block.tsx","components/website/code-preview.tsx","components/website/code-renderer.tsx","components/website/component-code-preview.tsx","components/website/component-preview.tsx","components/website/dropdown-menu.tsx","components/website/header.tsx","components/website/icons/github.tsx","components/website/icons/motion-primitives-logo.tsx","components/website/icons/shadcn-logo.tsx","components/website/icons/x.tsx","components/website/installation-cli.tsx","components/website/launch-banner.tsx","components/website/open-in-v0.tsx","components/website/scroll-area.tsx","components/website/table-of-contents.tsx","components/website/tabs.tsx","components/website/theme-provider.tsx","components/website/theme-switch.tsx","hooks/useClickOutside.tsx","hooks/usePreventScroll.tsx","lib/browser.ts","lib/code.ts","lib/custom-theme.ts","lib/shiki.ts","lib/theme-css-variables.ts","lib/utils.ts"],
+  name: 'Motion Primitives', repo: 'ibelick/motion-primitives', sha: '120f64f6ca60348e251f929e9c81f11ccbe45eda', license: 'MIT License · Copyright (c) 2024 ibelick', raw: true,
+  alias: { '@/': '' }, pub: 'public',
+  pkgs: { 'motion': '11.18.2', 'clsx': '2.1.1', 'tailwind-merge': '2.6.0', 'lucide-react': '0.400.0', 'react-use-measure': '2.1.7' },
+  virtual: {},
+};
+const TABS = [
+{ id: 'text-effect', label: 'Text Effect', real: true, demo: 'app/docs/text-effect/text-effect-preset.tsx', exp: 'TextEffectWithPreset', note: 'Chữ xuất hiện theo từ/ký tự với preset blur, fade-in-blur, scale, slide (TextEffect).' },
+{ id: 'text-scramble', label: 'Text Scramble', real: true, demo: 'app/docs/text-scramble/text-scramble-basic.tsx', exp: 'TextScrambleBasic', note: 'Chữ xáo ký tự rồi hội tụ về chữ thật (TextScramble).' },
+{ id: 'text-shimmer', label: 'Text Shimmer', real: true, demo: 'app/docs/text-shimmer/text-shimmer-basic.tsx', exp: 'TextShimmerBasic', note: 'Vệt sáng quét qua chữ (TextShimmer).' },
+{ id: 'magnetic', label: 'Magnetic', real: true, demo: 'app/docs/magnetic/magnetic-basic.tsx', exp: 'MagneticBasic', note: 'Nút bị hút về con trỏ bằng spring — rê chuột lại gần.' },
+{ id: 'tilt', label: 'Tilt', real: true, demo: 'app/docs/tilt/tilt-card-1.tsx', exp: 'TiltCard1', note: 'Thẻ nghiêng 3D theo con trỏ.' },
+{ id: 'spotlight', label: 'Spotlight', real: true, demo: 'app/docs/spotlight/spotlight-basic.tsx', exp: 'SpotlightBasic', note: 'Vệt sáng spotlight đi theo con trỏ trong thẻ.' },
+{ id: 'infinite-slider', label: 'Infinite Slider', real: true, demo: 'app/docs/infinite-slider/infinite-slider-basic.tsx', exp: 'InfiniteSliderBasic', note: 'Dải logo trượt vô hạn (animate + useMeasure), chiều ngang/dọc, đổi tốc độ khi hover.' },
+{ id: 'transition-panel', label: 'Transition Panel', real: true, demo: 'app/docs/transition-panel/transition-panel-tabs.tsx', exp: 'TabsTransitionPanel', note: 'Chuyển panel nội dung có hoạt ảnh (AnimatePresence) — bấm các tab.' },
+{ id: 'morphing-dialog', label: 'Morphing Dialog', real: true, demo: 'app/docs/morphing-dialog/morphing-dialog-basic-1.tsx', exp: 'MorphingDialogBasicOne', note: 'Hộp thoại biến hình từ nút bấm (shared layout).' },
+{ id: 'animated-background', label: 'Animated Background', real: true, demo: 'app/docs/animated-background/animated-tabs-hover.tsx', exp: 'AnimatedTabsHover', note: 'Nền trượt theo mục đang hover (layoutId).' },
+{ id: 'border-trail', label: 'Border Trail', real: true, demo: 'app/docs/border-trail/border-trail-card-1.tsx', exp: 'BorderTrailCard1', note: 'Vệt sáng chạy quanh viền thẻ.' },
+{ id: 'glow-effect', label: 'Glow Effect', real: true, demo: 'app/docs/glow-effect/glow-effect-card-mode.tsx', exp: 'GlowEffectCardMode', note: 'Quầng sáng gradient chuyển động quanh thẻ (GlowEffect + TextMorph).' },
+{ id: 'dock', label: 'Dock', real: true, demo: 'app/docs/dock/apple-style-dock.tsx', exp: 'AppleStyleDock', note: 'Dock kiểu macOS phóng to icon theo khoảng cách chuột.' },
+];
+
+// ===== runtime: nạp ĐÚNG file nguồn của repo từ jsdelivr (ghim commit), biên dịch tại trình duyệt (sucrase), chạy bằng React =====
+globalThis.process ||= { env: { NODE_ENV: 'production' } };
+const $ = (i) => document.getElementById(i);
+const RAW = (p) => CFG.raw ? 'https://raw.githubusercontent.com/' + CFG.repo + '/' + CFG.sha + '/' + p : 'https://cdn.jsdelivr.net/gh/' + CFG.repo + '@' + CFG.sha + '/' + p;
+const FIXED = JSON.parse(document.querySelector('script[type=importmap]').textContent).imports, EXTQ = '?external=' + Object.keys(FIXED).filter((k) => !k.includes('/')).join(',');
+const EXT = ['', '.tsx', '.ts', '.jsx', '.js', '.mjs', '/index.tsx', '/index.ts', '/index.jsx', '/index.js'];
+let tree, sucrase, compileVue, autoPre; const mods = new Map();
+const urlOf = (txt) => URL.createObjectURL(new Blob([txt], { type: 'text/javascript' }));
+const join = (from, rel) => { const o = from.split('/').slice(0, -1); for (const s of rel.split('/')) { if (s === '..') o.pop(); else if (s !== '.') o.push(s); } return o.join('/'); };
+function bare(s) {
+  if (FIXED[s]) return s;
+  const m = s.match(/^(@[^/]+\/[^/]+|[^/]+)(\/.*)?$/), v = CFG.pkgs[m[1]];
+  if (!v) throw new Error('chưa ghim phiên bản cho gói "' + m[1] + '"');
+  return 'https://esm.sh/' + m[1] + '@' + v + (m[2] || '') + (CFG.ext && CFG.ext[m[1]] != null ? CFG.ext[m[1]] : EXTQ);
+}
+async function resolve(s, from, key) {
+  if (CFG.virtual[s] != null) return vmod('virtual:' + s, CFG.virtual[s]);
+  let base = null;
+  for (const [pre, to] of Object.entries(CFG.alias)) if (s === pre.replace(/\/$/, '') || s.startsWith(pre)) { base = to + s.slice(pre.length); break; }
+  if (!base && s[0] === '/') base = s.slice(1);
+  if (!base && s[0] === '.') base = join(from, s);
+  if (base == null) return bare(s);
+  if (/\.css$/.test(base)) return cssmod(base);
+  if (/\.(svg|png|jpe?g|webp|gif|woff2?|json)$/.test(base)) return vmod('empty:' + base, 'export default ""');
+  const hit = EXT.map((e) => base + e).find((p) => tree.has(p));
+  if (!hit) throw new Error('không thấy file ' + base + ' (từ ' + from + ')');
+  (graph[key] ||= new Set()).add(hit);
+  return mod(hit);
+}
+const graph = {};
+const cssmod = (base) => { if (!mods.has('css:' + base)) mods.set('css:' + base, fetch(RAW(base)).then((r) => r.ok ? r.text() : '').then((css) => { const el = document.createElement('style'); el.textContent = css; document.head.append(el); return urlOf('export default ""'); })); return mods.get('css:' + base); };
+const vmod = (key, src) => { if (!mods.has(key)) mods.set(key, compile(src, key)); return mods.get(key); };
+const mod = (path) => { if (!mods.has(path)) mods.set(path, fetch(RAW(path)).then((r) => { if (!r.ok) throw new Error(r.status + ' ' + path); return r.text(); }).then((t) => path.endsWith('.vue') ? compileVue(t, path) : compile(autoPre ? autoPre(t) + t : t, path, !!autoPre))); return mods.get(path); };
+async function compile(src, path, isVue, key) {
+  key = key || path; const from = path.replace(/^(virtual|empty|demo):/, '') || 'x';
+  let js = sucrase.transform(src, { transforms: isVue ? ['typescript'] : ['typescript', 'jsx'], jsxRuntime: 'automatic', production: true, filePath: from + (/\.[jt]sx?$/.test(from) ? '' : '.tsx') }).code;
+  const re = /(?<=^|;)[ \t]*(?:import|export)\s[^;"']*?\bfrom\s*(["'])([^"'\n]+)\1|(?<=^|;)[ \t]*import\s*(["'])([^"'\n]+)\3/gm, specs = new Set();
+  for (const m of js.matchAll(re)) specs.add(m[2] || m[4]);
+  const map = {}; await Promise.all([...specs].map(async (s) => { map[s] = await resolve(s, from, key); }));
+  js = js.replace(re, (all, q1, s1, q2, s2) => { const s = s1 || s2, q = q1 || q2; return all.slice(0, all.lastIndexOf(q + s + q)) + q + map[s] + q; });
+  return urlOf(js);
+}
+// Tailwind v4: lấy @theme / :root / .dark thật của repo, thu hẹp về .rt-scope để không đè lên trang
+function block(css, head) { let out = '', from = 0; for (;;) { const i = css.indexOf(head, from); if (i < 0) return out; let d = 0, j = css.indexOf('{', i); const s = j; for (; j < css.length; j++) { if (css[j] === '{') d++; else if (css[j] === '}' && --d === 0) break; } out += css.slice(s + 1, j) + '\n'; from = j; } }
+async function tailwind() {
+  let css = CFG.css ? await (await fetch(RAW(CFG.css))).text() : '';
+  const root = block(css, ':root {'), dark = block(css, '\n.dark {'), theme = block(css, '@theme inline {') + block(css, '@theme static {');
+  const el = document.createElement('style'); el.type = 'text/tailwindcss';
+  el.textContent = '@layer theme, base, components, utilities;@import "tailwindcss/theme.css" layer(theme);@import "tailwindcss/utilities.css" layer(utilities);@custom-variant dark (&:is(.dark *));'
+    + '.rt-scope{' + root + '}.rt-scope.dark{' + dark + '}@theme inline{' + theme + '}' + (CFG.extraCss || '');
+  document.head.append(el);
+}
+if (CFG.pub) { const sa = Element.prototype.setAttribute; Element.prototype.setAttribute = function (n, v) { if (n === 'src' && typeof v === 'string' && v[0] === '/' && v[1] !== '/' && /^(IMG|SOURCE|VIDEO)$/.test(this.tagName)) v = RAW(CFG.pub + v); return sa.call(this, n, v); }; const d = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'src'); Object.defineProperty(HTMLImageElement.prototype, 'src', { ...d, set(v) { d.set.call(this, typeof v === 'string' && v[0] === '/' && v[1] !== '/' ? RAW(CFG.pub + v) : v); } }); }
+const sync = () => $('stage').classList.toggle('dark', document.documentElement.dataset.theme === 'dark');
+new MutationObserver(sync).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] }); sync();
+
+let cur = null, seq = 0;
+const RT = {
+  un: null,
+  async mount(m, host) { const [{ createElement }, { createRoot }] = await Promise.all([import('react'), import('react-dom/client')]); const root = createRoot(host); root.render(createElement(m.default)); RT.un = () => root.unmount(); },
+};
+const tag = (real) => { const b = $('badge'); b.className = 'aw-tag aw-tag--small m-badge ' + (real ? 'aw-tag--solid-green' : 'aw-tag--solid-yellow'); b.textContent = real ? 'THƯ VIỆN THẬT' : 'MÔ PHỎNG'; };
+async function show(id) {
+  const t = TABS.find((x) => x.id === id) || TABS[0], my = ++seq; cur = t;
+  document.querySelectorAll('#tabs button').forEach((b) => b.setAttribute('aria-selected', b.dataset.id === t.id));
+  tag(t.real); $('note').textContent = t.note;
+  if (t.demo) { t.code = 'export { ' + (t.exp || 'default') + ' as default } from "/' + t.demo + '"'; if (!t.shown) t.shown = fetch(RAW(t.demo)).then((r) => r.text()).then((x) => x.replace(/^export const controls[\s\S]*?\n}\n\n/m, '')).catch(() => '// (không tải được mã demo)'); }
+  const body = t.demo ? await t.shown : t.code; if (my !== seq) return;
+  const src = (t.real ? '// Nguồn thật · ' + CFG.license + '\n// ' + (t.src || (t.demo ? [t.demo] : [])).map((p) => 'github.com/' + CFG.repo + '/blob/' + CFG.sha.slice(0, 7) + '/' + p).join('\n//   ') + '\n' : '// MÔ PHỎNG web-native: không phải mã nguồn của repo.\n') + body;
+  $('code').textContent = src;
+  if (RT.un) { RT.un(); RT.un = null; }
+  $('mount').replaceChildren(); $('st').textContent = 'đang nạp ' + t.label + '…';
+  try {
+    const url = await vmod('demo:' + t.id, t.code);
+    if (my !== seq) return;
+    const host = document.createElement('div'); host.style.cssText = 'width:100%;display:grid;place-items:center'; $('mount').append(host);
+    const m = await import(url); if (my !== seq) return;
+    await RT.mount(m, host, t);
+    $('st').textContent = CFG.name + ' · ' + t.label + ' · đang chạy';
+  } catch (e) { if (my === seq) { $('mount').innerHTML = '<div class="m-err"></div>'; $('mount').firstChild.textContent = 'Lỗi nạp tab "' + t.label + '": ' + (e && e.message || e); console.error(e); $('st').textContent = 'lỗi'; } }
+}
+
+const go = (id) => { if (location.hash.slice(1) !== id) history.replaceState(null, '', '#' + id); show(id); };
+(async () => {
+  sucrase = await import('https://esm.sh/sucrase@3.35.0');
+  if (CFG.files) tree = new Set(CFG.files);
+  else { const j = await (await fetch('https://data.jsdelivr.com/v1/packages/gh/' + CFG.repo + '@' + CFG.sha + '?structure=flat')).json(); tree = new Set(j.files.map((f) => f.name.slice(1))); }
+  if (CFG.tailwind !== false) await tailwind();
+  if (CFG.boot) await CFG.boot();
+  const bar = $('tabs');
+  for (const t of TABS) { const b = document.createElement('button'); b.type = 'button'; b.role = 'tab'; b.dataset.id = t.id; b.textContent = t.label; b.onclick = () => go(t.id); bar.append(b); }
+  $('replay').onclick = () => { mods.delete('demo:' + cur.id); show(cur.id); };
+  addEventListener('hashchange', () => show(location.hash.slice(1)));
+  show(location.hash.slice(1));
+})().catch((e) => { $('st').textContent = 'lỗi nạp: ' + e.message; console.error(e); });
+</script>
+</body></html>

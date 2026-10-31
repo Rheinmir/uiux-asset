@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sample LosslessCut — uiux-asset</title>
+<link rel="stylesheet" href="../aw.css?v=559582af29">
+<link rel="stylesheet" href="_m.css">
+<style>
+.l-stage { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 12px; padding: 12px; place-items: stretch; align-content: start; }
+.l-box { background: var(--aw-card); border-radius: 8px; padding: 8px; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.l-box h3 { margin: 0; font: 600 11px/16px var(--aw-mono); opacity: .7; }
+.l-box .v { height: 220px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; justify-content: center; background: #000; border-radius: 6px; overflow: hidden; padding: 4px; }
+.l-box .v > * { flex: 1 1 140px; min-width: 0; max-width: 100%; max-height: 100%; object-fit: contain; }
+.l-box .v figure { margin: 0; display: grid; gap: 2px; color: #ddd; font: 10px var(--aw-mono); text-align: center; max-height: 100%; }
+.l-box .v figure video, .l-box .v figure img { max-height: 170px; width: 100%; object-fit: contain; }
+.l-box .v a { color: #fff; font: 12px var(--aw-mono); }
+.l-meta { font: 12px/1.4 var(--aw-mono); opacity: .8; min-height: 34px; }
+.l-tl { grid-column: 1 / -1; background: var(--aw-card); border-radius: 8px; padding: 10px 14px 12px; }
+.l-track { position: relative; height: 56px; border-radius: 6px; background: var(--aw-nf-bg-1); touch-action: none; cursor: pointer; user-select: none; overflow: hidden; }
+.l-kf { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--aw-tag-border); opacity: .6; }
+.l-kf b { position: absolute; top: 2px; left: 3px; font: 9px var(--aw-mono); opacity: .8; font-weight: 400; }
+.l-sel { position: absolute; top: 0; bottom: 0; background: rgba(250, 93, 41, .28); border-top: 3px solid var(--aw-color-orange); border-bottom: 3px solid var(--aw-color-orange); }
+.l-sel.dim { opacity: .45; } .l-sel i { position: absolute; left: 22px; top: 4px; font: 700 10px var(--aw-mono); font-style: normal; }
+.l-snap { position: absolute; top: 0; bottom: 0; width: 2px; background: #2fbf71; } 
+.l-h { position: absolute; top: 0; bottom: 0; width: 14px; margin-left: -7px; background: var(--aw-color-orange); cursor: ew-resize; display: grid; place-items: center; color: #fff; font: 700 9px var(--aw-mono); border-radius: 3px; z-index: 3; }
+.l-head { position: absolute; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: var(--aw-color-primary); z-index: 2; pointer-events: none; }
+.l-row { display: flex; justify-content: space-between; font: 12px var(--aw-mono); margin-top: 6px; opacity: .85; flex-wrap: wrap; gap: 8px; }
+.l-log { grid-column: 1 / -1; height: 80px; margin: 0; padding: 8px 10px; border-radius: 8px; background: var(--aw-card); font: 11px/1.45 var(--aw-mono); overflow: auto; white-space: pre-wrap; word-break: break-all; }
+.l-prog { grid-column: 1 / -1; height: 6px; border-radius: 3px; background: var(--aw-border-gray); overflow: hidden; }
+.l-prog i { display: block; height: 100%; width: 0; background: var(--aw-color-orange); transition: width .15s; }
+.m-bar .on { background: var(--aw-button-bg); color: var(--aw-button-color); border-color: var(--aw-button-bg); }
+.m-bar button:disabled { opacity: .4; cursor: wait; }
+@media (max-width: 720px) { .l-stage { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=559582af29"></script>
+<div class="aw-crumb">
+<h1>LosslessCut <span class="aw-tag aw-tag--small aw-tag--solid-yellow m-badge" id="tb">MÔ PHỎNG GIAO DIỆN · FFMPEG THẬT</span></h1>
+<span>Giao diện timeline là MÔ PHỎNG theo LosslessCut (app Electron, không chạy được trên web). Mọi thao tác xuất là <b>ffmpeg thật</b> (<code>@ffmpeg/ffmpeg@0.12.10</code> wasm, ~31MB nạp một lần dùng chung các tab) — đúng lệnh LosslessCut gọi. · <a href="https://github.com/mifi/lossless-cut" target="_blank" rel="noopener">mifi/lossless-cut</a> · <a href="./">← Motion</a></span>
+</div>
+<div class="m-bar" id="tabs" role="tablist"></div>
+<div class="m-bar" id="ctl"></div>
+<div class="m-stage l-stage" id="stage" style="min-height:620px">
+  <div class="l-prog"><i id="pg"></i></div>
+  <div class="l-box"><h3>NGUỒN · testsrc 12s + audio · keyframe mỗi 1s</h3><div class="v" id="vin"></div><div class="l-meta" id="min">đang nạp ffmpeg.wasm…</div></div>
+  <div class="l-box"><h3 id="olbl">KẾT QUẢ</h3><div class="v" id="vout"></div><div class="l-meta" id="mout">chưa xuất</div></div>
+  <div class="l-tl">
+    <div class="l-track" id="trk"></div>
+    <div class="l-row"><span id="tin">In 0.00s</span><span id="tcur">▶ 0.00s</span><span id="tout">Out 0.00s</span></div>
+  </div>
+  <pre class="l-log" id="log"></pre>
+</div>
+<p class="m-note" id="note"></p>
+<pre class="m-code" id="code"></pre>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/umd/ffmpeg.js"></script>
+<script>
+const $ = (id) => document.getElementById(id), logEl = $('log'), pg = $('pg'), trk = $('trk');
+const DUR = 12; let segs = [{ a: 3.2, b: 7.5 }], act = 0, busy = false, ready = false, vsrc = null, srcSize = 1, snaps = [];
+const log = (t) => { logEl.textContent += t + '\n'; const l = logEl.textContent.split('\n'); if (l.length > 150) logEl.textContent = l.slice(-80).join('\n'); logEl.scrollTop = 1e9; };
+const kb = (n) => (n / 1024).toFixed(1) + ' KB', f2 = (n) => n.toFixed(2) + 's';
+const ffmpeg = new FFmpegWASM.FFmpeg(); ffmpeg.on('log', ({ message }) => log(message));
+const CORE = 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/esm/', FF = 'https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/umd/';
+async function load() {
+  const blob = async (url, mime, big) => {
+    const r = await fetch(url), total = +r.headers.get('content-length') || 32129114, rd = r.body.getReader(), parts = []; let got = 0;
+    for (;;) { const { done, value } = await rd.read(); if (done) break; parts.push(value); got += value.length;
+      if (big) { pg.style.width = Math.min(100, got / total * 100) + '%'; $('min').textContent = 'đang tải ffmpeg-core.wasm ' + (got / 1048576).toFixed(1) + '/' + (total / 1048576).toFixed(1) + ' MB'; } }
+    return URL.createObjectURL(new Blob(parts, { type: mime }));
+  };
+  const classWorkerURL = await blob(FF + '814.ffmpeg.js', 'text/javascript'), coreURL = await blob(CORE + 'ffmpeg-core.js', 'text/javascript'), wasmURL = await blob(CORE + 'ffmpeg-core.wasm', 'application/wasm', true);
+  await ffmpeg.load({ classWorkerURL, coreURL, wasmURL });
+}
+const exec = async (a) => { log('$ ffmpeg ' + a.join(' ')); const rc = await ffmpeg.exec(a); if (rc) throw new Error('ffmpeg rc=' + rc); };
+const MIME = { mp4: 'video/mp4', mkv: 'video/x-matroska', ts: 'video/mp2t', mov: 'video/quicktime', m4a: 'audio/mp4', png: 'image/png', jpg: 'image/jpeg' };
+// tạo phần tử xem từ tệp trong FS; trả {el,size,dur}
+async function mk(name, cap) {
+  const data = await ffmpeg.readFile(name), ext = name.split('.').pop(), url = URL.createObjectURL(new Blob([data.buffer], { type: MIME[ext] }));
+  const fig = document.createElement('figure'); let el, dur = 0;
+  if (/^(png|jpg)$/.test(ext)) { el = new Image(); el.src = url; }
+  else { el = document.createElement(ext === 'm4a' ? 'audio' : 'video'); el.src = url; el.controls = true; el.muted = true; el.playsInline = true; el.preload = 'metadata'; dur = await new Promise((r) => { el.onloadedmetadata = () => r(el.duration); el.onerror = () => r(0); setTimeout(() => r(0), 1500); }); }
+  const a = Object.assign(document.createElement('a'), { href: url, download: name, textContent: '⤓ ' + name }), c = document.createElement('span'); c.textContent = cap || '';
+  fig.append(el, c, a); return { fig, el, size: data.length, dur };
+}
+async function outs(list, label, t0) { const box = $('vout'); box.replaceChildren(); for (const o of list) box.append(o.fig); $('mout').textContent = label + (t0 ? ' · ' + ((performance.now() - t0) / 1000).toFixed(2) + 's' : ''); }
+const cutArgs = (s, o) => ['-ss', s.a.toFixed(3), '-i', 'in.mp4', '-t', (s.b - s.a).toFixed(3), '-c', 'copy', '-avoid_negative_ts', 'make_zero', '-y', o];
+// ---- timeline mô phỏng
+const pct = (t) => (t / DUR * 100) + '%';
+for (let s = 0; s < DUR; s++) { const k = document.createElement('div'); k.className = 'l-kf'; k.style.left = pct(s); k.innerHTML = '<b>' + s + '</b>'; trk.append(k); }
+const dyn = document.createElement('div'), hi = Object.assign(document.createElement('div'), { className: 'l-h', textContent: '[' }), ho = Object.assign(document.createElement('div'), { className: 'l-h', textContent: ']' }), head = Object.assign(document.createElement('div'), { className: 'l-head' });
+trk.append(dyn, hi, ho, head);
+let cur;
+function draw() {
+  const s = segs[act], all = cur && cur.id === 'segments'; dyn.replaceChildren();
+  segs.forEach((g, i) => { if (!all && i !== act) return; const d = document.createElement('div'); d.className = 'l-sel' + (i === act ? '' : ' dim'); d.style.left = pct(g.a); d.style.width = pct(g.b - g.a); d.innerHTML = all ? '<i>#' + (i + 1) + '</i>' : ''; d.onpointerdown = (e) => { if (all) { act = i; draw(); e.stopPropagation(); } }; dyn.append(d); });
+  snaps.forEach((t) => { const d = document.createElement('div'); d.className = 'l-snap'; d.style.left = pct(t); dyn.append(d); });
+  hi.style.left = pct(s.a); ho.style.left = pct(s.b);
+  $('tin').textContent = 'In ' + f2(s.a); $('tout').textContent = 'Out ' + f2(s.b) + ' · độ dài ' + f2(s.b - s.a) + (all ? ' · đoạn #' + (act + 1) + '/' + segs.length : '');
+}
+const timeAt = (e) => { const r = trk.getBoundingClientRect(); return Math.min(DUR, Math.max(0, (e.clientX - r.left) / r.width * DUR)); };
+function drag(h, w) { h.onpointerdown = (e) => { e.stopPropagation(); h.setPointerCapture(e.pointerId); const s = () => segs[act];
+  h.onpointermove = (m) => { const t = timeAt(m); if (w === 'a') s().a = Math.min(t, s().b - .2); else s().b = Math.max(t, s().a + .2); draw(); if (vsrc) vsrc.currentTime = s()[w]; };
+  h.onpointerup = () => { h.onpointermove = h.onpointerup = null; }; }; }
+drag(hi, 'a'); drag(ho, 'b');
+trk.onpointerdown = (e) => { if (vsrc) vsrc.currentTime = timeAt(e); };
+const now = () => vsrc ? vsrc.currentTime : 0;
+(function tick() { const c = now(); head.style.left = pct(c); $('tcur').textContent = '▶ ' + f2(c); requestAnimationFrame(tick); })();
+// ---- tab
+const guard = (fn) => async () => { if (!ready || busy) return; busy = true; setDis(true); pg.style.width = '35%'; const t0 = performance.now(); try { await fn(t0); } catch (e) { $('mout').textContent = 'lỗi: ' + e.message; log('! ' + e.message); } pg.style.width = '100%'; busy = false; setDis(false); };
+const setDis = (d) => document.querySelectorAll('#ctl button, #ctl select').forEach((b) => b.disabled = d || !ready);
+let fmtVal = 'mkv', exVal = 'tách từng file', rmVal = 'mkv';
+const TABS = [
+  { id: 'cut', label: 'Cắt 1 đoạn', note: 'Kéo hai tay nắm cam (hoặc I / O tại vị trí đang phát), bấm xuất: <code>-ss … -t … -c copy</code> chỉ sao chép gói tin nên tức thời và không mất chất lượng. Vì chỉ cắt được ở keyframe, điểm vào bị lùi về keyframe trước đó nên thời lượng thực tế thường dài hơn đoạn chọn.',
+    code: "ffmpeg -ss 3.2 -i in.mp4 -t 4.3 -c copy -avoid_negative_ts make_zero -y out.mp4\n#      ^ In         ^ Out-In    ^ copy gói tin, KHÔNG giải mã/mã hoá lại",
+    btns: [{ t: 'Cắt (-c copy)', fn: guard(async (t0) => { const s = segs[act]; await exec(cutArgs(s, 'o.mp4')); const o = await mk('o.mp4', 'đoạn đã cắt'); await outs([o], kb(o.size) + ' · ' + f2(o.dur) + ' · bạn chọn ' + f2(s.b - s.a) + (o.dur > s.b - s.a + .05 ? ' (+' + (o.dur - s.b + s.a).toFixed(2) + 's do lùi về keyframe)' : '') + ' · ' + (o.size / srcSize * 100).toFixed(0) + '% nguồn', t0); }) }] },
+  { id: 'segments', label: 'Nhiều đoạn', note: 'LosslessCut cho đặt nhiều đoạn trên một timeline rồi xuất <b>tách từng file</b> hoặc <b>ghép các đoạn</b> (concat demuxer + <code>-c copy</code>). Bấm vào một đoạn để chọn rồi chỉnh tay nắm; "+ Đoạn" thêm đoạn mới.',
+    code: "# mỗi đoạn:  ffmpeg -ss A -i in.mp4 -t D -c copy seg1.mp4 ...\n# ghép:\nprintf \"file 'seg1.mp4'\\nfile 'seg2.mp4'\\n\" > list.txt\nffmpeg -f concat -safe 0 -i list.txt -c copy merged.mp4",
+    sel: [{ opts: ['tách từng file', 'ghép các đoạn'], set: (v) => exVal = v }],
+    btns: [{ t: '+ Đoạn', fn: () => { const l = segs[segs.length - 1]; const a = Math.min(DUR - 1, l.b + .8); segs.push({ a, b: Math.min(DUR, a + 1.8) }); act = segs.length - 1; draw(); } },
+      { t: '− Xoá đoạn', fn: () => { if (segs.length > 1) { segs.splice(act, 1); act = 0; draw(); } } },
+      { t: 'Xuất', fn: guard(async (t0) => { const L = []; for (let i = 0; i < segs.length; i++) { await exec(cutArgs(segs[i], 's' + i + '.mp4')); L.push('s' + i + '.mp4'); }
+        if (exVal.startsWith('ghép')) { await ffmpeg.writeFile('list.txt', L.map((n) => `file '${n}'\n`).join('')); await exec(['-f', 'concat', '-safe', '0', '-i', 'list.txt', '-c', 'copy', '-y', 'merged.mp4']); const o = await mk('merged.mp4', 'ghép ' + L.length + ' đoạn'); await outs([o], kb(o.size) + ' · ' + f2(o.dur), t0); }
+        else { const os = []; for (const n of L) os.push(await mk(n, n)); await outs(os, L.length + ' file · ' + kb(os.reduce((a, o) => a + o.size, 0)), t0); } }) }] },
+  { id: 'precise', label: 'Lossless vs chính xác', note: 'So sánh hai cách cho CÙNG đoạn chọn: <b>lossless</b> (<code>-c copy</code>, nhanh, bị lùi về keyframe) và <b>chính xác</b> (mã hoá lại <code>libx264</code>, cắt đúng khung nhưng chậm hơn và mất một thế hệ chất lượng). Đây chính là đánh đổi mà LosslessCut cảnh báo.',
+    code: "ffmpeg -ss 3.2 -i in.mp4 -t 4.3 -c copy lossless.mp4                      # nhanh, theo keyframe\nffmpeg -ss 3.2 -i in.mp4 -t 4.3 -c:v libx264 -preset ultrafast -c:a aac exact.mp4   # đúng khung",
+    btns: [{ t: 'So sánh', fn: guard(async () => { const s = segs[act], t0 = performance.now(); await exec(cutArgs(s, 'l.mp4')); const t1 = performance.now(); await exec(['-ss', s.a.toFixed(3), '-i', 'in.mp4', '-t', (s.b - s.a).toFixed(3), '-c:v', 'libx264', '-preset', 'ultrafast', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-y', 'e.mp4']); const t2 = performance.now();
+      const a = await mk('l.mp4', 'lossless ' + (t1 - t0).toFixed(0) + 'ms'), b = await mk('e.mp4', 'chính xác ' + (t2 - t1).toFixed(0) + 'ms'); await outs([a, b], 'chọn ' + f2(s.b - s.a) + ' · lossless ' + f2(a.dur) + ' / ' + kb(a.size) + ' · chính xác ' + f2(b.dur) + ' / ' + kb(b.size)); }) }] },
+  { id: 'remux', label: 'Đổi container / tách track', note: 'Đổi vỏ container mà không đụng dữ liệu (mp4 → mkv/mov/ts) hoặc tách riêng luồng video / âm thanh — đều bằng <code>-c copy</code>. Mkv/ts có thể không phát được trong trình duyệt, dùng nút tải để lấy tệp.',
+    code: "ffmpeg -i in.mp4 -c copy out.mkv        # remux\nffmpeg -i in.mp4 -vn -c:a copy audio.m4a   # chỉ âm thanh\nffmpeg -i in.mp4 -an -c:v copy video.mp4   # chỉ video",
+    sel: [{ opts: ['mkv', 'mov', 'ts', 'chỉ âm thanh (m4a)', 'chỉ video (mp4)'], set: (v) => rmVal = v }],
+    btns: [{ t: 'Xuất', fn: guard(async (t0) => { const s = segs[act], b = ['-ss', s.a.toFixed(3), '-i', 'in.mp4', '-t', (s.b - s.a).toFixed(3)]; let n, x;
+      if (rmVal.startsWith('chỉ âm')) { n = 'o.m4a'; x = ['-vn', '-c:a', 'copy']; } else if (rmVal.startsWith('chỉ video')) { n = 'o.mp4'; x = ['-an', '-c', 'copy']; } else { n = 'o.' + rmVal; x = ['-c', 'copy']; }
+      await exec([...b, ...x, '-avoid_negative_ts', 'make_zero', '-y', n]); const o = await mk(n, n); await outs([o], rmVal + ' · ' + kb(o.size) + (o.dur ? ' · ' + f2(o.dur) : ' · (trình duyệt không phát được, dùng nút tải)'), t0); }) }] },
+  { id: 'snapshot', label: 'Chụp khung', note: 'Phím "chụp khung hình" của LosslessCut: ffmpeg lấy đúng một khung tại vị trí đang phát và lưu PNG/JPG. Tua video nguồn (hoặc bấm timeline) rồi chụp; vạch xanh trên timeline đánh dấu những khung đã chụp.',
+    code: "ffmpeg -ss 5.40 -i in.mp4 -frames:v 1 -q:v 2 frame.jpg\nffmpeg -ss 5.40 -i in.mp4 -frames:v 1 frame.png",
+    sel: [{ opts: ['png', 'jpg'], set: (v) => snapFmt = v }],
+    btns: [{ t: 'Chụp tại vị trí hiện tại', fn: guard(async (t0) => { const t = now(), n = 'snap' + snaps.length + '.' + snapFmt; await exec(['-ss', t.toFixed(3), '-i', 'in.mp4', '-frames:v', '1', '-q:v', '2', '-y', n]); snaps.push(t); draw(); const o = await mk(n, f2(t)); snapList.push(o); await outs(snapList.slice(-4), snaps.length + ' khung · ' + kb(o.size) + ' ' + snapFmt, t0); }) }] },
+  { id: 'merge', label: 'Ghép file', note: 'Ghép hai file khác nhau (cùng codec/thông số) không mã hoá lại — tính năng "Merge files" của LosslessCut. Ở đây file thứ hai được sinh bằng <code>lavfi mandelbrot</code> với cùng cấu hình H.264/AAC rồi nối bằng concat demuxer.',
+    code: "ffmpeg -f lavfi -i mandelbrot=s=320x240:r=25 -f lavfi -i anullsrc -t 3 -c:v libx264 -g 25 -c:a aac b.mp4\nprintf \"file 'a.mp4'\\nfile 'b.mp4'\\n\" > list.txt\nffmpeg -f concat -safe 0 -i list.txt -c copy merged.mp4",
+    btns: [{ t: 'Ghép (cắt đoạn + file 2)', fn: guard(async (t0) => { const s = segs[act]; await exec(cutArgs(s, 'a.mp4'));
+      await exec(['-f', 'lavfi', '-i', 'mandelbrot=s=320x240:r=25', '-f', 'lavfi', '-i', 'sine=f=300:r=44100', '-t', '3', '-c:v', 'libx264', '-preset', 'ultrafast', '-g', '25', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-ar', '44100', '-y', 'b.mp4']);
+      await ffmpeg.writeFile('list.txt', "file 'a.mp4'\nfile 'b.mp4'\n"); await exec(['-f', 'concat', '-safe', '0', '-i', 'list.txt', '-c', 'copy', '-y', 'm.mp4']); const o = await mk('m.mp4', 'a.mp4 + b.mp4'); await outs([o], kb(o.size) + ' · ' + f2(o.dur) + ' (đoạn ' + f2(s.b - s.a) + ' + 3s)', t0); }) }] },
+];
+let snapFmt = 'png'; const snapList = [];
+const tabs = $('tabs'), ctl = $('ctl');
+TABS.forEach((t) => { const b = document.createElement('button'); b.type = 'button'; b.id = 'tab-' + t.id; b.textContent = t.label; b.setAttribute('role', 'tab'); b.onclick = () => openTab(t.id); tabs.append(b); });
+function openTab(id) {
+  cur = TABS.find((t) => t.id === id) || TABS[0]; TABS.forEach((t) => $('tab-' + t.id).classList.toggle('on', t === cur));
+  ctl.replaceChildren();
+  const ib = Object.assign(document.createElement('button'), { type: 'button', textContent: '[ In (I)' }), ob = Object.assign(document.createElement('button'), { type: 'button', textContent: 'Out (O) ]' });
+  ib.onclick = () => { segs[act].a = Math.min(now(), segs[act].b - .2); draw(); }; ob.onclick = () => { segs[act].b = Math.max(now(), segs[act].a + .2); draw(); }; ctl.append(ib, ob);
+  (cur.sel || []).forEach((c) => { const s = document.createElement('select'); c.opts.forEach((o) => s.append(new Option(o, o))); s.onchange = () => c.set(s.value); c.set(c.opts[0]); ctl.append(s); });
+  cur.btns.forEach((c) => { const b = Object.assign(document.createElement('button'), { type: 'button', textContent: c.t }); b.className = 'act'; b.onclick = c.fn; ctl.append(b); });
+  setDis(busy); $('note').innerHTML = cur.note; $('code').textContent = cur.code; $('olbl').textContent = 'KẾT QUẢ · ' + cur.label; $('vout').replaceChildren(); $('mout').textContent = 'chưa xuất'; draw();
+  if (location.hash !== '#' + cur.id) history.replaceState(null, '', '#' + cur.id);
+}
+addEventListener('hashchange', () => openTab(location.hash.slice(1)));
+addEventListener('keydown', (e) => { if (/input|select|textarea/i.test(e.target.tagName)) return; if (e.key === 'i' || e.key === 'I') ctl.children[0].click(); if (e.key === 'o' || e.key === 'O') ctl.children[1].click(); });
+openTab(location.hash.slice(1));
+(async () => {
+  try {
+    await load(); $('min').textContent = 'sinh video nguồn 12s (lavfi testsrc + sine, GOP 25)…'; pg.style.width = '0';
+    await exec(['-f', 'lavfi', '-i', 'testsrc=duration=12:size=320x240:rate=25', '-f', 'lavfi', '-i', 'sine=f=440:r=44100:d=12', '-c:v', 'libx264', '-preset', 'ultrafast', '-g', '25', '-sc_threshold', '0', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-ar', '44100', '-shortest', '-y', 'in.mp4']);
+    const r = await mk('in.mp4', ''); vsrc = r.el; vsrc.parentNode.querySelector('a').remove(); srcSize = r.size; $('vin').replaceChildren(vsrc); vsrc.style.cssText = 'width:100%;height:100%;max-height:none;object-fit:contain'; vsrc.currentTime = segs[0].a;
+    $('min').textContent = kb(r.size) + ' · ' + f2(r.dur) + ' · H.264+AAC'; ready = true; setDis(false); const b = ctl.querySelector('.act:last-of-type'); if (b && cur.id !== 'segments') b.click(); else { segs.push({ a: 8, b: 10.5 }); draw(); ctl.querySelector('.act:last-of-type').click(); }
+  } catch (e) { $('min').textContent = 'lỗi nạp: ' + e.message; log('! ' + e.stack); throw e; }
+})();
+</script>
+</body></html>

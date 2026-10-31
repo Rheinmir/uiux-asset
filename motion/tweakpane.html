@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sample Tweakpane — uiux-asset</title>
+<link rel="stylesheet" href="../aw.css?v=559582af29">
+<link rel="stylesheet" href="_m.css">
+<style>
+.m-bar [role=tab] { padding: 6px 12px; font-size: 14px; }
+.m-bar [role=tab][aria-selected=true] { background: color-mix(in srgb, currentColor 16%, transparent); font-weight: 700; }
+.m-code { max-height: 360px; }
+
+.tw { display: grid; grid-template-columns: 1fr 290px; gap: 16px; width: 100%; align-items: start; padding: 14px; box-sizing: border-box; }
+.tw canvas { width: 100%; height: auto; aspect-ratio: 900 / 520; border-radius: 12px; background: color-mix(in srgb, currentColor 5%, transparent); display: block; }
+.tw .pc { min-width: 0; }
+@media (max-width: 760px) { .tw { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=559582af29"></script>
+<div class="aw-crumb">
+<h1>Tweakpane <span class="aw-tag aw-tag--small aw-tag--solid-green m-badge" id="badge">THƯ VIỆN THẬT</span></h1>
+<span>Chạy <code>tweakpane@4.0.5</code> + <code>@tweakpane/plugin-essentials@0.2.1</code> thật từ CDN: mỗi tab một nhóm control của bảng điều khiển, tác động lên canvas bên cạnh. · <a href="https://github.com/cocopon/tweakpane" target="_blank" rel="noopener">cocopon/tweakpane</a> · <a href="./">← Motion</a></span>
+</div>
+<div class="m-bar" id="tabs"></div>
+<div class="m-bar"><span class="m-status" id="st">đang nạp thư viện…</span></div>
+<div class="m-stage" id="stage" style="min-height:440px;display:block"></div>
+<p class="m-note" id="note"></p>
+<pre class="m-code" id="code"></pre>
+</main>
+<script type="module">
+import { Pane } from 'https://cdn.jsdelivr.net/npm/tweakpane@4.0.5/dist/tweakpane.min.js';
+import * as EssentialsPlugin from 'https://cdn.jsdelivr.net/npm/@tweakpane/plugin-essentials@0.2.1/dist/tweakpane-plugin-essentials.min.js';
+// --- khung tab dùng chung (hash #tên-tab chọn tab) ---
+function initTabs(TABS) {
+  const $ = (i) => document.getElementById(i), bar = $('tabs'), stage = $('stage'), note = $('note'), code = $('code'), st = $('st'), badge = $('badge');
+  const names = Object.keys(TABS); let cur = null, cleanup = null, token = 0;
+  bar.setAttribute('role', 'tablist');
+  names.forEach((n) => { const b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'tab'); b.dataset.tab = n; b.id = 'tab-' + n; b.textContent = TABS[n].label; b.onclick = () => select(n); bar.append(b); });
+  async function select(n, fromHash) {
+    if (!TABS[n]) n = names[0];
+    if (cur === n && fromHash !== 'force') return;
+    const my = ++token, T = TABS[n];
+    if (cleanup) { try { cleanup(); } catch (e) { console.warn(e); } cleanup = null; }
+    stage.replaceChildren(); cur = n;
+    bar.querySelectorAll('[role=tab]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === n)));
+    note.textContent = T.note; code.textContent = T.code;
+    if (badge) { badge.textContent = T.sim ? 'MÔ PHỎNG' : 'THƯ VIỆN THẬT'; badge.className = 'aw-tag aw-tag--small m-badge ' + (T.sim ? 'aw-tag--solid-yellow' : 'aw-tag--solid-green'); }
+    if (!fromHash) try { history.replaceState(null, '', '#' + n); } catch (e) {}
+    st.textContent = 'đang nạp…';
+    const c = await T.mount(stage, st);
+    if (my !== token) { try { c && c(); } catch (e) {} return; }
+    cleanup = c || null;
+  }
+  addEventListener('hashchange', () => select(location.hash.slice(1), true));
+  select(location.hash.slice(1) || names[0], true);
+}
+// khung con: thanh nút + sân khấu cao cố định (không phụ thuộc cuộn trang)
+function mkBox(stage, { h = 380, btns = [] } = {}) {
+  const w = document.createElement('div'); w.style.cssText = 'width:100%;display:flex;flex-direction:column;gap:10px;padding:12px;box-sizing:border-box';
+  const bar = document.createElement('div'); bar.className = 'm-bar'; bar.style.margin = '0';
+  const arena = document.createElement('div'); arena.style.cssText = 'position:relative;width:100%;height:' + h + 'px;overflow:hidden;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,currentColor 5%,transparent)';
+  const add = (label, fn) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = label; b.onclick = () => fn(b); bar.append(b); return b; };
+  btns.forEach(([l, f]) => add(l, f)); w.append(bar, arena); stage.append(w); if (!btns.length) bar.remove();
+  return { arena, bar, add };
+}
+const el = (tag, css, parent, txt) => { const e = document.createElement(tag); if (css) e.style.cssText = css; if (txt != null) e.textContent = txt; if (parent) parent.append(e); return e; };
+
+const W = 900, H = 520;
+// khung chung: canvas + pane (có FPS graph); init(pane, ctx, st) trả về hàm vẽ draw(dt, now)
+function tw(stage, title, st, init) {
+  const w = el('div', '', stage); w.className = 'tw'; const cv = el('canvas', '', w); cv.width = W; cv.height = H; const pc = el('div', '', w); pc.className = 'pc';
+  const pane = new Pane({ title, container: pc }); pane.registerPlugin(EssentialsPlugin);
+  const fps = pane.addBlade({ view: 'fpsgraph', label: 'fps', rows: 2 }); const ctx = cv.getContext('2d'); const ink = getComputedStyle(cv).color;
+  const draw = init(pane, ctx, st, ink, cv); let raf, last = performance.now();
+  const loop = (now) => { fps.begin(); const dt = Math.min((now - last) / 1000, .05); last = now; draw(dt, now / 1000); fps.end(); raf = requestAnimationFrame(loop); }; raf = requestAnimationFrame(loop);
+  return () => { cancelAnimationFrame(raf); pane.dispose(); };
+}
+const EASE = { linear: (t) => t, cubic: (t) => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2, bounce: (t) => { const n = 7.5625, d = 2.75; if (t < 1 / d) return n * t * t; if (t < 2 / d) return n * (t -= 1.5 / d) * t + .75; if (t < 2.5 / d) return n * (t -= 2.25 / d) * t + .9375; return n * (t -= 2.625 / d) * t + .984375; }, elastic: (t) => t === 0 || t === 1 ? t : Math.pow(2, -10 * t) * Math.sin((t * 10 - .75) * (2 * Math.PI) / 3) + 1 };
+const bezier = (x1, y1, x2, y2) => (x) => { let lo = 0, hi = 1, t = x; for (let i = 0; i < 24; i++) { t = (lo + hi) / 2; const cx = 3 * (1 - t) * (1 - t) * t * x1 + 3 * (1 - t) * t * t * x2 + t * t * t; if (cx < x) lo = t; else hi = t; } return 3 * (1 - t) * (1 - t) * t * y1 + 3 * (1 - t) * t * t * y2 + t * t * t; };
+const shape = (ctx, kind, r) => { ctx.beginPath(); if (kind === 'circle') ctx.arc(0, 0, r, 0, 6.2832); else if (kind === 'square') ctx.rect(-r, -r, 2 * r, 2 * r); else { ctx.moveTo(0, -r); ctx.lineTo(r * .87, r * .5); ctx.lineTo(-r * .87, r * .5); ctx.closePath(); } ctx.fill(); };
+const clear = (ctx, a) => { if (a) { ctx.globalCompositeOperation = 'destination-out'; ctx.fillStyle = 'rgba(0,0,0,' + a + ')'; ctx.fillRect(0, 0, W, H); ctx.globalCompositeOperation = 'source-over'; } else ctx.clearRect(0, 0, W, H); };
+
+const TABS = {
+  bindings: { label: 'Binding cơ bản', note: 'addBinding(obj, key, opts) tự chọn control theo kiểu giá trị: màu → bộ chọn màu, số → slider, boolean → checkbox, options → danh sách. Kéo các thanh để điều khiển vật thể; "Đặt lại" dùng pane.refresh(). Đồ thị FPS là blade của plugin essentials.',
+    code: "const pane = new Pane({ title: 'Vật thể', container });\npane.registerPlugin(EssentialsPlugin);\nconst fps = pane.addBlade({ view: 'fpsgraph', label: 'fps', rows: 2 });\npane.addBinding(P, 'color');                                   // #6366f1 -> bộ chọn màu\npane.addBinding(P, 'speed',  { min: .2, max: 3, step: .05 });  // slider\npane.addBinding(P, 'easing', { options: { linear: 'linear', bounce: 'bounce' } });\npane.addBinding(P, 'trail');                                   // checkbox\n// vòng lặp: fps.begin(); ...; fps.end();",
+    mount: (s, st) => tw(s, 'Vật thể', st, (pane, ctx, st) => { const D = { color: '#6366f1', speed: 1, radius: 36, easing: 'bounce', shape: 'circle', trail: true, spin: true }, P = { ...D }; let t = 0, ang = 0;
+      pane.addBinding(P, 'color', { label: 'màu' }); pane.addBinding(P, 'speed', { label: 'tốc độ', min: .2, max: 3, step: .05 }); pane.addBinding(P, 'radius', { label: 'bán kính', min: 10, max: 80, step: 1 });
+      pane.addBinding(P, 'easing', { label: 'easing', options: { linear: 'linear', 'cubic in-out': 'cubic', bounce: 'bounce', elastic: 'elastic' } }); pane.addBinding(P, 'shape', { label: 'hình', options: { tròn: 'circle', vuông: 'square', 'tam giác': 'triangle' } });
+      const f = pane.addFolder({ title: 'Tuỳ chọn' }); f.addBinding(P, 'trail', { label: 'vệt mờ' }); f.addBinding(P, 'spin', { label: 'xoay' }); pane.addButton({ title: 'Đặt lại' }).on('click', () => { Object.assign(P, D); pane.refresh(); });
+      return (dt) => { t += dt * P.speed; ang += dt * P.speed * 2; clear(ctx, P.trail ? .18 : 0); const p = t % 2, u = p < 1 ? p : 2 - p, e = EASE[P.easing](u), pad = P.radius + 30; ctx.save(); ctx.translate(pad + (W - 2 * pad) * e, H / 2 + Math.sin(t * 3) * 60); if (P.spin) ctx.rotate(ang); ctx.fillStyle = P.color; shape(ctx, P.shape, P.radius); ctx.restore(); st.textContent = 'tweakpane 4.0.5 · ' + P.easing + ' · e=' + e.toFixed(2); }; }) },
+  point: { label: 'Point 2D / 3D', note: 'Giá trị {x,y} hoặc {x,y,z} tự thành control Point2d/3d với bảng chọn dạng pad: kéo chấm trong pad để đặt vị trí; z đổi kích thước. Có thể nhập số và dùng min/max/step theo từng trục.',
+    code: "const P = { pos: { x: 0.2, y: -0.4 }, scale3: { x: 1, y: 1, z: 0.5 } };\npane.addBinding(P, 'pos', { x: { min: -1, max: 1 }, y: { min: -1, max: 1, inverted: true } });\npane.addBinding(P, 'scale3', { x: { min: .2, max: 2 }, y: { min: .2, max: 2 }, z: { min: 0, max: 1 } });",
+    mount: (s, st) => tw(s, 'Point', st, (pane, ctx, st) => { const P = { pos: { x: 0.2, y: -0.4 }, size: { x: 1, y: 1, z: 0.5 } }; pane.addBinding(P, 'pos', { label: 'vị trí', picker: 'inline', expanded: true, x: { min: -1, max: 1 }, y: { min: -1, max: 1, inverted: true } }); pane.addBinding(P, 'size', { label: 'kích thước 3D', x: { min: .2, max: 2 }, y: { min: .2, max: 2 }, z: { min: 0, max: 1 } });
+      return () => { clear(ctx); ctx.fillStyle = 'rgba(128,128,128,.25)'; ctx.fillRect(W / 2, 0, 1, H); ctx.fillRect(0, H / 2, W, 1); ctx.save(); ctx.translate(W / 2 + P.pos.x * (W / 2 - 80), H / 2 + P.pos.y * (H / 2 - 60)); ctx.fillStyle = 'hsl(' + (P.size.z * 300) + ' 80% 58%)'; ctx.scale(P.size.x, P.size.y); shape(ctx, 'circle', 40 + P.size.z * 50); ctx.restore(); st.textContent = 'pos (' + P.pos.x.toFixed(2) + ', ' + P.pos.y.toFixed(2) + ') · z ' + P.size.z.toFixed(2); }; }) },
+  bezier: { label: 'Cubic Bezier', note: 'Plugin essentials: view "cubicbezier" cho phép kéo hai tay cầm để chỉnh đường cong easing, có xem trước. Bóng bên dưới chạy đúng đường cong đang chỉnh (mảng [x1,y1,x2,y2] như CSS cubic-bezier).',
+    code: "pane.registerPlugin(EssentialsPlugin);\nconst P = { ease: [0.5, 0, 0.5, 1] };\nconst bz = pane.addBlade({ view: 'cubicbezier', value: P.ease, expanded: true, picker: 'inline' });\nbz.on('change', (e) => { const v = e.value; P.ease = [v.x1, v.y1, v.x2, v.y2]; });   // dùng: bezier(...P.ease)(t)",
+    mount: (s, st) => tw(s, 'Easing', st, (pane, ctx, st, ink) => { const P = { ease: [0.5, 0, 0.5, 1], dur: 2 }; const bz = pane.addBlade({ view: 'cubicbezier', value: P.ease, expanded: true, picker: 'inline', label: 'easing' }); bz.on('change', (e) => { const v = e.value; P.ease = [v.x1, v.y1, v.x2, v.y2]; }); pane.addBinding(P, 'dur', { label: 'giây', min: .5, max: 5 }); let t = 0;
+      return (dt) => { t += dt / P.dur; const p = t % 2, u = p < 1 ? p : 2 - p, f = bezier(...P.ease); clear(ctx); ctx.strokeStyle = ink; ctx.globalAlpha = .25; ctx.lineWidth = 2; ctx.strokeRect(70, 70, 760, 240); ctx.beginPath(); for (let i = 0; i <= 60; i++) { const x = i / 60; ctx.lineTo(70 + 760 * x, 310 - 240 * f(x)); } ctx.globalAlpha = .9; ctx.strokeStyle = '#6366f1'; ctx.stroke(); ctx.globalAlpha = 1; ctx.fillStyle = '#ec4899'; ctx.beginPath(); ctx.arc(70 + 760 * u, 310 - 240 * f(u), 12, 0, 6.28); ctx.fill(); ctx.fillStyle = '#10b981'; ctx.beginPath(); ctx.arc(70 + 760 * f(u), 440, 28, 0, 6.28); ctx.fill(); st.textContent = 'cubic-bezier(' + P.ease.map((n) => n.toFixed(2)).join(', ') + ')'; }; }) },
+  interval: { label: 'Interval', note: 'Plugin essentials: view "interval" là thanh trượt hai đầu cho giá trị {min, max}. Ở đây vùng tô sáng giữa min và max trên thước, và chấm quét qua lại chỉ trong khoảng đó.',
+    code: "const P = { range: { min: 20, max: 70 } };\npane.addBinding(P, 'range', { min: 0, max: 100, step: 1 });   // tự dùng view interval\n// P.range.min / P.range.max",
+    mount: (s, st) => tw(s, 'Khoảng', st, (pane, ctx, st, ink) => { const P = { range: { min: 20, max: 70 }, speed: 1 }; pane.addBinding(P, 'range', { label: 'khoảng', min: 0, max: 100, step: 1 }); pane.addBinding(P, 'speed', { label: 'tốc độ', min: .2, max: 3 }); let t = 0;
+      return (dt) => { t += dt * P.speed; const u = (Math.sin(t * 2) + 1) / 2, v = P.range.min + (P.range.max - P.range.min) * u, X = (n) => 60 + n * 7.8; clear(ctx); ctx.fillStyle = ink; ctx.globalAlpha = .15; ctx.fillRect(60, 240, 780, 30); ctx.globalAlpha = 1; ctx.fillStyle = '#6366f1'; ctx.fillRect(X(P.range.min), 240, X(P.range.max) - X(P.range.min), 30); ctx.fillStyle = '#facc15'; ctx.beginPath(); ctx.arc(X(v), 255, 20, 0, 6.28); ctx.fill(); ctx.fillStyle = ink; ctx.font = '22px ui-monospace'; ctx.fillText(P.range.min + ' → ' + P.range.max, 60, 200); st.textContent = 'giá trị ' + v.toFixed(1); }; }) },
+  monitor: { label: 'Monitor', note: 'Binding readonly thành monitor: view "graph" vẽ đồ thị theo thời gian, bản chữ hiển thị giá trị. Sóng sin trên canvas và đồ thị trong bảng dùng chung một biến; biên độ và tần số chỉnh được.',
+    code: "const M = { wave: 0, label: '' };\npane.addBinding(M, 'wave',  { readonly: true, view: 'graph', min: -1, max: 1, interval: 40 });\npane.addBinding(M, 'label', { readonly: true });\n// mỗi khung: M.wave = Math.sin(t * freq) * amp;   // monitor tự đọc lại theo interval",
+    mount: (s, st) => tw(s, 'Giám sát', st, (pane, ctx, st, ink) => { const P = { freq: 2, amp: 0.8 }, M = { wave: 0, label: '' }; pane.addBinding(P, 'freq', { label: 'tần số', min: .5, max: 6 }); pane.addBinding(P, 'amp', { label: 'biên độ', min: .1, max: 1 }); pane.addBinding(M, 'wave', { readonly: true, view: 'graph', min: -1, max: 1, interval: 40, label: 'sóng' }); pane.addBinding(M, 'label', { readonly: true, label: 'nhãn' }); const hist = [];
+      return (dt, now) => { M.wave = Math.sin(now * P.freq) * P.amp; M.label = M.wave > 0 ? 'dương' : 'âm'; hist.push(M.wave); if (hist.length > 200) hist.shift(); clear(ctx); ctx.strokeStyle = ink; ctx.globalAlpha = .2; ctx.beginPath(); ctx.moveTo(0, 260); ctx.lineTo(W, 260); ctx.stroke(); ctx.globalAlpha = 1; ctx.strokeStyle = '#10b981'; ctx.lineWidth = 4; ctx.beginPath(); hist.forEach((v, i) => ctx.lineTo(i * (W / 200), 260 - v * 200)); ctx.stroke(); ctx.fillStyle = '#facc15'; ctx.beginPath(); ctx.arc(W - 10, 260 - M.wave * 200, 14, 0, 6.28); ctx.fill(); st.textContent = 'wave = ' + M.wave.toFixed(2); }; }) },
+  blades: { label: 'Blade & Tab', note: 'Blade là thành phần không gắn với object: addTab chia trang, addBlade({ view: "radiogrid" }) chọn một trong lưới, "buttongrid" là lưới nút bấm, "separator" ngăn nhóm. Ở đây radiogrid chọn hình, buttongrid chọn bảng màu, tab chia Chuyển động/Giao diện.',
+    code: "const tab = pane.addTab({ pages: [{ title: 'Chuyển động' }, { title: 'Giao diện' }] });\ntab.pages[0].addBinding(P, 'speed', { min: 0, max: 4 });\ntab.pages[1].addBlade({ view: 'radiogrid', groupName: 'shape', size: [3, 1], value: 'circle',\n  cells: (x) => ({ title: ['tròn', 'vuông', 'tam giác'][x], value: ['circle', 'square', 'triangle'][x] }) }).on('change', (e) => P.shape = e.value);\ntab.pages[1].addBlade({ view: 'buttongrid', size: [3, 1], cells: (x) => ({ title: ['tím', 'hồng', 'xanh'][x] }) }).on('click', (e) => P.color = COLORS[e.index[0]]);",
+    mount: (s, st) => tw(s, 'Blade', st, (pane, ctx, st) => { const P = { speed: 1.5, size: 50, shape: 'circle', color: '#6366f1' }, COLORS = ['#6366f1', '#ec4899', '#10b981']; const tab = pane.addTab({ pages: [{ title: 'Chuyển động' }, { title: 'Giao diện' }] }); tab.pages[0].addBinding(P, 'speed', { label: 'tốc độ', min: 0, max: 4 }); tab.pages[0].addBinding(P, 'size', { label: 'cỡ', min: 20, max: 90 }); tab.pages[0].addBlade({ view: 'separator' });
+      tab.pages[1].addBlade({ view: 'radiogrid', groupName: 'shape', size: [3, 1], label: 'hình', value: 'circle', cells: (x) => ({ title: ['tròn', 'vuông', 'tam giác'][x], value: ['circle', 'square', 'triangle'][x] }) }).on('change', (e) => { P.shape = e.value; });
+      tab.pages[1].addBlade({ view: 'buttongrid', size: [3, 1], label: 'màu', cells: (x) => ({ title: ['tím', 'hồng', 'xanh'][x] }) }).on('click', (e) => { P.color = COLORS[e.index[0]]; }); let t = 0;
+      return (dt) => { t += dt * P.speed; clear(ctx, .2); ctx.save(); ctx.translate(W / 2 + Math.cos(t) * 250, H / 2 + Math.sin(t * 1.5) * 120); ctx.rotate(t); ctx.fillStyle = P.color; shape(ctx, P.shape, P.size); ctx.restore(); st.textContent = P.shape + ' · ' + P.color; }; }) },
+  presets: { label: 'Preset (export/import)', note: 'pane.exportState() trả về cây JSON của toàn bộ giá trị, pane.importState() nạp lại: dùng để lưu 3 preset trong bộ nhớ trang. Chỉnh bảng rồi bấm Lưu 1-3, đổi giá trị, bấm Nạp để quay lại; JSON hiện ở khung dưới.',
+    code: "const saved = [];\nsaved[0] = pane.exportState();      // { color: '#..', speed: 1.2, ... }\npane.importState(saved[0]);         // khôi phục tất cả control\nJSON.stringify(saved[0]);",
+    mount: (s, st) => tw(s, 'Preset', st, (pane, ctx, st) => { const P = { color: '#ec4899', speed: 1, radius: 50, sides: 5 }, saved = [null, null, null]; pane.addBinding(P, 'color', { label: 'màu' }); pane.addBinding(P, 'speed', { label: 'tốc độ', min: .2, max: 4 }); pane.addBinding(P, 'radius', { label: 'bán kính', min: 20, max: 120 }); pane.addBinding(P, 'sides', { label: 'số cạnh', min: 3, max: 12, step: 1 });
+      const out = el('pre', 'margin:8px 0 0;font:11px ui-monospace;white-space:pre-wrap;max-height:120px;overflow:auto;opacity:.8', pane.element.parentElement, '(chưa lưu)'); const save = pane.addFolder({ title: 'Preset' });
+      [0, 1, 2].forEach((i) => { save.addButton({ title: 'Lưu ' + (i + 1) }).on('click', () => { saved[i] = pane.exportState(); out.textContent = JSON.stringify(saved[i]); }); }); [0, 1, 2].forEach((i) => { save.addButton({ title: 'Nạp ' + (i + 1) }).on('click', () => { if (saved[i]) { pane.importState(saved[i]); out.textContent = 'đã nạp ' + (i + 1); } else out.textContent = 'preset ' + (i + 1) + ' trống'; }); }); let t = 0;
+      return (dt) => { t += dt * P.speed; clear(ctx, .15); ctx.save(); ctx.translate(W / 2, H / 2); ctx.rotate(t); ctx.fillStyle = P.color; ctx.beginPath(); for (let i = 0; i < P.sides; i++) { const a = i / P.sides * 6.2832; ctx.lineTo(Math.cos(a) * P.radius * 2, Math.sin(a) * P.radius * 2); } ctx.closePath(); ctx.fill(); ctx.restore(); st.textContent = P.sides + ' cạnh · ' + P.color; }; }) },
+};
+initTabs(TABS);
+</script>
+</body></html>

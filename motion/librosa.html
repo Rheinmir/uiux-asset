@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sample librosa — uiux-asset</title>
+<link rel="stylesheet" href="../aw.css?v=559582af29">
+<link rel="stylesheet" href="_m.css">
+<style>
+.r-stage { display: block; padding: 12px; }
+.r-wrap { position: relative; border-radius: 8px; overflow: hidden; background: #0b0b10; cursor: crosshair; }
+.r-wrap canvas { width: 100%; display: block; max-width: none; }
+.r-cur { position: absolute; top: 0; bottom: 0; width: 2px; background: #fff; box-shadow: 0 0 6px #fff; pointer-events: none; }
+.r-ro { font: 12px var(--aw-mono); margin-top: 8px; min-height: 18px; opacity: .85; }
+.m-bar .on { background: var(--aw-button-bg); color: var(--aw-button-color); border-color: var(--aw-button-bg); }
+.m-bar label { font: 13px var(--aw-mono); display: inline-flex; gap: 4px; align-items: center; }
+.m-bar input[type=file] { max-width: 190px; font-size: 12px; }
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=559582af29"></script>
+<div class="aw-crumb">
+<h1>librosa <span class="aw-tag aw-tag--small aw-tag--solid-yellow m-badge">MÔ PHỎNG</span></h1>
+<span>librosa là thư viện Python nên không chạy được trên web. Đây là MÔ PHỎNG: toàn bộ thuật toán (FFT, STFT, mel, MFCC, chroma, onset/beat DP, YIN, HPSS + ISTFT) được tự cài bằng JavaScript thuần theo cách librosa làm, chạy trên tín hiệu tổng hợp hoặc file âm thanh bạn chọn; kết quả có thể lệch nhỏ so với librosa thật. Khối code bên dưới là đoạn Python tương ứng. · <a href="https://github.com/librosa/librosa" target="_blank" rel="noopener">librosa/librosa</a> · <a href="./">← Motion</a></span>
+</div>
+<div class="m-bar" id="tabs" role="tablist"></div>
+<div class="m-bar" id="ctl"></div>
+<div class="m-stage r-stage" id="stage" style="min-height:520px">
+  <div class="r-wrap" id="rw"><canvas id="cw" width="1200" height="90"></canvas><canvas id="ci" width="1200" height="270"></canvas><div class="r-cur" id="cur"></div></div>
+  <div class="r-ro" id="ro">đang tính…</div>
+</div>
+<p class="m-note" id="note"></p>
+<pre class="m-code" id="code"></pre>
+</main>
+<script>
+const $ = (i) => document.getElementById(i), SR = 22050, NFFT = 1024, HOP = 256, NB = NFFT / 2 + 1;
+// ================== DSP tự viết ==================
+function fft(re, im) { const n = re.length; for (let i = 1, j = 0; i < n; i++) { let b = n >> 1; for (; j & b; b >>= 1) j ^= b; j ^= b; if (i < j) { [re[i], re[j]] = [re[j], re[i]]; [im[i], im[j]] = [im[j], im[i]]; } }
+  for (let len = 2; len <= n; len <<= 1) { const a = -2 * Math.PI / len, wr = Math.cos(a), wi = Math.sin(a), h = len >> 1;
+    for (let i = 0; i < n; i += len) { let cr = 1, ci = 0; for (let k = 0; k < h; k++) { const u = i + k, v = u + h, tr = re[v] * cr - im[v] * ci, ti = re[v] * ci + im[v] * cr; re[v] = re[u] - tr; im[v] = im[u] - ti; re[u] += tr; im[u] += ti; const t = cr * wr - ci * wi; ci = cr * wi + ci * wr; cr = t; } } } }
+const hann = Float32Array.from({ length: NFFT }, (_, i) => .5 - .5 * Math.cos(2 * Math.PI * i / NFFT));
+function stft(y) { // center=True, pad_mode='reflect'
+  const p = NFFT / 2, L = y.length, x = new Float32Array(L + 2 * p); for (let i = 0; i < p; i++) { x[p - 1 - i] = y[Math.min(L - 1, i + 1)]; x[p + L + i] = y[Math.max(0, L - 2 - i)]; } x.set(y, p);
+  const nf = 1 + Math.floor((x.length - NFFT) / HOP), re = new Float32Array(nf * NB), im = new Float32Array(nf * NB), mag = new Float32Array(nf * NB), a = new Float64Array(NFFT), b = new Float64Array(NFFT);
+  for (let f = 0; f < nf; f++) { for (let i = 0; i < NFFT; i++) { a[i] = x[f * HOP + i] * hann[i]; b[i] = 0; } fft(a, b); for (let k = 0; k < NB; k++) { re[f * NB + k] = a[k]; im[f * NB + k] = b[k]; mag[f * NB + k] = Math.hypot(a[k], b[k]); } }
+  return { nf, re, im, mag, L };
+}
+function istft(S, mask) { const p = NFFT / 2, nf = S.nf, out = new Float32Array((nf - 1) * HOP + NFFT), wsum = new Float32Array(out.length), a = new Float64Array(NFFT), b = new Float64Array(NFFT);
+  for (let f = 0; f < nf; f++) { for (let k = 0; k < NB; k++) { const m = mask ? mask[f * NB + k] : 1, r = S.re[f * NB + k] * m, i = S.im[f * NB + k] * m; a[k] = r; b[k] = -i; if (k > 0 && k < NB - 1) { a[NFFT - k] = r; b[NFFT - k] = i; } } fft(a, b);
+    for (let i = 0; i < NFFT; i++) { out[f * HOP + i] += a[i] / NFFT * hann[i]; wsum[f * HOP + i] += hann[i] * hann[i]; } }
+  const y = new Float32Array(S.L); for (let i = 0; i < S.L; i++) { const w = wsum[i + p]; y[i] = w > 1e-6 ? out[i + p] / w : 0; } return y; }
+const hz2mel = (f) => f < 1000 ? f / (200 / 3) : 15 + Math.log(f / 1000) / (Math.log(6.4) / 27), mel2hz = (m) => m < 15 ? m * 200 / 3 : 1000 * Math.exp((m - 15) * Math.log(6.4) / 27);
+function melFB(nm) { const fb = new Float32Array(nm * NB), pts = Array.from({ length: nm + 2 }, (_, i) => mel2hz(hz2mel(0) + (hz2mel(SR / 2) - hz2mel(0)) * i / (nm + 1))); const fr = (k) => k * SR / NFFT;
+  for (let m = 0; m < nm; m++) { const en = 2 / (pts[m + 2] - pts[m]); for (let k = 0; k < NB; k++) { const lo = (fr(k) - pts[m]) / (pts[m + 1] - pts[m]), hi = (pts[m + 2] - fr(k)) / (pts[m + 2] - pts[m + 1]); fb[m * NB + k] = Math.max(0, Math.min(lo, hi)) * en; } } fb.centers = pts.slice(1, -1); return fb; }
+function melSpec(S, nm) { const fb = melFB(nm), M = new Float32Array(S.nf * nm); for (let f = 0; f < S.nf; f++) for (let m = 0; m < nm; m++) { let s = 0; for (let k = 0; k < NB; k++) { const w = fb[m * NB + k]; if (w) s += w * S.mag[f * NB + k] ** 2; } M[f * nm + m] = s; } M.centers = fb.centers; return M; }
+function toDb(A, power, top = 80) { let mx = 1e-10; for (const v of A) if (v > mx) mx = v; const r = new Float32Array(A.length), ref = 10 * Math.log10(mx); for (let i = 0; i < A.length; i++) r[i] = Math.max(10 * Math.log10(Math.max(1e-10, power ? A[i] : A[i] * A[i])) - ref, -top); return r; }
+function mfcc(Mdb, nf, nm, nc) { const out = new Float32Array(nf * nc); for (let f = 0; f < nf; f++) for (let c = 0; c < nc; c++) { let s = 0; for (let m = 0; m < nm; m++) s += Mdb[f * nm + m] * Math.cos(Math.PI * c * (m + .5) / nm); out[f * nc + c] = s * (c === 0 ? Math.sqrt(1 / nm) : Math.sqrt(2 / nm)); } return out; }
+function chroma(S) { const C = new Float32Array(S.nf * 12); for (let f = 0; f < S.nf; f++) { let mx = 1e-9; for (let k = 2; k < NB; k++) { const fr = k * SR / NFFT; if (fr < 130 || fr > 4200) continue; const pc = ((Math.round(12 * Math.log2(fr / 440) + 69) % 12) + 12) % 12; C[f * 12 + pc] += S.mag[f * NB + k] ** 2; } for (let c = 0; c < 12; c++) mx = Math.max(mx, C[f * 12 + c]); for (let c = 0; c < 12; c++) C[f * 12 + c] /= mx; } return C; }
+function onsetEnv(Mdb, nf, nm) { const o = new Float32Array(nf); for (let f = 1; f < nf; f++) { let s = 0; for (let m = 0; m < nm; m++) s += Math.max(0, Mdb[f * nm + m] - Mdb[(f - 1) * nm + m]); o[f] = s / nm; } return o; }
+function beatTrack(o) { const fps = SR / HOP, n = o.length, mean = o.reduce((a, b) => a + b, 0) / n, sd = Math.sqrt(o.reduce((a, b) => a + (b - mean) ** 2, 0) / n) || 1, z = o.map((v) => v / sd);
+  let best = 0, bl = 0; for (let lag = Math.round(fps * 60 / 200); lag <= Math.round(fps * 60 / 60); lag++) { let ac = 0; for (let i = lag; i < n; i++) ac += z[i] * z[i - lag]; ac /= n - lag; const bpm = 60 * fps / lag; ac *= Math.exp(-.5 * Math.log2(bpm / 120) ** 2); if (ac > best) { best = ac; bl = lag; } }
+  const T = bl, cum = new Float32Array(n), prev = new Int32Array(n).fill(-1); for (let t = 0; t < n; t++) { cum[t] = z[t]; let bs = 0, bp = -1; for (let p = Math.max(0, t - 2 * T); p <= t - Math.round(T / 2); p++) { const s = cum[p] - 100 * Math.log((t - p) / T) ** 2; if (bp < 0 || s > bs) { bs = s; bp = p; } } if (bp >= 0 && bs > 0) { cum[t] += bs; prev[t] = bp; } }
+  let t = n - 1, bv = -1e9; for (let i = Math.max(0, n - T); i < n; i++) if (cum[i] > bv) { bv = cum[i]; t = i; } const beats = []; while (t >= 0) { beats.push(t); t = prev[t]; } beats.reverse(); return { bpm: 60 * fps / bl, beats, z }; }
+function yin(y, hop = 512, W = 1024, tmax = 600) { const out = []; for (let s = 0; s + W + tmax < y.length; s += hop) { const d = new Float32Array(tmax); let e = 0; for (let j = 0; j < W; j++) e += y[s + j] ** 2; if (e / W < 1e-4) { out.push([(s + W / 2) / SR, 0]); continue; }
+    for (let tau = 1; tau < tmax; tau++) { let sum = 0; for (let j = 0; j < W; j++) { const df = y[s + j] - y[s + j + tau]; sum += df * df; } d[tau] = sum; } let run = 0; const cm = new Float32Array(tmax); cm[0] = 1; for (let tau = 1; tau < tmax; tau++) { run += d[tau]; cm[tau] = d[tau] * tau / (run || 1); }
+    let tau = -1; for (let i = 25; i < tmax - 1; i++) if (cm[i] < .15) { while (i + 1 < tmax && cm[i + 1] < cm[i]) i++; tau = i; break; } out.push([(s + W / 2) / SR, tau > 0 ? SR / tau : 0]); } return out; }
+function median(a) { a.sort((x, y) => x - y); return a[a.length >> 1]; }
+function hpss(S, k = 17) { const H = new Float32Array(S.mag.length), P = new Float32Array(S.mag.length), h = k >> 1, w = new Float32Array(k); for (let f = 0; f < S.nf; f++) for (let b = 0; b < NB; b++) { let n = 0; for (let j = -h; j <= h; j++) { const ff = f + j; if (ff >= 0 && ff < S.nf) w[n++] = S.mag[ff * NB + b]; } H[f * NB + b] = median(Array.from(w.subarray(0, n))); n = 0; for (let j = -h; j <= h; j++) { const bb = b + j; if (bb >= 0 && bb < NB) w[n++] = S.mag[f * NB + bb]; } P[f * NB + b] = median(Array.from(w.subarray(0, n))); }
+  const mh = new Float32Array(H.length), mp = new Float32Array(H.length); for (let i = 0; i < H.length; i++) { const a = H[i] ** 2, b = P[i] ** 2, s = a + b + 1e-12; mh[i] = a / s; mp[i] = b / s; } return { mh, mp }; }
+// ================== tín hiệu tổng hợp ==================
+const DUR = 4; let seed = 7; const rnd = () => (seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296 * 2 - 1;
+const SIGS = {
+  'Chirp 200→4000 Hz': () => { const y = new Float32Array(SR * DUR); for (let i = 0; i < y.length; i++) { const t = i / SR, ph = 2 * Math.PI * (200 * t + (3800 / (2 * DUR)) * t * t); y[i] = (.5 * Math.sin(ph) + .15 * Math.sin(2 * ph)) * Math.min(1, t * 20, (DUR - t) * 20); } return y; },
+  'Nhịp trống 120 BPM': () => { seed = 7; const y = new Float32Array(SR * DUR), add = (t0, len, fn) => { for (let i = 0; i < len * SR; i++) { const j = Math.round(t0 * SR) + i; if (j < y.length) y[j] += fn(i / SR); } };
+    [0, 1, 2, 3, 1.75, 3.75].forEach((t) => add(t, .3, (t) => .9 * Math.sin(2 * Math.PI * (50 * t + 20 * (1 - Math.exp(-t * 30)) / 30 * 5 + 90 * (1 - Math.exp(-t * 40)) / 40)) * Math.exp(-t * 14)));
+    [.5, 1.5, 2.5, 3.5].forEach((t) => add(t, .25, (t) => (.45 * rnd() + .4 * Math.sin(2 * Math.PI * 190 * t)) * Math.exp(-t * 22)));
+    for (let k = 0; k < 16; k++) { let pr = 0; add(k * .25, .06, (t) => { const n = rnd(), v = n - pr; pr = n; return .35 * v * Math.exp(-t * 90); }); } return y; },
+  'Nốt đàn (C-E-G-C-A-F-D-G)': () => { const y = new Float32Array(SR * DUR), notes = [60, 64, 67, 72, 69, 65, 62, 67], A = [1, .5, .3, .2, .1]; notes.forEach((m, n) => { const f0 = 440 * 2 ** ((m - 69) / 12); for (let i = 0; i < SR * .6; i++) { const j = n * SR * .5 + i, t = i / SR; if (j >= y.length) break; let v = 0; A.forEach((a, h) => v += a * Math.sin(2 * Math.PI * f0 * (h + 1) * t)); y[j] += .3 * v * Math.exp(-3 * t) * Math.min(1, t * 200); } }); return y; },
+};
+// ================== state ==================
+let sig = null, y = null, cache = {}, playing = false, pos = 0, tStart = 0, srcNode = null, ac = null, scroll = false, view = [0, DUR], buzz = { clicks: false, hp: 'gốc' }, cur;
+function compute(name, yy) { y = yy; sig = name; let mx = 0; for (const v of y) mx = Math.max(mx, Math.abs(v)); if (mx > 0) for (let i = 0; i < y.length; i++) y[i] *= .9 / mx; cache = {}; }
+const C = () => cache;
+function getS() { return C().S || (C().S = stft(y)); }
+function getMel(nm) { const k = 'M' + nm; return C()[k] || (C()[k] = (() => { const M = melSpec(getS(), nm); const d = toDb(M, true); d.centers = M.centers; return d; })()); }
+const secOf = (f) => f * HOP / SR, fOf = (t) => Math.min(getS().nf - 1, Math.max(0, Math.round(t * SR / HOP)));
+// ================== vẽ ==================
+const cw = $('cw'), ci = $('ci'), wcx = cw.getContext('2d'), icx = ci.getContext('2d');
+const off = Object.assign(document.createElement('canvas'), { width: 1200, height: 270 }), ox = off.getContext('2d'), offW = Object.assign(document.createElement('canvas'), { width: 1200, height: 90 }), owx = offW.getContext('2d');
+const STOPS = [[0, 0, 4], [59, 15, 112], [140, 41, 129], [222, 73, 104], [254, 159, 109], [252, 253, 191]];
+function cmap(v) { const x = Math.min(.9999, Math.max(0, v)) * 5, i = Math.floor(x), f = x - i, a = STOPS[i], b = STOPS[i + 1]; return [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f, a[2] + (b[2] - a[2]) * f]; }
+function heat(c, A, nf, nr, x, yy, w, h, lo, hi, get) { const t = Object.assign(document.createElement('canvas'), { width: nf, height: nr }), tc = t.getContext('2d'), im = tc.createImageData(nf, nr);
+  for (let f = 0; f < nf; f++) for (let r = 0; r < nr; r++) { const v = get ? get(f, r) : A[f * nr + r], [R, G, B] = cmap((v - lo) / (hi - lo)), o = ((nr - 1 - r) * nf + f) * 4; im.data[o] = R; im.data[o + 1] = G; im.data[o + 2] = B; im.data[o + 3] = 255; }
+  tc.putImageData(im, 0, 0); c.imageSmoothingEnabled = true; c.drawImage(t, x, yy, w, h); }
+const XT = (t) => t / DUR * 1200;
+function drawWave() { const c = owx; c.fillStyle = '#0b0b10'; c.fillRect(0, 0, 1200, 90); c.fillStyle = '#fa5d29'; const n = y.length;
+  for (let x = 0; x < 1200; x++) { let mn = 1, mx = -1; const a = Math.floor(x / 1200 * n), b = Math.floor((x + 1) / 1200 * n); for (let i = a; i < b; i++) { const v = y[i]; if (v < mn) mn = v; if (v > mx) mx = v; } c.fillRect(x, 45 - mx * 42, 1, Math.max(1, (mx - mn) * 42)); } c.fillStyle = 'rgba(255,255,255,.5)'; c.font = '11px ui-monospace,monospace'; c.fillText('waveform · y (sr=' + SR + ')', 6, 12); }
+function label(c, txt, x, yy, col) { c.fillStyle = col || '#fff'; c.font = '11px ui-monospace,monospace'; c.fillText(txt, x, yy); }
+function line(c, arr, col, ymap) { c.strokeStyle = col; c.lineWidth = 2; c.beginPath(); arr.forEach((v, i) => { const x = XT(secOf(i)), yy = ymap(v); i ? c.lineTo(x, yy) : c.moveTo(x, yy); }); c.stroke(); }
+let roFn = null, axis = 'tuyến tính', ovC = false, nmels = 64, ncoef = 20, hsel = 'gốc';
+const yOfHz = (f, H) => axis === 'log' ? H - H * Math.log(Math.max(50, f) / 50) / Math.log(SR / 2 / 50) : H - f / (SR / 2) * H;
+const NOTE = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'], noteOf = (f) => { const m = Math.round(12 * Math.log2(f / 440) + 69); return NOTE[((m % 12) + 12) % 12] + (Math.floor(m / 12) - 1); };
+const TABS = [
+  { id: 'waveform', label: 'Waveform & RMS', note: 'Đường bao biên độ của tín hiệu và hai đặc trưng miền thời gian: <code>rms</code> (năng lượng) và <code>zero_crossing_rate</code> (tần suất đổi dấu — cao với tiếng ồn/hi-hat). Bấm lên hình để tua, nút Phát để nghe tín hiệu.',
+    code: "y, sr = librosa.load(path, sr=22050)\nrms = librosa.feature.rms(y=y, frame_length=1024, hop_length=256)[0]\nzcr = librosa.feature.zero_crossing_rate(y, frame_length=1024, hop_length=256)[0]\nlibrosa.display.waveshow(y, sr=sr)",
+    ctl: () => [], draw() { const S = getS(), r = [], z = []; for (let f = 0; f < S.nf; f++) { let s = 0, c = 0; const st = f * HOP - NFFT / 2; for (let i = 0; i < NFFT; i++) { const v = y[Math.min(y.length - 1, Math.max(0, st + i))] || 0, w = y[Math.min(y.length - 1, Math.max(0, st + i - 1))] || 0; s += v * v; if ((v >= 0) !== (w >= 0)) c++; } r.push(Math.sqrt(s / NFFT)); z.push(c / NFFT); }
+      const mr = Math.max(...r), mz = Math.max(...z, 1e-9); ox.fillStyle = '#0b0b10'; ox.fillRect(0, 0, 1200, 270); ox.strokeStyle = 'rgba(255,255,255,.12)'; for (let i = 1; i < 4; i++) { ox.beginPath(); ox.moveTo(0, i * 67); ox.lineTo(1200, i * 67); ox.stroke(); }
+      line(ox, r, '#fa5d29', (v) => 262 - v / mr * 240); line(ox, z, '#49b3fc', (v) => 262 - v / mz * 240); label(ox, 'rms (cam, chuẩn hoá)', 8, 16, '#fa5d29'); label(ox, 'zero_crossing_rate (xanh, chuẩn hoá)', 8, 32, '#49b3fc'); roFn = (t) => { const f = fOf(t); return 'rms=' + r[f].toFixed(3) + ' · zcr=' + z[f].toFixed(3); }; } },
+  { id: 'stft', label: 'STFT', note: 'Biến đổi Fourier thời gian ngắn (n_fft=1024, hop=256, cửa sổ Hann, center=True) cho spectrogram dB. FFT radix-2 tự viết. Có thể chuyển trục tần số tuyến tính/log và phủ <code>spectral_centroid</code> (vàng) / <code>spectral_rolloff</code> 85% (xanh lá).',
+    code: "D = librosa.stft(y, n_fft=1024, hop_length=256)\nS_db = librosa.amplitude_to_db(np.abs(D), ref=np.max)\nlibrosa.display.specshow(S_db, sr=sr, hop_length=256, x_axis='time', y_axis='log')\ncent = librosa.feature.spectral_centroid(y=y, sr=sr)\nroll = librosa.feature.spectral_rolloff(y=y, sr=sr, roll_percent=0.85)",
+    ctl: () => [sel(['tuyến tính', 'log'], axis, (v) => { axis = v; redraw(); }), chk('Centroid + rolloff', ovC, (v) => { ovC = v; redraw(); })],
+    draw() { const S = getS(), d = C().Sdb || (C().Sdb = toDb(S.mag, false)), H = 270; heat(ox, null, S.nf, H, 0, 0, 1200, H, 0, 1, (f, r) => { const hz = axis === 'log' ? 50 * Math.pow(SR / 2 / 50, r / (H - 1)) : r / (H - 1) * SR / 2, b = Math.min(NB - 1, hz / (SR / NFFT)), b0 = Math.floor(b), b1 = Math.min(NB - 1, b0 + 1), q = b - b0; return ((d[f * NB + b0] * (1 - q) + d[f * NB + b1] * q) + 80) / 80; });
+      if (ovC) { const ce = [], ro = []; for (let f = 0; f < S.nf; f++) { let a = 0, b = 0, tot = 0; for (let k = 0; k < NB; k++) { a += k * S.mag[f * NB + k]; b += S.mag[f * NB + k]; tot += S.mag[f * NB + k] ** 2; } ce.push(a / (b || 1) * SR / NFFT); let c = 0, k = 0; for (; k < NB; k++) { c += S.mag[f * NB + k] ** 2; if (c >= .85 * tot) break; } ro.push(k * SR / NFFT); } line(ox, ce, '#ffd24a', (v) => yOfHz(v, H)); line(ox, ro, '#3ee6a8', (v) => yOfHz(v, H)); }
+      axisLabels([0, 500, 1000, 2000, 4000, 8000], (f) => yOfHz(f, H), 'Hz'); roFn = (t) => { const f = fOf(t); let bm = 1; for (let k = 1; k < NB; k++) if (S.mag[f * NB + k] > S.mag[f * NB + bm]) bm = k; return 'đỉnh phổ ≈ ' + (bm * SR / NFFT).toFixed(0) + ' Hz'; }; } },
+  { id: 'mel', label: 'Mel-spectrogram', note: 'Gom phổ công suất vào các dải mel (bộ lọc tam giác thang Slaney, chuẩn hoá diện tích như librosa) rồi đổi sang dB: tần thấp được phân giải mịn, tần cao thô — gần với cảm nhận của tai người.',
+    code: "S = librosa.feature.melspectrogram(y=y, sr=sr, n_fft=1024, hop_length=256, n_mels=64)\nS_db = librosa.power_to_db(S, ref=np.max)\nlibrosa.display.specshow(S_db, sr=sr, hop_length=256, x_axis='time', y_axis='mel')",
+    ctl: () => [sel(['32', '64', '128'], String(nmels), (v) => { nmels = +v; redraw(); }), lab('n_mels')],
+    draw() { const M = getMel(nmels), S = getS(); heat(ox, M, S.nf, nmels, 0, 0, 1200, 270, -80, 0); const H = 270; const pos = (hz) => H - H * (hz2mel(hz) - 0) / hz2mel(SR / 2); axisLabels([100, 500, 1000, 2000, 4000, 8000], pos, 'Hz'); roFn = (t) => { const f = fOf(t); let bm = 0; for (let m = 0; m < nmels; m++) if (M[f * nmels + m] > M[f * nmels + bm]) bm = m; return 'dải mel mạnh nhất #' + bm + ' ≈ ' + M.centers[bm].toFixed(0) + ' Hz · ' + M[f * nmels + bm].toFixed(0) + ' dB'; }; } },
+  { id: 'mfcc', label: 'MFCC', note: 'MFCC = DCT-II (chuẩn trực giao) của mel-spectrogram dB: vài hệ số đầu mô tả "hình dáng" đường bao phổ (âm sắc). Hệ số 0 là độ lớn tổng; mỗi hàng được chuẩn hoá z-score khi hiển thị để nhìn rõ các hệ số nhỏ.',
+    code: "S_db = librosa.power_to_db(librosa.feature.melspectrogram(y=y, sr=sr, n_fft=1024, hop_length=256, n_mels=64), ref=np.max)\nmf = librosa.feature.mfcc(S=S_db, n_mfcc=20)     # DCT-II, norm='ortho'\nlibrosa.display.specshow(mf, x_axis='time')",
+    ctl: () => [sel(['13', '20', '40'], String(ncoef), (v) => { ncoef = +v; redraw(); }), lab('n_mfcc')],
+    draw() { const M = getMel(64), S = getS(), mf = mfcc(M, S.nf, 64, ncoef), mu = [], sd = []; for (let c = 0; c < ncoef; c++) { let m = 0, s = 0; for (let f = 0; f < S.nf; f++) m += mf[f * ncoef + c]; m /= S.nf; for (let f = 0; f < S.nf; f++) s += (mf[f * ncoef + c] - m) ** 2; mu.push(m); sd.push(Math.sqrt(s / S.nf) || 1); }
+      heat(ox, null, S.nf, ncoef, 0, 0, 1200, 270, -2.5, 2.5, (f, r) => (mf[f * ncoef + r] - mu[r]) / sd[r]); axisLabels([0, 4, 8, 12].filter((c) => c < ncoef), (c) => 270 - (c + .5) / ncoef * 270, 'c'); roFn = (t) => { const f = fOf(t); return 'mfcc[0..3] = ' + [0, 1, 2, 3].map((c) => mf[f * ncoef + c].toFixed(1)).join(', '); }; } },
+  { id: 'chroma', label: 'Chroma', note: 'Chromagram: năng lượng gộp theo 12 lớp cao độ (C…B), bất kể quãng tám — dùng nhận hợp âm/giai điệu. Bản này là phiên bản đơn giản (cộng công suất theo lớp nốt gần nhất, bỏ qua tuning); thử với "Nốt đàn" để thấy C-E-G-C-A-F-D-G.',
+    code: "chroma = librosa.feature.chroma_stft(y=y, sr=sr, n_fft=1024, hop_length=256)\nlibrosa.display.specshow(chroma, y_axis='chroma', x_axis='time')",
+    ctl: () => [], draw() { const Cc = chroma(getS()), S = getS(); heat(ox, null, S.nf, 12, 0, 0, 1200, 270, 0, 1, (f, r) => Cc[f * 12 + r]); axisLabels([0, 2, 4, 5, 7, 9, 11], (c) => 270 - (c + .5) / 12 * 270, '', NOTE); roFn = (t) => { const f = fOf(t); let b = 0; for (let c = 1; c < 12; c++) if (Cc[f * 12 + c] > Cc[f * 12 + b]) b = c; return 'lớp cao độ mạnh nhất: ' + NOTE[b]; }; } },
+  { id: 'beat', label: 'Onset & Beat', note: 'Độ mạnh khởi âm (onset strength) = trung bình phần dương của hiệu mel-dB giữa hai khung; tempo lấy từ tự tương quan có trọng số quanh 120 BPM; beat tìm bằng quy hoạch động của Ellis (2007) như <code>beat_track</code>. Cam = beat, tam giác = đỉnh onset. Bật click để NGHE beat tìm được.',
+    code: "oenv = librosa.onset.onset_strength(y=y, sr=sr, hop_length=256)\ntempo, beats = librosa.beat.beat_track(onset_envelope=oenv, sr=sr, hop_length=256)\nonsets = librosa.onset.onset_detect(onset_envelope=oenv, sr=sr, hop_length=256)\nclicks = librosa.clicks(frames=beats, sr=sr, hop_length=256, length=len(y))",
+    ctl: () => [chk('Phát kèm tiếng click tại beat', buzz.clicks, (v) => { buzz.clicks = v; if (playing) play(now()); })],
+    draw() { const M = getMel(64), S = getS(), o = onsetEnv(M, S.nf, 64), bt = C().bt || (C().bt = beatTrack(o)); heat(ox, M, S.nf, 64, 0, 0, 1200, 270, -80, 0); ox.fillStyle = 'rgba(0,0,0,.55)'; ox.fillRect(0, 0, 1200, 270); const mo = Math.max(...o) || 1; line(ox, Array.from(o), '#49b3fc', (v) => 262 - v / mo * 200);
+      const thr = o.reduce((a, b) => a + b, 0) / o.length + .5 * Math.sqrt(o.reduce((a, b) => a + (b - o.reduce((x, y2) => x + y2, 0) / o.length) ** 2, 0) / o.length); C().peaks = []; for (let f = 2; f < o.length - 2; f++) if (o[f] > thr && o[f] >= o[f - 1] && o[f] > o[f + 1] && o[f] >= o[f - 2] && o[f] > o[f + 2]) { C().peaks.push(f); const x = XT(secOf(f)), yy = 262 - o[f] / mo * 200; ox.fillStyle = '#ffd24a'; ox.beginPath(); ox.moveTo(x, yy - 10); ox.lineTo(x - 5, yy - 20); ox.lineTo(x + 5, yy - 20); ox.fill(); }
+      ox.strokeStyle = '#fa5d29'; ox.lineWidth = 2; bt.beats.forEach((f) => { const x = XT(secOf(f)); ox.beginPath(); ox.moveTo(x, 0); ox.lineTo(x, 270); ox.stroke(); }); label(ox, 'onset_strength (xanh) · onset_detect (▼ vàng) · beat_track (vạch cam)', 8, 16); C().beatSec = bt.beats.map(secOf);
+      roFn = () => 'tempo ≈ ' + bt.bpm.toFixed(1) + ' BPM · ' + bt.beats.length + ' beat · ' + C().peaks.length + ' onset'; } },
+  { id: 'pitch', label: 'Pitch (YIN)', note: 'Ước lượng tần số cơ bản f0 bằng thuật toán YIN (hàm hiệu, chuẩn hoá trung bình tích luỹ, ngưỡng 0.15) — nền librosa.yin. Chấm cam là f0 từng khung phủ lên spectrogram trục log; thanh trạng thái hiện f0 và tên nốt tại con trỏ. Hợp nhất với "Chirp" và "Nốt đàn".',
+    code: "f0 = librosa.yin(y, fmin=65, fmax=2000, sr=sr, frame_length=2048, hop_length=512)\nnotes = librosa.hz_to_note(f0)\n# hoặc f0, voiced, prob = librosa.pyin(y, fmin=65, fmax=2000, sr=sr)",
+    ctl: () => [], draw() { const S = getS(), d = C().Sdb || (C().Sdb = toDb(S.mag, false)), H = 270, ax = axis; axis = 'log'; heat(ox, null, S.nf, H, 0, 0, 1200, H, 0, 1, (f, r) => { const hz = 50 * Math.pow(SR / 2 / 50, r / (H - 1)), b = Math.min(NB - 1, Math.round(hz / (SR / NFFT))); return (d[f * NB + b] + 80) / 80 * .8; });
+      const F = C().f0 || (C().f0 = yin(y)); ox.fillStyle = '#fa5d29'; F.forEach(([t, f]) => { if (f > 60 && f < 2500) { ox.beginPath(); ox.arc(XT(t), yOfHz(f, H), 3.5, 0, 7); ox.fill(); } }); axisLabels([100, 200, 440, 1000, 2000, 4000], (f) => yOfHz(f, H), 'Hz'); axis = ax;
+      roFn = (t) => { let b = F[0]; F.forEach((p) => { if (Math.abs(p[0] - t) < Math.abs(b[0] - t)) b = p; }); return b[1] > 60 ? 'f0 ≈ ' + b[1].toFixed(1) + ' Hz · nốt ' + noteOf(b[1]) : 'không có cao độ (vô thanh / im lặng)'; }; } },
+  { id: 'hpss', label: 'HPSS', note: 'Tách thành phần hài (harmonic — vạch ngang, đàn) và gõ (percussive — vạch dọc, trống) bằng lọc median hai hướng trên spectrogram + mặt nạ mềm, rồi ISTFT (giữ pha gốc) để NGHE từng phần. Dùng tín hiệu có cả trống lẫn nốt… hoặc thử "Nhịp trống" và "Nốt đàn" riêng. Hơi chậm (~1 giây) lần đầu.',
+    code: "D = librosa.stft(y, n_fft=1024, hop_length=256)\nD_h, D_p = librosa.decompose.hpss(D, kernel_size=17, margin=1.0)   # median filter + soft mask\ny_h = librosa.istft(D_h, hop_length=256, length=len(y))\ny_p = librosa.istft(D_p, hop_length=256, length=len(y))",
+    ctl: () => [sel(['gốc', 'harmonic', 'percussive'], hsel, (v) => { hsel = v; if (playing) play(now()); }), lab('nghe:')],
+    draw() { const S = getS(), hp = C().hp || (C().hp = (() => { const { mh, mp } = hpss(S), H2 = new Float32Array(S.mag.length), P2 = new Float32Array(S.mag.length); for (let i = 0; i < H2.length; i++) { H2[i] = S.mag[i] * mh[i]; P2[i] = S.mag[i] * mp[i]; } const dh = toDb(H2, false, 70), dp = toDb(P2, false, 70); C().yh = istft(S, mh); C().yp = istft(S, mp); return { dh, dp }; })());
+      const h2 = 135; heat(ox, null, S.nf, h2, 0, 0, 1200, h2, 0, 1, (f, r) => { const b = Math.round(r / (h2 - 1) * (NB - 1)); return (hp.dh[f * NB + b] + 70) / 70; }); heat(ox, null, S.nf, h2, 0, h2, 1200, h2, 0, 1, (f, r) => { const b = Math.round(r / (h2 - 1) * (NB - 1)); return (hp.dp[f * NB + b] + 70) / 70; });
+      ox.fillStyle = 'rgba(255,255,255,.35)'; ox.fillRect(0, h2 - 1, 1200, 2); label(ox, 'HARMONIC', 8, 16); label(ox, 'PERCUSSIVE', 8, h2 + 16); roFn = () => 'đang nghe: ' + hsel + ' (ISTFT từ mặt nạ mềm)'; } },
+];
+// ================== helper UI ==================
+const el = (t, p) => Object.assign(document.createElement(t), p || {});
+const sel = (opts, val, fn) => { const s = el('select'); opts.forEach((o) => s.append(new Option(o, o))); s.value = val; s.onchange = () => fn(s.value); return s; };
+const chk = (t, v, fn) => { const l = el('label'), c = el('input', { type: 'checkbox', checked: v }); c.onchange = () => fn(c.checked); l.append(c, t); return l; };
+const lab = (t) => el('span', { className: 'm-status', textContent: t }), btn = (t, fn) => { const b = el('button', { type: 'button', textContent: t }); b.onclick = fn; return b; };
+function axisLabels(vals, pos, unit, names) { vals.forEach((v) => { const yy = pos(v); ox.fillStyle = 'rgba(255,255,255,.5)'; ox.font = '10px ui-monospace,monospace'; ox.fillText(names ? names[v] : v + unit, 1196 - 36, Math.max(10, Math.min(266, yy - 2))); ox.fillRect(1160, yy, 36, 1); }); }
+function redraw() { if (!y) return; drawWave(); ox.clearRect(0, 0, 1200, 270); roFn = null; cur.draw(); show(); }
+function show() { const [a, b] = view, sx = a / DUR * 1200, sw = (b - a) / DUR * 1200; wcx.drawImage(offW, sx, 0, sw, 90, 0, 0, 1200, 90); icx.drawImage(off, sx, 0, sw, 270, 0, 0, 1200, 270);
+  icx.fillStyle = 'rgba(255,255,255,.55)'; icx.font = '10px ui-monospace,monospace'; for (let t = Math.ceil(a * 4) / 4; t < b; t += .25) { const x = (t - a) / (b - a) * 1200; icx.fillRect(x, 262, 1, t % 1 === 0 ? 8 : 4); if (t % 1 === 0) icx.fillText(t + 's', x + 3, 258); } }
+// ================== phát ==================
+const now = () => playing ? ((performance.now() - tStart) / 1000) % DUR : pos;
+function curBuf() { let b = y; if (cur.id === 'hpss') { getS(); cur.draw && C().hp || (ox.clearRect(0, 0, 0, 0), redrawQuiet()); b = hsel === 'harmonic' ? C().yh : hsel === 'percussive' ? C().yp : y; }
+  if (cur.id === 'beat' && buzz.clicks && C().beatSec) { b = Float32Array.from(y); C().beatSec.forEach((t) => { for (let i = 0; i < 600; i++) { const j = Math.round(t * SR) + i; if (j < b.length) b[j] += .6 * Math.sin(2 * Math.PI * 1500 * i / SR) * Math.exp(-i / 120); } }); } return b; }
+function redrawQuiet() { const p = cur; if (!C().hp) { ox.clearRect(0, 0, 1200, 270); p.draw(); } }
+function play(from) { stopSrc(); ac = ac || new (window.AudioContext || window.webkitAudioContext)(); ac.resume(); const b = curBuf(), ab = ac.createBuffer(1, b.length, SR); ab.copyToChannel(b, 0); srcNode = ac.createBufferSource(); srcNode.buffer = ab; srcNode.loop = true; srcNode.connect(ac.destination); srcNode.start(0, from); tStart = performance.now() - from * 1000; playing = true; $('pl').textContent = '⏸ Dừng'; }
+function stopSrc() { if (srcNode) { try { srcNode.stop(); } catch (e) {} srcNode = null; } }
+function pause() { pos = now(); stopSrc(); playing = false; $('pl').textContent = '▶ Phát'; }
+function seek(t) { pos = t; if (playing) play(t); }
+const rw = $('rw'); rw.onpointerdown = (e) => { const r = rw.getBoundingClientRect(); seek(view[0] + (e.clientX - r.left) / r.width * (view[1] - view[0])); };
+(function tick() { const t = now(); if (scroll) { const w = 1.6, a = Math.max(0, Math.min(DUR - w, t - w * .45)); view = [a, a + w]; if (y) show(); } else if (view[1] - view[0] < DUR) { view = [0, DUR]; if (y) show(); }
+  $('cur').style.left = Math.max(0, Math.min(100, (t - view[0]) / (view[1] - view[0]) * 100)) + '%'; if (roFn && y) $('ro').textContent = (playing ? '▶ ' : '⏸ ') + t.toFixed(2) + 's · ' + roFn(t); requestAnimationFrame(tick); })();
+// ================== tab & điều khiển chung ==================
+const tabsEl = $('tabs'), ctlEl = $('ctl'), fileIn = el('input', { type: 'file', accept: 'audio/*', title: 'Hoặc dùng file âm thanh của bạn' });
+TABS.forEach((t) => { const b = el('button', { type: 'button', id: 'tab-' + t.id, textContent: t.label }); b.setAttribute('role', 'tab'); b.onclick = () => openTab(t.id); tabsEl.append(b); });
+function setSig(name) { pause(); pos = 0; if (SIGS[name]) compute(name, SIGS[name]()); redraw(); }
+function openTab(id) { cur = TABS.find((t) => t.id === id) || TABS[0]; TABS.forEach((t) => $('tab-' + t.id).classList.toggle('on', t === cur)); if (playing) pause();
+  const s = sel(Object.keys(SIGS), sig && SIGS[sig] ? sig : Object.keys(SIGS)[0], (v) => setSig(v)); s.id = 'sig';
+  ctlEl.replaceChildren(s, fileIn, el('button', { type: 'button', id: 'pl', textContent: '▶ Phát', onclick: () => playing ? pause() : play(pos) }), chk('Cuộn theo con trỏ', scroll, (v) => scroll = v), ...cur.ctl());
+  $('note').innerHTML = cur.note; $('code').textContent = cur.code; if (y) redraw(); if (location.hash !== '#' + cur.id) history.replaceState(null, '', '#' + cur.id); }
+fileIn.onchange = async () => { const f = fileIn.files[0]; if (!f) return; try { const ac2 = new (window.AudioContext || window.webkitAudioContext)(), b = await ac2.decodeAudioData(await f.arrayBuffer()), ch = b.getChannelData(0), n = Math.min(DUR * SR, Math.floor(b.length / b.sampleRate * SR)), yy = new Float32Array(DUR * SR); for (let i = 0; i < n; i++) yy[i] = ch[Math.floor(i * b.sampleRate / SR)]; compute('file: ' + f.name, yy); pause(); pos = 0; redraw(); $('ro').textContent = 'đã nạp ' + f.name + ' (lấy 4 giây đầu, resample 22050 Hz)'; } catch (e) { $('ro').textContent = 'không giải mã được file: ' + e.message; } };
+addEventListener('hashchange', () => openTab(location.hash.slice(1)));
+cur = TABS[0]; compute('Chirp 200→4000 Hz', SIGS['Chirp 200→4000 Hz']()); drawWave(); openTab(location.hash.slice(1) || 'stft'); redraw();
+</script>
+</body></html>

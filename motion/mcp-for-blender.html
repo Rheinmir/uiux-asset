@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sample mcp-for-blender — uiux-asset</title>
+<link rel="stylesheet" href="../aw.css?v=559582af29">
+<link rel="stylesheet" href="_m.css">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/"}}</script>
+<style>.m-bar button[aria-pressed=true]{background:#2a6df4;color:#fff;border-color:#2a6df4}.m-bar input[type=range]{vertical-align:middle}.mb-view{display:flex;width:100%;height:100%}.mb-view>.v{flex:1;min-width:0;position:relative}.mb-log{width:38%;min-width:240px;max-width:420px;overflow:auto;padding:10px 12px;font:12px/1.5 ui-monospace,Menlo,monospace;background:rgba(127,127,127,.14);white-space:pre-wrap;word-break:break-word;text-align:left}.mb-log .q{color:#2a6df4}.mb-log .r{color:#1f9d55}.mb-log .e{color:#d33}@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .mb-log .q{color:#7aa7ff}:root:not([data-theme=light]) .mb-log .r{color:#5fd68a}}:root[data-theme=dark] .mb-log .q{color:#7aa7ff}:root[data-theme=dark] .mb-log .r{color:#5fd68a}@media(max-width:700px){.mb-view{flex-direction:column}.mb-log{width:auto;max-width:none;height:38%;min-width:0}}textarea.mb-py{width:100%;height:100px;font:12px/1.5 ui-monospace,Menlo,monospace;padding:10px;border-radius:12px;border:1px solid currentColor;background:transparent;color:inherit;box-sizing:border-box}.m-bar input[type=text]{min-width:260px;flex:1}</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=559582af29"></script>
+<div class="aw-crumb">
+<h1>mcp-for-blender <span class="aw-tag aw-tag--small aw-tag--solid-yellow m-badge">MÔ PHỎNG</span></h1>
+<span><b>Mô phỏng web-native bằng three.js</b>: không có Blender thật và không có MCP server thật. Minh họa luồng prompt → chuỗi JSON tool call (kiểu blender-mcp) → cảnh 3D đổi theo từng lệnh. 6 tab. · <a href="https://github.com/ahujasid/blender-mcp" target="_blank" rel="noopener">ahujasid/blender-mcp</a> · <a href="./">← Motion</a></span>
+</div>
+<div class="m-bar" id="tabs"></div>
+<div class="m-stage" id="stage" style="height:460px;min-height:460px;display:block"><div class="mb-view"><div class="v" id="vp"></div><div class="mb-log" id="log"></div></div></div>
+<div class="m-bar" id="ctl"></div>
+<p class="m-status" id="st" style="margin-top:10px">đang nạp thư viện…</p>
+<p class="m-note"><b>MÔ PHỎNG, không phải Blender thật.</b> Tên tool <code>get_scene_info</code> và <code>execute_blender_code</code> lấy theo blender-mcp; các lệnh <code>create_object</code>, <code>set_material</code>, <code>animate</code>… là lệnh minh họa tự đặt cho mô phỏng. Phần thật duy nhất là three.js vẽ cảnh.</p>
+<p class="m-note" id="note"></p>
+<pre class="m-code" id="code"></pre>
+</main>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+const $ = (id) => document.getElementById(id), vp = $('vp'), st = $('st'), tabsEl = $('tabs'), ctl = $('ctl'), logEl = $('log');
+let renderer;
+try { renderer = new THREE.WebGLRenderer({ antialias: true }); }
+catch (e) { vp.innerHTML = '<p style="padding:24px;text-align:center">Trình duyệt này không có WebGL nên không vẽ được viewport mô phỏng.</p>'; st.textContent = 'không có WebGL'; throw e; }
+renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5)); renderer.shadowMap.enabled = true; vp.append(renderer.domElement);
+const ui = {
+  btn(t, fn) { const b = document.createElement('button'); b.type = 'button'; b.textContent = t; b.onclick = () => fn(b); ctl.append(b); return b; },
+  range(t, min, max, step, v, fn) { const l = document.createElement('label'); l.style.cssText = 'font:13px ui-monospace,Menlo,monospace;display:flex;gap:6px;align-items:center'; const i = document.createElement('input'); i.type = 'range'; Object.assign(i, { min, max, step, value: v }); i.oninput = () => fn(+i.value); l.append(t, i); ctl.append(l); return i; },
+  group(names, fn, first = 0) { const bs = names.map((n, i) => ui.btn(n, () => { bs.forEach((x) => x.setAttribute('aria-pressed', x === bs[i])); fn(i); })); bs[first].click(); return bs; },
+};
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const COL = { đỏ: 0xe0463c, cam: 0xf0902a, vàng: 0xf0d03a, xanh: 0x3a7be0, 'xanh lá': 0x3aa655, tím: 0x9a5be0, trắng: 0xf2f2f2, hồng: 0xf06aa8, đen: 0x222222 };
+const hex = (c) => '#' + new THREE.Color(c).getHexString();
+// ---------- bộ máy "Blender giả": trạng thái cảnh + các tool ----------
+const makeSim = () => {
+  const scene = new THREE.Scene(); scene.background = new THREE.Color(0x35353b);
+  const camera = new THREE.PerspectiveCamera(45, 1, .1, 200); camera.position.set(6, 4.5, 8);
+  const grid = new THREE.GridHelper(20, 20, 0x77777f, 0x55555c); scene.add(grid);
+  const amb = new THREE.HemisphereLight(0xffffff, 0x444450, 1.1); scene.add(amb);
+  let light = new THREE.DirectionalLight(0xffffff, 2.4); light.position.set(5, 9, 6); light.castShadow = true; scene.add(light);
+  const controls = new OrbitControls(camera, renderer.domElement); controls.enableDamping = true; controls.target.set(0, 1, 0);
+  const objs = new Map(), tweens = [], S = { scene, camera, controls, objs, frame: 1, playing: false, kf: new Map(), onTick: null, counter: 0 };
+  const tween = (dur, fn, done) => tweens.push({ t0: performance.now(), dur, fn, done });
+  const E = (k) => k * k * (3 - 2 * k);
+  const geo = { cube: () => new THREE.BoxGeometry(1.4, 1.4, 1.4), sphere: () => new THREE.SphereGeometry(.85, 40, 28), cone: () => new THREE.ConeGeometry(.8, 1.6, 40), torus: () => new THREE.TorusGeometry(.7, .26, 24, 56), cylinder: () => new THREE.CylinderGeometry(.7, .7, 1.5, 40), plane: () => new THREE.PlaneGeometry(6, 6) };
+  const tools = {
+    create_object({ type = 'cube', name, color = 0x3a7be0, location = [0, .8, 0], scale = 1 }) {
+      if (!geo[type]) throw new Error('type không hợp lệ: ' + type); name = name || type.charAt(0).toUpperCase() + type.slice(1) + (++S.counter).toString().padStart(3, '0');
+      const m = new THREE.Mesh(geo[type](), new THREE.MeshStandardMaterial({ color, roughness: .5, metalness: 0 })); m.castShadow = m.receiveShadow = true; if (type === 'plane') m.rotation.x = -Math.PI / 2;
+      m.position.set(...location); m.userData = { name, type, anim: null, base: new THREE.Vector3(...location), s: scale }; m.scale.setScalar(.001); scene.add(m); objs.set(name, m);
+      tween(450, (k) => m.scale.setScalar(Math.max(.001, scale * (k < 1 ? E(k) * (1 + .15 * Math.sin(k * Math.PI)) : 1)))); return { name, type, location };
+    },
+    set_material({ name, color, metallic, roughness, emission, transmission }) { const m = need(name), mt = m.material; if (color !== undefined) mt.color.set(color); if (metallic !== undefined) mt.metalness = metallic; if (roughness !== undefined) mt.roughness = roughness; if (emission !== undefined) { mt.emissive.set(emission ? mt.color : 0x000000); mt.emissiveIntensity = emission ? 1.2 : 0; }
+      if (transmission !== undefined) { mt.transparent = transmission > 0; mt.opacity = 1 - transmission * .6; } return { name, color: hex(mt.color), metallic: +mt.metalness.toFixed(2), roughness: +mt.roughness.toFixed(2) }; },
+    transform_object({ name, location, rotation, scale }) { const m = need(name), p0 = m.position.clone(), s0 = m.scale.x, r0 = m.rotation.clone(); tween(600, (k) => { k = E(k); if (location) m.position.lerpVectors(p0, new THREE.Vector3(...location), k); if (scale !== undefined) m.scale.setScalar(s0 + (scale - s0) * k); if (rotation) m.rotation.set(r0.x + (rotation[0] - r0.x) * k, r0.y + (rotation[1] - r0.y) * k, r0.z + (rotation[2] - r0.z) * k); }, () => { if (location) m.userData.base.set(...location); }); return { name, location: location || m.position.toArray().map((v) => +v.toFixed(2)) }; },
+    animate({ name, preset = 'spin', speed = 1, radius = 3 }) { const m = need(name); m.userData.anim = { preset, speed, radius, t0: performance.now() / 1000, c: m.position.clone() }; return { name, preset, speed }; },
+    delete_object({ name }) { const m = need(name); scene.remove(m); m.geometry.dispose(); m.material.dispose(); objs.delete(name); S.kf.delete(name); return { deleted: name }; },
+    clear_scene() { [...objs.keys()].forEach((n) => tools.delete_object({ name: n })); S.counter = 0; return { objects: 0 }; },
+    set_light({ type = 'sun', energy = 2.4, color = 0xffffff, location = [5, 9, 6] }) { scene.remove(light); light = type === 'point' ? new THREE.PointLight(color, energy * 40, 0, 2) : type === 'spot' ? new THREE.SpotLight(color, energy * 70, 0, .5, .5, 2) : new THREE.DirectionalLight(color, energy); light.position.set(...location); light.castShadow = true; scene.add(light); amb.intensity = type === 'sun' ? 1.1 : .5; return { type, energy, color: hex(color), location }; },
+    set_camera({ location = [6, 4.5, 8], target = [0, 1, 0], orbit = false }) { const p0 = camera.position.clone(), t0 = controls.target.clone(); S.orbit = orbit; tween(800, (k) => { k = E(k); camera.position.lerpVectors(p0, new THREE.Vector3(...location), k); controls.target.lerpVectors(t0, new THREE.Vector3(...target), k); }); return { location, target, orbit }; },
+    get_scene_info() { return { object_count: objs.size, frame: S.frame, objects: [...objs.values()].map((m) => ({ name: m.userData.name, type: m.userData.type, location: m.position.toArray().map((v) => +v.toFixed(2)) })) }; },
+    get_object_info({ name }) { const m = need(name); return { name, type: m.userData.type, location: m.position.toArray().map((v) => +v.toFixed(2)), rotation_euler: [m.rotation.x, m.rotation.y, m.rotation.z].map((v) => +v.toFixed(2)), scale: +m.scale.x.toFixed(2), material: { color: hex(m.material.color), metallic: +m.material.metalness.toFixed(2), roughness: +m.material.roughness.toFixed(2) }, animation: m.userData.anim?.preset || null, keyframes: (S.kf.get(name) || []).map((k) => k.f) }; },
+    insert_keyframe({ name, frame = S.frame }) { const m = need(name), a = S.kf.get(name) || []; const k = { f: frame, p: m.position.toArray(), r: [m.rotation.x, m.rotation.y, m.rotation.z], s: m.scale.x }; const i = a.findIndex((x) => x.f === frame); if (i >= 0) a[i] = k; else a.push(k); a.sort((x, y) => x.f - y.f); S.kf.set(name, a); m.userData.anim = null; return { name, frame, keyframes: a.length }; },
+    set_frame({ frame }) { S.frame = Math.max(1, Math.min(120, Math.round(frame))); evalKF(); return { frame: S.frame }; },
+    play({ on = true }) { S.playing = on; return { playing: on }; },
+  };
+  const need = (n) => { const m = objs.get(n); if (!m) throw new Error(`object "${n}" không tồn tại`); return m; };
+  const evalKF = () => { for (const [n, a] of S.kf) { const m = objs.get(n); if (!m || !a.length) continue; const f = S.frame; let i = a.findIndex((k) => k.f >= f); if (i === 0 || (i < 0 && a.length === 1)) i = 0; const A = i < 0 ? a[a.length - 1] : a[Math.max(0, i - 1)], B = i < 0 ? A : a[i], k = B.f === A.f ? 1 : E((f - A.f) / (B.f - A.f)); const L = (x, y) => x + (y - x) * k; m.position.set(L(A.p[0], B.p[0]), L(A.p[1], B.p[1]), L(A.p[2], B.p[2])); m.rotation.set(L(A.r[0], B.r[0]), L(A.r[1], B.r[1]), L(A.r[2], B.r[2])); m.scale.setScalar(L(A.s, B.s)); } };
+  // chạy một lệnh, ghi log request/response như luồng MCP
+  S.call = (tool, args = {}) => { const q = { tool, arguments: args }; log('q', '→ tools/call\n' + JSON.stringify(q, (k, v) => (typeof v === 'number' && k.match(/color|emission/i) ? hex(v) : v))); let r; try { r = { status: 'success', result: tools[tool](args) }; log('r', '← ' + JSON.stringify(r)); } catch (e) { r = { status: 'error', message: e.message }; log('e', '← ' + JSON.stringify(r)); } return r; };
+  S.run = async (plan, gap = 650) => { for (const [tool, args] of plan) { S.call(tool, args); await sleep(gap); } };
+  S.tick = (t, dt) => {
+    const now = t / 1000;
+    for (let i = tweens.length - 1; i >= 0; i--) { const w = tweens[i], k = Math.min(1, (performance.now() - w.t0) / w.dur); w.fn(k); if (k >= 1) { w.done?.(); tweens.splice(i, 1); } }
+    for (const m of objs.values()) { const a = m.userData.anim; if (!a) continue; const u = (now - a.t0) * a.speed;
+      if (a.preset === 'spin') m.rotation.y = u * 1.6; else if (a.preset === 'bounce') m.position.y = Math.max(.1, a.c.y + Math.abs(Math.sin(u * 3)) * 2.4); else if (a.preset === 'orbit') m.position.set(Math.cos(u) * a.radius, a.c.y, Math.sin(u) * a.radius); else if (a.preset === 'pulse') m.scale.setScalar(m.userData.s * (1 + Math.sin(u * 4) * .22)); else if (a.preset === 'float') m.position.y = a.c.y + Math.sin(u * 2) * .5; }
+    if (S.playing) { S.frame = S.frame >= 120 ? 1 : S.frame + 1; evalKF(); S.onFrame?.(S.frame); }
+    if (S.orbit) { const r = Math.hypot(camera.position.x, camera.position.z), a = Math.atan2(camera.position.z, camera.position.x) + dt * .5; camera.position.x = Math.cos(a) * r; camera.position.z = Math.sin(a) * r; }
+    controls.update(); S.onTick?.(t, dt);
+  };
+  S.tools = tools; S.dispose = () => { tools.clear_scene(); controls.dispose(); scene.traverse((o) => { o.geometry?.dispose(); }); };
+  return S;
+};
+const log = (cls, txt) => { const d = document.createElement('div'); d.className = cls; d.textContent = txt; d.style.marginBottom = '6px'; logEl.append(d); while (logEl.children.length > 80) logEl.firstChild.remove(); logEl.scrollTop = logEl.scrollHeight; };
+
+const pairs = (s) => s; // giữ cú pháp gọn
+const PROMPTS = [
+  ['Tạo quả cầu đỏ kim loại rồi cho nhảy', [['create_object', { type: 'sphere', name: 'Ball', color: COL.đỏ, location: [0, .85, 0] }], ['set_material', { name: 'Ball', metallic: .9, roughness: .25 }], ['animate', { name: 'Ball', preset: 'bounce' }]]],
+  ['Dựng tháp 5 khối nhiều màu rồi quay camera', [...[COL.đỏ, COL.cam, COL.vàng, COL['xanh lá'], COL.xanh].map((c, i) => ['create_object', { type: 'cube', name: 'Tầng' + (i + 1), color: c, location: [0, .7 + i * 1.45, 0], scale: 1 - i * .12 }]), ['set_camera', { location: [8, 6, 8], target: [0, 3, 0], orbit: true }]]],
+  ['Làm hệ mặt trời mini', [['create_object', { type: 'sphere', name: 'MatTroi', color: COL.vàng, location: [0, 1, 0], scale: 1.1 }], ['set_material', { name: 'MatTroi', emission: true }], ['create_object', { type: 'sphere', name: 'HanhTinh1', color: COL.xanh, location: [3, 1, 0], scale: .45 }], ['create_object', { type: 'sphere', name: 'HanhTinh2', color: COL.đỏ, location: [5, 1, 0], scale: .6 }], ['animate', { name: 'HanhTinh1', preset: 'orbit', speed: 1.4, radius: 3 }], ['animate', { name: 'HanhTinh2', preset: 'orbit', speed: .8, radius: 5 }], ['set_camera', { location: [0, 11, 9], target: [0, 0, 0] }]]],
+  ['Dọn sạch cảnh', [['clear_scene', {}]]],
+];
+// bộ phân tích từ khoá rất ngây thơ cho ô gõ tự do
+const parsePrompt = (txt) => { const t = txt.toLowerCase(), plan = [], type = /cầu|sphere|bóng/.test(t) ? 'sphere' : /nón|cone/.test(t) ? 'cone' : /vòng|torus|donut/.test(t) ? 'torus' : /trụ|cylinder/.test(t) ? 'cylinder' : /khối|hộp|cube|vuông/.test(t) ? 'cube' : null; if (/xóa|dọn|clear/.test(t)) return [['clear_scene', {}]]; if (!type) return null;
+  const cname = Object.keys(COL).sort((a, b) => b.length - a.length).find((c) => t.includes(c)), n = ((/\b(\d)\b/.exec(t) || [])[1] | 0) || 1, nm = [];
+  for (let i = 0; i < Math.min(n, 5); i++) { const name = type[0].toUpperCase() + type.slice(1) + '_' + (S0.counter + i + 1); nm.push(name); plan.push(['create_object', { type, name, color: cname ? COL[cname] : COL.xanh, location: [(i - (Math.min(n, 5) - 1) / 2) * 2.2, .85, 0] }]); }
+  if (/kim loại|metal/.test(t)) nm.forEach((name) => plan.push(['set_material', { name, metallic: .95, roughness: .2 }])); if (/phát sáng|emission|neon/.test(t)) nm.forEach((name) => plan.push(['set_material', { name, emission: true }]));
+  const an = /nhảy|bounce/.test(t) ? 'bounce' : /xoay|quay|spin/.test(t) ? 'spin' : /bay|nổi|float/.test(t) ? 'float' : /đập|nhịp|pulse/.test(t) ? 'pulse' : null; if (an) nm.forEach((name) => plan.push(['animate', { name, preset: an }])); return plan; };
+
+let S0 = null, busy = false;
+const TABS = [
+{ id: 'prompt', name: 'Prompt → lệnh', note: 'Bấm một câu mẫu hoặc gõ câu của bạn (hiểu vài từ khoá tiếng Việt: cầu/khối/nón/vòng, màu, kim loại, nhảy/xoay/bay, "dọn"). Mô phỏng sinh ra chuỗi tool call JSON và chạy lần lượt, mỗi lệnh đổi cảnh ngay. Ở Blender thật, đây là việc LLM làm: đọc prompt rồi tự chọn tool và tham số.',
+  code: `// luồng MCP: LLM -> tools/call -> addon Blender thực thi -> kết quả JSON quay về LLM
+{ "tool": "create_object",  "arguments": { "type": "sphere", "name": "Ball", "color": "#e0463c" } }
+{ "tool": "set_material",   "arguments": { "name": "Ball", "metallic": 0.9, "roughness": 0.25 } }
+{ "tool": "animate",        "arguments": { "name": "Ball", "preset": "bounce" } }
+// ← {"status":"success","result":{"name":"Ball","type":"sphere"}}`,
+  init(S) { const run = async (plan) => { if (busy) return; busy = true; try { await S.run(plan); } finally { busy = false; } }; PROMPTS.forEach(([p, plan]) => ui.btn(p, () => { log('q', '"' + p + '"'); run(plan); }));
+    const wrap = document.createElement('div'); wrap.className = 'm-bar'; wrap.style.margin = 0; const inp = document.createElement('input'); inp.type = 'text'; inp.placeholder = 'Gõ: "tạo 3 khối vàng kim loại xoay"'; const go = document.createElement('button'); go.type = 'button'; go.textContent = 'Gửi';
+    const send = () => { const t = inp.value.trim(); if (!t) return; const plan = parsePrompt(t); log('q', '"' + t + '"'); if (!plan) { log('e', 'Mô phỏng chỉ hiểu từ khoá: cầu, khối, nón, vòng, trụ + màu + kim loại/nhảy/xoay/bay. (Blender thật dùng LLM nên hiểu mọi câu.)'); return; } run(plan); }; go.onclick = send; inp.onkeydown = (e) => e.key === 'Enter' && send(); wrap.append(inp, go); ctl.append(wrap); run(PROMPTS[2][1]); } },
+{ id: 'scene-info', name: 'Đọc cảnh (get_scene_info)', note: 'Hai tool đọc trạng thái: <code>get_scene_info</code> liệt kê mọi vật, <code>get_object_info</code> trả chi tiết một vật. Chúng đọc đúng cảnh three.js đang chạy (không phải số bịa). Bấm vào một vật trong viewport để gọi <code>get_object_info</code> cho nó; LLM dùng các tool này để "nhìn" cảnh trước khi sửa.',
+  code: `{ "tool": "get_scene_info",   "arguments": {} }
+// ← { "status":"success", "result": { "object_count": 3, "objects": [ { "name":"Cube001", "type":"cube", "location":[-2,.8,0] }, ... ] } }
+{ "tool": "get_object_info",  "arguments": { "name": "Cube001" } }
+// ← { "name":"Cube001", "location":[...], "material": { "color":"#3a7be0", "metallic":0, "roughness":.5 } }`,
+  init(S) { ui.btn('Thêm 3 vật mẫu', async () => { await S.run([['create_object', { type: 'cube', color: COL.xanh, location: [-2.5, .7, 0] }], ['create_object', { type: 'sphere', color: COL.đỏ, location: [0, .85, 0] }], ['create_object', { type: 'cone', color: COL['xanh lá'], location: [2.5, .8, 0] }]], 450); }); ui.btn('get_scene_info', () => S.call('get_scene_info')); ui.btn('Dọn cảnh', () => S.call('clear_scene'));
+    const ray = new THREE.Raycaster(), p = new THREE.Vector2(), cv = renderer.domElement; let dn; const d = (e) => { dn = [e.clientX, e.clientY]; }, u = (e) => { if (!dn || Math.hypot(e.clientX - dn[0], e.clientY - dn[1]) > 5) return; const r = cv.getBoundingClientRect(); p.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1); ray.setFromCamera(p, S.camera); const h = ray.intersectObjects([...S.objs.values()])[0]; if (h) S.call('get_object_info', { name: h.object.userData.name }); };
+    cv.addEventListener('pointerdown', d); cv.addEventListener('pointerup', u); S.offs = [() => { cv.removeEventListener('pointerdown', d); cv.removeEventListener('pointerup', u); }]; } },
+{ id: 'python', name: 'execute_blender_code', note: '<code>execute_blender_code</code> là tool mạnh nhất của blender-mcp: LLM gửi nguyên đoạn Python <code>bpy</code> để Blender chạy. <b>Ở đây KHÔNG chạy Python</b>: mô phỏng chỉ nhận dạng bằng biểu thức chính quy vài mẫu <code>bpy.ops.mesh.primitive_*_add(location=…)</code>, <code>.name</code>, <code>.scale</code>, <code>.color</code> và bỏ qua dòng khác (báo ở log). Sửa đoạn mã rồi bấm chạy.',
+  code: `{ "tool": "execute_blender_code", "arguments": { "code": "import bpy\\nbpy.ops.mesh.primitive_uv_sphere_add(location=(0, 0, 1))\\nbpy.context.object.name = 'Orb'\\n..." } }
+// Blender thật: exec() trong tiến trình Blender, trả lại stdout. Mô phỏng này: regex, không có Python.`,
+  init(S) { const ta = document.createElement('textarea'); ta.className = 'mb-py'; ta.spellcheck = false; const samples = [`import bpy
+bpy.ops.mesh.primitive_cube_add(location=(-2, 0, 1))
+bpy.context.object.name = "Hop"
+bpy.context.object.color = (0.9, 0.3, 0.2, 1)
+bpy.ops.mesh.primitive_uv_sphere_add(location=(1, 0, 1))
+bpy.context.object.name = "Cau"
+bpy.context.object.color = (0.2, 0.5, 0.9, 1)
+bpy.context.object.scale = (1.4, 1.4, 1.4)`, `import bpy
+for i in range(3):
+    bpy.ops.mesh.primitive_cone_add(location=(i*2-2, 0, 1))
+bpy.ops.mesh.primitive_torus_add(location=(0, 2, 1))
+bpy.ops.object.shade_smooth()`];
+    ta.value = samples[0]; ui.btn('Mẫu 1: hộp + cầu', () => ta.value = samples[0]); ui.btn('Mẫu 2: có vòng lặp (không hiểu)', () => ta.value = samples[1]); ui.btn('Chạy execute_blender_code', async () => { if (busy) return; busy = true; const code = ta.value, plan = [], skipped = [], pr = { cube: 'cube', uv_sphere: 'sphere', cone: 'cone', torus: 'torus', cylinder: 'cylinder', plane: 'plane' }; let last = null;
+      code.split('\n').forEach((ln) => { const l = ln.trim(); if (!l || l.startsWith('#') || l === 'import bpy') return; let m;
+        if ((m = /primitive_(\w+?)_add\(.*?location=\(([^)]*)\)/.exec(l)) && pr[m[1]]) { const v = m[2].split(',').map(Number); last = 'Obj' + (plan.length + 1); plan.push(['create_object', { type: pr[m[1]], name: last, location: [v[0], v[2] + .7, -v[1]] }]); }
+        else if ((m = /\.name\s*=\s*["']([^"']+)["']/.exec(l)) && last) { const o = plan.findLast((p) => p[1].name === last); o[1].name = m[1]; plan.forEach((p) => { if (p[1].name === last) p[1].name = m[1]; }); last = m[1]; }
+        else if ((m = /\.(?:color|diffuse_color)\s*=\s*\(([^)]*)\)/.exec(l)) && last) { const c = m[1].split(',').map(Number); plan.push(['set_material', { name: last, color: new THREE.Color(c[0], c[1], c[2]).getHex() }]); }
+        else if ((m = /\.scale\s*=\s*\(([^)]*)\)/.exec(l)) && last) { plan.push(['transform_object', { name: last, scale: +m[1].split(',')[0] }]); }
+        else skipped.push(l); });
+      log('q', '→ tools/call\n{ "tool": "execute_blender_code", "arguments": { "code": "<' + code.split('\n').length + ' dòng>" } }'); if (skipped.length) log('e', 'MÔ PHỎNG bỏ qua ' + skipped.length + ' dòng không nhận dạng được:\n' + skipped.join('\n')); try { await S.run(plan, 500); } finally { busy = false; } log('r', '← {"status":"success","result":{"executed":"mô phỏng, ' + plan.length + ' lệnh quy đổi"}}'); });
+    ta.style.marginBottom = '10px'; ctl.after(ta); S.offs = [() => ta.remove()]; } },
+{ id: 'vat-lieu', name: 'Vật liệu (set_material)', note: 'Ba vật mẫu; chọn vật rồi chọn vật liệu có sẵn hoặc kéo thanh kim loại/độ nhám. Mỗi thao tác phát một tool call <code>set_material</code> với đúng giá trị mới, vật đổi ngay trong viewport (PBR: <code>MeshStandardMaterial</code>).',
+  code: `{ "tool": "set_material", "arguments": { "name": "Cau", "color": "#d4af37", "metallic": 1.0, "roughness": 0.18 } }
+{ "tool": "set_material", "arguments": { "name": "Cau", "emission": true } }
+{ "tool": "set_material", "arguments": { "name": "Cau", "transmission": 0.8 } }   // kính (xấp xỉ bằng độ trong suốt)`,
+  init(S) { S.run([['create_object', { type: 'cube', name: 'Hop', color: COL.xanh, location: [-2.6, .7, 0] }], ['create_object', { type: 'sphere', name: 'Cau', color: COL.đỏ, location: [0, .85, 0] }], ['create_object', { type: 'torus', name: 'Vong', color: COL.tím, location: [2.6, 1, 0] }], ['animate', { name: 'Vong', preset: 'spin' }]], 300); let sel = 'Cau'; ui.group(['Hộp', 'Cầu', 'Vòng'], (i) => sel = ['Hop', 'Cau', 'Vong'][i], 1);
+    const P = { 'Nhựa đỏ': { color: COL.đỏ, metallic: 0, roughness: .45, emission: false, transmission: 0 }, 'Vàng kim loại': { color: 0xd4af37, metallic: 1, roughness: .18, emission: false, transmission: 0 }, 'Thép nhám': { color: 0xaab0b8, metallic: 1, roughness: .55, emission: false, transmission: 0 }, 'Kính': { color: 0xcfe8ff, metallic: 0, roughness: .05, emission: false, transmission: .8 }, 'Phát sáng': { color: COL.xanh, metallic: 0, roughness: .5, emission: true, transmission: 0 } };
+    Object.keys(P).forEach((k) => ui.btn(k, () => S.objs.has(sel) && S.call('set_material', { name: sel, ...P[k] }))); ui.range('kim loại', 0, 1, .05, 0, (v) => S.objs.has(sel) && S.tools.set_material({ name: sel, metallic: v })); ui.range('độ nhám', 0, 1, .05, .5, (v) => S.objs.has(sel) && S.tools.set_material({ name: sel, roughness: v })); } },
+{ id: 'hoat-anh', name: 'Hoạt ảnh keyframe', note: 'Như timeline Blender: kéo khung (1–120), di chuyển vật rồi <code>insert_keyframe</code> tại khung đó; giữa các keyframe nội suy mượt (smoothstep, Blender thật mặc định là Bezier). "Tạo chuyển động mẫu" tự chèn 4 keyframe; "Phát" chạy timeline 120 khung.',
+  code: `{ "tool": "set_frame",       "arguments": { "frame": 1 } }
+{ "tool": "insert_keyframe", "arguments": { "name": "Hop" } }
+{ "tool": "transform_object","arguments": { "name": "Hop", "location": [3, 2, 0], "rotation": [0, 3.14, 0] } }
+{ "tool": "set_frame",       "arguments": { "frame": 60 } }
+{ "tool": "insert_keyframe", "arguments": { "name": "Hop" } }   // tương đương bpy: obj.keyframe_insert('location', frame=60)`,
+  init(S) { S.call('create_object', { type: 'cube', name: 'Hop', color: COL.cam, location: [-3, .7, 0] }); const info = document.createElement('span'); info.className = 'm-status'; const fr = ui.range('khung', 1, 120, 1, 1, (v) => { S.tools.play({ on: false }); S.tools.set_frame({ frame: v }); refresh(); });
+    const refresh = () => { fr.value = S.frame; info.textContent = `khung ${S.frame}/120 · keyframe: ${(S.kf.get('Hop') || []).map((k) => k.f).join(', ') || 'chưa có'}`; }; S.onFrame = refresh; ctl.append(info); refresh();
+    ui.btn('Chèn keyframe tại khung này', () => { S.call('insert_keyframe', { name: 'Hop' }); refresh(); }); ui.btn('Dời vật ngẫu nhiên', () => { const m = S.objs.get('Hop'); m.userData.anim = null; m.position.set(Math.random() * 6 - 3, Math.random() * 2.5 + .7, Math.random() * 4 - 2); m.rotation.set(Math.random() * 3, Math.random() * 3, 0); log('q', 'transform_object (kéo vật bằng tay)'); });
+    ui.btn('Tạo chuyển động mẫu', async () => { if (busy) return; busy = true; const m = S.objs.get('Hop'); S.tools.play({ on: false }); try { for (const [f, p, r, s] of [[1, [-3, .7, 0], [0, 0, 0], 1], [40, [0, 3, 1.5], [0, 3.14, 0], 1.4], [80, [3, .7, 0], [0, 6.28, 0], 1], [120, [-3, .7, 0], [0, 6.28, 0], 1]]) { S.tools.set_frame({ frame: f }); m.position.set(...p); m.rotation.set(...r); m.scale.setScalar(s); S.call('insert_keyframe', { name: 'Hop', frame: f }); S.frame = f; refresh(); await sleep(350); } S.tools.set_frame({ frame: 1 }); refresh(); } finally { busy = false; } });
+    ui.btn('Phát / dừng', (b) => { S.playing = !S.playing; log('q', JSON.stringify({ tool: 'play', arguments: { on: S.playing } })); }); } },
+{ id: 'den-camera', name: 'Đèn + camera', note: '<code>set_light</code> đổi loại đèn (sun / point / spot), năng lượng và màu; <code>set_camera</code> chuyển camera mượt tới góc mới, có chế độ quay quanh. Nền có sàn và ba vật để thấy bóng đổ.',
+  code: `{ "tool": "set_light",  "arguments": { "type": "spot", "energy": 3, "color": "#ffd9a0", "location": [3, 8, 4] } }
+{ "tool": "set_camera", "arguments": { "location": [0, 12, 0.1], "target": [0, 0, 0] } }
+{ "tool": "set_camera", "arguments": { "location": [8, 5, 8], "target": [0, 1, 0], "orbit": true } }`,
+  init(S) { S.run([['create_object', { type: 'plane', name: 'San', color: 0x8a8f9a, location: [0, 0, 0] }], ['create_object', { type: 'cube', color: COL.đỏ, location: [-2.6, .7, 0] }], ['create_object', { type: 'sphere', color: COL.xanh, location: [0, .85, 0] }], ['create_object', { type: 'cone', color: COL.vàng, location: [2.6, .8, 0] }]], 250); S.scene.traverse((o) => o.isMesh && (o.receiveShadow = true));
+    let en = 2.4, col = 0xffffff, ty = 'sun'; const L = () => S.call('set_light', { type: ty, energy: en, color: col, location: ty === 'sun' ? [5, 9, 6] : [3, 7, 4] }); ui.group(['Sun', 'Point', 'Spot'], (i) => { ty = ['sun', 'point', 'spot'][i]; L(); }); ui.range('năng lượng', .5, 6, .1, 2.4, (v) => { en = v; S.tools.set_light({ type: ty, energy: en, color: col, location: ty === 'sun' ? [5, 9, 6] : [3, 7, 4] }); });
+    ui.btn('Màu ấm', () => { col = 0xffd9a0; L(); }); ui.btn('Màu lạnh', () => { col = 0xa8c8ff; L(); }); ui.btn('Màu trắng', () => { col = 0xffffff; L(); });
+    ui.btn('Camera: trước', () => S.call('set_camera', { location: [0, 2.5, 11], target: [0, 1, 0] })); ui.btn('Camera: trên xuống', () => S.call('set_camera', { location: [0, 12, .1], target: [0, 0, 0] })); ui.btn('Camera: chéo', () => S.call('set_camera', { location: [6, 4.5, 8], target: [0, 1, 0] })); ui.btn('Camera: quay quanh', () => S.call('set_camera', { location: [8, 5, 8], target: [0, 1, 0], orbit: true })); } },
+];
+let cur = null, curTab = null;
+const fit = () => { const w = vp.clientWidth, h = vp.clientHeight; renderer.setSize(w, h); if (cur) { cur.camera.aspect = w / h; cur.camera.updateProjectionMatrix(); } };
+function select(id) {
+  const t = TABS.find((x) => x.id === id) || TABS[0];
+  if (cur) { cur.offs?.forEach((f) => f()); cur.dispose(); } ctl.innerHTML = ''; logEl.innerHTML = ''; busy = false; document.querySelectorAll('textarea.mb-py').forEach((x) => x.remove());
+  cur = makeSim(); S0 = cur; curTab = t; fit(); log('r', '# MÔ PHỎNG: không có Blender, không có MCP server. Mọi lệnh chạy trong trang này.'); t.init(cur);
+  tabsEl.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.id === t.id));
+  $('note').innerHTML = t.note; $('code').textContent = t.code; st.textContent = `MÔ PHỎNG (three.js 0.186.0, không phải Blender) · tab "${t.name}"`;
+}
+TABS.forEach((t) => { const b = document.createElement('button'); b.type = 'button'; b.dataset.id = t.id; b.textContent = t.name; b.onclick = () => { location.hash = t.id; select(t.id); }; tabsEl.append(b); });
+addEventListener('hashchange', () => select(location.hash.slice(1)));
+new ResizeObserver(fit).observe(vp);
+select(location.hash.slice(1));
+let last = 0;
+renderer.setAnimationLoop((ms) => { const dt = Math.min((ms - last) / 1000, .05); last = ms; cur.tick(ms, dt); renderer.render(cur.scene, cur.camera); });
+</script>
+</body></html>

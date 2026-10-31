@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sample three.quarks — uiux-asset</title>
+<link rel="stylesheet" href="../aw.css?v=559582af29">
+<link rel="stylesheet" href="_m.css">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/","three.quarks":"https://cdn.jsdelivr.net/npm/three.quarks@0.17.1/dist/three.quarks.esm.js","quarks.core":"https://cdn.jsdelivr.net/npm/quarks.core@0.17.1/dist/quarks.core.esm.js"}}</script>
+<style>.m-bar button[aria-pressed=true]{background:#2a6df4;color:#fff;border-color:#2a6df4}.m-bar input[type=range]{vertical-align:middle}</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=559582af29"></script>
+<div class="aw-crumb">
+<h1>three.quarks <span class="aw-tag aw-tag--small aw-tag--solid-green m-badge">THƯ VIỆN THẬT</span></h1>
+<span>Chạy <code>three.quarks@0.17.1</code> thật (<code>BatchedRenderer</code> + <code>ParticleSystem</code>): 7 tab = lửa, khói, tia lửa vệt, hình dạng phát, lực/hành vi, hạt mesh 3D, mưa kéo dài. Rê chuột để phát hạt. · <a href="https://github.com/Alchemist0823/three.quarks" target="_blank" rel="noopener">Alchemist0823/three.quarks</a> · <a href="./">← Motion</a></span>
+</div>
+<div class="m-bar" id="tabs"></div>
+<div class="m-stage" id="stage" style="height:460px;min-height:460px;cursor:crosshair"></div>
+<div class="m-bar" id="ctl"></div>
+<p class="m-status" id="st" style="margin-top:10px">đang nạp thư viện…</p>
+<p class="m-note" id="note"></p>
+<pre class="m-code" id="code"></pre>
+</main>
+<script type="module">
+import * as THREE from 'three';
+import * as Q from 'three.quarks';
+const { BatchedRenderer, ParticleSystem, ConstantValue, IntervalValue, ColorRange, Gradient, Bezier, PiecewiseBezier, ColorOverLife, SizeOverLife, RotationOverLife, ApplyForce, Noise, TurbulenceField, OrbitOverLife, SpeedOverLife, Rotation3DOverLife, AxisAngleGenerator, RandomQuatGenerator, WidthOverLength, ConeEmitter, SphereEmitter, DonutEmitter, HemisphereEmitter, GridEmitter, RectangleEmitter, CircleEmitter, PointEmitter, RenderMode, Vector3: V3, Vector4: V4 } = Q;
+const $ = (id) => document.getElementById(id), stage = $('stage'), st = $('st'), tabsEl = $('tabs'), ctl = $('ctl');
+let renderer;
+try { renderer = new THREE.WebGLRenderer({ antialias: true }); }
+catch (e) { stage.innerHTML = '<p style="padding:24px;text-align:center">Trình duyệt này không có WebGL nên không vẽ được hạt.</p>'; st.textContent = 'không có WebGL'; throw e; }
+renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5)); stage.append(renderer.domElement);
+const ui = {
+  btn(t, fn) { const b = document.createElement('button'); b.type = 'button'; b.textContent = t; b.onclick = () => fn(b); ctl.append(b); return b; },
+  range(t, min, max, step, v, fn) { const l = document.createElement('label'); l.style.cssText = 'font:13px ui-monospace,Menlo,monospace;display:flex;gap:6px;align-items:center'; const i = document.createElement('input'); i.type = 'range'; Object.assign(i, { min, max, step, value: v }); i.oninput = () => fn(+i.value); l.append(t, i); ctl.append(l); return i; },
+  group(names, fn, first = 0) { const bs = names.map((n, i) => ui.btn(n, () => { bs.forEach((x) => x.setAttribute('aria-pressed', x === bs[i])); fn(i); })); bs[first].click(); },
+  toggle(t, fn, on = false) { const b = ui.btn(t, () => { on = !on; b.setAttribute('aria-pressed', on); fn(on); }); b.setAttribute('aria-pressed', on); return b; },
+};
+// texture hạt mềm sinh bằng canvas (không cần ảnh ngoài)
+const softTex = (stops = [[0, 'rgba(255,255,255,1)'], [.35, 'rgba(255,255,255,.55)'], [1, 'rgba(255,255,255,0)']]) => { const c = document.createElement('canvas'); c.width = c.height = 64; const g = c.getContext('2d'), r = g.createRadialGradient(32, 32, 0, 32, 32, 32); stops.forEach(([o, col]) => r.addColorStop(o, col)); g.fillStyle = r; g.fillRect(0, 0, 64, 64); return new THREE.CanvasTexture(c); };
+const mat = (tex, add = true) => new THREE.MeshBasicMaterial({ map: tex, transparent: true, blending: add ? THREE.AdditiveBlending : THREE.NormalBlending, depthWrite: false, side: THREE.DoubleSide });
+const fade = (a = [[0, 0], [.1, 1], [1, 0]]) => a;
+const world = () => {
+  const scene = new THREE.Scene(); scene.background = new THREE.Color(0x0a0c12);
+  const camera = new THREE.PerspectiveCamera(50, 1, .1, 100); camera.position.set(0, 1.5, 9); camera.lookAt(0, 1.5, 0);
+  const batch = new BatchedRenderer(); scene.add(batch);
+  const w = { scene, camera, batch, systems: [], pt: new V3(0, 0, 0), cur: new V3(0, 0, 0), tick: null, click: null, tex: [], offs: [],
+    add(ps) { scene.add(ps.emitter); batch.addSystem(ps); w.systems.push(ps); return ps; },
+    remove(ps) { batch.deleteSystem(ps); ps.dispose(); scene.remove(ps.emitter); w.systems = w.systems.filter((x) => x !== ps); } };
+  const ray = new THREE.Raycaster(), plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0), cv = renderer.domElement, ndc = new THREE.Vector2(), hit = new THREE.Vector3();
+  const mv = (e) => { const r = cv.getBoundingClientRect(); ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1); ray.setFromCamera(ndc, camera); if (ray.ray.intersectPlane(plane, hit)) w.pt.set(hit.x, hit.y, 0); };
+  const dn = (e) => { mv(e); w.click?.(w.pt); }; cv.addEventListener('pointermove', mv); cv.addEventListener('pointerdown', dn);
+  w.offs.push(() => { cv.removeEventListener('pointermove', mv); cv.removeEventListener('pointerdown', dn); });
+  return w;
+};
+const follow = (w, ps, k = .18, dy = 0) => { w.cur.lerp(w.pt, k); ps.emitter.position.set(w.cur.x, w.cur.y + dy, 0); };
+const base = (o) => ({ duration: 1, looping: true, startTileIndex: new ConstantValue(0), uTileCount: 1, vTileCount: 1, worldSpace: true, renderOrder: 2, ...o });
+const bez = (a, b, c, d) => new PiecewiseBezier([[new Bezier(a, b, c, d), 0]]);
+
+const TABS = [
+{ id: 'lua', name: 'Lửa', note: 'Ngọn lửa theo chuột: <code>ConeEmitter</code> phun hạt lên, texture mềm hòa trộn cộng (<code>AdditiveBlending</code>); <code>ColorOverLife</code> đổi vàng → cam → đỏ thẫm, <code>SizeOverLife</code> thu nhỏ dần, <code>Noise</code> làm lửa chập chờn. Rê chuột trong khung để di chuyển.',
+  code: `const batch = new BatchedRenderer(); scene.add(batch);
+const fire = new ParticleSystem({
+  duration: 1, looping: true, worldSpace: true,
+  startLife: new IntervalValue(.6, 1.1), startSpeed: new IntervalValue(1.5, 2.5), startSize: new IntervalValue(.6, 1),
+  startColor: new ColorRange(new Vector4(1,.9,.4,1), new Vector4(1,.4,.1,1)),
+  emissionOverTime: new ConstantValue(110), shape: new ConeEmitter({ radius: .25, angle: .35 }),
+  material: new MeshBasicMaterial({ map: softTexture, transparent: true, blending: AdditiveBlending, depthWrite: false }),
+  behaviors: [ new ColorOverLife(new Gradient([[new Vector3(1,.9,.5),0],[new Vector3(1,.3,.05),.5],[new Vector3(.2,.05,.05),1]], [[1,0],[.8,.5],[0,1]])),
+               new SizeOverLife(new PiecewiseBezier([[new Bezier(1,.8,.4,0), 0]])), new Noise(new ConstantValue(1.5), new ConstantValue(.8)) ] });
+scene.add(fire.emitter); batch.addSystem(fire);   // mỗi khung: batch.update(delta)`,
+  init(w) { const ps = w.add(new ParticleSystem(base({ startLife: new IntervalValue(.6, 1.1), startSpeed: new IntervalValue(1.5, 2.5), startSize: new IntervalValue(1.1, 1.8), startColor: new ColorRange(new V4(1, .9, .4, 1), new V4(1, .4, .1, 1)), emissionOverTime: new ConstantValue(110), shape: new ConeEmitter({ radius: .25, angle: .35 }), material: mat(softTex()),
+      behaviors: [new ColorOverLife(new Gradient([[new V3(1, .9, .5), 0], [new V3(1, .3, .05), .5], [new V3(.2, .05, .05), 1]], [[1, 0], [.8, .5], [0, 1]])), new SizeOverLife(bez(1, .8, .4, 0)), new Noise(new ConstantValue(1.5), new ConstantValue(.8), new ConstantValue(.6), new ConstantValue(0))] })));
+    ps.emitter.rotation.x = -Math.PI / 2; const rate = ui.range('mật độ', 10, 300, 10, 110, (v) => ps.emissionOverTime = new ConstantValue(v)); w.tick = () => follow(w, ps); } },
+{ id: 'khoi', name: 'Khói', note: 'Khói dùng hòa trộn thường (không cộng) nên che được nền; hạt <b>to dần</b> (<code>SizeOverLife</code> tăng), <b>xoay</b> (<code>startRotation</code> + <code>RotationOverLife</code>), mờ dần theo <code>ColorOverLife</code> và trôi theo <code>Noise</code>. Rê chuột để dắt cột khói.',
+  code: `new ParticleSystem({ startLife: new IntervalValue(2.5, 4), startSpeed: new IntervalValue(.6, 1.2),
+  startRotation: new IntervalValue(-Math.PI, Math.PI), startColor: new ColorRange(new Vector4(.55,.55,.6,.6), new Vector4(.8,.8,.85,.6)),
+  material: new MeshBasicMaterial({ map: smokeTex, transparent: true, depthWrite: false }),
+  behaviors: [ new SizeOverLife(new PiecewiseBezier([[new Bezier(.5,.9,1.6,2.4), 0]])), new RotationOverLife(new IntervalValue(-.8, .8)),
+               new ColorOverLife(new ColorRange(new Vector4(1,1,1,1), new Vector4(1,1,1,0))), new Noise(new ConstantValue(.8), new ConstantValue(.6)) ] });`,
+  init(w) { const ps = w.add(new ParticleSystem(base({ startLife: new IntervalValue(2.5, 4), startSpeed: new IntervalValue(.6, 1.2), startSize: new IntervalValue(1.2, 1.8), startRotation: new IntervalValue(-Math.PI, Math.PI), startColor: new ColorRange(new V4(.5, .5, .56, .55), new V4(.85, .85, .9, .55)), emissionOverTime: new ConstantValue(22), shape: new ConeEmitter({ radius: .2, angle: .25 }), material: mat(softTex(), false), renderOrder: 1,
+      behaviors: [new SizeOverLife(bez(.5, .9, 1.6, 2.6)), new RotationOverLife(new IntervalValue(-.8, .8)), new ColorOverLife(new ColorRange(new V4(1, 1, 1, 1), new V4(1, 1, 1, 0))), new Noise(new ConstantValue(.8), new ConstantValue(.6), new ConstantValue(.5), new ConstantValue(0))] })));
+    ps.emitter.rotation.x = -Math.PI / 2; ui.range('mật độ', 4, 80, 2, 22, (v) => ps.emissionOverTime = new ConstantValue(v)); w.tick = () => follow(w, ps, .1, -1.2); } },
+{ id: 'tia-lua', name: 'Tia lửa (Trail)', note: 'Hạt dạng <b>vệt</b>: <code>renderMode: RenderMode.Trail</code> kéo đuôi cho từng hạt, <code>WidthOverLength</code> làm đuôi thon nhọn, <code>ApplyForce</code> thêm trọng lực. Bấm vào khung để bắn một chùm tia lửa tại chỗ đó (cũng tự bắn mỗi 1.5 giây).',
+  code: `new ParticleSystem({ looping: false, duration: 1, renderMode: RenderMode.Trail,
+  rendererEmitterSettings: { startLength: new ConstantValue(18), followLocalOrigin: false },
+  emissionOverTime: new ConstantValue(0), emissionBursts: [{ time: 0, count: new ConstantValue(70), cycle: 1, interval: .01, probability: 1 }],
+  shape: new SphereEmitter({ radius: .1, thickness: 1 }), startSpeed: new IntervalValue(3, 7),
+  behaviors: [ new ApplyForce(new Vector3(0,-1,0), new ConstantValue(9)), new WidthOverLength(new PiecewiseBezier([[new Bezier(1,.6,.3,0),0]])) ] });
+sparks.emitter.position.copy(pointer); sparks.restart();   // bắn lại`,
+  init(w) { const ps = w.add(new ParticleSystem(base({ looping: false, renderMode: RenderMode.Trail, rendererEmitterSettings: { startLength: new ConstantValue(20), followLocalOrigin: false }, startLife: new IntervalValue(.8, 1.5), startSpeed: new IntervalValue(3, 7), startSize: new ConstantValue(.2), startColor: new ColorRange(new V4(1, .85, .4, 1), new V4(1, .5, .15, 1)), emissionOverTime: new ConstantValue(0), emissionBursts: [{ time: 0, count: new ConstantValue(70), cycle: 1, interval: .01, probability: 1 }], shape: new SphereEmitter({ radius: .1, thickness: 1 }), material: new THREE.MeshBasicMaterial({ transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, vertexColors: true }),
+      behaviors: [new ApplyForce(new V3(0, -1, 0), new ConstantValue(9)), new WidthOverLength(bez(1, .6, .3, 0)), new ColorOverLife(new ColorRange(new V4(1, 1, 1, 1), new V4(1, .3, .1, 0)))] })));
+    const shoot = (p) => { ps.emitter.position.set(p.x, p.y, 0); ps.restart(); }; ps.emitter.position.set(0, 1.5, 0); w.click = shoot; let acc = 0; w.tick = (t, dt) => { acc += dt; if (acc > 1.5) { acc = 0; shoot(w.pt); } }; ui.btn('Bắn một chùm', () => shoot(w.pt)); } },
+{ id: 'hinh-dang', name: 'Hình dạng phát', note: 'Mỗi <code>EmitterShape</code> quyết định hạt sinh ra ở đâu và bay theo hướng nào: Sphere, Hemisphere, Cone, Donut, Circle, Rectangle, Grid, Point. Bấm từng nút để đổi; khối phát xoay chậm để thấy dạng 3D. Rê chuột để dời tâm.',
+  code: `const shapes = { sphere: new SphereEmitter({ radius: 1.4, thickness: 1 }), donut: new DonutEmitter({ radius: 1.5, donutRadius: .35 }),
+  cone: new ConeEmitter({ radius: .6, angle: .5 }), grid: new GridEmitter({ width: 3, height: 3, column: 8, row: 8 }), /* ... */ };
+const ps = new ParticleSystem({ shape: shapes.donut, worldSpace: false, startSpeed: new ConstantValue(.4), ... });
+ps.emitterShape = shapes.grid;   // đổi hình dạng khi đang chạy`,
+  init(w) { const shapes = [['Sphere', () => new SphereEmitter({ radius: 1.4, thickness: 1 })], ['Hemisphere', () => new HemisphereEmitter({ radius: 1.4, thickness: 1 })], ['Cone', () => new ConeEmitter({ radius: .7, angle: .6 })], ['Donut', () => new DonutEmitter({ radius: 1.5, donutRadius: .35 })], ['Circle', () => new CircleEmitter({ radius: 1.5 })], ['Rectangle', () => new RectangleEmitter({ width: 3, height: 2 })], ['Grid', () => new GridEmitter({ width: 3, height: 3, column: 9, row: 9 })], ['Point', () => new PointEmitter()]];
+    const ps = w.add(new ParticleSystem(base({ worldSpace: false, startLife: new IntervalValue(1.2, 1.8), startSpeed: new ConstantValue(.5), startSize: new ConstantValue(.26), startColor: new ColorRange(new V4(.3, .9, 1, 1), new V4(1, .4, .8, 1)), emissionOverTime: new ConstantValue(260), shape: shapes[0][1](), material: mat(softTex()), behaviors: [new ColorOverLife(new ColorRange(new V4(1, 1, 1, 1), new V4(1, 1, 1, 0)))] })));
+    ui.group(shapes.map((s) => s[0]), (i) => { ps.emitterShape = shapes[i][1](); }); ps.emitter.rotation.x = -.5; w.tick = (t) => { follow(w, ps, .1); ps.emitter.rotation.y = t * .5; }; } },
+{ id: 'hanh-vi', name: 'Lực + hành vi', note: 'Mỗi <code>Behavior</code> bật/tắt riêng, hạt đổi chuyển động ngay: <code>ApplyForce</code> (trọng lực), <code>TurbulenceField</code> (gió xoáy), <code>OrbitOverLife</code> (quay quanh trục), <code>SpeedOverLife</code> (giảm tốc), <code>ColorOverLife</code> + <code>SizeOverLife</code>. Hệ hạt được dựng lại với tập hành vi đã chọn.',
+  code: `const behaviors = [];
+if (gravity)    behaviors.push(new ApplyForce(new Vector3(0, -1, 0), new ConstantValue(6)));
+if (turbulence) behaviors.push(new TurbulenceField(new Vector3(2,2,2), 3, new Vector3(1.5,1.5,1.5), new Vector3(.4,.4,.4)));
+if (orbit)      behaviors.push(new OrbitOverLife(new ConstantValue(2.5), new Vector3(0, 1, 0)));
+if (slow)       behaviors.push(new SpeedOverLife(new PiecewiseBezier([[new Bezier(1,.6,.2,0), 0]])));
+ps.behaviors = behaviors;`,
+  init(w) { const on = { 'Trọng lực': 0, 'Gió xoáy': 0, 'Quay quanh': 0, 'Giảm tốc': 0 };
+    const ps = w.add(new ParticleSystem(base({ startLife: new IntervalValue(1.6, 2.4), startSpeed: new IntervalValue(2, 4), startSize: new IntervalValue(.2, .35), startColor: new ColorRange(new V4(1, .8, .3, 1), new V4(.4, .8, 1, 1)), emissionOverTime: new ConstantValue(120), shape: new SphereEmitter({ radius: .15, thickness: 1 }), material: mat(softTex()), behaviors: [] })));
+    const build = () => { const b = [new ColorOverLife(new ColorRange(new V4(1, 1, 1, 1), new V4(1, 1, 1, 0))), new SizeOverLife(bez(1, .9, .6, .2))];
+      if (on['Trọng lực']) b.push(new ApplyForce(new V3(0, -1, 0), new ConstantValue(6))); if (on['Gió xoáy']) b.push(new TurbulenceField(new V3(2, 2, 2), 3, new V3(1.5, 1.5, 1.5), new V3(.4, .4, .4)));
+      if (on['Quay quanh']) b.push(new OrbitOverLife(new ConstantValue(2.5), new V3(0, 1, 0))); if (on['Giảm tốc']) b.push(new SpeedOverLife(bez(1, .6, .2, 0))); ps.behaviors = b; };
+    Object.keys(on).forEach((k) => ui.toggle(k, (v) => { on[k] = v; build(); })); build(); ps.emitter.position.set(0, 1.5, 0); w.tick = () => follow(w, ps, .12); } },
+{ id: 'mesh', name: 'Hạt mesh 3D', note: '<code>RenderMode.Mesh</code> dùng <code>instancingGeometry</code> là một mesh thật (hộp, tứ diện, vòng…) thay cho sprite phẳng, xoay 3D bằng <code>Rotation3DOverLife</code>, đổ màu riêng từng hạt qua <code>startColor</code>. Bấm vào khung để bắn pháo giấy; có đèn nên thấy khối.',
+  code: `new ParticleSystem({ renderMode: RenderMode.Mesh, instancingGeometry: new BoxGeometry(.25, .12, .02),
+  material: new MeshStandardMaterial({ vertexColors: true }),
+  startRotation: new RandomQuatGenerator(), startColor: new RandomColor(new Vector4(1,.2,.3,1), new Vector4(.2,.8,1,1)),
+  behaviors: [ new ApplyForce(new Vector3(0,-1,0), new ConstantValue(6)),
+               new Rotation3DOverLife(new AxisAngleGenerator(new Vector3(0,1,0), new ConstantValue(8))) ] });`,
+  init(w) { w.scene.add(new THREE.HemisphereLight(0xffffff, 0x444466, 2.2)); const sun = new THREE.DirectionalLight(0xffffff, 2); sun.position.set(2, 6, 5); w.scene.add(sun);
+    const geos = [new THREE.BoxGeometry(.28, .14, .03), new THREE.TetrahedronGeometry(.15), new THREE.TorusGeometry(.1, .04, 8, 16)], mk = (g) => new ParticleSystem(base({ looping: false, renderMode: RenderMode.Mesh, instancingGeometry: g, rendererEmitterSettings: {}, startLife: new IntervalValue(2.2, 3), startSpeed: new IntervalValue(3, 7), startSize: new ConstantValue(1), startRotation: new RandomQuatGenerator(), startColor: new Q.RandomColor(new V4(1, .2, .3, 1), new V4(.2, .8, 1, 1)), emissionOverTime: new ConstantValue(0), emissionBursts: [{ time: 0, count: new ConstantValue(80), cycle: 1, interval: .01, probability: 1 }], shape: new ConeEmitter({ radius: .1, angle: .9 }), material: new THREE.MeshStandardMaterial({ vertexColors: true, roughness: .5, side: THREE.DoubleSide }), behaviors: [new ApplyForce(new V3(0, -1, 0), new ConstantValue(5)), new Rotation3DOverLife(new AxisAngleGenerator(new V3(0, 1, 0), new ConstantValue(8)))] }));
+    let ps = null, gi = 0; const set = (i) => { gi = i; if (ps) w.remove(ps); ps = w.add(mk(geos[i])); ps.emitter.rotation.x = -Math.PI / 2; shoot(w.pt); };
+    const shoot = (p) => { ps.emitter.position.set(p.x, Math.min(p.y, 2) - 1.5, 0); ps.restart(); }; w.click = shoot;
+    ui.group(['Hộp dẹt', 'Tứ diện', 'Vòng'], set); ui.btn('Bắn pháo giấy', () => shoot(w.pt)); } },
+{ id: 'keo-dai', name: 'Mưa (kéo dài)', note: '<code>RenderMode.StretchedBillBoard</code> kéo sprite dài theo vận tốc (<code>speedFactor</code>, <code>lengthFactor</code>): hợp với mưa, tia, vệt tốc độ. Emitter hình chữ nhật rộng phía trên, hạt rơi nhờ <code>ApplyForce</code>. Rê chuột để gió thổi nghiêng cơn mưa.',
+  code: `new ParticleSystem({ renderMode: RenderMode.StretchedBillBoard,
+  rendererEmitterSettings: { speedFactor: .08, lengthFactor: 1 },
+  shape: new RectangleEmitter({ width: 16, height: 1 }), startSize: new IntervalValue(.02, .04),
+  behaviors: [ new ApplyForce(new Vector3(wind, -1, 0), new ConstantValue(22)) ] });
+rain.behaviors[0].direction.x = wind;   // đổi gió khi đang chạy`,
+  init(w) { w.camera.position.set(0, 3, 9); const ps = w.add(new ParticleSystem(base({ renderMode: RenderMode.StretchedBillBoard, rendererEmitterSettings: { speedFactor: .1, lengthFactor: 1 }, startLife: new IntervalValue(.9, 1.3), startSpeed: new ConstantValue(0), startSize: new IntervalValue(.07, .13), startColor: new ColorRange(new V4(.6, .75, 1, .9), new V4(.85, .92, 1, .8)), emissionOverTime: new ConstantValue(500), shape: new RectangleEmitter({ width: 16, height: 1 }), material: mat(softTex(), true) })));
+    const force = new ApplyForce(new V3(0, -1, 0), new ConstantValue(22)); ps.addBehavior(force); ps.emitter.rotation.x = -Math.PI / 2; ps.emitter.position.set(0, 6, -1); w.tick = () => { force.direction.set(w.pt.x * .08, -1, 0).normalize(); }; ui.range('lượng mưa', 100, 1200, 50, 500, (v) => ps.emissionOverTime = new ConstantValue(v)); } },
+];
+let cur = null;
+const fit = () => { const w = stage.clientWidth, h = stage.clientHeight; renderer.setSize(w, h); if (cur) { cur.camera.aspect = w / h; cur.camera.updateProjectionMatrix(); } };
+function select(id) {
+  const t = TABS.find((x) => x.id === id) || TABS[0];
+  if (cur) { cur.offs.forEach((f) => f()); [...cur.systems].forEach((p) => cur.remove(p)); cur.scene.traverse((o) => { o.geometry?.dispose(); [].concat(o.material || []).forEach((m) => { m.map?.dispose(); m.dispose(); }); }); } ctl.innerHTML = '';
+  cur = world(); t.init(cur); fit();
+  tabsEl.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.id === t.id));
+  $('note').innerHTML = t.note; $('code').textContent = t.code; st.textContent = `three.quarks 0.17.1 · THƯ VIỆN THẬT · tab "${t.name}"`;
+}
+TABS.forEach((t) => { const b = document.createElement('button'); b.type = 'button'; b.dataset.id = t.id; b.textContent = t.name; b.onclick = () => { location.hash = t.id; select(t.id); }; tabsEl.append(b); });
+addEventListener('hashchange', () => select(location.hash.slice(1)));
+new ResizeObserver(fit).observe(stage);
+select(location.hash.slice(1));
+let last = 0;
+renderer.setAnimationLoop((ms) => { const t = ms / 1000, dt = Math.min(t - last, .05); last = t; cur.tick?.(t, dt); cur.batch.update(dt); renderer.render(cur.scene, cur.camera); });
+</script>
+</body></html>

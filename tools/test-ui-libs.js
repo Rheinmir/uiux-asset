@@ -10,3 +10,16 @@ const home = R('index.html');
 assert(home.includes(`<b>${libs.length}</b><span>thư viện UI`), 'trang chủ: số thư viện UI khác ' + libs.length);
 assert(home.includes(`aw-tag--bold">${libs.length}<`), 'trang chủ: thẻ số khác ' + libs.length);
 console.log('test-ui-libs: ok', libs.length, 'mục');
+// 28 sample motion: mỗi repo X20 + 8 repo «Hiệu ứng» cũ có trang motion/<slug>.html, đứng trong gallery motion/index.html, và thẻ ở ui-libraries trỏ tới đúng trang đó.
+const OLD8 = 'DavidHDev/react-bits magicuidesign/magicui imskyleen/animate-ui ibelick/motion-primitives nolly-studio/cult-ui unovue/inspira-ui shader-effects-inc/shaders uiverse-io/galaxy'.split(' ');
+const tpl = R('tools/ui-libs.tpl.html'), gal = R('motion/index.html');
+const map = Object.fromEntries([...tpl.matchAll(/'([^']+\/[^']+)': '([a-z0-9-]+)'/g)].map((m) => [m[1].toLowerCase(), m[2]]));
+for (const r of X20.concat(OLD8)) {
+  const slug = map[r.toLowerCase()]; assert(slug, 'ui-libs.tpl.html thiếu SAMPLE cho ' + r);
+  if (slug !== 'galaxy') assert(fs.existsSync(path.join(__dirname, '..', 'motion', slug + '.html')), 'thiếu motion/' + slug + '.html');
+  assert(fs.existsSync(path.join(__dirname, '..', 'motion', 'thumbs', slug + '-stage.jpg')), 'thiếu ảnh thẻ motion/thumbs/' + slug + '-stage.jpg');
+  assert(gal.includes(`'${slug}', `), 'motion/index.html thiếu ' + slug);
+  if (slug !== 'galaxy') assert(R('motion/' + slug + '.html').includes('href="./"'), slug + ': thiếu link về gallery');
+  assert(R('ui-libraries/index.html').includes(`'${r}': '${slug}'`), 'ui-libraries/index.html chưa build lại cho ' + r);
+}
+console.log('test-ui-libs: 28 sample motion ok');

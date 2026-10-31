@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sample whisperX — uiux-asset</title>
+<link rel="stylesheet" href="../aw.css?v=559582af29">
+<link rel="stylesheet" href="_m.css">
+<style>
+.w-stage { display: block; padding: 14px; min-height: 480px; place-items: unset; }
+.w-cv { width: 100%; height: 150px; display: block; border-radius: 8px; background: var(--aw-card); }
+.w-tx { background: var(--aw-card); border-radius: 8px; padding: 14px 16px; margin-top: 10px; font: 400 18px/2 var(--aw-font); max-height: 270px; overflow: auto; }
+.w-tx .seg { display: block; margin-bottom: 6px; } .w-tx .sp { display: inline-block; font: 600 11px var(--aw-mono); padding: 1px 8px; border-radius: 99px; margin-right: 8px; color: #fff; vertical-align: middle; }
+.w-tx .w { cursor: pointer; padding: 1px 2px; border-radius: 4px; border-bottom: 3px solid transparent; transition: background .1s, color .1s; }
+.w-tx .w:hover { background: var(--aw-nf-bg-1); } .w-tx .w.now { background: var(--aw-color-orange); color: #fff; } .w-tx .w.done { opacity: .5; } .w-tx .w.low { text-decoration: underline wavy #e5372d; }
+.w-tx .ts { font: 10px var(--aw-mono); opacity: .55; vertical-align: super; margin-left: 1px; }
+.w-row { display: grid; grid-template-columns: 80px 1fr 64px; gap: 8px; align-items: center; font: 12px var(--aw-mono); padding: 5px 0; border-bottom: 1px solid var(--aw-border-gray); }
+.w-bar { height: 10px; border-radius: 5px; background: var(--aw-border-gray); overflow: hidden; } .w-bar i { display: block; height: 100%; width: 0; background: var(--aw-color-orange); }
+.w-pipe { display: flex; flex-wrap: wrap; gap: 10px; align-items: stretch; }
+.w-st { flex: 1 1 140px; background: var(--aw-card); border: 2px solid var(--aw-border-gray); border-radius: 10px; padding: 10px 12px; font: 12px/1.5 var(--aw-mono); transition: border-color .2s, transform .2s; }
+.w-st b { display: block; font: 600 14px var(--aw-font); } .w-st.run { border-color: var(--aw-color-orange); transform: translateY(-3px); } .w-st.ok { border-color: #2fbf71; }
+.w-pre { margin: 10px 0 0; padding: 12px 14px; border-radius: 8px; background: var(--aw-card); font: 12px/1.5 var(--aw-mono); max-height: 300px; overflow: auto; white-space: pre; }
+.w-ro { font: 12px var(--aw-mono); margin-top: 8px; opacity: .85; }
+.m-bar .on { background: var(--aw-button-bg); color: var(--aw-button-color); border-color: var(--aw-button-bg); }
+.m-bar label { font: 13px var(--aw-mono); display: inline-flex; gap: 6px; align-items: center; } .m-bar input[type=range] { width: 110px; }
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=559582af29"></script>
+<div class="aw-crumb">
+<h1>whisperX <span class="aw-tag aw-tag--small aw-tag--solid-yellow m-badge">MÔ PHỎNG</span></h1>
+<span>whisperX là pipeline Python/GPU (faster-whisper + wav2vec2 + pyannote) nên không chạy được trên web. Trang này MÔ PHỎNG đầu ra và từng giai đoạn của nó trên một transcript dựng sẵn (không nhận dạng giọng nói thật, mốc thời gian và điểm tin cậy là dữ liệu mẫu; "giọng" phát là tiếng bíp tổng hợp). Định dạng JSON/SRT/VTT/TSV do trang tự sinh theo đúng cấu trúc đầu ra của whisperX. · <a href="https://github.com/m-bain/whisperX" target="_blank" rel="noopener">m-bain/whisperX</a> · <a href="./">← Motion</a></span>
+</div>
+<div class="m-bar" id="tabs" role="tablist"></div>
+<div class="m-bar" id="ctl"></div>
+<div class="m-stage w-stage" id="stage"></div>
+<p class="m-note" id="note"></p>
+<pre class="m-code" id="code"></pre>
+</main>
+<script>
+const $ = (i) => document.getElementById(i), el = (t, p) => Object.assign(document.createElement(t), p || {});
+// ================== dữ liệu mẫu (transcript dựng sẵn) ==================
+const RAW = [['SPEAKER_00', 'Chào mừng các bạn đến với buổi demo whisperX hôm nay.'], ['SPEAKER_01', 'Cảm ơn bạn, mình rất muốn xem công cụ này căn chỉnh từng từ như thế nào.'], ['SPEAKER_00', 'Đầu tiên mô hình Whisper phiên âm cả câu, sau đó wav2vec2 căn chỉnh thời gian cho từng từ.'], ['SPEAKER_01', 'Còn phần nhận diện người nói thì dùng pyannote đúng không?'], ['SPEAKER_00', 'Đúng vậy, và toàn bộ chạy rất nhanh nhờ xử lý theo lô.']];
+const hash = (s) => { let h = 2166136261; for (const c of s) h = Math.imul(h ^ c.charCodeAt(0), 16777619); return (h >>> 0) / 4294967296; };
+const SEGS = []; let tt = .5, prevSp = null;
+RAW.forEach(([sp, text], si) => { if (prevSp) tt += sp === prevSp ? .45 : .7; const words = []; text.split(' ').forEach((w) => { const d = .14 + .042 * w.replace(/[^\p{L}]/gu, '').length; words.push({ word: w, start: +tt.toFixed(2), end: +(tt + d).toFixed(2), score: +(0.55 + .44 * hash(w + si)).toFixed(3) }); tt += d + .06; }); SEGS.push({ start: words[0].start, end: words[words.length - 1].end, text, words, speaker: sp }); prevSp = sp; });
+const TOTAL = Math.ceil(tt + .6), WORDS = SEGS.flatMap((s, i) => s.words.map((w) => ({ ...w, seg: i, speaker: s.speaker })));
+const SPCOL = { SPEAKER_00: '#3a6df0', SPEAKER_01: '#e0642b' };
+let T = 0, playing = false, tClock = 0, ac = null, lastW = -1, nSpk = 2, tab;
+// ================== âm thanh bíp tổng hợp ==================
+function blip(w) { try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); ac.resume(); const o = ac.createOscillator(), g = ac.createGain(), t = ac.currentTime; o.type = 'triangle'; o.frequency.value = (w.speaker === 'SPEAKER_00' ? 150 : 230) * (1 + .5 * hash(w.word)); g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.12, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + Math.max(.1, w.end - w.start)); o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t + .4); } catch (e) {} }
+let sound = true;
+const wordAt = (t) => WORDS.findIndex((w) => t >= w.start && t < w.end);
+function setT(t) { T = Math.max(0, Math.min(TOTAL, t)); lastW = -1; tClock = performance.now() - T * 1000; }
+function frame() { if (playing) { T = (performance.now() - tClock) / 1000; if (T >= TOTAL) { playing = false; T = TOTAL; syncBtn(); } }
+  const wi = wordAt(T); if (wi !== lastW) { lastW = wi; if (playing && wi >= 0 && sound) blip(WORDS[wi]); } if (tab && tab.tick) tab.tick(T, wi); requestAnimationFrame(frame); }
+const syncBtn = () => { const b = $('pp'); if (b) b.textContent = playing ? '⏸ Dừng' : '▶ Phát'; };
+const transport = () => { const b = el('button', { type: 'button', id: 'pp', textContent: '▶ Phát' }); b.onclick = () => { if (T >= TOTAL) setT(0); playing = !playing; tClock = performance.now() - T * 1000; syncBtn(); }; const r = el('button', { type: 'button', textContent: '⏮' }); r.onclick = () => setT(0); const l = el('label'), c = el('input', { type: 'checkbox', checked: sound }); c.onchange = () => sound = c.checked; l.append(c, 'tiếng bíp theo từ'); return [r, b, l]; };
+// ================== VAD tổng hợp ==================
+let vad = { on: .5, off: .36, gap: .3, chunk: 12 };
+const FPS = 50;
+function probCurve() { const n = TOTAL * FPS, p = new Float32Array(n); for (let i = 0; i < n; i++) { const t = i / FPS; let v = .08 + .1 * hash('n' + i); for (const s of SEGS) { if (t >= s.start - .05 && t <= s.end + .05) { const inGap = !s.words.some((w) => t >= w.start - .03 && t <= w.end + .03); v = inGap ? .45 + .25 * hash('g' + i) : .88 + .1 * hash('s' + i); } } p[i] = v; } const q = new Float32Array(n); for (let i = 0; i < n; i++) { let s = 0, c = 0; for (let j = -3; j <= 3; j++) if (p[i + j] !== undefined) { s += p[i + j]; c++; } q[i] = s / c; } return q; }
+const PROB = probCurve();
+function vadSegs() { const segs = []; let on = false, st = 0; for (let i = 0; i < PROB.length; i++) { if (!on && PROB[i] >= vad.on) { on = true; st = i / FPS; } else if (on && PROB[i] < vad.off) { on = false; segs.push([st, i / FPS]); } } if (on) segs.push([st, PROB.length / FPS]);
+  const m = []; for (const s of segs) { const l = m[m.length - 1]; if (l && s[0] - l[1] < vad.gap) l[1] = s[1]; else m.push([...s]); } return { raw: segs, merged: m.filter((s) => s[1] - s[0] > .15) }; }
+function chunks(ms) { const out = []; let cur = null; for (const s of ms) { if (cur && s[1] - cur[0] <= vad.chunk) cur[1] = s[1]; else { cur = [...s]; out.push(cur); } } return out; }
+// ================== các tab ==================
+const stage = $('stage');
+const slider = (lbl, k, mn, mx, st, fn) => { const l = el('label'), r = el('input', { type: 'range', min: mn, max: mx, step: st, value: vad[k] }), v = el('span', { textContent: vad[k] }); r.oninput = () => { vad[k] = +r.value; v.textContent = r.value; fn(); }; l.append(lbl, r, v); return l; };
+const sel = (opts, val, fn) => { const s = el('select'); opts.forEach((o) => s.append(new Option(o, o))); s.value = val; s.onchange = () => fn(s.value); return s; };
+const lab = (t) => el('span', { className: 'm-status', textContent: t });
+function cv2(h) { const c = el('canvas', { className: 'w-cv' }); c.width = 1200; c.height = h || 150; return c; }
+function words(box, opt) { // render transcript clickable
+  box.replaceChildren(); WORDS_EL = []; SEGS.forEach((s, si) => { const d = el('span', { className: 'seg' }); if (opt.spk) { const sp = el('span', { className: 'sp', textContent: spkOf(s, si), style: 'background:' + SPCOL[spkOf(s, si)] }); d.append(sp); }
+    s.words.forEach((w, wi) => { const x = el('span', { className: 'w' + (opt.score && w.score < .65 ? ' low' : ''), textContent: w.word }); if (opt.score) x.style.borderBottomColor = `hsl(${Math.round((w.score - .5) * 240)} 70% 45%)`; if (opt.spk) x.title = spkOf(s, si); x.title += ' ' + w.start + '–' + w.end + 's · score ' + w.score; x.onclick = () => { const i = WORDS.findIndex((q) => q.start === w.start); setT(WORDS[i].start); if (!playing) { playing = true; syncBtn(); } }; d.append(x, ' '); WORDS_EL.push(x); }); box.append(d); }); }
+let WORDS_EL = []; const spkOf = (s, si) => nSpk === 1 ? 'SPEAKER_00' : s.speaker;
+const markNow = (wi) => WORDS_EL.forEach((x, i) => { x.classList.toggle('now', i === wi); x.classList.toggle('done', wi >= 0 ? i < wi : T >= TOTAL); });
+const TABS = [
+  { id: 'pipeline', label: 'Pipeline', note: 'Toàn cảnh 5 bước của whisperX: (1) VAD cắt đoạn có tiếng nói, (2) Whisper phiên âm theo lô, (3) wav2vec2 căn chỉnh cưỡng bức ra mốc thời gian từng từ, (4) pyannote nhận diện người nói, (5) gán người nói cho từng từ rồi xuất. Bấm "Chạy pipeline" để xem các bước lần lượt kích hoạt (thời gian trên màn hình là giả lập).',
+    code: "import whisperx\naudio = whisperx.load_audio('meeting.wav')\nmodel = whisperx.load_model('large-v2', device='cuda', compute_type='float16')\nresult = model.transcribe(audio, batch_size=16)                       # VAD + Whisper theo lô\nmodel_a, meta = whisperx.load_align_model(language_code=result['language'], device='cuda')\nresult = whisperx.align(result['segments'], model_a, meta, audio, 'cuda')   # mốc thời gian từng từ\ndiar = whisperx.DiarizationPipeline(use_auth_token=HF_TOKEN, device='cuda')\nresult = whisperx.assign_word_speakers(diar(audio), result)            # nhãn người nói",
+    ctl: () => [(() => { const b = el('button', { type: 'button', textContent: 'Chạy pipeline' }); b.onclick = runPipe; return b; })()],
+    show() { stage.replaceChildren(); const p = el('div', { className: 'w-pipe', id: 'pipe' }); [['1 · VAD', 'pyannote / silero\ncắt đoạn có tiếng'], ['2 · Transcribe', 'faster-whisper\nbatched, không mốc từ'], ['3 · Align', 'wav2vec2 forced alignment\nmốc từng từ + score'], ['4 · Diarize', 'pyannote.audio\nSPEAKER_xx'], ['5 · Assign & export', 'assign_word_speakers\njson/srt/vtt/tsv/txt']].forEach(([a, b]) => p.append(el('div', { className: 'w-st', innerHTML: '<b>' + a + '</b>' + b.replace('\n', '<br>') + '<br><span class="t">—</span>' }))); stage.append(p, el('div', { className: 'w-ro', id: 'pro', textContent: 'File mẫu: ' + TOTAL + 's · ' + WORDS.length + ' từ · ' + SEGS.length + ' đoạn · 2 người nói (dữ liệu dựng sẵn)' })); } },
+  { id: 'vad', label: 'VAD & cắt chunk', note: 'Bước 1: mô hình VAD cho xác suất có tiếng theo khung; whisperX dùng hai ngưỡng (<code>vad_onset</code> bật, <code>vad_offset</code> tắt — hysteresis), gộp đoạn gần nhau rồi cắt thành chunk ≤ <code>chunk_size</code> giây để xử lý theo lô. Đường cong xác suất ở đây là TỔNG HỢP từ mốc từ mẫu; thuật toán ngưỡng + gộp là thật, kéo thanh trượt để thấy đoạn thay đổi.',
+    code: "model = whisperx.load_model('large-v2', 'cuda', vad_options={'vad_onset': 0.500, 'vad_offset': 0.363}, asr_options={...})\n# CLI: whisperx audio.wav --vad_onset 0.5 --vad_offset 0.363 --chunk_size 30\n# (vad_method: pyannote | silero)",
+    ctl: () => [slider('onset', 'on', .2, .9, .01, () => tab.show()), slider('offset', 'off', .1, .8, .01, () => tab.show()), slider('gộp <s', 'gap', 0, 1.5, .05, () => tab.show()), slider('chunk_size', 'chunk', 4, 30, 1, () => tab.show())],
+    show() { stage.replaceChildren(); const c = cv2(240); stage.append(c); const x = c.getContext('2d'), W = 1200, H = 240, X = (t) => t / TOTAL * W; x.fillStyle = 'rgba(128,128,128,.08)'; x.fillRect(0, 0, W, H); const { raw, merged } = vadSegs(), ch = chunks(merged);
+      x.strokeStyle = '#49b3fc'; x.lineWidth = 2; x.beginPath(); PROB.forEach((v, i) => { const px = X(i / FPS), py = 130 - v * 110; i ? x.lineTo(px, py) : x.moveTo(px, py); }); x.stroke();
+      x.setLineDash([6, 4]); [[vad.on, '#2fbf71', 'onset'], [vad.off, '#e5372d', 'offset']].forEach(([v, col, n]) => { x.strokeStyle = col; x.beginPath(); x.moveTo(0, 130 - v * 110); x.lineTo(W, 130 - v * 110); x.stroke(); x.fillStyle = col; x.font = '12px ui-monospace,monospace'; x.fillText(n + ' ' + v, 6, 130 - v * 110 - 4); }); x.setLineDash([]);
+      x.fillStyle = 'rgba(250,93,41,.7)'; merged.forEach(([a, b]) => x.fillRect(X(a), 140, X(b) - X(a), 30)); x.fillStyle = 'rgba(128,128,128,.9)'; raw.forEach(([a, b]) => x.fillRect(X(a), 176, X(b) - X(a), 8));
+      ch.forEach(([a, b], i) => { x.fillStyle = 'rgba(58,109,240,.8)'; x.fillRect(X(a), 194, X(b) - X(a) - 3, 30); x.fillStyle = '#fff'; x.fillText('chunk ' + (i + 1) + ' · ' + (b - a).toFixed(1) + 's', X(a) + 6, 213); }); x.fillStyle = '#888'; x.fillText('P(speech)', 6, 16); x.fillText('đoạn sau gộp', W - 110, 156); x.fillText('đoạn thô', W - 80, 184);
+      stage.append(el('div', { className: 'w-ro', textContent: raw.length + ' đoạn thô → ' + merged.length + ' đoạn sau gộp → ' + ch.length + ' chunk (≤ ' + vad.chunk + 's) sẽ đưa vào Whisper theo lô' })); } },
+  { id: 'transcribe', label: 'Transcribe (batched)', bs: 4, note: 'Bước 2: Whisper (faster-whisper) phiên âm các chunk; nhờ xử lý <b>theo lô</b> (<code>batch_size</code>) nhiều chunk chạy song song nên nhanh hơn hẳn. Kết quả mỗi đoạn chỉ có văn bản và mốc thời gian mức ĐOẠN (chưa có mốc từ). Đổi batch_size để xem số lượt xử lý thay đổi; thời gian là giả lập (1 lượt = 0.9s), văn bản là transcript dựng sẵn.',
+    code: "result = model.transcribe(audio, batch_size=16)   # chunk xử lý song song theo lô\nprint(result['segments'])\n# [{'text': ' Chào mừng các bạn ...', 'start': 0.5, 'end': 4.1}, ...]   <- CHƯA có words[]",
+    ctl: () => [sel(['1', '2', '4', '8', '16'], String(TABS[2].bs), (v) => { TABS[2].bs = +v; tab.show(); }), lab('batch_size'), (() => { const b = el('button', { type: 'button', textContent: 'Chạy transcribe' }); b.onclick = () => runBatch(); return b; })()],
+    show() { stage.replaceChildren(); this.rows = SEGS.map((s, i) => { const r = el('div', { className: 'w-row' }); r.innerHTML = '<span>chunk ' + (i + 1) + '</span><div><div class="w-bar"><i></i></div><div class="txt" style="font:13px var(--aw-font);margin-top:4px;min-height:20px;opacity:.9"></div></div><span class="tm"></span>'; stage.append(r); return r; }); stage.append(el('div', { className: 'w-ro', id: 'tro', textContent: SEGS.length + ' chunk · batch_size ' + TABS[2].bs + ' → ' + Math.ceil(SEGS.length / TABS[2].bs) + ' lượt. Bấm "Chạy transcribe".' })); } },
+  { id: 'align', label: 'Align (từng từ)', note: 'Bước 3 — điểm mạnh nhất của whisperX: căn chỉnh cưỡng bức bằng wav2vec2 cho mốc <code>start/end</code> + <code>score</code> của TỪNG TỪ. Bấm Phát để thấy tô sáng kiểu karaoke đồng bộ đồng hồ; bấm một từ để nhảy tới đó; gạch chân màu thể hiện score (đỏ thấp → xanh cao), từ score &lt; 0.65 bị đánh gợn sóng. Mốc từ là dữ liệu mẫu.',
+    code: "model_a, meta = whisperx.load_align_model(language_code='vi', device='cuda')\nresult = whisperx.align(result['segments'], model_a, meta, audio, 'cuda', return_char_alignments=False)\n# result['segments'][0]['words'][0] =\n# {'word': 'Chào', 'start': 0.5, 'end': 0.84, 'score': 0.912}",
+    ctl: () => transport(), show() { stage.replaceChildren(); const b = el('div', { className: 'w-tx', id: 'tx' }); stage.append(b, el('div', { className: 'w-ro', id: 'aro' })); words(b, { score: true }); }, tick(t, wi) { markNow(wi); const w = WORDS[wi]; if ($('aro')) $('aro').textContent = t.toFixed(2) + 's / ' + TOTAL + 's' + (w ? ' · "' + w.word + '" ' + w.start + '→' + w.end + ' · score ' + w.score : ''); } },
+  { id: 'diarize', label: 'Diarize (người nói)', note: 'Bước 4–5: pyannote cho các khoảng thời gian theo người nói, sau đó <code>assign_word_speakers</code> gán nhãn SPEAKER_xx cho từng từ theo độ chồng lấn thời gian. Đổi "số người nói" thành 1 để thấy nhãn gộp lại (tương tự min/max_speakers). Các làn bên dưới là timeline người nói.',
+    code: "diarize_model = whisperx.DiarizationPipeline(use_auth_token=HF_TOKEN, device='cuda')\ndiar = diarize_model(audio, min_speakers=2, max_speakers=2)\nresult = whisperx.assign_word_speakers(diar, result)\n# result['segments'][0]['speaker'] == 'SPEAKER_00'   (từng từ cũng có 'speaker')",
+    ctl: () => [...transport(), sel(['2', '1'], String(nSpk), (v) => { nSpk = +v; tab.show(); }), lab('số người nói')],
+    show() { stage.replaceChildren(); const c = cv2(110); stage.append(c); this.cx = c.getContext('2d'); const b = el('div', { className: 'w-tx', id: 'tx' }); stage.append(b, el('div', { className: 'w-ro', id: 'aro' })); words(b, { spk: true }); },
+    tick(t, wi) { markNow(wi); const x = this.cx; if (!x) return; const W = 1200; x.clearRect(0, 0, W, 110); x.fillStyle = 'rgba(128,128,128,.08)'; x.fillRect(0, 0, W, 110); const spks = nSpk === 1 ? ['SPEAKER_00'] : ['SPEAKER_00', 'SPEAKER_01'];
+      spks.forEach((sp, i) => { x.fillStyle = '#888'; x.font = '11px ui-monospace,monospace'; x.fillText(sp, 6, 16 + i * 44); SEGS.forEach((s, si) => { if (spkOf(s, si) === sp) { x.fillStyle = SPCOL[sp]; x.fillRect(s.start / TOTAL * W, 22 + i * 44, (s.end - s.start) / TOTAL * W, 26); } }); }); x.fillStyle = '#fa5d29'; x.fillRect(t / TOTAL * W - 1, 0, 3, 110);
+      if ($('aro')) $('aro').textContent = t.toFixed(2) + 's' + (WORDS[wi] ? ' · "' + WORDS[wi].word + '" → ' + spkOf(SEGS[WORDS[wi].seg], WORDS[wi].seg) : ''); } },
+  { id: 'export', label: 'Xuất (json/srt/vtt…)', fmt: 'json', hl: false, note: 'Định dạng đầu ra của whisperX (<code>--output_format</code>): <b>json</b> (segments → words → start/end/score/speaker), <b>srt</b>, <b>vtt</b>, <b>tsv</b>, <b>txt</b>. Chọn định dạng và tuỳ chọn <code>--highlight_words</code> (SRT/VTT gạch dưới từ đang đọc); văn bản bên dưới do trang sinh ra từ dữ liệu mẫu, có thể sao chép hoặc tải về.',
+    code: "whisperx meeting.wav --model large-v2 --diarize --highlight_words True --output_format srt\n# output_format: all | json | srt | vtt | txt | tsv | aud",
+    ctl: () => [sel(['json', 'srt', 'vtt', 'tsv', 'txt'], TABS[5].fmt, (v) => { TABS[5].fmt = v; tab.show(); }), (() => { const l = el('label'), c = el('input', { type: 'checkbox', checked: TABS[5].hl }); c.onchange = () => { TABS[5].hl = c.checked; tab.show(); }; l.append(c, 'highlight_words'); return l; })(), (() => { const b = el('button', { type: 'button', textContent: 'Tải về' }); b.onclick = () => { const a = el('a', { href: URL.createObjectURL(new Blob([$('out').textContent], { type: 'text/plain' })), download: 'meeting.' + TABS[5].fmt }); a.click(); }; return b; })()],
+    show() { stage.replaceChildren(); stage.append(el('pre', { className: 'w-pre', id: 'out', textContent: render(TABS[5].fmt, TABS[5].hl) })); } },
+];
+const ts = (t, sep) => { const h = Math.floor(t / 3600), m = Math.floor(t % 3600 / 60), s = Math.floor(t % 60), ms = Math.round((t % 1) * 1000); return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0') + sep + String(ms).padStart(3, '0'); };
+function render(f, hl) {
+  if (f === 'json') return JSON.stringify({ segments: SEGS.map((s, si) => ({ start: s.start, end: s.end, text: ' ' + s.text, words: s.words.map((w) => ({ ...w, speaker: spkOf(s, si) })), speaker: spkOf(s, si) })), language: 'vi' }, null, 2);
+  if (f === 'txt') return SEGS.map((s, si) => '[' + spkOf(s, si) + ']: ' + s.text).join('\n');
+  if (f === 'tsv') return 'start\tend\ttext\n' + SEGS.map((s) => Math.round(s.start * 1000) + '\t' + Math.round(s.end * 1000) + '\t' + s.text).join('\n');
+  const isV = f === 'vtt', sep = isV ? '.' : ',', out = []; SEGS.forEach((s, si) => { const sp = '[' + spkOf(s, si) + ']: ';
+    if (hl) s.words.forEach((w, k) => { const txt = s.words.map((q, j) => j === k ? (isV ? '<u>' + q.word + '</u>' : '<u>' + q.word + '</u>') : q.word).join(' '); out.push((isV ? '' : (out.length + 1) + '\n') + ts(w.start, sep) + ' --> ' + ts(w.end, sep) + '\n' + sp + txt + '\n'); });
+    else out.push((isV ? '' : (out.length + 1) + '\n') + ts(s.start, sep) + ' --> ' + ts(s.end, sep) + '\n' + sp + s.text + '\n'); }); return (isV ? 'WEBVTT\n\n' : '') + out.join('\n'); }
+async function runPipe() { const st = [...document.querySelectorAll('#pipe .w-st')], ms = [380, 1100, 900, 700, 250]; st.forEach((s) => { s.classList.remove('run', 'ok'); s.querySelector('.t').textContent = '—'; }); for (let i = 0; i < st.length; i++) { st[i].classList.add('run'); await new Promise((r) => setTimeout(r, 650)); st[i].classList.remove('run'); st[i].classList.add('ok'); st[i].querySelector('.t').textContent = 'xong · ~' + ms[i] + ' ms (giả lập)'; } $('pro').textContent = '✓ ' + WORDS.length + ' từ có mốc thời gian + người nói → mở các tab kế để xem từng bước'; }
+async function runBatch() { const t = TABS[2], rows = t.rows, bs = t.bs, nb = Math.ceil(SEGS.length / bs); rows.forEach((r) => { r.querySelector('i').style.width = '0'; r.querySelector('.txt').textContent = ''; r.querySelector('.tm').textContent = ''; }); const t0 = performance.now();
+  for (let b = 0; b < nb; b++) { const idx = []; for (let k = 0; k < bs && b * bs + k < SEGS.length; k++) idx.push(b * bs + k); $('tro').textContent = 'lượt ' + (b + 1) + '/' + nb + ' · ' + idx.length + ' chunk song song…'; for (let p = 0; p <= 10; p++) { idx.forEach((i) => rows[i].querySelector('i').style.width = p * 10 + '%'); await new Promise((r) => setTimeout(r, 55)); } idx.forEach((i) => { rows[i].querySelector('.txt').textContent = SEGS[i].text; rows[i].querySelector('.tm').textContent = SEGS[i].start + '–' + SEGS[i].end; }); }
+  $('tro').textContent = '✓ ' + nb + ' lượt (batch_size=' + bs + ') · giả lập ≈ ' + (nb * .9).toFixed(1) + 's so với ' + (SEGS.length * .9).toFixed(1) + 's nếu batch_size=1 · đo thật ' + ((performance.now() - t0) / 1000).toFixed(1) + 's'; }
+const tabsEl = $('tabs'), ctlEl = $('ctl');
+TABS.forEach((t) => { const b = el('button', { type: 'button', id: 'tab-' + t.id, textContent: t.label }); b.setAttribute('role', 'tab'); b.onclick = () => openTab(t.id); tabsEl.append(b); });
+function openTab(id) { tab = TABS.find((t) => t.id === id) || TABS[0]; TABS.forEach((t) => $('tab-' + t.id).classList.toggle('on', t === tab)); playing = false; ctlEl.replaceChildren(...tab.ctl()); $('note').innerHTML = tab.note; $('code').textContent = tab.code; WORDS_EL = []; tab.show(); syncBtn(); if (location.hash !== '#' + tab.id) history.replaceState(null, '', '#' + tab.id); }
+addEventListener('hashchange', () => openTab(location.hash.slice(1)));
+openTab(location.hash.slice(1) || 'align'); requestAnimationFrame(frame);
+</script>
+</body></html>

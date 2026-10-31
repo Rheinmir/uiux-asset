@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sample three-gpu-pathtracer — uiux-asset</title>
+<link rel="stylesheet" href="../aw.css?v=559582af29">
+<link rel="stylesheet" href="_m.css">
+<script type="importmap">{"imports":{
+"three":"https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js",
+"three/addons/":"https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/",
+"three/examples/jsm/":"https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/",
+"three-mesh-bvh":"https://cdn.jsdelivr.net/npm/three-mesh-bvh@0.9.17/src/index.js",
+"three-gpu-pathtracer":"https://cdn.jsdelivr.net/npm/three-gpu-pathtracer@0.0.27/src/index.js"}}</script>
+<style>.m-bar button[aria-pressed=true]{background:#2a6df4;color:#fff;border-color:#2a6df4}.m-bar input[type=range]{vertical-align:middle}</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=559582af29"></script>
+<div class="aw-crumb">
+<h1>three-gpu-pathtracer <span class="aw-tag aw-tag--small aw-tag--solid-green m-badge">THƯ VIỆN THẬT</span></h1>
+<span>Chạy <code>three-gpu-pathtracer@0.0.27</code> + <code>three-mesh-bvh@0.9.17</code> thật: path tracing trên GPU, ảnh nhiễu mịn dần theo số sample. 6 tab = 6 tính năng chính. · <a href="https://github.com/gkjohnson/three-gpu-pathtracer" target="_blank" rel="noopener">gkjohnson/three-gpu-pathtracer</a> · <a href="./">← Motion</a></span>
+</div>
+<div class="m-bar" id="tabs"></div>
+<div class="m-stage" id="stage" style="height:460px;min-height:460px"></div>
+<div class="m-bar" id="ctl"></div>
+<p class="m-status" id="st" style="margin-top:10px">đang nạp thư viện…</p>
+<p class="m-note" id="note"></p>
+<pre class="m-code" id="code"></pre>
+</main>
+<script type="module">
+const $ = (id) => document.getElementById(id), stage = $('stage'), st = $('st'), tabsEl = $('tabs'), ctl = $('ctl');
+const msg = (t) => { stage.innerHTML = '<p style="padding:24px;text-align:center">' + t + '</p>'; st.textContent = t; };
+const THREE = await import('three');
+const { OrbitControls } = await import('three/addons/controls/OrbitControls.js');
+let renderer;
+try { renderer = new THREE.WebGLRenderer({ antialias: false }); } catch (e) { msg('Trình duyệt này không có WebGL2 nên không chạy được path tracer.'); throw e; }
+if (!renderer.capabilities.isWebGL2 || !renderer.extensions.has('EXT_color_buffer_float')) { msg('GPU/trình duyệt không hỗ trợ texture float (EXT_color_buffer_float), path tracer không chạy được.'); throw new Error('no float'); }
+const { WebGLPathTracer, PhysicalCamera, ShapedAreaLight, GradientEquirectTexture } = await import('three-gpu-pathtracer');
+renderer.setPixelRatio(1); stage.append(renderer.domElement);
+const pt = new WebGLPathTracer(renderer);
+Object.assign(pt, { bounces: 4, renderScale: .4, minSamples: 1, renderDelay: 0, fadeDuration: 0, filterGlossyFactor: .5 }); pt.tiles.set(2, 2);
+const ui = {
+  btn(t, fn) { const b = document.createElement('button'); b.type = 'button'; b.textContent = t; b.onclick = () => fn(b); ctl.append(b); return b; },
+  range(t, min, max, step, v, fn) { const l = document.createElement('label'); l.style.cssText = 'font:13px ui-monospace,Menlo,monospace;display:flex;gap:6px;align-items:center'; const i = document.createElement('input'); i.type = 'range'; Object.assign(i, { min, max, step, value: v }); i.oninput = () => fn(+i.value); l.append(t, i); ctl.append(l); return i; },
+  group(names, fn, first = 0) { const bs = names.map((n, i) => ui.btn(n, () => { bs.forEach((x) => x.setAttribute('aria-pressed', x === bs[i])); fn(i); })); bs[first].click(); },
+};
+const mk = (scene, geo, mat, x, y, z) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); scene.add(m); return m; };
+const diffuse = (c) => new THREE.MeshStandardMaterial({ color: c, roughness: 1, metalness: 0 });
+const PRESET = {
+  nham: (m) => m.setValues({ color: 0xff8a50, roughness: .9, metalness: 0, transmission: 0 }),
+  'kim loại': (m) => m.setValues({ color: 0xe8edf2, roughness: .08, metalness: 1, transmission: 0 }),
+  'thủy tinh': (m) => m.setValues({ color: 0xffffff, roughness: 0, metalness: 0, transmission: 1, ior: 1.5, thickness: 1 }),
+  'sần (roughness .45)': (m) => m.setValues({ color: 0x6fa8ff, roughness: .45, metalness: 1, transmission: 0 }),
+};
+const cornell = (sphereMat) => {
+  const scene = new THREE.Scene(); scene.background = new THREE.Color(0x15171c);
+  mk(scene, new THREE.BoxGeometry(4, .1, 4), diffuse(0xdddddd), 0, 0, 0); mk(scene, new THREE.BoxGeometry(4, .1, 4), diffuse(0xdddddd), 0, 4, 0);
+  mk(scene, new THREE.BoxGeometry(4, 4, .1), diffuse(0xdddddd), 0, 2, -2); mk(scene, new THREE.BoxGeometry(.1, 4, 4), diffuse(0xd8423a), -2, 2, 0); mk(scene, new THREE.BoxGeometry(.1, 4, 4), diffuse(0x3aa655), 2, 2, 0);
+  mk(scene, new THREE.BoxGeometry(1.6, .05, 1.6), new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xfff2e0, emissiveIntensity: 14 }), 0, 3.93, 0);
+  mk(scene, new THREE.SphereGeometry(.8, 48, 32), sphereMat, -.7, .85, .3);
+  const b = mk(scene, new THREE.BoxGeometry(1.1, 1.1, 1.1), diffuse(0xe8e0d0), 1, .6, -.6); b.rotation.y = .5;
+  const camera = new THREE.PerspectiveCamera(40, 1, .1, 50); camera.position.set(0, 2, 7.2); return { scene, camera, target: [0, 2, 0] };
+};
+const openScene = (env) => {
+  const scene = new THREE.Scene(), g = new GradientEquirectTexture(); Object.assign(g, { topColor: new THREE.Color(0x6fa8ff), bottomColor: new THREE.Color(0xfff2e0), exponent: 1.5 }); g.update();
+  scene.background = g; scene.environment = g;
+  mk(scene, new THREE.CylinderGeometry(6, 6, .1, 64), diffuse(0xcfcfcf), 0, -.05, 0);
+  const camera = new THREE.PerspectiveCamera(40, 1, .1, 60); camera.position.set(0, 2.2, 7); return { scene, camera, g, target: [0, .8, 0] };
+};
+const TABS = [
+{ id: 'cornell', name: 'Cornell box', note: 'Mỗi khung <code>renderSample()</code> bắn thêm một lượt tia cho mỗi điểm ảnh và lấy trung bình: ảnh nhiễu hạt rồi mịn dần theo số sample. Ánh sáng đến từ <b>một tấm phát sáng (emissive mesh)</b> trên trần, nên có đổ bóng mềm và <b>ánh sáng gián tiếp</b> (tường đỏ/xanh ám màu lên vật). Kéo chuột để xoay camera, ảnh hội tụ lại từ đầu.',
+  code: `import { WebGLPathTracer } from 'three-gpu-pathtracer';
+const pt = new WebGLPathTracer(renderer);
+pt.bounces = 4; pt.renderScale = .4; pt.tiles.set(2, 2);
+pt.setScene(scene, camera);                       // dựng BVH bằng three-mesh-bvh
+renderer.setAnimationLoop(() => pt.renderSample()); // pt.samples tăng dần
+controls.addEventListener('change', () => pt.updateCamera());`,
+  init() { const c = cornell(new THREE.MeshPhysicalMaterial({ color: 0xff8a50, roughness: .9 })); ui.btn('Reset (hội tụ lại)', () => pt.reset()); return c; } },
+{ id: 'vat-lieu', name: 'Vật liệu', note: 'Cùng một hộp Cornell, quả cầu đổi vật liệu <code>MeshPhysicalMaterial</code>: nhám (khuếch tán), kim loại bóng, kim loại sần (phản xạ mờ) và thủy tinh (<code>transmission</code> + <code>ior</code> 1.5, có khúc xạ và caustic mờ). Đổi vật liệu gọi <code>updateMaterials()</code> không dựng lại BVH.',
+  code: `sphereMat.setValues({ color: 0xffffff, roughness: 0, metalness: 0,
+  transmission: 1, ior: 1.5, thickness: 1 });   // thủy tinh
+pt.updateMaterials();                              // đẩy lại bảng vật liệu, reset sample`,
+  init() { const m = new THREE.MeshPhysicalMaterial(), c = cornell(m); ui.group(Object.keys(PRESET), (i) => { PRESET[Object.keys(PRESET)[i]](m); if (ready) pt.updateMaterials(); }); return c; } },
+{ id: 'moi-truong', name: 'Ánh sáng môi trường', note: 'Cảnh ngoài trời không có đèn nào: toàn bộ ánh sáng đến từ <code>scene.environment</code> là <code>GradientEquirectTexture</code> (texture equirect sinh bằng code, đổi màu trời/đất). Path tracer lấy mẫu quan trọng theo texture này nên bóng mềm theo hướng trời.',
+  code: `const env = new GradientEquirectTexture();
+env.topColor.set(0x6fa8ff); env.bottomColor.set(0xfff2e0); env.update();
+scene.background = scene.environment = env;
+scene.environmentIntensity = 1.5;
+pt.updateEnvironment();`,
+  init() { const o = openScene(), m = (g, x, y, z) => mk(o.scene, new THREE.SphereGeometry(.8, 48, 32), new THREE.MeshPhysicalMaterial(g), x, y, z);
+    m({ color: 0xff8a50, roughness: .9 }, -2, .8, 0); m({ color: 0xe8edf2, roughness: .05, metalness: 1 }, 0, .8, 0); m({ color: 0xffffff, roughness: 0, transmission: 1, ior: 1.5, thickness: 1 }, 2, .8, 0);
+    const sky = { 'trời xanh': [0x6fa8ff, 0xfff2e0], 'hoàng hôn': [0xff7a40, 0x2a1030], 'studio trắng': [0xffffff, 0xcccccc], 'đêm': [0x101840, 0x05060a] };
+    ui.group(Object.keys(sky), (i) => { const [t, b] = Object.values(sky)[i]; o.g.topColor.set(t); o.g.bottomColor.set(b); o.g.update(); if (ready) pt.updateEnvironment(); });
+    ui.range('cường độ', .2, 3, .1, 1, (v) => { o.scene.environmentIntensity = v; if (ready) pt.updateEnvironment(); }); return o; } },
+{ id: 'dof', name: 'Độ sâu trường ảnh', note: '<code>PhysicalCamera</code> mô phỏng ống kính thật: <code>focusDistance</code> chọn mặt phẳng nét, <code>bokehSize</code> (khẩu độ) quyết định độ mờ phía trước/sau, <code>apertureBlades</code> tạo bokeh hình đa giác. Hàng quả cầu xếp theo chiều sâu để thấy rõ vùng nét di chuyển.',
+  code: `const camera = new PhysicalCamera(40, aspect, .1, 60);
+camera.focusDistance = 7;        // khoảng cách mặt phẳng nét
+camera.bokehSize = .35;          // khẩu độ lớn -> mờ nhiều
+camera.apertureBlades = 6;       // bokeh hình lục giác
+pt.updateCamera();`,
+  init() { const o = openScene(); o.camera = new PhysicalCamera(40, 1, .1, 60); o.camera.position.set(1, 1.6, 8); o.target = [-.5, .6, -3];
+    for (let i = 0; i < 7; i++) mk(o.scene, new THREE.SphereGeometry(.5, 40, 28), new THREE.MeshStandardMaterial({ color: new THREE.Color().setHSL(i / 7, .7, .55), roughness: .35 }), (i % 2 ? 1.2 : -1.2) + i * .1, .5, 3.5 - i * 1.5);
+    const cam = o.camera; cam.focusDistance = 6; cam.bokehSize = .25; const up = () => ready && pt.updateCamera();
+    ui.range('khoảng nét', 3, 14, .2, 6, (v) => { cam.focusDistance = v; up(); }); ui.range('bokeh', 0, .6, .02, .25, (v) => { cam.bokehSize = v; up(); });
+    ui.group(['tròn', '5 cánh', '8 cánh'], (i) => { cam.apertureBlades = [0, 5, 8][i]; up(); }); return o; } },
+{ id: 'den', name: 'Đèn diện tích', note: '<code>ShapedAreaLight</code> (RectAreaLight có thêm dạng tròn) cho bóng và vệt sáng mềm đúng vật lý: đèn càng lớn bóng càng mềm. Đổi hình dạng, màu và cường độ; <code>updateLights()</code> chỉ cập nhật bảng đèn.',
+  code: `const light = new ShapedAreaLight(0xffe0b0, 40, 3, 3);
+light.isCircular = true;       // đèn hình tròn
+light.position.set(2, 4, 2); light.lookAt(0, 0, 0);
+scene.add(light);
+pt.updateLights();`,
+  init() { const o = openScene(); o.scene.environmentIntensity = .08; o.scene.background = new THREE.Color(0x101216); o.scene.environment = null;
+    mk(o.scene, new THREE.SphereGeometry(.8, 48, 32), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: .5 }), -1, .8, 0); mk(o.scene, new THREE.BoxGeometry(1.3, 1.3, 1.3), new THREE.MeshStandardMaterial({ color: 0xff8a50, roughness: .3 }), 1.3, .65, -.4);
+    const l = new ShapedAreaLight(0xffe0b0, 40, 3, 3); l.position.set(2.5, 4.5, 3); l.lookAt(0, 0, 0); o.scene.add(l); const up = () => ready && pt.updateLights();
+    ui.group(['hình chữ nhật', 'hình tròn'], (i) => { l.isCircular = !!i; up(); }); ui.range('cường độ', 5, 150, 5, 40, (v) => { l.intensity = v; up(); });
+    ui.range('kích thước', .5, 6, .1, 3, (v) => { l.width = l.height = v; up(); });
+    const cols = { ấm: 0xffe0b0, lạnh: 0xa8c8ff, hồng: 0xff80c0 }; ui.group(Object.keys(cols), (i) => { l.color.set(Object.values(cols)[i]); up(); }); return o; } },
+{ id: 'nay-tia', name: 'Số lần nảy tia', note: 'Hai quả cầu gương/thủy tinh trong hộp Cornell: ít lần nảy thì phần phản chiếu và khúc xạ bị cụt (đen), nhiều lần nảy thì ánh sáng gián tiếp và hình ảnh trong gương đầy đủ. <code>bounces</code> cho tia thường, <code>transmissiveBounces</code> riêng cho tia xuyên qua thủy tinh.',
+  code: `pt.bounces = 2;              // ánh sáng gián tiếp bị cắt sớm
+pt.transmissiveBounces = 6;  // đủ để tia chui qua/ra khỏi cầu thủy tinh
+pt.multipleImportanceSampling = true;
+pt.reset();`,
+  init() { const m = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0, transmission: 1, ior: 1.5, thickness: 1 }), c = cornell(m);
+    mk(c.scene, new THREE.SphereGeometry(.55, 40, 28), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0, metalness: 1 }), 1, 1.6, -.5);
+    ui.group(['1', '2', '4', '8'], (i) => { pt.bounces = [1, 2, 4, 8][i]; pt.reset(); }, 2); ui.range('xuyên kính', 1, 12, 1, 6, (v) => { pt.transmissiveBounces = v; pt.reset(); }); pt.transmissiveBounces = 6; return c; } },
+];
+let cur = null, ready = false, ro = null;
+const fit = () => { const w = stage.clientWidth, h = stage.clientHeight; renderer.setSize(w, h); if (cur) { cur.camera.aspect = w / h; cur.camera.updateProjectionMatrix(); if (ready) pt.updateCamera(); } };
+const kill = (s) => s.traverse((o) => { o.geometry?.dispose(); [].concat(o.material || []).forEach((m) => m.dispose()); });
+async function select(id) {
+  const t = TABS.find((x) => x.id === id) || TABS[0]; ready = false;
+  if (cur) { cur.controls.dispose(); kill(cur.scene); } ctl.innerHTML = '';
+  pt.bounces = 4; pt.transmissiveBounces = 10; curTab = t;
+  tabsEl.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.id === t.id));
+  $('note').innerHTML = t.note; $('code').textContent = t.code; st.textContent = 'đang dựng BVH + biên dịch shader (lâu nếu không có GPU thật)…';
+  await new Promise((r) => requestAnimationFrame(() => setTimeout(r, 30)));
+  cur = t.init(); cur.camera.aspect = stage.clientWidth / stage.clientHeight; cur.camera.updateProjectionMatrix();
+  cur.controls = new OrbitControls(cur.camera, renderer.domElement); cur.controls.target.set(...cur.target); cur.controls.update();
+  cur.controls.addEventListener('change', () => ready && pt.updateCamera());
+  pt.setScene(cur.scene, cur.camera); ready = true;
+}
+let curTab = null;
+TABS.forEach((t) => { const b = document.createElement('button'); b.type = 'button'; b.dataset.id = t.id; b.textContent = t.name; b.onclick = () => { location.hash = t.id; }; tabsEl.append(b); });
+addEventListener('hashchange', () => select(location.hash.slice(1)));
+new ResizeObserver(fit).observe(stage); fit();
+await select(location.hash.slice(1));
+renderer.setAnimationLoop(() => {
+  if (!ready) return; pt.renderSample();
+  st.textContent = `three-gpu-pathtracer 0.0.27 · THƯ VIỆN THẬT · tab "${curTab.name}" · ${Math.floor(pt.samples)} sample · ${pt.bounces} lần nảy`;
+});
+</script>
+</body></html>

@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sample Lottie Web — uiux-asset</title>
+<link rel="stylesheet" href="../aw.css?v=559582af29">
+<link rel="stylesheet" href="_m.css">
+<style>
+.m-bar [role=tab] { padding: 6px 12px; font-size: 14px; }
+.m-bar [role=tab][aria-selected=true] { background: color-mix(in srgb, currentColor 16%, transparent); font-weight: 700; }
+.m-code { max-height: 360px; }
+
+.lt { width: min(100%, 360px); aspect-ratio: 1; }
+.lt-seek { width: 160px; accent-color: currentColor; }
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=559582af29"></script>
+<div class="aw-crumb">
+<h1>Lottie Web <span class="aw-tag aw-tag--small aw-tag--solid-green m-badge" id="badge">THƯ VIỆN THẬT</span></h1>
+<span>Chạy <code>lottie-web@5.12.2</code> thật (renderer SVG). Mỗi tab là một JSON animation tự viết inline nhấn vào một tính năng của định dạng Lottie. · <a href="https://github.com/airbnb/lottie-web" target="_blank" rel="noopener">airbnb/lottie-web</a> · <a href="./">← Motion</a></span>
+</div>
+<div class="m-bar" id="tabs"></div>
+<div class="m-bar"><span class="m-status" id="st">đang nạp thư viện…</span></div>
+<div class="m-stage" id="stage" style="min-height:440px;display:block"></div>
+<p class="m-note" id="note"></p>
+<pre class="m-code" id="code"></pre>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+<script>
+// --- khung tab dùng chung (hash #tên-tab chọn tab) ---
+function initTabs(TABS) {
+  const $ = (i) => document.getElementById(i), bar = $('tabs'), stage = $('stage'), note = $('note'), code = $('code'), st = $('st'), badge = $('badge');
+  const names = Object.keys(TABS); let cur = null, cleanup = null, token = 0;
+  bar.setAttribute('role', 'tablist');
+  names.forEach((n) => { const b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'tab'); b.dataset.tab = n; b.id = 'tab-' + n; b.textContent = TABS[n].label; b.onclick = () => select(n); bar.append(b); });
+  async function select(n, fromHash) {
+    if (!TABS[n]) n = names[0];
+    if (cur === n && fromHash !== 'force') return;
+    const my = ++token, T = TABS[n];
+    if (cleanup) { try { cleanup(); } catch (e) { console.warn(e); } cleanup = null; }
+    stage.replaceChildren(); cur = n;
+    bar.querySelectorAll('[role=tab]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === n)));
+    note.textContent = T.note; code.textContent = T.code;
+    if (badge) { badge.textContent = T.sim ? 'MÔ PHỎNG' : 'THƯ VIỆN THẬT'; badge.className = 'aw-tag aw-tag--small m-badge ' + (T.sim ? 'aw-tag--solid-yellow' : 'aw-tag--solid-green'); }
+    if (!fromHash) try { history.replaceState(null, '', '#' + n); } catch (e) {}
+    st.textContent = 'đang nạp…';
+    const c = await T.mount(stage, st);
+    if (my !== token) { try { c && c(); } catch (e) {} return; }
+    cleanup = c || null;
+  }
+  addEventListener('hashchange', () => select(location.hash.slice(1), true));
+  select(location.hash.slice(1) || names[0], true);
+}
+// khung con: thanh nút + sân khấu cao cố định (không phụ thuộc cuộn trang)
+function mkBox(stage, { h = 380, btns = [] } = {}) {
+  const w = document.createElement('div'); w.style.cssText = 'width:100%;display:flex;flex-direction:column;gap:10px;padding:12px;box-sizing:border-box';
+  const bar = document.createElement('div'); bar.className = 'm-bar'; bar.style.margin = '0';
+  const arena = document.createElement('div'); arena.style.cssText = 'position:relative;width:100%;height:' + h + 'px;overflow:hidden;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,currentColor 5%,transparent)';
+  const add = (label, fn) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = label; b.onclick = () => fn(b); bar.append(b); return b; };
+  btns.forEach(([l, f]) => add(l, f)); w.append(bar, arena); stage.append(w); if (!btns.length) bar.remove();
+  return { arena, bar, add };
+}
+const el = (tag, css, parent, txt) => { const e = document.createElement(tag); if (css) e.style.cssText = css; if (txt != null) e.textContent = txt; if (parent) parent.append(e); return e; };
+
+// ---- bộ dựng JSON Lottie ----
+const E = (n) => ({ x: Array(n).fill(0.25), y: Array(n).fill(1) }), EO = (n) => ({ x: Array(n).fill(0.4), y: Array(n).fill(0) });
+const kf = (pts, n) => ({ a: 1, k: pts.map((p, i) => i < pts.length - 1 ? { t: p[0], s: p[1], e: pts[i + 1][1], i: E(n), o: EO(n) } : { t: p[0], s: p[1] }) });
+const S = (v) => ({ a: 0, k: v });
+const TR = (extra) => Object.assign({ ty: 'tr', p: S([0, 0]), a: S([0, 0]), s: S([100, 100]), r: S(0), o: S(100) }, extra || {});
+const LAYER = (ind, nm, ks, shapes, extra) => Object.assign({ ddd: 0, ind, ty: 4, nm, sr: 1, ks: Object.assign({ o: S(100), r: S(0), p: S([100, 100, 0]), a: S([0, 0, 0]), s: S([100, 100, 100]) }, ks), ao: 0, shapes, ip: 0, op: 120, st: 0, bm: 0 }, extra || {});
+const COMP = (layers, nm) => ({ v: '5.7.0', fr: 30, ip: 0, op: 120, w: 200, h: 200, nm, ddd: 0, assets: [], layers });
+const GR = (...it) => ({ ty: 'gr', it: [...it, TR()] });
+const EL = (w, h, p) => ({ ty: 'el', s: S([w, h]), p: S(p || [0, 0]) });
+const FL = (c) => ({ ty: 'fl', c: typeof c.a === 'number' ? c : S(c), o: S(100) });
+const ST = (c, w) => ({ ty: 'st', c: S(c), o: S(100), w: S(w), lc: 2, lj: 2 });
+const rgb = (hex) => [parseInt(hex.slice(1, 3), 16) / 255, parseInt(hex.slice(3, 5), 16) / 255, parseInt(hex.slice(5, 7), 16) / 255, 1];
+const K = 0.5523;
+const sq = (r) => ({ i: [[0, 0], [0, 0], [0, 0], [0, 0]], o: [[0, 0], [0, 0], [0, 0], [0, 0]], v: [[-r, -r], [r, -r], [r, r], [-r, r]], c: true });
+const ci = (r) => ({ i: [[-K * r, 0], [0, -K * r], [K * r, 0], [0, K * r]], o: [[K * r, 0], [0, K * r], [-K * r, 0], [0, -K * r]], v: [[0, -r], [r, 0], [0, r], [-r, 0]], c: true });
+
+// ---- 7 animation ----
+const D = {};
+D.pulse = COMP([
+  LAYER(1, 'ripple', { s: kf([[20, [40, 40, 100]], [75, [190, 190, 100]]], 3), o: kf([[20, [70]], [75, [0]]], 1) }, [GR(EL(120, 120), ST(rgb('#34d399'), 5))]),
+  LAYER(2, 'disc', { s: kf([[0, [0, 0, 100]], [18, [112, 112, 100]], [30, [100, 100, 100]], [75, [106, 106, 100]], [100, [100, 100, 100]], [119, [100, 100, 100]]], 3) }, [GR(EL(120, 120), FL(rgb('#10b981')))])], 'pulse');
+D.trim = COMP([
+  LAYER(1, 'check', { p: S([0, 0, 0]) }, [{ ty: 'gr', it: [{ ty: 'sh', ks: { a: 0, k: { i: [[0, 0], [0, 0], [0, 0]], o: [[0, 0], [0, 0], [0, 0]], v: [[62, 102], [88, 128], [140, 74]], c: false } } },
+    { ty: 'tm', s: S(0), e: { a: 1, k: [{ t: 30, s: [0], e: [100], i: { x: [0.3], y: [1] }, o: { x: [0.6], y: [0] } }, { t: 70, s: [100] }] }, o: S(0), m: 1 }, ST([1, 1, 1, 1], 12), TR()] }]),
+  LAYER(2, 'disc', { s: kf([[0, [0, 0, 100]], [20, [108, 108, 100]], [30, [100, 100, 100]]], 3) }, [GR(EL(130, 130), FL(rgb('#6366f1')))])], 'trim');
+D.morph = COMP([LAYER(1, 'shape', { r: kf([[0, [0]], [60, [180]], [119, [360]]], 1) }, [GR({ ty: 'sh', ks: { a: 1, k: [{ t: 0, s: [sq(50)], e: [ci(50)], i: E(1), o: EO(1) }, { t: 40, s: [ci(50)], e: [sq(50)], i: E(1), o: EO(1) }, { t: 80, s: [sq(50)], e: [ci(50)], i: E(1), o: EO(1) }, { t: 119, s: [ci(50)] }] } }, ST([1, 1, 1, 1], 0), FL(rgb('#f59e0b')))])], 'morph');
+D.color = COMP([
+  LAYER(1, 'dot', { p: kf([[0, [40, 100, 0]], [60, [160, 100, 0]], [119, [40, 100, 0]]], 3), s: kf([[0, [60, 60, 100]], [60, [140, 140, 100]], [119, [60, 60, 100]]], 3) }, [GR(EL(60, 60), FL({ a: 1, k: [{ t: 0, s: rgb('#6366f1'), e: rgb('#ec4899'), i: E(4), o: EO(4) }, { t: 40, s: rgb('#ec4899'), e: rgb('#f59e0b'), i: E(4), o: EO(4) }, { t: 80, s: rgb('#f59e0b'), e: rgb('#6366f1'), i: E(4), o: EO(4) }, { t: 119, s: rgb('#6366f1') }] }))])], 'color');
+D.path = COMP([LAYER(1, 'rocket', { p: { a: 1, k: [{ t: 0, s: [30, 160, 0], e: [170, 60, 0], to: [40, -120, 0], ti: [-60, 0, 0], i: { x: 0.5, y: 0.5 }, o: { x: 0.5, y: 0.5 } }, { t: 60, s: [170, 60, 0], e: [30, 160, 0], to: [60, 0, 0], ti: [40, 120, 0], i: { x: 0.5, y: 0.5 }, o: { x: 0.5, y: 0.5 } }, { t: 119, s: [30, 160, 0] }] } }, [GR({ ty: 'sh', ks: { a: 0, k: { i: [[0, 0], [0, 0], [0, 0]], o: [[0, 0], [0, 0], [0, 0]], v: [[18, 0], [-12, -12], [-12, 12]], c: true } } }, FL(rgb('#ef4444')))], { ao: 1 }),
+  LAYER(2, 'track', {}, [GR({ ty: 'sh', ks: { a: 0, k: { i: [[0, 0], [0, 0]], o: [[0, 0], [0, 0]], v: [[30, 160], [170, 60]], c: false } } }, ST([0.55, 0.55, 0.55, 1], 2))])], 'path');
+D.repeater = COMP([LAYER(1, 'flower', { r: kf([[0, [0]], [119, [360]]], 1) }, [{ ty: 'gr', it: [EL(46, 46, [48, 0]), FL({ a: 1, k: [{ t: 0, s: rgb('#ec4899'), e: rgb('#06b6d4'), i: E(4), o: EO(4) }, { t: 60, s: rgb('#06b6d4'), e: rgb('#ec4899'), i: E(4), o: EO(4) }, { t: 119, s: rgb('#ec4899') }] }),
+  { ty: 'rp', c: kf([[0, [3]], [60, [12]], [119, [3]]], 1), o: S(0), m: 1, tr: { ty: 'tr', p: S([0, 0]), a: S([0, 0]), s: S([100, 100]), r: S(30), so: S(100), eo: S(100) } }, TR()] }])], 'repeater');
+D.matte = COMP([
+  LAYER(1, 'matte', { s: kf([[0, [10, 10, 100]], [60, [170, 170, 100]], [119, [10, 10, 100]]], 3) }, [GR(EL(100, 100), FL(rgb('#ffffff')))], { td: 1 }),
+  LAYER(2, 'stripes', { p: kf([[0, [100, 100, 0]], [119, [100, 100, 0]]], 3) }, [{ ty: 'gr', it: [{ ty: 'rc', d: 1, s: S([260, 40]), p: S([0, -60]), r: S(0) }, FL(rgb('#ef4444')), TR()] }, { ty: 'gr', it: [{ ty: 'rc', d: 1, s: S([260, 40]), p: S([0, 0]), r: S(0) }, FL(rgb('#f59e0b')), TR()] }, { ty: 'gr', it: [{ ty: 'rc', d: 1, s: S([260, 40]), p: S([0, 60]), r: S(0) }, FL(rgb('#6366f1')), TR()] }], { tt: 1 })], 'matte');
+
+function lot(stage, st, data, tabInfo) {
+  const { arena, bar, add } = mkBox(stage, { h: 360 }); const box = el('div', '', arena); box.className = 'lt';
+  const anim = lottie.loadAnimation({ container: box, renderer: 'svg', loop: true, autoplay: true, animationData: data }); let dir = 1;
+  const pp = add('Tạm dừng', () => { if (anim.isPaused) { anim.play(); pp.textContent = 'Tạm dừng'; } else { anim.pause(); pp.textContent = 'Phát'; } });
+  add('Đảo chiều', () => { dir = -dir; anim.setDirection(dir); if (anim.isPaused) { anim.play(); pp.textContent = 'Tạm dừng'; } });
+  const sp = el('select', '', bar); sp.setAttribute('aria-label', 'Tốc độ'); [0.25, 0.5, 1, 2].forEach((v) => { const o = el('option', '', sp, v + 'x'); o.value = v; if (v === 1) o.selected = true; }); sp.onchange = () => anim.setSpeed(+sp.value);
+  const sk = el('input', '', bar); sk.type = 'range'; sk.min = 0; sk.max = 119; sk.value = 0; sk.className = 'lt-seek'; sk.oninput = () => { anim.goToAndStop(+sk.value, true); pp.textContent = 'Phát'; };
+  anim.addEventListener('enterFrame', (e) => { sk.value = Math.round(e.currentTime); st.textContent = 'lottie 5.12.2 · khung ' + Math.round(e.currentTime) + '/119 · ' + anim.playSpeed + 'x · ' + (anim.isPaused ? 'dừng' : dir > 0 ? 'xuôi' : 'ngược'); });
+  return () => anim.destroy();
+}
+const mk = (key) => (s, st) => lot(s, st, D[key]);
+const TABS = {
+  pulse: { label: 'Scale & opacity', note: 'Shape layer có keyframe scale (3 chiều) và opacity với easing bezier (i/o): đĩa nảy ra rồi đập nhịp, vòng sóng lan ra và mờ dần. Nền tảng của mọi animation Lottie là bảng ks (transform) của layer.',
+    code: "layer.ks.s = { a: 1, k: [\n  { t: 0,  s: [0, 0, 100],     e: [112, 112, 100], i: {x:[.25,.25,.25], y:[1,1,1]}, o: {x:[.4,.4,.4], y:[0,0,0]} },\n  { t: 18, s: [112, 112, 100], e: [100, 100, 100], /* ... */ }, { t: 119, s: [100, 100, 100] } ] };\nlayer.ks.o = { a: 1, k: [{ t: 20, s: [70], e: [0] /* ... */ }, { t: 75, s: [0] }] };   // opacity", mount: mk('pulse') },
+  trim: { label: 'Trim Paths', note: 'Mục "tm" (Trim Paths) với end 0→100 làm nét vẽ dần ra: dấu check được vẽ theo đường path thật, không phải ảnh. Kéo thanh khung để tua tay từng nhịp.',
+    code: "{ ty: 'gr', it: [\n  { ty: 'sh', ks: { a: 0, k: { v: [[62,102],[88,128],[140,74]], i: [[0,0],[0,0],[0,0]], o: [[0,0],[0,0],[0,0]], c: false } } },\n  { ty: 'tm', s: { a: 0, k: 0 }, e: { a: 1, k: [{ t: 30, s: [0], e: [100] /* i/o */ }, { t: 70, s: [100] }] }, m: 1 },\n  { ty: 'st', c: { a: 0, k: [1,1,1,1] }, w: { a: 0, k: 12 }, lc: 2, lj: 2 } ] }", mount: mk('trim') },
+  morph: { label: 'Path morph', note: 'Keyframe của chính path "sh": cùng số đỉnh nên tiếng tiếp tuyến i/o nội suy giữa hình vuông (tay cầm 0) và hình tròn (tay cầm 0.5523·r), kết hợp xoay layer.',
+    code: "{ ty: 'sh', ks: { a: 1, k: [\n  { t: 0,  s: [squarePath],  e: [circlePath], i: {x:[.25], y:[1]}, o: {x:[.4], y:[0]} },\n  { t: 40, s: [circlePath],  e: [squarePath], /* ... */ }, { t: 119, s: [circlePath] } ] } }\n// circle: i/o = ±0.5523 * r tại 4 đỉnh [0,-r] [r,0] [0,r] [-r,0]", mount: mk('morph') },
+  color: { label: 'Color keyframes', note: 'Màu fill ("fl.c") có keyframe RGBA: chấm đi qua tím, hồng, vàng trong khi vị trí và scale cũng đổi. Đảo chiều để thấy chuỗi chạy ngược.',
+    code: "{ ty: 'fl', o: { a: 0, k: 100 }, c: { a: 1, k: [\n  { t: 0,  s: [.39,.4,.95,1],  e: [.93,.28,.6,1], i: E, o: EO },\n  { t: 40, s: [.93,.28,.6,1],  e: [.96,.62,.04,1], i: E, o: EO },\n  { t: 80, s: [.96,.62,.04,1], e: [.39,.4,.95,1], i: E, o: EO }, { t: 119, s: [.39,.4,.95,1] } ] } }", mount: mk('color') },
+  path: { label: 'Motion path', note: 'Vị trí có tiếp tuyến không gian to/ti tạo đường cong Bézier; ao: 1 (auto-orient) xoay tam giác theo hướng đi. Đường xám là vết quỹ đạo thẳng để so sánh với đường cong thật.',
+    code: "ks.p = { a: 1, k: [\n  { t: 0,  s: [30,160,0], e: [170,60,0], to: [40,-120,0], ti: [-60,0,0], i: {x:.5,y:.5}, o: {x:.5,y:.5} },\n  { t: 60, s: [170,60,0], e: [30,160,0], to: [60,0,0],   ti: [40,120,0] /* ... */ }, { t: 119, s: [30,160,0] } ] }\nlayer.ao = 1;   // auto-orient theo tiếp tuyến", mount: mk('path') },
+  repeater: { label: 'Repeater', note: 'Mục "rp" nhân bản nhóm shape với phép biến đổi cộng dồn (xoay 30° mỗi bản); số bản c có keyframe 3→12→3 nên bông hoa nở ra rồi thu lại, màu cũng đổi, cả layer xoay.',
+    code: "{ ty: 'gr', it: [ ellipse, fill,\n  { ty: 'rp', c: { a: 1, k: [{ t: 0, s: [3], e: [12] }, { t: 60, s: [12], e: [3] }] }, o: { a: 0, k: 0 }, m: 1,\n    tr: { ty: 'tr', r: { a: 0, k: 30 }, s: { a: 0, k: [100,100] }, so: { a: 0, k: 100 }, eo: { a: 0, k: 100 } } } ] }", mount: mk('repeater') },
+  matte: { label: 'Track matte', note: 'Layer phía trên đặt td: 1 làm mặt nạ alpha cho layer ngay dưới (tt: 1): ba dải màu chỉ hiện trong vòng tròn đang phình/thu, tương tự mặt nạ của After Effects.',
+    code: "layers: [\n  { nm: 'matte',   td: 1, ks: { s: { a: 1, k: [{ t: 0, s: [10,10,100], e: [170,170,100] }, ...] } }, shapes: [circle] },\n  { nm: 'stripes', tt: 1, shapes: [rect đỏ, rect vàng, rect tím] }   // chỉ hiện nơi matte có alpha\n]", mount: mk('matte') },
+};
+initTabs(TABS);
+</script>
+</body></html>

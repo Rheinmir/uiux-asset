@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sample Anime.js — uiux-asset</title>
+<link rel="stylesheet" href="../aw.css?v=559582af29">
+<link rel="stylesheet" href="_m.css">
+<style>
+.m-bar [role=tab] { padding: 6px 12px; font-size: 14px; }
+.m-bar [role=tab][aria-selected=true] { background: color-mix(in srgb, currentColor 16%, transparent); font-weight: 700; }
+.m-code { max-height: 360px; }
+
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=559582af29"></script>
+<div class="aw-crumb">
+<h1>Anime.js <span class="aw-tag aw-tag--small aw-tag--solid-green m-badge" id="badge">THƯ VIỆN THẬT</span></h1>
+<span>Chạy <code>animejs@4.2.2</code> thật từ CDN, mỗi tab một hiệu ứng chính của thư viện. · <a href="https://github.com/juliangarnier/anime" target="_blank" rel="noopener">juliangarnier/anime</a> · <a href="./">← Motion</a></span>
+</div>
+<div class="m-bar" id="tabs"></div>
+<div class="m-bar"><span class="m-status" id="st">đang nạp thư viện…</span></div>
+<div class="m-stage" id="stage" style="min-height:440px;display:block"></div>
+<p class="m-note" id="note"></p>
+<pre class="m-code" id="code"></pre>
+</main>
+<script type="module">
+import * as A from 'https://cdn.jsdelivr.net/npm/animejs@4.2.2/+esm';
+const { animate, stagger, createTimeline, createScope, svg, onScroll, splitText, createDraggable, createSpring, spring, utils } = A;
+// --- khung tab dùng chung (hash #tên-tab chọn tab) ---
+function initTabs(TABS) {
+  const $ = (i) => document.getElementById(i), bar = $('tabs'), stage = $('stage'), note = $('note'), code = $('code'), st = $('st'), badge = $('badge');
+  const names = Object.keys(TABS); let cur = null, cleanup = null, token = 0;
+  bar.setAttribute('role', 'tablist');
+  names.forEach((n) => { const b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'tab'); b.dataset.tab = n; b.id = 'tab-' + n; b.textContent = TABS[n].label; b.onclick = () => select(n); bar.append(b); });
+  async function select(n, fromHash) {
+    if (!TABS[n]) n = names[0];
+    if (cur === n && fromHash !== 'force') return;
+    const my = ++token, T = TABS[n];
+    if (cleanup) { try { cleanup(); } catch (e) { console.warn(e); } cleanup = null; }
+    stage.replaceChildren(); cur = n;
+    bar.querySelectorAll('[role=tab]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === n)));
+    note.textContent = T.note; code.textContent = T.code;
+    if (badge) { badge.textContent = T.sim ? 'MÔ PHỎNG' : 'THƯ VIỆN THẬT'; badge.className = 'aw-tag aw-tag--small m-badge ' + (T.sim ? 'aw-tag--solid-yellow' : 'aw-tag--solid-green'); }
+    if (!fromHash) try { history.replaceState(null, '', '#' + n); } catch (e) {}
+    st.textContent = 'đang nạp…';
+    const c = await T.mount(stage, st);
+    if (my !== token) { try { c && c(); } catch (e) {} return; }
+    cleanup = c || null;
+  }
+  addEventListener('hashchange', () => select(location.hash.slice(1), true));
+  select(location.hash.slice(1) || names[0], true);
+}
+// khung con: thanh nút + sân khấu cao cố định (không phụ thuộc cuộn trang)
+function mkBox(stage, { h = 380, btns = [] } = {}) {
+  const w = document.createElement('div'); w.style.cssText = 'width:100%;display:flex;flex-direction:column;gap:10px;padding:12px;box-sizing:border-box';
+  const bar = document.createElement('div'); bar.className = 'm-bar'; bar.style.margin = '0';
+  const arena = document.createElement('div'); arena.style.cssText = 'position:relative;width:100%;height:' + h + 'px;overflow:hidden;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,currentColor 5%,transparent)';
+  const add = (label, fn) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = label; b.onclick = () => fn(b); bar.append(b); return b; };
+  btns.forEach(([l, f]) => add(l, f)); w.append(bar, arena); stage.append(w); if (!btns.length) bar.remove();
+  return { arena, bar, add };
+}
+const el = (tag, css, parent, txt) => { const e = document.createElement(tag); if (css) e.style.cssText = css; if (txt != null) e.textContent = txt; if (parent) parent.append(e); return e; };
+
+const scoped = (arena, fn) => { const sc = createScope({ root: arena }).add(fn); return () => sc.revert(); };
+const HUE = (i, n = 72) => 'hsl(' + (i * 360 / n) + ' 80% 55%)';
+
+const TABS = {
+  stagger: { label: 'Stagger', note: 'stagger() rải độ trễ theo lưới, từ tâm ra ngoài: một lệnh animate điều khiển 72 chấm. Bấm "Chạy lại" hoặc đổi điểm xuất phát.',
+    code: "import { animate, stagger } from 'animejs';\nanimate('.dot', {\n  scale: [1, 2.2, 1], translateY: [0, -16, 0],\n  delay: stagger(40, { grid: [12, 6], from: 'center' }), // từ tâm\n});",
+    mount(stage, st) { let from = 'center'; const { arena, add } = mkBox(stage, { btns: [] }); arena.style.cssText += ';grid-template-columns:repeat(12,26px);gap:16px;justify-content:center;align-content:center';
+      for (let i = 0; i < 72; i++) el('div', 'width:26px;height:26px;border-radius:50%;background:' + HUE(i), arena).className = 'dot';
+      const run = () => animate('.dot', { scale: [1, 2.2, 1], translateY: [0, -16, 0], delay: stagger(40, { grid: [12, 6], from }) });
+      for (const f of ['center', 'first', 'last']) add('từ ' + f, () => { from = f; run(); });
+      const c = scoped(arena, run); st.textContent = 'stagger · grid 12×6'; return c; } },
+  timeline: { label: 'Timeline', note: 'createTimeline() nối nhiều bước theo thời gian; vị trí chèn "<<", "+=200" hoặc nhãn. Thanh tiến độ chạy theo timeline.',
+    code: "const tl = createTimeline({ defaults: { duration: 700, ease: 'inOutQuad' } });\ntl.add('.a', { x: 260 })\n  .add('.b', { x: 260, rotate: 360 }, '-=300')   // chèn chồng 300ms\n  .add('.c', { x: 260, scale: 1.6 }, '+=100');",
+    mount(stage, st) { const { arena, add } = mkBox(stage, { h: 380 }); arena.style.cssText += ';display:block;padding:30px';
+      const cols = ['#6366f1', '#ec4899', '#f59e0b']; const bars = cols.map((c, i) => el('div', 'position:absolute;left:30px;top:' + (60 + i * 80) + 'px;width:56px;height:56px;border-radius:14px;background:' + c, arena));
+      const prog = el('div', 'position:absolute;left:0;bottom:0;height:6px;width:100%;background:#10b981;transform:scaleX(0);transform-origin:left', arena);
+      let tl; const build = () => { tl && tl.revert(); tl = createTimeline({ defaults: { duration: 700, ease: 'inOutQuad' }, loop: false, onUpdate: (s) => { prog.style.transform = 'scaleX(' + s.progress + ')'; st.textContent = 'timeline · ' + Math.round(s.progress * 100) + '%'; } })
+        .add(bars[0], { x: 560 }).add(bars[1], { x: 560, rotate: 360 }, '-=300').add(bars[2], { x: 560, scale: 1.5 }, '+=100').add(bars, { x: 0, rotate: 0, scale: 1 }, '+=300'); };
+      add('Chạy lại', () => build()); add('Tạm dừng/Tiếp', () => tl && (tl.paused ? tl.play() : tl.pause())); build(); return () => tl && tl.revert(); } },
+  'svg-draw': { label: 'SVG draw', note: 'svg.createDrawable() biến path thành đối tượng có thuộc tính draw: "0 0" → "0 1" để vẽ nét dần, kết hợp stagger cho nhiều nét.',
+    code: "import { animate, svg, stagger } from 'animejs';\nanimate(svg.createDrawable('.line'), {\n  draw: ['0 0', '0 1'],\n  ease: 'inOutQuad', duration: 1800,\n  delay: stagger(250), loop: true, alternate: true,\n});",
+    mount(stage, st) { const { arena } = mkBox(stage); arena.innerHTML = '<svg viewBox="0 0 600 300" style="width:min(100%,640px);height:100%" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="8"><path class="line" stroke="#6366f1" d="M40 220 C 120 20, 200 20, 280 150 S 440 280, 560 60"/><path class="line" stroke="#ec4899" d="M60 260 H 540"/><circle class="line" cx="300" cy="150" r="80" stroke="#f59e0b"/><path class="line" stroke="#10b981" d="M250 150 l36 36 l70 -80"/></svg>';
+      const c = scoped(arena, () => animate(svg.createDrawable('.line'), { draw: ['0 0', '0 1'], ease: 'inOutQuad', duration: 1800, delay: stagger(250), loop: true, alternate: true })); st.textContent = 'svg.createDrawable'; return c; } },
+  morph: { label: 'Morph', note: 'svg.morphTo() biến hình đường dẫn d này thành d khác (cùng số điểm hoặc để thư viện nội suy). Bấm để chuyển giữa 3 hình.',
+    code: "import { animate, svg } from 'animejs';\nanimate('#shape', {\n  d: svg.morphTo('#target'),\n  fill: '#ec4899', duration: 900, ease: 'inOutExpo',\n});",
+    mount(stage, st) { const { arena, add } = mkBox(stage); const P = { 'tròn': 'M300 60 C 400 60 460 120 460 200 C 460 280 400 340 300 340 C 200 340 140 280 140 200 C 140 120 200 60 300 60 Z', 'sao': 'M300 40 L 350 160 L 470 160 L 370 235 L 410 350 L 300 280 L 190 350 L 230 235 L 130 160 L 250 160 Z', 'tim': 'M300 340 C 100 220 120 80 220 80 C 270 80 300 120 300 140 C 300 120 330 80 380 80 C 480 80 500 220 300 340 Z' };
+      arena.innerHTML = '<svg viewBox="0 0 600 380" style="width:min(100%,560px);height:100%"><path id="shape" fill="#6366f1" d="' + P['tròn'] + '"/>' + Object.entries(P).map(([k, d]) => '<path id="t-' + k.replace(' ', '') + '" d="' + d + '" fill="none" stroke="none"/>').join('') + '</svg>';
+      const col = { 'tròn': '#6366f1', 'sao': '#f59e0b', 'tim': '#ec4899' }; let cl;
+      for (const k of Object.keys(P)) add(k, () => { cl && cl.revert(); cl = animate(arena.querySelector('#shape'), { d: svg.morphTo(arena.querySelector('#t-' + k)), fill: col[k], duration: 900, ease: 'inOutExpo' }); st.textContent = 'morphTo → ' + k; });
+      setTimeout(() => arena.isConnected && add && arena.querySelector('#shape') && animate(arena.querySelector('#shape'), { d: svg.morphTo(arena.querySelector('#t-sao')), fill: '#f59e0b', duration: 900, ease: 'inOutExpo' }), 500);
+      return () => cl && cl.revert(); } },
+  'motion-path': { label: 'Motion path', note: 'svg.createMotionPath() cho translateX/translateY/rotate bám theo một path: vật thể chạy dọc đường cong và xoay theo hướng đi.',
+    code: "const { translateX, translateY, rotate } = svg.createMotionPath('#track');\nanimate('.car', { translateX, translateY, rotate,\n  ease: 'linear', duration: 4000, loop: true });",
+    mount(stage, st) { const { arena } = mkBox(stage); arena.style.display = 'block'; arena.innerHTML = '<svg viewBox="0 0 600 380" style="position:absolute;inset:0;width:100%;height:100%"><path id="track" fill="none" stroke="currentColor" stroke-opacity=".25" stroke-width="3" stroke-dasharray="6 8" d="M60 300 C 60 60, 260 60, 300 190 S 540 330, 540 90"/></svg><div class="car" style="position:absolute;left:0;top:0;width:34px;height:20px;margin:-10px 0 0 -17px;border-radius:6px;background:#ef4444;box-shadow:0 0 0 4px rgba(239,68,68,.25)"></div>';
+      const c = scoped(arena, () => { const mp = svg.createMotionPath('#track'); const svgEl = arena.querySelector('svg'); const k = () => svgEl.getBoundingClientRect().width / 600; animate('.car', { ...mp, ease: 'linear', duration: 4000, loop: true }); }); st.textContent = 'svg.createMotionPath'; return c; } },
+  scroll: { label: 'Scroll', note: 'onScroll() gắn tiến độ animation vào cuộn của một khung (sync: true). Cuộn khung bên dưới để xoay và đổi màu ô vuông; khung tự cuộn một lần khi mở.',
+    code: "import { animate, onScroll } from 'animejs';\nanimate('.box', {\n  rotate: 360, x: 220, backgroundColor: '#ec4899',\n  ease: 'linear',\n  autoplay: onScroll({ container: '.scroller', sync: true }),\n});",
+    mount(stage, st) { const { arena } = mkBox(stage); arena.style.cssText += ';display:grid;grid-template-columns:1fr 1fr'; const left = el('div', 'display:grid;place-items:center;height:100%', arena); const sq = el('div', 'width:70px;height:70px;border-radius:14px;background:#6366f1', left); const sc = el('div', 'height:100%;width:100%;overflow-y:auto', arena); sc.id = 'sc'; el('div', 'height:1200px;background:repeating-linear-gradient(180deg,transparent 0 58px,color-mix(in srgb,currentColor 18%,transparent) 58px 60px)', sc);
+      const c = scoped(arena, () => animate(sq, { rotate: 360, x: 110, scale: 1.6, backgroundColor: '#ec4899', ease: 'linear', autoplay: onScroll({ container: sc, sync: true }) })); setTimeout(() => sc.scrollTo({ top: 500, behavior: 'smooth' }), 700); st.textContent = 'onScroll({ sync: true })'; return c; } },
+  spring: { label: 'Spring', note: 'spring() là easing vật lý: bounce/duration điều khiển độ nảy. Bấm ba nút để so độ nảy thấp, vừa, cao trên cùng khoảng di chuyển.',
+    code: "import { animate, spring } from 'animejs';\nanimate('.ball', { x: 460, ease: spring({ bounce: .7, duration: 900 }) });",
+    mount(stage, st) { const { arena, add } = mkBox(stage); arena.style.display = 'block'; const rows = [.2, .5, .8].map((b, i) => ({ b, el: el('div', 'position:absolute;left:30px;top:' + (50 + i * 100) + 'px;width:56px;height:56px;border-radius:50%;background:' + ['#6366f1', '#ec4899', '#f59e0b'][i], arena, ''), })); rows.forEach((r, i) => el('div', 'position:absolute;right:20px;top:' + (70 + i * 100) + 'px;font:12px ui-monospace;opacity:.6', arena, 'bounce ' + r.b));
+      const run = () => rows.forEach((r) => animate(r.el, { x: [0, 480], ease: spring({ bounce: r.b, duration: 900 }), duration: 1200 }));
+      add('Bật ra', run); add('Về', () => rows.forEach((r) => animate(r.el, { x: 0, ease: spring({ bounce: r.b, duration: 900 }) }))); const c = scoped(arena, run); st.textContent = 'spring({ bounce })'; return c; } },
+  text: { label: 'Text split', note: 'splitText() tách chữ thành từng ký tự/từ/dòng thành phần tử riêng để animate bằng stagger.',
+    code: "import { animate, stagger, splitText } from 'animejs';\nconst { chars } = splitText('h2', { chars: true });\nanimate(chars, { y: ['100%', '0%'], opacity: [0, 1],\n  delay: stagger(40), ease: 'outBack', duration: 700 });",
+    mount(stage, st) { const { arena, add } = mkBox(stage, { h: 300 }); const h2 = el('h2', 'font:800 56px/1.1 system-ui;margin:0;text-align:center;overflow:hidden;padding:8px', arena, 'Chữ bay từng ký tự'); let cl = null;
+      const run = () => { cl && cl.revert(); cl = null; const sc = createScope({ root: arena }).add(() => { const { chars } = splitText(h2, { chars: { wrap: 'clip' } }); animate(chars, { y: ['110%', '0%'], opacity: [0, 1], delay: stagger(35), ease: 'outBack', duration: 800 }); }); cl = sc; };
+      add('Chạy lại', run); run(); st.textContent = 'splitText chars'; return () => cl && cl.revert(); } },
+  draggable: { label: 'Draggable', note: 'createDraggable() cho kéo thả có quán tính; releaseEase là spring nên thả tay sẽ nảy về. Kéo ô tím trong khung.',
+    code: "import { createDraggable, createSpring } from 'animejs';\ncreateDraggable('.box', {\n  container: '.arena',\n  releaseEase: createSpring({ stiffness: 120, damping: 6 }),\n});",
+    mount(stage, st) { const { arena } = mkBox(stage); arena.style.display = 'block'; const box = el('div', 'position:absolute;left:calc(50% - 45px);top:calc(50% - 45px);width:90px;height:90px;border-radius:18px;background:#8b5cf6;cursor:grab;display:grid;place-items:center;color:#fff;font:600 13px system-ui;touch-action:none', arena, 'kéo tôi');
+      const c = scoped(arena, () => { createDraggable(box, { container: arena, releaseEase: createSpring({ stiffness: 120, damping: 6 }), onDrag: (d) => { st.textContent = 'x=' + Math.round(d.x) + ' y=' + Math.round(d.y); } }); }); st.textContent = 'createDraggable'; return c; } },
+};
+initTabs(TABS);
+</script>
+</body></html>

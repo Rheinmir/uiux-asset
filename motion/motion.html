@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sample Motion — uiux-asset</title>
+<link rel="stylesheet" href="../aw.css?v=559582af29">
+<link rel="stylesheet" href="_m.css">
+<style>
+.m-bar [role=tab] { padding: 6px 12px; font-size: 14px; }
+.m-bar [role=tab][aria-selected=true] { background: color-mix(in srgb, currentColor 16%, transparent); font-weight: 700; }
+.m-code { max-height: 360px; }
+
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=559582af29"></script>
+<div class="aw-crumb">
+<h1>Motion <span class="aw-tag aw-tag--small aw-tag--solid-green m-badge" id="badge">THƯ VIỆN THẬT</span></h1>
+<span>Chạy gói <code>motion@12.23.12</code> thật từ CDN, mỗi tab một nhóm API chính. · <a href="https://github.com/motiondivision/motion" target="_blank" rel="noopener">motiondivision/motion</a> · <a href="./">← Motion</a></span>
+</div>
+<div class="m-bar" id="tabs"></div>
+<div class="m-bar"><span class="m-status" id="st">đang nạp thư viện…</span></div>
+<div class="m-stage" id="stage" style="min-height:440px;display:block"></div>
+<p class="m-note" id="note"></p>
+<pre class="m-code" id="code"></pre>
+</main>
+<script type="module">
+import * as M from 'https://cdn.jsdelivr.net/npm/motion@12.23.12/+esm';
+const { animate, stagger, scroll, scrollInfo, inView, hover, press, spring, mix, interpolate, motionValue, mapValue, springValue, styleEffect, delay } = M;
+// --- khung tab dùng chung (hash #tên-tab chọn tab) ---
+function initTabs(TABS) {
+  const $ = (i) => document.getElementById(i), bar = $('tabs'), stage = $('stage'), note = $('note'), code = $('code'), st = $('st'), badge = $('badge');
+  const names = Object.keys(TABS); let cur = null, cleanup = null, token = 0;
+  bar.setAttribute('role', 'tablist');
+  names.forEach((n) => { const b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'tab'); b.dataset.tab = n; b.id = 'tab-' + n; b.textContent = TABS[n].label; b.onclick = () => select(n); bar.append(b); });
+  async function select(n, fromHash) {
+    if (!TABS[n]) n = names[0];
+    if (cur === n && fromHash !== 'force') return;
+    const my = ++token, T = TABS[n];
+    if (cleanup) { try { cleanup(); } catch (e) { console.warn(e); } cleanup = null; }
+    stage.replaceChildren(); cur = n;
+    bar.querySelectorAll('[role=tab]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === n)));
+    note.textContent = T.note; code.textContent = T.code;
+    if (badge) { badge.textContent = T.sim ? 'MÔ PHỎNG' : 'THƯ VIỆN THẬT'; badge.className = 'aw-tag aw-tag--small m-badge ' + (T.sim ? 'aw-tag--solid-yellow' : 'aw-tag--solid-green'); }
+    if (!fromHash) try { history.replaceState(null, '', '#' + n); } catch (e) {}
+    st.textContent = 'đang nạp…';
+    const c = await T.mount(stage, st);
+    if (my !== token) { try { c && c(); } catch (e) {} return; }
+    cleanup = c || null;
+  }
+  addEventListener('hashchange', () => select(location.hash.slice(1), true));
+  select(location.hash.slice(1) || names[0], true);
+}
+// khung con: thanh nút + sân khấu cao cố định (không phụ thuộc cuộn trang)
+function mkBox(stage, { h = 380, btns = [] } = {}) {
+  const w = document.createElement('div'); w.style.cssText = 'width:100%;display:flex;flex-direction:column;gap:10px;padding:12px;box-sizing:border-box';
+  const bar = document.createElement('div'); bar.className = 'm-bar'; bar.style.margin = '0';
+  const arena = document.createElement('div'); arena.style.cssText = 'position:relative;width:100%;height:' + h + 'px;overflow:hidden;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,currentColor 5%,transparent)';
+  const add = (label, fn) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = label; b.onclick = () => fn(b); bar.append(b); return b; };
+  btns.forEach(([l, f]) => add(l, f)); w.append(bar, arena); stage.append(w); if (!btns.length) bar.remove();
+  return { arena, bar, add };
+}
+const el = (tag, css, parent, txt) => { const e = document.createElement(tag); if (css) e.style.cssText = css; if (txt != null) e.textContent = txt; if (parent) parent.append(e); return e; };
+
+const C = ['#6366f1', '#ec4899', '#f59e0b', '#10b981', '#06b6d4'];
+
+const TABS = {
+  stagger: { label: 'animate + stagger', note: 'animate(selector, keyframes, options): delay: stagger(0.07) rải độ trễ, from: "center" cho tâm; kiểu "spring" có bounce. Một lệnh điều khiển cả hàng 12 ô.',
+    code: "import { animate, stagger } from 'motion';\nanimate('.sq', { y: [60, 0], opacity: [0, 1], scale: [.5, 1], rotate: [-30, 0] },\n  { delay: stagger(0.06, { from: 'center' }), type: 'spring', bounce: .45 });",
+    mount(stage, st) { const { arena, add } = mkBox(stage, { h: 300 }); arena.style.cssText += ';grid-template-columns:repeat(12,1fr);gap:10px;padding:20px;align-content:center;place-items:stretch'; for (let i = 0; i < 12; i++) el('div', 'aspect-ratio:1;border-radius:12px;background:hsl(' + (200 + i * 12) + ' 80% 58%)', arena).className = 'sq';
+      let from = 'center'; const run = () => animate(arena.querySelectorAll('.sq'), { y: [60, 0], opacity: [0, 1], scale: [.5, 1], rotate: [-30, 0] }, { delay: stagger(0.06, { from }), type: 'spring', bounce: .45 });
+      ['first', 'center', 'last'].forEach((f) => add('from: ' + f, () => { from = f; run(); })); run(); st.textContent = 'animate + stagger'; } },
+  spring: { label: 'spring', note: 'Kiểu spring có hai cách khai báo: stiffness/damping/mass (vật lý) hoặc duration/bounce (trực quan). Ba ô cùng đi 420px với độ nảy khác nhau; springValue() cho vật bám chuột có quán tính.',
+    code: "animate(el, { x: 420 }, { type: 'spring', stiffness: 300, damping: 10 });   // vật lý\nanimate(el, { x: 420 }, { type: 'spring', duration: .8, bounce: .6 });         // trực quan\nconst x = motionValue(0), sx = springValue(x, { stiffness: 200, damping: 12 });\nstyleEffect(el, { x: sx });  x.set(mouseX);",
+    mount(stage, st) { const { arena, add } = mkBox(stage, { h: 330 }); arena.style.display = 'block'; const cfgs = [{ stiffness: 300, damping: 10 }, { duration: .8, bounce: .6 }, { stiffness: 80, damping: 20 }]; const balls = cfgs.map((_, i) => el('div', 'position:absolute;left:20px;top:' + (24 + i * 56) + 'px;width:44px;height:44px;border-radius:50%;background:' + C[i], arena));
+      const lead = el('div', 'position:absolute;left:20px;top:200px;width:30px;height:30px;border-radius:50%;border:3px solid ' + C[3], arena), foll = el('div', 'position:absolute;left:20px;top:240px;width:44px;height:44px;border-radius:50%;background:' + C[3], arena); el('div', 'position:absolute;right:14px;top:206px;font:12px ui-monospace;opacity:.6', arena, 'rê chuột trong khung: vòng rỗng = mục tiêu, ô đặc = springValue');
+      const x = motionValue(0), sx = springValue(x, { stiffness: 200, damping: 12 }); const stop = styleEffect(foll, { x: sx }); const ml = (e) => { const r = arena.getBoundingClientRect(); const v = Math.max(0, Math.min(e.clientX - r.left - 40, r.width - 90)); x.set(v); lead.style.transform = 'translateX(' + v + 'px)'; }; arena.addEventListener('pointermove', ml);
+      const run = (to) => balls.forEach((b, i) => animate(b, { x: to }, { type: 'spring', ...cfgs[i] })); add('Bật ra →', () => run(420)); add('← Về', () => run(0)); setTimeout(() => run(420), 300); st.textContent = 'spring · springValue'; return () => { stop && stop(); arena.removeEventListener('pointermove', ml); }; } },
+  sequence: { label: 'Sequence', note: 'animate([...]) nhận mảng bước [phần tử, keyframes, tuỳ chọn] cùng mốc "at" (tuyệt đối, tương đối "-0.2", hoặc nhãn) để dựng timeline mà không cần plugin.',
+    code: "animate([\n  [a, { x: 380 }, { duration: .6 }],\n  [b, { x: 380, rotate: 180 }, { duration: .6, at: '-0.3' }],   // chồng 0.3s\n  [c, { x: 380, scale: 1.5 }, { duration: .6 }],\n  [[a, b, c], { x: 0, rotate: 0, scale: 1 }, { duration: .6, at: '+0.4' }],\n]);",
+    mount(stage, st) { const { arena, add } = mkBox(stage, { h: 300 }); arena.style.display = 'block'; const els = [0, 1, 2].map((i) => el('div', 'position:absolute;left:30px;top:' + (30 + i * 90) + 'px;width:56px;height:56px;border-radius:14px;background:' + C[i], arena)); let a;
+      const run = () => { a && a.cancel(); a = animate([[els[0], { x: 380 }, { duration: .6 }], [els[1], { x: 380, rotate: 180 }, { duration: .6, at: '-0.3' }], [els[2], { x: 380, scale: 1.5 }, { duration: .6 }], [els, { x: 0, rotate: 0, scale: 1 }, { duration: .6, at: '+0.4' }]]); }; add('Chạy lại', run); add('Tạm dừng/Tiếp', () => a && (a.speed === 0 ? (a.speed = 1) : (a.speed = 0))); run(); st.textContent = 'animate([...]) sequence'; return () => a && a.cancel(); } },
+  svg: { label: 'SVG path', note: 'animate với pathLength vẽ nét SVG dần ra (Motion tự đặt strokeDasharray); opacity và màu cùng chạy. Dùng stagger cho nhiều đường.',
+    code: "animate('path', { pathLength: [0, 1], opacity: [0, 1] },\n  { duration: 1.4, ease: 'easeInOut', delay: stagger(0.3), repeat: Infinity, repeatType: 'reverse' });",
+    mount(stage, st) { const { arena } = mkBox(stage, { h: 330 }); arena.innerHTML = '<svg viewBox="0 0 600 300" style="width:min(100%,640px);height:100%" fill="none" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"><path stroke="#6366f1" d="M40 230 C 100 20, 220 20, 280 140 S 420 260, 560 50"/><path stroke="#ec4899" d="M60 270 H 540"/><path stroke="#f59e0b" d="M300 60 L 340 150 L 440 160 L 365 225 L 390 320 L 300 265 L 210 320 L 235 225 L 160 160 L 260 150 Z" transform="translate(0 -40) scale(.8) translate(75 40)"/></svg>';
+      const a = animate(arena.querySelectorAll('path'), { pathLength: [0, 1], opacity: [0, 1] }, { duration: 1.4, ease: 'easeInOut', delay: stagger(0.3), repeat: Infinity, repeatType: 'reverse' }); st.textContent = 'pathLength'; return () => a.cancel(); } },
+  scroll: { label: 'scroll()', note: 'scroll(animation, { container }) gắn tiến độ animation vào cuộn; scrollInfo() trả số liệu cuộn thô (progress 0..1). Cuộn khung bên phải: ô vuông xoay, thanh tiến độ chạy, chỉ số cập nhật.',
+    code: "import { animate, scroll, scrollInfo } from 'motion';\nscroll(animate(box, { rotate: [0, 360], scale: [1, 1.6] }), { container: scroller });\nscroll(animate(bar, { scaleX: [0, 1] }), { container: scroller });\nscrollInfo((info) => out.textContent = info.y.progress.toFixed(2), { container: scroller });",
+    mount(stage, st) { const { arena } = mkBox(stage, { h: 330 }); arena.style.cssText += ';display:grid;grid-template-columns:1fr 1fr'; const left = el('div', 'display:grid;place-items:center;align-content:center;gap:18px;height:100%', arena); const bar = el('div', 'width:200px;height:8px;border-radius:4px;background:#f59e0b;transform-origin:left;transform:scaleX(0)', left); const box = el('div', 'width:70px;height:70px;border-radius:14px;background:#10b981', left); const out = el('div', 'font:600 20px ui-monospace', left, 'progress 0.00');
+      const sc = el('div', 'height:100%;width:100%;overflow-y:auto', arena); el('div', 'height:1200px;background:repeating-linear-gradient(180deg,transparent 0 58px,color-mix(in srgb,currentColor 18%,transparent) 58px 60px)', sc);
+      const s1 = scroll(animate(box, { rotate: [0, 360], scale: [1, 1.6] }, { ease: 'linear' }), { container: sc }), s2 = scroll(animate(bar, { scaleX: [0, 1] }, { ease: 'linear' }), { container: sc }), s3 = scrollInfo((i) => { out.textContent = 'progress ' + i.y.progress.toFixed(2); }, { container: sc }); setTimeout(() => sc.scrollTo({ top: 420, behavior: 'smooth' }), 600); st.textContent = 'scroll · scrollInfo'; return () => [s1, s2, s3].forEach((f) => typeof f === 'function' && f()); } },
+  inview: { label: 'inView', note: 'inView(el, onEnter, { root, amount }) chạy callback khi phần tử vào khung nhìn và (nếu callback trả hàm) gọi khi rời đi. Cuộn khung: các thẻ trồi lên khi vào, mờ xuống khi ra.',
+    code: "import { animate, inView } from 'motion';\ninView('.card', (el) => {\n  animate(el, { opacity: 1, y: 0, scale: 1 }, { type: 'spring', bounce: .4 });\n  return () => animate(el, { opacity: .2, y: 30, scale: .9 });   // khi rời\n}, { root: scroller, amount: .6 });",
+    mount(stage, st) { const { arena } = mkBox(stage, { h: 340 }); arena.style.display = 'block'; const sc = el('div', 'position:absolute;inset:0;overflow-y:auto;padding:14px 60px', arena); const cards = []; for (let i = 0; i < 8; i++) cards.push(el('div', 'height:100px;margin:0 0 18px;border-radius:16px;display:grid;place-items:center;color:#fff;font:700 22px system-ui;opacity:.2;transform:translateY(30px) scale(.9);background:' + C[i % 5], sc, 'Thẻ ' + (i + 1)));
+      const stop = inView(cards, (c) => { animate(c, { opacity: 1, y: 0, scale: 1 }, { type: 'spring', bounce: .4 }); st.textContent = 'vào: ' + c.textContent; return () => animate(c, { opacity: .2, y: 30, scale: .9 }); }, { root: sc, amount: 0.6 }); setTimeout(() => sc.scrollTo({ top: 260, behavior: 'smooth' }), 800); return () => stop && stop(); } },
+  gestures: { label: 'hover · press · drag', note: 'hover() và press() là cử chỉ cấp thấp trả hàm dọn: rê chuột phóng to, nhấn giữ co lại. Kéo-thả ở đây tự viết bằng pointer events rồi animate() spring kéo về (gói motion thuần JS không có drag giống bản React).',
+    code: "import { animate, hover, press } from 'motion';\nhover(ball, () => { animate(ball, { scale: 1.2 }); return () => animate(ball, { scale: 1 }); });\npress(ball, () => { animate(ball, { scale: .9 }); return () => animate(ball, { scale: 1.2 }); });\n// thả tay: animate(ball, { x: 0, y: 0 }, { type: 'spring', stiffness: 220, damping: 12 })",
+    mount(stage, st) { const { arena } = mkBox(stage, { h: 330 }); const ball = el('div', 'width:96px;height:96px;border-radius:50%;background:#6366f1;cursor:grab;touch-action:none;display:grid;place-items:center;color:#fff;font:600 13px system-ui;user-select:none', arena, 'kéo tôi'); let x = 0, y = 0, d = null;
+      const h1 = hover(ball, () => { animate(ball, { scale: 1.2 }, { duration: .2 }); return () => animate(ball, { scale: 1 }, { duration: .2 }); }), p1 = press(ball, () => { animate(ball, { scale: .9 }, { duration: .1 }); return () => animate(ball, { scale: 1.2 }, { duration: .15 }); });
+      ball.onpointerdown = (e) => { d = { px: e.clientX - x, py: e.clientY - y }; ball.setPointerCapture(e.pointerId); }; ball.onpointermove = (e) => { if (!d) return; x = e.clientX - d.px; y = e.clientY - d.py; animate(ball, { x, y }, { duration: 0 }); st.textContent = 'x=' + Math.round(x) + ' y=' + Math.round(y); };
+      const rel = () => { if (!d) return; d = null; x = y = 0; animate(ball, { x: 0, y: 0 }, { type: 'spring', stiffness: 220, damping: 12 }); }; ball.onpointerup = rel; ball.onpointercancel = rel; setTimeout(() => animate(ball, { x: [-120, 0], y: [-60, 0] }, { type: 'spring', stiffness: 220, damping: 12 }), 400); st.textContent = 'hover · press · kéo'; return () => { h1 && h1(); p1 && p1(); }; } },
+  value: { label: 'motionValue', note: 'motionValue là giá trị phản ứng không qua React: animate(mv, to) chạy nó, mapValue() suy ra giá trị khác (màu, góc), styleEffect() ghi vào style. animate(0, 100, { onUpdate }) cũng chạy được cho số thuần. Kéo thanh trượt hoặc bấm nút.',
+    code: "const v = motionValue(0);\nconst angle = mapValue(v, [0, 100], [0, 360]);\nconst color = mapValue(v, [0, 50, 100], ['#6366f1', '#ec4899', '#f59e0b']);\nstyleEffect(box, { rotate: angle, backgroundColor: color });\nanimate(v, 100, { duration: 1.2, ease: 'easeInOut' });\nanimate(0, 1000, { duration: 2, onUpdate: (n) => counter.textContent = Math.round(n) });",
+    mount(stage, st) { const { arena, add } = mkBox(stage, { h: 330 }); const box = el('div', 'width:110px;height:110px;border-radius:22px;margin-bottom:60px', arena); const cnt = el('div', 'position:absolute;bottom:56px;font:700 28px ui-monospace', arena, '0'); const rng = el('input', 'position:absolute;bottom:18px;width:60%', arena); rng.type = 'range'; rng.min = 0; rng.max = 100; rng.value = 0;
+      const v = motionValue(0), ang = mapValue(v, [0, 100], [0, 360]), col = mapValue(v, [0, 50, 100], ['#6366f1', '#ec4899', '#f59e0b']); const stop = styleEffect(box, { rotate: ang, backgroundColor: col }); let a, b;
+      v.on('change', (n) => { rng.value = n; st.textContent = 'v=' + n.toFixed(1); }); rng.oninput = () => { a && a.stop(); v.set(+rng.value); };
+      const go = (to) => { a && a.stop(); a = animate(v, to, { duration: 1.2, ease: 'easeInOut' }); b && b.stop(); b = animate(+cnt.textContent, to * 10, { duration: 1.2, onUpdate: (n) => (cnt.textContent = Math.round(n)) }); }; add('→ 100', () => go(100)); add('→ 0', () => go(0)); setTimeout(() => go(100), 300); return () => { a && a.stop(); b && b.stop(); stop && stop(); }; } },
+};
+initTabs(TABS);
+</script>
+</body></html>

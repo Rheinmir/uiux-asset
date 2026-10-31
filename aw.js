@@ -8,7 +8,7 @@
   d.dataset.theme = saved || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 
   if (self !== top) return;                                    // trang đang làm ảnh xem trước (iframe ở gallery): chỉ nội dung, không vỏ/giỏ
-  const NAV = [['scroll-effects/', 'Scroll effects'], ['components/', 'Components'], ['ui-kits/', 'UI kits'], ['galaxy/', 'Galaxy'], ['ui-libraries/', 'Thư viện UI'], ['stats.html', 'Thống kê']];
+  const NAV = [['scroll-effects/', 'Scroll effects'], ['components/', 'Components'], ['ui-kits/', 'UI kits'], ['galaxy/', 'Galaxy'], ['ui-libraries/', 'Thư viện UI'], ['motion/', 'Motion'], ['stats.html', 'Thống kê']];
   const links = NAV.map(([p, t]) => `<a href="${R + p}"${location.href.startsWith(R + p) ? ' aria-current="page"' : ''}>${t}</a>`).join('');
   const run = '<span><b>uiux-asset</b></span><span class="ms">sentiment_satisfied</span><span>Code gốc nguyên văn — xem chạy thật, copy nguyên file</span>';
 

@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sample postprocessing — uiux-asset</title>
+<link rel="stylesheet" href="../aw.css?v=559582af29">
+<link rel="stylesheet" href="_m.css">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/","postprocessing":"https://cdn.jsdelivr.net/npm/postprocessing@6.39.5/build/index.js"}}</script>
+<style>.m-bar button[aria-pressed=true]{background:#2a6df4;color:#fff;border-color:#2a6df4}.m-bar input[type=range]{vertical-align:middle}</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=559582af29"></script>
+<div class="aw-crumb">
+<h1>postprocessing <span class="aw-tag aw-tag--small aw-tag--solid-green m-badge">THƯ VIỆN THẬT</span></h1>
+<span>Chạy <code>postprocessing@6.39.5</code> (pmndrs) thật: <code>EffectComposer</code> + <code>EffectPass</code>, 7 tab = bloom, chromatic/glitch, pixel/retro, màu, DoF, outline, tổ hợp bật/tắt. · <a href="https://github.com/pmndrs/postprocessing" target="_blank" rel="noopener">pmndrs/postprocessing</a> · <a href="./">← Motion</a></span>
+</div>
+<div class="m-bar" id="tabs"></div>
+<div class="m-stage" id="stage" style="height:460px;min-height:460px"></div>
+<div class="m-bar" id="ctl"></div>
+<p class="m-status" id="st" style="margin-top:10px">đang nạp thư viện…</p>
+<p class="m-note" id="note"></p>
+<pre class="m-code" id="code"></pre>
+</main>
+<script type="module">
+import * as THREE from 'three';
+import * as PP from 'postprocessing';
+const { EffectComposer, RenderPass, EffectPass, BloomEffect, ChromaticAberrationEffect, GlitchEffect, GlitchMode, PixelationEffect, ColorDepthEffect, ScanlineEffect, DotScreenEffect, VignetteEffect, SepiaEffect, NoiseEffect, HueSaturationEffect, BrightnessContrastEffect, DepthOfFieldEffect, OutlineEffect, BlendFunction } = PP;
+const $ = (id) => document.getElementById(id), stage = $('stage'), st = $('st'), tabsEl = $('tabs'), ctl = $('ctl');
+let renderer;
+try { renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: 'high-performance' }); }
+catch (e) { stage.innerHTML = '<p style="padding:24px;text-align:center">Trình duyệt này không có WebGL nên không chạy được postprocessing.</p>'; st.textContent = 'không có WebGL'; throw e; }
+renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5)); stage.append(renderer.domElement);
+const ui = {
+  btn(t, fn) { const b = document.createElement('button'); b.type = 'button'; b.textContent = t; b.onclick = () => fn(b); ctl.append(b); return b; },
+  range(t, min, max, step, v, fn) { const l = document.createElement('label'); l.style.cssText = 'font:13px ui-monospace,Menlo,monospace;display:flex;gap:6px;align-items:center'; const i = document.createElement('input'); i.type = 'range'; Object.assign(i, { min, max, step, value: v }); i.oninput = () => fn(+i.value); l.append(t, i); ctl.append(l); return i; },
+  toggle(t, pass, on = true) { pass.enabled = on; const b = ui.btn(t, () => { pass.enabled = !pass.enabled; b.setAttribute('aria-pressed', pass.enabled); }); b.setAttribute('aria-pressed', on); return b; },
+  group(names, fn, first = 0) { const bs = names.map((n, i) => ui.btn(n, () => { bs.forEach((x) => x.setAttribute('aria-pressed', x === bs[i])); fn(i); })); bs[first].click(); },
+};
+// cảnh chung: một hàng vật thể rải theo chiều sâu, phát sáng + chuyển động, camera trôi theo chuột
+const makeWorld = () => {
+  const scene = new THREE.Scene(); scene.background = new THREE.Color(0x0a0c12);
+  const camera = new THREE.PerspectiveCamera(50, 1, .1, 120); camera.position.set(0, 2.2, 8);
+  scene.add(new THREE.HemisphereLight(0xaac4ff, 0x302018, 1.4)); const sun = new THREE.DirectionalLight(0xffffff, 2.2); sun.position.set(4, 8, 6); scene.add(sun);
+  const grid = new THREE.GridHelper(60, 60, 0x3a4a6a, 0x232a3a); grid.position.y = -.01; scene.add(grid);
+  const things = [], glow = [0xff3d6e, 0x35e0ff, 0xffd23d, 0x7dff6b, 0xb06bff];
+  glow.forEach((c, i) => { const m = new THREE.Mesh(new THREE.SphereGeometry(.55, 32, 20), new THREE.MeshStandardMaterial({ color: c, emissive: c, emissiveIntensity: 2.2 })); m.userData = { a: i * 1.3, r: 3.6 - (i % 2) * 1, z: 5 - i * 3.6 }; scene.add(m); things.push(m); });
+  const knot = new THREE.Mesh(new THREE.TorusKnotGeometry(.9, .28, 128, 20), new THREE.MeshStandardMaterial({ color: 0xe8edf5, roughness: .25, metalness: .6 })); knot.position.set(0, 1.4, 1); scene.add(knot); things.push(knot);
+  const box = new THREE.Mesh(new THREE.BoxGeometry(1.4, 1.4, 1.4), new THREE.MeshStandardMaterial({ color: 0x4a7dff, roughness: .4 })); box.position.set(-3.6, .7, -6); scene.add(box); things.push(box);
+  const px = { x: 0, y: 0 }, cv = renderer.domElement, mv = (e) => { const r = cv.getBoundingClientRect(); px.x = ((e.clientX - r.left) / r.width) * 2 - 1; px.y = ((e.clientY - r.top) / r.height) * 2 - 1; };
+  cv.addEventListener('pointermove', mv);
+  const update = (t) => { things.forEach((m, i) => { if (m.userData.r) { const u = m.userData; m.position.set(Math.cos(t * .6 + u.a) * u.r, 1.1 + Math.sin(t * 1.3 + u.a) * .5, u.z + Math.sin(t * .6 + u.a) * 1.2); } else { m.rotation.x = t * .5; m.rotation.y = t * .7; } });
+    camera.position.x += (px.x * 3 - camera.position.x) * .05; camera.position.y += (2.2 - px.y * 1.2 - camera.position.y) * .05; camera.lookAt(0, 1, -2); };
+  return { scene, camera, things, update, off: () => cv.removeEventListener('pointermove', mv) };
+};
+const mkComposer = (w) => { const c = new EffectComposer(renderer, { multisampling: 0 }); c.addPass(new RenderPass(w.scene, w.camera)); c.add = (e) => { const p = new EffectPass(w.camera, e); c.addPass(p); return p; }; return c; };
+const V2 = (x, y) => new THREE.Vector2(x, y);
+
+const TABS = [
+{ id: 'bloom', name: 'Bloom', note: '<code>BloomEffect</code> với <code>mipmapBlur</code>: chỉ các vùng sáng hơn <code>luminanceThreshold</code> mới toả quầng, nên các quả cầu phát sáng (emissive) bừng lên còn vật thường thì không. Thử hạ ngưỡng xuống 0 để cả cảnh toả sáng.',
+  code: `const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new BloomEffect({ mipmapBlur: true, intensity: 2, luminanceThreshold: .6, luminanceSmoothing: .2, radius: .7 });
+composer.addPass(new EffectPass(camera, bloom));
+bloom.intensity = 3; bloom.luminanceMaterial.threshold = .3; bloom.mipmapBlurPass.radius = .9;`,
+  init(w, c) { const b = new BloomEffect({ mipmapBlur: true, intensity: 2, luminanceThreshold: .6, luminanceSmoothing: .2, radius: .7 }); const p = c.add(b);
+    ui.toggle('Bloom bật', p); ui.range('cường độ', 0, 6, .1, 2, (v) => b.intensity = v); ui.range('ngưỡng sáng', 0, 1.5, .05, .6, (v) => b.luminanceMaterial.threshold = v); ui.range('bán kính', 0, 1, .05, .7, (v) => b.mipmapBlurPass.radius = v); } },
+{ id: 'chroma-glitch', name: 'Chromatic + Glitch', note: '<code>ChromaticAberrationEffect</code> tách kênh R/G/B theo <code>offset</code> (có thể tăng dần ra mép bằng <code>radialModulation</code>); <code>GlitchEffect</code> chớp nhiễu kiểu màn hình hỏng với ba chế độ: thỉnh thoảng, liên tục nhẹ, liên tục mạnh.',
+  code: `const chroma = new ChromaticAberrationEffect({ offset: new Vector2(.004, .004), radialModulation: true, modulationOffset: .3 });
+const glitch = new GlitchEffect({ delay: new Vector2(1.5, 3.5), duration: new Vector2(.6, 1), strength: new Vector2(.3, 1) });
+glitch.mode = GlitchMode.CONSTANT_WILD;   // SPORADIC | CONSTANT_MILD | CONSTANT_WILD
+composer.addPass(new EffectPass(camera, chroma)); composer.addPass(new EffectPass(camera, glitch));`,
+  init(w, c) { const ch = new ChromaticAberrationEffect({ offset: V2(.006, .006), radialModulation: true, modulationOffset: .3 }), gl = new GlitchEffect({ delay: V2(1.2, 3), duration: V2(.6, 1), strength: V2(.3, 1) });
+    const p1 = c.add(ch), p2 = c.add(gl); ui.toggle('Chromatic', p1); ui.range('lệch kênh', 0, .03, .001, .006, (v) => ch.offset.set(v, v)); ui.toggle('Glitch', p2);
+    ui.group(['thỉnh thoảng', 'liên tục nhẹ', 'liên tục mạnh'], (i) => gl.mode = [GlitchMode.SPORADIC, GlitchMode.CONSTANT_MILD, GlitchMode.CONSTANT_WILD][i]); } },
+{ id: 'pixel-retro', name: 'Pixel + Retro', note: '<code>PixelationEffect</code> (thô hoá thành khối), <code>ColorDepthEffect</code> (giảm số bit màu như máy 8-bit), <code>ScanlineEffect</code> (vạch CRT) và <code>DotScreenEffect</code> (in chấm báo). Bật/tắt từng cái, kéo thanh để đổi cỡ.',
+  code: `const pixel = new PixelationEffect(8);          // granularity: cạnh khối, tính bằng pixel
+const depth = new ColorDepthEffect({ bits: 4 });
+const scan = new ScanlineEffect({ density: 1.4 });
+composer.addPass(new EffectPass(camera, pixel, depth, scan));
+pixel.granularity = 16;`,
+  init(w, c) { const px = new PixelationEffect(8), cd = new ColorDepthEffect({ bits: 5 }), sc = new ScanlineEffect({ density: 1.4 }), dot = new DotScreenEffect({ scale: .9, angle: Math.PI / 6 });
+    const a = c.add(px), b = c.add(cd), s = c.add(sc), d = c.add(dot); ui.toggle('Pixelation', a); ui.range('khối', 1, 32, 1, 8, (v) => px.granularity = v); ui.toggle('Color depth', b); ui.range('bit', 1, 8, 1, 5, (v) => cd.bitDepth = v); ui.toggle('Scanline', s, true); ui.toggle('Dot screen', d, false); } },
+{ id: 'mau', name: 'Màu + Vignette', note: 'Nhóm hiệu ứng chỉnh màu: <code>VignetteEffect</code> (tối góc), <code>SepiaEffect</code>, <code>HueSaturationEffect</code> (xoay hue, đổi bão hoà), <code>BrightnessContrastEffect</code> và <code>NoiseEffect</code> (hạt phim). Tất cả cộng dồn như một chuỗi.',
+  code: `const vignette = new VignetteEffect({ offset: .3, darkness: .7 });
+const hs = new HueSaturationEffect({ hue: Math.PI / 2, saturation: .3 });
+const bc = new BrightnessContrastEffect({ brightness: .05, contrast: .2 });
+const noise = new NoiseEffect({ premultiply: true }); noise.blendMode.opacity.value = .25;
+composer.addPass(new EffectPass(camera, hs, bc, vignette, noise));`,
+  init(w, c) { const vg = new VignetteEffect({ offset: .25, darkness: .8 }), se = new SepiaEffect({ intensity: .8 }), hs = new HueSaturationEffect({ hue: 0, saturation: 0 }), bc = new BrightnessContrastEffect({ brightness: 0, contrast: .15 }), ns = new NoiseEffect({ premultiply: true }); ns.blendMode.opacity.value = .3;
+    const pv = c.add(vg), ps = c.add(se), ph = c.add(hs), pb = c.add(bc), pn = c.add(ns); ui.toggle('Vignette', pv); ui.range('độ tối', 0, 1.2, .05, .8, (v) => vg.darkness = v); ui.toggle('Sepia', ps, false); ui.toggle('Hue/Saturation', ph); ui.range('hue', 0, 6.28, .05, 0, (v) => hs.hue = v); ui.range('bão hoà', -1, 1, .05, 0, (v) => hs.saturation = v); ui.toggle('Sáng/Tương phản', pb); ui.toggle('Hạt phim', pn); } },
+{ id: 'dof', name: 'Depth of Field', note: '<code>DepthOfFieldEffect</code> dùng depth buffer để làm mờ kiểu ống kính: chỉnh <code>worldFocusDistance</code> (khoảng cách nét tính bằng đơn vị cảnh), <code>worldFocusRange</code> (vùng nét) và <code>bokehScale</code> (độ mờ). Các quả cầu xếp xa dần nên vùng nét trượt rõ.',
+  code: `const dof = new DepthOfFieldEffect(camera, { worldFocusDistance: 10, worldFocusRange: 6, bokehScale: 4, height: 480 });
+composer.addPass(new EffectPass(camera, dof));
+dof.cocMaterial.worldFocusDistance = 16;  // lia nét ra xa
+dof.bokehScale = 8;`,
+  init(w, c) { const d = new DepthOfFieldEffect(w.camera, { worldFocusDistance: 10, worldFocusRange: 6, bokehScale: 4, height: 360 }); const p = c.add(d); ui.toggle('DoF bật', p); ui.range('khoảng nét', 3, 30, .5, 10, (v) => d.cocMaterial.worldFocusDistance = v); ui.range('vùng nét', 1, 20, .5, 6, (v) => d.cocMaterial.worldFocusRange = v); ui.range('bokeh', 0, 12, .5, 4, (v) => d.bokehScale = v); } },
+{ id: 'outline', name: 'Outline chọn vật', note: 'Rê chuột vào một vật để <code>OutlineEffect</code> viền nó (xRay xuyên qua vật che); bấm để giữ vật trong <code>selection</code>. Viền nhấp nháy theo <code>pulseSpeed</code>.',
+  code: `const outline = new OutlineEffect(scene, camera, { edgeStrength: 4, visibleEdgeColor: 0xffffff, hiddenEdgeColor: 0x22ccff, pulseSpeed: .6, blur: true, xRay: true });
+composer.addPass(new EffectPass(camera, outline));
+outline.selection.set([mesh]);  // vật được viền
+outline.selection.toggle(mesh); // bấm để thêm/bớt`,
+  init(w, c) { const o = new OutlineEffect(w.scene, w.camera, { edgeStrength: 5, visibleEdgeColor: 0xffffff, hiddenEdgeColor: 0x22ccff, pulseSpeed: .6, blur: true, xRay: true }); c.add(o);
+    const ray = new THREE.Raycaster(), p = new THREE.Vector2(9, 9), cv = renderer.domElement, picked = new Set(); let hover = null;
+    const mv = (e) => { const r = cv.getBoundingClientRect(); p.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1); }, dn = () => { if (hover) { picked.has(hover) ? picked.delete(hover) : picked.add(hover); } };
+    cv.addEventListener('pointermove', mv); cv.addEventListener('pointerdown', dn); ui.btn('Bỏ chọn tất cả', () => picked.clear());
+    w.extra = () => { ray.setFromCamera(p, w.camera); hover = ray.intersectObjects(w.things)[0]?.object || null; o.selection.set([...picked, ...(hover ? [hover] : [])]); cv.style.cursor = hover ? 'pointer' : ''; };
+    w.offs.push(() => { cv.removeEventListener('pointermove', mv); cv.removeEventListener('pointerdown', dn); cv.style.cursor = ''; }); } },
+{ id: 'to-hop', name: 'Tổ hợp bật/tắt', note: 'Chuỗi đầy đủ như một pipeline thật: mỗi hiệu ứng là một <code>EffectPass</code> riêng, bật/tắt bằng <code>pass.enabled</code> mà không phải dựng lại composer. Bật nhiều cái cùng lúc để thấy chúng cộng dồn theo thứ tự.',
+  code: `composer.addPass(new RenderPass(scene, camera));
+const passes = { bloom: new EffectPass(camera, bloom), chroma: new EffectPass(camera, chroma), pixel: new EffectPass(camera, pixel), glitch: new EffectPass(camera, glitch), vignette: new EffectPass(camera, vignette) };
+Object.values(passes).forEach((p) => composer.addPass(p));
+passes.glitch.enabled = !passes.glitch.enabled;`,
+  init(w, c) { const bl = new BloomEffect({ mipmapBlur: true, intensity: 1.8, luminanceThreshold: .6, radius: .7 }), ch = new ChromaticAberrationEffect({ offset: V2(.004, .004), radialModulation: true, modulationOffset: .3 }), px = new PixelationEffect(6), gl = new GlitchEffect({ delay: V2(1.2, 3), duration: V2(.6, 1) }), vg = new VignetteEffect({ offset: .25, darkness: .8 }), ns = new NoiseEffect({ premultiply: true }), sc = new ScanlineEffect({ density: 1.4 }), se = new SepiaEffect({ intensity: .9 }); ns.blendMode.opacity.value = .25;
+    [['Bloom', bl, 1], ['Chromatic', ch, 1], ['Vignette', vg, 1], ['Pixelation', px, 0], ['Glitch', gl, 0], ['Noise', ns, 0], ['Scanline', sc, 0], ['Sepia', se, 0]].forEach(([n, e, on]) => ui.toggle(n, c.add(e), !!on)); } },
+];
+let cur = null, curTab = null;
+const fit = () => { const w = stage.clientWidth, h = stage.clientHeight; if (cur) { cur.c.setSize(w, h); cur.w.camera.aspect = w / h; cur.w.camera.updateProjectionMatrix(); } else renderer.setSize(w, h); };
+function select(id) {
+  const t = TABS.find((x) => x.id === id) || TABS[0];
+  if (cur) { cur.w.offs.forEach((f) => f()); cur.w.off(); cur.c.dispose(); cur.w.scene.traverse((o) => { o.geometry?.dispose(); [].concat(o.material || []).forEach((m) => m.dispose()); }); } ctl.innerHTML = '';
+  const w = makeWorld(); w.offs = []; const c = mkComposer(w); curTab = t; t.init(w, c); cur = { w, c }; fit();
+  tabsEl.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.id === t.id));
+  $('note').innerHTML = t.note; $('code').textContent = t.code; st.textContent = `postprocessing 6.39.5 · THƯ VIỆN THẬT · tab "${t.name}"`;
+}
+TABS.forEach((t) => { const b = document.createElement('button'); b.type = 'button'; b.dataset.id = t.id; b.textContent = t.name; b.onclick = () => { location.hash = t.id; select(t.id); }; tabsEl.append(b); });
+addEventListener('hashchange', () => select(location.hash.slice(1)));
+new ResizeObserver(fit).observe(stage);
+select(location.hash.slice(1));
+let last = 0;
+renderer.setAnimationLoop((ms) => { const t = ms / 1000; cur.w.update(t); cur.w.extra?.(); cur.c.render(Math.min(t - last, .1)); last = t; });
+</script>
+</body></html>

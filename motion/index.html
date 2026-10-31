@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Motion — 28 sample chạy thật — uiux-asset</title>
+<meta name="description" content="28 thư viện/công cụ motion, mỗi cái một trang sample chạy được ngay trên web để chọn. Nhãn rõ: thư viện thật hay mô phỏng.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=559582af29">
+<style>
+.mo-thumb { display: block; aspect-ratio: 16 / 10; overflow: hidden; border-radius: var(--aw-rounded-small); background: var(--aw-img); }
+.mo-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .35s; }
+.mo-thumb:hover img { transform: scale(1.04); }
+#fil { flex-wrap: nowrap; }
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=559582af29"></script>
+<div class="aw-crumb">
+<h1>Motion. Sample chạy thật <span class="aw-tag aw-tag--bold" id="total">28</span></h1>
+<span>Mỗi thư viện/công cụ trong 28 mục «Hiệu ứng» có một trang chạy ngay trong trình duyệt, chia tab theo từng hiệu ứng chính. <b>Thư viện thật</b> = nạp đúng thư viện từ CDN. <b>Mô phỏng</b> = công cụ Python/native không chạy được trên web nên dựng lại hành vi bằng web, ghi rõ trong trang. Danh sách repo + sao: <a href="../ui-libraries/?k=motion">Thư viện UI · Hiệu ứng</a>.</span>
+</div>
+<div class="aw-filters" id="fil" role="group" aria-label="Loại sample"></div>
+<div class="aw-grid" id="g"></div>
+</main>
+<script>
+(() => {
+  // [slug, tên, repo, loại: real|sim, mô tả ngắn]
+  const S = [
+    ['remotion', 'Remotion', 'remotion-dev/remotion', 'real', 'Video bằng React: Player thật phát composition spring + interpolate.'],
+    ['remotion-skills', 'Remotion Skills', 'remotion-dev/skills', 'real', 'Composition viết theo quy tắc skill của Remotion cho agent.'],
+    ['anime', 'Anime.js', 'juliangarnier/anime', 'real', 'Stagger lưới + timeline, animejs 4 thật.'],
+    ['motion', 'Motion', 'motiondivision/motion', 'real', 'animate, stagger, scroll, spring của motion.dev.'],
+    ['manim', 'Manim', 'ManimCommunity/manim', 'sim', 'Cảnh kiểu 3Blue1Brown: Write/Create/Transform (mô phỏng, kèm mã Python).'],
+    ['lottie-web', 'Lottie', 'airbnb/lottie-web', 'real', 'lottie.loadAnimation với JSON tự viết, đổi tốc độ/chiều.'],
+    ['mcp-for-blender', 'Blender MCP', 'ahujasid/mcp-for-blender', 'sim', 'Prompt → tool call → cảnh 3D (mô phỏng, không có Blender).'],
+    ['three-js', 'three.js', 'mrdoob/three.js', 'real', 'Cảnh PBR + bóng đổ + OrbitControls.'],
+    ['three-gpu-pathtracer', 'three-gpu-pathtracer', 'gkjohnson/three-gpu-pathtracer', 'real', 'Path tracing trên GPU, hình hội tụ dần.'],
+    ['joltphysics', 'Jolt Physics', 'jrouwe/JoltPhysics', 'real', 'Vật lý Jolt (WASM) thật: hộp/cầu rơi, xếp chồng, nổ.'],
+    ['postprocessing', 'postprocessing', 'pmndrs/postprocessing', 'real', 'Bloom, glitch, pixel… bật tắt từng hiệu ứng.'],
+    ['three-quarks', 'three.quarks', 'Alchemist0823/three.quarks', 'real', 'Hệ hạt lửa/khói/tia lửa, rê chuột phát hạt.'],
+    ['tweakpane', 'Tweakpane', 'cocopon/tweakpane', 'real', 'Bảng chỉnh tham số trực tiếp điều khiển hoạt ảnh.'],
+    ['comfyui', 'ComfyUI', 'Comfy-Org/ComfyUI', 'sim', 'Đồ thị node kéo thả, Queue Prompt chạy từng node (mô phỏng).'],
+    ['cosyvoice', 'CosyVoice', 'QwenAudio/CosyVoice', 'sim', 'Giao diện TTS + sóng âm (giọng của trình duyệt, mô phỏng).'],
+    ['librosa', 'librosa', 'librosa/librosa', 'sim', 'STFT + mel-spectrogram tính bằng JS (mô phỏng thuật toán).'],
+    ['whisperx', 'WhisperX', 'm-bain/whisperX', 'sim', 'Phụ đề từng từ + người nói, đồng bộ karaoke (mô phỏng).'],
+    ['obs-studio', 'OBS Studio', 'obsproject/obs-studio', 'sim', 'Scenes, sources, chuyển cảnh, ghi clip thật từ canvas (mô phỏng).'],
+    ['lossless-cut', 'LosslessCut', 'mifi/lossless-cut', 'sim', 'Cắt không mã hoá lại: giao diện mô phỏng, xuất bằng ffmpeg.wasm thật.'],
+    ['ffmpeg', 'FFmpeg', 'FFmpeg/FFmpeg', 'real', 'ffmpeg.wasm thật: sinh video, filter, mã hoá ngay trong trình duyệt.'],
+    ['react-bits', 'React Bits', 'DavidHDev/react-bits', 'real', 'Text, nền và hiệu ứng tương tác từ mã nguồn React Bits.'],
+    ['magicui', 'Magic UI', 'magicuidesign/magicui', 'real', 'Marquee, beam, ticker, meteors… component Magic UI.'],
+    ['animate-ui', 'Animate UI', 'imskyleen/animate-ui', 'real', 'Component có chuyển động: tabs, accordion, tooltip…'],
+    ['motion-primitives', 'Motion Primitives', 'ibelick/motion-primitives', 'real', 'Text effect, spotlight, magnetic, tilt, slider…'],
+    ['cult-ui', 'Cult UI', 'nolly-studio/cult-ui', 'real', 'Dynamic island, expandable, texture button…'],
+    ['inspira-ui', 'Inspira UI', 'unovue/inspira-ui', 'real', 'Component hiệu ứng cho Vue 3.'],
+    ['shaders', 'Shaders', 'shader-effects-inc/shaders', 'real', 'Hiệu ứng shader GPU của shader-effects-inc.'],
+    ['galaxy', 'Galaxy (Uiverse)', 'uiverse-io/galaxy', 'real', '3.802 element CSS: nút, thẻ, loader, toggle… đã có sẵn trang riêng.'],
+  ];
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const HREF = (s) => s === 'galaxy' ? '../galaxy/' : s + '.html';
+  const LAB = { real: ['Thư viện thật', 'aw-tag--solid-green'], sim: ['Mô phỏng', 'aw-tag--solid-yellow'] };
+  let cur = new URLSearchParams(location.search).get('t') || '';
+  function paint() {
+    const list = S.filter((x) => !cur || x[3] === cur);
+    document.getElementById('g').innerHTML = list.map(([slug, name, repo, t, d]) => `<article class="aw-card-site">
+      <a class="mo-thumb" href="${HREF(slug)}" aria-label="Chạy sample ${esc(name)}"><img src="thumbs/${slug}-stage.jpg" alt="Ảnh chụp sample ${esc(name)}" loading="lazy" width="800" height="500"></a>
+      <div class="aw-card-site__info"><span class="aw-av" style="font-size:15px"><h3 class="aw-av__title"><a href="${HREF(slug)}">${esc(name)}</a><span class="grow"></span>
+        <span class="aw-tag aw-tag--medium ${LAB[t][1]}">${LAB[t][0]}</span>
+        <a class="aw-tag aw-tag--medium" href="https://github.com/${esc(repo)}" target="_blank" rel="noopener">Repo</a></h3></span></div>
+      <p class="aw-desc">${esc(d)}</p></article>`).join('');
+    const n = (t) => S.filter((x) => !t || x[3] === t).length;
+    document.getElementById('fil').innerHTML = [['', 'Tất cả'], ['real', 'Thư viện thật'], ['sim', 'Mô phỏng']]
+      .map(([v, l]) => `<button type="button" class="aw-filter" data-v="${v}" aria-pressed="${v === cur}">${l}<span class="ul-k" style="margin-left:6px;font-size:11px;opacity:.65">${n(v)}</span></button>`).join('');
+    history.replaceState(null, '', cur ? '?t=' + cur : location.pathname);
+  }
+  document.getElementById('fil').onclick = (e) => { const b = e.target.closest('button'); if (b) { cur = b.dataset.v; paint(); } };
+  paint();
+})();
+</script><script src="/stats.js?v=559582af29" defer></script></body></html>

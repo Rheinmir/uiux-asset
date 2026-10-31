@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sample Remotion — uiux-asset</title>
+<link rel="stylesheet" href="../aw.css?v=559582af29">
+<link rel="stylesheet" href="_m.css">
+<style>
+.m-bar [role=tab] { padding: 6px 12px; font-size: 14px; }
+.m-bar [role=tab][aria-selected=true] { background: color-mix(in srgb, currentColor 16%, transparent); font-weight: 700; }
+.m-code { max-height: 360px; }
+
+</style>
+<script type="importmap">
+{ "imports": {
+  "react": "https://esm.sh/react@18.3.1",
+  "react/jsx-runtime": "https://esm.sh/react@18.3.1/jsx-runtime",
+  "react/jsx-dev-runtime": "https://esm.sh/react@18.3.1/jsx-dev-runtime",
+  "react-dom": "https://esm.sh/react-dom@18.3.1?external=react",
+  "react-dom/client": "https://esm.sh/react-dom@18.3.1/client?external=react",
+  "remotion": "https://esm.sh/remotion@4.0.539?external=react,react-dom",
+  "remotion/no-react": "https://esm.sh/remotion@4.0.539/no-react",
+  "@remotion/player": "https://esm.sh/@remotion/player@4.0.539?external=react,react-dom,remotion",
+  "@remotion/transitions": "https://esm.sh/@remotion/transitions@4.0.539?external=react,react-dom,remotion",
+  "@remotion/transitions/fade": "https://esm.sh/@remotion/transitions@4.0.539/fade?external=react,react-dom,remotion",
+  "@remotion/transitions/slide": "https://esm.sh/@remotion/transitions@4.0.539/slide?external=react,react-dom,remotion",
+  "@remotion/transitions/wipe": "https://esm.sh/@remotion/transitions@4.0.539/wipe?external=react,react-dom,remotion",
+  "@remotion/shapes": "https://esm.sh/@remotion/shapes@4.0.539?external=react,react-dom,remotion",
+  "@remotion/paths": "https://esm.sh/@remotion/paths@4.0.539?external=react,react-dom,remotion",
+  "@remotion/noise": "https://esm.sh/@remotion/noise@4.0.539?external=react,react-dom,remotion",
+  "@remotion/rough-notation": "https://esm.sh/@remotion/rough-notation@4.0.539?external=react,react-dom,remotion",
+  "@remotion/effects/light-leak": "https://esm.sh/@remotion/effects@4.0.539/light-leak?external=react,react-dom,remotion",
+  "@remotion/captions": "https://esm.sh/@remotion/captions@4.0.539?external=react,react-dom,remotion",
+  "@remotion/motion-blur": "https://esm.sh/@remotion/motion-blur@4.0.539?external=react,react-dom,remotion",
+  "@remotion/layout-utils": "https://esm.sh/@remotion/layout-utils@4.0.539?external=react,react-dom,remotion"
+} }
+</script>
+
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=559582af29"></script>
+<div class="aw-crumb">
+<h1>Remotion <span class="aw-tag aw-tag--small aw-tag--solid-green m-badge" id="badge">THƯ VIỆN THẬT</span></h1>
+<span>Chạy <code>@remotion/player@4.0.539</code> + <code>remotion</code> thật (React 18.3.1, esm.sh): mỗi tab một composition viết bằng React, có thanh tua của Player. · <a href="https://github.com/remotion-dev/remotion" target="_blank" rel="noopener">remotion-dev/remotion</a> · <a href="./">← Motion</a></span>
+</div>
+<div class="m-bar" id="tabs"></div>
+<div class="m-bar"><span class="m-status" id="st">đang nạp thư viện…</span></div>
+<div class="m-stage" id="stage" style="min-height:440px;display:block"></div>
+<p class="m-note" id="note"></p>
+<pre class="m-code" id="code"></pre>
+</main>
+<script type="module">
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import { Player } from '@remotion/player';
+import { AbsoluteFill, Sequence, Series, Loop, useCurrentFrame, useVideoConfig, interpolate, interpolateColors, spring, Easing } from 'remotion';
+import { TransitionSeries, linearTiming, springTiming } from '@remotion/transitions';
+import { fade } from '@remotion/transitions/fade';
+import { slide } from '@remotion/transitions/slide';
+import { wipe } from '@remotion/transitions/wipe';
+import { Star, Pie, Heart, Polygon, Triangle, Circle as ShCircle } from '@remotion/shapes';
+import { evolvePath, getPointAtLength, getLength, interpolatePath } from '@remotion/paths';
+import { noise2D } from '@remotion/noise';
+const h = React.createElement;
+// --- khung tab dùng chung (hash #tên-tab chọn tab) ---
+function initTabs(TABS) {
+  const $ = (i) => document.getElementById(i), bar = $('tabs'), stage = $('stage'), note = $('note'), code = $('code'), st = $('st'), badge = $('badge');
+  const names = Object.keys(TABS); let cur = null, cleanup = null, token = 0;
+  bar.setAttribute('role', 'tablist');
+  names.forEach((n) => { const b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'tab'); b.dataset.tab = n; b.id = 'tab-' + n; b.textContent = TABS[n].label; b.onclick = () => select(n); bar.append(b); });
+  async function select(n, fromHash) {
+    if (!TABS[n]) n = names[0];
+    if (cur === n && fromHash !== 'force') return;
+    const my = ++token, T = TABS[n];
+    if (cleanup) { try { cleanup(); } catch (e) { console.warn(e); } cleanup = null; }
+    stage.replaceChildren(); cur = n;
+    bar.querySelectorAll('[role=tab]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === n)));
+    note.textContent = T.note; code.textContent = T.code;
+    if (badge) { badge.textContent = T.sim ? 'MÔ PHỎNG' : 'THƯ VIỆN THẬT'; badge.className = 'aw-tag aw-tag--small m-badge ' + (T.sim ? 'aw-tag--solid-yellow' : 'aw-tag--solid-green'); }
+    if (!fromHash) try { history.replaceState(null, '', '#' + n); } catch (e) {}
+    st.textContent = 'đang nạp…';
+    const c = await T.mount(stage, st);
+    if (my !== token) { try { c && c(); } catch (e) {} return; }
+    cleanup = c || null;
+  }
+  addEventListener('hashchange', () => select(location.hash.slice(1), true));
+  select(location.hash.slice(1) || names[0], true);
+}
+// khung con: thanh nút + sân khấu cao cố định (không phụ thuộc cuộn trang)
+function mkBox(stage, { h = 380, btns = [] } = {}) {
+  const w = document.createElement('div'); w.style.cssText = 'width:100%;display:flex;flex-direction:column;gap:10px;padding:12px;box-sizing:border-box';
+  const bar = document.createElement('div'); bar.className = 'm-bar'; bar.style.margin = '0';
+  const arena = document.createElement('div'); arena.style.cssText = 'position:relative;width:100%;height:' + h + 'px;overflow:hidden;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,currentColor 5%,transparent)';
+  const add = (label, fn) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = label; b.onclick = () => fn(b); bar.append(b); return b; };
+  btns.forEach(([l, f]) => add(l, f)); w.append(bar, arena); stage.append(w); if (!btns.length) bar.remove();
+  return { arena, bar, add };
+}
+const el = (tag, css, parent, txt) => { const e = document.createElement(tag); if (css) e.style.cssText = css; if (txt != null) e.textContent = txt; if (parent) parent.append(e); return e; };
+
+const clamp = { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' };
+const BG = 'linear-gradient(135deg,#0f172a,#312e81)';
+const abs = (o) => ({ position: 'absolute', ...o });
+const Title = ({ children, sub }) => h('div', { style: abs({ left: 60, top: 36, color: '#fff', fontFamily: 'system-ui,sans-serif' }) }, h('div', { style: { fontSize: 48, fontWeight: 800 } }, children), sub && h('div', { style: { fontSize: 24, opacity: .7, marginTop: 4, fontFamily: 'ui-monospace,Menlo,monospace' } }, sub));
+const mountPlayer = (stage, component, { dur = 150, fps = 30 } = {}) => {
+  const w = el('div', 'padding:12px;box-sizing:border-box;width:100%', stage), root = createRoot(w);
+  root.render(h(Player, { component, durationInFrames: dur, fps, compositionWidth: 1280, compositionHeight: 720, controls: true, loop: true, autoPlay: true, acknowledgeRemotionLicense: true, style: { width: '100%', maxWidth: 720, margin: '0 auto', display: 'block' } }));
+  return () => root.unmount();
+};
+
+// ---- các composition ----
+const CInterp = () => { const f = useCurrentFrame();
+  const x1 = interpolate(f, [0, 60, 120], [0, 900, 0], clamp);
+  const x2 = interpolate(f, [0, 60], [0, 700]);            // không clamp: vượt khoảng sẽ trôi tiếp
+  const col = interpolateColors(f, [0, 60, 120], ['#38bdf8', '#f472b6', '#facc15']);
+  const rot = interpolate(f, [0, 150], [0, 360], { easing: Easing.bezier(0.16, 1, 0.3, 1) });
+  const row = (y, label, x, c, extra) => h('div', { style: abs({ left: 60, top: y }) }, h('div', { style: { color: '#fff', fontSize: 26, fontFamily: 'ui-monospace,monospace', marginBottom: 8 } }, label), h('div', { style: { width: 90, height: 90, borderRadius: 18, background: c, translate: x + 'px 0px', ...extra } }));
+  return h(AbsoluteFill, { style: { background: BG } }, h(Title, { sub: 'frame ' + f }, 'interpolate'),
+    row(190, 'clamp: [0,60,120] -> [0,900,0]', x1, col), row(380, 'không clamp: [0,60] -> [0,700]', x2, '#34d399'), row(550, 'Easing.bezier + rotate', 0, '#fb923c', { rotate: rot + 'deg' })); };
+const CSpring = () => { const f = useCurrentFrame(), { fps } = useVideoConfig();
+  const cfgs = [['damping 200 (không nảy)', { damping: 200 }], ['damping 20', { damping: 20 }], ['damping 8 (nảy)', { damping: 8 }], ['mass 3, damping 12', { damping: 12, mass: 3 }]];
+  return h(AbsoluteFill, { style: { background: BG } }, h(Title, { sub: 'spring({ frame, fps, config })' }, 'spring'),
+    cfgs.map(([l, c], i) => { const s = spring({ frame: f - 15, fps, config: c }); return h('div', { key: i, style: abs({ left: 60, top: 170 + i * 135 }) }, h('div', { style: { color: '#fff', fontSize: 24, fontFamily: 'ui-monospace,monospace', marginBottom: 6 } }, l), h('div', { style: { width: 70, height: 70, borderRadius: '50%', background: ['#38bdf8', '#a78bfa', '#f472b6', '#facc15'][i], translate: (s * 1000) + 'px 0px' } })); })); };
+const Card = ({ n, c }) => { const f = useCurrentFrame(); return h('div', { style: { width: 330, height: 330, borderRadius: 28, background: c, color: '#fff', fontFamily: 'system-ui', display: 'grid', placeItems: 'center', textAlign: 'center', opacity: interpolate(f, [0, 12], [0, 1], clamp), translate: '0px ' + interpolate(f, [0, 12], [60, 0], clamp) + 'px' } }, h('div', null, h('div', { style: { fontSize: 44, fontWeight: 800 } }, 'Sequence ' + n), h('div', { style: { fontSize: 30, opacity: .85, marginTop: 8 } }, 'frame cục bộ: ' + f))); };
+const CSeq = () => { const f = useCurrentFrame();
+  return h(AbsoluteFill, { style: { background: BG } }, h(Title, { sub: 'frame toàn cục: ' + f }, 'Sequence'),
+    [[0, '#6366f1'], [40, '#ec4899'], [80, '#f59e0b']].map(([from, c], i) => h(Sequence, { key: i, from, durationInFrames: 70, layout: 'none', name: 'Card ' + (i + 1) }, h('div', { style: abs({ left: 60 + i * 400, top: 240 }) }, h(Card, { n: i + 1, c }))))); };
+const Scene = ({ c, t }) => { const f = useCurrentFrame(); return h(AbsoluteFill, { style: { background: c, color: '#fff', fontFamily: 'system-ui', justifyContent: 'center', alignItems: 'center' } }, h('div', { style: { textAlign: 'center' } }, h('div', { style: { fontSize: 80, fontWeight: 800, lineHeight: 1.1 } }, t), h('div', { style: { fontSize: 32, opacity: .8, marginTop: 12 } }, 'frame cục bộ ' + f))); };
+const Spinner = () => { const f = useCurrentFrame(); return h('div', { style: abs({ right: 70, bottom: 60, width: 90, height: 90, borderRadius: '50%', border: '10px solid rgba(255,255,255,.3)', borderTopColor: '#fff', rotate: interpolate(f, [0, 20], [0, 360]) + 'deg' }) }); };
+const CSeries = () => h(AbsoluteFill, null, h(Series, null,
+  h(Series.Sequence, { durationInFrames: 50 }, h(Scene, { c: '#2563eb', t: 'Cảnh 1' })),
+  h(Series.Sequence, { durationInFrames: 50 }, h(Scene, { c: '#db2777', t: 'Cảnh 2' })),
+  h(Series.Sequence, { durationInFrames: 50, offset: -10 }, h(Scene, { c: '#059669', t: 'Cảnh 3 (offset -10)' }))),
+  h(Loop, { durationInFrames: 20 }, h(Spinner)));
+const CTrans = () => h(TransitionSeries, null,
+  h(TransitionSeries.Sequence, { durationInFrames: 60 }, h(Scene, { c: '#4f46e5', t: 'fade' })),
+  h(TransitionSeries.Transition, { presentation: fade(), timing: linearTiming({ durationInFrames: 20 }) }),
+  h(TransitionSeries.Sequence, { durationInFrames: 60 }, h(Scene, { c: '#be185d', t: 'slide' })),
+  h(TransitionSeries.Transition, { presentation: slide({ direction: 'from-right' }), timing: springTiming({ config: { damping: 200 }, durationInFrames: 25 }) }),
+  h(TransitionSeries.Sequence, { durationInFrames: 60 }, h(Scene, { c: '#0f766e', t: 'wipe' })),
+  h(TransitionSeries.Transition, { presentation: wipe({ direction: 'from-top-left' }), timing: linearTiming({ durationInFrames: 25 }) }),
+  h(TransitionSeries.Sequence, { durationInFrames: 60 }, h(Scene, { c: '#b45309', t: 'xong' })));
+const CShapes = () => { const f = useCurrentFrame(), { fps } = useVideoConfig(); const s = spring({ frame: f, fps, config: { damping: 9 } });
+  const cell = (i, node, lab) => h('div', { key: i, style: abs({ left: 60 + (i % 3) * 400, top: 190 + Math.floor(i / 3) * 260, width: 360, height: 240, display: 'grid', placeItems: 'center', color: '#fff', fontFamily: 'ui-monospace,monospace', fontSize: 22 }) }, h('div', { style: { scale: String(s), rotate: (i % 2 ? -1 : 1) * f * 2 + 'deg' } }, node), h('div', { style: abs({ bottom: 0 }) }, lab));
+  return h(AbsoluteFill, { style: { background: BG } }, h(Title, { sub: '@remotion/shapes' }, 'shapes'),
+    cell(0, h(Star, { points: 5, innerRadius: 40, outerRadius: 90, fill: '#facc15' }), 'Star'), cell(1, h(Pie, { radius: 90, progress: interpolate(f, [0, 90], [0, 1], clamp), fill: '#38bdf8', closePath: true }), 'Pie progress'), cell(2, h(Heart, { height: 170, fill: '#f472b6' }), 'Heart'),
+    cell(3, h(Polygon, { points: 6, radius: 85, fill: '#34d399' }), 'Polygon'), cell(4, h(Triangle, { length: 150, direction: 'up', fill: '#fb923c' }), 'Triangle'), cell(5, h(ShCircle, { radius: 80, fill: '#a78bfa' }), 'Circle')); };
+const D1 = 'M60 340 C 200 40, 380 40, 500 220 S 760 420, 900 120 S 1100 40, 1200 200', D2 = 'M60 340 C 200 340, 380 340, 500 340 S 760 340, 900 340 S 1100 340, 1200 340';
+const CPaths = () => { const f = useCurrentFrame(); const p = interpolate(f, [0, 90], [0, 1], { ...clamp, easing: Easing.inOut(Easing.cubic) }); const ev = evolvePath(p, D1);
+  const len = getLength(D1), pt = getPointAtLength(D1, len * p); const morph = interpolatePath(interpolate(f, [90, 150], [0, 1], clamp), D1, D2);
+  return h(AbsoluteFill, { style: { background: BG } }, h(Title, { sub: 'evolvePath · getPointAtLength · interpolatePath' }, 'paths'),
+    h('svg', { viewBox: '0 0 1280 720', style: abs({ inset: 0 }), fill: 'none' }, h('path', { d: f < 90 ? D1 : morph, stroke: '#a5b4fc', strokeWidth: 10, strokeLinecap: 'round', strokeDasharray: f < 90 ? ev.strokeDasharray : undefined, strokeDashoffset: f < 90 ? ev.strokeDashoffset : undefined, transform: 'translate(0 160)' }), f < 90 && h('circle', { cx: pt.x, cy: pt.y + 160, r: 22, fill: '#facc15' }))); };
+const CNoise = () => { const f = useCurrentFrame(); const cells = [];
+  for (let y = 0; y < 8; y++) for (let x = 0; x < 14; x++) { const n = noise2D('seed', x * .3, y * .3 + f * .02); cells.push(h('div', { key: x + '-' + y, style: abs({ left: 40 + x * 85, top: 150 + y * 70, width: 40, height: 40, borderRadius: '50%', background: 'hsl(' + (200 + n * 140) + ' 85% 60%)', scale: String(.45 + (n + 1) * .55), translate: (n * 22) + 'px ' + (n * 14) + 'px' }) })); }
+  return h(AbsoluteFill, { style: { background: BG } }, h(Title, { sub: 'noise2D(seed, x, y)' }, 'noise'), cells); };
+
+const TABS = {
+  interpolate: { label: 'interpolate', note: 'interpolate(frame, in, out, opts) ánh xạ khung hình sang giá trị; extrapolate "clamp" chặn tràn, Easing.bezier chỉnh nhịp, interpolateColors nội suy màu. Hàng 2 không clamp nên chạy vượt khoảng.',
+    code: "const x  = interpolate(frame, [0, 60, 120], [0, 900, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });\nconst x2 = interpolate(frame, [0, 60], [0, 700]);   // không clamp\nconst color = interpolateColors(frame, [0, 60, 120], ['#38bdf8', '#f472b6', '#facc15']);\nconst rot = interpolate(frame, [0, 150], [0, 360], { easing: Easing.bezier(0.16, 1, 0.3, 1) });",
+    mount: (s, st) => (st.textContent = 'remotion 4.0.539 · interpolate', mountPlayer(s, CInterp)) },
+  spring: { label: 'spring', note: 'spring({ frame, fps, config }) cho chuyển động vật lý theo khung hình: damping lớn thì êm, nhỏ thì nảy; mass làm chậm và nặng hơn. Giá trị chạy 0→1 và có thể nhân ra pixel.',
+    code: "const s = spring({ frame: frame - 15, fps, config: { damping: 8 } });   // 0 -> 1 có nảy\nconst x = s * 1000;\n// config: damping, mass, stiffness, overshootClamping; durationInFrames để ép độ dài",
+    mount: (s, st) => (st.textContent = 'remotion 4.0.539 · spring', mountPlayer(s, CSpring, { dur: 120 })) },
+  sequence: { label: 'Sequence', note: '<Sequence from durationInFrames> dời và cắt thời gian: bên trong, useCurrentFrame() trả về khung CỤC BỘ bắt đầu từ 0. Ba thẻ vào ở khung 0, 40, 80.',
+    code: "<Sequence from={0}  durationInFrames={70} layout=\"none\"><Card n={1} /></Sequence>\n<Sequence from={40} durationInFrames={70} layout=\"none\"><Card n={2} /></Sequence>\n// trong Card: const f = useCurrentFrame(); // 0 tại thời điểm Sequence bắt đầu",
+    mount: (s, st) => (st.textContent = 'remotion 4.0.539 · Sequence', mountPlayer(s, CSeq, { dur: 150 })) },
+  series: { label: 'Series + Loop', note: '<Series> xếp các cảnh nối đuôi nhau, "offset" âm cho chồng lên, <Loop durationInFrames> lặp một đoạn (vòng quay góc dưới lặp mỗi 20 khung).',
+    code: "<Series>\n  <Series.Sequence durationInFrames={50}><Scene1 /></Series.Sequence>\n  <Series.Sequence durationInFrames={50}><Scene2 /></Series.Sequence>\n  <Series.Sequence durationInFrames={50} offset={-10}><Scene3 /></Series.Sequence>\n</Series>\n<Loop durationInFrames={20}><Spinner /></Loop>",
+    mount: (s, st) => (st.textContent = 'remotion 4.0.539 · Series/Loop', mountPlayer(s, CSeries, { dur: 140 })) },
+  transitions: { label: 'Transitions', note: '@remotion/transitions: <TransitionSeries> với fade(), slide(), wipe(); timing là linearTiming hoặc springTiming. Hai cảnh phát đồng thời trong lúc chuyển nên tổng thời lượng ngắn hơn.',
+    code: "import { TransitionSeries, linearTiming, springTiming } from '@remotion/transitions';\nimport { fade } from '@remotion/transitions/fade';\n<TransitionSeries>\n  <TransitionSeries.Sequence durationInFrames={60}><A /></TransitionSeries.Sequence>\n  <TransitionSeries.Transition presentation={fade()} timing={linearTiming({ durationInFrames: 20 })} />\n  <TransitionSeries.Sequence durationInFrames={60}><B /></TransitionSeries.Sequence>\n</TransitionSeries>",
+    mount: (s, st) => (st.textContent = '@remotion/transitions 4.0.539', mountPlayer(s, CTrans, { dur: 195 })) },
+  shapes: { label: 'Shapes', note: '@remotion/shapes cung cấp Star, Pie, Heart, Polygon, Triangle, Circle… là SVG, tham số hoá bằng prop; ở đây dùng spring để bật ra và Pie.progress chạy theo khung.',
+    code: "import { Star, Pie, Heart, Polygon } from '@remotion/shapes';\n<Star points={5} innerRadius={40} outerRadius={90} fill=\"#facc15\" />\n<Pie radius={90} progress={interpolate(frame, [0, 90], [0, 1])} closePath fill=\"#38bdf8\" />",
+    mount: (s, st) => (st.textContent = '@remotion/shapes 4.0.539', mountPlayer(s, CShapes, { dur: 120 })) },
+  paths: { label: 'Paths', note: '@remotion/paths: evolvePath() vẽ đường dần ra (strokeDasharray), getPointAtLength() lấy toạ độ để dẫn chấm vàng chạy theo đường, interpolatePath() biến đường cong thành đường thẳng.',
+    code: "import { evolvePath, getPointAtLength, getLength, interpolatePath } from '@remotion/paths';\nconst { strokeDasharray, strokeDashoffset } = evolvePath(progress, d);\nconst { x, y } = getPointAtLength(d, getLength(d) * progress);\nconst morph = interpolatePath(t, dCong, dThang);",
+    mount: (s, st) => (st.textContent = '@remotion/paths 4.0.539', mountPlayer(s, CPaths, { dur: 150 })) },
+  noise: { label: 'Noise', note: '@remotion/noise: noise2D(seed, x, y) cho nhiễu mượt xác định theo khung; lưới 14×8 chấm đổi màu, kích thước và vị trí theo giá trị nhiễu trôi theo thời gian.',
+    code: "import { noise2D } from '@remotion/noise';\nconst n = noise2D('seed', x * 0.3, y * 0.3 + frame * 0.02);   // -1..1, mượt\nstyle={{ scale: String(0.45 + (n + 1) * 0.55), background: 'hsl(' + (200 + n * 140) + ' 85% 60%)' }}",
+    mount: (s, st) => (st.textContent = '@remotion/noise 4.0.539', mountPlayer(s, CNoise, { dur: 180 })) },
+};
+initTabs(TABS);
+</script>
+</body></html>

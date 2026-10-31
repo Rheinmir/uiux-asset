@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sample OBS Studio — uiux-asset</title>
+<link rel="stylesheet" href="../aw.css?v=559582af29">
+<link rel="stylesheet" href="_m.css">
+<style>
+.o-stage { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: 12px; padding: 12px; place-items: stretch; align-content: start; }
+.o-lc { display: grid; gap: 8px; align-content: start; grid-template-columns: 1fr; }
+.o-lc.studio { grid-template-columns: 1fr 1fr; }
+.o-pv { position: relative; border-radius: 6px; overflow: hidden; background: #000; aspect-ratio: 16 / 9; touch-action: none; }
+.o-pv canvas { width: 100%; height: 100%; display: block; }
+.o-lab { position: absolute; left: 8px; top: 6px; font: 700 10px var(--aw-mono); color: #fff; background: rgba(0,0,0,.55); padding: 1px 7px; border-radius: 99px; display: none; }
+.studio .o-lab { display: block; }
+#pv2 { display: none; } .studio #pv2 { display: block; }
+.o-sel { position: absolute; border: 2px solid #ff2b2b; pointer-events: none; display: none; box-shadow: 0 0 0 1px rgba(255,255,255,.4); }
+.o-rec { position: absolute; top: 8px; right: 10px; font: 600 12px var(--aw-mono); color: #fff; background: rgba(0,0,0,.55); padding: 2px 8px; border-radius: 99px; display: none; }
+.o-rec.on { display: block; } .o-rec::before { content: "● "; color: #ff3b3b; animation: ob 1s infinite; } @keyframes ob { 50% { opacity: .2; } }
+.o-pan { background: var(--aw-card); border-radius: 8px; padding: 8px; min-width: 0; }
+.o-pan h3 { margin: 0 0 6px; font: 600 11px/16px var(--aw-mono); opacity: .65; letter-spacing: .04em; }
+.o-li { display: flex; align-items: center; gap: 8px; padding: 4px 8px; border-radius: 6px; cursor: pointer; font: 13px/18px var(--aw-font); border: 1px solid transparent; }
+.o-li:hover { background: var(--aw-nf-bg-1); }
+.o-li.on { background: var(--aw-inverse-bg); color: var(--aw-inverse-ink); }
+.o-li .eye { margin-left: auto; font: 11px var(--aw-mono); opacity: .8; border: 1px solid currentColor; border-radius: 4px; padding: 0 5px; }
+.o-li .eye.off { opacity: .35; text-decoration: line-through; }
+.o-dock { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: 12px; }
+.o-clip { aspect-ratio: 16 / 9; background: #000; border-radius: 6px; display: grid; place-items: center; color: #888; font: 12px var(--aw-mono); overflow: hidden; }
+.o-clip video { width: 100%; height: 100%; }
+.o-log { font: 11px/1.5 var(--aw-mono); opacity: .8; max-height: 90px; overflow: auto; }
+.o-in { font: inherit; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--aw-border-input); background: var(--aw-bg-input); color: var(--aw-color-input); width: 100%; margin-top: 6px; display: none; }
+.o-fl { display: grid; grid-template-columns: auto 1fr auto; gap: 2px 8px; align-items: center; font: 12px/18px var(--aw-mono); margin: 2px 0 6px; }
+.o-fl label.h { grid-column: 1 / -1; font: 600 12px var(--aw-font); display: flex; gap: 6px; align-items: center; cursor: pointer; }
+.o-fl input[type=range] { width: 100%; }
+.o-ch { display: grid; grid-template-columns: 74px 1fr auto; gap: 6px 8px; align-items: center; font: 12px var(--aw-mono); margin-bottom: 8px; }
+.o-vu { height: 8px; background: var(--aw-nf-bg-1); border-radius: 4px; overflow: hidden; grid-column: 1 / -1; } .o-vu i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #2fbf71 60%, #f0c030 80%, #e5372d); }
+.o-mini { font: 11px var(--aw-mono); padding: 1px 8px; border-radius: 99px; border: 1px solid currentColor; background: transparent; color: inherit; cursor: pointer; }
+.o-mini.on { background: #d12a2a; color: #fff; border-color: #d12a2a; }
+.m-bar .on { background: var(--aw-button-bg); color: var(--aw-button-color); border-color: var(--aw-button-bg); }
+.m-bar .rec { background: #d12a2a; color: #fff; border-color: #d12a2a; margin-left: auto; }
+.m-bar button:disabled { opacity: .4; cursor: not-allowed; }
+.m-bar input[type=range] { width: 120px; }
+@media (max-width: 720px) { .o-stage, .o-dock { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=559582af29"></script>
+<div class="aw-crumb">
+<h1>OBS Studio <span class="aw-tag aw-tag--small aw-tag--solid-yellow m-badge" id="tb">MÔ PHỎNG</span></h1>
+<span>OBS thật là app native (C++/Qt), không chạy được trên web. Đây là MÔ PHỎNG bằng canvas + WebAudio: scene, source, filter, studio mode do trang tự vẽ; riêng ghi hình (<code>captureStream</code> + <code>MediaRecorder</code>) và bộ trộn âm (WebAudio) chạy API trình duyệt thật. Nhãn từng tab ở bên cạnh tiêu đề. · <a href="https://github.com/obsproject/obs-studio" target="_blank" rel="noopener">obsproject/obs-studio</a> · <a href="./">← Motion</a></span>
+</div>
+<div class="m-bar" id="tabs" role="tablist"><button id="rec" type="button" class="rec">Start Recording</button></div>
+<div class="m-bar" id="ctl"></div>
+<div class="m-stage o-stage" id="stage" style="min-height:600px;display:grid">
+  <div class="o-lc" id="lc">
+    <div class="o-pv" id="pv2"><canvas id="cv2" width="640" height="360"></canvas><span class="o-lab">PREVIEW</span></div>
+    <div class="o-pv" id="pv"><canvas id="cv" width="640" height="360"></canvas><div class="o-sel" id="sel"></div><span class="o-lab">PROGRAM</span><div class="o-rec" id="rt">REC 00:00</div></div>
+  </div>
+  <div style="display:grid;gap:12px;align-content:start;min-width:0">
+    <div class="o-pan"><h3>SCENES</h3><div id="scenes"></div></div>
+    <div class="o-pan"><h3>SOURCES</h3><div id="srcs"></div><input class="o-in" id="txt" aria-label="Nội dung chữ"></div>
+    <div class="o-pan" id="tpw" style="display:none"><h3 id="tph">—</h3><div id="tp"></div></div>
+  </div>
+  <div class="o-dock">
+    <div class="o-pan"><h3>LOG · <span id="st">sẵn sàng</span></h3><div class="o-log" id="log"></div></div>
+    <div class="o-pan"><h3>BẢN GHI VỪA QUAY (phát lại)</h3><div class="o-clip" id="clip">chưa có bản ghi</div></div>
+  </div>
+</div>
+<p class="m-note" id="note"></p>
+<pre class="m-code" id="code"></pre>
+</main>
+<script>
+const W = 640, H = 360, $ = (i) => document.getElementById(i), cv = $('cv'), ctx = cv.getContext('2d'), ctx2 = $('cv2').getContext('2d');
+const mk = () => Object.assign(document.createElement('canvas'), { width: W, height: H });
+const bufA = mk(), bufB = mk(), cA = bufA.getContext('2d'), cB = bufB.getContext('2d'), tA = mk(), tAc = tA.getContext('2d', { willReadFrequently: true }), tB = mk(), tBc = tB.getContext('2d');
+const S = (name, kind, x, y, w, h, extra) => ({ name, kind, x, y, w, h, bw: w, bh: h, vis: true, ...extra });
+const scenes = [
+  { name: 'Gameplay', src: [S('Game Capture', 'game', 0, 0, W, H), S('Webcam', 'camera', 470, 226, 154, 120), S('Text: LIVE', 'text', 16, 14, 200, 34, { text: 'LIVE · Gameplay' }), S('Logo', 'logo', 566, 12, 62, 62)] },
+  { name: 'Talking head', src: [S('Webcam', 'camera', 0, 0, W, H), S('Text: lower third', 'text', 28, 292, 380, 48, { text: 'Xin chào, mình là Kasumi' }), S('Logo', 'logo', 566, 12, 62, 62)] },
+  { name: 'Desktop', src: [S('Display Capture', 'desktop', 0, 0, W, H), S('Text: tiêu đề', 'text', 16, 14, 300, 34, { text: 'Hướng dẫn · Mô phỏng OBS' }), S('Logo', 'logo', 566, 12, 62, 62)] },
+  { name: 'Chroma Key', src: [S('Game Capture', 'game', 0, 0, W, H), S('Green screen cam', 'camera', 300, 30, 300, 320, { bg: '#00d62b', fOn: 'chroma' }), S('Text: tiêu đề', 'text', 16, 14, 300, 34, { text: 'Chroma Key: xoá nền xanh' })] },
+];
+let cur = 0, selIdx = 0, tr = null, pvIdx = 1;
+const log = (t) => { const l = $('log'); l.innerHTML += '<div>' + new Date().toLocaleTimeString() + ' ' + t + '</div>'; l.scrollTop = 1e9; };
+// ---- định nghĩa filter (giống danh sách filter của OBS cho video)
+const FDEFS = [
+  { key: 'cc', label: 'Color Correction', p: [['bright', 'Brightness', 30, 200, 100], ['contrast', 'Contrast', 30, 250, 100], ['sat', 'Saturation', 0, 300, 100], ['hue', 'Hue shift', 0, 360, 0]] },
+  { key: 'blur', label: 'Blur (Composite Blur)', p: [['px', 'Radius px', 0, 20, 6]] },
+  { key: 'gray', label: 'Apply LUT: Greyscale', p: [] }, { key: 'sepia', label: 'Apply LUT: Sepia', p: [] },
+  { key: 'chroma', label: 'Chroma Key', p: [['sim', 'Similarity', 5, 100, 55]] },
+  { key: 'crop', label: 'Crop/Pad', p: [['l', 'Left %', 0, 50, 0], ['r', 'Right %', 0, 50, 0], ['t', 'Top %', 0, 50, 0], ['b', 'Bottom %', 0, 50, 0]] },
+  { key: 'scroll', label: 'Scroll', p: [['speed', 'Horizontal speed', -8, 8, 3]] },
+];
+const newF = () => Object.fromEntries(FDEFS.map((d) => [d.key, { on: false, ...Object.fromEntries(d.p.map((q) => [q[0], q[4]])) }]));
+scenes.forEach((sc) => sc.src.forEach((s) => { if (s.fOn) { s.f = newF(); s.f[s.fOn].on = true; } }));
+// ---- vẽ từng loại source
+function rr(c, x, y, w, h, r) { c.beginPath(); c.roundRect(x, y, w, h, r); }
+const stars = Array.from({ length: 70 }, (_, i) => ({ x: (i * 97) % W, y: (i * 53) % H, z: 1 + (i % 3) }));
+const draw = {
+  game(c, s, t) {
+    const g = c.createLinearGradient(0, s.y, 0, s.y + s.h); g.addColorStop(0, '#0a0f2c'); g.addColorStop(1, '#2a1250'); c.fillStyle = g; c.fillRect(s.x, s.y, s.w, s.h);
+    c.fillStyle = '#fff'; stars.forEach((q) => { const y = (q.y + t * 40 * q.z) % s.h; c.globalAlpha = .4 + q.z * .18; c.fillRect(s.x + q.x * s.w / W, s.y + y, q.z, q.z * 2); }); c.globalAlpha = 1;
+    const px = s.x + s.w / 2 + Math.sin(t * 1.3) * s.w * .3, py = s.y + s.h * .78;
+    c.fillStyle = '#3ee6a8'; c.beginPath(); c.moveTo(px, py - 24); c.lineTo(px + 18, py + 14); c.lineTo(px, py + 6); c.lineTo(px - 18, py + 14); c.fill();
+    c.fillStyle = '#ffd24a'; for (let i = 0; i < 4; i++) { const by = py - 30 - ((t * 220 + i * 70) % (s.h * .7)); c.fillRect(px - 2, by, 4, 12); }
+    for (let i = 0; i < 5; i++) { const ex = s.x + ((i * 130 + Math.sin(t + i) * 40 + 60) % s.w), ey = s.y + 40 + (i % 2) * 44 + Math.sin(t * 2 + i) * 8; c.fillStyle = '#ff5c7a'; rr(c, ex - 16, ey - 10, 32, 20, 6); c.fill(); }
+    c.fillStyle = '#fff'; c.font = '600 14px ui-monospace,monospace'; c.fillText('SCORE ' + String(Math.floor(t * 130)).padStart(6, '0'), s.x + 16, s.y + s.h - 14);
+  },
+  desktop(c, s, t) {
+    c.fillStyle = '#16314f'; c.fillRect(s.x, s.y, s.w, s.h);
+    const g = c.createRadialGradient(s.x + s.w * .8, s.y, 10, s.x + s.w * .8, s.y, s.w); g.addColorStop(0, '#3f78c9'); g.addColorStop(1, '#16314f'); c.fillStyle = g; c.fillRect(s.x, s.y, s.w, s.h);
+    const wx = s.x + 60 * s.w / W, wy = s.y + 64 * s.h / H, ww = s.w - 120 * s.w / W, wh = s.h - 120 * s.h / H; c.fillStyle = '#1e1e24'; rr(c, wx, wy, ww, wh, 8); c.fill();
+    c.fillStyle = '#2d2d36'; rr(c, wx, wy, ww, 24, 8); c.fill(); ['#ff5f57', '#febc2e', '#28c840'].forEach((k, i) => { c.fillStyle = k; c.beginPath(); c.arc(wx + 14 + i * 16, wy + 12, 5, 0, 7); c.fill(); });
+    const cols = ['#7ee787', '#79c0ff', '#ffa657', '#d2a8ff', '#e6edf3'];
+    for (let i = 0; i < 11; i++) { const L = 40 + ((i * 53 + 17) % 150), vis = Math.min(L, Math.max(0, (t * 60 - i * 22) % 320)); c.fillStyle = cols[i % 5]; c.fillRect(wx + 18 + (i % 3) * 16, wy + 40 + i * 17 * s.h / H, vis, 7); }
+    c.fillStyle = '#fff'; if (Math.floor(t * 2) % 2) c.fillRect(wx + 18, wy + wh - 20, 8, 13);
+    const mx = s.x + s.w * .45 + Math.sin(t * .9) * s.w * .28, my = s.y + s.h * .55 + Math.cos(t * 1.3) * s.h * .22; c.fillStyle = '#fff'; c.beginPath(); c.moveTo(mx, my); c.lineTo(mx, my + 18); c.lineTo(mx + 5, my + 14); c.lineTo(mx + 12, my + 14); c.closePath(); c.fill(); c.strokeStyle = '#000'; c.stroke();
+    c.fillStyle = 'rgba(0,0,0,.45)'; c.fillRect(s.x, s.y + s.h - 28, s.w, 28); c.fillStyle = '#fff'; c.font = '12px ui-monospace,monospace'; c.fillText('Dock · ' + new Date().toLocaleTimeString(), s.x + 12, s.y + s.h - 10);
+  },
+  camera(c, s, t) {
+    c.save(); rr(c, s.x, s.y, s.w, s.h, s.w < W && !s.bg ? 10 : 0); c.clip();
+    if (s.bg) { c.fillStyle = s.bg; c.fillRect(s.x, s.y, s.w, s.h); } else { const g = c.createLinearGradient(s.x, s.y, s.x + s.w, s.y + s.h); g.addColorStop(0, '#3a2a55'); g.addColorStop(1, '#b86a8a'); c.fillStyle = g; c.fillRect(s.x, s.y, s.w, s.h); }
+    const cx = s.x + s.w / 2 + Math.sin(t * .8) * s.w * .02, k = Math.min(s.h / 120, s.w / 160 * 1.2);
+    c.fillStyle = '#1d1630'; c.beginPath(); c.ellipse(cx, s.y + s.h * 1.02, s.w * .26, s.h * .38, 0, 0, 7); c.fill();
+    c.fillStyle = '#f0c6a8'; c.beginPath(); c.ellipse(cx, s.y + s.h * .46, 20 * k, 25 * k, 0, 0, 7); c.fill();
+    c.fillStyle = '#2b1d12'; c.beginPath(); c.ellipse(cx, s.y + s.h * .36, 22 * k, 15 * k, 0, Math.PI, 0); c.fill();
+    c.fillStyle = '#222'; const bl = Math.floor(t * 1.7) % 6 === 0 ? 1 : 4; c.fillRect(cx - 9 * k, s.y + s.h * .44, 4 * k, bl * k * .8); c.fillRect(cx + 5 * k, s.y + s.h * .44, 4 * k, bl * k * .8);
+    c.strokeStyle = '#8a3b3b'; c.lineWidth = 2 * k; c.beginPath(); c.ellipse(cx, s.y + s.h * .55, 6 * k, (1 + Math.abs(Math.sin(t * 9)) * 3) * k, 0, 0, 7); c.stroke();
+    if (!s.bg) { c.fillStyle = 'rgba(255,255,255,.05)'; for (let i = 0; i < 26; i++) c.fillRect(s.x + Math.random() * s.w, s.y + Math.random() * s.h, 2, 2); }
+    c.restore();
+  },
+  text(c, s, t) {
+    c.font = '700 ' + Math.round(s.h * .5) + 'px Inter Tight,Helvetica,sans-serif'; const w = Math.max(80, c.measureText(s.text).width + 40); s.w = w;
+    c.fillStyle = 'rgba(0,0,0,.55)'; rr(c, s.x, s.y, w, s.h, 8); c.fill(); c.fillStyle = '#ff4d2e'; c.fillRect(s.x, s.y, 6, s.h);
+    c.fillStyle = '#fff'; c.textBaseline = 'middle'; c.fillText(s.text, s.x + 20, s.y + s.h / 2 + 1); c.textBaseline = 'alphabetic';
+  },
+  color(c, s, t) { c.fillStyle = s.color || '#6a3df5'; rr(c, s.x, s.y, s.w, s.h, 10); c.fill(); c.fillStyle = 'rgba(255,255,255,.7)'; c.font = '600 12px ui-monospace,monospace'; c.fillText('Color Source', s.x + 10, s.y + 20); },
+  logo(c, s, t) {
+    c.save(); c.translate(s.x + s.w / 2, s.y + s.h / 2); c.rotate(Math.sin(t) * .12); const r = s.w / 2;
+    c.fillStyle = '#302e3a'; c.beginPath(); c.arc(0, 0, r, 0, 7); c.fill();
+    ['#e8e8e8', '#ff4d2e', '#e8e8e8'].forEach((k, i) => { c.strokeStyle = k; c.lineWidth = r * .16; c.beginPath(); c.arc(0, 0, r * (.72 - i * .01), i * 2.09 + .3, i * 2.09 + 1.7); c.stroke(); });
+    c.restore();
+  },
+};
+// áp filter: vẽ nguồn vào buffer, scroll / chroma bằng pixel, rồi vẽ với ctx.filter + crop
+function drawSrc(c, s, t) {
+  const f = s.f; if (!f || !FDEFS.some((d) => f[d.key].on)) { draw[s.kind](c, s, t); return; }
+  tAc.clearRect(0, 0, W, H); draw[s.kind](tAc, s, t); let src = tA;
+  if (f.scroll.on) { tBc.clearRect(0, 0, W, H); const o = ((t * f.scroll.speed * 40) % s.w + s.w) % s.w; tBc.save(); tBc.beginPath(); tBc.rect(s.x, s.y, s.w, s.h); tBc.clip(); for (const k of [-1, 0]) tBc.drawImage(tA, o + k * s.w, 0); tBc.restore(); src = tB; }
+  if (f.chroma.on) {
+    const sc = src === tA ? tAc : tBc, x = Math.max(0, Math.floor(s.x)), y = Math.max(0, Math.floor(s.y)), w = Math.min(W - x, Math.ceil(s.w)), h = Math.min(H - y, Math.ceil(s.h));
+    const im = sc.getImageData(x, y, w, h), d = im.data, thr = f.chroma.sim * 3.2;
+    for (let i = 0; i < d.length; i += 4) { const dr = d[i], dg = d[i + 1] - 214, db = d[i + 2] - 43, dist = Math.sqrt(dr * dr + dg * dg + db * db); if (dist < thr) d[i + 3] = 0; else if (dist < thr * 1.35) d[i + 3] = 255 * (dist - thr) / (thr * .35); }
+    sc.putImageData(im, x, y);
+  }
+  const fl = []; if (f.cc.on) fl.push(`brightness(${f.cc.bright}%) contrast(${f.cc.contrast}%) saturate(${f.cc.sat}%) hue-rotate(${f.cc.hue}deg)`); if (f.blur.on) fl.push(`blur(${f.blur.px}px)`); if (f.gray.on) fl.push('grayscale(100%)'); if (f.sepia.on) fl.push('sepia(100%)');
+  c.save(); if (fl.length) c.filter = fl.join(' ');
+  if (f.crop.on) { const k = f.crop; c.beginPath(); c.rect(s.x + s.w * k.l / 100, s.y + s.h * k.t / 100, s.w * (1 - (k.l + k.r) / 100), s.h * (1 - (k.t + k.b) / 100)); c.clip(); }
+  c.drawImage(src, 0, 0); c.restore();
+}
+function renderScene(c, sc, t) { c.fillStyle = '#000'; c.fillRect(0, 0, W, H); for (const s of sc.src) if (s.vis) drawSrc(c, s, t); }
+// ---- chuyển cảnh
+let TT = 'Fade', TD = 900;
+function composite(p, type) {
+  const e = p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+  if (type === 'Fade') { ctx.drawImage(bufA, 0, 0); ctx.globalAlpha = e; ctx.drawImage(bufB, 0, 0); ctx.globalAlpha = 1; }
+  else if (type === 'Slide') { ctx.drawImage(bufA, -W * .3 * e, 0); ctx.drawImage(bufB, W * (1 - e), 0); ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fillRect(W * (1 - e) - 6, 0, 6, H); }
+  else if (type === 'Swipe') { ctx.drawImage(bufA, 0, 0); ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W * e, H); ctx.clip(); ctx.drawImage(bufB, 0, 0); ctx.restore(); ctx.fillStyle = '#fff'; ctx.fillRect(W * e - 2, 0, 3, H); }
+  else if (type === 'Luma Wipe') { ctx.drawImage(bufA, 0, 0); ctx.save(); ctx.beginPath(); const R = Math.hypot(W, H) / 2 * e; ctx.arc(W / 2, H / 2, R, 0, 7); ctx.clip(); ctx.drawImage(bufB, 0, 0); ctx.restore(); }
+  else if (type === 'Cut') { ctx.drawImage(p < .5 ? bufA : bufB, 0, 0); }
+  else {
+    const bw = W * .5, lead = p * (W + bw + 160), sk = 120;
+    ctx.drawImage(bufA, 0, 0); ctx.save(); ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(lead - bw + sk, 0); ctx.lineTo(lead - bw, H); ctx.lineTo(0, H); ctx.clip(); ctx.drawImage(bufB, 0, 0); ctx.restore();
+    const g = ctx.createLinearGradient(lead - bw, 0, lead, 0); g.addColorStop(0, '#ff4d2e'); g.addColorStop(1, '#6a3df5'); ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(lead - bw + sk, 0); ctx.lineTo(lead + sk, 0); ctx.lineTo(lead, H); ctx.lineTo(lead - bw, H); ctx.fill();
+    ctx.save(); ctx.translate(lead - bw / 2 + sk / 2, H / 2); ctx.rotate(p * 6.28); ctx.fillStyle = '#fff'; ctx.font = '800 54px Inter Tight,Helvetica,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('OBS', 0, 0); ctx.restore();
+  }
+}
+function frame(ms) {
+  const t = ms / 1000;
+  if (tr) { const p = Math.min(1, (ms - tr.t0) / tr.dur); renderScene(cA, scenes[tr.from], t); renderScene(cB, scenes[tr.to], t); composite(p, tr.type); if (p >= 1) { tr = null; $('st').textContent = 'Scene: ' + scenes[cur].name; } }
+  else renderScene(ctx, scenes[cur], t);
+  if (cur_tab && cur_tab.id === 'studio') renderScene(ctx2, scenes[pvIdx], t);
+  meters(); requestAnimationFrame(frame);
+}
+function go(i) {
+  if (i === cur && !tr) return; tr = { from: cur, to: i, t0: performance.now(), dur: TT === 'Cut' ? 120 : TD, type: TT }; cur = i; selIdx = 0; ui(); $('st').textContent = TT + ' → ' + scenes[i].name; log('SetCurrentProgramScene "' + scenes[i].name + '" · transition ' + TT + ' (' + TD + 'ms)');
+}
+// ---- UI
+const isStudio = () => cur_tab && cur_tab.id === 'studio';
+function ui() {
+  $('scenes').innerHTML = ''; scenes.forEach((sc, i) => { const d = document.createElement('div'); d.className = 'o-li' + (i === (isStudio() ? pvIdx : cur) ? ' on' : ''); d.textContent = sc.name + (isStudio() && i === cur ? '   ● PGM' : ''); d.onclick = () => { if (isStudio()) { pvIdx = i; ui(); log('SetCurrentPreviewScene "' + sc.name + '"'); } else go(i); }; $('scenes').append(d); });
+  $('srcs').innerHTML = ''; scenes[cur].src.forEach((s, i) => {
+    const d = document.createElement('div'); d.className = 'o-li' + (i === selIdx ? ' on' : ''); d.innerHTML = '<span>' + s.kind + ' · ' + s.name + '</span>';
+    const e = document.createElement('span'); e.className = 'eye' + (s.vis ? '' : ' off'); e.textContent = 'eye'; e.onclick = (ev) => { ev.stopPropagation(); s.vis = !s.vis; log('SetSceneItemEnabled "' + s.name + '" = ' + s.vis); ui(); }; d.append(e);
+    d.onclick = () => { selIdx = i; ui(); }; $('srcs').append(d);
+  });
+  const s = scenes[cur].src[selIdx], inp = $('txt'); inp.style.display = s && s.kind === 'text' ? 'block' : 'none'; if (s && s.kind === 'text') inp.value = s.text;
+  box(); if (cur_tab && cur_tab.panel) cur_tab.panel();
+}
+function box() {
+  const s = scenes[cur].src[selIdx], el = $('sel'); if (!s || !s.vis) { el.style.display = 'none'; return; }
+  el.style.display = 'block'; el.style.left = s.x / W * 100 + '%'; el.style.top = s.y / H * 100 + '%'; el.style.width = s.w / W * 100 + '%'; el.style.height = s.h / H * 100 + '%';
+}
+$('txt').oninput = (e) => { scenes[cur].src[selIdx].text = e.target.value; };
+let drag = null; const pv = $('pv');
+const pt = (e) => { const r = pv.getBoundingClientRect(); return [(e.clientX - r.left) / r.width * W, (e.clientY - r.top) / r.height * H]; };
+pv.onpointerdown = (e) => { const [x, y] = pt(e), L = scenes[cur].src;
+  for (let i = L.length - 1; i >= 0; i--) { const s = L[i]; if (s.vis && x >= s.x && x <= s.x + s.w && y >= s.y && y <= s.y + s.h) { if (s.w >= W && s.h >= H) continue; selIdx = i; drag = { dx: x - s.x, dy: y - s.y }; pv.setPointerCapture(e.pointerId); ui(); return; } } };
+pv.onpointermove = (e) => { if (!drag) return; const [x, y] = pt(e), s = scenes[cur].src[selIdx]; s.x = Math.max(0, Math.min(W - s.w, x - drag.dx)); s.y = Math.max(0, Math.min(H - s.h, y - drag.dy)); box(); };
+pv.onpointerup = () => { drag = null; };
+// ---- helper tạo control
+const el = (tag, props, kids) => Object.assign(document.createElement(tag), props || {}, {}), btn = (t, fn, cls) => { const b = el('button', { type: 'button', textContent: t }); if (cls) b.className = cls; b.onclick = fn; return b; };
+const sel = (opts, val, fn) => { const s = el('select'); opts.forEach((o) => s.append(new Option(o, o))); s.value = val; s.onchange = () => fn(s.value); return s; };
+const lab = (t) => el('span', { className: 'm-status', textContent: t });
+// ---- âm thanh WebAudio
+let ac, master, dest, chans = [], audioOn = false;
+function startAudio() {
+  if (ac) { ac.resume(); return; }
+  ac = new (window.AudioContext || window.webkitAudioContext)(); dest = ac.createMediaStreamDestination(); master = ac.createGain(); master.gain.value = .6; master.connect(ac.destination); master.connect(dest);
+  const mkCh = (name, node) => { const g = ac.createGain(), an = ac.createAnalyser(); an.fftSize = 512; node.connect(g); g.connect(an); an.connect(master); const c = { name, g, an, vol: 1, mute: false, buf: new Float32Array(512) }; chans.push(c); return c; };
+  // Mic (giả): sawtooth qua lowpass, biên độ nhảy kiểu lời nói
+  const o = ac.createOscillator(); o.type = 'sawtooth'; o.frequency.value = 130; const lp = ac.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 900; const sg = ac.createGain(); sg.gain.value = 0; o.connect(lp); lp.connect(sg); o.start();
+  setInterval(() => { const t = ac.currentTime; sg.gain.cancelScheduledValues(t); sg.gain.linearRampToValueAtTime(Math.random() < .25 ? 0 : .08 + Math.random() * .25, t + .07); o.frequency.linearRampToValueAtTime(110 + Math.random() * 80, t + .1); }, 140);
+  mkCh('Mic/Aux', sg);
+  // Desktop Audio (giả): arpeggio qua compressor tuỳ chọn
+  const bus = ac.createGain(), comp = ac.createDynamicsCompressor(); comp.threshold.value = -50; comp.ratio.value = 12; bus.connect(comp); const dch = mkCh('Desktop Audio', bus); dch.comp = comp; dch.bus = bus; dch.useComp = false; bus.connect(comp); comp.connect(dch.g);
+  const notes = [220, 277.2, 329.6, 440, 329.6, 277.2]; let n = 0;
+  setInterval(() => { const t = ac.currentTime, ox = ac.createOscillator(), eg = ac.createGain(); ox.type = 'triangle'; ox.frequency.value = notes[n++ % notes.length] * (n % 12 < 6 ? 1 : 1.5); eg.gain.setValueAtTime(.0001, t); eg.gain.exponentialRampToValueAtTime(.3, t + .02); eg.gain.exponentialRampToValueAtTime(.0001, t + .24); ox.connect(eg); eg.connect(bus); ox.start(t); ox.stop(t + .26); }, 250);
+  log('AudioContext sr=' + ac.sampleRate + ' · 2 kênh + master'); ui();
+}
+function meters() { if (!ac) return; chans.forEach((c) => { c.an.getFloatTimeDomainData(c.buf); let s = 0; for (const v of c.buf) s += v * v; const db = 20 * Math.log10(Math.sqrt(s / c.buf.length) + 1e-6); c.db = Math.max(-60, db); const m = $('vu-' + c.name.replace(/\W/g, '')); if (m) m.style.width = Math.max(0, (c.db + 60) / 60 * 100) + '%'; const d = $('db-' + c.name.replace(/\W/g, '')); if (d) d.textContent = c.db.toFixed(0) + ' dB'; }); }
+// ---- ghi hình THẬT
+let rec = null, chunks = [], t0 = 0, tmr = 0, recMt = '';
+const MTS = ['video/webm;codecs=vp8', 'video/webm;codecs=vp9', 'video/webm', 'video/mp4'].filter((m) => window.MediaRecorder && MediaRecorder.isTypeSupported(m)); let recFmt = MTS[0], recBr = 2.5e6; const clips = [];
+$('rec').onclick = () => {
+  if (rec) { rec.stop(); return; }
+  if (!recFmt) { $('st').textContent = 'trình duyệt không hỗ trợ MediaRecorder'; return; }
+  const stream = cv.captureStream(30); if (dest) dest.stream.getAudioTracks().forEach((k) => stream.addTrack(k));
+  chunks = []; recMt = recFmt; rec = new MediaRecorder(stream, { mimeType: recMt, videoBitsPerSecond: recBr });
+  rec.ondataavailable = (e) => e.data.size && chunks.push(e.data);
+  rec.onstop = () => { clearInterval(tmr); const blob = new Blob(chunks, { type: recMt.split(';')[0] }), url = URL.createObjectURL(blob), dur = ((performance.now() - t0) / 1000);
+    const v = document.createElement('video'); v.src = url; v.controls = true; v.loop = true; v.muted = !dest; v.autoplay = true; v.playsInline = true; $('clip').replaceChildren(v); clips.push({ url, size: blob.size, dur, mt: recMt, audio: !!dest });
+    log('StopRecord · ' + (blob.size / 1024).toFixed(0) + ' KB · ' + recMt + (dest ? ' + audio' : '')); $('st').textContent = 'đã ghi ' + dur.toFixed(1) + 's · ' + (blob.size / 1024).toFixed(0) + ' KB'; stream.getVideoTracks().forEach((k) => k.stop());
+    rec = null; $('rec').textContent = 'Start Recording'; $('rt').classList.remove('on'); if (cur_tab.panel) cur_tab.panel(); };
+  rec.start(250); t0 = performance.now(); $('rec').textContent = 'Stop Recording'; $('rt').classList.add('on'); log('StartRecord · ' + recMt + ' @ ' + (recBr / 1e6) + ' Mbps' + (dest ? ' + audio track từ mixer' : ''));
+  tmr = setInterval(() => { const s = Math.floor((performance.now() - t0) / 1000); $('rt').textContent = 'REC ' + String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'); }, 250);
+};
+// ---- các tab
+const panel = (title, fn) => { $('tpw').style.display = 'block'; $('tph').textContent = title; const p = $('tp'); p.replaceChildren(); fn(p); };
+function filtersPanel() {
+  panel('FILTERS · ' + (scenes[cur].src[selIdx] ? scenes[cur].src[selIdx].name : '—'), (p) => {
+    const s = scenes[cur].src[selIdx]; if (!s) return; if (!s.f) s.f = newF();
+    for (const d of FDEFS) { const w = el('div', { className: 'o-fl' }), l = el('label', { className: 'h' }), cb = el('input', { type: 'checkbox', checked: s.f[d.key].on, id: 'fx-' + d.key }); cb.onchange = () => { s.f[d.key].on = cb.checked; log('CreateSourceFilter/SetSourceFilterEnabled ' + d.label + ' on "' + s.name + '" = ' + cb.checked); }; l.append(cb, d.label); w.append(l);
+      for (const [k, name, mn, mx] of d.p) { const r = el('input', { type: 'range', min: mn, max: mx, step: 1, value: s.f[d.key][k] }), v = el('span', { textContent: s.f[d.key][k] }); r.oninput = () => { s.f[d.key][k] = +r.value; v.textContent = r.value; if (!cb.checked) { cb.checked = true; s.f[d.key].on = true; } }; w.append(el('span', { textContent: name }), r, v); }
+      p.append(w); }
+  });
+}
+const TABS = [
+  { id: 'transitions', label: 'Chuyển cảnh', tag: 'MÔ PHỎNG', note: 'Bấm một Scene trong danh sách để chuyển cảnh theo kiểu đã chọn: Cut, Fade, Slide, Swipe, Luma Wipe (mặt nạ tròn) hoặc Stinger (dải màu có logo quét ngang). Đổi thời lượng ở ô bên cạnh. Mỗi chuyển cảnh render hai scene vào hai buffer rồi trộn trên canvas.',
+    code: "// obs-websocket v5: SetCurrentSceneTransition / SetCurrentSceneTransitionDuration / SetCurrentProgramScene\nrenderScene(bufA, from, t); renderScene(bufB, to, t);\nctx.drawImage(bufA, 0, 0); ctx.globalAlpha = ease(p); ctx.drawImage(bufB, 0, 0);   // Fade\nctx.save(); ctx.arc(W/2, H/2, R*ease(p), 0, 7); ctx.clip(); ctx.drawImage(bufB, 0, 0);   // Luma Wipe",
+    ctl: () => [lab('Transition:'), sel(['Cut', 'Fade', 'Slide', 'Swipe', 'Luma Wipe', 'Stinger'], TT, (v) => TT = v), sel(['300', '600', '900', '1500'], String(TD), (v) => TD = +v), lab('ms · bấm Scene để chuyển')] },
+  { id: 'sources', label: 'Sources', tag: 'MÔ PHỎNG', note: 'Thêm / xoá source, đổi thứ tự lớp (▲▼), đổi kích thước bằng thanh trượt, kéo trực tiếp source trên preview (viền đỏ). Các loại có sẵn: Display Capture, Game Capture, Video Capture (camera giả), Text, Color Source, Image (logo). Không dùng thiết bị thật của bạn.',
+    code: "// obs-websocket: CreateInput / RemoveInput / SetSceneItemIndex / SetSceneItemTransform\nsrc.splice(i, 0, { kind: 'text', x, y, w, h });          // CreateInput\n[src[i], src[i+1]] = [src[i+1], src[i]];                 // SetSceneItemIndex\ns.w = s.bw * k; s.h = s.bh * k;                          // SetSceneItemTransform",
+    ctl: () => { const add = (kind, name, w, h, ex) => () => { scenes[cur].src.push(S(name, kind, 40, 60, w, h, ex)); selIdx = scenes[cur].src.length - 1; log('CreateInput ' + kind + ' "' + name + '"'); ui(); };
+      const sc = el('input', { type: 'range', min: 40, max: 250, value: 100, 'aria-label': 'Kích thước' }); sc.oninput = () => { const s = scenes[cur].src[selIdx]; if (!s || s.kind === 'text') { if (s) { s.h = s.bh * sc.value / 100; } } else if (s) { s.w = s.bw * sc.value / 100; s.h = s.bh * sc.value / 100; } box(); };
+      return [btn('+ Text', add('text', 'Text mới', 160, 34, { text: 'Hello OBS' })), btn('+ Color', add('color', 'Color Source', 150, 90, { color: ['#6a3df5', '#e5372d', '#2fbf71', '#f0b429'][Math.floor(Math.random() * 4)] })), btn('+ Camera', add('camera', 'Webcam', 160, 120)), btn('+ Logo', add('logo', 'Logo', 80, 80)), btn('+ Desktop', add('desktop', 'Display Capture', 240, 150)),
+        btn('▲', () => { const L = scenes[cur].src; if (selIdx < L.length - 1) { [L[selIdx], L[selIdx + 1]] = [L[selIdx + 1], L[selIdx]]; selIdx++; ui(); } }), btn('▼', () => { const L = scenes[cur].src; if (selIdx > 0) { [L[selIdx], L[selIdx - 1]] = [L[selIdx - 1], L[selIdx]]; selIdx--; ui(); } }),
+        btn('Xoá', () => { const L = scenes[cur].src; if (L.length > 1) { log('RemoveInput "' + L[selIdx].name + '"'); L.splice(selIdx, 1); selIdx = 0; ui(); } }), lab('Kích thước'), sc]; } },
+  { id: 'filters', label: 'Filters', tag: 'MÔ PHỎNG', panel: filtersPanel, note: 'Chọn một source rồi bật filter ở bảng bên phải: Color Correction, Blur, Greyscale/Sepia (kiểu Apply LUT), Crop/Pad, Scroll và Chroma Key. Chuyển sang Scene "Chroma Key" để thấy nền xanh bị xoá theo độ tương đồng — thuật toán khoảng cách màu trên từng pixel của canvas.',
+    code: "// obs-websocket: CreateSourceFilter / SetSourceFilterSettings / SetSourceFilterEnabled\nctx.filter = 'brightness(120%) contrast(110%) saturate(150%) hue-rotate(20deg) blur(4px)';\nconst d = imageData.data;              // Chroma Key\nif (dist(rgb, keyGreen) < similarity * 3.2) d[i + 3] = 0;",
+    ctl: () => [btn('Tới scene Chroma Key', () => go(3)), lab('rồi bật/tắt filter ở bảng bên phải')] },
+  { id: 'studio', label: 'Studio Mode', tag: 'MÔ PHỎNG', note: 'Studio Mode của OBS tách Preview (cảnh kế tiếp, chỉnh thoải mái) và Program (cảnh đang lên sóng). Chọn scene để đưa vào Preview, bấm "Transition" để đẩy Preview lên Program bằng kiểu chuyển cảnh đã chọn. Cột bên phải đánh dấu ● PGM là scene đang phát.',
+    code: "// obs-websocket: SetStudioModeEnabled / SetCurrentPreviewScene / TriggerStudioModeTransition\npreviewScene = i;                       // click scene = chỉ đổi Preview\ntransition(programScene, previewScene); // nút Transition = Preview → Program",
+    ctl: () => [sel(['Cut', 'Fade', 'Slide', 'Swipe', 'Luma Wipe', 'Stinger'], TT, (v) => TT = v), btn('Transition ▶', () => { if (pvIdx !== cur) { const n = pvIdx; go(n); pvIdx = n === 0 ? 1 : 0; ui(); } }), lab('chọn scene = đưa vào Preview')] },
+  { id: 'audio', label: 'Audio Mixer', tag: 'MÔ PHỎNG · WEBAUDIO THẬT', note: 'Bộ trộn âm chạy bằng WebAudio thật: "Mic" (oscillator giả giọng nói) và "Desktop Audio" (arpeggio) đi qua fader (GainNode), nút Mute, bộ nén (DynamicsCompressorNode — giống filter Compressor của OBS) và VU meter đo bằng AnalyserNode (dB). Bật âm thanh trước; sau đó "Start Recording" sẽ ghi cả track âm thanh của mixer.',
+    code: "// obs-websocket: SetInputVolume / SetInputMute / CreateSourceFilter(compressor_filter)\nconst g = ac.createGain(), an = ac.createAnalyser();\nsrc.connect(g); g.connect(an); an.connect(master);\nan.getFloatTimeDomainData(buf);  // rms → 20*log10 → VU\nstream.addTrack(destination.stream.getAudioTracks()[0]);   // ghi cùng canvas",
+    ctl: () => [btn('Bật âm thanh', () => startAudio()), lab('(cần một cú bấm để trình duyệt cho phép phát)')],
+    panel() { panel('AUDIO MIXER', (p) => { if (!ac) { p.textContent = 'Bấm "Bật âm thanh".'; return; }
+      chans.forEach((c) => { const id = c.name.replace(/\W/g, ''), w = el('div', { className: 'o-ch' }), f = el('input', { type: 'range', min: 0, max: 150, value: c.vol * 100, 'aria-label': c.name }), m = el('button', { type: 'button', className: 'o-mini' + (c.mute ? ' on' : ''), textContent: 'Mute' });
+        f.oninput = () => { c.vol = f.value / 100; c.g.gain.value = c.mute ? 0 : c.vol; }; m.onclick = () => { c.mute = !c.mute; c.g.gain.value = c.mute ? 0 : c.vol; m.classList.toggle('on', c.mute); log('SetInputMute "' + c.name + '" = ' + c.mute); };
+        w.append(el('span', { textContent: c.name }), f, m, el('div', { className: 'o-vu' }, null)); w.querySelector('.o-vu').append(el('i', { id: 'vu-' + id })); const d = el('span', { id: 'db-' + id, textContent: '-60 dB' }); w.append(d);
+        if (c.comp) { const cb = el('input', { type: 'checkbox' }); cb.onchange = () => { c.comp.threshold.value = cb.checked ? -30 : -50; c.comp.ratio.value = cb.checked ? 12 : 1; log('Compressor ' + (cb.checked ? 'ON' : 'OFF') + ' trên Desktop Audio'); }; w.append(el('label', { style: 'grid-column:1/-1;font:12px var(--aw-font)' }, null)); w.lastChild.append(cb, ' Compressor filter'); }
+        p.append(w); });
+      const mw = el('div', { className: 'o-ch' }), mf = el('input', { type: 'range', min: 0, max: 100, value: master.gain.value * 100 }); mf.oninput = () => master.gain.value = mf.value / 100; mw.append(el('span', { textContent: 'Master' }), mf); p.append(mw); }); } },
+  { id: 'record', label: 'Recording', tag: 'MÔ PHỎNG · GHI HÌNH THẬT', note: 'Ghi canvas chương trình bằng MediaRecorder thật. Chọn codec/container và bitrate (chỉ các định dạng trình duyệt hỗ trợ), bấm "Start Recording" ở góc phải, đổi scene vài lần rồi Stop — clip thật hiện ở khung "Bản ghi", các lần ghi được liệt kê ở bảng bên phải. Bật Audio Mixer trước để clip có tiếng.',
+    code: "// obs-websocket: StartRecord / StopRecord (+ SetProfileParameter cho bitrate)\nconst stream = programCanvas.captureStream(30);\nconst rec = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp8', videoBitsPerSecond: 2.5e6 });\nrec.ondataavailable = (e) => chunks.push(e.data);\nrec.onstop = () => video.src = URL.createObjectURL(new Blob(chunks));\nrec.start(250);",
+    ctl: () => [lab('Định dạng:'), sel(MTS.length ? MTS : ['(không hỗ trợ)'], recFmt, (v) => recFmt = v), lab('Bitrate:'), sel(['1 Mbps', '2.5 Mbps', '6 Mbps'], recBr / 1e6 + ' Mbps', (v) => recBr = parseFloat(v) * 1e6)],
+    panel() { panel('CÁC BẢN GHI', (p) => { if (!clips.length) { p.textContent = 'Chưa có bản ghi nào.'; return; } clips.forEach((c, i) => { const a = el('a', { href: c.url, download: 'obs-' + (i + 1) + '.' + (c.mt.includes('mp4') ? 'mp4' : 'webm'), textContent: '#' + (i + 1) + ' · ' + c.dur.toFixed(1) + 's · ' + (c.size / 1024).toFixed(0) + ' KB · ' + c.mt.split(';')[0] + (c.audio ? ' + audio' : '') + ' ⤓' }); a.style.cssText = 'display:block;font:12px var(--aw-mono)'; p.append(a); }); }); } },
+];
+let cur_tab = null; const tabsEl = $('tabs'), ctlEl = $('ctl');
+TABS.forEach((t) => { const b = el('button', { type: 'button', id: 'tab-' + t.id, textContent: t.label }); b.setAttribute('role', 'tab'); b.onclick = () => openTab(t.id); tabsEl.insertBefore(b, $('rec')); });
+function openTab(id) {
+  cur_tab = TABS.find((t) => t.id === id) || TABS[0]; TABS.forEach((t) => $('tab-' + t.id).classList.toggle('on', t === cur_tab));
+  ctlEl.replaceChildren(...cur_tab.ctl()); $('note').innerHTML = cur_tab.note; $('code').textContent = cur_tab.code; $('tb').textContent = cur_tab.tag;
+  $('lc').classList.toggle('studio', cur_tab.id === 'studio'); $('tpw').style.display = cur_tab.panel ? 'block' : 'none'; if (cur_tab.id === 'studio' && pvIdx === cur) pvIdx = (cur + 1) % scenes.length;
+  ui(); if (location.hash !== '#' + cur_tab.id) history.replaceState(null, '', '#' + cur_tab.id);
+}
+addEventListener('hashchange', () => openTab(location.hash.slice(1)));
+openTab(location.hash.slice(1)); log('OBS (mô phỏng) khởi động · canvas ' + W + 'x' + H + ' @ rAF'); requestAnimationFrame(frame);
+</script>
+</body></html>

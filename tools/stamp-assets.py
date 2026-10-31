@@ -16,7 +16,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 ASSETS = ["aw.css", "aw.js", "cart.js", "search.js", "stats.js", "ui-kits/kits.js", "galaxy/galaxy.js"]
 PAGES = ["index.html", "stats.html", "ui-kits/index.html", "galaxy/index.html", "scroll-effects/index.html",
-         "components/index.html", "components/chip.html", "ui-libraries/index.html"]
+         "components/index.html", "components/chip.html", "ui-libraries/index.html"] + sorted(str(f.relative_to(ROOT)) for f in (ROOT / "motion").glob("*.html"))
 REF = re.compile(r'((?:src|href)="[^"]*?\b(?:aw\.css|aw\.js|search\.js|stats\.js|kits\.js|galaxy\.js))(?:\?v=[0-9a-f]+)?"')
 
 ver = hashlib.sha256(b"".join((ROOT / a).read_bytes() for a in ASSETS)).hexdigest()[:10]

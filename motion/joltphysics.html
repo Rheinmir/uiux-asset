@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sample JoltPhysics — uiux-asset</title>
+<link rel="stylesheet" href="../aw.css?v=559582af29">
+<link rel="stylesheet" href="_m.css">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/","jolt-physics":"https://cdn.jsdelivr.net/npm/jolt-physics@1.1.1/dist/jolt-physics.wasm-compat.js"}}</script>
+<style>.m-bar button[aria-pressed=true]{background:#2a6df4;color:#fff;border-color:#2a6df4}.m-bar input[type=range]{vertical-align:middle}</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=559582af29"></script>
+<div class="aw-crumb">
+<h1>JoltPhysics <span class="aw-tag aw-tag--small aw-tag--solid-green m-badge">THƯ VIỆN THẬT</span></h1>
+<span>Chạy <code>jolt-physics@1.1.1</code> (JoltPhysics.js, bản WASM nhúng một file <code>wasm-compat</code>) thật, vẽ bằng three.js: 6 tab = xếp chồng, thả &amp; nổ, hình dạng, khớp nối, ma sát/độ nảy, tương tác. · <a href="https://github.com/jrouwe/JoltPhysics" target="_blank" rel="noopener">jrouwe/JoltPhysics</a> · <a href="./">← Motion</a></span>
+</div>
+<div class="m-bar" id="tabs"></div>
+<div class="m-stage" id="stage" style="height:460px;min-height:460px"></div>
+<div class="m-bar" id="ctl"></div>
+<p class="m-status" id="st" style="margin-top:10px">đang nạp Jolt WASM (~3MB)…</p>
+<p class="m-note" id="note"></p>
+<pre class="m-code" id="code"></pre>
+</main>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { ConvexGeometry } from 'three/addons/geometries/ConvexGeometry.js';
+const $ = (id) => document.getElementById(id), stage = $('stage'), st = $('st'), tabsEl = $('tabs'), ctl = $('ctl');
+let renderer;
+try { renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); }
+catch (e) { stage.innerHTML = '<p style="padding:24px;text-align:center">Trình duyệt này không có WebGL nên không vẽ được cảnh.</p>'; st.textContent = 'không có WebGL'; throw e; }
+renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5)); renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap; stage.append(renderer.domElement);
+let Jolt;
+try { Jolt = await (await import('jolt-physics')).default(); } catch (e) { stage.innerHTML = '<p style="padding:24px;text-align:center">Không nạp được Jolt WASM: ' + e.message + '</p>'; st.textContent = 'lỗi nạp Jolt'; throw e; }
+// --- thế giới Jolt dùng chung: hai lớp (tĩnh / động) như ví dụ của JoltPhysics.js ---
+const L_STATIC = 0, L_MOVING = 1, jsettings = new Jolt.JoltSettings();
+const pairFilter = new Jolt.ObjectLayerPairFilterTable(2); pairFilter.EnableCollision(L_STATIC, L_MOVING); pairFilter.EnableCollision(L_MOVING, L_MOVING);
+const bpInterface = new Jolt.BroadPhaseLayerInterfaceTable(2, 2); bpInterface.MapObjectToBroadPhaseLayer(L_STATIC, new Jolt.BroadPhaseLayer(0)); bpInterface.MapObjectToBroadPhaseLayer(L_MOVING, new Jolt.BroadPhaseLayer(1));
+jsettings.mObjectLayerPairFilter = pairFilter; jsettings.mBroadPhaseLayerInterface = bpInterface; jsettings.mObjectVsBroadPhaseLayerFilter = new Jolt.ObjectVsBroadPhaseLayerFilterTable(bpInterface, 2, pairFilter, 2);
+const jolt = new Jolt.JoltInterface(jsettings), phys = jolt.GetPhysicsSystem(), bi = phys.GetBodyInterface();
+const V = (x, y, z) => new Jolt.Vec3(x, y, z), R = (x, y, z) => new Jolt.RVec3(x, y, z), Qt = (x = 0, y = 0, z = 0, w = 1) => new Jolt.Quat(x, y, z, w);
+
+const ui = {
+  btn(t, fn) { const b = document.createElement('button'); b.type = 'button'; b.textContent = t; b.onclick = () => fn(b); ctl.append(b); return b; },
+  range(t, min, max, step, v, fn) { const l = document.createElement('label'); l.style.cssText = 'font:13px ui-monospace,Menlo,monospace;display:flex;gap:6px;align-items:center'; const i = document.createElement('input'); i.type = 'range'; Object.assign(i, { min, max, step, value: v }); i.oninput = () => fn(+i.value); l.append(t, i); ctl.append(l); return i; },
+  group(names, fn, first = 0) { const bs = names.map((n, i) => ui.btn(n, () => { bs.forEach((x) => x.setAttribute('aria-pressed', x === bs[i])); fn(i); })); bs[first].click(); },
+};
+const rnd = (a, b) => a + Math.random() * (b - a), hsl = () => new THREE.Color().setHSL(Math.random(), .65, .55);
+
+// Một "cảnh" = tập thân vật Jolt + mesh three tương ứng, tự dọn khi đổi tab
+const makeScene = () => {
+  const scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(45, 1, .1, 200); camera.position.set(0, 6, 13);
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x778899, 1.6));
+  const sun = new THREE.DirectionalLight(0xffffff, 2.6); sun.position.set(6, 14, 8); sun.castShadow = true; sun.shadow.mapSize.set(1024, 1024); Object.assign(sun.shadow.camera, { left: -16, right: 16, top: 16, bottom: -16, near: 1, far: 50 }); scene.add(sun);
+  const grid = new THREE.GridHelper(40, 40, 0x888888, 0x888888); grid.material.transparent = true; grid.material.opacity = .25; scene.add(grid);
+  const S = { scene, camera, items: [], cons: [], tick: null, offs: [], ground: null };
+  const mat = (c) => new THREE.MeshStandardMaterial({ color: c || hsl(), roughness: .5, metalness: .1 });
+  // shape: đối tượng Jolt.Shape; mesh: three Object3D; opt: {pos,rot,vel,fixed,friction,restitution}
+  S.spawn = (shape, mesh, o = {}) => {
+    const pos = o.pos || [0, 0, 0], rq = o.rot || [0, 0, 0, 1];
+    const cs = new Jolt.BodyCreationSettings(shape, R(...pos), Qt(...rq), o.fixed ? Jolt.EMotionType_Static : Jolt.EMotionType_Dynamic, o.fixed ? L_STATIC : L_MOVING);
+    if (o.friction !== undefined) cs.mFriction = o.friction; if (o.restitution !== undefined) cs.mRestitution = o.restitution;
+    const body = bi.CreateBody(cs); Jolt.destroy(cs); bi.AddBody(body.GetID(), Jolt.EActivation_Activate);
+    if (o.vel) bi.SetLinearVelocity(body.GetID(), V(...o.vel));
+    mesh.castShadow = mesh.receiveShadow = true; mesh.traverse((m) => { m.castShadow = m.receiveShadow = true; }); mesh.position.set(...pos); mesh.quaternion.set(...rq); scene.add(mesh);
+    const it = { body, mesh, fixed: !!o.fixed }; S.items.push(it); return it;
+  };
+  S.box = (hx, hy, hz, o = {}) => S.spawn(new Jolt.BoxShape(V(hx, hy, hz), .02, null), new THREE.Mesh(new THREE.BoxGeometry(hx * 2, hy * 2, hz * 2), mat(o.color)), o);
+  S.sphere = (r, o = {}) => S.spawn(new Jolt.SphereShape(r), new THREE.Mesh(new THREE.SphereGeometry(r, 24, 16), mat(o.color)), o);
+  S.floor = () => { const it = S.box(20, .5, 20, { pos: [0, -.5, 0], fixed: true, color: new THREE.Color(0x8d96a6), friction: .6 }); it.mesh.material.transparent = true; it.mesh.material.opacity = .6; return it; };
+  S.removeItem = (it) => { bi.RemoveBody(it.body.GetID()); bi.DestroyBody(it.body.GetID()); scene.remove(it.mesh); it.mesh.traverse((m) => { m.geometry?.dispose(); m.material?.dispose(); }); S.items = S.items.filter((x) => x !== it); };
+  S.dynamic = () => S.items.filter((i) => !i.fixed);
+  S.cap = (n) => { const d = S.dynamic(); d.slice(0, Math.max(0, d.length - n)).forEach(S.removeItem); };
+  S.sync = () => { for (const it of S.items) { if (it.fixed) continue; const p = it.body.GetPosition(), q = it.body.GetRotation(); it.mesh.position.set(p.GetX(), p.GetY(), p.GetZ()); it.mesh.quaternion.set(q.GetX(), q.GetY(), q.GetZ(), q.GetW()); } };
+  S.dispose = () => { S.offs.forEach((f) => f()); S.cons.forEach((c) => phys.RemoveConstraint(c)); [...S.items].forEach(S.removeItem); phys.SetGravity(V(0, -9.81, 0)); };
+  S.controls = new OrbitControls(camera, renderer.domElement); S.controls.enableDamping = true; S.controls.target.set(0, 2, 0); S.controls.update();
+  const od = S.dispose; S.dispose = () => { S.controls.dispose(); od(); };
+  return S;
+};
+// shape + mesh cho từng loại (dùng ở tab thả & hình dạng)
+const SHAPES = {
+  'Hộp': () => { const h = rnd(.3, .5); return [new Jolt.BoxShape(V(h, h, h), .02, null), new THREE.Mesh(new THREE.BoxGeometry(h * 2, h * 2, h * 2))]; },
+  'Cầu': () => { const r = rnd(.3, .5); return [new Jolt.SphereShape(r), new THREE.Mesh(new THREE.SphereGeometry(r, 24, 16))]; },
+  'Nang (capsule)': () => { const hh = rnd(.25, .4), r = rnd(.22, .3); return [new Jolt.CapsuleShape(hh, r), new THREE.Mesh(new THREE.CapsuleGeometry(r, hh * 2, 6, 16))]; },
+  'Trụ': () => { const hh = rnd(.25, .45), r = rnd(.25, .4); return [new Jolt.CylinderShape(hh, r, .02, null), new THREE.Mesh(new THREE.CylinderGeometry(r, r, hh * 2, 24))]; },
+  'Convex hull': () => { const ps = [...Array(9)].map(() => new THREE.Vector3(rnd(-.5, .5), rnd(-.5, .5), rnd(-.5, .5))), arr = new Jolt.ArrayVec3(), st2 = new Jolt.ConvexHullShapeSettings(); ps.forEach((p) => arr.push_back(V(p.x, p.y, p.z))); st2.mPoints = arr; const res = st2.Create(); return [res.Get(), new THREE.Mesh(new ConvexGeometry(ps))]; },
+  'Compound (chữ T)': () => { const cs = new Jolt.StaticCompoundShapeSettings(); cs.AddShapeShape(V(0, .35, 0), Qt(), new Jolt.BoxShape(V(.55, .15, .2), .02, null), 0); cs.AddShapeShape(V(0, -.15, 0), Qt(), new Jolt.BoxShape(V(.15, .35, .2), .02, null), 0);
+    const g = new THREE.Group(), b1 = new THREE.Mesh(new THREE.BoxGeometry(1.1, .3, .4)), b2 = new THREE.Mesh(new THREE.BoxGeometry(.3, .7, .4)); b1.position.y = .35; b2.position.y = -.15; g.add(b1, b2); return [cs.Create().Get(), g]; },
+};
+const dropShape = (S, k, pos, vel) => { const [shape, mesh] = SHAPES[k](), col = hsl(); mesh.traverse((m) => { if (m.isMesh) m.material = new THREE.MeshStandardMaterial({ color: col, roughness: .5, metalness: .1 }); }); return S.spawn(shape, mesh, { pos, rot: [Math.random() - .5, Math.random() - .5, Math.random() - .5, 1].map((v, i, a) => v / Math.hypot(...a)), vel, restitution: .2 }); };
+
+const TABS = [
+{ id: 'xep-chong', name: 'Xếp chồng', note: 'Tháp 7 tầng gồm 28 hộp xếp tay. Jolt giải tiếp xúc nhiều vật nên tháp đứng yên (vật ngủ, <code>Sleeping</code>) cho tới khi có thứ đâm vào. Bấm "Bắn bóng" để bắn quả cầu nặng vào tháp, kéo chuột để xoay góc nhìn.',
+  code: `const jolt = new Jolt.JoltInterface(settings), bi = jolt.GetPhysicsSystem().GetBodyInterface();
+const shape = new Jolt.BoxShape(new Jolt.Vec3(.5, .25, .5), .02, null);
+const cs = new Jolt.BodyCreationSettings(shape, new Jolt.RVec3(x, y, z), new Jolt.Quat(0,0,0,1), Jolt.EMotionType_Dynamic, LAYER_MOVING);
+const body = bi.CreateBody(cs); bi.AddBody(body.GetID(), Jolt.EActivation_Activate);
+bi.SetLinearVelocity(ball.GetID(), new Jolt.Vec3(0, 2, -28));   // bắn bóng
+jolt.Step(dt, 1);                                                 // mỗi khung`,
+  init(S) { S.floor(); const mk = () => { for (let y = 0; y < 7; y++) for (let i = 0; i < 4; i++) S.box(.5, .25, .5, { pos: [(i - 1.5) * 1.02 + (y % 2) * .5, .26 + y * .52, 0], friction: .7, color: new THREE.Color().setHSL(.08 + y * .02, .6, .55) }); }; mk();
+    const shoot = () => S.sphere(.6, { pos: [rnd(-3, 3), rnd(1.5, 3), 12], vel: [rnd(-.6, .6), rnd(1, 3), -26], color: new THREE.Color(0x2a6df4), restitution: .1 }); ui.btn('Bắn bóng', shoot);
+    ui.btn('Dựng lại tháp', () => { [...S.dynamic()].forEach(S.removeItem); mk(); }); } },
+{ id: 'tha-no', name: 'Thả & nổ', note: '"Thả thêm" rơi 10 vật ngẫu nhiên (hộp/cầu) từ trên cao, chạm nhau và chồng đống (tối đa 160 vật). "Nổ" đặt một vụ nổ ở giữa: mỗi thân vật nhận <code>AddImpulse</code> hướng ra xa tâm, mạnh hơn khi ở gần. "Reset" xóa hết.',
+  code: `// nổ: xung lượng hướng ra xa tâm, giảm theo khoảng cách
+for (const b of dynamicBodies) {
+  const p = b.GetPosition(), d = new THREE.Vector3(p.GetX(), p.GetY() + .5, p.GetZ()), k = 40 / (1 + d.length());
+  d.normalize().multiplyScalar(k * mass);
+  bi.AddImpulse(b.GetID(), new Jolt.Vec3(d.x, d.y, d.z));
+}`,
+  init(S) { S.floor(); const drop = (n = 10) => { for (let i = 0; i < n; i++) { const p = [rnd(-4, 4), rnd(4, 10), rnd(-4, 4)]; if (Math.random() < .5) S.box(rnd(.25, .45), rnd(.25, .45), rnd(.25, .45), { pos: p, restitution: .25 }); else S.sphere(rnd(.25, .5), { pos: p, restitution: .4 }); } S.cap(160); };
+    drop(20); ui.btn('Thả thêm', () => drop(10));
+    ui.btn('Nổ', () => { const c = new THREE.Vector3(0, -.5, 0), d = new THREE.Vector3(); for (const it of S.dynamic()) { d.copy(it.mesh.position).sub(c); const k = 70 / (1 + d.length()); d.normalize().multiplyScalar(k * (it.mass || 4)); bi.AddImpulse(it.body.GetID(), V(d.x, d.y + 12, d.z)); } });
+    ui.btn('Reset', () => { [...S.dynamic()].forEach(S.removeItem); drop(20); }); } },
+{ id: 'hinh-dang', name: 'Các loại hình dạng', note: 'Sáu loại <code>Shape</code> của Jolt: <code>BoxShape</code>, <code>SphereShape</code>, <code>CapsuleShape</code>, <code>CylinderShape</code>, <code>ConvexHullShapeSettings</code> (bao lồi từ 9 điểm ngẫu nhiên) và <code>StaticCompoundShapeSettings</code> (ghép hai hộp thành chữ T). Chọn loại để thả một cơn mưa 12 vật.',
+  code: `new Jolt.CapsuleShape(halfHeight, radius);
+new Jolt.CylinderShape(halfHeight, radius, .02, null);
+const hull = new Jolt.ConvexHullShapeSettings(), pts = new Jolt.ArrayVec3();
+points.forEach((p) => pts.push_back(new Jolt.Vec3(p.x, p.y, p.z))); hull.mPoints = pts;
+const shape = hull.Create().Get();
+const compound = new Jolt.StaticCompoundShapeSettings();
+compound.AddShapeShape(new Jolt.Vec3(0, .35, 0), new Jolt.Quat(0,0,0,1), boxA, 0);`,
+  init(S) { S.floor(); const keys = Object.keys(SHAPES); const go = (k) => { for (let i = 0; i < 12; i++) dropShape(S, k, [rnd(-3, 3), 3 + i * .9, rnd(-3, 3)]); S.cap(100); };
+    keys.forEach((k) => ui.btn(k, () => go(k))); ui.btn('Xóa hết', () => [...S.dynamic()].forEach(S.removeItem)); go(keys[4]); } },
+{ id: 'khop', name: 'Khớp nối (constraint)', note: '<b>Dây xích</b>: 12 mắt hộp nối bằng <code>PointConstraintSettings</code> (khớp cầu), đầu trên gắn vào một thân tĩnh. <b>Cánh cửa</b>: <code>HingeConstraintSettings</code> (bản lề, có giới hạn góc) trên cột tĩnh. Bấm để quật dây, thả bóng nặng hoặc đẩy cửa.',
+  code: `const pc = new Jolt.PointConstraintSettings();
+pc.mPoint1 = pc.mPoint2 = new Jolt.RVec3(x, y + .5, z);     // điểm nối (toạ độ thế giới)
+phys.AddConstraint(pc.Create(linkA, linkB));
+const hinge = new Jolt.HingeConstraintSettings();
+hinge.mPoint1 = hinge.mPoint2 = new Jolt.RVec3(1, 1, 0);
+hinge.mHingeAxis1 = hinge.mHingeAxis2 = new Jolt.Vec3(0, 1, 0);
+hinge.mNormalAxis1 = hinge.mNormalAxis2 = new Jolt.Vec3(1, 0, 0);
+hinge.mLimitsMin = -1.6; hinge.mLimitsMax = 1.6;`,
+  init(S) { S.floor(); S.camera.position.set(0, 6, 17); const anchor = S.box(.4, .2, .4, { pos: [-3, 9, 0], fixed: true, color: new THREE.Color(0x555a66) }), links = []; let prev = anchor, py = 9;
+    for (let i = 0; i < 12; i++) { const y = 8.7 - i * .62, l = S.box(.18, .3, .18, { pos: [-3, y, 0], color: new THREE.Color().setHSL(.55 + i * .02, .6, .55), friction: .5 }); const pc = new Jolt.PointConstraintSettings(); pc.mPoint1 = pc.mPoint2 = R(-3, (i ? y + .31 : py - .2) , 0); const c = pc.Create(prev.body, l.body); phys.AddConstraint(c); S.cons.push(c); links.push(l); prev = l; }
+    S.box(.15, 1.5, .15, { pos: [4, 1.5, 0], fixed: true, color: new THREE.Color(0x555a66) }); const door = S.box(1.2, 1.1, .08, { pos: [5.35, 1.7, 0], color: new THREE.Color(0xe8a24a) });
+    const hs = new Jolt.HingeConstraintSettings(); hs.mPoint1 = hs.mPoint2 = R(4.15, 1.7, 0); hs.mHingeAxis1 = hs.mHingeAxis2 = V(0, 1, 0); hs.mNormalAxis1 = hs.mNormalAxis2 = V(1, 0, 0); hs.mLimitsMin = -1.7; hs.mLimitsMax = 1.7;
+    const hc = hs.Create(S.items.find((i) => i.fixed && Math.abs(i.mesh.position.x - 4) < .01).body, door.body); phys.AddConstraint(hc); S.cons.push(hc);
+    ui.btn('Quật dây', () => bi.AddImpulse(links[links.length - 1].body.GetID(), V(rnd(10, 16), 3, rnd(-3, 3))));
+    ui.btn('Thả bóng nặng', () => S.sphere(.7, { pos: [rnd(-3.5, -2.5), 12, rnd(-.2, .2)], color: new THREE.Color(0x2a6df4) }));
+    ui.btn('Đẩy cửa', () => bi.AddImpulse(door.body.GetID(), V(0, 0, rnd(12, 18)))); S.controls.target.set(1, 4, 0); } },
+{ id: 'vat-lieu', name: 'Ma sát + độ nảy', note: 'Trái: 4 quả cầu cùng thả từ độ cao 8 với <code>mRestitution</code> 0 / 0.4 / 0.7 / 0.95, quả càng "đàn hồi" càng nảy cao. Phải: 4 hộp trượt xuống dốc với <code>mFriction</code> 0 / 0.2 / 0.5 / 1, hộp nhẵn trượt ra xa, hộp nhám kẹt lại. Bấm "Thả lại".',
+  code: `const cs = new Jolt.BodyCreationSettings(shape, pos, rot, Jolt.EMotionType_Dynamic, LAYER_MOVING);
+cs.mRestitution = 0.95;   // 0 = không nảy, ~1 = nảy gần như mãi
+cs.mFriction = 0.2;       // 0 = trơn tuột, 1 = bám
+bi.AddBody(bi.CreateBody(cs).GetID(), Jolt.EActivation_Activate);`,
+  init(S) { S.camera.position.set(0, 7, 18); S.controls.target.set(0, 3, 0); const fl = S.floor(); bi.SetRestitution(fl.body.GetID(), 1);
+    const ang = -.32, ramp = S.box(4, .2, 2.8, { pos: [8, 3.2, 0], rot: [0, 0, Math.sin(ang / 2), Math.cos(ang / 2)], fixed: true, friction: 1, color: new THREE.Color(0x6a7080) });
+    const rs = [0, .4, .7, .95], fr = [0, .2, .5, 1], cols = [0xe05a5a, 0xe0a05a, 0x5ae07a, 0x5a8ae0];
+    const reset = () => { [...S.dynamic()].forEach(S.removeItem); rs.forEach((r, i) => S.sphere(.5, { pos: [-9 + i * 2.2, 8, 0], restitution: r, friction: .5, color: new THREE.Color(cols[i]) })); fr.forEach((f, i) => S.box(.5, .5, .5, { pos: [5.8 + 0, 5.2 + 0, -1.9 + i * 1.25], rot: [0, 0, Math.sin(ang / 2), Math.cos(ang / 2)], friction: f, restitution: 0, color: new THREE.Color(cols[i]) })); };
+    reset(); ui.btn('Thả lại', reset); } },
+{ id: 'tuong-tac', name: 'Tương tác', note: 'Bấm vào một vật: three.js <code>Raycaster</code> tìm vật dưới chuột, rồi Jolt <code>AddImpulse</code> tung nó lên. Thanh trượt đổi <code>SetGravity</code> (âm hoặc dương), nút "Đảo trọng lực" cho mọi thứ bay lên trần.',
+  code: `phys.SetGravity(new Jolt.Vec3(0, -g, 0));          // đổi trọng lực toàn thế giới
+const hit = raycaster.intersectObjects(meshes)[0];  // chọn vật bằng three
+bi.AddImpulse(hit.object.userData.body.GetID(), new Jolt.Vec3(0, 14, 0));
+bi.ActivateBody(id);                                  // đánh thức vật đang ngủ`,
+  init(S) { S.floor(); S.box(20, .5, 20, { pos: [0, 9.5, 0], fixed: true, color: new THREE.Color(0x8d96a6) }).mesh.visible = false;
+    for (let i = 0; i < 40; i++) { const p = [rnd(-6, 6), rnd(.5, 7), rnd(-5, 5)]; Math.random() < .5 ? S.box(.4, .4, .4, { pos: p, restitution: .3 }) : S.sphere(.45, { pos: p, restitution: .5 }); }
+    S.dynamic().forEach((it) => { it.mesh.userData.item = it; });
+    let g = 9.81; const setG = (v) => { g = v; phys.SetGravity(V(0, -v, 0)); for (const it of S.dynamic()) bi.ActivateBody(it.body.GetID()); }; ui.range('trọng lực', -15, 25, .5, 9.81, setG); ui.btn('Đảo trọng lực', () => setG(-g));
+    const ray = new THREE.Raycaster(), p = new THREE.Vector2(), cv = renderer.domElement; let dn = null;
+    const d = (e) => { dn = [e.clientX, e.clientY]; }, u = (e) => { if (!dn || Math.hypot(e.clientX - dn[0], e.clientY - dn[1]) > 5) return; const r = cv.getBoundingClientRect(); p.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1); ray.setFromCamera(p, S.camera);
+      const h = ray.intersectObjects(S.dynamic().map((i) => i.mesh))[0]; if (h) { const it = h.object.userData.item; bi.AddImpulse(it.body.GetID(), V(rnd(-3, 3), 16, rnd(-3, 3))); it.mesh.material.emissive?.setHex(0x666666); setTimeout(() => it.mesh.material.emissive?.setHex(0), 200); } };
+    cv.addEventListener('pointerdown', d); cv.addEventListener('pointerup', u); S.offs.push(() => { cv.removeEventListener('pointerdown', d); cv.removeEventListener('pointerup', u); }); } },
+];
+let cur = null, curTab = null;
+const fit = () => { const w = stage.clientWidth, h = stage.clientHeight; renderer.setSize(w, h); if (cur) { cur.camera.aspect = w / h; cur.camera.updateProjectionMatrix(); } };
+function select(id) {
+  const t = TABS.find((x) => x.id === id) || TABS[0];
+  if (cur) { cur.dispose(); } ctl.innerHTML = '';
+  cur = makeScene(); curTab = t; t.init(cur); cur.dynamic().forEach((it) => { it.mesh.userData.item = it; }); fit();
+  tabsEl.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.id === t.id));
+  $('note').innerHTML = t.note; $('code').textContent = t.code;
+}
+TABS.forEach((t) => { const b = document.createElement('button'); b.type = 'button'; b.dataset.id = t.id; b.textContent = t.name; b.onclick = () => { location.hash = t.id; select(t.id); }; tabsEl.append(b); });
+addEventListener('hashchange', () => select(location.hash.slice(1)));
+new ResizeObserver(fit).observe(stage);
+select(location.hash.slice(1));
+let last = performance.now(), fps = 0;
+renderer.setAnimationLoop((ms) => { const dt = Math.min((ms - last) / 1000, 1 / 30); last = ms; fps += (1 / Math.max(dt, 1e-3) - fps) * .05; jolt.Step(dt, dt > 1 / 55 ? 2 : 1); cur.sync(); cur.controls.update();
+  const dyn = cur.dynamic(); st.textContent = `jolt-physics 1.1.1 (wasm-compat) · THƯ VIỆN THẬT · tab "${curTab.name}" · ${dyn.length} vật động · ${dyn.filter((i) => i.body.IsActive()).length} đang chạy`; renderer.render(cur.scene, cur.camera); });
+</script>
+</body></html>

@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sample CosyVoice — uiux-asset</title>
+<link rel="stylesheet" href="../aw.css?v=559582af29">
+<link rel="stylesheet" href="_m.css">
+<style>
+.c-stage { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 14px; padding: 14px; place-items: stretch; align-content: start; }
+.c-pan { background: var(--aw-card); border-radius: 10px; padding: 12px 14px; min-width: 0; }
+.c-pan h3 { margin: 0 0 8px; font: 600 11px/16px var(--aw-mono); opacity: .65; letter-spacing: .04em; }
+.c-f { display: grid; gap: 4px; margin-bottom: 10px; font: 12px var(--aw-mono); }
+.c-f textarea, .c-f select, .c-f input[type=text] { font: 14px/1.5 var(--aw-font); padding: 8px 10px; border-radius: 8px; border: 1px solid var(--aw-border-input); background: var(--aw-bg-input); color: var(--aw-color-input); width: 100%; }
+.c-f textarea { min-height: 96px; resize: vertical; }
+.c-wave { width: 100%; height: 150px; border-radius: 8px; background: #0b0b10; display: block; max-width: none; }
+.c-st { display: grid; gap: 6px; margin-top: 10px; }
+.c-s { display: grid; grid-template-columns: 150px 1fr 54px; gap: 8px; align-items: center; font: 12px var(--aw-mono); }
+.c-bar { height: 8px; border-radius: 4px; background: var(--aw-border-gray); overflow: hidden; } .c-bar i { display: block; width: 0; height: 100%; background: var(--aw-color-orange); }
+.c-emb { display: flex; align-items: flex-end; gap: 2px; height: 56px; margin-top: 6px; } .c-emb i { flex: 1; background: var(--aw-color-blue); border-radius: 2px 2px 0 0; transition: height .3s; }
+.c-tok { display: flex; flex-wrap: wrap; gap: 4px; font: 12px var(--aw-mono); margin-top: 8px; } .c-tok span { padding: 1px 7px; border-radius: 6px; background: var(--aw-nf-bg-1); } .c-tok .tag { background: var(--aw-color-orange); color: #fff; } .c-tok .strong { background: #3a6df0; color: #fff; font-weight: 700; } .c-tok .on { outline: 2px solid var(--aw-color-primary); }
+.c-lane { position: relative; height: 26px; border-radius: 6px; background: var(--aw-nf-bg-1); margin-top: 6px; overflow: hidden; } .c-lane b { position: absolute; top: 3px; bottom: 3px; border-radius: 4px; font: 10px/20px var(--aw-mono); padding: 0 6px; color: #fff; overflow: hidden; }
+.c-ro { font: 12px var(--aw-mono); margin-top: 8px; opacity: .85; min-height: 18px; }
+.m-bar .on { background: var(--aw-button-bg); color: var(--aw-button-color); border-color: var(--aw-button-bg); }
+.m-bar button:disabled { opacity: .4; }
+@media (max-width: 760px) { .c-stage { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=559582af29"></script>
+<div class="aw-crumb">
+<h1>CosyVoice <span class="aw-tag aw-tag--small aw-tag--solid-yellow m-badge">MÔ PHỎNG</span></h1>
+<span>CosyVoice là mô hình TTS Python/GPU (LLM + flow matching + vocoder) nên không chạy được trên web. Đây là MÔ PHỎNG giao diện và quy trình; âm thanh phát ra là <b>giọng speechSynthesis của trình duyệt</b> (hoặc tiếng bíp tổng hợp nếu máy không có giọng) — KHÔNG phải CosyVoice, không có nhân bản giọng thật. Thanh tiến độ, embedding và sóng âm (khi dùng giọng trình duyệt) đều là giả lập. · <a href="https://github.com/QwenAudio/CosyVoice" target="_blank" rel="noopener">QwenAudio/CosyVoice</a> · <a href="./">← Motion</a></span>
+</div>
+<div class="m-bar" id="tabs" role="tablist"></div>
+<div class="m-stage c-stage" id="stage" style="min-height:520px">
+  <div class="c-pan"><h3 id="fh">FORM</h3><div id="form"></div><div class="m-bar" style="margin:6px 0 0"><button id="go" type="button">Synthesize</button><button id="stop" type="button">Dừng</button></div><div class="c-ro" id="ro">sẵn sàng</div></div>
+  <div class="c-pan"><h3 id="wh">SÓNG ÂM</h3><canvas class="c-wave" id="wv" width="1200" height="150"></canvas><div class="c-st" id="stg"></div><div id="extra"></div></div>
+</div>
+<p class="m-note" id="note"></p>
+<pre class="m-code" id="code"></pre>
+</main>
+<script>
+const $ = (i) => document.getElementById(i), el = (t, p) => Object.assign(document.createElement(t), p || {}), SS = window.speechSynthesis;
+let voices = SS ? SS.getVoices() : []; if (SS) SS.onvoiceschanged = () => { voices = SS.getVoices(); };
+const hasTTS = () => !!SS && voices.length > 0;
+// ================== phát tiếng ==================
+let ac, an, tabNow, speaking = false, simAmp = 0, lastB = 0, realMode = false, cancelFlag = 0;
+function ensureAudio() { if (!ac) { ac = new (window.AudioContext || window.webkitAudioContext)(); an = ac.createAnalyser(); an.fftSize = 1024; an.connect(ac.destination); } ac.resume(); }
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const syl = (t) => t.replace(/<[^>]+>|\[[^\]]+\]/g, ' ').split(/\s+/).filter(Boolean).flatMap((w) => w.length > 6 ? [w.slice(0, 3), w.slice(3)] : [w]);
+function toneSpeak(text, o) { ensureAudio(); realMode = true; const s = syl(text), id = cancelFlag; return new Promise(async (res) => { for (const w of s) { if (id !== cancelFlag) break; const t = ac.currentTime, d = (.2 + .018 * w.length) / o.rate, f = o.base * o.pitch * (1 + .6 * (((w.charCodeAt(0) * 7) % 10) / 10)), os = ac.createOscillator(), g = ac.createGain(), lp = ac.createBiquadFilter(); os.type = 'sawtooth'; os.frequency.setValueAtTime(f, t); os.frequency.linearRampToValueAtTime(f * (/[?]$/.test(w) ? 1.3 : .9), t + d); lp.type = 'lowpass'; lp.frequency.value = 1100; g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.2 * o.vol, t + .03); g.gain.exponentialRampToValueAtTime(.0001, t + d); os.connect(lp); lp.connect(g); g.connect(an); os.start(t); os.stop(t + d + .02); await sleep(d * 1000 * .95); } res(); }); }
+function pickVoice(lang) { const l = (lang || 'vi').toLowerCase(); return voices.find((v) => v.lang.toLowerCase().startsWith(l)) || voices.find((v) => v.lang.toLowerCase().startsWith('en')) || voices[0]; }
+function say(text, o) { // o: {rate,pitch,vol,lang,base}
+  o = { rate: 1, pitch: 1, vol: 1, lang: 'vi', base: 150, ...o }; const clean = text.replace(/<[^>]+>|\[[^\]]+\]/g, ' ').replace(/\s+/g, ' ').trim(); if (!clean) return Promise.resolve();
+  if (!hasTTS()) return toneSpeak(text, o);
+  realMode = false; return new Promise((res) => { const u = new SpeechSynthesisUtterance(clean), v = pickVoice(o.lang); if (v) { u.voice = v; u.lang = v.lang; } u.rate = Math.min(2, Math.max(.5, o.rate)); u.pitch = Math.min(2, Math.max(.1, o.pitch)); u.volume = Math.min(1, o.vol); let done = false; const fin = () => { if (!done) { done = true; res(); } };
+    u.onboundary = () => { lastB = performance.now(); }; u.onend = fin; u.onerror = fin; SS.speak(u); setTimeout(() => { if (!done && !SS.speaking && !SS.pending) fin(); }, 2500 + clean.length * 120); }); }
+function stopAll() { cancelFlag++; if (SS) SS.cancel(); speaking = false; }
+// ================== sóng âm ==================
+const cv = $('wv'), cx = cv.getContext('2d'); const buf = new Uint8Array(1024);
+(function loop(ms) { const t = ms / 1000, W = 1200, H = 150; cx.fillStyle = '#0b0b10'; cx.fillRect(0, 0, W, H); cx.lineWidth = 2; cx.strokeStyle = '#fa5d29'; cx.beginPath();
+  if (speaking && realMode && an) { an.getByteTimeDomainData(buf); for (let i = 0; i < 1024; i++) { const x = i / 1023 * W, y = H / 2 + (buf[i] - 128) / 128 * H * .46; i ? cx.lineTo(x, y) : cx.moveTo(x, y); } }
+  else { const tgt = speaking ? .35 + .65 * Math.max(0, 1 - (performance.now() - lastB) / 260) * (.6 + .4 * Math.sin(t * 13)) + .1 * Math.abs(Math.sin(t * 7.3)) : .03; simAmp += (tgt - simAmp) * .2; for (let i = 0; i <= 600; i++) { const x = i / 600 * W, u = i / 600, env = Math.sin(Math.PI * u) ** .6, y = H / 2 + simAmp * env * H * .4 * (Math.sin(u * 60 + t * 18) * .6 + Math.sin(u * 133 - t * 11) * .3 + Math.sin(u * 23 + t * 5) * .3); i ? cx.lineTo(x, y) : cx.moveTo(x, y); } }
+  cx.stroke(); cx.fillStyle = 'rgba(255,255,255,.4)'; cx.font = '11px ui-monospace,monospace'; cx.fillText(speaking ? (realMode ? 'sóng âm THẬT (AnalyserNode, tone tổng hợp)' : 'sóng âm GIẢ LẬP (speechSynthesis không cho đọc PCM)') : 'im lặng', 8, 14); requestAnimationFrame(loop); })(0);
+// ================== form ==================
+const V = {}; const F = {
+  text: (id, def, lbl) => ({ id, def, lbl: lbl || 'Văn bản (tts_text)', t: 'ta' }), sel: (id, opts, lbl) => ({ id, opts, def: opts[0], lbl, t: 'sel' }), rng: (id, mn, mx, st, def, lbl) => ({ id, mn, mx, st, def, lbl, t: 'rng' }), ro: (id, def, lbl) => ({ id, def, lbl, t: 'ro' }),
+};
+function build(fields) { const f = $('form'); f.replaceChildren(); fields.forEach((d) => { if (V[d.id] === undefined || d.reset) V[d.id] = d.def; const w = el('div', { className: 'c-f' }); w.append(el('span', { textContent: d.lbl })); let c;
+  if (d.t === 'ta') { c = el('textarea', { value: V[d.id] }); c.oninput = () => { V[d.id] = c.value; tabNow.onForm && tabNow.onForm(d.id); }; } else if (d.t === 'sel') { c = el('select'); d.opts.forEach((o) => c.append(new Option(o, o))); c.value = V[d.id]; c.onchange = () => { V[d.id] = c.value; tabNow.onForm && tabNow.onForm(d.id); }; }
+  else if (d.t === 'rng') { c = el('input', { type: 'range', min: d.mn, max: d.mx, step: d.st, value: V[d.id] }); const v = el('span', { textContent: V[d.id] }); c.oninput = () => { V[d.id] = +c.value; v.textContent = c.value; }; w.append(c, v); c = null; } else { c = el('input', { type: 'text', value: V[d.id], readOnly: true }); c.id = 'f-' + d.id; }
+  if (c) { c.id = c.id || 'f-' + d.id; w.append(c); } f.append(w); }); }
+const STAGES = ['Text → tokens (BPE)', 'LLM → speech tokens', 'Flow matching → mel', 'HiFT vocoder → wav'];
+async function pipeline(len, label) { const g = $('stg'); g.replaceChildren(); const bars = STAGES.map((s) => { const r = el('div', { className: 'c-s', innerHTML: '<span>' + s + '</span><div class="c-bar"><i></i></div><span>…</span>' }); g.append(r); return r; }); const ms = [200, 500 + len * 9, 380 + len * 5, 300 + len * 3], t0 = performance.now();
+  for (let i = 0; i < 4; i++) { const t = performance.now(); while (performance.now() - t < ms[i]) { bars[i].querySelector('i').style.width = Math.min(100, (performance.now() - t) / ms[i] * 100) + '%'; await sleep(30); } bars[i].querySelector('i').style.width = '100%'; bars[i].lastChild.textContent = (ms[i] / 1000).toFixed(1) + 's'; }
+  $('ro').textContent = label + ' · tạo xong (giả lập ' + ((performance.now() - t0) / 1000).toFixed(1) + 's) · đang phát bằng giọng trình duyệt…'; }
+async function synth(opts, label, textForLen) { stopAll(); const id = cancelFlag; $('go').disabled = true; await pipeline(textForLen.length, label); if (id !== cancelFlag) { $('go').disabled = false; return; } speaking = true; try { await opts(); } catch (e) {} if (id === cancelFlag) speaking = false; $('go').disabled = false; $('ro').textContent = 'xong · ' + label; }
+const SFT = { '中文女': { lang: 'zh', pitch: 1.3, base: 210 }, '中文男': { lang: 'zh', pitch: .8, base: 110 }, '日语男': { lang: 'ja', pitch: .9, base: 120 }, '粤语女': { lang: 'zh-HK', pitch: 1.25, base: 200 }, '英文女': { lang: 'en', pitch: 1.25, base: 200 }, '英文男': { lang: 'en', pitch: .8, base: 110 }, '韩语女': { lang: 'ko', pitch: 1.3, base: 210 } };
+const PROMPTS = { 'Giọng A · nữ trẻ': { pitch: 1.4, rate: 1.05, base: 220, txt: 'Hôm nay trời đẹp quá, mình đi dạo nhé.' }, 'Giọng B · nam trầm': { pitch: .65, rate: .92, base: 100, txt: 'Chào buổi sáng, đây là bản tin đầu ngày.' }, 'Giọng C · kể chuyện': { pitch: 1, rate: .85, base: 150, txt: 'Ngày xửa ngày xưa, có một vị vua nọ.' } };
+const embed = (k) => Array.from({ length: 32 }, (_, i) => { let h = 2166136261; for (const c of k + i) h = Math.imul(h ^ c.charCodeAt(0), 16777619); return Math.abs(Math.sin(h % 100003 * 12.9898 + i)) ; });
+const showEmb = (k) => { $('extra').replaceChildren(...[el('div', { className: 'c-ro', textContent: 'speaker embedding (GIẢ, băm từ tên giọng — mô hình thật dùng CAM++ 192 chiều):' }), (() => { const d = el('div', { className: 'c-emb' }); embed(k).forEach((v) => d.append(el('i', { style: 'height:' + (8 + v * 48) + 'px' }))); return d; })()]); };
+const INSTR = { 'Nói với giọng vui vẻ, hào hứng': { pitch: 1.3, rate: 1.2, vol: 1 }, 'Thì thầm nhẹ nhàng': { pitch: .95, rate: .85, vol: .35 }, 'Nói giận dữ, dứt khoát': { pitch: .85, rate: 1.25, vol: 1 }, 'Giọng trầm ấm, chậm rãi': { pitch: .7, rate: .8, vol: .9 }, 'Buồn bã, kéo dài': { pitch: .85, rate: .7, vol: .7 } };
+const LANGS = { en: ['en', 'This sentence is spoken in English with the cloned voice.'], zh: ['zh', '这是用克隆的声音说出的中文句子。'], ja: ['ja', 'これはクローンした声で話す日本語の文です。'], ko: ['ko', '이것은 복제된 목소리로 말하는 한국어 문장입니다.'], vi: ['vi', 'Đây là câu tiếng Việt đọc bằng giọng đã nhân bản.'] };
+// ================== tab ==================
+const DEF = 'Xin chào, đây là bản mô phỏng giao diện CosyVoice chạy ngay trong trình duyệt.';
+const TABS = [
+  { id: 'sft', label: 'SFT (giọng có sẵn)', note: 'Chế độ SFT của CosyVoice-300M-SFT: chọn một trong các speaker huấn luyện sẵn (名字 gốc: 中文女, 英文男…) rồi nhập văn bản. Ở đây mỗi speaker chỉ ánh xạ sang một giọng trình duyệt cùng ngôn ngữ + cao độ khác nhau; bấm Synthesize để chạy các bước giả lập rồi nghe.',
+    code: "cosyvoice = CosyVoice('pretrained_models/CosyVoice-300M-SFT', load_jit=True, load_onnx=False, fp16=False)\nprint(cosyvoice.list_available_spks())   # ['中文女', '中文男', '日语男', '粤语女', '英文女', '英文男', '韩语女']\nfor i, j in enumerate(cosyvoice.inference_sft('你好，我是通义生成式语音大模型。', '中文女', stream=False)):\n    torchaudio.save(f'sft_{i}.wav', j['tts_speech'], cosyvoice.sample_rate)",
+    fields: () => [F.sel('spk', Object.keys(SFT), 'speaker (spk_id)'), F.text('text', DEF), F.rng('speed', .6, 1.6, .05, 1, 'speed')],
+    run() { const s = SFT[V.spk]; return synth(() => say(V.text, { lang: s.lang === 'zh' || s.lang === 'ja' || s.lang === 'ko' || s.lang === 'en' ? (voices.some((v) => v.lang.toLowerCase().startsWith(s.lang)) ? s.lang : 'vi') : 'vi', pitch: s.pitch, rate: V.speed, base: s.base }), 'SFT · ' + V.spk, V.text); }, show() { $('extra').replaceChildren(); } },
+  { id: 'zero-shot', label: 'Zero-shot (nhân bản)', note: 'Zero-shot voice cloning của CosyVoice: chỉ cần ~3–10 giây âm thanh mẫu (<code>prompt_speech_16k</code>) và lời của đoạn mẫu (<code>prompt_text</code>). Ở đây "âm thanh mẫu" là 3 hồ sơ giọng giả (cao độ/tốc độ khác nhau) với embedding băm giả — KHÔNG có nhân bản thật; giọng phát là giọng trình duyệt được chỉnh cao độ.',
+    code: "prompt_speech_16k = load_wav('zero_shot_prompt.wav', 16000)\nfor i, j in enumerate(cosyvoice.inference_zero_shot('Xin chào, đây là câu cần đọc.', 'Hôm nay trời đẹp quá, mình đi dạo nhé.', prompt_speech_16k, stream=False)):\n    torchaudio.save(f'zero_shot_{i}.wav', j['tts_speech'], cosyvoice.sample_rate)",
+    fields: () => [F.sel('prm', Object.keys(PROMPTS), 'prompt_speech (mẫu giọng)'), F.ro('ptx', PROMPTS[Object.keys(PROMPTS)[0]].txt, 'prompt_text'), F.text('text', DEF)],
+    onForm(id) { if (id === 'prm') { $('f-ptx').value = PROMPTS[V.prm].txt; showEmb(V.prm); } }, run() { const p = PROMPTS[V.prm]; return synth(() => say(V.text, { pitch: p.pitch, rate: p.rate, base: p.base }), 'zero-shot · ' + V.prm, V.text); }, show() { showEmb(V.prm || Object.keys(PROMPTS)[0]); } },
+  { id: 'cross-lingual', label: 'Cross-lingual', note: 'Cross-lingual: dùng giọng mẫu của ngôn ngữ này để đọc văn bản ngôn ngữ khác (<code>inference_cross_lingual</code>), không cần prompt_text. Đổi ngôn ngữ đích để chèn câu mẫu; trình duyệt chọn giọng cùng ngôn ngữ nếu máy có, nếu không dùng giọng mặc định.',
+    code: "for i, j in enumerate(cosyvoice.inference_cross_lingual('<|en|>And then later on, fully acquiring that company.', prompt_speech_16k, stream=False)):\n    torchaudio.save(f'cross_lingual_{i}.wav', j['tts_speech'], cosyvoice.sample_rate)   # thẻ ngôn ngữ <|zh|> <|en|> <|jp|> <|yue|> <|ko|>",
+    fields: () => [F.sel('prm', Object.keys(PROMPTS), 'prompt_speech (mẫu giọng)'), F.sel('lang', Object.keys(LANGS), 'ngôn ngữ đích'), F.text('text', LANGS.en[1])],
+    onForm(id) { if (id === 'lang') { V.text = LANGS[V.lang][1]; document.querySelector('#form textarea').value = V.text; $('extra').replaceChildren(tags()); } }, run() { const p = PROMPTS[V.prm]; return synth(() => say(V.text, { lang: LANGS[V.lang][0], pitch: p.pitch, rate: p.rate, base: p.base }), 'cross-lingual · ' + V.lang, V.text); }, show() { $('extra').replaceChildren(tags()); } },
+  { id: 'instruct', label: 'Instruct (điều khiển bằng lời)', note: 'CosyVoice-Instruct điều khiển phong cách bằng câu chỉ dẫn tự nhiên (cảm xúc, tốc độ, giọng điệu…). Ở đây các chỉ dẫn mẫu được tra bảng sang <code>pitch / rate / volume</code> của speechSynthesis — chỉ là ánh xạ từ khoá giả lập, không phải hiểu ngôn ngữ như mô hình thật.',
+    code: "cosyvoice = CosyVoice('pretrained_models/CosyVoice-300M-Instruct')\nfor i, j in enumerate(cosyvoice.inference_instruct('Xin chào ...', '中文男', 'Theo giọng vui vẻ, hào hứng.', stream=False)):\n    torchaudio.save(f'instruct_{i}.wav', j['tts_speech'], cosyvoice.sample_rate)   # CosyVoice2: inference_instruct2(..., prompt_speech_16k)",
+    fields: () => [F.sel('ins', Object.keys(INSTR), 'instruct_text'), F.text('text', DEF)], run() { const p = INSTR[V.ins]; return synth(() => say(V.text, p), 'instruct · ' + V.ins, V.text); },
+    show() { const t = el('table'); t.style.cssText = 'font:12px var(--aw-mono);width:100%;margin-top:8px'; t.innerHTML = '<tr><td>chỉ dẫn</td><td>pitch</td><td>rate</td><td>vol</td></tr>' + Object.entries(INSTR).map(([k, v]) => `<tr><td>${k}</td><td>${v.pitch}</td><td>${v.rate}</td><td>${v.vol}</td></tr>`).join(''); $('extra').replaceChildren(t); } },
+  { id: 'tags', label: 'Fine-grained (thẻ)', note: 'CosyVoice 2/3 cho điều khiển tinh bằng thẻ: <code>[laughter]</code> <code>[breath]</code> chèn tiếng cười/thở, <code>&lt;strong&gt;…&lt;/strong&gt;</code> nhấn mạnh. Ở đây thẻ được phân tích thật; [breath]/[laughter] được tổng hợp bằng WebAudio (nhiễu lọc / chuỗi nốt), còn <code>&lt;strong&gt;</code> tăng cao độ + âm lượng đoạn đó. Giọng đọc vẫn là giọng trình duyệt.',
+    code: "# CosyVoice-Instruct / CosyVoice2: thẻ trong tts_text\ntext = 'Trên đường đi [breath] anh ấy bỗng <strong>cười phá lên</strong> [laughter] vì câu chuyện cũ.'\nfor i, j in enumerate(cosyvoice.inference_instruct2(text, '用自然的语气说', prompt_speech_16k, stream=False)): ...",
+    fields: () => [F.text('text', 'Trên đường đi [breath] anh ấy bỗng <strong>cười phá lên</strong> [laughter] vì câu chuyện cũ.')], onForm() { $('extra').replaceChildren(tags()); },
+    run() { return synth(async () => { ensureAudio(); const id = cancelFlag; for (const p of parts(V.text)) { if (id !== cancelFlag) break; $('extra').replaceChildren(tags(p.i)); if (p.k === 'breath') await noise(.45); else if (p.k === 'laugh') await laugh(); else await say(p.t, { pitch: p.k === 'strong' ? 1.35 : 1, rate: p.k === 'strong' ? 1.1 : 1, vol: 1, base: p.k === 'strong' ? 190 : 150 }); } }, 'fine-grained tags', V.text); }, show() { $('extra').replaceChildren(tags()); } },
+  { id: 'streaming', label: 'Streaming', note: 'Suy luận streaming (<code>stream=True</code>): văn bản/token được sinh theo từng đoạn nhỏ và âm thanh phát NGAY khi đoạn đầu xong thay vì chờ cả câu — độ trễ gói đầu (first-packet latency) thấp hơn nhiều. Hai làn bên dưới: "sinh" (giả lập) và "phát" (thật, giọng trình duyệt), so với chờ cả câu.',
+    code: "for i, j in enumerate(cosyvoice.inference_sft(long_text, '中文女', stream=True)):   # mỗi vòng lặp = một đoạn âm thanh\n    play(j['tts_speech'])    # phát tức thì, không đợi các đoạn sau\n# CosyVoice2: hỗ trợ bi-streaming (text đưa vào theo generator)",
+    fields: () => [F.text('text', 'Đoạn đầu tiên được phát ngay khi sẵn sàng. Trong lúc đó, các đoạn sau vẫn đang được sinh. Nhờ vậy người nghe không phải chờ hết cả bài. Đây là lợi ích chính của suy luận streaming.'), F.sel('n', ['2 câu / đoạn', '1 câu / đoạn'], 'kích thước đoạn')], show() { $('extra').replaceChildren(); },
+    run() { const sents = V.text.match(/[^.!?]+[.!?]?/g).map((s) => s.trim()).filter(Boolean), per = V.n.startsWith('2') ? 2 : 1, ch = []; for (let i = 0; i < sents.length; i += per) ch.push(sents.slice(i, i + per).join(' ')); const lanes = el('div'); lanes.innerHTML = '<div class="c-ro">sinh (giả lập)</div><div class="c-lane" id="lg"></div><div class="c-ro">phát (giọng trình duyệt)</div><div class="c-lane" id="lp"></div>'; $('extra').replaceChildren(lanes, el('div', { className: 'c-ro', id: 'lat' }));
+      return (async () => { stopAll(); const id = cancelFlag; $('go').disabled = true; $('stg').replaceChildren(); const t0 = performance.now(), est = ch.map((c) => 450 + c.length * 7); let ready = [], tt = 0; const X = (ms) => ms / (est.reduce((a, b) => a + b, 0) + 14000) * 100; const gen = (async () => { for (let i = 0; i < ch.length; i++) { const s = performance.now() - t0; await sleep(est[i]); if (id !== cancelFlag) return; const b = el('b', { textContent: 'g' + (i + 1), style: `left:${X(s)}%;width:${X(est[i])}%;background:#6a3df5` }); $('lg').append(b); ready.push(i); } })();
+        speaking = true; let first = true; for (let i = 0; i < ch.length; i++) { while (!ready.includes(i)) { await sleep(40); if (id !== cancelFlag) break; } if (id !== cancelFlag) break; const s = performance.now() - t0; if (first) { first = false; $('lat').textContent = 'độ trễ gói đầu ≈ ' + (s / 1000).toFixed(2) + 's (chờ cả câu sẽ là ≈ ' + (est.reduce((a, b) => a + b, 0) / 1000).toFixed(2) + 's)'; } const b = el('b', { textContent: 'p' + (i + 1), style: `left:${X(s)}%;width:${X(Math.max(900, ch[i].length * 55))}%;background:#fa5d29` }); $('lp').append(b); await say(ch[i], { rate: 1, base: 160 }); }
+        await gen; if (id === cancelFlag) speaking = false; $('go').disabled = false; $('ro').textContent = 'xong · streaming ' + ch.length + ' đoạn'; })(); } },
+];
+const tg = (t) => { const out = []; let i = 0; const re = /(\[breath\]|\[laughter\]|<strong>[\s\S]*?<\/strong>)/g; t.split(re).filter((s) => s !== '').forEach((s) => { if (s === '[breath]') out.push({ k: 'breath', t: s, i: i++ }); else if (s === '[laughter]') out.push({ k: 'laugh', t: s, i: i++ }); else if (s.startsWith('<strong>')) out.push({ k: 'strong', t: s.replace(/<\/?strong>/g, ''), i: i++ }); else out.push({ k: 'n', t: s, i: i++ }); }); return out; };
+const parts = tg;
+function tags(on) { const d = el('div', { className: 'c-tok' }); if (tabNow.id === 'cross-lingual') { d.append(el('span', { className: 'tag', textContent: '<|' + LANGS[V.lang || 'en'][0] + '|>' })); } (tabNow.id === 'tags' ? tg(V.text || '') : []).forEach((p) => d.append(el('span', { className: (p.k === 'breath' || p.k === 'laugh' ? 'tag' : p.k === 'strong' ? 'strong' : '') + (on === p.i ? ' on' : ''), textContent: p.k === 'n' ? p.t.trim() || '·' : p.t }))); return d; }
+async function noise(s) { ensureAudio(); realMode = true; const n = ac.sampleRate * s, b = ac.createBuffer(1, n, ac.sampleRate), d = b.getChannelData(0); for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * Math.sin(Math.PI * i / n); const src = ac.createBufferSource(), f = ac.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 1800; src.buffer = b; src.connect(f); f.connect(an); src.start(); await sleep(s * 1000); }
+async function laugh() { ensureAudio(); realMode = true; for (let i = 0; i < 5; i++) { const t = ac.currentTime, o = ac.createOscillator(), g = ac.createGain(); o.type = 'sawtooth'; o.frequency.setValueAtTime(330 - i * 20, t); g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.15, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + .13); o.connect(g); g.connect(an); o.start(t); o.stop(t + .15); await sleep(150); } }
+const tabsEl = $('tabs'); TABS.forEach((t) => { const b = el('button', { type: 'button', id: 'tab-' + t.id, textContent: t.label }); b.setAttribute('role', 'tab'); b.onclick = () => openTab(t.id); tabsEl.append(b); });
+function openTab(id) { stopAll(); tabNow = TABS.find((t) => t.id === id) || TABS[0]; TABS.forEach((t) => $('tab-' + t.id).classList.toggle('on', t === tabNow)); Object.keys(V).forEach((k) => delete V[k]); build(tabNow.fields().map((d) => ({ ...d, reset: true }))); $('fh').textContent = 'FORM · ' + tabNow.label.toUpperCase(); $('stg').replaceChildren(); $('ro').textContent = hasTTS() ? 'giọng trình duyệt: ' + voices.length + ' giọng khả dụng' : 'máy không có giọng speechSynthesis → dùng tiếng bíp tổng hợp (tone theo âm tiết)'; $('note').innerHTML = tabNow.note; $('code').textContent = tabNow.code; tabNow.show(); if (location.hash !== '#' + tabNow.id) history.replaceState(null, '', '#' + tabNow.id); }
+$('go').onclick = () => tabNow.run(); $('stop').onclick = () => { stopAll(); $('go').disabled = false; $('ro').textContent = 'đã dừng'; };
+addEventListener('hashchange', () => openTab(location.hash.slice(1)));
+openTab(location.hash.slice(1));
+</script>
+</body></html>

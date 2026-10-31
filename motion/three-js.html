@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sample three.js — uiux-asset</title>
+<link rel="stylesheet" href="../aw.css?v=559582af29">
+<link rel="stylesheet" href="_m.css">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/"}}</script>
+<style>.m-bar button[aria-pressed=true]{background:#2a6df4;color:#fff;border-color:#2a6df4}.m-bar input[type=range]{vertical-align:middle}</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=559582af29"></script>
+<div class="aw-crumb">
+<h1>three.js <span class="aw-tag aw-tag--small aw-tag--solid-green m-badge">THƯ VIỆN THẬT</span></h1>
+<span>Chạy <code>three@0.186.0</code> thật từ CDN: 7 tab = 7 tính năng chính (hình học, PBR, đèn+bóng, mixer, hạt, raycast, camera). · <a href="https://github.com/mrdoob/three.js" target="_blank" rel="noopener">mrdoob/three.js</a> · <a href="./">← Motion</a></span>
+</div>
+<div class="m-bar" id="tabs"></div>
+<div class="m-stage" id="stage" style="height:460px;min-height:460px"></div>
+<div class="m-bar" id="ctl"></div>
+<p class="m-status" id="st" style="margin-top:10px">đang nạp thư viện…</p>
+<p class="m-note" id="note"></p>
+<pre class="m-code" id="code"></pre>
+</main>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+const $ = (id) => document.getElementById(id), stage = $('stage'), st = $('st'), tabsEl = $('tabs'), ctl = $('ctl');
+let renderer;
+try { renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); }
+catch (e) { stage.innerHTML = '<p style="padding:24px;text-align:center">Trình duyệt này không có WebGL nên không vẽ được cảnh three.js.</p>'; st.textContent = 'không có WebGL'; throw e; }
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2)); renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+stage.append(renderer.domElement);
+// môi trường sáng nhẹ cho vật liệu PBR (dùng chung, tạo một lần)
+const envScene = new THREE.Scene(); envScene.background = new THREE.Color(0x778088);
+const envTop = new THREE.Mesh(new THREE.BoxGeometry(8, .2, 8), new THREE.MeshBasicMaterial({ color: 0xffffff })); envTop.position.y = 5; envScene.add(envTop);
+const envTex = new THREE.PMREMGenerator(renderer).fromScene(envScene, .04).texture;
+const ui = {
+  btn(t, fn) { const b = document.createElement('button'); b.type = 'button'; b.textContent = t; b.onclick = () => fn(b); ctl.append(b); return b; },
+  range(t, min, max, step, v, fn) { const l = document.createElement('label'); l.style.cssText = 'font:13px ui-monospace,Menlo,monospace;display:flex;gap:6px;align-items:center'; const i = document.createElement('input'); i.type = 'range'; Object.assign(i, { min, max, step, value: v }); i.oninput = () => fn(+i.value); l.append(t, i); ctl.append(l); return i; },
+};
+const newScene = () => { const s = new THREE.Scene(); s.environment = envTex; s.environmentIntensity = .6; return s; };
+const floor = (y = 0, r = 14) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(r, r), new THREE.ShadowMaterial({ opacity: .35 })); m.rotation.x = -Math.PI / 2; m.position.y = y; m.receiveShadow = true; return m; };
+const grid = (y = 0) => { const g = new THREE.GridHelper(14, 14, 0x888888, 0x888888); g.material.transparent = true; g.material.opacity = .25; g.position.y = y; return g; };
+const persp = (x, y, z, fov = 45) => { const c = new THREE.PerspectiveCamera(fov, 1, .1, 100); c.position.set(x, y, z); return c; };
+const orbit = (cam, tx = 0, ty = 0, tz = 0) => { const o = new OrbitControls(cam, renderer.domElement); o.enableDamping = true; o.target.set(tx, ty, tz); o.update(); return o; };
+
+const TABS = [
+{ id: 'hinh-hoc', name: 'Hình học', note: 'Tám <code>BufferGeometry</code> dựng sẵn của three.js (kèm <code>LatheGeometry</code> và <code>ExtrudeGeometry</code> từ Shape trái tim). Bật khung dây để thấy lưới tam giác.',
+  code: `const geos = [new THREE.BoxGeometry(1,1,1), new THREE.SphereGeometry(.7,24,16),
+  new THREE.TorusKnotGeometry(.5,.18,96,16), new THREE.ConeGeometry(.6,1.2,24),
+  new THREE.LatheGeometry(points, 32), new THREE.ExtrudeGeometry(heartShape, { depth: .3, bevelEnabled: true })];
+mesh.material.wireframe = true;`,
+  init() {
+    const scene = newScene(), camera = persp(0, 3.2, 7.5); const sun = new THREE.DirectionalLight(0xffffff, 2.5); sun.position.set(3, 6, 4); scene.add(new THREE.AmbientLight(0xffffff, 1.2), sun);
+    const heart = new THREE.Shape(); heart.moveTo(0, -.5); heart.bezierCurveTo(-.9, .1, -.5, .8, 0, .35); heart.bezierCurveTo(.5, .8, .9, .1, 0, -.5);
+    const pts = [...Array(10)].map((_, i) => new THREE.Vector2(Math.sin(i * .5) * .35 + .3, (i - 5) * .22));
+    const geos = [new THREE.BoxGeometry(1, 1, 1), new THREE.SphereGeometry(.7, 24, 16), new THREE.TorusKnotGeometry(.5, .18, 96, 16), new THREE.ConeGeometry(.6, 1.2, 24),
+      new THREE.IcosahedronGeometry(.7, 1), new THREE.LatheGeometry(pts, 32), new THREE.ExtrudeGeometry(heart, { depth: .3, bevelEnabled: true, bevelSize: .06, bevelThickness: .06 }), new THREE.TorusGeometry(.55, .22, 16, 40)];
+    const meshes = geos.map((g, i) => { const m = new THREE.Mesh(g, new THREE.MeshStandardMaterial({ color: new THREE.Color().setHSL(i / 8, .7, .55), roughness: .4, metalness: .1 })); m.position.set((i % 4 - 1.5) * 2, i < 4 ? 1.2 : -1.2, 0); scene.add(m); return m; });
+    let wire = false; ui.btn('Bật/tắt khung dây', () => { wire = !wire; meshes.forEach((m) => m.material.wireframe = wire); });
+    const o = orbit(camera, 0, 0, 0);
+    return { scene, camera, update: (t) => { meshes.forEach((m, i) => { m.rotation.y = t * .6 + i; m.rotation.x = t * .3; }); o.update(); }, dispose: () => o.dispose() };
+  } },
+{ id: 'vat-lieu', name: 'Vật liệu PBR', note: 'Lưới 5×3 quả cầu <code>MeshStandardMaterial</code>: cột đổi <code>roughness</code> 0→1, hàng đổi <code>metalness</code> 0 / .5 / 1, phản chiếu từ <code>scene.environment</code> (PMREM). Thanh trượt đổi cường độ môi trường.',
+  code: `const mat = new THREE.MeshStandardMaterial({ color: 0xff7a59, roughness: col / 4, metalness: row / 2 });
+scene.environment = new THREE.PMREMGenerator(renderer).fromScene(envScene, .04).texture;
+scene.environmentIntensity = 1.2;`,
+  init() {
+    const scene = newScene(), camera = persp(0, 1.5, 9); scene.environmentIntensity = 1.2;
+    const geo = new THREE.SphereGeometry(.8, 40, 28), mats = [];
+    for (let r = 0; r < 3; r++) for (let c = 0; c < 5; c++) { const m = new THREE.MeshStandardMaterial({ color: 0xff7a59, roughness: c / 4, metalness: r / 2 }); mats.push(m); const s = new THREE.Mesh(geo, m); s.position.set((c - 2) * 2, (1 - r) * 2, 0); scene.add(s); }
+    scene.add(new THREE.DirectionalLight(0xffffff, 1.5));
+    ui.range('môi trường', 0, 2.5, .1, 1.2, (v) => scene.environmentIntensity = v);
+    let phys = false; ui.btn('Thêm clearcoat (Physical)', (b) => { phys = !phys; scene.traverse((o) => { if (o.isMesh) { const m = o.material, p = phys ? new THREE.MeshPhysicalMaterial({ color: m.color, roughness: m.roughness, metalness: m.metalness, clearcoat: 1, clearcoatRoughness: .05 }) : new THREE.MeshStandardMaterial({ color: m.color, roughness: m.roughness, metalness: m.metalness }); m.dispose(); o.material = p; } }); b.textContent = phys ? 'Bỏ clearcoat' : 'Thêm clearcoat (Physical)'; });
+    const o = orbit(camera);
+    return { scene, camera, update: () => o.update(), dispose: () => o.dispose() };
+  } },
+{ id: 'den-bong', name: 'Đèn + bóng đổ', note: 'Bốn loại đèn đều đổ bóng: <code>DirectionalLight</code>, <code>PointLight</code>, <code>SpotLight</code> (quay quanh), <code>HemisphereLight</code> (không bóng). Bóng dùng <code>PCFSoftShadowMap</code>.',
+  code: `renderer.shadowMap.enabled = true;
+const spot = new THREE.SpotLight(0xa0c4ff, 200, 0, .5, .5, 2);
+spot.castShadow = true; spot.shadow.mapSize.set(1024, 1024);
+mesh.castShadow = true; floor.receiveShadow = true;`,
+  init() {
+    const scene = newScene(), camera = persp(5, 4, 7); scene.environmentIntensity = .15;
+    scene.add(floor(), grid());
+    const ms = [new THREE.TorusKnotGeometry(.5, .18, 96, 16), new THREE.BoxGeometry(1.2, 1.2, 1.2), new THREE.SphereGeometry(.8, 32, 24)].map((g, i) => { const m = new THREE.Mesh(g, new THREE.MeshStandardMaterial({ color: [0xff7a59, 0xe8e0d0, 0x2a6df4][i], roughness: .45 })); m.position.set((i - 1) * 2.2, 1, 0); m.castShadow = true; scene.add(m); return m; });
+    const mk = {
+      'hướng': () => { const l = new THREE.DirectionalLight(0xffffff, 3); l.position.set(4, 7, 3); Object.assign(l.shadow.camera, { left: -7, right: 7, top: 7, bottom: -7 }); return l; },
+      'điểm': () => { const l = new THREE.PointLight(0xffb070, 110, 0, 2); l.position.set(-2, 4, 3); return l; },
+      'rọi (quay)': () => { const l = new THREE.SpotLight(0xa0c4ff, 220, 0, .45, .5, 2); l.position.set(0, 7, 4); return l; },
+      'bán cầu (không bóng)': () => new THREE.HemisphereLight(0xbfd8ff, 0x554433, 2.2),
+    };
+    let lamp; const set = (k, b) => { if (lamp) scene.remove(lamp); lamp = mk[k](); if (lamp.shadow) { lamp.castShadow = true; lamp.shadow.mapSize.set(1024, 1024); } scene.add(lamp); lamp.userData.k = k; ctl.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', x === b)); };
+    Object.keys(mk).forEach((k) => { const b = ui.btn(k, (bb) => set(k, bb)); if (k === 'hướng') set(k, b); });
+    const o = orbit(camera, 0, .8, 0);
+    return { scene, camera, update: (t) => { ms.forEach((m, i) => m.rotation.y = t * (.5 + i * .2)); if (lamp.userData.k === 'rọi (quay)') lamp.position.set(Math.cos(t) * 5, 7, Math.sin(t) * 5); o.update(); }, dispose: () => o.dispose() };
+  } },
+{ id: 'mixer', name: 'Hoạt ảnh (Mixer)', note: 'Hoạt ảnh keyframe thật: <code>VectorKeyframeTrack</code> (vị trí), <code>QuaternionKeyframeTrack</code> (xoay), <code>ColorKeyframeTrack</code> (màu) gói trong <code>AnimationClip</code>, phát bằng <code>AnimationMixer</code>. Đổi tốc độ, chế độ lặp, tạm dừng.',
+  code: `const clip = new THREE.AnimationClip('nhay', 3, [
+  new THREE.VectorKeyframeTrack('.position', [0,1,2,3], [-2,0,0, 0,2,0, 2,0,0, -2,0,0]),
+  new THREE.QuaternionKeyframeTrack('.quaternion', times, quatValues),
+  new THREE.ColorKeyframeTrack('.material.color', [0,1.5,3], [1,.4,.3, .2,.5,1, 1,.4,.3])]);
+const mixer = new THREE.AnimationMixer(mesh); const action = mixer.clipAction(clip).play();
+action.timeScale = 2; action.setLoop(THREE.LoopPingPong); mixer.update(dt);`,
+  init() {
+    const scene = newScene(), camera = persp(0, 2.5, 8); scene.add(grid(-1.2), new THREE.DirectionalLight(0xffffff, 2.5));
+    const mesh = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.2, 1.2), new THREE.MeshStandardMaterial({ color: 0xff6644, roughness: .35 })); scene.add(mesh);
+    const q = (x, y, z) => new THREE.Quaternion().setFromEuler(new THREE.Euler(x, y, z)).toArray();
+    const clip = new THREE.AnimationClip('nhay', 3, [
+      new THREE.VectorKeyframeTrack('.position', [0, 1, 2, 3], [-2.5, 0, 0, 0, 2, 0, 2.5, 0, 0, -2.5, 0, 0]),
+      new THREE.QuaternionKeyframeTrack('.quaternion', [0, 1, 2, 3], [...q(0, 0, 0), ...q(Math.PI, 0, Math.PI / 2), ...q(0, Math.PI, Math.PI), ...q(0, 0, Math.PI * 2)]),
+      new THREE.ColorKeyframeTrack('.material.color', [0, 1.5, 3], [1, .4, .3, .2, .5, 1, 1, .4, .3])]);
+    const mixer = new THREE.AnimationMixer(mesh), action = mixer.clipAction(clip).play(); let last = 0;
+    ui.btn('Tạm dừng / chạy', () => action.paused = !action.paused);
+    ui.btn('Lặp: LoopRepeat', (b) => { const pp = action.loop === THREE.LoopRepeat; action.setLoop(pp ? THREE.LoopPingPong : THREE.LoopRepeat, Infinity); b.textContent = pp ? 'Lặp: LoopPingPong' : 'Lặp: LoopRepeat'; });
+    ui.range('tốc độ', .2, 3, .1, 1, (v) => action.timeScale = v);
+    const o = orbit(camera);
+    return { scene, camera, update: (t) => { mixer.update(t - last); last = t; o.update(); }, dispose: () => { mixer.stopAllAction(); o.dispose(); } };
+  } },
+{ id: 'hat', name: 'Hạt (Points)', note: 'Một <code>Points</code> với 8000 đỉnh trong <code>BufferGeometry</code>, màu theo đỉnh (<code>vertexColors</code>). Ba bố cục (thiên hà xoắn ốc, cầu, lưới) và nội suy vị trí từng khung giữa chúng.',
+  code: `const geo = new THREE.BufferGeometry();
+geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+scene.add(new THREE.Points(geo, new THREE.PointsMaterial({ size: .05, vertexColors: true })));
+// mỗi khung: pos[i] += (target[i] - pos[i]) * .05; geo.attributes.position.needsUpdate = true;`,
+  init() {
+    const N = 8000, scene = new THREE.Scene(), camera = persp(0, 4, 9);
+    const pos = new Float32Array(N * 3), col = new Float32Array(N * 3), c = new THREE.Color();
+    const sets = [0, 1, 2].map((k) => { const a = new Float32Array(N * 3); for (let i = 0; i < N; i++) {
+      let x, y, z; if (k === 0) { const r = Math.pow(i / N, .6) * 4.5, arm = (i % 3) * 2.094, th = r * 1.4 + arm; x = Math.cos(th) * r + (Math.random() - .5) * .35; z = Math.sin(th) * r + (Math.random() - .5) * .35; y = (Math.random() - .5) * .4 * (1 - r / 5); }
+      else if (k === 1) { const u = Math.random() * 2 - 1, p = Math.random() * 6.283, s = Math.sqrt(1 - u * u) * 3.2; x = Math.cos(p) * s; y = u * 3.2; z = Math.sin(p) * s; }
+      else { const n = 20; x = ((i % n) - n / 2) * .3; y = (((i / n | 0) % n) - n / 2) * .3; z = ((i / (n * n) | 0) - 10) * .3; }
+      a.set([x, y, z], i * 3); } return a; });
+    pos.set(sets[0]); for (let i = 0; i < N; i++) { c.setHSL(.55 + (i / N) * .35, .8, .6); col.set([c.r, c.g, c.b], i * 3); }
+    const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(pos, 3)); geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+    const pts = new THREE.Points(geo, new THREE.PointsMaterial({ size: .06, vertexColors: true, sizeAttenuation: true })); scene.add(pts);
+    let tgt = 0; ['Thiên hà', 'Cầu', 'Lưới'].forEach((n, i) => ui.btn(n, () => tgt = i));
+    const o = orbit(camera);
+    return { scene, camera, update: (t) => { const T = sets[tgt]; for (let i = 0; i < N * 3; i++) pos[i] += (T[i] - pos[i]) * .06; geo.attributes.position.needsUpdate = true; pts.rotation.y = t * .15; o.update(); }, dispose: () => o.dispose() };
+  } },
+{ id: 'raycast', name: 'Raycasting (chọn vật)', note: 'Rê chuột: <code>Raycaster.setFromCamera</code> + <code>intersectObjects</code> làm khối bật sáng và nhô lên; bấm để đổi màu và bật/tắt xoay. Khung nhìn vẫn kéo xoay được.',
+  code: `const ray = new THREE.Raycaster(), p = new THREE.Vector2();
+canvas.onpointermove = (e) => { p.set((e.offsetX / w) * 2 - 1, -(e.offsetY / h) * 2 + 1); };
+ray.setFromCamera(p, camera);
+const hit = ray.intersectObjects(cubes)[0]?.object;  // vật gần nhất dưới chuột
+if (hit) hit.material.emissive.set(0x444444);`,
+  init() {
+    const scene = newScene(), camera = persp(6, 6, 8); scene.add(new THREE.DirectionalLight(0xffffff, 2.5), grid(-.6));
+    const cubes = [], g = new THREE.BoxGeometry(.85, .85, .85);
+    for (let x = -3; x <= 3; x++) for (let z = -3; z <= 3; z++) { const m = new THREE.Mesh(g, new THREE.MeshStandardMaterial({ color: new THREE.Color().setHSL((x + z + 6) / 14, .6, .55), roughness: .4 })); m.position.set(x * 1.1, 0, z * 1.1); m.userData = { spin: false, y: 0 }; scene.add(m); cubes.push(m); }
+    const ray = new THREE.Raycaster(), p = new THREE.Vector2(9, 9), cv = renderer.domElement; let hover = null, down = null;
+    const move = (e) => { const r = cv.getBoundingClientRect(); p.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1); };
+    const onDown = (e) => { down = [e.clientX, e.clientY]; }, onUp = (e) => { if (down && Math.hypot(e.clientX - down[0], e.clientY - down[1]) < 5 && hover) { hover.userData.spin = !hover.userData.spin; hover.material.color.setHSL(Math.random(), .7, .55); } down = null; };
+    cv.addEventListener('pointermove', move); cv.addEventListener('pointerdown', onDown); cv.addEventListener('pointerup', onUp);
+    const o = orbit(camera, 0, 0, 0), msg = document.createElement('span'); msg.className = 'm-status'; ctl.append(msg);
+    return { scene, camera, update: (t) => { ray.setFromCamera(p, camera); hover = ray.intersectObjects(cubes)[0]?.object || null; cv.style.cursor = hover ? 'pointer' : 'grab'; msg.textContent = hover ? `đang trỏ vào khối (${hover.position.x.toFixed(1)}, ${hover.position.z.toFixed(1)})` : 'rê chuột vào một khối';
+      cubes.forEach((m) => { const on = m === hover; m.userData.y += ((on ? .5 : 0) - m.userData.y) * .2; m.position.y = m.userData.y; m.material.emissive.setHex(on ? 0x555555 : 0); if (m.userData.spin) m.rotation.y += .04; }); o.update(); },
+      dispose: () => { cv.removeEventListener('pointermove', move); cv.removeEventListener('pointerdown', onDown); cv.removeEventListener('pointerup', onUp); cv.style.cursor = ''; o.dispose(); } };
+  } },
+{ id: 'camera', name: 'Camera', note: 'Chuyển <code>PerspectiveCamera</code> ↔ <code>OrthographicCamera</code> (cùng một cảnh, mất/hiện phối cảnh) và kéo thanh FOV để thấy méo phối cảnh khi góc rộng. OrbitControls tạo lại cho camera mới.',
+  code: `const persp = new THREE.PerspectiveCamera(fov, aspect, .1, 100);
+const ortho = new THREE.OrthographicCamera(-s * aspect, s * aspect, s, -s, .1, 100);
+persp.fov = 80; persp.updateProjectionMatrix();
+controls = new OrbitControls(activeCamera, canvas);`,
+  init() {
+    const scene = newScene(), P = persp(4, 3, 6, 45), O = new THREE.OrthographicCamera(-1, 1, 1, -1, .1, 100); O.position.set(4, 3, 6);
+    scene.add(new THREE.DirectionalLight(0xffffff, 2.5), grid(-1));
+    for (let i = 0; i < 5; i++) { const m = new THREE.Mesh(new THREE.BoxGeometry(1, 1 + i * .4, 1), new THREE.MeshStandardMaterial({ color: new THREE.Color().setHSL(i / 5, .6, .55), roughness: .5 })); m.position.set(i * 1.6 - 3.2, (i * .4) / 2 - .5, -i * .8 + 1.2); scene.add(m); }
+    const out = { scene, camera: P, resize: null }; let o = orbit(P), isP = true, fovIn;
+    const fit = () => { const a = stage.clientWidth / stage.clientHeight, s = 4; O.left = -s * a; O.right = s * a; O.top = s; O.bottom = -s; O.updateProjectionMatrix(); };
+    const sw = (b) => { o.dispose(); isP = !isP; const from = isP ? O : P, to = isP ? P : O; to.position.copy(from.position); to.quaternion.copy(from.quaternion); out.camera = to; o = orbit(to); b.textContent = isP ? 'Đang: Perspective' : 'Đang: Orthographic'; fovIn.disabled = !isP; };
+    ui.btn('Đang: Perspective', sw); fovIn = ui.range('FOV', 15, 120, 1, 45, (v) => { P.fov = v; P.updateProjectionMatrix(); });
+    out.onResize = fit; fit(); out.update = () => o.update(); out.dispose = () => o.dispose(); return out;
+  } },
+];
+
+let cur = null, curTab = null;
+const fit = () => { const w = stage.clientWidth, h = stage.clientHeight; renderer.setSize(w, h); if (cur) { const c = cur.camera; if (c.isPerspectiveCamera) { c.aspect = w / h; c.updateProjectionMatrix(); } cur.onResize?.(); } };
+const kill = (s) => s.traverse((o) => { o.geometry?.dispose(); [].concat(o.material || []).forEach((m) => m.dispose()); });
+function select(id) {
+  const t = TABS.find((x) => x.id === id) || TABS[0];
+  if (cur) { cur.dispose?.(); kill(cur.scene); } ctl.innerHTML = '';
+  curTab = t; cur = t.init(); fit();
+  tabsEl.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.id === t.id));
+  $('note').innerHTML = t.note; $('code').textContent = t.code; st.textContent = `three 0.186.0 · THƯ VIỆN THẬT · tab "${t.name}"`;
+}
+TABS.forEach((t) => { const b = document.createElement('button'); b.type = 'button'; b.dataset.id = t.id; b.textContent = t.name; b.onclick = () => { location.hash = t.id; select(t.id); }; tabsEl.append(b); });
+addEventListener('hashchange', () => select(location.hash.slice(1)));
+new ResizeObserver(fit).observe(stage);
+select(location.hash.slice(1));
+const clock = new THREE.Clock();
+renderer.setAnimationLoop(() => { cur.update?.(clock.getElapsedTime()); renderer.render(cur.scene, cur.camera); });
+</script>
+</body></html>
