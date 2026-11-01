@@ -1,0 +1,22 @@
+{
+  "slug": "remotion",
+  "name": "Remotion",
+  "category": "Ảnh, video & nhạc AI",
+  "repo": "remotion-dev/skills",
+  "url": "https://github.com/remotion-dev/skills",
+  "confidence": "chắc",
+  "candidates": [
+    "remotion-dev/remotion (repo mẹ, chứa packages/skills; giấy phép riêng của Remotion)",
+    "digitalsamba/claude-code-video-toolkit (bản sao remotion-official, không có giấy phép riêng)"
+  ],
+  "license": "Không có LICENSE (GitHub: none). Repo mẹ remotion-dev/remotion dùng giấy phép tuỳ biến 'Remotion License' (GitHub: NOASSERTION)",
+  "stars": 6006,
+  "pushed": "2026-10-26T11:37:35Z",
+  "path": "skills/remotion-best-practices (router) + 12 skill con remotion-*",
+  "vendored": false,
+  "files": [],
+  "bytes": 0,
+  "reason": "remotion-dev/skills không có tệp LICENSE (mặc định bảo lưu mọi quyền). Repo mẹ remotion-dev/remotion dùng 'Remotion License' tuỳ biến: miễn phí cho cá nhân / công ty tới 3 nhân viên / phi lợi nhuận, công ty for-profit lớn hơn cần mua company license; cấm chép/sửa mã để bán, cho thuê, cấp phép lại hay cấp phép phụ bản phái sinh. Không phải giấy phép phân phối lại (MIT/Apache...), nên không chép.",
+  "install": "npx skills add remotion-dev/skills",
+  "note": "Nguồn chính thức do đội Remotion duy trì (commit 30d4553 ngày 2026-10-26). Gồm remotion-best-practices (router), remotion-captions, -create, -docs, -interactivity, -maps, -markup, -multimedia, -render, -saas, -studio, -upgrade. Chỉ nên liên kết tới repo, người dùng tự cài. Lưu ý: digitalsamba/claude-code-video-toolkit có thư mục remotion-official là bản sao nguyên văn của nó, cũng không được cấp phép lại nên không chép từ đó."
+}

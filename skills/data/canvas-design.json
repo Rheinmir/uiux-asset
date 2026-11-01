@@ -1,0 +1,359 @@
+{
+  "slug": "canvas-design",
+  "name": "Canvas Design",
+  "category": "Thiết kế & giao diện",
+  "repo": "anthropics/skills",
+  "url": "https://github.com/anthropics/skills",
+  "confidence": "chắc",
+  "candidates": [],
+  "stars": 186085,
+  "pushed": "2026-10-28",
+  "vendored": true,
+  "install": "/plugin marketplace add anthropics/skills  (rồi chọn plugin example-skills: /plugin install example-skills@anthropic-agent-skills)",
+  "license": "Apache-2.0 (SKILL.md); phông trong canvas-fonts/ theo SIL OFL kèm tệp *-OFL.txt",
+  "path": "skills/canvas-design",
+  "note": "Nặng ~5,6MB vì kèm 27+ tệp phông .ttf (mỗi tệp <200KB) cùng tệp OFL tương ứng; nếu cần nhẹ repo có thể bỏ canvas-fonts/ (SKILL.md tham chiếu thư mục này). Repo anthropics/skills không có LICENSE gốc (API license trả 404); mỗi skill có LICENSE.txt riêng, đọc từng cái. Các skill docx/pdf/pptx/xlsx dùng giấy phép khác, không thuộc nhóm này.",
+  "files": [
+    {
+      "path": "LICENSE",
+      "bytes": 11345
+    },
+    {
+      "path": "LICENSE.txt",
+      "bytes": 11345
+    },
+    {
+      "path": "SKILL.md",
+      "bytes": 11939
+    },
+    {
+      "path": "SOURCE.md",
+      "bytes": 1061
+    },
+    {
+      "path": "canvas-fonts/ArsenalSC-OFL.txt",
+      "bytes": 4373
+    },
+    {
+      "path": "canvas-fonts/ArsenalSC-Regular.ttf",
+      "bytes": 165848
+    },
+    {
+      "path": "canvas-fonts/BigShoulders-Bold.ttf",
+      "bytes": 94528
+    },
+    {
+      "path": "canvas-fonts/BigShoulders-OFL.txt",
+      "bytes": 4397
+    },
+    {
+      "path": "canvas-fonts/BigShoulders-Regular.ttf",
+      "bytes": 94396
+    },
+    {
+      "path": "canvas-fonts/Boldonse-OFL.txt",
+      "bytes": 4390
+    },
+    {
+      "path": "canvas-fonts/Boldonse-Regular.ttf",
+      "bytes": 77168
+    },
+    {
+      "path": "canvas-fonts/BricolageGrotesque-Bold.ttf",
+      "bytes": 90952
+    },
+    {
+      "path": "canvas-fonts/BricolageGrotesque-OFL.txt",
+      "bytes": 4403
+    },
+    {
+      "path": "canvas-fonts/BricolageGrotesque-Regular.ttf",
+      "bytes": 90920
+    },
+    {
+      "path": "canvas-fonts/CrimsonPro-Bold.ttf",
+      "bytes": 107352
+    },
+    {
+      "path": "canvas-fonts/CrimsonPro-Italic.ttf",
+      "bytes": 108828
+    },
+    {
+      "path": "canvas-fonts/CrimsonPro-OFL.txt",
+      "bytes": 4394
+    },
+    {
+      "path": "canvas-fonts/CrimsonPro-Regular.ttf",
+      "bytes": 106696
+    },
+    {
+      "path": "canvas-fonts/DMMono-OFL.txt",
+      "bytes": 4392
+    },
+    {
+      "path": "canvas-fonts/DMMono-Regular.ttf",
+      "bytes": 48852
+    },
+    {
+      "path": "canvas-fonts/EricaOne-OFL.txt",
+      "bytes": 4410
+    },
+    {
+      "path": "canvas-fonts/EricaOne-Regular.ttf",
+      "bytes": 24872
+    },
+    {
+      "path": "canvas-fonts/GeistMono-Bold.ttf",
+      "bytes": 78304
+    },
+    {
+      "path": "canvas-fonts/GeistMono-OFL.txt",
+      "bytes": 4388
+    },
+    {
+      "path": "canvas-fonts/GeistMono-Regular.ttf",
+      "bytes": 78232
+    },
+    {
+      "path": "canvas-fonts/Gloock-OFL.txt",
+      "bytes": 4381
+    },
+    {
+      "path": "canvas-fonts/Gloock-Regular.ttf",
+      "bytes": 95156
+    },
+    {
+      "path": "canvas-fonts/IBMPlexMono-Bold.ttf",
+      "bytes": 136008
+    },
+    {
+      "path": "canvas-fonts/IBMPlexMono-OFL.txt",
+      "bytes": 4363
+    },
+    {
+      "path": "canvas-fonts/IBMPlexMono-Regular.ttf",
+      "bytes": 133796
+    },
+    {
+      "path": "canvas-fonts/IBMPlexSerif-Bold.ttf",
+      "bytes": 161000
+    },
+    {
+      "path": "canvas-fonts/IBMPlexSerif-BoldItalic.ttf",
+      "bytes": 169840
+    },
+    {
+      "path": "canvas-fonts/IBMPlexSerif-Italic.ttf",
+      "bytes": 170004
+    },
+    {
+      "path": "canvas-fonts/IBMPlexSerif-Regular.ttf",
+      "bytes": 160380
+    },
+    {
+      "path": "canvas-fonts/InstrumentSans-Bold.ttf",
+      "bytes": 68084
+    },
+    {
+      "path": "canvas-fonts/InstrumentSans-BoldItalic.ttf",
+      "bytes": 70004
+    },
+    {
+      "path": "canvas-fonts/InstrumentSans-Italic.ttf",
+      "bytes": 69900
+    },
+    {
+      "path": "canvas-fonts/InstrumentSans-OFL.txt",
+      "bytes": 4403
+    },
+    {
+      "path": "canvas-fonts/InstrumentSans-Regular.ttf",
+      "bytes": 68028
+    },
+    {
+      "path": "canvas-fonts/InstrumentSerif-Italic.ttf",
+      "bytes": 70868
+    },
+    {
+      "path": "canvas-fonts/InstrumentSerif-Regular.ttf",
+      "bytes": 69312
+    },
+    {
+      "path": "canvas-fonts/Italiana-OFL.txt",
+      "bytes": 4394
+    },
+    {
+      "path": "canvas-fonts/Italiana-Regular.ttf",
+      "bytes": 27184
+    },
+    {
+      "path": "canvas-fonts/JetBrainsMono-Bold.ttf",
+      "bytes": 114828
+    },
+    {
+      "path": "canvas-fonts/JetBrainsMono-OFL.txt",
+      "bytes": 4399
+    },
+    {
+      "path": "canvas-fonts/JetBrainsMono-Regular.ttf",
+      "bytes": 114904
+    },
+    {
+      "path": "canvas-fonts/Jura-Light.ttf",
+      "bytes": 154308
+    },
+    {
+      "path": "canvas-fonts/Jura-Medium.ttf",
+      "bytes": 154488
+    },
+    {
+      "path": "canvas-fonts/Jura-OFL.txt",
+      "bytes": 4380
+    },
+    {
+      "path": "canvas-fonts/LibreBaskerville-OFL.txt",
+      "bytes": 4449
+    },
+    {
+      "path": "canvas-fonts/LibreBaskerville-Regular.ttf",
+      "bytes": 147584
+    },
+    {
+      "path": "canvas-fonts/Lora-Bold.ttf",
+      "bytes": 133828
+    },
+    {
+      "path": "canvas-fonts/Lora-BoldItalic.ttf",
+      "bytes": 140332
+    },
+    {
+      "path": "canvas-fonts/Lora-Italic.ttf",
+      "bytes": 139328
+    },
+    {
+      "path": "canvas-fonts/Lora-OFL.txt",
+      "bytes": 4423
+    },
+    {
+      "path": "canvas-fonts/Lora-Regular.ttf",
+      "bytes": 133888
+    },
+    {
+      "path": "canvas-fonts/NationalPark-Bold.ttf",
+      "bytes": 79208
+    },
+    {
+      "path": "canvas-fonts/NationalPark-OFL.txt",
+      "bytes": 4399
+    },
+    {
+      "path": "canvas-fonts/NationalPark-Regular.ttf",
+      "bytes": 76424
+    },
+    {
+      "path": "canvas-fonts/NothingYouCouldDo-OFL.txt",
+      "bytes": 4363
+    },
+    {
+      "path": "canvas-fonts/NothingYouCouldDo-Regular.ttf",
+      "bytes": 32020
+    },
+    {
+      "path": "canvas-fonts/Outfit-Bold.ttf",
+      "bytes": 55392
+    },
+    {
+      "path": "canvas-fonts/Outfit-OFL.txt",
+      "bytes": 4389
+    },
+    {
+      "path": "canvas-fonts/Outfit-Regular.ttf",
+      "bytes": 54912
+    },
+    {
+      "path": "canvas-fonts/PixelifySans-Medium.ttf",
+      "bytes": 51072
+    },
+    {
+      "path": "canvas-fonts/PixelifySans-OFL.txt",
+      "bytes": 4395
+    },
+    {
+      "path": "canvas-fonts/PoiretOne-OFL.txt",
+      "bytes": 4366
+    },
+    {
+      "path": "canvas-fonts/PoiretOne-Regular.ttf",
+      "bytes": 45244
+    },
+    {
+      "path": "canvas-fonts/RedHatMono-Bold.ttf",
+      "bytes": 34420
+    },
+    {
+      "path": "canvas-fonts/RedHatMono-OFL.txt",
+      "bytes": 4394
+    },
+    {
+      "path": "canvas-fonts/RedHatMono-Regular.ttf",
+      "bytes": 34488
+    },
+    {
+      "path": "canvas-fonts/Silkscreen-OFL.txt",
+      "bytes": 4394
+    },
+    {
+      "path": "canvas-fonts/Silkscreen-Regular.ttf",
+      "bytes": 31960
+    },
+    {
+      "path": "canvas-fonts/SmoochSans-Medium.ttf",
+      "bytes": 59704
+    },
+    {
+      "path": "canvas-fonts/SmoochSans-OFL.txt",
+      "bytes": 4396
+    },
+    {
+      "path": "canvas-fonts/Tektur-Medium.ttf",
+      "bytes": 76248
+    },
+    {
+      "path": "canvas-fonts/Tektur-OFL.txt",
+      "bytes": 4385
+    },
+    {
+      "path": "canvas-fonts/Tektur-Regular.ttf",
+      "bytes": 75604
+    },
+    {
+      "path": "canvas-fonts/WorkSans-Bold.ttf",
+      "bytes": 191304
+    },
+    {
+      "path": "canvas-fonts/WorkSans-BoldItalic.ttf",
+      "bytes": 175772
+    },
+    {
+      "path": "canvas-fonts/WorkSans-Italic.ttf",
+      "bytes": 174280
+    },
+    {
+      "path": "canvas-fonts/WorkSans-OFL.txt",
+      "bytes": 4397
+    },
+    {
+      "path": "canvas-fonts/WorkSans-Regular.ttf",
+      "bytes": 188916
+    },
+    {
+      "path": "canvas-fonts/YoungSerif-OFL.txt",
+      "bytes": 4398
+    },
+    {
+      "path": "canvas-fonts/YoungSerif-Regular.ttf",
+      "bytes": 105136
+    }
+  ],
+  "bytes": 5566409
+}

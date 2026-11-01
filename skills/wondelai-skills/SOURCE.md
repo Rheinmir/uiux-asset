@@ -1,0 +1,26 @@
+# SOURCE
+
+- Repo: https://github.com/wondelai/skills
+- Commit sha đã chép: c172996495bed0fcd26896a9416b2093fd7073f0
+- Giấy phép: MIT (xem tệp LICENSE trong thư mục này; bản sao từ LICENSE gốc ở gốc repo)
+- Ngày chép: 2026-11-01
+- Trạng thái: chép nguyên văn, không sửa nội dung tệp.
+- Ánh xạ (đường dẫn trong repo -> đường dẫn ở đây):
+  - `conversion-optimization` -> `conversion-optimization`
+  - `cro-methodology` -> `cro-methodology`
+  - `grow-business` -> `grow-business`
+  - `grow-website` -> `grow-website`
+  - `contagious` -> `contagious`
+  - `hundred-million-offers` -> `hundred-million-offers`
+  - `one-page-marketing` -> `one-page-marketing`
+  - `storybrand-messaging` -> `storybrand-messaging`
+  - `influence-psychology` -> `influence-psychology`
+  - `made-to-stick` -> `made-to-stick`
+  - `scorecard-marketing` -> `scorecard-marketing`
+  - `lean-analytics` -> `lean-analytics`
+  - `predictable-revenue` -> `predictable-revenue`
+  - `obviously-awesome` -> `obviously-awesome`
+  - `improve-retention` -> `improve-retention`
+- Lý do chọn tập con: repo có ~65 skill (~22MB, vượt ngưỡng 2MB) nên chỉ chép 15 skill marketing/bán hàng/tăng trưởng/CRO ăn khớp mô tả bài: conversion-optimization, cro-methodology, grow-business, grow-website, contagious, hundred-million-offers, one-page-marketing, storybrand-messaging, influence-psychology, made-to-stick, scorecard-marketing, lean-analytics, predictable-revenue, obviously-awesome, improve-retention.
+- Mỗi skill chép trọn thư mục (SKILL.md + references/), tổng ~1.5MB. Không có tệp >300KB nào bị bỏ.
+- Bỏ (không chép): các skill UX/kỹ thuật/chiến lược khác (clean-code, ux-heuristics, hooked-ux, refactoring-ui, ...), .claude-plugin/, .agents/, docs/, scripts/, plugins/ và các tệp gốc ngoài LICENSE.

@@ -1,0 +1,57 @@
+{
+ "slug": "gpt-image-2",
+ "name": "GPT Image 2",
+ "category": "Ảnh, video & nhạc AI",
+ "repo": "glebis/claude-skills",
+ "url": "https://github.com/glebis/claude-skills",
+ "confidence": "chắc",
+ "candidates": [
+  "wuyoscar/GPT-Image2-Skill (MIT, 5970 sao, thư viện prompt + CLI, chưa thấy preset theo nền tảng)",
+  "robonuggets/gpt-image-2-skill (không giấy phép)",
+  "Wangnov/gpt-image-2-skill (MIT, CLI Rust)"
+ ],
+ "license": "MIT",
+ "stars": 404,
+ "pushed": "2026-10-27T21:55:26Z",
+ "path": "gpt-image-2",
+ "vendored": true,
+ "files": [
+  {
+   "path": ".claude-plugin/plugin.json",
+   "bytes": 293
+  },
+  {
+   "path": "LICENSE",
+   "bytes": 1074
+  },
+  {
+   "path": "SKILL.md",
+   "bytes": 9918
+  },
+  {
+   "path": "platforms.yaml",
+   "bytes": 837
+  },
+  {
+   "path": "presets.yaml",
+   "bytes": 11334
+  },
+  {
+   "path": "references/api_reference.md",
+   "bytes": 2629
+  },
+  {
+   "path": "screenshot.json",
+   "bytes": 792
+  },
+  {
+   "path": "scripts/gpt_image_2.py",
+   "bytes": 31187
+  }
+ ],
+ "bytes": 58064,
+ "reason": "",
+ "install": "",
+ "note": "Khớp nhất mô tả bài: có thinking mode, chỉnh sửa ảnh, presets.yaml + platforms.yaml (preset theo nền tảng), carousel. Repo là bộ 118 skill của Gleb Kalinin; chỉ chép thư mục gpt-image-2. Bỏ 2 ảnh PNG > 300KB (screenshot.png, references/vhs-infomercial.png). Cần OpenAI API key. Các repo gpt-image-2 khác đã xem chưa thấy preset theo nền tảng + thinking mode. · Lệnh cài: README repo không ghi lệnh cho skill này nên không đưa ra (không bịa).",
+ "commit": "046a4ce050291736afb5e434c2001dae8ea03a06"
+}

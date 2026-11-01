@@ -1,0 +1,580 @@
+{
+  "slug": "pm-skills",
+  "name": "PM Skills",
+  "category": "Nghiên cứu & chiến lược",
+  "repo": "phuryn/pm-skills",
+  "url": "https://github.com/phuryn/pm-skills",
+  "confidence": "chắc",
+  "candidates": [],
+  "license": "MIT (Copyright (c) 2026 Pawel Huryn)",
+  "stars": 27587,
+  "pushed": "2026-10-29",
+  "path": "pm-*/ (9 plugin, 69 SKILL.md)",
+  "vendored": true,
+  "files": [
+    {
+      "path": "LICENSE",
+      "bytes": 1068
+    },
+    {
+      "path": "SOURCE.md",
+      "bytes": 1030
+    },
+    {
+      "path": "pm-ai-shipping/.claude-plugin/plugin.json",
+      "bytes": 629
+    },
+    {
+      "path": "pm-ai-shipping/.cursor-plugin/plugin.json",
+      "bytes": 640
+    },
+    {
+      "path": "pm-ai-shipping/README.md",
+      "bytes": 1845
+    },
+    {
+      "path": "pm-ai-shipping/commands/derive-tests.md",
+      "bytes": 1185
+    },
+    {
+      "path": "pm-ai-shipping/commands/document-app.md",
+      "bytes": 1161
+    },
+    {
+      "path": "pm-ai-shipping/commands/performance-audit-static.md",
+      "bytes": 1250
+    },
+    {
+      "path": "pm-ai-shipping/commands/security-audit-static.md",
+      "bytes": 1229
+    },
+    {
+      "path": "pm-ai-shipping/commands/ship-check.md",
+      "bytes": 1166
+    },
+    {
+      "path": "pm-ai-shipping/skills/code-review/SKILL.md",
+      "bytes": 1120
+    },
+    {
+      "path": "pm-ai-shipping/skills/intended-vs-implemented/SKILL.md",
+      "bytes": 1175
+    },
+    {
+      "path": "pm-ai-shipping/skills/shipping-artifacts/SKILL.md",
+      "bytes": 1149
+    },
+    {
+      "path": "pm-data-analytics/.claude-plugin/plugin.json",
+      "bytes": 535
+    },
+    {
+      "path": "pm-data-analytics/.cursor-plugin/plugin.json",
+      "bytes": 546
+    },
+    {
+      "path": "pm-data-analytics/README.md",
+      "bytes": 1057
+    },
+    {
+      "path": "pm-data-analytics/commands/analyze-cohorts.md",
+      "bytes": 3415
+    },
+    {
+      "path": "pm-data-analytics/commands/analyze-test.md",
+      "bytes": 3942
+    },
+    {
+      "path": "pm-data-analytics/commands/write-query.md",
+      "bytes": 2817
+    },
+    {
+      "path": "pm-data-analytics/skills/ab-test-analysis/SKILL.md",
+      "bytes": 3587
+    },
+    {
+      "path": "pm-data-analytics/skills/cohort-analysis/SKILL.md",
+      "bytes": 5026
+    },
+    {
+      "path": "pm-data-analytics/skills/sql-queries/SKILL.md",
+      "bytes": 3628
+    },
+    {
+      "path": "pm-execution/.claude-plugin/plugin.json",
+      "bytes": 625
+    },
+    {
+      "path": "pm-execution/.cursor-plugin/plugin.json",
+      "bytes": 636
+    },
+    {
+      "path": "pm-execution/README.md",
+      "bytes": 4066
+    },
+    {
+      "path": "pm-execution/commands/generate-data.md",
+      "bytes": 2810
+    },
+    {
+      "path": "pm-execution/commands/meeting-notes.md",
+      "bytes": 2882
+    },
+    {
+      "path": "pm-execution/commands/plan-okrs.md",
+      "bytes": 3629
+    },
+    {
+      "path": "pm-execution/commands/pre-mortem.md",
+      "bytes": 3733
+    },
+    {
+      "path": "pm-execution/commands/red-team-prd.md",
+      "bytes": 2748
+    },
+    {
+      "path": "pm-execution/commands/sprint.md",
+      "bytes": 5164
+    },
+    {
+      "path": "pm-execution/commands/stakeholder-map.md",
+      "bytes": 3854
+    },
+    {
+      "path": "pm-execution/commands/test-scenarios.md",
+      "bytes": 2868
+    },
+    {
+      "path": "pm-execution/commands/transform-roadmap.md",
+      "bytes": 3433
+    },
+    {
+      "path": "pm-execution/commands/write-prd.md",
+      "bytes": 3505
+    },
+    {
+      "path": "pm-execution/commands/write-stories.md",
+      "bytes": 3916
+    },
+    {
+      "path": "pm-execution/skills/brainstorm-okrs/SKILL.md",
+      "bytes": 4341
+    },
+    {
+      "path": "pm-execution/skills/create-prd/SKILL.md",
+      "bytes": 7301
+    },
+    {
+      "path": "pm-execution/skills/dummy-dataset/SKILL.md",
+      "bytes": 3930
+    },
+    {
+      "path": "pm-execution/skills/job-stories/SKILL.md",
+      "bytes": 2969
+    },
+    {
+      "path": "pm-execution/skills/outcome-roadmap/SKILL.md",
+      "bytes": 3601
+    },
+    {
+      "path": "pm-execution/skills/pre-mortem/SKILL.md",
+      "bytes": 4082
+    },
+    {
+      "path": "pm-execution/skills/prioritization-frameworks/SKILL.md",
+      "bytes": 4235
+    },
+    {
+      "path": "pm-execution/skills/release-notes/SKILL.md",
+      "bytes": 2569
+    },
+    {
+      "path": "pm-execution/skills/retro/SKILL.md",
+      "bytes": 2809
+    },
+    {
+      "path": "pm-execution/skills/sprint-plan/SKILL.md",
+      "bytes": 2365
+    },
+    {
+      "path": "pm-execution/skills/stakeholder-map/SKILL.md",
+      "bytes": 2510
+    },
+    {
+      "path": "pm-execution/skills/strategy-red-team/SKILL.md",
+      "bytes": 4515
+    },
+    {
+      "path": "pm-execution/skills/summarize-meeting/SKILL.md",
+      "bytes": 2997
+    },
+    {
+      "path": "pm-execution/skills/test-scenarios/SKILL.md",
+      "bytes": 3472
+    },
+    {
+      "path": "pm-execution/skills/user-stories/SKILL.md",
+      "bytes": 2991
+    },
+    {
+      "path": "pm-execution/skills/wwas/SKILL.md",
+      "bytes": 3086
+    },
+    {
+      "path": "pm-go-to-market/.claude-plugin/plugin.json",
+      "bytes": 512
+    },
+    {
+      "path": "pm-go-to-market/.cursor-plugin/plugin.json",
+      "bytes": 523
+    },
+    {
+      "path": "pm-go-to-market/README.md",
+      "bytes": 1391
+    },
+    {
+      "path": "pm-go-to-market/commands/battlecard.md",
+      "bytes": 3797
+    },
+    {
+      "path": "pm-go-to-market/commands/growth-strategy.md",
+      "bytes": 4110
+    },
+    {
+      "path": "pm-go-to-market/commands/plan-launch.md",
+      "bytes": 4542
+    },
+    {
+      "path": "pm-go-to-market/skills/beachhead-segment/SKILL.md",
+      "bytes": 5876
+    },
+    {
+      "path": "pm-go-to-market/skills/competitive-battlecard/SKILL.md",
+      "bytes": 2886
+    },
+    {
+      "path": "pm-go-to-market/skills/growth-loops/SKILL.md",
+      "bytes": 5788
+    },
+    {
+      "path": "pm-go-to-market/skills/gtm-motions/SKILL.md",
+      "bytes": 7556
+    },
+    {
+      "path": "pm-go-to-market/skills/gtm-strategy/SKILL.md",
+      "bytes": 4047
+    },
+    {
+      "path": "pm-go-to-market/skills/ideal-customer-profile/SKILL.md",
+      "bytes": 6002
+    },
+    {
+      "path": "pm-market-research/.claude-plugin/plugin.json",
+      "bytes": 574
+    },
+    {
+      "path": "pm-market-research/.cursor-plugin/plugin.json",
+      "bytes": 585
+    },
+    {
+      "path": "pm-market-research/README.md",
+      "bytes": 1559
+    },
+    {
+      "path": "pm-market-research/commands/analyze-feedback.md",
+      "bytes": 3640
+    },
+    {
+      "path": "pm-market-research/commands/competitive-analysis.md",
+      "bytes": 3537
+    },
+    {
+      "path": "pm-market-research/commands/research-users.md",
+      "bytes": 4282
+    },
+    {
+      "path": "pm-market-research/skills/competitor-analysis/SKILL.md",
+      "bytes": 4814
+    },
+    {
+      "path": "pm-market-research/skills/customer-journey-map/SKILL.md",
+      "bytes": 3268
+    },
+    {
+      "path": "pm-market-research/skills/market-segments/SKILL.md",
+      "bytes": 3623
+    },
+    {
+      "path": "pm-market-research/skills/market-sizing/SKILL.md",
+      "bytes": 4424
+    },
+    {
+      "path": "pm-market-research/skills/sentiment-analysis/SKILL.md",
+      "bytes": 3500
+    },
+    {
+      "path": "pm-market-research/skills/user-personas/SKILL.md",
+      "bytes": 3047
+    },
+    {
+      "path": "pm-market-research/skills/user-segmentation/SKILL.md",
+      "bytes": 4102
+    },
+    {
+      "path": "pm-marketing-growth/.claude-plugin/plugin.json",
+      "bytes": 542
+    },
+    {
+      "path": "pm-marketing-growth/.cursor-plugin/plugin.json",
+      "bytes": 553
+    },
+    {
+      "path": "pm-marketing-growth/README.md",
+      "bytes": 1206
+    },
+    {
+      "path": "pm-marketing-growth/commands/market-product.md",
+      "bytes": 3459
+    },
+    {
+      "path": "pm-marketing-growth/commands/north-star.md",
+      "bytes": 4017
+    },
+    {
+      "path": "pm-marketing-growth/skills/marketing-ideas/SKILL.md",
+      "bytes": 2178
+    },
+    {
+      "path": "pm-marketing-growth/skills/north-star-metric/SKILL.md",
+      "bytes": 4152
+    },
+    {
+      "path": "pm-marketing-growth/skills/positioning-ideas/SKILL.md",
+      "bytes": 3002
+    },
+    {
+      "path": "pm-marketing-growth/skills/product-name/SKILL.md",
+      "bytes": 2196
+    },
+    {
+      "path": "pm-marketing-growth/skills/value-prop-statements/SKILL.md",
+      "bytes": 3032
+    },
+    {
+      "path": "pm-product-discovery/.claude-plugin/plugin.json",
+      "bytes": 528
+    },
+    {
+      "path": "pm-product-discovery/.cursor-plugin/plugin.json",
+      "bytes": 539
+    },
+    {
+      "path": "pm-product-discovery/README.md",
+      "bytes": 2822
+    },
+    {
+      "path": "pm-product-discovery/commands/brainstorm.md",
+      "bytes": 4971
+    },
+    {
+      "path": "pm-product-discovery/commands/discover.md",
+      "bytes": 4921
+    },
+    {
+      "path": "pm-product-discovery/commands/interview.md",
+      "bytes": 5301
+    },
+    {
+      "path": "pm-product-discovery/commands/setup-metrics.md",
+      "bytes": 4448
+    },
+    {
+      "path": "pm-product-discovery/commands/triage-requests.md",
+      "bytes": 4483
+    },
+    {
+      "path": "pm-product-discovery/skills/analyze-feature-requests/SKILL.md",
+      "bytes": 2274
+    },
+    {
+      "path": "pm-product-discovery/skills/brainstorm-experiments-existing/SKILL.md",
+      "bytes": 2408
+    },
+    {
+      "path": "pm-product-discovery/skills/brainstorm-experiments-new/SKILL.md",
+      "bytes": 2538
+    },
+    {
+      "path": "pm-product-discovery/skills/brainstorm-ideas-existing/SKILL.md",
+      "bytes": 2951
+    },
+    {
+      "path": "pm-product-discovery/skills/brainstorm-ideas-new/SKILL.md",
+      "bytes": 2437
+    },
+    {
+      "path": "pm-product-discovery/skills/identify-assumptions-existing/SKILL.md",
+      "bytes": 2102
+    },
+    {
+      "path": "pm-product-discovery/skills/identify-assumptions-new/SKILL.md",
+      "bytes": 3227
+    },
+    {
+      "path": "pm-product-discovery/skills/interview-script/SKILL.md",
+      "bytes": 4817
+    },
+    {
+      "path": "pm-product-discovery/skills/metrics-dashboard/SKILL.md",
+      "bytes": 5754
+    },
+    {
+      "path": "pm-product-discovery/skills/opportunity-solution-tree/SKILL.md",
+      "bytes": 4281
+    },
+    {
+      "path": "pm-product-discovery/skills/prioritize-assumptions/SKILL.md",
+      "bytes": 2311
+    },
+    {
+      "path": "pm-product-discovery/skills/prioritize-features/SKILL.md",
+      "bytes": 2497
+    },
+    {
+      "path": "pm-product-discovery/skills/summarize-interview/SKILL.md",
+      "bytes": 2036
+    },
+    {
+      "path": "pm-product-strategy/.claude-plugin/plugin.json",
+      "bytes": 596
+    },
+    {
+      "path": "pm-product-strategy/.cursor-plugin/plugin.json",
+      "bytes": 607
+    },
+    {
+      "path": "pm-product-strategy/README.md",
+      "bytes": 3133
+    },
+    {
+      "path": "pm-product-strategy/commands/business-model.md",
+      "bytes": 6001
+    },
+    {
+      "path": "pm-product-strategy/commands/market-scan.md",
+      "bytes": 4583
+    },
+    {
+      "path": "pm-product-strategy/commands/pricing.md",
+      "bytes": 4577
+    },
+    {
+      "path": "pm-product-strategy/commands/strategy.md",
+      "bytes": 4214
+    },
+    {
+      "path": "pm-product-strategy/commands/value-proposition.md",
+      "bytes": 2836
+    },
+    {
+      "path": "pm-product-strategy/skills/ansoff-matrix/SKILL.md",
+      "bytes": 5684
+    },
+    {
+      "path": "pm-product-strategy/skills/business-model/SKILL.md",
+      "bytes": 5784
+    },
+    {
+      "path": "pm-product-strategy/skills/lean-canvas/SKILL.md",
+      "bytes": 4860
+    },
+    {
+      "path": "pm-product-strategy/skills/monetization-strategy/SKILL.md",
+      "bytes": 6660
+    },
+    {
+      "path": "pm-product-strategy/skills/pestle-analysis/SKILL.md",
+      "bytes": 4647
+    },
+    {
+      "path": "pm-product-strategy/skills/porters-five-forces/SKILL.md",
+      "bytes": 8185
+    },
+    {
+      "path": "pm-product-strategy/skills/pricing-strategy/SKILL.md",
+      "bytes": 3666
+    },
+    {
+      "path": "pm-product-strategy/skills/product-strategy/SKILL.md",
+      "bytes": 4833
+    },
+    {
+      "path": "pm-product-strategy/skills/product-vision/SKILL.md",
+      "bytes": 2518
+    },
+    {
+      "path": "pm-product-strategy/skills/startup-canvas/SKILL.md",
+      "bytes": 6346
+    },
+    {
+      "path": "pm-product-strategy/skills/swot-analysis/SKILL.md",
+      "bytes": 3813
+    },
+    {
+      "path": "pm-product-strategy/skills/value-proposition/SKILL.md",
+      "bytes": 5836
+    },
+    {
+      "path": "pm-toolkit/.claude-plugin/plugin.json",
+      "bytes": 556
+    },
+    {
+      "path": "pm-toolkit/.cursor-plugin/plugin.json",
+      "bytes": 567
+    },
+    {
+      "path": "pm-toolkit/README.md",
+      "bytes": 1566
+    },
+    {
+      "path": "pm-toolkit/commands/draft-nda.md",
+      "bytes": 2058
+    },
+    {
+      "path": "pm-toolkit/commands/privacy-policy.md",
+      "bytes": 2178
+    },
+    {
+      "path": "pm-toolkit/commands/proofread.md",
+      "bytes": 1806
+    },
+    {
+      "path": "pm-toolkit/commands/review-resume.md",
+      "bytes": 3157
+    },
+    {
+      "path": "pm-toolkit/commands/tailor-resume.md",
+      "bytes": 2514
+    },
+    {
+      "path": "pm-toolkit/skills/draft-nda/SKILL.md",
+      "bytes": 7484
+    },
+    {
+      "path": "pm-toolkit/skills/grammar-check/SKILL.md",
+      "bytes": 9673
+    },
+    {
+      "path": "pm-toolkit/skills/privacy-policy/SKILL.md",
+      "bytes": 10699
+    },
+    {
+      "path": "pm-toolkit/skills/review-resume/SKILL.md",
+      "bytes": 11301
+    }
+  ],
+  "bytes": 463748,
+  "reason": "",
+  "install": "claude plugin marketplace add phuryn/pm-skills\nclaude plugin install pm-toolkit@pm-skills",
+  "note": "Chép 9 thư mục plugin nguyên văn (skills + commands). pm-ai-shipping README ghi đã chuyển sang phuryn/product-engineering nhưng vẫn còn trong commit này."
+}

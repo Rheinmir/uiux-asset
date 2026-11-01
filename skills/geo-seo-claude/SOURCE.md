@@ -1,0 +1,23 @@
+# SOURCE
+
+- Repo: https://github.com/zubair-trabzada/geo-seo-claude
+- Commit sha đã chép: 989cae01e8ebbc42a9ec798eb9e7cb423f5ec89c
+- Giấy phép: MIT (xem tệp LICENSE trong thư mục này; bản sao từ LICENSE gốc ở gốc repo)
+- Ngày chép: 2026-11-01
+- Trạng thái: chép nguyên văn, không sửa nội dung tệp.
+- Ánh xạ (đường dẫn trong repo -> đường dẫn ở đây):
+  - `geo` -> `geo`
+  - `skills` -> `skills`
+  - `agents` -> `agents`
+  - `scripts` -> `scripts`
+  - `schema` -> `schema`
+  - `templates` -> `templates`
+  - `docs` -> `docs`
+  - `requirements.txt` -> `requirements.txt`
+  - `README.md` -> `README.md`
+  - `CLAUDE.md` -> `CLAUDE.md`
+  - `install.sh` -> `install.sh`
+  - `install-win.sh` -> `install-win.sh`
+  - `uninstall.sh` -> `uninstall.sh`
+- Chép: geo/ (skill chính), skills/ (15 skill con geo-*), agents/ (5 agent), scripts/ (Python + webapp), schema/, templates/, docs/, requirements.txt, README.md, CLAUDE.md, install.sh, install-win.sh, uninstall.sh. Tổng dưới 2MB, không có tệp >300KB.
+- Bỏ (không chép): examples/ (báo cáo mẫu cho một khách hàng cụ thể, gồm PDF), tests/, white-label/, assets/banner.svg, .github/, pr-draft-*.md, CONTRIBUTING.md, .gitignore. Không bỏ vì kích thước mà vì không phải phần chạy của skill.

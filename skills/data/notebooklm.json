@@ -1,0 +1,33 @@
+{
+  "slug": "notebooklm",
+  "name": "NotebookLM",
+  "category": "Ảnh, video & nhạc AI",
+  "repo": "teng-lin/notebooklm-py",
+  "url": "https://github.com/teng-lin/notebooklm-py",
+  "confidence": "gợi ý",
+  "candidates": [
+    "PleasePrompto/notebooklm-skill (MIT, 7791 sao, chỉ hỏi đáp có trích dẫn, không tạo podcast/quiz/slide)",
+    "Mathews-Tom/armory skills/notebooklm (MIT, dẫn xuất dùng notebooklm-py)",
+    "ArtemXTech/personal-os-skills skills/notebooklm (MIT, hướng tới kênh podcast chuyên gia)"
+  ],
+  "license": "MIT",
+  "stars": 20043,
+  "pushed": "2026-10-31T00:39:22Z",
+  "path": "SKILL.md (gốc repo)",
+  "vendored": true,
+  "files": [
+    {
+      "path": "LICENSE",
+      "bytes": 1065
+    },
+    {
+      "path": "SKILL.md",
+      "bytes": 16376
+    }
+  ],
+  "bytes": 17441,
+  "reason": "",
+  "install": "npx skills add teng-lin/notebooklm-py",
+  "note": "Tên notebooklm rất phổ biến, nhiều skill trùng tên. Chọn teng-lin vì skill tạo được audio (podcast), quiz, flashcards, slide-deck, infographic, mind-map từ nguồn (bài viết, PDF, YouTube, web) đúng mô tả bài. Chỉ chép SKILL.md + LICENSE (skill nằm ở gốc repo; repo còn là thư viện Python, cần pip/uv tool install notebooklm-py[browser]). Là API không chính thức của Google NotebookLM.",
+  "commit": "7db1000b516c3f3a7d3afe7c4c572924ee7a5264"
+}

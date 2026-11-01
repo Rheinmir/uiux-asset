@@ -1,0 +1,120 @@
+{
+ "slug": "autoresearch",
+ "name": "Autoresearch",
+ "category": "Lập trình & tự động hóa",
+ "repo": "uditgoenka/autoresearch",
+ "url": "https://github.com/uditgoenka/autoresearch",
+ "confidence": "chắc",
+ "candidates": [
+  "karpathy/autoresearch (ý tưởng gốc, không phải Claude skill, repo không có giấy phép)",
+  "arush361/autoresearch-claude-skills (1 sao)"
+ ],
+ "license": "MIT",
+ "stars": 6781,
+ "pushed": "2026-10-31T13:56:11Z",
+ "path": "claude-plugin/skills/autoresearch/ (+ claude-plugin/commands/autoresearch/)",
+ "vendored": true,
+ "files": [
+  {
+   "path": "LICENSE",
+   "bytes": 1068
+  },
+  {
+   "path": "SKILL.md",
+   "bytes": 10069
+  },
+  {
+   "path": "SOURCE.md",
+   "bytes": 970
+  },
+  {
+   "path": "commands/autoresearch/debug.md",
+   "bytes": 4152
+  },
+  {
+   "path": "commands/autoresearch/evals.md",
+   "bytes": 5196
+  },
+  {
+   "path": "commands/autoresearch/fix.md",
+   "bytes": 4488
+  },
+  {
+   "path": "commands/autoresearch/improve.md",
+   "bytes": 6195
+  },
+  {
+   "path": "commands/autoresearch/learn.md",
+   "bytes": 8160
+  },
+  {
+   "path": "commands/autoresearch/plan.md",
+   "bytes": 3347
+  },
+  {
+   "path": "commands/autoresearch/predict.md",
+   "bytes": 3903
+  },
+  {
+   "path": "commands/autoresearch/probe.md",
+   "bytes": 5022
+  },
+  {
+   "path": "commands/autoresearch/reason.md",
+   "bytes": 4860
+  },
+  {
+   "path": "commands/autoresearch/regression.md",
+   "bytes": 9578
+  },
+  {
+   "path": "commands/autoresearch/scenario.md",
+   "bytes": 4286
+  },
+  {
+   "path": "commands/autoresearch/security.md",
+   "bytes": 4775
+  },
+  {
+   "path": "commands/autoresearch/ship.md",
+   "bytes": 4004
+  },
+  {
+   "path": "references/behavior-preserving-optimization.md",
+   "bytes": 2692
+  },
+  {
+   "path": "references/fork-and-flush.md",
+   "bytes": 8602
+  },
+  {
+   "path": "references/orchestrator-routing.md",
+   "bytes": 7350
+  },
+  {
+   "path": "references/predict-personas.md",
+   "bytes": 3145
+  },
+  {
+   "path": "references/reason-judge-protocol.md",
+   "bytes": 3508
+  },
+  {
+   "path": "references/security-checklist.md",
+   "bytes": 3524
+  },
+  {
+   "path": "scripts/orchestrate.sh",
+   "bytes": 29476
+  },
+  {
+   "path": "scripts/score-regression.sh",
+   "bytes": 7775
+  }
+ ],
+ "bytes": 146145,
+ "install": "npx skills add uditgoenka/autoresearch",
+ "note": "SKILL.md tham chiếu ../../commands/autoresearch/<name>.md nên chép thêm 13 tệp lệnh vào autoresearch/commands/autoresearch/ (đường dẫn tương đối trong repo không giữ nguyên). Bản .agents/skills/autoresearch (cho Codex) khác và không chép.",
+ "commit": "7bddd056dfd0b0ded8360588d8101b1ecb5c0baa",
+ "vendored_date": "2026-11-01"
+}

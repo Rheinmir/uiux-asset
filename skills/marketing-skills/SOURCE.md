@@ -1,0 +1,27 @@
+# SOURCE
+
+- Repo: https://github.com/coreyhaines31/marketingskills
+- Commit sha đã chép: 88c79f6528a9347420e57ceb1fff9a60de651768
+- Giấy phép: MIT (xem tệp LICENSE trong thư mục này; bản sao từ LICENSE gốc ở gốc repo)
+- Ngày chép: 2026-11-01
+- Trạng thái: chép nguyên văn, không sửa nội dung tệp.
+- Ánh xạ (đường dẫn trong repo -> đường dẫn ở đây):
+  - `skills/seo-audit` -> `seo-audit`
+  - `skills/ai-seo` -> `ai-seo`
+  - `skills/programmatic-seo` -> `programmatic-seo`
+  - `skills/ad-creative` -> `ad-creative`
+  - `skills/ads` -> `ads`
+  - `skills/analytics` -> `analytics`
+  - `skills/social` -> `social`
+  - `skills/video` -> `video`
+  - `skills/content-strategy` -> `content-strategy`
+  - `skills/copywriting` -> `copywriting`
+  - `skills/cro` -> `cro`
+  - `skills/marketing-ideas` -> `marketing-ideas`
+  - `skills/launch` -> `launch`
+  - `skills/marketing-psychology` -> `marketing-psychology`
+  - `skills/product-marketing` -> `product-marketing`
+- Lý do chọn tập con: repo có 53 skill (~4.4MB, vượt ngưỡng 2MB) nên chỉ chép 15 skill chính ăn khớp mô tả bài (SEO, mẫu quảng cáo, tăng trưởng, phân tích, video ngắn): seo-audit, ai-seo, programmatic-seo, ad-creative, ads, analytics, social, video, content-strategy, copywriting, cro, marketing-ideas, launch, marketing-psychology, product-marketing.
+- Mỗi skill chép trọn thư mục (SKILL.md + references/ + assets/ + evals/), tổng ~1.2MB. Không có tệp >300KB nào bị bỏ.
+- Bỏ (không chép): 38 skill còn lại trong skills/ (vd conversion-tracking, reverse-engineer-marketing, marketing-plan, ...), cùng tools/, scripts/, docs/, tests/ và các tệp gốc repo ngoài LICENSE.
+- Lưu ý: một số SKILL.md có thể tham chiếu chéo tới skill khác không được chép (vd customer-research, pricing, copy-editing).

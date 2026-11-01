@@ -1,0 +1,294 @@
+{
+  "slug": "drawn-diagrams",
+  "name": "Drawn Diagrams",
+  "category": "Thiết kế & giao diện",
+  "repo": "muthuishere/hand-drawn-diagrams",
+  "url": "https://github.com/muthuishere/hand-drawn-diagrams",
+  "confidence": "gợi ý",
+  "candidates": [
+    "cclank/lanshu-animated-architecture-diagram (MIT, 1018 sao, skill Codex, sơ đồ kiến trúc vẽ tay có hoạt ảnh)",
+    "lazypay/Archscribe (MIT, 373 sao, sơ đồ kiến trúc vẽ tay nền tối có hoạt ảnh, xuất .excalidraw)"
+  ],
+  "license": "MIT",
+  "stars": 85,
+  "pushed": "2026-09-27",
+  "path": "/ (gốc repo)",
+  "vendored": true,
+  "install": "npx skills add muthuishere/hand-drawn-diagrams  (thêm -g để cài toàn cục)",
+  "note": "Không có repo nào tên đúng 'drawn-diagrams'. Chọn hand-drawn-diagrams vì khớp nhất: Excalidraw vẽ tay, có animated SVG, dùng cho Claude Code. Hai ứng viên kia mạnh về sao nhưng thiên về sơ đồ kiến trúc. Nên người duyệt xác nhận lại. API license báo NOASSERTION nhưng LICENSE thực là MIT.",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 98
+    },
+    {
+      "path": ".github/workflows/skill-review.yml",
+      "bytes": 302
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 166
+    },
+    {
+      "path": "AGENTS.md",
+      "bytes": 5525
+    },
+    {
+      "path": "CLAUDE.md",
+      "bytes": 5400
+    },
+    {
+      "path": "INSTALL.md",
+      "bytes": 3314
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 1384
+    },
+    {
+      "path": "MANUAL-INSTALL.md",
+      "bytes": 2275
+    },
+    {
+      "path": "README.md",
+      "bytes": 4674
+    },
+    {
+      "path": "SKILL.md",
+      "bytes": 2022
+    },
+    {
+      "path": "SOURCE.md",
+      "bytes": 1075
+    },
+    {
+      "path": "assets/demo.gif",
+      "bytes": 132
+    },
+    {
+      "path": "assets/diagram.animated.svg",
+      "bytes": 692926
+    },
+    {
+      "path": "assets/thermal-physics-exam-revision.animated.svg",
+      "bytes": 368405
+    },
+    {
+      "path": "docs/animate.html",
+      "bytes": 10896
+    },
+    {
+      "path": "docs/edit.html",
+      "bytes": 10493
+    },
+    {
+      "path": "docs/index.html",
+      "bytes": 5901
+    },
+    {
+      "path": "install.cmd",
+      "bytes": 440
+    },
+    {
+      "path": "install.sh",
+      "bytes": 303
+    },
+    {
+      "path": "installscripts/install.py",
+      "bytes": 7595
+    },
+    {
+      "path": "installscripts/uninstall.py",
+      "bytes": 1539
+    },
+    {
+      "path": "references/activation-routing.xml",
+      "bytes": 5973
+    },
+    {
+      "path": "references/animation-spec.md",
+      "bytes": 7165
+    },
+    {
+      "path": "references/arrow-routing.md",
+      "bytes": 2497
+    },
+    {
+      "path": "references/bullets.md",
+      "bytes": 1483
+    },
+    {
+      "path": "references/color-palette.md",
+      "bytes": 1312
+    },
+    {
+      "path": "references/creative-raw-diagrams.md",
+      "bytes": 1150
+    },
+    {
+      "path": "references/element-templates.md",
+      "bytes": 12666
+    },
+    {
+      "path": "references/fundamental-shapes.md",
+      "bytes": 3367
+    },
+    {
+      "path": "references/ideation-diagrams.md",
+      "bytes": 2062
+    },
+    {
+      "path": "references/index.md",
+      "bytes": 783
+    },
+    {
+      "path": "references/json-schema.md",
+      "bytes": 4473
+    },
+    {
+      "path": "references/medical-diagrams.md",
+      "bytes": 3330
+    },
+    {
+      "path": "references/page-mockup-diagrams.md",
+      "bytes": 5055
+    },
+    {
+      "path": "references/patterns.md",
+      "bytes": 5321
+    },
+    {
+      "path": "references/prompt-templates.md",
+      "bytes": 4813
+    },
+    {
+      "path": "references/quality-checklist.md",
+      "bytes": 4383
+    },
+    {
+      "path": "references/route-guide-template.md",
+      "bytes": 531
+    },
+    {
+      "path": "references/sales-funnel-diagrams.md",
+      "bytes": 2063
+    },
+    {
+      "path": "references/teachers-diagrams.md",
+      "bytes": 4890
+    },
+    {
+      "path": "references/technical-explainer-diagrams.md",
+      "bytes": 4351
+    },
+    {
+      "path": "references/ux-designer-diagrams.md",
+      "bytes": 2060
+    },
+    {
+      "path": "scripts/.gitignore",
+      "bytes": 26
+    },
+    {
+      "path": "scripts/animate_excalidraw.py",
+      "bytes": 2124
+    },
+    {
+      "path": "scripts/animatecreator.html",
+      "bytes": 2439
+    },
+    {
+      "path": "scripts/edit_excalidraw.py",
+      "bytes": 1698
+    },
+    {
+      "path": "scripts/get_excalidraw_urls.py",
+      "bytes": 1489
+    },
+    {
+      "path": "scripts/hosted_scene_urls.py",
+      "bytes": 2503
+    },
+    {
+      "path": "scripts/local_excalidraw_server.py",
+      "bytes": 4954
+    },
+    {
+      "path": "scripts/open_diagram.py",
+      "bytes": 7631
+    },
+    {
+      "path": "scripts/pyproject.toml",
+      "bytes": 333
+    },
+    {
+      "path": "scripts/render_animated_svg.py",
+      "bytes": 13726
+    },
+    {
+      "path": "scripts/render_excalidraw.py",
+      "bytes": 12300
+    },
+    {
+      "path": "scripts/tests/conftest.py",
+      "bytes": 401
+    },
+    {
+      "path": "scripts/tests/test_hosted_scene_urls.py",
+      "bytes": 3595
+    },
+    {
+      "path": "scripts/tests/test_open_diagram.py",
+      "bytes": 5768
+    },
+    {
+      "path": "scripts/tests/test_render_animated_svg.py",
+      "bytes": 7219
+    },
+    {
+      "path": "scripts/tests/test_render_excalidraw.py",
+      "bytes": 2514
+    },
+    {
+      "path": "scripts/tests/test_validate_excalidraw.py",
+      "bytes": 8818
+    },
+    {
+      "path": "scripts/tests/testdata/transportation-circulation-study-guide.excalidraw",
+      "bytes": 91300
+    },
+    {
+      "path": "scripts/uv.lock",
+      "bytes": 20690
+    },
+    {
+      "path": "scripts/validate_excalidraw.py",
+      "bytes": 12441
+    },
+    {
+      "path": "steps/step-01-route.md",
+      "bytes": 3040
+    },
+    {
+      "path": "steps/step-02-draw.md",
+      "bytes": 6453
+    },
+    {
+      "path": "steps/step-03-validate.md",
+      "bytes": 5212
+    },
+    {
+      "path": "uninstall.cmd",
+      "bytes": 450
+    },
+    {
+      "path": "uninstall.sh",
+      "bytes": 388
+    },
+    {
+      "path": "workflow.md",
+      "bytes": 3197
+    }
+  ],
+  "bytes": 1425302
+}

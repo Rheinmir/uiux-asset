@@ -1,0 +1,659 @@
+{
+ "slug": "antfu-s-skills",
+ "name": "Antfu's Skills",
+ "category": "Lập trình & tự động hóa",
+ "repo": "antfu/skills",
+ "url": "https://github.com/antfu/skills",
+ "confidence": "chắc",
+ "candidates": [
+  "antfu/skills-pack (gói npm @antfu/skills, theo README repo)"
+ ],
+ "license": "MIT",
+ "stars": 6030,
+ "pushed": "2026-10-30T21:17:56Z",
+ "path": "skills/ (14 thư mục skill)",
+ "vendored": true,
+ "files": [
+  {
+   "path": "LICENSE",
+   "bytes": 1102
+  },
+  {
+   "path": "SOURCE.md",
+   "bytes": 814
+  },
+  {
+   "path": "antfu-create-pr/README.md",
+   "bytes": 1457
+  },
+  {
+   "path": "antfu-create-pr/SKILL.md",
+   "bytes": 5855
+  },
+  {
+   "path": "antfu-create-pr/references/pr-body.md",
+   "bytes": 4296
+  },
+  {
+   "path": "antfu-create-pr/references/visual-evidence.md",
+   "bytes": 4632
+  },
+  {
+   "path": "antfu-create-pr/scripts/upload-github-attachment.sh",
+   "bytes": 2666
+  },
+  {
+   "path": "antfu-issue-triage/SKILL.md",
+   "bytes": 12003
+  },
+  {
+   "path": "antfu-query/SKILL.md",
+   "bytes": 3122
+  },
+  {
+   "path": "antfu-simplify/SKILL.md",
+   "bytes": 6453
+  },
+  {
+   "path": "antfu/SKILL.md",
+   "bytes": 7858
+  },
+  {
+   "path": "antfu/references/antfu-eslint-config.md",
+   "bytes": 6944
+  },
+  {
+   "path": "antfu/references/app-development.md",
+   "bytes": 2623
+  },
+  {
+   "path": "antfu/references/library-development.md",
+   "bytes": 4851
+  },
+  {
+   "path": "antfu/references/monorepo.md",
+   "bytes": 2743
+  },
+  {
+   "path": "antfu/references/setting-up.md",
+   "bytes": 3109
+  },
+  {
+   "path": "nitro/GENERATION.md",
+   "bytes": 135
+  },
+  {
+   "path": "nitro/SKILL.md",
+   "bytes": 3800
+  },
+  {
+   "path": "nitro/references/advanced-migration.md",
+   "bytes": 6945
+  },
+  {
+   "path": "nitro/references/core-assets.md",
+   "bytes": 3748
+  },
+  {
+   "path": "nitro/references/core-cache.md",
+   "bytes": 8110
+  },
+  {
+   "path": "nitro/references/core-configuration.md",
+   "bytes": 5847
+  },
+  {
+   "path": "nitro/references/core-rendering.md",
+   "bytes": 5097
+  },
+  {
+   "path": "nitro/references/core-routing.md",
+   "bytes": 8455
+  },
+  {
+   "path": "nitro/references/core-storage.md",
+   "bytes": 4499
+  },
+  {
+   "path": "nitro/references/deploy-presets.md",
+   "bytes": 3938
+  },
+  {
+   "path": "nitro/references/features-database.md",
+   "bytes": 3542
+  },
+  {
+   "path": "nitro/references/features-openapi.md",
+   "bytes": 3543
+  },
+  {
+   "path": "nitro/references/features-plugins.md",
+   "bytes": 3966
+  },
+  {
+   "path": "nitro/references/features-tasks.md",
+   "bytes": 4064
+  },
+  {
+   "path": "nitro/references/features-websocket.md",
+   "bytes": 3897
+  },
+  {
+   "path": "nuxt/GENERATION.md",
+   "bytes": 134
+  },
+  {
+   "path": "nuxt/SKILL.md",
+   "bytes": 4595
+  },
+  {
+   "path": "nuxt/references/advanced-hooks.md",
+   "bytes": 6801
+  },
+  {
+   "path": "nuxt/references/advanced-layers.md",
+   "bytes": 5224
+  },
+  {
+   "path": "nuxt/references/advanced-module-authoring.md",
+   "bytes": 14467
+  },
+  {
+   "path": "nuxt/references/best-practices-data-fetching.md",
+   "bytes": 9220
+  },
+  {
+   "path": "nuxt/references/best-practices-ssr.md",
+   "bytes": 6715
+  },
+  {
+   "path": "nuxt/references/core-cli.md",
+   "bytes": 4646
+  },
+  {
+   "path": "nuxt/references/core-config.md",
+   "bytes": 8149
+  },
+  {
+   "path": "nuxt/references/core-data-fetching.md",
+   "bytes": 10134
+  },
+  {
+   "path": "nuxt/references/core-deployment.md",
+   "bytes": 4859
+  },
+  {
+   "path": "nuxt/references/core-directory-structure.md",
+   "bytes": 8879
+  },
+  {
+   "path": "nuxt/references/core-modules.md",
+   "bytes": 5512
+  },
+  {
+   "path": "nuxt/references/core-routing.md",
+   "bytes": 6006
+  },
+  {
+   "path": "nuxt/references/features-components-autoimport.md",
+   "bytes": 6092
+  },
+  {
+   "path": "nuxt/references/features-components.md",
+   "bytes": 5841
+  },
+  {
+   "path": "nuxt/references/features-composables.md",
+   "bytes": 7074
+  },
+  {
+   "path": "nuxt/references/features-server.md",
+   "bytes": 9805
+  },
+  {
+   "path": "nuxt/references/features-state.md",
+   "bytes": 4014
+  },
+  {
+   "path": "nuxt/references/rendering-modes.md",
+   "bytes": 5656
+  },
+  {
+   "path": "pinia/GENERATION.md",
+   "bytes": 135
+  },
+  {
+   "path": "pinia/SKILL.md",
+   "bytes": 2719
+  },
+  {
+   "path": "pinia/references/advanced-hmr.md",
+   "bytes": 1387
+  },
+  {
+   "path": "pinia/references/advanced-nuxt.md",
+   "bytes": 2671
+  },
+  {
+   "path": "pinia/references/advanced-ssr.md",
+   "bytes": 2425
+  },
+  {
+   "path": "pinia/references/best-practices-outside-component.md",
+   "bytes": 2218
+  },
+  {
+   "path": "pinia/references/best-practices-testing.md",
+   "bytes": 4830
+  },
+  {
+   "path": "pinia/references/core-stores.md",
+   "bytes": 7749
+  },
+  {
+   "path": "pinia/references/features-composables.md",
+   "bytes": 2746
+  },
+  {
+   "path": "pinia/references/features-composing-stores.md",
+   "bytes": 2612
+  },
+  {
+   "path": "pinia/references/features-plugins.md",
+   "bytes": 3676
+  },
+  {
+   "path": "pnpm/GENERATION.md",
+   "bytes": 134
+  },
+  {
+   "path": "pnpm/SKILL.md",
+   "bytes": 5122
+  },
+  {
+   "path": "pnpm/references/best-practices-ci.md",
+   "bytes": 8227
+  },
+  {
+   "path": "pnpm/references/best-practices-migration.md",
+   "bytes": 8562
+  },
+  {
+   "path": "pnpm/references/best-practices-performance.md",
+   "bytes": 5294
+  },
+  {
+   "path": "pnpm/references/core-cli.md",
+   "bytes": 9213
+  },
+  {
+   "path": "pnpm/references/core-config.md",
+   "bytes": 7757
+  },
+  {
+   "path": "pnpm/references/core-store.md",
+   "bytes": 5846
+  },
+  {
+   "path": "pnpm/references/core-workspaces.md",
+   "bytes": 5520
+  },
+  {
+   "path": "pnpm/references/features-aliases.md",
+   "bytes": 3383
+  },
+  {
+   "path": "pnpm/references/features-catalogs.md",
+   "bytes": 4502
+  },
+  {
+   "path": "pnpm/references/features-config-dependencies.md",
+   "bytes": 3004
+  },
+  {
+   "path": "pnpm/references/features-global-virtual-store.md",
+   "bytes": 8690
+  },
+  {
+   "path": "pnpm/references/features-hooks.md",
+   "bytes": 7164
+  },
+  {
+   "path": "pnpm/references/features-multi-ecosystem.md",
+   "bytes": 4018
+  },
+  {
+   "path": "pnpm/references/features-overrides.md",
+   "bytes": 4083
+  },
+  {
+   "path": "pnpm/references/features-patches.md",
+   "bytes": 4295
+  },
+  {
+   "path": "pnpm/references/features-peer-deps.md",
+   "bytes": 4492
+  },
+  {
+   "path": "pnpm/references/features-supply-chain-security.md",
+   "bytes": 5441
+  },
+  {
+   "path": "pnpm/references/features-task-orchestration.md",
+   "bytes": 5689
+  },
+  {
+   "path": "pnpm/references/features-versioning.md",
+   "bytes": 4420
+  },
+  {
+   "path": "unocss/GENERATION.md",
+   "bytes": 136
+  },
+  {
+   "path": "unocss/SKILL.md",
+   "bytes": 4360
+  },
+  {
+   "path": "unocss/references/core-config.md",
+   "bytes": 3222
+  },
+  {
+   "path": "unocss/references/core-extracting.md",
+   "bytes": 2191
+  },
+  {
+   "path": "unocss/references/core-layers.md",
+   "bytes": 1620
+  },
+  {
+   "path": "unocss/references/core-processors.md",
+   "bytes": 2785
+  },
+  {
+   "path": "unocss/references/core-rules.md",
+   "bytes": 3678
+  },
+  {
+   "path": "unocss/references/core-safelist.md",
+   "bytes": 4104
+  },
+  {
+   "path": "unocss/references/core-shortcuts.md",
+   "bytes": 1912
+  },
+  {
+   "path": "unocss/references/core-theme.md",
+   "bytes": 3113
+  },
+  {
+   "path": "unocss/references/core-variants.md",
+   "bytes": 3236
+  },
+  {
+   "path": "unocss/references/integrations-nuxt.md",
+   "bytes": 3397
+  },
+  {
+   "path": "unocss/references/integrations-vite.md",
+   "bytes": 4459
+  },
+  {
+   "path": "unocss/references/preset-attributify.md",
+   "bytes": 2581
+  },
+  {
+   "path": "unocss/references/preset-icons.md",
+   "bytes": 3839
+  },
+  {
+   "path": "unocss/references/preset-mini.md",
+   "bytes": 2786
+  },
+  {
+   "path": "unocss/references/preset-rem-to-px.md",
+   "bytes": 1624
+  },
+  {
+   "path": "unocss/references/preset-tagify.md",
+   "bytes": 2021
+  },
+  {
+   "path": "unocss/references/preset-typography.md",
+   "bytes": 1781
+  },
+  {
+   "path": "unocss/references/preset-web-fonts.md",
+   "bytes": 2505
+  },
+  {
+   "path": "unocss/references/preset-wind3.md",
+   "bytes": 3416
+  },
+  {
+   "path": "unocss/references/preset-wind4.md",
+   "bytes": 4708
+  },
+  {
+   "path": "unocss/references/transformer-attributify-jsx.md",
+   "bytes": 2534
+  },
+  {
+   "path": "unocss/references/transformer-compile-class.md",
+   "bytes": 2243
+  },
+  {
+   "path": "unocss/references/transformer-directives.md",
+   "bytes": 2547
+  },
+  {
+   "path": "unocss/references/transformer-variant-group.md",
+   "bytes": 1826
+  },
+  {
+   "path": "vite/GENERATION.md",
+   "bytes": 134
+  },
+  {
+   "path": "vite/SKILL.md",
+   "bytes": 2524
+  },
+  {
+   "path": "vite/references/build-and-ssr.md",
+   "bytes": 3820
+  },
+  {
+   "path": "vite/references/core-config.md",
+   "bytes": 4133
+  },
+  {
+   "path": "vite/references/core-features.md",
+   "bytes": 5270
+  },
+  {
+   "path": "vite/references/core-plugin-api.md",
+   "bytes": 6147
+  },
+  {
+   "path": "vite/references/environment-api.md",
+   "bytes": 4527
+  },
+  {
+   "path": "vite/references/rolldown-migration.md",
+   "bytes": 5426
+  },
+  {
+   "path": "vitepress/GENERATION.md",
+   "bytes": 139
+  },
+  {
+   "path": "vitepress/SKILL.md",
+   "bytes": 3686
+  },
+  {
+   "path": "vitepress/references/advanced-i18n.md",
+   "bytes": 6424
+  },
+  {
+   "path": "vitepress/references/advanced-ssr.md",
+   "bytes": 4086
+  },
+  {
+   "path": "vitepress/references/core-cli.md",
+   "bytes": 2541
+  },
+  {
+   "path": "vitepress/references/core-config.md",
+   "bytes": 7298
+  },
+  {
+   "path": "vitepress/references/core-markdown.md",
+   "bytes": 6502
+  },
+  {
+   "path": "vitepress/references/core-routing.md",
+   "bytes": 4105
+  },
+  {
+   "path": "vitepress/references/features-code-blocks.md",
+   "bytes": 3667
+  },
+  {
+   "path": "vitepress/references/features-data-loading.md",
+   "bytes": 4436
+  },
+  {
+   "path": "vitepress/references/features-dynamic-routes.md",
+   "bytes": 5015
+  },
+  {
+   "path": "vitepress/references/features-vue.md",
+   "bytes": 3707
+  },
+  {
+   "path": "vitepress/references/recipes-deploy.md",
+   "bytes": 5396
+  },
+  {
+   "path": "vitepress/references/theme-config.md",
+   "bytes": 7031
+  },
+  {
+   "path": "vitepress/references/theme-custom.md",
+   "bytes": 5817
+  },
+  {
+   "path": "vitepress/references/theme-customization.md",
+   "bytes": 8486
+  },
+  {
+   "path": "vitest/GENERATION.md",
+   "bytes": 136
+  },
+  {
+   "path": "vitest/SKILL.md",
+   "bytes": 3716
+  },
+  {
+   "path": "vitest/references/advanced-environments.md",
+   "bytes": 5005
+  },
+  {
+   "path": "vitest/references/advanced-projects.md",
+   "bytes": 7529
+  },
+  {
+   "path": "vitest/references/advanced-type-testing.md",
+   "bytes": 4740
+  },
+  {
+   "path": "vitest/references/advanced-vi.md",
+   "bytes": 5933
+  },
+  {
+   "path": "vitest/references/core-cli.md",
+   "bytes": 5055
+  },
+  {
+   "path": "vitest/references/core-config.md",
+   "bytes": 7878
+  },
+  {
+   "path": "vitest/references/core-describe.md",
+   "bytes": 3624
+  },
+  {
+   "path": "vitest/references/core-expect.md",
+   "bytes": 9001
+  },
+  {
+   "path": "vitest/references/core-hooks.md",
+   "bytes": 4891
+  },
+  {
+   "path": "vitest/references/core-test-api.md",
+   "bytes": 5662
+  },
+  {
+   "path": "vitest/references/features-benchmarking.md",
+   "bytes": 3992
+  },
+  {
+   "path": "vitest/references/features-concurrency.md",
+   "bytes": 4805
+  },
+  {
+   "path": "vitest/references/features-context.md",
+   "bytes": 5414
+  },
+  {
+   "path": "vitest/references/features-coverage.md",
+   "bytes": 5120
+  },
+  {
+   "path": "vitest/references/features-filtering.md",
+   "bytes": 4931
+  },
+  {
+   "path": "vitest/references/features-mocking.md",
+   "bytes": 10064
+  },
+  {
+   "path": "vitest/references/features-reporters.md",
+   "bytes": 4114
+  },
+  {
+   "path": "vitest/references/features-snapshots.md",
+   "bytes": 5291
+  },
+  {
+   "path": "vitest/references/features-test-tags.md",
+   "bytes": 3693
+  },
+  {
+   "path": "vue/GENERATION.md",
+   "bytes": 133
+  },
+  {
+   "path": "vue/SKILL.md",
+   "bytes": 2473
+  },
+  {
+   "path": "vue/references/advanced-patterns.md",
+   "bytes": 6270
+  },
+  {
+   "path": "vue/references/core-new-apis.md",
+   "bytes": 5698
+  },
+  {
+   "path": "vue/references/script-setup-macros.md",
+   "bytes": 4129
+  }
+ ],
+ "bytes": 734199,
+ "install": "pnpx skills add antfu/skills --skill='*'",
+ "note": "Bộ skill của Anthony Fu: antfu, vue, nuxt, vite, vitest, unocss, pnpm, pinia, nitro, vitepress, antfu-create-pr/issue-triage/query/simplify. Một số skill (vue, nuxt, ...) được sinh từ tài liệu dự án gốc (xem GENERATION.md trong từng thư mục); README repo tuyên bố toàn bộ skills và scripts là MIT.",
+ "commit": "7de210b51c8d48cc405a4eac3e17cbb1396c653b",
+ "vendored_date": "2026-11-01"
+}
