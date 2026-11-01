@@ -1,120 +1,20 @@
 {
-  "slug": "ai-video-toolkit",
-  "name": "AI Video Toolkit",
-  "category": "Ảnh, video & nhạc AI",
-  "repo": "digitalsamba/claude-code-video-toolkit",
-  "url": "https://github.com/digitalsamba/claude-code-video-toolkit",
-  "confidence": "gợi ý",
-  "candidates": [
-    "ytrofr/claude-remotion-editor (.claude/skills/ai-video-toolkit, MIT, 30 sao; trùng tên chính xác nhưng mô tả là phụ kiện Remotion: voiceover, caption, light leak, không phải quy trình kịch bản tới MP4)",
-    "kaostyl/ai-video-toolkit (MIT, 0 sao, 8 skill nhỏ)"
-  ],
-  "license": "MIT",
-  "stars": 2401,
-  "pushed": "2026-11-01T04:32:19Z",
-  "path": "skills/video-toolkit + .claude/skills/*",
-  "vendored": true,
-  "files": [
-    {
-      "path": "LICENSE",
-      "bytes": 1070
-    },
-    {
-      "path": "SKILL.md",
-      "bytes": 18229
-    },
-    {
-      "path": "related/acestep/SKILL.md",
-      "bytes": 13804
-    },
-    {
-      "path": "related/elevenlabs/SKILL.md",
-      "bytes": 14215
-    },
-    {
-      "path": "related/elevenlabs/reference.md",
-      "bytes": 6403
-    },
-    {
-      "path": "related/ffmpeg/SKILL.md",
-      "bytes": 13247
-    },
-    {
-      "path": "related/ffmpeg/reference.md",
-      "bytes": 4662
-    },
-    {
-      "path": "related/frontend-design/SKILL.md",
-      "bytes": 4275
-    },
-    {
-      "path": "related/ideogram4/SKILL.md",
-      "bytes": 7588
-    },
-    {
-      "path": "related/ideogram4/examples.md",
-      "bytes": 8070
-    },
-    {
-      "path": "related/ideogram4/prompting.md",
-      "bytes": 6627
-    },
-    {
-      "path": "related/ltx2/SKILL.md",
-      "bytes": 11897
-    },
-    {
-      "path": "related/moviepy/SKILL.md",
-      "bytes": 13157
-    },
-    {
-      "path": "related/playwright-recording/SKILL.md",
-      "bytes": 12670
-    },
-    {
-      "path": "related/playwright-recording/reference.md",
-      "bytes": 8224
-    },
-    {
-      "path": "related/qwen-edit/SKILL.md",
-      "bytes": 6013
-    },
-    {
-      "path": "related/qwen-edit/examples.md",
-      "bytes": 6807
-    },
-    {
-      "path": "related/qwen-edit/parameters.md",
-      "bytes": 4497
-    },
-    {
-      "path": "related/qwen-edit/prompting.md",
-      "bytes": 2927
-    },
-    {
-      "path": "related/remotion/SKILL.md",
-      "bytes": 6587
-    },
-    {
-      "path": "related/remotion/motion-craft.md",
-      "bytes": 10038
-    },
-    {
-      "path": "related/remotion/reference.md",
-      "bytes": 10300
-    },
-    {
-      "path": "related/runpod/SKILL.md",
-      "bytes": 8365
-    },
-    {
-      "path": "related/synthetic-ui-demo/SKILL.md",
-      "bytes": 8952
-    }
-  ],
-  "bytes": 208624,
-  "reason": "",
-  "install": "git clone https://github.com/digitalsamba/claude-code-video-toolkit.git",
-  "note": "Chọn theo mô tả (quy trình AI từ kịch bản đến MP4 QC) chứ không theo tên: tên 'ai-video-toolkit' không phải tên repo hay skill ở đây (skill chính là video_toolkit). Chép skills/video-toolkit/SKILL.md làm SKILL.md gốc + 12 skill trong .claude/skills vào related/. KHÔNG chép .claude/skills/remotion-official (bản sao remotion-dev/skills, không có giấy phép phân phối lại). Không chép .claude/commands, tools/, templates/ (skill tham chiếu tới chúng, cần clone cả repo để chạy).",
-  "commit": "29995dce7d19443d5e6cb384ce8e4bb86ab98967"
+ "slug": "ai-video-toolkit",
+ "name": "AI Video Toolkit",
+ "category": "Ảnh, video & nhạc AI",
+ "repo": "digitalsamba/claude-code-video-toolkit",
+ "url": "https://github.com/digitalsamba/claude-code-video-toolkit",
+ "confidence": "gợi ý",
+ "candidates": [
+  "ytrofr/claude-remotion-editor (.claude/skills/ai-video-toolkit, MIT, 30 sao; trùng tên chính xác nhưng mô tả là phụ kiện Remotion: voiceover, caption, light leak, không phải quy trình kịch bản tới MP4)",
+  "kaostyl/ai-video-toolkit (MIT, 0 sao, 8 skill nhỏ)"
+ ],
+ "license": "MIT",
+ "stars": 2401,
+ "pushed": "2026-11-01T04:32:19Z",
+ "path": "skills/video-toolkit + .claude/skills/*",
+ "vendored": false,
+ "reason": "Nguồn chỉ ở mức «gợi ý» (tên không khớp hẳn với skill trong bài), nên theo quyết định của chủ dự án chỉ để liên kết, không chép. Bản chép đã gỡ.",
+ "install": "git clone https://github.com/digitalsamba/claude-code-video-toolkit.git",
+ "note": "Chọn theo mô tả (quy trình AI từ kịch bản đến MP4 QC) chứ không theo tên: tên 'ai-video-toolkit' không phải tên repo hay skill ở đây (skill chính là video_toolkit). Chép skills/video-toolkit/SKILL.md làm SKILL.md gốc + 12 skill trong .claude/skills vào related/. KHÔNG chép .claude/skills/remotion-official (bản sao remotion-dev/skills, không có giấy phép phân phối lại). Không chép .claude/commands, tools/, templates/ (skill tham chiếu tới chúng, cần clone cả repo để chạy)."
 }

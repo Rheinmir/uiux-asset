@@ -1,97 +1,22 @@
 {
-  "slug": "email-marketing",
-  "name": "Email Marketing",
-  "category": "Marketing & tăng trưởng",
-  "repo": "CosmoBlk/email-marketing-bible",
-  "url": "https://github.com/CosmoBlk/email-marketing-bible",
-  "confidence": "gợi ý",
-  "candidates": [
-    "kostja94/marketing-skills (skills/channels/owned/email-marketing)",
-    "claude-office-skills/skills (email-marketing)",
-    "zubair-trabzada/ai-marketing-claude (có skill email)",
-    "poriyafj-cod/MegaSkillClaude (psk/data/skills, không giấy phép)"
-  ],
-  "license": "MIT",
-  "stars": 359,
-  "pushed": "2026-10-13",
-  "path": "skills/email-marketing-bible",
-  "vendored": true,
-  "files": [
-    {
-      "path": "LICENSE",
-      "bytes": 1071
-    },
-    {
-      "path": "SKILL.md",
-      "bytes": 17258
-    },
-    {
-      "path": "references/agent-ops.md",
-      "bytes": 13730
-    },
-    {
-      "path": "references/benchmarks.md",
-      "bytes": 6788
-    },
-    {
-      "path": "references/cold-email.md",
-      "bytes": 5884
-    },
-    {
-      "path": "references/compliance.md",
-      "bytes": 18258
-    },
-    {
-      "path": "references/copy.md",
-      "bytes": 9738
-    },
-    {
-      "path": "references/deliverability.md",
-      "bytes": 16973
-    },
-    {
-      "path": "references/design.md",
-      "bytes": 9747
-    },
-    {
-      "path": "references/flows.md",
-      "bytes": 17293
-    },
-    {
-      "path": "references/measurement.md",
-      "bytes": 11040
-    },
-    {
-      "path": "references/messaging-channels.md",
-      "bytes": 4424
-    },
-    {
-      "path": "references/models.md",
-      "bytes": 2698
-    },
-    {
-      "path": "references/platforms.md",
-      "bytes": 8490
-    },
-    {
-      "path": "references/playbooks.md",
-      "bytes": 7398
-    },
-    {
-      "path": "references/segmentation.md",
-      "bytes": 4520
-    },
-    {
-      "path": "references/sources.md",
-      "bytes": 22780
-    },
-    {
-      "path": "references/thresholds.md",
-      "bytes": 8870
-    }
-  ],
-  "bytes": 186960,
-  "reason": "",
-  "install": "/plugin marketplace add CosmoBlk/email-marketing-bible  rồi  /plugin install email-marketing-bible@email-marketing-bible  (agent khác: npx skills add CosmoBlk/email-marketing-bible)",
-  "note": "Tên bài 'Email Marketing' quá chung chung nên chỉ là gợi ý; mô tả (phân khúc, deliverability, flow tự động, giữ chân) khớp nội dung email-marketing-bible (phân khúc, deliverability, flows, win-back). Có nhiều repo email-marketing khác. Commit 962648c."
+ "slug": "email-marketing",
+ "name": "Email Marketing",
+ "category": "Marketing & tăng trưởng",
+ "repo": "CosmoBlk/email-marketing-bible",
+ "url": "https://github.com/CosmoBlk/email-marketing-bible",
+ "confidence": "gợi ý",
+ "candidates": [
+  "kostja94/marketing-skills (skills/channels/owned/email-marketing)",
+  "claude-office-skills/skills (email-marketing)",
+  "zubair-trabzada/ai-marketing-claude (có skill email)",
+  "poriyafj-cod/MegaSkillClaude (psk/data/skills, không giấy phép)"
+ ],
+ "license": "MIT",
+ "stars": 359,
+ "pushed": "2026-10-13",
+ "path": "skills/email-marketing-bible",
+ "vendored": false,
+ "reason": "Nguồn chỉ ở mức «gợi ý» (tên không khớp hẳn với skill trong bài), nên theo quyết định của chủ dự án chỉ để liên kết, không chép. Bản chép đã gỡ.",
+ "install": "/plugin marketplace add CosmoBlk/email-marketing-bible  rồi  /plugin install email-marketing-bible@email-marketing-bible  (agent khác: npx skills add CosmoBlk/email-marketing-bible)",
+ "note": "Tên bài 'Email Marketing' quá chung chung nên chỉ là gợi ý; mô tả (phân khúc, deliverability, flow tự động, giữ chân) khớp nội dung email-marketing-bible (phân khúc, deliverability, flows, win-back). Có nhiều repo email-marketing khác. Commit 962648c."
 }

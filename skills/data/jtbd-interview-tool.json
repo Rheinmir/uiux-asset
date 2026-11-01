@@ -1,166 +1,23 @@
 {
-  "slug": "jtbd-interview-tool",
-  "name": "JTBD Interview Tool",
-  "category": "Nghiên cứu & chiến lược",
-  "repo": "glebis/humane-agentic-design",
-  "url": "https://github.com/glebis/humane-agentic-design",
-  "confidence": "gợi ý",
-  "candidates": [
-    "ipavelm/ultimate-product-discovery-skill (MIT)",
-    "lowwwbank/interview-to-jtbd (MIT)",
-    "savvides/jtbd (MIT)",
-    "katokuneva-tech/jtbd-interviewer (không license)",
-    "brandonsgitstub/jtbd-skill (GPL-3.0)"
-  ],
-  "license": "MIT (Copyright (c) 2026 Gleb Kalinin)",
-  "stars": 41,
-  "pushed": "2026-10-15",
-  "path": "humane/skills/jtbd/",
-  "vendored": true,
-  "files": [
-    {
-      "path": ".gitignore",
-      "bytes": 34
-    },
-    {
-      "path": "LICENSE",
-      "bytes": 1069
-    },
-    {
-      "path": "SKILL.md",
-      "bytes": 17638
-    },
-    {
-      "path": "SOURCE.md",
-      "bytes": 748
-    },
-    {
-      "path": "agents/openai.yaml",
-      "bytes": 118
-    },
-    {
-      "path": "references/granularity_fixes.md",
-      "bytes": 3013
-    },
-    {
-      "path": "references/jargon_blacklist.md",
-      "bytes": 3708
-    },
-    {
-      "path": "references/job_map.md",
-      "bytes": 2754
-    },
-    {
-      "path": "references/odi.md",
-      "bytes": 3423
-    },
-    {
-      "path": "references/output-schema.md",
-      "bytes": 1748
-    },
-    {
-      "path": "references/review_taxonomy.md",
-      "bytes": 5055
-    },
-    {
-      "path": "references/superpowers_handoff.md",
-      "bytes": 3485
-    },
-    {
-      "path": "references/switch_forces.md",
-      "bytes": 5753
-    },
-    {
-      "path": "scripts/graph.py",
-      "bytes": 15425
-    },
-    {
-      "path": "scripts/ingest_transcript.py",
-      "bytes": 9646
-    },
-    {
-      "path": "scripts/mine_reviews.py",
-      "bytes": 15865
-    },
-    {
-      "path": "scripts/odi_score.py",
-      "bytes": 322
-    },
-    {
-      "path": "scripts/report.py",
-      "bytes": 18092
-    },
-    {
-      "path": "scripts/validate_granularity.py",
-      "bytes": 4145
-    },
-    {
-      "path": "scripts/validate_outcome.py",
-      "bytes": 2375
-    },
-    {
-      "path": "templates/data.json",
-      "bytes": 121960
-    },
-    {
-      "path": "templates/example_bad_then_fixed.json",
-      "bytes": 4486
-    },
-    {
-      "path": "templates/example_good.json",
-      "bytes": 2269
-    },
-    {
-      "path": "templates/graph.html",
-      "bytes": 126955
-    },
-    {
-      "path": "templates/gtm-brief.md",
-      "bytes": 1993
-    },
-    {
-      "path": "templates/messaging-angles.md",
-      "bytes": 2050
-    },
-    {
-      "path": "templates/one-pager.md",
-      "bytes": 1157
-    },
-    {
-      "path": "templates/review-brief.md",
-      "bytes": 1424
-    },
-    {
-      "path": "tests/test_graph.py",
-      "bytes": 9987
-    },
-    {
-      "path": "tests/test_ingest_transcript.py",
-      "bytes": 13413
-    },
-    {
-      "path": "tests/test_mine_reviews.py",
-      "bytes": 11131
-    },
-    {
-      "path": "tests/test_odi_score.py",
-      "bytes": 667
-    },
-    {
-      "path": "tests/test_report.py",
-      "bytes": 8024
-    },
-    {
-      "path": "tests/test_validate_granularity.py",
-      "bytes": 3570
-    },
-    {
-      "path": "tests/test_validate_outcome.py",
-      "bytes": 1727
-    }
-  ],
-  "bytes": 425229,
-  "reason": "",
-  "install": "npx skills add glebis/humane-agentic-design\n/plugin marketplace add glebis/humane-agentic-design\n/plugin install humane@humane-agentic-design",
-  "note": "Tên gốc skill là 'jtbd'. Khớp mô tả: phỏng vấn -> insight, messaging angles, GTM brief, Push/Pull/Habit/Anxiety. Bản cũ ở glebis/claude-skills đã chuyển sang repo này. Trỏ sang vài skill anh em trong gói humane (không chép)."
+ "slug": "jtbd-interview-tool",
+ "name": "JTBD Interview Tool",
+ "category": "Nghiên cứu & chiến lược",
+ "repo": "glebis/humane-agentic-design",
+ "url": "https://github.com/glebis/humane-agentic-design",
+ "confidence": "gợi ý",
+ "candidates": [
+  "ipavelm/ultimate-product-discovery-skill (MIT)",
+  "lowwwbank/interview-to-jtbd (MIT)",
+  "savvides/jtbd (MIT)",
+  "katokuneva-tech/jtbd-interviewer (không license)",
+  "brandonsgitstub/jtbd-skill (GPL-3.0)"
+ ],
+ "license": "MIT (Copyright (c) 2026 Gleb Kalinin)",
+ "stars": 41,
+ "pushed": "2026-10-15",
+ "path": "humane/skills/jtbd/",
+ "vendored": false,
+ "reason": "Nguồn chỉ ở mức «gợi ý» (tên không khớp hẳn với skill trong bài), nên theo quyết định của chủ dự án chỉ để liên kết, không chép. Bản chép đã gỡ.",
+ "install": "npx skills add glebis/humane-agentic-design\n/plugin marketplace add glebis/humane-agentic-design\n/plugin install humane@humane-agentic-design",
+ "note": "Tên gốc skill là 'jtbd'. Khớp mô tả: phỏng vấn -> insight, messaging angles, GTM brief, Push/Pull/Habit/Anxiety. Bản cũ ở glebis/claude-skills đã chuyển sang repo này. Trỏ sang vài skill anh em trong gói humane (không chép)."
 }
