@@ -10,7 +10,7 @@ Xem chạy trực tiếp: **https://rheinmir.github.io/uiux-asset/**
 | [`components/`](components/) | bài viết UI/UX tái tạo bằng code (chip: setproduct.com/blog/chip-ui-design) — dựng lại bằng `tools/build-chips.py` | chip: 29 mẫu |
 | [`ui-kits/`](ui-kits/) | UI kit rút từ site thật bằng `/ui-kit-from-code` — mirror tự động từ kho private `Rheinmir/ui-kits` | tự tăng (xem `ui-kits/kits.json`) |
 | [`galaxy/`](galaxy/) | [uiverse-io/galaxy](https://github.com/uiverse-io/galaxy) (Uiverse.io, MIT) — chép nguyên văn bằng `tools/vendor-galaxy.py`; xem trước trong iframe sandbox, Tailwind CDN cho mục không có `<style>` | 3.802 (433 dùng Tailwind) |
-| [`motion/`](motion/) | 20 thư viện/công cụ motion (bài X của @e1genqq, xem `ui-libraries/`) — mỗi mục một trang chạy ngay trên web; nhãn "Thư viện thật" (nạp từ CDN, ghim phiên bản) hoặc "Mô phỏng" (Python/native không chạy được trên web). Ảnh thẻ chụp bằng `tools/shot-motion.cjs` | 20 |
+| [`motion/`](motion/) | 20 thư viện/công cụ motion (bài X của @e1genqq, xem `ui-libraries/`) — mỗi mục một trang chạy ngay trên web; nhãn "Thư viện thật" (nạp từ CDN, ghim phiên bản) hoặc "Mô phỏng" (Python/native không chạy được trên web). Mỗi trang mặc định là lưới thẻ chạy sống (`motion/_g.js`: đọc nút `#tabs`, mỗi thẻ là iframe `?embed=1&t=N` nạp khi gần màn hình), bấm thẻ mới mở bản lớn + code. Ảnh thẻ chụp bằng `tools/shot-motion.cjs` | 20 |
 | [`teardown/`](teardown/) | [elvarofficial/teardown](https://github.com/elvarofficial/teardown) (MIT, bài X của @elvar_official) — hướng dẫn tiếng Việt + 3 máy 3D tháo rời được (V8, Cessna, Strandbeest) build nguyên văn bằng `node sims/build.mjs <tên>-live`, ~800 KB/trang, chạy offline | 3 |
 
 ## Tìm kiếm và thống kê

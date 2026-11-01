@@ -6,11 +6,16 @@
 <title>Teardown — máy 3D tháo rời được — uiux-asset</title>
 <meta name="description" content="Cách dựng mô phỏng 3D của một cỗ máy bằng một skill Claude Code (teardown, MIT), kèm 3 demo chạy ngay: động cơ V8, càng đáp Cessna, Strandbeest.">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
-<link rel="stylesheet" href="../aw.css?v=559582af29">
+<link rel="stylesheet" href="../aw.css?v=cafbf519f9">
 <link rel="stylesheet" href="../motion/_m.css">
 <style>
-.td-frame { width: 100%; height: min(72vh, 620px); border: 0; display: block; background: #fff; }
-.td-poster { display: grid; place-items: center; gap: 12px; text-align: center; padding: 24px; min-height: 420px; }
+.td-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr)); gap: 16px; }
+.td-card { min-width: 0; }
+.td-view { position: relative; aspect-ratio: 16 / 10; border-radius: var(--aw-rounded-normal, 12px); overflow: hidden; background: var(--aw-nf-bg-2, #eee); border: 1px solid color-mix(in srgb, currentColor 14%, transparent); }
+.td-view img, .td-view iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; object-fit: cover; }
+.td-view iframe { background: #fff; }
+.td-t { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; margin: 10px 0 4px; font-size: 1em; }
+.td-d { margin: 0; line-height: 1.55; opacity: .8; font-size: 14px; }
 .td-steps { counter-reset: s; list-style: none; padding: 0; display: grid; gap: 14px; max-width: 78ch; }
 .td-steps li { counter-increment: s; padding-left: 52px; position: relative; line-height: 1.6; }
 .td-steps li::before { content: counter(s); position: absolute; left: 0; top: 0; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-weight: 600; background: var(--aw-nf-bg-2, #eee); }
@@ -24,17 +29,15 @@
 </style>
 </head>
 <body>
-<main class="aw-wrap"><script src="../aw.js?v=559582af29"></script>
+<main class="aw-wrap"><script src="../aw.js?v=cafbf519f9"></script>
 <div class="aw-crumb">
 <h1>Teardown. Máy 3D tháo rời được <span class="aw-tag aw-tag--small aw-tag--solid-green m-badge">MÃ NGUỒN THẬT, MIT</span></h1>
 <span>Một skill Claude Code dựng bất kỳ cỗ máy nào thành một trang HTML offline: máy chạy ở giữa, mỗi bảng đo đọc số thật, mỗi nút mở ra bộ phận đang làm việc. Bài gốc: <a href="https://x.com/elvar_official/status/2116192984299344372" target="_blank" rel="noopener">@elvar_official</a> · repo <a href="https://github.com/elvarofficial/teardown" target="_blank" rel="noopener">elvarofficial/teardown</a> · <a href="../motion/">← Motion</a></span>
 </div>
 
 <h2 class="aw-heading-hr">Demo chạy được</h2>
-<p class="m-note" style="margin-top:0">Ba máy này là 3 ví dụ đi kèm skill, build nguyên văn từ repo bằng <code>node sims/build.mjs &lt;tên&gt;-live</code> (three.js và font đã nhúng, ~800 KB mỗi trang, chạy offline). Để yên thì trang tự dẫn tour bằng một con trỏ; bấm, kéo, cuộn hay gõ phím là bạn lái, 25 giây không đụng thì tour quay lại. Trên máy chỉ có card đồ hoạ tích hợp, lần mở đầu mất vài giây để biên dịch shader.</p>
-<div class="m-bar" id="tabs" role="tablist" aria-label="Chọn máy"></div>
-<div class="m-stage" id="stage" style="min-height:420px;display:block"></div>
-<p class="m-note" id="info"></p>
+<p class="m-note" style="margin-top:0">Ba máy hiện cạnh nhau, chạy sống. Đây là 3 ví dụ đi kèm skill, build nguyên văn từ repo bằng <code>node sims/build.mjs &lt;tên&gt;-live</code> (three.js và font đã nhúng, ~800 KB mỗi trang, chạy offline). Để yên thì mỗi trang tự dẫn tour bằng một con trỏ; bấm, kéo, cuộn hay gõ phím trong khung là bạn lái, 25 giây không đụng thì tour quay lại. Trên máy chỉ có card đồ hoạ tích hợp, lần mở đầu mất vài giây để biên dịch shader.</p>
+<div class="td-cards" id="cards"></div>
 
 <h2 class="aw-heading-hr">Cách làm, từng bước</h2>
 <p class="m-note" style="margin-top:0">Tóm tắt tiếng Việt từ bài viết và <a href="https://github.com/elvarofficial/teardown/blob/main/SKILL.md" target="_blank" rel="noopener">SKILL.md</a> của repo (MIT, ghi công ở cuối trang). Cần Claude Code, Node.js 20+, và ffmpeg + Python 3 chỉ khi muốn xuất video có tiếng.</p>
@@ -77,29 +80,21 @@
 </main>
 <script>
 (() => {
+  // 3 máy hiện CẠNH NHAU, chạy sống; iframe chỉ nạp khi gần màn hình (mỗi máy là một renderer WebGL nặng), cuộn xa thì dỡ
   const M = [
-    ['v8', 'V8 cross-plane', 'v8-live.html', 'Động cơ V8: xi lanh bạn theo dõi hoá thuỷ tinh, thấy hỗn hợp cháy bên trong trong khi biểu đồ áp suất vẽ vòng của nó. Thứ tự nổ 1-8-4-3-6-5-7-2, van nâng theo cam, 8 piston theo đúng cơ cấu tay quay trượt. Chế độ cắt: kính, mặt cắt, đặc.'],
-    ['cessna', 'Càng đáp Cessna 337', 'cessna-live.html', 'Càng chính của Cessna 337 gập vào thân khi cất cánh, thả xuống khi hạ cánh. Một đầu vào duy nhất (hành trình 0..1): thanh răng 201 mm quay bánh răng 32 răng (module 4 mm) đúng nửa vòng.'],
-    ['strandbeest', 'Strandbeest', 'strandbeest-live.html', 'Con quái vật của Theo Jansen: 20 chân trên một trục khuỷu, đi ngang trên cát. Đầu vào là gió; tốc độ trục khuỷu tích phân từ gió, mọi khớp theo 11 chiều dài khâu của Jansen bằng giao điểm hai đường tròn.'],
+    ['v8', 'V8 cross-plane', 'v8-live.html', 'Xi lanh bạn theo dõi hoá thuỷ tinh, thấy hỗn hợp cháy bên trong trong khi biểu đồ áp suất vẽ vòng của nó. Thứ tự nổ 1-8-4-3-6-5-7-2, van nâng theo cam, 8 piston theo cơ cấu tay quay trượt. Cắt: kính, mặt cắt, đặc.'],
+    ['cessna', 'Càng đáp Cessna 337', 'cessna-live.html', 'Càng chính gập vào thân khi cất cánh, thả khi hạ cánh. Một đầu vào duy nhất (hành trình 0..1): thanh răng 201 mm quay bánh răng 32 răng (module 4 mm) đúng nửa vòng.'],
+    ['strandbeest', 'Strandbeest', 'strandbeest-live.html', 'Con quái vật của Theo Jansen: 20 chân trên một trục khuỷu, đi ngang trên cát. Đầu vào là gió; mọi khớp theo 11 chiều dài khâu của Jansen bằng giao điểm hai đường tròn.'],
   ];
-  const $ = (id) => document.getElementById(id);
-  const tabs = $('tabs'), stage = $('stage'), info = $('info');
-  tabs.innerHTML = M.map((m) => `<button type="button" role="tab" data-k="${m[0]}" aria-selected="false">${m[1]}</button>`).join('') +
-    '<a class="aw-tag aw-tag--medium" id="full" target="_blank" rel="noopener" href="#">Mở toàn màn hình ↗</a>';
-  let cur = '';
-  function show(k, run) {
-    const m = M.find((x) => x[0] === k) || M[0];
-    cur = m[0];
-    tabs.querySelectorAll('button').forEach((b) => b.setAttribute('aria-selected', b.dataset.k === cur));
-    $('full').href = m[2]; info.textContent = m[3];
-    stage.innerHTML = run ? `<iframe class="td-frame" src="${m[2]}" title="${m[1]}" allow="fullscreen" loading="eager"></iframe>`
-      : `<div class="td-poster"><img src="thumbs/${m[0]}.jpg" alt="Ảnh chụp ${m[1]}" style="max-width:min(100%,720px);border-radius:12px"><button type="button" id="go" style="font:inherit;padding:10px 22px;border-radius:999px;border:1px solid currentColor;background:transparent;color:inherit;cursor:pointer">Chạy demo ${m[1]}</button></div>`;
-    if (!run) $('go').onclick = () => show(cur, true);
-    history.replaceState(null, '', '#' + cur);
-  }
-  tabs.onclick = (e) => { const b = e.target.closest('button'); if (b) show(b.dataset.k, true); };
-  show(location.hash.slice(1), !!location.hash.slice(1));   // mở thẳng #v8 thì chạy luôn; mở trần thì chỉ hiện ảnh, tránh nạp WebGL nặng khi chưa ai bấm
+  const root = document.getElementById('cards');
+  root.innerHTML = M.map((m) => `<article class="td-card"><div class="td-view"><img src="thumbs/${m[0]}.jpg" alt="" loading="lazy"><iframe data-src="${m[2]}" title="${m[1]}" allow="fullscreen"></iframe></div>
+    <h3 class="td-t">${m[1]} <a class="aw-tag aw-tag--medium" href="${m[2]}" target="_blank" rel="noopener">Mở toàn màn hình ↗</a></h3><p class="td-d">${m[3]}</p></article>`).join('');
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    const f = e.target;
+    if (e.isIntersecting) { if (!f.getAttribute('src')) f.src = f.dataset.src; } else if (f.getAttribute('src')) f.removeAttribute('src');
+  }), { rootMargin: '150px 0px' });
+  root.querySelectorAll('iframe').forEach((f) => io.observe(f));
 })();
 </script>
-<script src="/stats.js?v=559582af29" defer></script>
+<script src="/stats.js?v=cafbf519f9" defer></script>
 </body></html>

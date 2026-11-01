@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Sample mcp-for-blender — uiux-asset</title>
-<link rel="stylesheet" href="../aw.css?v=559582af29">
+<link rel="stylesheet" href="../aw.css?v=cafbf519f9">
 <link rel="stylesheet" href="_m.css">
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/"}}</script>
 <style>.m-bar button[aria-pressed=true]{background:#2a6df4;color:#fff;border-color:#2a6df4}.m-bar input[type=range]{vertical-align:middle}.mb-view{display:flex;width:100%;height:100%}.mb-view>.v{flex:1;min-width:0;position:relative}.mb-log{width:38%;min-width:240px;max-width:420px;overflow:auto;padding:10px 12px;font:12px/1.5 ui-monospace,Menlo,monospace;background:rgba(127,127,127,.14);white-space:pre-wrap;word-break:break-word;text-align:left}.mb-log .q{color:#2a6df4}.mb-log .r{color:#1f9d55}.mb-log .e{color:#d33}@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .mb-log .q{color:#7aa7ff}:root:not([data-theme=light]) .mb-log .r{color:#5fd68a}}:root[data-theme=dark] .mb-log .q{color:#7aa7ff}:root[data-theme=dark] .mb-log .r{color:#5fd68a}@media(max-width:700px){.mb-view{flex-direction:column}.mb-log{width:auto;max-width:none;height:38%;min-width:0}}textarea.mb-py{width:100%;height:100px;font:12px/1.5 ui-monospace,Menlo,monospace;padding:10px;border-radius:12px;border:1px solid currentColor;background:transparent;color:inherit;box-sizing:border-box}.m-bar input[type=text]{min-width:260px;flex:1}</style>
 </head>
 <body>
-<main class="aw-wrap"><script src="../aw.js?v=559582af29"></script>
+<main class="aw-wrap"><script src="../aw.js?v=cafbf519f9"></script>
 <div class="aw-crumb">
 <h1>mcp-for-blender <span class="aw-tag aw-tag--small aw-tag--solid-yellow m-badge">MÔ PHỎNG</span></h1>
 <span><b>Mô phỏng web-native bằng three.js</b>: không có Blender thật và không có MCP server thật. Minh họa luồng prompt → chuỗi JSON tool call (kiểu blender-mcp) → cảnh 3D đổi theo từng lệnh. 6 tab. · <a href="https://github.com/ahujasid/blender-mcp" target="_blank" rel="noopener">ahujasid/blender-mcp</a> · <a href="./">← Motion</a></span>
@@ -191,4 +191,5 @@ select(location.hash.slice(1));
 let last = 0;
 renderer.setAnimationLoop((ms) => { const dt = Math.min((ms - last) / 1000, .05); last = ms; cur.tick(ms, dt); renderer.render(cur.scene, cur.camera); });
 </script>
+<script src="_g.js?v=cafbf519f9" defer></script>
 </body></html>

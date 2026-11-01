@@ -20,6 +20,8 @@ for (const r of X20.concat(OLD8)) {
   assert(fs.existsSync(path.join(__dirname, '..', 'motion', 'thumbs', slug + '-stage.jpg')), 'thiếu ảnh thẻ motion/thumbs/' + slug + '-stage.jpg');
   assert(gal.includes(`'${slug}', `), 'motion/index.html thiếu ' + slug);
   if (slug !== 'galaxy') assert(R('motion/' + slug + '.html').includes('href="./"'), slug + ': thiếu link về gallery');
+  if (slug !== 'galaxy') assert(/<script src="_g\.js[^"]*" defer><\/script>/.test(R('motion/' + slug + '.html')), slug + ': thiếu _g.js (dạng lưới xem nhanh)');
+  if (slug !== 'galaxy') assert(R('motion/' + slug + '.html').includes('id="tabs"'), slug + ': thiếu #tabs (lưới đọc nút tab từ đây)');
   assert(R('ui-libraries/index.html').includes(`'${r}': '${slug}'`), 'ui-libraries/index.html chưa build lại cho ' + r);
 }
 console.log('test-ui-libs: 28 sample motion ok');
