@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Teardown — máy 3D tháo rời được — uiux-asset</title>
+<meta name="description" content="Cách dựng mô phỏng 3D của một cỗ máy bằng một skill Claude Code (teardown, MIT), kèm 3 demo chạy ngay: động cơ V8, càng đáp Cessna, Strandbeest.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=559582af29">
+<link rel="stylesheet" href="../motion/_m.css">
+<style>
+.td-frame { width: 100%; height: min(72vh, 620px); border: 0; display: block; background: #fff; }
+.td-poster { display: grid; place-items: center; gap: 12px; text-align: center; padding: 24px; min-height: 420px; }
+.td-steps { counter-reset: s; list-style: none; padding: 0; display: grid; gap: 14px; max-width: 78ch; }
+.td-steps li { counter-increment: s; padding-left: 52px; position: relative; line-height: 1.6; }
+.td-steps li::before { content: counter(s); position: absolute; left: 0; top: 0; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-weight: 600; background: var(--aw-nf-bg-2, #eee); }
+.td-steps b { display: block; font-weight: 600; }
+.td-rules b { font-weight: 600; }
+.td-rules { max-width: 78ch; line-height: 1.65; padding-left: 20px; }
+.td-rules li { margin-bottom: 8px; }
+.td-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; max-width: 78ch; }
+.td-grid div { padding: 14px 16px; border-radius: 12px; background: var(--aw-nf-bg-2, #eee); line-height: 1.5; }
+.td-grid b { display: block; margin-bottom: 4px; }
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=559582af29"></script>
+<div class="aw-crumb">
+<h1>Teardown. Máy 3D tháo rời được <span class="aw-tag aw-tag--small aw-tag--solid-green m-badge">MÃ NGUỒN THẬT, MIT</span></h1>
+<span>Một skill Claude Code dựng bất kỳ cỗ máy nào thành một trang HTML offline: máy chạy ở giữa, mỗi bảng đo đọc số thật, mỗi nút mở ra bộ phận đang làm việc. Bài gốc: <a href="https://x.com/elvar_official/status/2116192984299344372" target="_blank" rel="noopener">@elvar_official</a> · repo <a href="https://github.com/elvarofficial/teardown" target="_blank" rel="noopener">elvarofficial/teardown</a> · <a href="../motion/">← Motion</a></span>
+</div>
+
+<h2 class="aw-heading-hr">Demo chạy được</h2>
+<p class="m-note" style="margin-top:0">Ba máy này là 3 ví dụ đi kèm skill, build nguyên văn từ repo bằng <code>node sims/build.mjs &lt;tên&gt;-live</code> (three.js và font đã nhúng, ~800 KB mỗi trang, chạy offline). Để yên thì trang tự dẫn tour bằng một con trỏ; bấm, kéo, cuộn hay gõ phím là bạn lái, 25 giây không đụng thì tour quay lại. Trên máy chỉ có card đồ hoạ tích hợp, lần mở đầu mất vài giây để biên dịch shader.</p>
+<div class="m-bar" id="tabs" role="tablist" aria-label="Chọn máy"></div>
+<div class="m-stage" id="stage" style="min-height:420px;display:block"></div>
+<p class="m-note" id="info"></p>
+
+<h2 class="aw-heading-hr">Cách làm, từng bước</h2>
+<p class="m-note" style="margin-top:0">Tóm tắt tiếng Việt từ bài viết và <a href="https://github.com/elvarofficial/teardown/blob/main/SKILL.md" target="_blank" rel="noopener">SKILL.md</a> của repo (MIT, ghi công ở cuối trang). Cần Claude Code, Node.js 20+, và ffmpeg + Python 3 chỉ khi muốn xuất video có tiếng.</p>
+<ol class="td-steps">
+<li><b>Cài skill</b>Chạy <code>npx skills add elvarofficial/teardown -g -a claude-code</code>, rồi một lần trong thư mục đã cài: <code>npm install &amp;&amp; npx playwright install chromium</code>. Mở Claude Code, gõ <code>/teardown</code>.</li>
+<li><b>Chọn máy và tìm một ảnh tham chiếu</b>Bước quyết định mọi thứ. Không có gì để đối chiếu thì cả con tê tê, con tatu hay con bọ cạp đều ra "đồ chơi chung chung"; đưa một clip V8 thật thì mô hình dựng lại từng bảng. Chọn máy có MỘT đầu vào chuyển động và số liệu thật: đĩa líp xe đạp, bộ thoát đồng hồ cơ, vi sai ô tô, máy may, cần máy xúc.</li>
+<li><b>Dựng máy</b>Dán prompt, thay phần trong ngoặc vuông. Mô hình đi trước: bánh răng, đồng hồ đo và dòng thời gian cùng đọc MỘT hàm nên không lệch nhau. Một đầu vào duy nhất (góc trục khuỷu, hành trình, sức gió) cho cả cơ cấu; 12 bộ phận tạo dáng tay là 12 hoạt ảnh, không phải một cơ cấu.</li>
+<li><b>Dựng bảng điều khiển</b>Biểu đồ chạy theo bộ phận là lý do người xem ở lại: vòng áp suất V8 khép lại mỗi 720° trục khuỷu và bạn nhìn nó khép.</li>
+<li><b>Cho nó diện mạo</b>Studio sáng, một màu nhấn duy nhất cho thứ đang thay đổi, viền mực cho chi tiết trắng. Ống trắng của Strandbeest biến mất trên nền kem cho tới khi chuyển sang nền cát và thêm viền mực; nhìn trực diện 20 chân thành hàng rào nên camera đặt góc 3/4 dọc sống lưng.</li>
+<li><b>Soi như nhà phê bình</b>Chụp ảnh tĩnh theo từng nhịp (<code>capture.mjs --stills beats</code>) rồi đọc từng ô. Các ảnh bắt được 2 lỗi: mặt thỏ chọc thủng vành mũ, đến khi một con số 0,222 m kéo nó về; chân hexapod bay mỗi lần đổi dáng đi, đến khi bàn chân nhắm vào điểm đặt kế tiếp thật.</li>
+<li><b>Thành trang bạn lái được</b>Nút bấm, thanh trượt, xoay, zoom, phím tắt; để yên thì tự tour. Thử trên card đồ hoạ tích hợp: hexapod 15 fps lên 75 fps sau khi giảm chất lượng theo bậc. Tìm shader đắt trước: một phép dịch chuyển tính 5 lần mỗi đỉnh tốn hơn mọi bậc giảm chất lượng cộng lại.</li>
+<li><b>Biến thành video</b><code>capture.mjs</code> dựng từng khung hình theo thời gian ra mp4 60 fps (quay màn hình bị rớt khung khi GPU nặng, tua theo thời gian thì không), <code>run_sfx.py</code> tạo nhạc nền bằng Python thuần trên cùng dòng thời gian (V8: 26 giây, 189 âm, mỗi tiếng thịch rơi đúng nhịp nổ).</li>
+<li><b>Đưa lên mạng</b>Giữ trang dưới 1 MB: trang thỏ nặng 15,9 MB (kèm mô hình) thì X không hiện thẻ link; đưa mô hình ra tệp riêng còn 967 KB thì thẻ hiện. Dùng <code>build.json</code> với <code>{"external": {"heavy.glb": "light.glb"}}</code>.</li>
+<li><b>Thưởng: cho người xem làm hỏng nó</b>Ai đẩy máy vượt giới hạn sẽ hiểu từng con số làm gì. Kéo một chân Strandbeest ra và thanh servo chuyển sang DETACHED.</li>
+</ol>
+
+<h2 class="aw-heading-hr">Bảy luật quyết định thành bại</h2>
+<ol class="td-rules">
+<li><b>Bắt đầu từ tham chiếu, không từ tưởng tượng.</b> Ảnh, bản vẽ cắt lớp trong sách hướng dẫn, hoặc clip vật thật; dựng rồi so từng khung.</li>
+<li><b>Số thật, một nguồn.</b> Lấy kích thước thật trước (đường kính xi lanh, hành trình, số răng, chiều dài khâu). Mọi đồng hồ, biểu đồ, nhãn đọc cùng hàm tạo dáng. Kiểm tay một con số: Cessna 32 răng × module 4 mm = bánh răng 128 mm, nửa chu vi là hành trình 201 mm.</li>
+<li><b>Một đầu vào điều khiển tất cả.</b> Không keyframe tay; phim, trang live và nhạc không bao giờ lệch.</li>
+<li><b>Bộ phận đang làm việc phải mở ra.</b> Cô lập, cắt, xuyên thấu; một camera đi vào bên trong đáng hơn mười vòng xoay.</li>
+<li><b>Studio sáng, một màu nhấn.</b> Nền sáng đọc được trên feed, nền tối mất giây đầu; màu nhấn đánh dấu thứ đang thay đổi.</li>
+<li><b>Chọn camera theo cơ cấu.</b> Cơ cấu phẳng nhìn trực diện sẽ xẹp thành lưới.</li>
+<li><b>Sửa va chạm bằng một con số.</b> Chi tiết chọc xuyên nhau thì đổi tỉ lệ/vị trí trong khối tham số, đừng giấu bằng góc máy.</li>
+</ol>
+
+<h2 class="aw-heading-hr">Trong repo có gì</h2>
+<div class="td-grid">
+<div><b>SKILL.md</b>Thứ Claude đọc: cách dựng máy, luật làm cho đúng, vòng soát.</div>
+<div><b>sims/kit/</b>Runtime, sân khấu 3D, khởi động shader.</div>
+<div><b>sims/v8-*, cessna-*, strandbeest-*</b>3 máy hoàn chỉnh. <code>-shared</code> là máy, <code>-live</code> là trang bạn lái, <code>-film</code> là tour thu hình.</div>
+<div><b>sims/build.mjs</b>Gói một máy thành một HTML (three.js, font nhúng sẵn).</div>
+<div><b>sims/capture.mjs</b>Dựng phim từng khung 60 fps hoặc tờ ảnh tĩnh để soát.</div>
+<div><b>sfx/</b>Âm thanh tổng hợp bằng Python thuần trên dòng thời gian của phim, chuẩn −14 LUFS.</div>
+</div>
+
+<h2 class="aw-heading-hr">Ghi công và giấy phép</h2>
+<p class="m-note" style="margin-top:0">Mã và ý tưởng: <a href="https://github.com/elvarofficial/teardown" target="_blank" rel="noopener">elvarofficial/teardown</a> (MIT, bản sao giấy phép: <a href="LICENSE">LICENSE</a>). Nền tảng runtime, quay khung và âm thanh: <a href="https://github.com/whaleyxbt/claude-motion" target="_blank" rel="noopener">whaleyxbt/claude-motion</a> (MIT). Ba trang demo ở đây là kết quả build nguyên văn từ repo, không sửa mã. Trang này chỉ chứa 3 bản <code>-live</code>; phần quay phim và âm thanh cần chạy skill ở máy bạn.</p>
+</main>
+<script>
+(() => {
+  const M = [
+    ['v8', 'V8 cross-plane', 'v8-live.html', 'Động cơ V8: xi lanh bạn theo dõi hoá thuỷ tinh, thấy hỗn hợp cháy bên trong trong khi biểu đồ áp suất vẽ vòng của nó. Thứ tự nổ 1-8-4-3-6-5-7-2, van nâng theo cam, 8 piston theo đúng cơ cấu tay quay trượt. Chế độ cắt: kính, mặt cắt, đặc.'],
+    ['cessna', 'Càng đáp Cessna 337', 'cessna-live.html', 'Càng chính của Cessna 337 gập vào thân khi cất cánh, thả xuống khi hạ cánh. Một đầu vào duy nhất (hành trình 0..1): thanh răng 201 mm quay bánh răng 32 răng (module 4 mm) đúng nửa vòng.'],
+    ['strandbeest', 'Strandbeest', 'strandbeest-live.html', 'Con quái vật của Theo Jansen: 20 chân trên một trục khuỷu, đi ngang trên cát. Đầu vào là gió; tốc độ trục khuỷu tích phân từ gió, mọi khớp theo 11 chiều dài khâu của Jansen bằng giao điểm hai đường tròn.'],
+  ];
+  const $ = (id) => document.getElementById(id);
+  const tabs = $('tabs'), stage = $('stage'), info = $('info');
+  tabs.innerHTML = M.map((m) => `<button type="button" role="tab" data-k="${m[0]}" aria-selected="false">${m[1]}</button>`).join('') +
+    '<a class="aw-tag aw-tag--medium" id="full" target="_blank" rel="noopener" href="#">Mở toàn màn hình ↗</a>';
+  let cur = '';
+  function show(k, run) {
+    const m = M.find((x) => x[0] === k) || M[0];
+    cur = m[0];
+    tabs.querySelectorAll('button').forEach((b) => b.setAttribute('aria-selected', b.dataset.k === cur));
+    $('full').href = m[2]; info.textContent = m[3];
+    stage.innerHTML = run ? `<iframe class="td-frame" src="${m[2]}" title="${m[1]}" allow="fullscreen" loading="eager"></iframe>`
+      : `<div class="td-poster"><img src="thumbs/${m[0]}.jpg" alt="Ảnh chụp ${m[1]}" style="max-width:min(100%,720px);border-radius:12px"><button type="button" id="go" style="font:inherit;padding:10px 22px;border-radius:999px;border:1px solid currentColor;background:transparent;color:inherit;cursor:pointer">Chạy demo ${m[1]}</button></div>`;
+    if (!run) $('go').onclick = () => show(cur, true);
+    history.replaceState(null, '', '#' + cur);
+  }
+  tabs.onclick = (e) => { const b = e.target.closest('button'); if (b) show(b.dataset.k, true); };
+  show(location.hash.slice(1), !!location.hash.slice(1));   // mở thẳng #v8 thì chạy luôn; mở trần thì chỉ hiện ảnh, tránh nạp WebGL nặng khi chưa ai bấm
+})();
+</script>
+<script src="/stats.js?v=559582af29" defer></script>
+</body></html>
