@@ -1,0 +1,20 @@
+<!doctype html><meta charset="utf-8"><style>
+body{margin:0;background:#fff;color:#1f2328;font:15px/1.55 -apple-system,"Helvetica Neue",Arial,sans-serif}
+.w{width:1000px;padding:28px 36px;box-sizing:border-box}
+h1{font-size:26px;margin:0 0 8px;border-bottom:1px solid #d0d7de;padding-bottom:8px}h3{margin:18px 0 6px;font-size:17px}
+blockquote{margin:8px 0;padding:6px 14px;border-left:4px solid #d0d7de;color:#57606a}
+code,pre{font:13px ui-monospace,Menlo,monospace;background:#f6f8fa;border-radius:6px}code{padding:1px 5px}pre{padding:12px 14px;margin:8px 0;overflow:hidden}
+ul{margin:6px 0;padding-left:22px;list-style:none}li{margin:3px 0}.f b{font-weight:600}</style><div class=w>
+<h1>Hết hạn yêu cầu mở phiên: Implementation Plan</h1>
+<blockquote><b>For agentic workers:</b> REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (<code>- [ ]</code>) syntax.</blockquote>
+<p><b>Goal:</b> a spawn request waiting more than 30 minutes is not handed to a watcher; it is marked failed once.<br><b>Architecture:</b> one function <code>spawn_fresh(dev_id)</code> in <code>ui/server.py</code>, called by <code>spawn_pending</code>.<br><b>Tech Stack:</b> Python stdlib, unittest.</p>
+<h3>File Structure</h3><ul class=f><li>- <b>Modify</b> <code>ui/server.py</code>: add <code>SPAWN_STALE</code>, <code>spawn_fresh</code>; <code>spawn_pending</code> calls it</li><li>- <b>Create</b> <code>tests/test_spawn_stale.py</code>: old request not sent, new sent, failed written once</li></ul>
+<h3>Task 1: Expire stale spawn requests</h3>
+<ul><li>- [ ] <b>Step 1: Write the failing test</b></li></ul>
+<pre>def test_old_spawn_not_sent_and_failed_once(self):
+    self.req("sold", 9 * 3600); self.req("snew", 60)
+    self.assertEqual([x["id"] for x in S.spawn_fresh(M1)], ["snew"])</pre>
+<ul><li>- [ ] <b>Step 2: Run it to make sure it fails</b><br>Run: <code>python3 tests/run_isolated.py tests/test_spawn_stale.py</code> &nbsp; Expected: FAIL, <code>spawn_fresh</code> is not defined</li>
+<li>- [ ] <b>Step 3: Implement the minimal code</b> (<code>spawn_fresh</code> with a lock; <code>SPAWN_STALE = 1800</code>)</li>
+<li>- [ ] <b>Step 4: Run the tests and make sure they pass</b> &nbsp; Expected: <code>run-isolated: 1 tệp, 0 lỗi</code></li>
+<li>- [ ] <b>Step 5: Commit</b> &nbsp; <code>git commit -m "spawn: yêu cầu quá 30 phút không giao nữa"</code></li></ul></div>
