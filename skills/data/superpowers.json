@@ -1,365 +1,371 @@
 {
- "slug": "superpowers",
- "name": "Superpowers",
- "category": "Lập trình & tự động hóa",
- "repo": "obra/superpowers",
- "url": "https://github.com/obra/superpowers",
- "confidence": "chắc",
- "candidates": [],
- "license": "MIT",
- "stars": 310323,
- "pushed": "2026-10-29T23:35:34Z",
- "path": "skills/ (15 thư mục skill)",
- "vendored": true,
- "files": [
-  {
-   "path": "LICENSE",
-   "bytes": 1070
-  },
-  {
-   "path": "SOURCE.md",
-   "bytes": 657
-  },
-  {
-   "path": "brainstorming/SKILL.md",
-   "bytes": 13602
-  },
-  {
-   "path": "brainstorming/builder-check-prompt.md",
-   "bytes": 881
-  },
-  {
-   "path": "brainstorming/scripts/frame-template.html",
-   "bytes": 8094
-  },
-  {
-   "path": "brainstorming/scripts/helper.js",
-   "bytes": 5615
-  },
-  {
-   "path": "brainstorming/scripts/server.cjs",
-   "bytes": 25699
-  },
-  {
-   "path": "brainstorming/scripts/start-server.sh",
-   "bytes": 6908
-  },
-  {
-   "path": "brainstorming/scripts/stop-server.sh",
-   "bytes": 3263
-  },
-  {
-   "path": "brainstorming/visual-companion.md",
-   "bytes": 13413
-  },
-  {
-   "path": "diagnosing-superpowers/SKILL.md",
-   "bytes": 6941
-  },
-  {
-   "path": "diagnosing-superpowers/prompts/analyst-common.md",
-   "bytes": 1582
-  },
-  {
-   "path": "diagnosing-superpowers/prompts/cost-and-time.md",
-   "bytes": 1640
-  },
-  {
-   "path": "diagnosing-superpowers/prompts/plan-adherence.md",
-   "bytes": 1637
-  },
-  {
-   "path": "diagnosing-superpowers/prompts/quality-evidence.md",
-   "bytes": 1476
-  },
-  {
-   "path": "diagnosing-superpowers/prompts/repeated-work.md",
-   "bytes": 1469
-  },
-  {
-   "path": "diagnosing-superpowers/prompts/request-conflicts.md",
-   "bytes": 1011
-  },
-  {
-   "path": "diagnosing-superpowers/prompts/scrub-audit.md",
-   "bytes": 1363
-  },
-  {
-   "path": "diagnosing-superpowers/prompts/scrub.md",
-   "bytes": 1471
-  },
-  {
-   "path": "diagnosing-superpowers/prompts/similar-session.md",
-   "bytes": 1711
-  },
-  {
-   "path": "diagnosing-superpowers/prompts/skill-timeline.md",
-   "bytes": 1646
-  },
-  {
-   "path": "diagnosing-superpowers/prompts/stumbles.md",
-   "bytes": 1330
-  },
-  {
-   "path": "diagnosing-superpowers/references/context-safety.md",
-   "bytes": 990
-  },
-  {
-   "path": "diagnosing-superpowers/references/github-issues.md",
-   "bytes": 1636
-  },
-  {
-   "path": "diagnosing-superpowers/references/redaction-policy.md",
-   "bytes": 2243
-  },
-  {
-   "path": "diagnosing-superpowers/references/session-discovery.md",
-   "bytes": 1859
-  },
-  {
-   "path": "diagnosing-superpowers/templates/bundle-README.md",
-   "bytes": 3672
-  },
-  {
-   "path": "diagnosing-superpowers/templates/case.md",
-   "bytes": 2983
-  },
-  {
-   "path": "diagnosing-superpowers/templates/issue.md",
-   "bytes": 2680
-  },
-  {
-   "path": "diagnosing-superpowers/templates/report.md",
-   "bytes": 2359
-  },
-  {
-   "path": "dispatching-parallel-agents/SKILL.md",
-   "bytes": 6078
-  },
-  {
-   "path": "executing-plans/SKILL.md",
-   "bytes": 18103
-  },
-  {
-   "path": "executing-plans/scripts/task-done",
-   "bytes": 1692
-  },
-  {
-   "path": "executing-plans/scripts/task-start",
-   "bytes": 963
-  },
-  {
-   "path": "finishing-a-development-branch/SKILL.md",
-   "bytes": 7781
-  },
-  {
-   "path": "receiving-code-review/SKILL.md",
-   "bytes": 6203
-  },
-  {
-   "path": "requesting-code-review/SKILL.md",
-   "bytes": 2974
-  },
-  {
-   "path": "requesting-code-review/code-reviewer.md",
-   "bytes": 6449
-  },
-  {
-   "path": "subagent-driven-development/SKILL.md",
-   "bytes": 19506
-  },
-  {
-   "path": "subagent-driven-development/implementer-prompt.md",
-   "bytes": 6335
-  },
-  {
-   "path": "subagent-driven-development/re-review-prompt.md",
-   "bytes": 4761
-  },
-  {
-   "path": "subagent-driven-development/references/batching.md",
-   "bytes": 583
-  },
-  {
-   "path": "subagent-driven-development/references/cannot-verify.md",
-   "bytes": 513
-  },
-  {
-   "path": "subagent-driven-development/references/final-review.md",
-   "bytes": 2447
-  },
-  {
-   "path": "subagent-driven-development/references/fix-loop.md",
-   "bytes": 4249
-  },
-  {
-   "path": "subagent-driven-development/references/handling-reports.md",
-   "bytes": 1062
-  },
-  {
-   "path": "subagent-driven-development/references/preflight.md",
-   "bytes": 1353
-  },
-  {
-   "path": "subagent-driven-development/references/resuming.md",
-   "bytes": 614
-  },
-  {
-   "path": "subagent-driven-development/scripts/review-package",
-   "bytes": 2029
-  },
-  {
-   "path": "subagent-driven-development/scripts/sdd-workspace",
-   "bytes": 3684
-  },
-  {
-   "path": "subagent-driven-development/scripts/task-brief",
-   "bytes": 1322
-  },
-  {
-   "path": "subagent-driven-development/task-reviewer-prompt.md",
-   "bytes": 9031
-  },
-  {
-   "path": "systematic-debugging/CREATION-LOG.md",
-   "bytes": 4257
-  },
-  {
-   "path": "systematic-debugging/SKILL.md",
-   "bytes": 9530
-  },
-  {
-   "path": "systematic-debugging/condition-based-waiting-example.ts",
-   "bytes": 5054
-  },
-  {
-   "path": "systematic-debugging/condition-based-waiting.md",
-   "bytes": 3516
-  },
-  {
-   "path": "systematic-debugging/defense-in-depth.md",
-   "bytes": 3650
-  },
-  {
-   "path": "systematic-debugging/find-polluter.sh",
-   "bytes": 1986
-  },
-  {
-   "path": "systematic-debugging/root-cause-tracing.md",
-   "bytes": 5321
-  },
-  {
-   "path": "systematic-debugging/test-academic.md",
-   "bytes": 653
-  },
-  {
-   "path": "systematic-debugging/test-pressure-1.md",
-   "bytes": 1900
-  },
-  {
-   "path": "systematic-debugging/test-pressure-2.md",
-   "bytes": 2283
-  },
-  {
-   "path": "systematic-debugging/test-pressure-3.md",
-   "bytes": 2692
-  },
-  {
-   "path": "test-driven-development/SKILL.md",
-   "bytes": 9578
-  },
-  {
-   "path": "test-driven-development/writing-good-tests.md",
-   "bytes": 8268
-  },
-  {
-   "path": "using-git-worktrees/SKILL.md",
-   "bytes": 6813
-  },
-  {
-   "path": "using-superpowers/SKILL.md",
-   "bytes": 3192
-  },
-  {
-   "path": "using-superpowers/references/antigravity-tools.md",
-   "bytes": 1495
-  },
-  {
-   "path": "using-superpowers/references/claude-code-tools.md",
-   "bytes": 1469
-  },
-  {
-   "path": "using-superpowers/references/codex-tools.md",
-   "bytes": 4762
-  },
-  {
-   "path": "using-superpowers/references/gemini-tools.md",
-   "bytes": 4598
-  },
-  {
-   "path": "using-superpowers/references/hermes-tools.md",
-   "bytes": 1964
-  },
-  {
-   "path": "using-superpowers/references/muse-tools.md",
-   "bytes": 1908
-  },
-  {
-   "path": "using-superpowers/references/pi-tools.md",
-   "bytes": 1242
-  },
-  {
-   "path": "verification-before-completion/SKILL.md",
-   "bytes": 3646
-  },
-  {
-   "path": "writing-plans/SKILL.md",
-   "bytes": 10335
-  },
-  {
-   "path": "writing-skills/SKILL.md",
-   "bytes": 16738
-  },
-  {
-   "path": "writing-skills/references/CLAUDE_MD_TESTING.md",
-   "bytes": 5423
-  },
-  {
-   "path": "writing-skills/references/anthropic-best-practices.md",
-   "bytes": 46197
-  },
-  {
-   "path": "writing-skills/references/bulletproofing.md",
-   "bytes": 2577
-  },
-  {
-   "path": "writing-skills/references/discovery.md",
-   "bytes": 7616
-  },
-  {
-   "path": "writing-skills/references/flowcharts.md",
-   "bytes": 1262
-  },
-  {
-   "path": "writing-skills/references/graphviz-conventions.dot",
-   "bytes": 5970
-  },
-  {
-   "path": "writing-skills/references/persuasion-principles.md",
-   "bytes": 5901
-  },
-  {
-   "path": "writing-skills/references/testing-skills-with-subagents.md",
-   "bytes": 12557
-  },
-  {
-   "path": "writing-skills/render-graphs.js",
-   "bytes": 4968
+  "slug": "superpowers",
+  "name": "Superpowers",
+  "category": "Lập trình & tự động hóa",
+  "repo": "obra/superpowers",
+  "url": "https://github.com/obra/superpowers",
+  "confidence": "chắc",
+  "candidates": [],
+  "license": "MIT",
+  "stars": 310323,
+  "pushed": "2026-10-29T23:35:34Z",
+  "path": "skills/ (15 thư mục skill)",
+  "vendored": true,
+  "files": [
+    {
+      "path": "LICENSE",
+      "bytes": 1070
+    },
+    {
+      "path": "SOURCE.md",
+      "bytes": 657
+    },
+    {
+      "path": "brainstorming/SKILL.md",
+      "bytes": 13602
+    },
+    {
+      "path": "brainstorming/builder-check-prompt.md",
+      "bytes": 881
+    },
+    {
+      "path": "brainstorming/scripts/frame-template.html",
+      "bytes": 8094
+    },
+    {
+      "path": "brainstorming/scripts/helper.js",
+      "bytes": 5615
+    },
+    {
+      "path": "brainstorming/scripts/server.cjs",
+      "bytes": 25699
+    },
+    {
+      "path": "brainstorming/scripts/start-server.sh",
+      "bytes": 6908
+    },
+    {
+      "path": "brainstorming/scripts/stop-server.sh",
+      "bytes": 3263
+    },
+    {
+      "path": "brainstorming/visual-companion.md",
+      "bytes": 13413
+    },
+    {
+      "path": "diagnosing-superpowers/SKILL.md",
+      "bytes": 6941
+    },
+    {
+      "path": "diagnosing-superpowers/prompts/analyst-common.md",
+      "bytes": 1582
+    },
+    {
+      "path": "diagnosing-superpowers/prompts/cost-and-time.md",
+      "bytes": 1640
+    },
+    {
+      "path": "diagnosing-superpowers/prompts/plan-adherence.md",
+      "bytes": 1637
+    },
+    {
+      "path": "diagnosing-superpowers/prompts/quality-evidence.md",
+      "bytes": 1476
+    },
+    {
+      "path": "diagnosing-superpowers/prompts/repeated-work.md",
+      "bytes": 1469
+    },
+    {
+      "path": "diagnosing-superpowers/prompts/request-conflicts.md",
+      "bytes": 1011
+    },
+    {
+      "path": "diagnosing-superpowers/prompts/scrub-audit.md",
+      "bytes": 1363
+    },
+    {
+      "path": "diagnosing-superpowers/prompts/scrub.md",
+      "bytes": 1471
+    },
+    {
+      "path": "diagnosing-superpowers/prompts/similar-session.md",
+      "bytes": 1711
+    },
+    {
+      "path": "diagnosing-superpowers/prompts/skill-timeline.md",
+      "bytes": 1646
+    },
+    {
+      "path": "diagnosing-superpowers/prompts/stumbles.md",
+      "bytes": 1330
+    },
+    {
+      "path": "diagnosing-superpowers/references/context-safety.md",
+      "bytes": 990
+    },
+    {
+      "path": "diagnosing-superpowers/references/github-issues.md",
+      "bytes": 1636
+    },
+    {
+      "path": "diagnosing-superpowers/references/redaction-policy.md",
+      "bytes": 2243
+    },
+    {
+      "path": "diagnosing-superpowers/references/session-discovery.md",
+      "bytes": 1859
+    },
+    {
+      "path": "diagnosing-superpowers/templates/bundle-README.md",
+      "bytes": 3672
+    },
+    {
+      "path": "diagnosing-superpowers/templates/case.md",
+      "bytes": 2983
+    },
+    {
+      "path": "diagnosing-superpowers/templates/issue.md",
+      "bytes": 2680
+    },
+    {
+      "path": "diagnosing-superpowers/templates/report.md",
+      "bytes": 2359
+    },
+    {
+      "path": "dispatching-parallel-agents/SKILL.md",
+      "bytes": 6078
+    },
+    {
+      "path": "executing-plans/SKILL.md",
+      "bytes": 18103
+    },
+    {
+      "path": "executing-plans/scripts/task-done",
+      "bytes": 1692
+    },
+    {
+      "path": "executing-plans/scripts/task-start",
+      "bytes": 963
+    },
+    {
+      "path": "finishing-a-development-branch/SKILL.md",
+      "bytes": 7781
+    },
+    {
+      "path": "receiving-code-review/SKILL.md",
+      "bytes": 6203
+    },
+    {
+      "path": "requesting-code-review/SKILL.md",
+      "bytes": 2974
+    },
+    {
+      "path": "requesting-code-review/code-reviewer.md",
+      "bytes": 6449
+    },
+    {
+      "path": "subagent-driven-development/SKILL.md",
+      "bytes": 19506
+    },
+    {
+      "path": "subagent-driven-development/implementer-prompt.md",
+      "bytes": 6335
+    },
+    {
+      "path": "subagent-driven-development/re-review-prompt.md",
+      "bytes": 4761
+    },
+    {
+      "path": "subagent-driven-development/references/batching.md",
+      "bytes": 583
+    },
+    {
+      "path": "subagent-driven-development/references/cannot-verify.md",
+      "bytes": 513
+    },
+    {
+      "path": "subagent-driven-development/references/final-review.md",
+      "bytes": 2447
+    },
+    {
+      "path": "subagent-driven-development/references/fix-loop.md",
+      "bytes": 4249
+    },
+    {
+      "path": "subagent-driven-development/references/handling-reports.md",
+      "bytes": 1062
+    },
+    {
+      "path": "subagent-driven-development/references/preflight.md",
+      "bytes": 1353
+    },
+    {
+      "path": "subagent-driven-development/references/resuming.md",
+      "bytes": 614
+    },
+    {
+      "path": "subagent-driven-development/scripts/review-package",
+      "bytes": 2029
+    },
+    {
+      "path": "subagent-driven-development/scripts/sdd-workspace",
+      "bytes": 3684
+    },
+    {
+      "path": "subagent-driven-development/scripts/task-brief",
+      "bytes": 1322
+    },
+    {
+      "path": "subagent-driven-development/task-reviewer-prompt.md",
+      "bytes": 9031
+    },
+    {
+      "path": "systematic-debugging/CREATION-LOG.md",
+      "bytes": 4257
+    },
+    {
+      "path": "systematic-debugging/SKILL.md",
+      "bytes": 9530
+    },
+    {
+      "path": "systematic-debugging/condition-based-waiting-example.ts",
+      "bytes": 5054
+    },
+    {
+      "path": "systematic-debugging/condition-based-waiting.md",
+      "bytes": 3516
+    },
+    {
+      "path": "systematic-debugging/defense-in-depth.md",
+      "bytes": 3650
+    },
+    {
+      "path": "systematic-debugging/find-polluter.sh",
+      "bytes": 1986
+    },
+    {
+      "path": "systematic-debugging/root-cause-tracing.md",
+      "bytes": 5321
+    },
+    {
+      "path": "systematic-debugging/test-academic.md",
+      "bytes": 653
+    },
+    {
+      "path": "systematic-debugging/test-pressure-1.md",
+      "bytes": 1900
+    },
+    {
+      "path": "systematic-debugging/test-pressure-2.md",
+      "bytes": 2283
+    },
+    {
+      "path": "systematic-debugging/test-pressure-3.md",
+      "bytes": 2692
+    },
+    {
+      "path": "test-driven-development/SKILL.md",
+      "bytes": 9578
+    },
+    {
+      "path": "test-driven-development/writing-good-tests.md",
+      "bytes": 8268
+    },
+    {
+      "path": "using-git-worktrees/SKILL.md",
+      "bytes": 6813
+    },
+    {
+      "path": "using-superpowers/SKILL.md",
+      "bytes": 3192
+    },
+    {
+      "path": "using-superpowers/references/antigravity-tools.md",
+      "bytes": 1495
+    },
+    {
+      "path": "using-superpowers/references/claude-code-tools.md",
+      "bytes": 1469
+    },
+    {
+      "path": "using-superpowers/references/codex-tools.md",
+      "bytes": 4762
+    },
+    {
+      "path": "using-superpowers/references/gemini-tools.md",
+      "bytes": 4598
+    },
+    {
+      "path": "using-superpowers/references/hermes-tools.md",
+      "bytes": 1964
+    },
+    {
+      "path": "using-superpowers/references/muse-tools.md",
+      "bytes": 1908
+    },
+    {
+      "path": "using-superpowers/references/pi-tools.md",
+      "bytes": 1242
+    },
+    {
+      "path": "verification-before-completion/SKILL.md",
+      "bytes": 3646
+    },
+    {
+      "path": "writing-plans/SKILL.md",
+      "bytes": 10335
+    },
+    {
+      "path": "writing-skills/SKILL.md",
+      "bytes": 16738
+    },
+    {
+      "path": "writing-skills/references/CLAUDE_MD_TESTING.md",
+      "bytes": 5423
+    },
+    {
+      "path": "writing-skills/references/anthropic-best-practices.md",
+      "bytes": 46197
+    },
+    {
+      "path": "writing-skills/references/bulletproofing.md",
+      "bytes": 2577
+    },
+    {
+      "path": "writing-skills/references/discovery.md",
+      "bytes": 7616
+    },
+    {
+      "path": "writing-skills/references/flowcharts.md",
+      "bytes": 1262
+    },
+    {
+      "path": "writing-skills/references/graphviz-conventions.dot",
+      "bytes": 5970
+    },
+    {
+      "path": "writing-skills/references/persuasion-principles.md",
+      "bytes": 5901
+    },
+    {
+      "path": "writing-skills/references/testing-skills-with-subagents.md",
+      "bytes": 12557
+    },
+    {
+      "path": "writing-skills/render-graphs.js",
+      "bytes": 4968
+    }
+  ],
+  "bytes": 437954,
+  "install": "/plugin install superpowers@claude-plugins-official",
+  "note": "Bộ 15 skill (brainstorming, writing-plans, test-driven-development, systematic-debugging, ...). Chép toàn bộ skills/. Tên trong bài khớp tên repo, mô tả khớp.",
+  "commit": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b",
+  "vendored_date": "2026-11-01",
+  "preview": {
+    "kind": "generated",
+    "src": "preview/sample.jpg",
+    "label": "output mẫu: bản kế hoạch theo mẫu của skill writing-plans (skill commit 2ce8aa15, 02/11/2026); nội dung là một việc thật của Hang, chưa chạy toàn bộ bộ skill; mã nguồn preview/sample.html",
+    "credit": "tự tạo, không phải ảnh của tác giả skill"
   }
- ],
- "bytes": 437954,
- "install": "/plugin install superpowers@claude-plugins-official",
- "note": "Bộ 15 skill (brainstorming, writing-plans, test-driven-development, systematic-debugging, ...). Chép toàn bộ skills/. Tên trong bài khớp tên repo, mô tả khớp.",
- "commit": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b",
- "vendored_date": "2026-11-01"
 }
