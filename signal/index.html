@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Signal — dựng lại 5 màn «20 F*CKING HOT REPOS» — uiux-asset</title>
+<meta name="description" content="Nghiệm thu: 5 ảnh gốc, bản HTML dựng bằng mắt, ảnh lệch, phần trăm khớp pixel từng màn; kèm bản chạy tín hiệu (chuyển động là đoán).">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=a1ba470dd2">
+<link rel="stylesheet" href="../motion/_m.css">
+<style>
+.sg-sum { width: 100%; border-collapse: collapse; margin: 8px 0 4px; font-variant-numeric: tabular-nums; }
+.sg-sum th, .sg-sum td { text-align: right; padding: 8px 12px; border-bottom: 1px solid color-mix(in srgb, currentColor 14%, transparent); }
+.sg-sum th:first-child, .sg-sum td:first-child { text-align: left; }
+.sg-sum td b { font-size: 1.15em; }
+.sg-scr { margin: 28px 0 0; }
+.sg-scr h3 { margin: 0 0 4px; display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: baseline; }
+.sg-pct { font: 600 15px ui-monospace, Menlo, monospace; padding: 2px 10px; border-radius: 99px; background: color-mix(in srgb, #2fa86a 22%, transparent); }
+.sg-tri { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 14px; margin-top: 10px; }
+.sg-p { min-width: 0; } .sg-p small { display: block; margin-bottom: 6px; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; opacity: .65; }
+.sg-v { position: relative; aspect-ratio: 1179 / 2556; overflow: hidden; border-radius: 14px; background: #000; border: 1px solid color-mix(in srgb, currentColor 18%, transparent); }
+.sg-v img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.sg-v iframe { position: absolute; left: 0; top: 0; width: 1179px; height: 2556px; border: 0; transform-origin: 0 0; pointer-events: none; background: #000; }
+.sg-live { max-width: 330px; }
+.sg-live .sg-v iframe { pointer-events: none; }
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=a1ba470dd2"></script>
+<div class="aw-crumb">
+<h1>Signal. Dựng lại 5 màn bằng mắt, đo bằng pixel <span class="aw-tag aw-tag--small aw-tag--solid-green m-badge">DỰNG TỪ ẢNH, KHÔNG CÓ SITE GỐC</span></h1>
+<span>Chỉ có 5 ảnh chụp màn hình iPhone của một video «20 F*CKING HOT REPOS» (đồ thị repo.network, tác giả @beamnxw, đăng bởi DeepResource.ai). Không có mã site, nên mọi thứ dưới đây dựng lại bằng mắt: chữ thật, số thật, bố cục đo từ ảnh. Mỗi màn chụp bằng Playwright đúng khung 1179×2556, rồi so từng pixel với ảnh gốc.</span>
+</div>
+
+<h2 class="aw-heading-hr">Độ khớp từng màn</h2>
+<p class="m-note" style="margin-top:0"><b>Khớp</b> = % pixel mà cả ba kênh màu lệch không quá 32/255. <b>Giống</b> = 100 trừ độ lệch tuyệt đối trung bình. Vùng «video» (đồ thị) thấp nhất vì nền sao là hạt sinh bằng số ngẫu nhiên có hạt giống, không phải dữ liệu thật; phần vỏ mạng xã hội và bảng chữ khớp cao.</p>
+<div style="overflow-x:auto"><table class="sg-sum" id="sum"><thead><tr><th>Màn</th><th>Khớp</th><th>Giống</th><th>Vỏ trên</th><th>Video</th><th>Vỏ dưới</th></tr></thead><tbody></tbody></table></div>
+<div id="screens"></div>
+
+<h2 class="aw-heading-hr">Chạy tín hiệu <span class="aw-tag aw-tag--small m-badge">CHUYỂN ĐỘNG LÀ ĐOÁN</span></h2>
+<p class="m-note" style="margin-top:0">Ảnh tĩnh không cho thấy chuyển động nên đây là suy đoán: repo được chọn lần lượt, vòng cam trượt sang nút kế, một chấm tín hiệu chạy dọc từ nút cũ sang nút mới, hàng danh sách và vạch cam đổi theo, nền đồ thị chuyển mờ. Thời lượng và đường cong là tự chọn, không đo từ video. Chỉ 5 repo có mô tả vì chỉ thấy 5 màn; 15 repo còn lại chỉ có tên.</p>
+<div class="sg-live"><div class="sg-p"><small>Bản chạy sống (đoán)</small><div class="sg-v" data-src="mock.html?live=1"></div></div></div>
+
+<h2 class="aw-heading-hr">Ghi chú trung thực</h2>
+<ul class="m-note">
+<li>Chữ, số, tên repo, mô tả, chỉ số tuần là chép từ ảnh. Font Poppins và IBM Plex Mono là đoán theo hình chữ, không xác nhận được.</li>
+<li>Logo DeepResource.ai, ảnh đại diện, hình người nổi ở góc trái và biểu tượng con ma pixel đều vẽ lại bằng SVG, chỉ giống đại thể.</li>
+<li>Ảnh gốc là bản chụp bài đăng của bên thứ ba, đưa vào đây chỉ để đối chiếu nghiệm thu; không phải sản phẩm hay mã của họ.</li>
+<li>Tái lập số: <code>NODE_PATH=$(npm root -g) node tools/signal-diff.cjs</code> (cần một server tĩnh cổng 8841 ở gốc repo).</li>
+</ul>
+</main>
+<script>
+(() => {
+  const NAMES = ['06 Graphify', '07 ai-memory', '12 axuse', '11 earshot', '08 Graphicle'];
+  const $ = (s, r = document) => r.querySelector(s), f = (n) => n.toFixed(2).replace('.', ',') + '%';
+  // iframe 1179×2556 co theo bề rộng ô: scale = rộng ô / 1179
+  const ro = new ResizeObserver((es) => es.forEach((e) => { const i = e.target.querySelector('iframe'); if (i) i.style.transform = `scale(${e.contentRect.width / 1179})`; }));
+  const io = new IntersectionObserver((es) => es.forEach((e) => { const v = e.target; if (e.isIntersecting && !v.querySelector('iframe')) { const i = document.createElement('iframe'); i.src = v.dataset.src; i.title = 'Bản dựng'; i.loading = 'lazy'; v.appendChild(i); i.style.transform = `scale(${v.clientWidth / 1179})`; } }), { rootMargin: '300px 0px' });
+  const watch = (v) => { ro.observe(v); io.observe(v); };
+  fetch('match.json').then((r) => r.json()).then((d) => {
+    $('#sum tbody').innerHTML = d.screens.map((s) => `<tr><td>Màn ${s.screen} · ${NAMES[s.screen - 1]}</td><td><b>${f(s.match)}</b></td><td>${f(s.like)}</td><td>${f(s.top)}</td><td>${f(s.video)}</td><td>${f(s.bottom)}</td></tr>`).join('') + `<tr><td><b>Trung bình</b></td><td><b>${f(d.screens.reduce((a, s) => a + s.match, 0) / d.screens.length)}</b></td><td>${f(d.screens.reduce((a, s) => a + s.like, 0) / d.screens.length)}</td><td></td><td></td><td></td></tr>`;
+    $('#screens').innerHTML = d.screens.map((s) => `<section class="sg-scr"><h3>Màn ${s.screen} · ${NAMES[s.screen - 1]} <span class="sg-pct">khớp ${f(s.match)}</span></h3>
+      <div class="sg-tri"><div class="sg-p"><small>Ảnh gốc</small><div class="sg-v"><img src="shots/orig-${s.screen}.webp" alt="Ảnh gốc màn ${s.screen}" loading="lazy"></div></div>
+      <div class="sg-p"><small>Bản dựng (HTML thật)</small><div class="sg-v" data-src="mock.html?s=${s.screen}"></div></div>
+      <div class="sg-p"><small>Lệch &gt; 32/255 (đỏ)</small><div class="sg-v"><img src="shots/diff-${s.screen}.webp" alt="Ảnh lệch màn ${s.screen}" loading="lazy"></div></div></div></section>`).join('');
+    document.querySelectorAll('.sg-v[data-src]').forEach(watch);
+  });
+  document.querySelectorAll('.sg-live .sg-v[data-src]').forEach(watch);
+})();
+</script>
+<script src="/stats.js?v=a1ba470dd2" defer></script>
+</body></html>
