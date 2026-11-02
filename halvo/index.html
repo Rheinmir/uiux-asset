@@ -15,13 +15,11 @@
 .hv-fit { width: calc(1179px * var(--k, 1)); height: calc(666px * var(--k, 1)); margin: 0 auto; }
 #stage { --k: 1; position: relative; width: 1179px; height: 666px; overflow: hidden; transform: scale(var(--k)); transform-origin: 0 0; font-family: 'Outfit', system-ui, sans-serif; line-height: 1.2; color: #ecebe8; background: #2b241d; border-radius: 22px; user-select: none; }
 #stage * { box-sizing: border-box; }
-#stage .bg { position: absolute; inset: 0; background:
-  linear-gradient(115deg, transparent 0 28%, rgba(120,98,76,.38) 29% 31%, transparent 32% 100%),
-  linear-gradient(70deg, transparent 0 55%, rgba(110,90,70,.34) 56% 58%, transparent 59% 100%),
-  radial-gradient(900px 420px at 55% -8%, rgba(125,104,82,.55), transparent 70%),
-  linear-gradient(#352c24, #241f1a 60%, #1d1a17); transition: filter .5s; }
-#stage[data-v="climate"] .bg { filter: blur(6px) brightness(.95); }
-#stage .bg::after { content: ''; position: absolute; right: 0; top: 150px; width: 330px; bottom: 0; background: linear-gradient(90deg, transparent, rgba(150,130,108,.20)); }
+#stage .bg { position: absolute; inset: 0; background: url(img/beams.jpg) center / cover, #2b241d; transition: filter .5s; }
+#stage .bg2 { position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .5s; }
+#stage[data-v="climate"] .bg2 { opacity: 1; background: radial-gradient(ellipse 420px 330px at 1010px 170px, rgba(176,158,134,.55), transparent 72%), radial-gradient(ellipse 260px 200px at 120px 250px, rgba(120,110,95,.28), transparent 70%); }
+#stage[data-v="rooms"] .bg2 { opacity: 1; background: radial-gradient(ellipse 330px 70px at 930px 200px, rgba(120,128,100,.55), transparent 75%), radial-gradient(ellipse 260px 120px at 420px 200px, rgba(150,138,118,.35), transparent 75%); }
+#stage[data-v="climate"] .bg { filter: blur(6px) brightness(1.0); }
 .g { position: absolute; background: linear-gradient(rgba(58,53,49,.66), rgba(44,40,37,.66)); border: 1px solid rgba(255,255,255,.075); border-radius: 20px; backdrop-filter: blur(14px); }
 .t13 { font-size: 13px; font-weight: 500; } .t11 { font-size: 11px; } .t10 { font-size: 10px; } .dim { color: #a9a39b; } .tl { color: #5fe3c1; }
 .abs { position: absolute; } .tx { position: absolute; white-space: nowrap; }
@@ -51,11 +49,7 @@
 .seg.tealseg span.on { background: #5fe3c1; color: #0d3b31; font-weight: 600; }
 .bar { position: absolute; height: 5px; border-radius: 3px; background: rgba(255,255,255,.13); } .bar i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 3px; background: #4fd7b6; }
 .card-s { position: absolute; border-radius: 12px; background: rgba(40,37,34,.62); border: 1px solid rgba(255,255,255,.06); }
-.photo { position: absolute; overflow: hidden; border-radius: 12px; background: linear-gradient(#cdbfa8, #b7a78d); }
-.photo.a { background: linear-gradient(#6b5a45 0 22%, #d8c9b0 22% 60%, #8d7358 60%); }
-.photo.b { background: linear-gradient(#e6e2d8 0 40%, #cfcabd 40%); } .photo.b::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 50%; background: repeating-linear-gradient(90deg, #303533 0 4px, #cbd0cc 4px 62px); }
-.photo.c { background: linear-gradient(#e3ded2, #cfc8b8); } .photo.d { background: radial-gradient(circle at 50% 48%, #f2e6c8 0 17%, transparent 18%), linear-gradient(#e7e3da, #d5d0c4); }
-.photo.e { background: linear-gradient(115deg, #c9c9b3, #9aa07e 55%, #d8d6c4); }
+.photo { position: absolute; overflow: hidden; border-radius: 12px; background: #b7a78d center / cover no-repeat; }
 #chrome { position: absolute; inset: 0; z-index: 5; pointer-events: none; } #chrome > * { pointer-events: auto; }
 .view { position: absolute; inset: 0; display: none; } #stage[data-v="overview"] #v-overview, #stage[data-v="rooms"] #v-rooms, #stage[data-v="climate"] #v-climate { display: block; }
 .scene { position: absolute; inset: 0; background: linear-gradient(#a8957a 0 24%, #cdbb9f 24% 66%, #7d6850 66%); }
@@ -71,8 +65,8 @@
 <body>
 <main class="aw-wrap"><script src="../aw.js?v=a1ba470dd2"></script>
 <div class="aw-crumb">
-<h1>Nesta. Mock dashboard nhà thông minh <span class="aw-tag aw-tag--small aw-tag--solid-green m-badge">DỰNG TAY, KHÔNG ẢNH</span></h1>
-<span>Một dashboard điều khiển nhà (Overview, Rooms, Climate) dựng bằng HTML/CSS từ ảnh chụp màn hình của một bản demo, mắt nhìn tay dựng, rồi đo độ khớp pixel với ảnh gốc. Bấm menu bên trái để đổi màn; bấm − / + chỉnh nhiệt độ; công tắc và tab đều bấm được. Thương hiệu trong ảnh gốc đã được thay bằng tên giả «Nesta»; ảnh phòng là hình vẽ CSS, không dùng ảnh thật.</span>
+<h1>Nesta. Mock dashboard nhà thông minh <span class="aw-tag aw-tag--small aw-tag--solid-green m-badge">DỰNG TAY HTML/CSS</span></h1>
+<span>Một dashboard điều khiển nhà (Overview, Rooms, Climate) dựng bằng HTML/CSS từ ảnh chụp màn hình của một bản demo, mắt nhìn tay dựng, rồi đo độ khớp pixel với ảnh gốc. Bấm menu bên trái để đổi màn; bấm − / + chỉnh nhiệt độ; công tắc và tab đều bấm được. Thương hiệu trong ảnh gốc đã được thay bằng tên giả «Nesta»; ảnh phòng và ảnh nền là ảnh miễn phí trên Unsplash (có ghi nguồn bên dưới).</span>
 </div>
 <div class="hv-wrap"><div class="hv-scroll" id="scroll"><div class="hv-fit" id="fit"><div id="stage" data-v="overview">
   <div class="bg"></div>
@@ -81,7 +75,8 @@
 </div></div></div></div>
 <h2 class="aw-heading-hr">Độ khớp với ảnh gốc</h2>
 <div id="diff"></div>
-<p class="hv-note">Cách đo: chụp trang ở đúng 1179×666 rồi so từng điểm ảnh với khung hình gốc cùng kích thước. «Sai lệch trung bình» là trung bình |Δ| của ba kênh màu trên 255; «điểm lệch» là tỉ lệ điểm ảnh có tổng Δ ba kênh trên 96. Ảnh gốc là khung hình video của người khác nên không đưa lên trang này, chỉ giữ số liệu. Ảnh chụp là video đã nén nên chữ nhỏ và nền ảnh thật khó khớp tuyệt đối. Màn hình nhỏ: kéo ngang để xem hết.</p>
+<p class="hv-note">Ảnh: phòng khách, thumbnail và nền lấy từ ảnh của <a href="https://unsplash.com/photos/a-living-room-filled-with-furniture-and-large-windows-7pvC_d2iXSE" target="_blank" rel="noopener">Clay Banks</a>, <a href="https://unsplash.com/photos/a-living-room-with-a-wood-ceiling-klCiPmzUw0Y" target="_blank" rel="noopener">Andrea Davis</a> và <a href="https://unsplash.com/photos/a-living-room-filled-with-furniture-and-lots-of-windows-TalkML4fkwg" target="_blank" rel="noopener">Clay Banks</a> trên Unsplash (giấy phép Unsplash), đã cắt, chỉnh màu và làm mờ.</p>
+<p class="hv-note">Cách đo: chụp trang ở đúng 1179×666 rồi so từng điểm ảnh với khung hình gốc cùng kích thước. «Sai lệch trung bình» là trung bình |Δ| của ba kênh màu trên 255; «điểm lệch» là tỉ lệ điểm ảnh có tổng Δ ba kênh trên 96. «Chỉ giao diện» bỏ viền khung video (8 px), nút like của app đè lên khung hình, và vùng ảnh (ảnh phòng, thumbnail) vì ảnh miễn phí không thể trùng từng điểm với ảnh gốc. Ảnh gốc là khung hình video của người khác nên không đưa lên trang này, chỉ giữ số liệu. Ảnh chụp là video đã nén nên chữ nhỏ và nền ảnh thật khó khớp tuyệt đối. Màn hình nhỏ: kéo ngang để xem hết.</p>
 </main>
 <script>
 (() => {
@@ -143,19 +138,19 @@
       const scenes = [['Slow morning', 'Blinds up, pendants warm at 60%, kettle…', 116, 285, '#a8844a'], ['Deep focus', 'Desk lamp cool, purifier quiet, speakers…', 365, 285, '#7e9fb5'], ['Film night', 'Screen and soundbar on, cove at 10%, bl…', 613, 285, '#6b8a72'], ['Dinner party', 'Island at 50%, living speaker on, lamps l…', 116, 346, '#b07860'], ['Away', 'Everything off, every door locked, came…', 365, 346, '#8a8a80'], ['Lights out', 'All lights off, doors locked, heating to 18°', 613, 346, '#6aa89a']];
       const stat = (x, l, v, u, sub, p) => `${box('g', x, 431, 256, 100, '', 'border-radius:18px')}${txt(x + 17, 444, ic + ' ' + l, 't11 dim')}${txt(x + 16, 465, v + `<span class="dim" style="font-size:11px;margin-left:3px">${u}</span>`, '', 'font-size:18px;font-weight:500')}${txt(x + 17, 505, sub, 't10 dim')}${curve('left:' + (x + 168) + 'px;top:494px;color:' + (p[2]) + ';opacity:.85', 76, 28, p[0])}`;
       return `${topbar('Overview')}
-        ${box('g', 97, 84, 775, 332, '', 'border-radius:22px')}${txt(116, 103, 'Larch House · Wednesday evening', 't10 dim')}${txt(116, 120, 'Good evening, Amara', '', 'font-size:27px;font-weight:400;letter-spacing:-.01em')}
+        ${box('g', 97, 84, 775, 332, '', 'border-radius:22px')}${txt(116, 103, 'Larch House · Wednesday evening', 't10 dim')}${txt(116, 120, 'Good evening, Amara', '', 'font-size:30px;font-weight:400;letter-spacing:-.005em')}
         ${box('abs', 805, 103, 28, 28, '<span style="font-size:8px;color:#5b4a2a">AL</span>', 'display:grid;place-items:center;border-radius:50%;background:#f3dba8')}${box('abs', 827, 103, 28, 28, '<span style="font-size:8px;color:#2a4a44">TO</span>', 'display:grid;place-items:center;border-radius:50%;background:#bfe6dd;border:2px solid #3a3531')}
         ${chip(116, 169, 90, '2 of 3 home')}${chip(215, 169, 91, '9 devices on')}${chip(316, 169, 93, '1.48 kW now')}${chip(417, 169, 118, 'Every door locked', 'green')}
         ${txt(116, 210, 'Heating holds 21.5° until 22:30, then eases to 17° for the night. The dishwasher<br>finishes at 20:20, and the roof covered 74% of today.', '', 'font-size:12px;line-height:19px;color:#d6d1c9')}
         ${txt(116, 265, 'SCENES', 'dim', 'font-size:8.5px;letter-spacing:.12em')}
-        ${scenes.map(([n, d, x, y, c]) => `${box('card-s', x, y, 241, 51, '', 'border-radius:13px')}${box('abs', x + 9, y + 9, 33, 33, '<i class="ic" style="border-color:' + c + ';opacity:1"></i>', 'display:grid;place-items:center;border-radius:10px;background:' + c + '33')}${txt(x + 52, y + 11, n, '', 'font-size:11px;font-weight:500')}${txt(x + 52, y + 27, d, 'dim', 'font-size:8.5px')}`).join('')}
+        ${scenes.map(([n, d, x, y, c]) => `${box('card-s', x, y, 241, 51, '', 'border-radius:13px')}${box('abs', x + 9, y + 9, 33, 33, '<i class="ic" style="border-color:' + c + ';opacity:1"></i>', 'display:grid;place-items:center;border-radius:10px;background:' + c + '33')}${txt(x + 52, y + 10, n, '', 'font-size:11.5px;font-weight:500')}${txt(x + 52, y + 27, d, 'dim', 'font-size:9px')}`).join('')}
         ${box('g', 888, 84, 275, 332, '', 'border-radius:22px')}${txt(903, 98, 'Climate', '', 'font-size:12.5px;font-weight:500')}${txt(903, 117, 'Whole house · outside 9.5°', 'dim', 'font-size:8.5px')}${box('btn', 1109, 101, 39, 26, 'Plan', 'font-size:9.5px;border-radius:9px')}
         ${dial(1019, 247, 86, st.set, 0)}${txt(1019 - 30, 208, '♨ HEATING', 'tl', 'font-size:8px;letter-spacing:.08em;left:975px')}${txt(988, 226, st.set.toFixed(1) + '<span style="font-size:18px;vertical-align:top;margin-left:2px;opacity:.8">°C</span>', '', 'font-size:35px;font-weight:400;letter-spacing:-.02em')}${txt(977, 272, 'Indoors 21° · warming', 'dim', 'font-size:8.5px')}
         ${box('btn', 963, 312, 34, 34, '−', 'border-radius:50%;font-size:16px', ).replace('class="btn"', 'class="btn" data-set="-0.5"')}${box('btn', 1053, 312, 34, 34, '+', 'border-radius:50%;font-size:16px').replace('class="btn"', 'class="btn" data-set="0.5"')}
         <div class="seg" style="left:906px;top:361px;width:240px;height:31px">${['Heat', 'Eco', 'Cool', 'Auto'].map((m) => `<span class="${m === st.mode ? 'on' : ''}" data-mode="${m}" style="font-size:10px;padding:0 6px">${m}</span>`).join('')}</div>
         ${stat(97, 'Drawing now', '1,478', 'W', '<span style="color:#4fd98a">●</span> live', ['M0 22 L10 20 L22 12 L36 14 L50 8 L64 9 L76 8', 0, '#c69a4a'])}${stat(368, 'Used today', '15.8', 'kWh', '<span style="padding:1px 6px;border-radius:5px;background:rgba(210,90,80,.3);color:#f0968c">▲ 25%</span> vs yesterday', ['M0 24 L8 20 L16 22 L24 12 L32 16 L40 10 L48 14 L56 8 L64 10 L76 6', 0, '#6c9ec0'])}${stat(638, 'Solar today', '11.7', 'kWh', 'Battery 64%', ['M0 26 C16 26 22 4 38 4 C54 4 60 26 76 26', 0, '#52b08c'])}${stat(908, 'Humidity', '46', '%', 'Comfort band 40–55%', ['M0 14 L76 14', 0, '#52b08c'])}
         ${box('g', 97, 545, 1066, 140, '', 'border-radius:22px')}${txt(113, 558, 'Rooms', '', 'font-size:12.5px;font-weight:500')}${txt(113, 578, 'Five rooms, two floors', 'dim', 'font-size:8.5px')}${txt(1106, 569, 'All rooms', 'tl', 'font-size:9.5px')}
-        ${['a', 'b', 'c', 'd', 'e'].map((k, i) => box('photo ' + k, 113 + i * 209, 602, 199, 80)).join('')}`;
+        ${['t1', 't2', 't3', 't4', 't5'].map((k, i) => box('photo', 113 + i * 209, 602, 199, 80, '', `background-image:url(img/${k}.jpg)`)).join('')}`;
     },
     rooms() {
       const tabs = [['Living room', 241, 102, 2], ['Kitchen', 345, 62, 1], ['Media room', 410, 82, 1], ['Studio', 498, 62, 1], ['Garden lounge', 580, 104, 0]];
@@ -163,7 +158,7 @@
         ${box('g', 237, 84, 926, 79, '', 'border-radius:22px')}${txt(251, 96, 'Living room', '', 'font-size:30px;font-weight:400;letter-spacing:-.01em')}${txt(251, 135, 'Ground floor · 2 of 2 lights on · 8 devices drawing 55 W', 'dim', 'font-size:10px')}
         ${box('btn', 992, 117, 77, 34, '☾ All off', 'font-size:11px')}${box('btn', 1075, 117, 74, 34, '♡ All on', 'font-size:11px;background:rgba(95,227,193,.45);color:#e8fff8')}
         ${box('g', 237, 184, 477, 38, '', 'border-radius:14px;background:rgba(56,52,48,.8)')}${tabs.map(([n, x, w, c]) => `<div class="abs" data-tab="${n}" style="left:${x}px;top:188px;width:${w}px;height:31px;display:flex;align-items:center;justify-content:center;gap:6px;border-radius:10px;font-size:10.5px;cursor:pointer;${n === st.tab ? 'background:#5fe3c1;color:#0d3b31;font-weight:600' : 'color:#d4cfc7'}">${n}${c ? `<b style="width:15px;height:15px;border-radius:50%;background:${n === st.tab ? 'rgba(13,59,49,.2)' : 'rgba(255,255,255,.15)'};font-size:8px;display:grid;place-items:center">${c}</b>` : ''}</div>`).join('')}
-        <div class="photo" style="left:237px;top:237px;width:620px;height:276px;border-radius:18px"><div class="scene"><i class="w" style="left:160px"></i><i class="w" style="left:250px;width:120px"></i><i class="w" style="left:395px;width:110px"></i><i class="w" style="left:520px;width:100px"></i><i class="plant"></i><i class="sofa"></i></div></div>
+        <div class="photo" style="left:237px;top:237px;width:620px;height:276px;border-radius:18px;background-image:url(img/living.jpg)"></div>
         ${box('abs', 249, 249, 120, 30, '<span style="width:17px;height:17px;border-radius:50%;background:#f3dba8;color:#5b4a2a;font-size:7px;display:grid;place-items:center">AL</span><span style="margin-left:6px;font-size:10px">Amara is in here</span>', 'display:flex;align-items:center;padding:0 8px;border-radius:9px;background:rgba(32,30,28,.7)')}
         ${[['21°', 'Temperature', 249], ['46%', 'Humidity', 399], ['612', 'CO₂ ppm', 549], ['180', 'Lux', 702]].map(([v, l, x]) => `${box('abs', x, 457, 144, 43, '', 'border-radius:11px;background:rgba(36,34,32,.72)')}${box('abs', x + 8, 466, 24, 24, '<i class="ic tl"></i>', 'display:grid;place-items:center;border-radius:8px;background:rgba(95,227,193,.18)')}${txt(x + 40, 463, v, '', 'font-size:13px;font-weight:500')}${txt(x + 40, 481, l, 'dim', 'font-size:8.5px')}`).join('')}
         ${box('g', 872, 237, 291, 276, '', 'border-radius:20px')}${txt(887, 250, 'Climate', '', 'font-size:12px;font-weight:500')}${txt(887, 269, 'House set to 21.5° · heat', 'dim', 'font-size:8.5px')}${box('btn', 1074, 253, 75, 27, 'Thermostat', 'font-size:9.5px;border-radius:9px')}
@@ -219,7 +214,7 @@
   addEventListener('resize', fit);
   const h = location.hash.slice(1); if (views[h]) st.v = h;     // #rooms / #climate (dùng cho test đo pixel)
   paint(); fit();
-  fetch('diff.json').then((r) => r.json()).then((j) => { $('diff').innerHTML = '<table class="hv-table"><tr><th>Màn</th><th>Sai lệch trung bình</th><th>Điểm lệch (Δ>96)</th></tr>' + j.views.map((v) => `<tr><td>${v.name}</td><td>${v.mad}%</td><td>${v.px}%</td></tr>`).join('') + '</table>'; }).catch(() => { $('diff').textContent = 'Chưa có số đo.'; });
+  fetch('diff.json').then((r) => r.json()).then((j) => { $('diff').innerHTML = '<table class="hv-table"><tr><th>Màn</th><th>Sai lệch trung bình</th><th>Điểm lệch, toàn khung</th><th>Điểm lệch, chỉ giao diện</th></tr>' + j.views.map((v) => `<tr><td>${v.name}</td><td>${v.mad}%</td><td>${v.px}%</td><td>${v.px_ui}%</td></tr>`).join('') + '</table>'; }).catch(() => { $('diff').textContent = 'Chưa có số đo.'; });
   window.__hv = { st, paint };
 })();
 </script>
