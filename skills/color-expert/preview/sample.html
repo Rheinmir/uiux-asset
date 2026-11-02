@@ -1,0 +1,64 @@
+<!doctype html><html lang="vi"><meta charset="utf-8"><title>Bảng màu teal 9 bước — output mẫu</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f5f4f1;color:#1b1f1f;font:14px/1.5 "Inter",system-ui,sans-serif;width:1120px;padding:32px 36px}
+h1{font:700 24px/1.2 system-ui;margin:0}.sub{opacity:.65;margin:4px 0 20px}h2{font:700 12px ui-monospace,Menlo,monospace;letter-spacing:.08em;opacity:.65;margin:22px 0 8px}
+.ramp{display:grid;grid-template-columns:repeat(9,1fr);gap:6px}.sw{border-radius:10px;overflow:hidden;background:#fff;box-shadow:0 0 0 1px #0001}.sw i{display:block;height:74px}.sw div{padding:6px 8px;font:11px/1.35 ui-monospace,Menlo,monospace}.sw b{display:block;font-size:12px}
+.gray{display:grid;grid-template-columns:repeat(9,1fr);gap:6px;margin-top:6px}.gray i{display:block;height:20px;border-radius:5px}
+.plot{background:#fff;border-radius:12px;padding:12px 16px;box-shadow:0 0 0 1px #0001}.row{display:grid;grid-template-columns:1fr 1fr;gap:16px}.card{background:#fff;border-radius:12px;padding:14px 16px;box-shadow:0 0 0 1px #0001}
+table{border-collapse:collapse;width:100%;font-size:12.5px}td,th{padding:5px 8px 5px 0;text-align:left;border-bottom:1px solid #0001}th{opacity:.6;font-weight:500}code{font:12px ui-monospace,Menlo,monospace}
+.ok{color:#14733a;font-weight:600}.no{color:#b3261e;font-weight:600}.pair{display:inline-block;padding:2px 10px;border-radius:6px;font-weight:600;font-size:12px}
+pre{margin:0;font:12px/1.55 ui-monospace,Menlo,monospace;white-space:pre-wrap}.themes{display:grid;grid-template-columns:1fr 1fr;gap:16px}.th{border-radius:14px;padding:18px;border:1px solid #0002}
+.th h3{margin:0 0 6px;font:700 17px system-ui}.th p{margin:0 0 12px;font-size:13px}.th .b{display:inline-block;padding:8px 16px;border-radius:8px;font-weight:600;font-size:13px}.th .l{margin-left:12px;font-size:13px;text-decoration:underline}
+.note{font-size:12.5px;opacity:.75;margin-top:14px;max-width:96ch}
+</style>
+<h1>Thang màu accent teal 9 bước, sáng và tối</h1>
+<p class="sub">Output mẫu theo cách làm trong SKILL.md (OKLCH → token tham chiếu → token ngữ nghĩa → kiểm tương phản cả hai chế độ). Mọi số bên dưới do trang này tính khi dựng.</p>
+<h2>1 · THANG THAM CHIẾU (OKLCH, hue 195, độ sáng giảm dần, bước gần đều)</h2>
+<div class="ramp" id="ramp"></div><div class="gray" id="gray"></div>
+<div class="row" style="margin-top:14px"><div class="plot"><b style="font-size:12.5px">Độ sáng OKLCH L theo bước (càng gần đường thẳng càng đều)</b><svg id="plot" width="480" height="120"></svg></div>
+<div class="card"><b style="font-size:12.5px">Quy tắc đã áp dụng</b><pre>• OKLCH để giữ độ sáng giảm đều tay, không dùng HSL
+• Chroma kẹp theo gam sRGB cho từng bước (không cắt thô)
+• Dải xám bên trên: nếu đơn điệu thì thang đọc được cả khi in đen trắng
+• Chỉ gợi ý công cụ khi cần: Huetone, Leonardo (không dùng coolors.co)</pre></div></div>
+<h2>2 · TOKEN NGỮ NGHĨA (đúng công thức, không gán tay)</h2>
+<div class="row"><div class="card"><pre id="tok"></pre></div>
+<div class="card"><table id="tb"></table></div></div>
+<h2>3 · KIỂM TƯƠNG PHẢN CẢ HAI CHẾ ĐỘ</h2>
+<div class="themes" id="themes"></div>
+<p class="note">WCAG: chữ thường cần ≥ 4,5:1, chữ lớn và thành phần giao diện ≥ 3:1. APCA tính xấp xỉ theo công thức W3 0.1.9 (Lc ≥ 75 cho chữ nội dung cỡ vừa, ≥ 90 cho chữ thân bài nhỏ). Bước nào không đạt được ghi «không đạt», không làm tròn cho đẹp.</p>
+<script>
+const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+const toLin=c=>c<=0.04045?c/12.92:((c+0.055)/1.055)**2.4, fromLin=c=>c<=0.0031308?12.92*c:1.055*c**(1/2.4)-0.055;
+function oklch2rgb(L,C,H){const h=H*Math.PI/180,a=C*Math.cos(h),b=C*Math.sin(h);
+ const l=(L+0.3963377774*a+0.2158037573*b)**3,m=(L-0.1055613458*a-0.0638541728*b)**3,s=(L-0.0894841775*a-1.2914855480*b)**3;
+ return [4.0767416621*l-3.3077115913*m+0.2309699292*s,-1.2684380046*l+2.6097574011*m-0.3413193965*s,-0.0041960863*l-0.7034186147*m+1.7076147010*s];}
+const inGamut=r=>r.every(v=>v>=-0.0005&&v<=1.0005);
+function solve(L,C,H){let c=C;while(c>0&&!inGamut(oklch2rgb(L,c,H)))c-=0.002;return Math.max(0,c);}
+const hex=(L,C,H)=>'#'+oklch2rgb(L,C,H).map(v=>Math.round(clamp(fromLin(clamp(v,0,1)),0,1)*255).toString(16).padStart(2,'0')).join('');
+const rgb=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)/255);
+const Y=h=>{const[r,g,b]=rgb(h).map(toLin);return 0.2126729*r+0.7151522*g+0.072175*b};
+const wcag=(a,b)=>{const[x,y]=[Y(a),Y(b)].sort((p,q)=>q-p);return (x+0.05)/(y+0.05)};
+function apca(txt,bg){const f=y=>y<0.022?y+(0.022-y)**1.414:y;const yt=f(Y(txt)),yb=f(Y(bg));let s=yb>yt?(yb**0.56-yt**0.57)*1.14:(yb**0.65-yt**0.62)*1.14;return Math.abs(s)<0.1?0:(s>0?(s-0.027):(s+0.027))*100}
+const H=195,Ls=[0.97,0.92,0.85,0.77,0.68,0.58,0.48,0.38,0.28],Cs=[0.02,0.04,0.07,0.1,0.12,0.125,0.115,0.09,0.06],names=[50,100,200,300,400,500,600,700,800];
+const ref=Ls.map((L,i)=>{const C=solve(L,Cs[i],H);return{n:names[i],L,C,hex:hex(L,C,H)}});
+document.getElementById('ramp').innerHTML=ref.map(r=>`<div class="sw"><i style="background:${r.hex}"></i><div><b>teal-${r.n}</b>${r.hex}<br>L ${r.L.toFixed(2)} C ${r.C.toFixed(3)}</div></div>`).join('');
+document.getElementById('gray').innerHTML=ref.map(r=>{const y=Math.round(fromLin(Y(r.hex))*255);return `<i style="background:rgb(${y},${y},${y})"></i>`}).join('');
+const svg=document.getElementById('plot');let d='';ref.forEach((r,i)=>{d+=(i?'L':'M')+(20+i*55)+' '+(100-r.L*88)+' '});
+svg.innerHTML=`<path d="${d}" fill="none" stroke="#0e7c86" stroke-width="2.5"/>`+ref.map((r,i)=>`<circle cx="${20+i*55}" cy="${100-r.L*88}" r="4" fill="${r.hex}" stroke="#0007"/>`).join('')+`<text x="4" y="116" font-size="10" fill="#555">50 → 800</text>`;
+const T={light:{surface:ref[0],text:ref[8],accent:ref[5],accentText:null,muted:ref[6]},dark:{surface:ref[8],text:ref[0],accent:ref[3],muted:ref[2]}};
+const best=(bg,list)=>list.map(h=>[h,wcag(h,bg)]).sort((a,b)=>b[1]-a[1])[0][0];
+const onAccent=(acc)=>best(acc,['#ffffff',ref[8].hex,'#0b1112']);
+const mode={light:{surface:ref[0].hex,text:ref[8].hex,accent:ref[6].hex,accentSoft:ref[1].hex,link:ref[6].hex},dark:{surface:ref[8].hex,text:ref[0].hex,accent:ref[3].hex,accentSoft:ref[7].hex,link:ref[2].hex}};
+document.getElementById('tok').textContent=`ref.teal-50…800 := ramp(oklch, hue 195, L 0.97→0.28)
+
+semantic.surface    := light: teal-50   | dark: teal-800
+semantic.text       := bestContrastWith(surface)
+semantic.accent     := light: teal-600  | dark: teal-300
+semantic.onAccent   := bestContrastWith(accent)
+semantic.hover      := color-mix(in oklab, accent, text 12%)
+semantic.link       := accent, gate: contrast ≥ 4.5`;
+const rows=[];for(const m of['light','dark']){const k=mode[m];const oa=onAccent(k.accent);rows.push([m==='light'?'Sáng':'Tối','chữ / nền',k.text,k.surface],[m==='light'?'Sáng':'Tối','chữ trên nút',oa,k.accent],[m==='light'?'Sáng':'Tối','liên kết / nền',k.link,k.surface])}
+const cell=(a,b)=>{const w=wcag(a,b),p=apca(a,b);return `<span class="pair" style="background:${b};color:${a}">Aa</span> <code>${w.toFixed(2)}:1</code> <span class="${w>=4.5?'ok':'no'}">${w>=4.5?'đạt':'không đạt'}</span> · Lc ${Math.abs(p).toFixed(0)}`};
+document.getElementById('tb').innerHTML='<tr><th>Chế độ</th><th>Cặp</th><th>Kết quả (WCAG · APCA ≈)</th></tr>'+rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${cell(r[2],r[3])}</td></tr>`).join('');
+document.getElementById('themes').innerHTML=['light','dark'].map(m=>{const k=mode[m],oa=onAccent(k.accent);return `<div class="th" style="background:${k.surface};color:${k.text};border-color:${k.accent}55"><h3>${m==='light'?'Chế độ sáng':'Chế độ tối'}</h3><p>Dùng token ngữ nghĩa, không gán màu thẳng vào thành phần.</p><span class="b" style="background:${k.accent};color:${oa}">Bắt đầu</span><span class="l" style="color:${k.link}">Xem tài liệu</span></div>`}).join('');
+</script>
