@@ -40,7 +40,8 @@
     "verification-before-completion/SKILL.md",
     "writing-plans/SKILL.md",
     "writing-skills/SKILL.md"
-   ]
+   ],
+   "no_preview": "chưa có"
   },
   {
    "slug": "repomix",
@@ -66,7 +67,8 @@
    "skill_md": [
     "repomix-explorer/SKILL.md",
     "repomix/SKILL.md"
-   ]
+   ],
+   "no_preview": "chưa có"
   },
   {
    "slug": "antfu-s-skills",
@@ -106,7 +108,8 @@
     "vitepress/SKILL.md",
     "vitest/SKILL.md",
     "vue/SKILL.md"
-   ]
+   ],
+   "no_preview": "chưa có"
   },
   {
    "slug": "dev-browser",
@@ -131,7 +134,8 @@
    "file_count": 3,
    "skill_md": [
     "SKILL.md"
-   ]
+   ],
+   "no_preview": "chưa có"
   },
   {
    "slug": "web-scraper",
@@ -153,7 +157,8 @@
    "note": "Khớp cả 3 ý của mô tả (recon thích ứng + kiểm chứng kết quả, stealth browser, phát hiện API qua bắt traffic). Frontmatter name là \"web-scraping\", chỉ tên repo là web-scraper; tên \"Web Scraper\" quá chung nên chỉ ghi gợi ý. README chỉ nói đặt thư mục vào thư mục skills của Claude Code, không có lệnh cài. Bỏ .git, .gitignore khi chép; LICENSE ở gốc slug.",
    "reason": "Nguồn chỉ ở mức «gợi ý» (tên không khớp hẳn với skill trong bài), nên theo quyết định của chủ dự án chỉ để liên kết, không chép. Bản chép đã gỡ.",
    "tagline": "Tự động hóa web",
-   "desc_vi": "Cào dữ liệu đa chiến lược: kiểm tra dữ liệu, duyệt ẩn danh và phát hiện API."
+   "desc_vi": "Cào dữ liệu đa chiến lược: kiểm tra dữ liệu, duyệt ẩn danh và phát hiện API.",
+   "no_preview": "chưa có"
   },
   {
    "slug": "vexor-search",
@@ -178,7 +183,8 @@
    "file_count": 4,
    "skill_md": [
     "SKILL.md"
-   ]
+   ],
+   "no_preview": "chưa có"
   },
   {
    "slug": "skill-seekers",
@@ -203,7 +209,8 @@
    "file_count": 3,
    "skill_md": [
     "SKILL.md"
-   ]
+   ],
+   "no_preview": "chưa có"
   },
   {
    "slug": "autoresearch",
@@ -231,7 +238,8 @@
    "file_count": 24,
    "skill_md": [
     "SKILL.md"
-   ]
+   ],
+   "no_preview": "chưa có"
   },
   {
    "slug": "frontend-design",
@@ -248,11 +256,17 @@
    "license": "Apache-2.0",
    "path": "skills/frontend-design",
    "note": "SKILL.md khai 'license: Complete terms in LICENSE.txt'. Bản LICENSE.txt của skill này ngắn hơn (177 dòng, thiếu phần APPENDIX) so với các skill kia nhưng là văn bản Apache 2.0. Mô tả SKILL.md hiện tại: 'Guidance for distinctive, intentional visual design...'. Repo anthropics/skills không có LICENSE gốc (API license trả 404); mỗi skill có LICENSE.txt riêng, đọc từng cái. Các skill docx/pdf/pptx/xlsx dùng giấy phép khác, không thuộc nhóm này.",
-   "bytes": 30495,
+   "bytes": 149545,
+   "preview": {
+    "kind": "generated",
+    "src": "preview/sample.png",
+    "label": "output mẫu: Claude làm theo SKILL.md (commit ca45fc49) cho brief «trang bảng triều rừng Cần Giờ», 02/11/2026; mã nguồn: preview/sample.html",
+    "credit": "tự tạo, không phải ảnh của tác giả skill"
+   },
    "tagline": "Thiết kế UI/UX",
    "desc_vi": "Buộc AI chọn hướng giao diện hiện đại, táo bạo trước khi code, loại bỏ kiểu UI rập khuôn.",
    "commit": "ca45fc496a3436251f191354091d557da31c15b5",
-   "file_count": 4,
+   "file_count": 6,
    "skill_md": [
     "SKILL.md"
    ]
@@ -276,11 +290,18 @@
    "vendored": true,
    "install": "git clone https://github.com/dominikmartn/nothing-design-skill.git && cp -r nothing-design-skill/nothing-design ~/.claude/skills/",
    "note": "Khớp rõ (đơn sắc, ngôn ngữ thiết kế Nothing). Frontmatter name là 'nothing-design' (khác tên bài). SKILL.md khai chỉ kích hoạt khi người dùng nói rõ 'Nothing style/design'.",
-   "bytes": 25183,
+   "bytes": 1660263,
+   "preview": {
+    "kind": "upstream",
+    "src": "preview/preview.gif",
+    "label": "preview.gif trong README của repo (734×540)",
+    "credit": "dominikmartn/nothing-design-skill, MIT",
+    "source_url": "https://github.com/dominikmartn/nothing-design-skill/blob/main/preview.gif"
+   },
    "tagline": "Thiết kế UI",
    "desc_vi": "Tạo giao diện đơn sắc tinh tế theo ngôn ngữ thiết kế công nghiệp của Nothing Phone.",
    "commit": "74affbb786af098b18503467b205c10a7df30126",
-   "file_count": 6,
+   "file_count": 7,
    "skill_md": [
     "SKILL.md"
    ]
@@ -309,7 +330,8 @@
    "file_count": 18,
    "skill_md": [
     "SKILL.md"
-   ]
+   ],
+   "no_preview": "chưa có"
   },
   {
    "slug": "color-expert",
@@ -329,7 +351,8 @@
    "note": "Khớp rõ về tên và mô tả (khoa học màu, APCA/WCAG, không gian màu, bảng màu). references/ khoảng 2,8MB. Nếu chấp nhận rủi ro có thể chỉ chép SKILL.md/README/INDEX.md (phần gốc CC-BY-4.0, cần ghi công), nhưng chưa làm.",
    "bytes": 0,
    "tagline": "Thiết kế & hình ảnh",
-   "desc_vi": "Khoa học màu sắc: bảng màu, độ tương phản, dễ tiếp cận và hài hòa thị giác."
+   "desc_vi": "Khoa học màu sắc: bảng màu, độ tương phản, dễ tiếp cận và hài hòa thị giác.",
+   "no_preview": "chưa có"
   },
   {
    "slug": "claudedesign-skills",
@@ -370,7 +393,8 @@
     "rive-interactive/SKILL.md",
     "spline-interactive/SKILL.md",
     "threejs-webgl/SKILL.md"
-   ]
+   ],
+   "no_preview": "chưa có"
   },
   {
    "slug": "drawn-diagrams",
@@ -392,7 +416,8 @@
    "note": "Không có repo nào tên đúng 'drawn-diagrams'. Chọn hand-drawn-diagrams vì khớp nhất: Excalidraw vẽ tay, có animated SVG, dùng cho Claude Code. Hai ứng viên kia mạnh về sao nhưng thiên về sơ đồ kiến trúc. Nên người duyệt xác nhận lại. API license báo NOASSERTION nhưng LICENSE thực là MIT.",
    "reason": "Nguồn chỉ ở mức «gợi ý» (tên không khớp hẳn với skill trong bài), nên theo quyết định của chủ dự án chỉ để liên kết, không chép. Bản chép đã gỡ.",
    "tagline": "Truyền thông trực quan",
-   "desc_vi": "Vẽ sơ đồ, lưu đồ phong cách vẽ tay có chuyển động, dễ hiểu và dễ nhớ."
+   "desc_vi": "Vẽ sơ đồ, lưu đồ phong cách vẽ tay có chuyển động, dễ hiểu và dễ nhớ.",
+   "no_preview": "chưa có"
   },
   {
    "slug": "canvas-design",
@@ -409,11 +434,17 @@
    "license": "Apache-2.0 (SKILL.md); phông trong canvas-fonts/ theo SIL OFL kèm tệp *-OFL.txt",
    "path": "skills/canvas-design",
    "note": "Nặng ~5,6MB vì kèm 27+ tệp phông .ttf (mỗi tệp <200KB) cùng tệp OFL tương ứng; nếu cần nhẹ repo có thể bỏ canvas-fonts/ (SKILL.md tham chiếu thư mục này). Repo anthropics/skills không có LICENSE gốc (API license trả 404); mỗi skill có LICENSE.txt riêng, đọc từng cái. Các skill docx/pdf/pptx/xlsx dùng giấy phép khác, không thuộc nhóm này.",
-   "bytes": 5566409,
+   "bytes": 5620858,
+   "preview": {
+    "kind": "generated",
+    "src": "preview/sample.png",
+    "label": "output mẫu: áp phích «Quỹ đạo» dựng bằng SVG theo hướng «triết lý thị giác» của SKILL.md; mã nguồn preview/sample.svg (skill commit ca45fc49, 02/11/2026)",
+    "credit": "tự tạo, không phải ảnh của tác giả skill"
+   },
    "tagline": "Thiết kế đồ họa",
    "desc_vi": "Tạo poster, ấn phẩm và hình ảnh nghệ thuật theo nguyên tắc thẩm mỹ hiện đại.",
    "commit": "ca45fc496a3436251f191354091d557da31c15b5",
-   "file_count": 85,
+   "file_count": 87,
    "skill_md": [
     "SKILL.md"
    ]
@@ -433,11 +464,17 @@
    "license": "Apache-2.0",
    "path": "skills/algorithmic-art",
    "note": "Dùng p5.js, seeded randomness, flow field/particle. Repo anthropics/skills không có LICENSE gốc (API license trả 404); mỗi skill có LICENSE.txt riêng, đọc từng cái. Các skill docx/pdf/pptx/xlsx dùng giấy phép khác, không thuộc nhóm này.",
-   "bytes": 71821,
+   "bytes": 522003,
+   "preview": {
+    "kind": "generated",
+    "src": "preview/sample.jpg",
+    "label": "output mẫu: tranh flow field (seed 20261102) vẽ bằng canvas theo ý tưởng của SKILL.md; KHÔNG dùng khung p5.js của skill; mã nguồn preview/sample.html (skill commit ca45fc49, 02/11/2026)",
+    "credit": "tự tạo, không phải ảnh của tác giả skill"
+   },
    "tagline": "Nghệ thuật tạo sinh",
    "desc_vi": "Tạo tác phẩm độc bản bằng hạt, trường dòng chảy và thuật toán ngẫu nhiên.",
    "commit": "ca45fc496a3436251f191354091d557da31c15b5",
-   "file_count": 6,
+   "file_count": 8,
    "skill_md": [
     "SKILL.md"
    ]
@@ -463,7 +500,8 @@
    "install": "npx skills add remotion-dev/skills",
    "note": "Nguồn chính thức do đội Remotion duy trì (commit 30d4553 ngày 2026-10-26). Gồm remotion-best-practices (router), remotion-captions, -create, -docs, -interactivity, -maps, -markup, -multimedia, -render, -saas, -studio, -upgrade. Chỉ nên liên kết tới repo, người dùng tự cài. Lưu ý: digitalsamba/claude-code-video-toolkit có thư mục remotion-official là bản sao nguyên văn của nó, cũng không được cấp phép lại nên không chép từ đó.",
    "tagline": "Dựng video bằng code",
-   "desc_vi": "Tạo video điện ảnh bằng React: chuyển động, phụ đề, hiệu ứng và xuất video."
+   "desc_vi": "Tạo video điện ảnh bằng React: chuyển động, phụ đề, hiệu ứng và xuất video.",
+   "no_preview": "chưa có"
   },
   {
    "slug": "reels-scripting",
@@ -490,7 +528,8 @@
    "file_count": 3,
    "skill_md": [
     "SKILL.md"
-   ]
+   ],
+   "no_preview": "chưa có"
   },
   {
    "slug": "youtube-thumbnail",
@@ -519,7 +558,8 @@
    "file_count": 3,
    "skill_md": [
     "SKILL.md"
-   ]
+   ],
+   "no_preview": "chưa có"
   },
   {
    "slug": "gpt-image-2",
@@ -548,7 +588,8 @@
    "file_count": 9,
    "skill_md": [
     "SKILL.md"
-   ]
+   ],
+   "no_preview": "chưa có"
   },
   {
    "slug": "ai-video-toolkit",
@@ -570,7 +611,8 @@
    "install": "git clone https://github.com/digitalsamba/claude-code-video-toolkit.git",
    "note": "Chọn theo mô tả (quy trình AI từ kịch bản đến MP4 QC) chứ không theo tên: tên 'ai-video-toolkit' không phải tên repo hay skill ở đây (skill chính là video_toolkit). Chép skills/video-toolkit/SKILL.md làm SKILL.md gốc + 12 skill trong .claude/skills vào related/. KHÔNG chép .claude/skills/remotion-official (bản sao remotion-dev/skills, không có giấy phép phân phối lại). Không chép .claude/commands, tools/, templates/ (skill tham chiếu tới chúng, cần clone cả repo để chạy).",
    "tagline": "Sản xuất video AI",
-   "desc_vi": "Quy trình làm video bằng AI từ viết kịch bản đến xuất file MP4 hoàn chỉnh."
+   "desc_vi": "Quy trình làm video bằng AI từ viết kịch bản đến xuất file MP4 hoàn chỉnh.",
+   "no_preview": "chưa có"
   },
   {
    "slug": "ai-music-album",
@@ -649,7 +691,8 @@
     "validate-album/SKILL.md",
     "verify-sources/SKILL.md",
     "voice-checker/SKILL.md"
-   ]
+   ],
+   "no_preview": "chưa có"
   },
   {
    "slug": "generative-media",
@@ -670,7 +713,8 @@
    "install": "npx skills add SamurAIGPT/Generative-Media-Skills --all",
    "note": "Hai repo trùng tên. Chọn SamurAIGPT vì mô tả repo ('Multi-modal Generative Media Skills for AI Agents ... image, video, and audio generation') sát câu 'tạo ảnh, video và âm thanh' của bài; calesthio nghiêng về quy trình sản xuất và cũng có thể là nguồn đúng. Chép core/ (3 skill) và library/ (57 skill); bỏ .opencode/skills (bản trùng của library), media_outputs/, schema_data.json (637KB), assets/. Cần muapi-cli và API key muapi.ai.",
    "tagline": "AI đa phương thức",
-   "desc_vi": "Bộ công cụ đa nền tảng tạo ảnh, video và âm thanh bằng AI."
+   "desc_vi": "Bộ công cụ đa nền tảng tạo ảnh, video và âm thanh bằng AI.",
+   "no_preview": "chưa có"
   },
   {
    "slug": "notebooklm",
@@ -693,7 +737,8 @@
    "install": "npx skills add teng-lin/notebooklm-py",
    "note": "Tên notebooklm rất phổ biến, nhiều skill trùng tên. Chọn teng-lin vì skill tạo được audio (podcast), quiz, flashcards, slide-deck, infographic, mind-map từ nguồn (bài viết, PDF, YouTube, web) đúng mô tả bài. Chỉ chép SKILL.md + LICENSE (skill nằm ở gốc repo; repo còn là thư viện Python, cần pip/uv tool install notebooklm-py[browser]). Là API không chính thức của Google NotebookLM.",
    "tagline": "Tái sử dụng kiến thức",
-   "desc_vi": "Biến bài viết, PDF, video, website thành podcast, câu đố và slide thuyết trình."
+   "desc_vi": "Biến bài viết, PDF, video, website thành podcast, câu đố và slide thuyết trình.",
+   "no_preview": "chưa có"
   },
   {
    "slug": "deep-research",
@@ -721,7 +766,8 @@
    "file_count": 26,
    "skill_md": [
     "SKILL.md"
-   ]
+   ],
+   "no_preview": "chưa có"
   },
   {
    "slug": "academic-research",
@@ -741,7 +787,8 @@
    "install": "/plugin marketplace add Imbad0202/academic-research-skills\n/plugin install academic-research-skills",
    "note": "Khớp mô tả: pipeline nghiên cứu -> viết -> phản biện -> sửa; Style Calibration (căn giọng văn) và Writing Quality Check (bắt dấu hiệu văn AI). Repo có sẵn skill 'deep-research' riêng, không dùng cho mục Deep Research của bài vì cùng giấy phép NC.",
    "tagline": "Viết học thuật",
-   "desc_vi": "Quy trình nghiên cứu học thuật trọn gói: sửa bài, căn giọng văn, phát hiện văn AI."
+   "desc_vi": "Quy trình nghiên cứu học thuật trọn gói: sửa bài, căn giọng văn, phát hiện văn AI.",
+   "no_preview": "chưa có"
   },
   {
    "slug": "sm-research",
@@ -764,7 +811,8 @@
    "install": "",
    "note": "Máy này đã có skill last30days cài sẵn (cùng mô tả). Nếu người dùng xác nhận, có thể chép skills/last30days/ bỏ assets/*.jpeg|png|mp3.",
    "tagline": "Nghiên cứu mạng xã hội",
-   "desc_vi": "Theo dõi dư luận và xu hướng từ các thảo luận thật trên Reddit và X."
+   "desc_vi": "Theo dõi dư luận và xu hướng từ các thảo luận thật trên Reddit và X.",
+   "no_preview": "chưa có"
   },
   {
    "slug": "jtbd-interview-tool",
@@ -789,7 +837,8 @@
    "install": "npx skills add glebis/humane-agentic-design\n/plugin marketplace add glebis/humane-agentic-design\n/plugin install humane@humane-agentic-design",
    "note": "Tên gốc skill là 'jtbd'. Khớp mô tả: phỏng vấn -> insight, messaging angles, GTM brief, Push/Pull/Habit/Anxiety. Bản cũ ở glebis/claude-skills đã chuyển sang repo này. Trỏ sang vài skill anh em trong gói humane (không chép).",
    "tagline": "Nghiên cứu khách hàng",
-   "desc_vi": "Biến phỏng vấn khách hàng thành insight và thông điệp theo khung Jobs-To-Be-Done."
+   "desc_vi": "Biến phỏng vấn khách hàng thành insight và thông điệp theo khung Jobs-To-Be-Done.",
+   "no_preview": "chưa có"
   },
   {
    "slug": "pm-skills",
@@ -882,7 +931,8 @@
     "pm-toolkit/skills/grammar-check/SKILL.md",
     "pm-toolkit/skills/privacy-policy/SKILL.md",
     "pm-toolkit/skills/review-resume/SKILL.md"
-   ]
+   ],
+   "no_preview": "chưa có"
   },
   {
    "slug": "ai-transformation",
@@ -906,7 +956,8 @@
    "install": "",
    "note": "Ứng viên đầu danh sách chỉ khớp một phần ('use-case discovery' + scorecard).",
    "tagline": "Tư vấn AI",
-   "desc_vi": "Tìm cơ hội tự động hóa và đánh giá mức sẵn sàng ứng dụng AI của doanh nghiệp."
+   "desc_vi": "Tìm cơ hội tự động hóa và đánh giá mức sẵn sàng ứng dụng AI của doanh nghiệp.",
+   "no_preview": "chưa có"
   },
   {
    "slug": "evidence-dialogue",
@@ -929,7 +980,8 @@
    "install": "",
    "note": "Tên gốc skill là 'balanced' (không phải evidence-dialogue); chọn theo mô tả 'evidence-based dialogue mode that avoids sycophancy'. Lệnh cài theo mẫu README repo (README ghi ví dụ tdd), tên balanced có trong marketplace.json. · Lệnh cài: README repo không ghi lệnh cho skill này nên không đưa ra (không bịa).",
    "tagline": "Tư duy phản biện",
-   "desc_vi": "Thay thói “chiều lòng” của AI bằng phân tích, tranh luận và lập luận có bằng chứng."
+   "desc_vi": "Thay thói “chiều lòng” của AI bằng phân tích, tranh luận và lập luận có bằng chứng.",
+   "no_preview": "chưa có"
   },
   {
    "slug": "daydream",
@@ -958,7 +1010,8 @@
    "file_count": 7,
    "skill_md": [
     "SKILL.md"
-   ]
+   ],
+   "no_preview": "chưa có"
   },
   {
    "slug": "marketing-skills",
@@ -997,7 +1050,8 @@
     "seo-audit/SKILL.md",
     "social/SKILL.md",
     "video/SKILL.md"
-   ]
+   ],
+   "no_preview": "chưa có"
   },
   {
    "slug": "marketing-module",
@@ -1022,7 +1076,8 @@
    "install": "",
    "note": "Chỉ tìm thấy khớp chính xác tên + mô tả (SEO, growth, sales, CRO, content automation) ở repo tổng hợp MegaSkillClaude; không tìm ra dự án gốc \"Marketing Module\" độc lập. Các ứng viên MIT (ai-marketing-skills, marketing-os) cùng chủ đề nhưng tên khác nên không ép.",
    "tagline": "Hệ thống marketing",
-   "desc_vi": "Kho công cụ tự động hóa SEO, tăng trưởng, bán hàng, CRO và content marketing."
+   "desc_vi": "Kho công cụ tự động hóa SEO, tăng trưởng, bán hàng, CRO và content marketing.",
+   "no_preview": "chưa có"
   },
   {
    "slug": "wondelai-skills",
@@ -1061,7 +1116,8 @@
     "predictable-revenue/SKILL.md",
     "scorecard-marketing/SKILL.md",
     "storybrand-messaging/SKILL.md"
-   ]
+   ],
+   "no_preview": "chưa có"
   },
   {
    "slug": "kim-barrett-suite",
@@ -1099,7 +1155,8 @@
     "skills/operator-os/scroll-stopping-creative/SKILL.md",
     "skills/orchestrators/full-funnel-campaign-orchestrator/SKILL.md",
     "skills/qa/generic-language-killer/SKILL.md"
-   ]
+   ],
+   "no_preview": "chưa có"
   },
   {
    "slug": "email-marketing",
@@ -1123,7 +1180,8 @@
    "install": "/plugin marketplace add CosmoBlk/email-marketing-bible  rồi  /plugin install email-marketing-bible@email-marketing-bible  (agent khác: npx skills add CosmoBlk/email-marketing-bible)",
    "note": "Tên bài 'Email Marketing' quá chung chung nên chỉ là gợi ý; mô tả (phân khúc, deliverability, flow tự động, giữ chân) khớp nội dung email-marketing-bible (phân khúc, deliverability, flows, win-back). Có nhiều repo email-marketing khác. Commit 962648c.",
    "tagline": "Email marketing",
-   "desc_vi": "Hệ thống email trọn gói: phân khúc, tỉ lệ vào inbox, chuỗi tự động và giữ chân khách."
+   "desc_vi": "Hệ thống email trọn gói: phân khúc, tỉ lệ vào inbox, chuỗi tự động và giữ chân khách.",
+   "no_preview": "chưa có"
   },
   {
    "slug": "competitive-ads",
@@ -1147,7 +1205,8 @@
    "install": "",
    "note": "Tên skill trong repo là competitive-ads-extractor, mô tả khớp đúng (trích quảng cáo đối thủ từ thư viện quảng cáo Facebook/LinkedIn, phân tích thông điệp). Chỉ một thư mục SKILL.md ~7.9KB. README của repo không ghi lệnh cài chính thức cho riêng skill này.",
    "tagline": "Nghiên cứu quảng cáo",
-   "desc_vi": "Thu thập quảng cáo đối thủ, phân tích thông điệp để chạy chiến dịch tốt hơn."
+   "desc_vi": "Thu thập quảng cáo đối thủ, phân tích thông điệp để chạy chiến dịch tốt hơn.",
+   "no_preview": "chưa có"
   },
   {
    "slug": "geo-seo-claude",
@@ -1187,7 +1246,8 @@
     "skills/geo-schema/SKILL.md",
     "skills/geo-technical/SKILL.md",
     "skills/geo-update/SKILL.md"
-   ]
+   ],
+   "no_preview": "chưa có"
   },
   {
    "slug": "post-scorer",
@@ -1217,7 +1277,8 @@
    "file_count": 3,
    "skill_md": [
     "SKILL.md"
-   ]
+   ],
+   "no_preview": "chưa có"
   }
  ]
 }
