@@ -214,18 +214,23 @@
    "pushed": "2026-09-30T18:49:17Z",
    "path": "skills/skill-seekers/",
    "vendored": true,
-   "bytes": 4876,
+   "bytes": 203525,
    "install": "pip install skill-seekers",
    "note": "Repo chính là công cụ Skill Seekers; skills/skill-seekers/SKILL.md có frontmatter name \"skill-builder\". Repo còn distribution/claude-plugin/skills/skill-builder (cùng tên) không chép riêng. Skill cần cài gói pip skill-seekers.",
    "commit": "5b5d8dfca263fa76e6daae9f292890b311ef36aa",
    "vendored_date": "2026-11-01",
+   "preview": {
+    "kind": "generated",
+    "src": "preview/sample.jpg",
+    "label": "chạy thật: skill-seekers 3.10.0 (pip, Python 3.12) phân tích thư mục tools/ của repo uiux-asset, không bật bước AI enhance, 02/11/2026; ảnh là lệnh, SKILL.md do công cụ sinh (đường dẫn máy rút thành ~) và 14 dòng đầu của một tệp tham chiếu; skill commit 5b5d8dfc",
+    "credit": "tự chạy, không phải ảnh của tác giả"
+   },
    "tagline": "Tạo skill",
    "desc_vi": "Biến tài liệu, repository và PDF thành skill Claude dùng lại được.",
-   "file_count": 3,
+   "file_count": 4,
    "skill_md": [
     "SKILL.md"
-   ],
-   "no_preview": "chưa có"
+   ]
   },
   {
    "slug": "autoresearch",
