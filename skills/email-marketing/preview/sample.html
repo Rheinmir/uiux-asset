@@ -1,0 +1,62 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=1200">
+<title>Email Marketing Bible: soạn email chào mừng (chưa gửi)</title><style>
+*{box-sizing:border-box}
+body{margin:0;background:#ece9e1;font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;color:#1f2328}
+.card{width:1200px;margin:0 auto;background:#fff;padding:28px 36px 22px}
+.hd{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;border-bottom:2px solid #1f2328;padding-bottom:14px;margin-bottom:18px}
+.hd h1{margin:0;font-size:26px;line-height:1.2}
+.hd .sub{color:#57606a;font-size:14px;margin-top:4px}
+.warn{background:#fff6dd;border:1px solid #e6c964;border-radius:6px;padding:8px 12px;font-size:13.5px;margin-bottom:16px}
+.chip{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.06em;padding:3px 10px;border-radius:999px;vertical-align:middle}
+.in{background:#dbeafe;color:#1d4ed8}.out{background:#dcfce7;color:#15803d}.fic{background:#fde8e8;color:#b42318}
+.sec{margin:0 0 18px}
+.sec>h2{font-size:15px;margin:0 0 8px;display:flex;align-items:center;gap:10px}
+.box{border:1px solid #d0d7de;border-radius:8px;padding:14px 16px;background:#fafbfc}
+.box.o{background:#fff;border-color:#9bd6ae}
+.cols{display:grid;gap:16px}.c2{grid-template-columns:1fr 1fr}.c3{grid-template-columns:1fr 1fr 1fr}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{border:1px solid #d0d7de;padding:6px 9px;text-align:left;vertical-align:top}
+th{background:#f0f2f5;font-weight:650}
+td.n,th.n{text-align:right;white-space:nowrap}
+pre{margin:0;background:#101418;color:#e6edf3;border-radius:8px;padding:14px 16px;font:13.5px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre-wrap}
+code{font:12.5px ui-monospace,Menlo,monospace;background:#eef1f4;padding:1px 5px;border-radius:4px}
+blockquote{margin:6px 0;padding:6px 12px;border-left:3px solid #9aa4af;background:#f4f6f8;font-size:13.5px}
+.pri{font-weight:700;border-radius:4px;padding:1px 7px;font-size:12px}.hi{background:#fee2e2;color:#b42318}.me{background:#fef3c7;color:#92400e}.lo{background:#e0f2fe;color:#075985}
+.muted{color:#57606a}.small{font-size:12.5px}
+.ft{border-top:1px solid #d0d7de;margin-top:8px;padding-top:10px;font-size:12px;color:#57606a}
+ul,ol{margin:4px 0 4px 20px;padding:0}li{margin:2px 0}
+.bar{height:8px;background:#e5e7eb;border-radius:4px;overflow:hidden}.bar i{display:block;height:100%;background:#2da44e}
+.na{color:#b42318;font-weight:650}
+</style></head><body><div class="card">
+<div class="hd"><div><h1>Email Marketing Bible: soạn email chào mừng (chưa gửi)</h1><div class="sub">Bộ luật vận hành email, ưu tiên cổng an toàn trước khi gửi</div></div>
+<div style="text-align:right"><span class="chip fic">ĐẦU VÀO HƯ CẤU</span><div class="small muted" style="margin-top:6px">output mẫu · 02/11/2026</div></div></div>
+
+<div class="sec"><h2><span class="chip in">ĐẦU VÀO MẪU</span><span class="muted small">đầu vào hư cấu: thương hiệu cà phê online nhỏ</span></h2><div class="box"><div class="cols c2"><div><b>Thương hiệu hư cấu «Sương Mai Coffee»</b>: bán hạt cà phê rang nhỏ mẻ qua mạng. Việc cần làm: <b>email chào mừng số 1</b> trong luồng welcome (soạn nháp, theo §4–§5 của skill).</div>
+<div class="small"><b>Phạm vi chạy:</b> chỉ soạn nháp + lint + gói kiểm trước khi gửi. <b>Không có ESP nào được nối</b> (không Klaviyo/Mailchimp/Brevo/Kit), nên không có số liệu danh sách, không có kiểm tra xác thực DNS, không gửi gì. Đúng luật cổng của skill: không gửi nếu chưa có người gõ «send it».</div></div></div></div>
+<div class="sec"><h2><span class="chip out">ĐẦU RA</span><span class="muted small">kết quả theo đúng định dạng mà SKILL.md quy định</span></h2><div class="box o"><div class="cols c2"><div><b>Bản nháp email #1</b> <span class="small muted">(tiếng Anh vì skill và danh sách cấm là tiếng Anh)</span>
+<div style="border:1px solid #d0d7de;border-radius:8px;padding:14px;margin-top:6px;background:#fff">
+<div class="small"><b>Subject:</b> Welcome to Sương Mai: start here <span class="muted">(32 ký tự)</span></div>
+<div class="small" style="margin-bottom:8px"><b>Preview:</b> Roasted Tuesdays, shipped Wednesdays. What to do with your first bag.</div>
+<div style="font-size:14px;border-top:1px solid #e5e7eb;padding-top:10px">Hi {{ first_name | default: &#x27;there&#x27; }},<br><br>Thanks for ordering. Here is how we work: we roast on Tuesdays and ship on Wednesdays, in small batches, never from a warehouse shelf.<br><br>One opinion before your bag arrives. Grind it the day you open it. We do not sell pre-ground coffee, because ground coffee loses aroma much faster than whole beans. A hand grinder will do more for your cup than a new kettle.<br><br>Your first brew: 15 g of beans to 250 ml of water just off the boil, four minutes, press, pour.<br><br>The roast date is on the label. On your bag it is the Tuesday before it shipped.<br><br><span style="display:inline-block;background:#1f2328;color:#fff;padding:8px 16px;border-radius:6px;font-weight:600">Read the brew guide</span> <span class="small muted">→ suongmai.example/brew</span><br><br>Reply to this email if anything is off. It goes to a person.<br><br>Lan, Sương Mai Coffee<div class="small muted" style="margin-top:10px;border-top:1px solid #e5e7eb;padding-top:6px">Sương Mai Coffee, [physical address required before any send] · Unsubscribe: {{ unsubscribe_url }}</div></div></div></div>
+<div><b>Lint chống văn mẫu AI (§5)</b>
+<ul class="small"><li>Danh sách cấm 25 từ/cụm: <b>0 trùng</b> (chạy bằng script đối chiếu văn bản thật).</li><li>Dấu gạch dài: <b>0</b>. Mẫu «it's not X, it's Y»: <b>0</b>.</li><li>Một ý kiến thật: «xay hạt vào ngày mở túi, không bán bột xay sẵn».</li><li>Một bằng chứng cụ thể: ngày rang in trên nhãn. Số liệu thật của quán cần thay vào nếu có.</li><li>Nhịp câu: có câu ngắn sau câu dài.</li></ul>
+<b>Gói kiểm trước khi gửi (Packet, §0)</b>
+<table class="small" style="margin-top:4px">
+<tr><th style="width:36%">Mục</th><th>Giá trị</th></tr>
+<tr><td>Preview URL / draft id</td><td class="na">chưa có (không có ESP)</td></tr>
+<tr><td>Kích thước tập nhận / loại trừ</td><td class="na">chưa có</td></tr>
+<tr><td>Subject / preview text</td><td>32 ký tự / có thêm thông tin</td></tr>
+<tr><td>From-name + reply-to</td><td>«Lan, Sương Mai» + hộp thư có người đọc [điền]</td></tr>
+<tr><td>Unsubscribe + địa chỉ vật lý</td><td>chỗ giữ sẵn trong footer; <span class="na">địa chỉ thật còn thiếu</span></td></tr>
+<tr><td>SPF/DKIM/DMARC, Postmaster</td><td class="na">chưa kiểm được</td></tr>
+<tr><td>Rủi ro tuân thủ</td><td>cơ sở đồng ý (consent) chưa xác định</td></tr></table></div></div>
+<div style="margin-top:10px"><b>Pre-send checklist (§4)</b>
+<table class="small" style="margin-top:4px">
+<tr><td style="width:30px;text-align:center">☑</td><td>Copy: qua §5, một CTA, subject ≈ 45 ký tự (advisory), preview text bổ sung thông tin</td><td class="small muted">subject 32 ký tự</td></tr>
+<tr><td style="width:30px;text-align:center">☑</td><td>Link: URL CTA là link thẳng (không bọc theo dõi), merge default dùng nháy đơn</td><td class="small muted">default: 'there'</td></tr>
+<tr><td style="width:30px;text-align:center">☐</td><td>Audience, suppressions, xác thực, unsubscribe một chạm (RFC 8058), seed test</td><td class="small muted">cần ESP + DNS thật</td></tr>
+<tr><td style="width:30px;text-align:center">☐</td><td>Kill switch / throttle; seed test trong hộp thư thật</td><td class="small muted">cần ESP</td></tr>
+</table></div>
+<div style="margin-top:10px;background:#fee2e2;border-radius:6px;padding:8px 12px"><b>TRẠNG THÁI: CHƯA GỬI.</b> Dừng ở cổng: thiếu địa chỉ vật lý, xác thực và cơ sở đồng ý chưa xác định nên theo §0 phải <b>chặn gửi</b>. Dù đủ điều kiện, vẫn chỉ gửi sau khi người dùng gõ «send it».</div></div></div>
+<div class="ft">Tự tạo bởi Claude khi làm theo SKILL.md của «email-marketing (email-marketing-bible)» (commit 962648c), 02/11/2026. Không phải ảnh của tác giả skill. Mọi thương hiệu, người, số liệu trong đầu vào là hư cấu; không gọi API, không chạy script của skill.</div>
+</div></body></html>

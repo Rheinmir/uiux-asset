@@ -1,0 +1,56 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=1200"><title>Deep Research - output mẫu</title><style>
+:root{--bg:#f5f3ee;--card:#fff;--ink:#1d1d1f;--mut:#6b6b70;--line:#e2dfd7;--acc:#8a4b1f;--in:#e8f0fe;--inink:#1a4db3;--out:#e6f4ea;--outink:#17692d}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+.wrap{width:1200px;margin:0 auto;padding:28px}
+.top{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid var(--ink);padding-bottom:10px;margin-bottom:18px}
+.top h1{margin:0;font-size:22px}.top .meta{color:var(--mut);font-size:13px}
+.chip{display:inline-block;font:700 12px/1 ui-monospace,Menlo,monospace;letter-spacing:.08em;padding:6px 10px;border-radius:999px;margin-bottom:10px}
+.chip.in{background:var(--in);color:var(--inink)}.chip.out{background:var(--out);color:var(--outink)}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:18px}
+.panel.in{border-left:5px solid var(--inink)}.panel.out{border-left:5px solid var(--outink)}
+h2{font-size:18px;margin:18px 0 6px}h3{font-size:15px;margin:14px 0 4px;color:var(--acc)}p{margin:6px 0}
+table{border-collapse:collapse;width:100%;margin:8px 0;font-size:14px}th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}th{background:#faf8f3}
+code,.mono{font-family:ui-monospace,Menlo,monospace;font-size:13px}pre{background:#f4f1ea;border-radius:8px;padding:12px 14px;overflow:hidden;white-space:pre-wrap;font:13px/1.5 ui-monospace,Menlo,monospace;margin:8px 0}
+ul,ol{margin:6px 0;padding-left:22px}li{margin:3px 0}blockquote{margin:8px 0;padding:6px 14px;border-left:3px solid var(--line);color:#444;background:#faf8f3}
+.grid{display:grid;gap:14px}.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr 1fr}.box{border:1px solid var(--line);border-radius:8px;padding:10px 14px;background:#fffdf9}
+.tag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:999px;background:#eee;margin-left:4px}.ok{background:#d9f0df;color:#17692d}.warn{background:#fdecc8;color:#7a4b00}.bad{background:#f9d8d6;color:#9b1c14}
+.foot{color:var(--mut);font-size:12.5px;border-top:1px solid var(--line);padding-top:10px;margin-top:6px}
+a{color:#1a4db3;word-break:break-all}
+</style></head><body><div class="wrap">
+<div class="top"><h1>Deep Research - output mẫu</h1><div class="meta">skill: <code>deep-research</code> - commit f2f2c0f</div></div>
+<div class="panel in"><span class="chip in">ĐẦU VÀO MẪU</span><p><b>Lệnh:</b> «deep research: HTTP/3 khác HTTP/2 ở điểm cốt lõi nào, và có thật sự nhanh hơn không?» - chế độ <b>quick</b> (3 pha: SCOPE, RETRIEVE, PACKAGE; theo bảng chế độ của SKILL.md).</p>
+<p style="color:#6b6b70;font-size:13px">Câu hỏi kỹ thuật công khai, nguồn là tài liệu IETF và hai bài đo đạc có thật. Bài mẫu chạy với 6 nguồn, ít hơn mục tiêu 10+ của skill nên là bản rút gọn (xem Hạn chế).</p></div>
+<div class="panel out"><span class="chip out">ĐẦU RA</span><h2>Executive Summary</h2>
+<p>HTTP/2 ghép nhiều yêu cầu trên một kết nối TCP, nhưng RFC 9113 nói thẳng rằng nghẽn đầu hàng ở tầng TCP không được giao thức này giải quyết <sup>[2]</sup>. HTTP/3 bỏ TCP, chạy trên QUIC (qua UDP), và để chính tầng vận chuyển lo việc ghép luồng nên một gói mất chỉ làm đứng luồng bị ảnh hưởng <sup>[1][3]</sup>. Vì HPACK cần nhận gói theo đúng thứ tự, HTTP/3 thay bằng QPACK <sup>[1][4]</sup>. Về tốc độ, bằng chứng không một chiều: một đợt đo trên hàng nghìn website cho thấy lợi ích đáng kể chỉ ở mạng trễ cao hoặc băng thông rất thấp <sup>[5]</sup>, và một bài ở The Web Conference 2024 báo cáo QUIC kém hơn trên mạng nhanh <sup>[6]</sup> (chưa đọc toàn văn).</p>
+<h2>Introduction</h2>
+<p><b>Phạm vi:</b> khác biệt về kiến trúc (vận chuyển, ghép luồng, nén tiêu đề) và bằng chứng đo hiệu năng. <b>Giả định (mặc định của skill):</b> người đọc kỹ thuật, so sánh cân bằng. Ngoài phạm vi: cấu hình máy chủ, bảo mật TLS.</p>
+<h2>Finding 1 - Ghép luồng chuyển từ HTTP xuống tầng vận chuyển</h2>
+<p>HTTP/2 «runs over a TCP connection», mỗi cặp yêu cầu/đáp là một stream của riêng nó, nhưng RFC 9113 ghi rõ «TCP head-of-line blocking is not addressed by this protocol» <sup>[2]</sup>. RFC 9114 mô tả hệ quả: gói mất hay đến sai thứ tự làm mọi giao dịch đang chạy bị đứng <sup>[1]</sup>. HTTP/3 ghép yêu cầu bằng stream của QUIC; «Streams are independent of each other» <sup>[1]</sup>, và QUIC «does not provide any means of ensuring ordering between bytes on different streams» <sup>[3]</sup>.</p>
+<h2>Finding 2 - Nén tiêu đề phải đổi theo</h2>
+<p>HPACK giả định thứ tự toàn cục nên sẽ gây nghẽn đầu hàng với tiêu đề; QPACK «is redesigned to allow correctness in the presence of out-of-order delivery» <sup>[4]</sup>, và HTTP/3 thay HPACK bằng QPACK <sup>[1]</sup>.</p>
+<h2>Finding 3 - Vận chuyển trên UDP, kết nối không gắn chặt một đường mạng</h2>
+<p>«QUIC packets are carried in UDP datagrams» và «QUIC connections are not strictly bound to a single network path»; chuyển kết nối dùng connection ID <sup>[3]</sup>.</p>
+<h2>Finding 4 - Nhanh hơn? Còn tuỳ điều kiện mạng</h2>
+<p>Trevisan và cộng sự (đo trong 2020, công bố 2021): HTTP/3 «provides sizable benefits only in scenarios with high latency or very poor bandwidth»; không thấy lợi ích khi mất gói cao, và khác biệt lớn giữa các nhà cung cấp <sup>[5]</sup>. Zhang và cộng sự (WWW 2024) đặt tên bài «QUIC is not Quick Enough over Fast Internet» <sup>[6]</sup>; kết quả chi tiết tôi <b>chưa kiểm chứng</b> với toàn văn nên không trích số liệu.</p>
+<h2>Synthesis, Limitations, Recommendations</h2>
+<ul><li><b>Synthesis:</b> HTTP/3 giải quyết một lỗi cụ thể của HTTP/2 (nghẽn đầu hàng ở TCP) bằng cách đổi tầng vận chuyển, nên lợi ích xuất hiện ở mạng trễ/mất gói, không phải mọi nơi.</li>
+<li><b>Limitations:</b> 6 nguồn (dưới 10); trích dẫn RFC lấy qua công cụ tóm tắt trang, chưa đối chiếu từng chữ trong toàn văn; chưa đọc phần sau ký tự 100.000 của các RFC; bài [6] chưa đọc toàn văn; không có dữ liệu đo riêng.</li>
+<li><b>Recommendations:</b> đo trên mạng của chính người dùng trước khi bật HTTP/3 cho mọi người; giữ HTTP/2 làm đường lùi.</li></ul>
+<h2>Bibliography</h2>
+<ol style="font-size:13.5px">
+<li>IETF (2022). <i>RFC 9114: HTTP/3</i>. RFC Editor. <a href="https://www.rfc-editor.org/rfc/rfc9114.html">rfc-editor.org/rfc/rfc9114</a> - doi:10.17487/RFC9114</li>
+<li>IETF (2022). <i>RFC 9113: HTTP/2</i>. RFC Editor. <a href="https://www.rfc-editor.org/rfc/rfc9113.html">rfc-editor.org/rfc/rfc9113</a> - doi:10.17487/RFC9113</li>
+<li>IETF (2021). <i>RFC 9000: QUIC: A UDP-Based Multiplexed and Secure Transport</i>. <a href="https://www.rfc-editor.org/rfc/rfc9000.html">rfc-editor.org/rfc/rfc9000</a> - doi:10.17487/RFC9000</li>
+<li>IETF (2022). <i>RFC 9204: QPACK: Field Compression for HTTP/3</i>. <a href="https://www.rfc-editor.org/rfc/rfc9204.html">rfc-editor.org/rfc/rfc9204</a> - doi:10.17487/RFC9204</li>
+<li>Trevisan, M., Giordano, D., Drago, I., Khatouni, A. S. (2021). Measuring HTTP/3: Adoption and Performance. arXiv:2102.12358. <a href="https://arxiv.org/abs/2102.12358">arxiv.org/abs/2102.12358</a></li>
+<li>Zhang, X., Jin, S., He, Y., Hassan, A., Mao, Z. M., Qian, F., Zhang, Z.-L. (2024). QUIC is not Quick Enough over Fast Internet. <i>Proc. ACM Web Conference 2024</i>, 2713-2722. <a href="https://doi.org/10.1145/3589334.3645323">doi:10.1145/3589334.3645323</a></li></ol>
+<h2>Methodology Appendix (rút gọn) và tệp bằng chứng</h2>
+<p style="font-size:13.5px">Truy vấn: 1 tìm kiếm web về đo hiệu năng, 4 lần đọc RFC, 1 lần đối chiếu arXiv và Crossref. Ngày chạy 02/11/2026. Các tệp theo hợp đồng đầu ra của skill (<code>sources.jsonl</code>, <code>evidence.jsonl</code>, <code>claims.jsonl</code>); <code>source_id = sha256(canonical_locator)[:16]</code> tính thật:</p>
+<pre>{"source_id":"779be9a2aed0ee0e","canonical_locator":"https://www.rfc-editor.org/rfc/rfc9114","source_type":"documentation","year":"2022"}
+{"source_id":"19b1c63f6292a9ab","canonical_locator":"https://www.rfc-editor.org/rfc/rfc9113","source_type":"documentation","year":"2022"}
+{"source_id":"ce83b627260cc037","canonical_locator":"https://www.rfc-editor.org/rfc/rfc9000","source_type":"documentation","year":"2021"}
+{"source_id":"337f59f9d84c0b9f","canonical_locator":"https://www.rfc-editor.org/rfc/rfc9204","source_type":"documentation","year":"2022"}
+{"source_id":"91f1ab53018d3dc4","canonical_locator":"arxiv:2102.12358","source_type":"academic","year":"2021"}
+{"source_id":"6e968a3b13f4f914","canonical_locator":"doi:10.1145/3589334.3645323","source_type":"academic","year":"2024"}</pre>
+<p style="font-size:13px;color:#6b6b70"><b>Không chạy:</b> <code>validate_report.py</code>, <code>verify_citations.py</code>, <code>md_to_html.py</code> và các bước pha 4-7 của chế độ standard/deep (quy tắc 3 nguồn độc lập cho mỗi tuyên bố chưa đạt ở chế độ quick này).</p></div>
+<div class="foot">Mẫu do Claude tự tạo bằng cách làm theo SKILL.md (commit f2f2c0f) ngày 02/11/2026, chế độ quick, không chạy script của skill. Trích dẫn lấy từ trang thật đã mở ngày 02/11/2026; xem phần Hạn chế. Không phải ảnh hay demo của tác giả skill.</div></div></body></html>

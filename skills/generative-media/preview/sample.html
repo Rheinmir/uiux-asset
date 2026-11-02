@@ -1,0 +1,47 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=1200"><title>generative-media – output mẫu</title><style>
+*{box-sizing:border-box}body{margin:0;background:#eef0f3;font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:#1c2330}
+.card{width:1200px;margin:0;background:#fff;padding:36px 44px 32px}
+h1{font-size:26px;margin:0 0 4px}h2{font-size:18px;margin:0 0 10px}
+.meta{color:#5b6577;font-size:14px;margin-bottom:22px}
+.chip{display:inline-block;font:700 12px/1 -apple-system,Helvetica,Arial,sans-serif;letter-spacing:.06em;padding:6px 10px;border-radius:4px;margin-bottom:12px}
+.in{background:#e7eefc;color:#1d3f8f}.out{background:#e2f4e8;color:#14683a}.warn{background:#fff1d6;color:#8a5200}
+.box{border:1px solid #d9dee7;border-radius:8px;padding:16px 20px;margin-bottom:22px}
+.box.inb{background:#f6f8fd}.box.outb{background:#fbfdfb}
+pre,code{font:13px/1.5 ui-monospace,Menlo,Consolas,monospace}
+pre{background:#10151f;color:#e6edf6;padding:14px 16px;border-radius:6px;margin:8px 0;white-space:pre-wrap;overflow:hidden}
+table{border-collapse:collapse;width:100%;font-size:14px}th,td{border:1px solid #d9dee7;padding:6px 10px;text-align:left;vertical-align:top}th{background:#f0f3f8}
+.note{background:#fff1d6;border-left:4px solid #e0a030;padding:10px 14px;font-size:14px;margin:14px 0;border-radius:3px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}.small{font-size:13px;color:#5b6577}
+.ok{color:#14683a;font-weight:700}
+</style></head><body><div class="card">
+<h1>generative-media: gói prompt phim cho 3 cảnh (Cinema Director)</h1>
+<div class="meta">Skill: SamurAIGPT/Generative-Media-Skills · core/media + library/motion/cinema-director · commit 66b55e2 · 02/11/2026</div>
+
+<span class="chip in">ĐẦU VÀO MẪU</span>
+<div class="box inb"><b>Chủ đề:</b> «Người gác hải đăng già trong buổi tối cuối cùng trước khi đèn được tự động hóa» (nhân vật và cảnh hư cấu).<br>
+<b>Ý đồ đạo diễn:</b> ba nhịp cảm xúc: nội tâm, buồn man mác, hùng vĩ.</div>
+
+<span class="chip out">ĐẦU RA</span>
+<div class="box outb">
+<h2>3 prompt đã mở rộng theo «Prompt Optimization Protocol»</h2>
+<div class="small" style="margin-bottom:10px">Công thức của skill: <code>[Shot Type] + [Subject/Action] + [Environment] + [Lighting] + [Camera Movement] + [Lens Effect]</code>, thêm một câu quan hệ ánh sáng (quy tắc «Physics logic»).</div>
+<div style="border:1px solid #d9dee7;border-radius:6px;padding:12px 14px;margin-bottom:12px;background:#fff">
+<div><b>Cảnh 1</b> · ý đồ <b>Introspective</b> <span class="small">(bảng ý đồ: Close-Up · Slow Push In · Soft Rembrandt / Window Light)</span></div>
+<table style="margin:8px 0;font-size:13px"><tr><th>Shot Type</th><th>Subject/Action</th><th>Environment</th><th>Lighting</th><th>Camera Movement</th><th>Lens</th></tr>
+<tr><td>Close-Up</td><td>weathered hands winding the brass clockwork of an old lighthouse lamp</td><td>a small lamp room at dusk, salt-stained glass, brass fittings</td><td>soft Rembrandt window light from the left, with warm dust motes drifting through the beam</td><td>slow Dolly In</td><td>shallow DOF</td></tr></table>
+<pre>Close-Up of weathered hands winding the brass clockwork of an old lighthouse lamp, a small lamp room at dusk, salt-stained glass, brass fittings. Soft Rembrandt window light from the left, with warm dust motes drifting through the beam. Slow Dolly In, shallow DOF. Warm light glinting along the polished brass edges as the gears turn.</pre>
+<div class="small">Mô hình đề xuất theo mục «Model Bias»: <b>Veo3</b> (chậm, thẩm mỹ cao).</div></div><div style="border:1px solid #d9dee7;border-radius:6px;padding:12px 14px;margin-bottom:12px;background:#fff">
+<div><b>Cảnh 2</b> · ý đồ <b>Melancholic</b> <span class="small">(bảng ý đồ: Profile / Medium · Slow Pull Out · Blue Hour / Desaturated)</span></div>
+<table style="margin:8px 0;font-size:13px"><tr><th>Shot Type</th><th>Subject/Action</th><th>Environment</th><th>Lighting</th><th>Camera Movement</th><th>Lens</th></tr>
+<tr><td>Medium profile shot</td><td>an elderly keeper at the gallery rail looking out over the sea</td><td>the lighthouse balcony at blue hour, calm water below</td><td>blue hour light, desaturated palette</td><td>slow Dolly Out</td><td>anamorphic</td></tr></table>
+<pre>Medium profile shot of an elderly keeper at the gallery rail looking out over the sea, the lighthouse balcony at blue hour, calm water below. Blue hour light, desaturated palette. Slow Dolly Out, anamorphic. Faint horizontal flares from the lamp stretch across the dark glass behind him.</pre>
+<div class="small">Mô hình đề xuất theo mục «Model Bias»: <b>Veo3</b> (chậm, thẩm mỹ cao).</div></div><div style="border:1px solid #d9dee7;border-radius:6px;padding:12px 14px;margin-bottom:12px;background:#fff">
+<div><b>Cảnh 3</b> · ý đồ <b>Majestic/Epic</b> <span class="small">(bảng ý đồ: Extreme Wide · Drone Flyover · Golden Hour / Volumetric)</span></div>
+<table style="margin:8px 0;font-size:13px"><tr><th>Shot Type</th><th>Subject/Action</th><th>Environment</th><th>Lighting</th><th>Camera Movement</th><th>Lens</th></tr>
+<tr><td>Extreme Wide shot</td><td>the lighthouse beam sweeping slowly across open water</td><td>a rocky headland with long waves rolling in</td><td>golden hour with volumetric god rays</td><td>smooth Drone Flyover</td><td>anamorphic</td></tr></table>
+<pre>Extreme Wide shot of the lighthouse beam sweeping slowly across open water, a rocky headland with long waves rolling in. Golden hour with volumetric god rays. Smooth Drone Flyover, anamorphic. The beam&#x27;s light shimmers on the wet rocks and the foam of each wave.</pre>
+<div class="small">Mô hình đề xuất theo mục «Model Bias»: <b>Veo3</b> (chậm, thẩm mỹ cao).</div></div>
+<div class="small">Máy kiểm theo mục Constraints: cả 3 cảnh đủ 6 thành phần và không có hai chuyển động mâu thuẫn trong cùng một cảnh. Mục «chủ thể không biến hình» do người soạn tự soát, không phải máy kiểm.</div>
+</div>
+<div class="note"><b>Chỉ là gói prompt bằng chữ.</b> Chưa gọi <code>generate-film.sh</code>/muapi.ai (cần MUAPI_KEY), nên không có video hay ảnh nào được tạo và không có kiểm chứng rằng mô hình sẽ làm đúng ý. Theo SKILL.md của core/media, các script sinh ảnh/video/nhạc đều cần MUAPI_KEY; thẻ này chỉ minh họa phần mở rộng prompt của cinema-director. Mọi nội dung hư cấu.</div>
+</div></body></html>

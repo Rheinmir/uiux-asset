@@ -17,5 +17,6 @@
  "vendored": false,
  "reason": "Nguồn chỉ ở mức «gợi ý» (tên không khớp hẳn với skill trong bài), nên theo quyết định của chủ dự án chỉ để liên kết, không chép. Bản chép đã gỡ.",
  "install": "npx skills add teng-lin/notebooklm-py",
- "note": "Tên notebooklm rất phổ biến, nhiều skill trùng tên. Chọn teng-lin vì skill tạo được audio (podcast), quiz, flashcards, slide-deck, infographic, mind-map từ nguồn (bài viết, PDF, YouTube, web) đúng mô tả bài. Chỉ chép SKILL.md + LICENSE (skill nằm ở gốc repo; repo còn là thư viện Python, cần pip/uv tool install notebooklm-py[browser]). Là API không chính thức của Google NotebookLM."
+ "note": "Tên notebooklm rất phổ biến, nhiều skill trùng tên. Chọn teng-lin vì skill tạo được audio (podcast), quiz, flashcards, slide-deck, infographic, mind-map từ nguồn (bài viết, PDF, YouTube, web) đúng mô tả bài. Chỉ chép SKILL.md + LICENSE (skill nằm ở gốc repo; repo còn là thư viện Python, cần pip/uv tool install notebooklm-py[browser]). Là API không chính thức của Google NotebookLM.",
+ "no_preview": "Cần đăng nhập Google và cài notebooklm-py (CLI quản lý notebook thật); thiếu tài khoản thì không chạy được, nên không có output mẫu."
 }

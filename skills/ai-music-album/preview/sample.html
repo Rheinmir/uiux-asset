@@ -1,0 +1,47 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=1200"><title>ai-music-album – output mẫu</title><style>
+*{box-sizing:border-box}body{margin:0;background:#eef0f3;font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:#1c2330}
+.card{width:1200px;margin:0;background:#fff;padding:36px 44px 32px}
+h1{font-size:26px;margin:0 0 4px}h2{font-size:18px;margin:0 0 10px}
+.meta{color:#5b6577;font-size:14px;margin-bottom:22px}
+.chip{display:inline-block;font:700 12px/1 -apple-system,Helvetica,Arial,sans-serif;letter-spacing:.06em;padding:6px 10px;border-radius:4px;margin-bottom:12px}
+.in{background:#e7eefc;color:#1d3f8f}.out{background:#e2f4e8;color:#14683a}.warn{background:#fff1d6;color:#8a5200}
+.box{border:1px solid #d9dee7;border-radius:8px;padding:16px 20px;margin-bottom:22px}
+.box.inb{background:#f6f8fd}.box.outb{background:#fbfdfb}
+pre,code{font:13px/1.5 ui-monospace,Menlo,Consolas,monospace}
+pre{background:#10151f;color:#e6edf6;padding:14px 16px;border-radius:6px;margin:8px 0;white-space:pre-wrap;overflow:hidden}
+table{border-collapse:collapse;width:100%;font-size:14px}th,td{border:1px solid #d9dee7;padding:6px 10px;text-align:left;vertical-align:top}th{background:#f0f3f8}
+.note{background:#fff1d6;border-left:4px solid #e0a030;padding:10px 14px;font-size:14px;margin:14px 0;border-radius:3px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}.small{font-size:13px;color:#5b6577}
+.ok{color:#14683a;font-weight:700}
+</style></head><body><div class="card">
+<h1>ai-music-album: kế hoạch album từ skill album-conceptualizer</h1>
+<div class="meta">Skill: bitwize-music-studio/claude-ai-music-skills · skills/album-conceptualizer (trong bộ ai-music-album) · commit 597d928 · 02/11/2026</div>
+
+<span class="chip in">ĐẦU VÀO MẪU</span>
+<div class="box inb">
+<div class="small" style="margin-bottom:8px">Skill hỏi 7 giai đoạn và chờ người dùng trả lời. Ở đây câu trả lời là hư cấu, tự viết cho ví dụ này (nghệ sĩ, tên đĩa, bài hát đều không có thật).</div>
+<table><tr><th style="width:170px">Giai đoạn</th><th>Trả lời giả định</th></tr>
+<tr><td>1 Nền tảng</td><td>Nghệ sĩ mới «Lò Sưởi Giấy» · dream-pop điện tử · loại <i>thematic</i> · 8 bài (cỡ tiêu chuẩn 8–12) · chủ đề: chuyến tàu điện đêm cuối cùng · không phải chuyện có thật (khỏi cần RESEARCH.md)</td></tr>
+<tr><td>2 Ý tưởng</td><td>Cảm giác giữa hai nơi: rời thành phố ồn, chưa về tới nhà. Cốt lõi cảm xúc: cô đơn nhưng ấm.</td></tr>
+<tr><td>3 Âm thanh</td><td>Tổng hợp mềm, trống nhẹ, giọng thì thầm. Thời lượng mục tiêu 3:30–5:00 (mặc định của skill).</td></tr>
+<tr><td>5 Bìa</td><td>Tông xanh đêm và vàng đèn tàu, một toa tàu sáng đèn.</td></tr>
+<tr><td>7 Xác nhận</td><td>«Ready to start writing?» được trả lời «đồng ý» (giả định), nên bước viết lời mới được phép bắt đầu.</td></tr></table>
+</div>
+
+<span class="chip out">ĐẦU RA</span>
+<div class="box outb">
+<h2 style="margin-bottom:2px">Album «Chuyến Cuối» · Lò Sưởi Giấy · thematic · 8 bài</h2>
+<div class="small" style="margin-bottom:10px">Nội dung kiểu README album (giai đoạn 4: cấu trúc + trình tự). Nhịp (BPM) và mức năng lượng 1–5 là lựa chọn thiết kế trong kế hoạch, chưa có bài nào được tạo ra.</div>
+<table><tr><th>#</th><th>Tên tạm</th><th>Lời</th><th>BPM</th><th>Năng lượng</th><th>Trọng tâm</th></tr><tr><td>01</td><td><b>Bến đầu</b></td><td>Instrumental</td><td>72</td><td><div style='display:flex;gap:2px;align-items:center'><span style="width:16px;height:12px;background:#2f7d5a"></span><span style="width:16px;height:12px;background:#2f7d5a"></span><span style="width:16px;height:12px;background:#dde3ea"></span><span style="width:16px;height:12px;background:#dde3ea"></span><span style="width:16px;height:12px;background:#dde3ea"></span></div></td><td>Mở: tiếng loa báo tàu, hơi thở thành phố trước khi lên chuyến</td></tr><tr><td>02</td><td><b>Cửa kính mờ</b></td><td>Có lời</td><td>104</td><td><div style='display:flex;gap:2px;align-items:center'><span style="width:16px;height:12px;background:#2f7d5a"></span><span style="width:16px;height:12px;background:#2f7d5a"></span><span style="width:16px;height:12px;background:#2f7d5a"></span><span style="width:16px;height:12px;background:#dde3ea"></span><span style="width:16px;height:12px;background:#dde3ea"></span></div></td><td>Nhìn thành phố qua hơi nước trên kính</td></tr><tr><td>03</td><td><b>Đèn đỏ ngã tư</b></td><td>Có lời</td><td>122</td><td><div style='display:flex;gap:2px;align-items:center'><span style="width:16px;height:12px;background:#2f7d5a"></span><span style="width:16px;height:12px;background:#2f7d5a"></span><span style="width:16px;height:12px;background:#2f7d5a"></span><span style="width:16px;height:12px;background:#2f7d5a"></span><span style="width:16px;height:12px;background:#2f7d5a"></span></div></td><td>Đỉnh đầu: nhịp thúc, đề xuất làm đĩa đơn</td></tr><tr><td>04</td><td><b>Người ngủ gật</b></td><td>Có lời</td><td>88</td><td><div style='display:flex;gap:2px;align-items:center'><span style="width:16px;height:12px;background:#2f7d5a"></span><span style="width:16px;height:12px;background:#2f7d5a"></span><span style="width:16px;height:12px;background:#2f7d5a"></span><span style="width:16px;height:12px;background:#dde3ea"></span><span style="width:16px;height:12px;background:#dde3ea"></span></div></td><td>Người lạ ngủ tựa vai, chuyện nhỏ giữa những người không quen</td></tr><tr><td>05</td><td><b>Nửa đêm không ai gọi</b></td><td>Có lời</td><td>70</td><td><div style='display:flex;gap:2px;align-items:center'><span style="width:16px;height:12px;background:#2f7d5a"></span><span style="width:16px;height:12px;background:#dde3ea"></span><span style="width:16px;height:12px;background:#dde3ea"></span><span style="width:16px;height:12px;background:#dde3ea"></span><span style="width:16px;height:12px;background:#dde3ea"></span></div></td><td>Thung lũng: lời thú nhận, chậm và thưa</td></tr><tr><td>06</td><td><b>Chuyển tuyến</b></td><td>Có lời</td><td>112</td><td><div style='display:flex;gap:2px;align-items:center'><span style="width:16px;height:12px;background:#2f7d5a"></span><span style="width:16px;height:12px;background:#2f7d5a"></span><span style="width:16px;height:12px;background:#2f7d5a"></span><span style="width:16px;height:12px;background:#2f7d5a"></span><span style="width:16px;height:12px;background:#dde3ea"></span></div></td><td>Dựng lại đà: phải đổi tuyến mới về được</td></tr><tr><td>07</td><td><b>Chuyến cuối</b></td><td>Có lời</td><td>128</td><td><div style='display:flex;gap:2px;align-items:center'><span style="width:16px;height:12px;background:#2f7d5a"></span><span style="width:16px;height:12px;background:#2f7d5a"></span><span style="width:16px;height:12px;background:#2f7d5a"></span><span style="width:16px;height:12px;background:#2f7d5a"></span><span style="width:16px;height:12px;background:#2f7d5a"></span></div></td><td>Trái tim album và bài chủ đề: đuổi theo chuyến tàu cuối</td></tr><tr><td>08</td><td><b>Về nhà</b></td><td>Instrumental</td><td>76</td><td><div style='display:flex;gap:2px;align-items:center'><span style="width:16px;height:12px;background:#2f7d5a"></span><span style="width:16px;height:12px;background:#2f7d5a"></span><span style="width:16px;height:12px;background:#dde3ea"></span><span style="width:16px;height:12px;background:#dde3ea"></span><span style="width:16px;height:12px;background:#dde3ea"></span></div></td><td>Đóng: hạ nhịp, đèn hiên nhà sáng</td></tr></table>
+<h2 style="margin-top:16px">Bảng motif (hạt giống, theo mục Motifs &amp; Threads)</h2>
+<table><tr><th>Hình ảnh / cụm từ lặp</th><th>Xuất hiện đầu ở</th><th>Quay lại ở</th></tr>
+<tr><td>Hơi nước trên kính</td><td>02</td><td>08</td></tr><tr><td>Tiếng loa báo ga</td><td>01</td><td>07, 08</td></tr><tr><td>Đèn hiên nhà</td><td>05 (nhắc thoáng)</td><td>08</td></tr></table>
+<h2 style="margin-top:16px">Kiểm tra nhịp album (theo «Pacing Problems Checklist», máy kiểm)</h2>
+<table>
+<tr><td class="ok" style="width:34px">OK</td><td>Không có 3 bài liền cùng mức năng lượng</td></tr>
+<tr><td class="ok">OK</td><td>Hai bài kề nhau lệch nhau hơn 10 BPM (nhỏ nhất: 16)</td></tr>
+<tr><td class="ok">OK</td><td>Đỉnh ở bài 3 và 7, thung lũng ở bài 5; trái tim album (bài 7) nằm trong khoảng 5–7</td></tr>
+<tr><td class="ok">OK</td><td>Mở bằng bài instrumental, đóng bằng bài hạ nhịp; 8 bài nằm trong cỡ 8–12</td></tr></table>
+</div>
+<div class="note"><b>Chỉ là kế hoạch bằng chữ.</b> Skill này dừng ở bản thiết kế album. Chưa viết lời, chưa tạo prompt Suno, chưa tạo nhạc; không có âm thanh hay ảnh bìa nào trong thẻ này. Câu trả lời đầu vào là hư cấu và việc «đồng ý» ở giai đoạn 7 là giả định của ví dụ.</div>
+</div></body></html>

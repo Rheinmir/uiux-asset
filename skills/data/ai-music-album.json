@@ -415,5 +415,11 @@
   "reason": "",
   "install": "/plugin marketplace add bitwize-music-studio/claude-ai-music-skills  rồi  /plugin install bitwize-music@bitwize-music",
   "note": "Tên 'ai-music-album' lấy từ skill mục lục của nexu-io/open-design, tệp đó ghi 'upstream' trỏ tới repo này; mô tả bài (viết lời, mix, master, phát hành) khớp bộ skill lyric-writer, mix-engineer, mastering-engineer, release-director của repo. Chép toàn bộ thư mục skills/ (53 skill) vào skills/ai-music-album/<tên skill>/; không có SKILL.md gốc ở thư mục này. Không chép reference/, templates/, genres/, tools/, servers/ của repo (skill tham chiếu tới chúng).",
-  "commit": "597d928fb2c8316ee13159771405813174aa01de"
+  "commit": "597d928fb2c8316ee13159771405813174aa01de",
+  "preview": {
+    "kind": "generated",
+    "src": "preview/sample.png",
+    "label": "output mẫu: Claude làm theo SKILL.md (commit 597d928) cho đầu vào «album thematic hư cấu Chuyến Cuối», 02/11/2026; mã nguồn: preview/sample.html",
+    "credit": "tự tạo, không phải ảnh của tác giả skill"
+  }
 }

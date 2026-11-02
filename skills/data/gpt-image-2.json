@@ -51,7 +51,8 @@
  ],
  "bytes": 58064,
  "reason": "",
- "install": "",
- "note": "Khớp nhất mô tả bài: có thinking mode, chỉnh sửa ảnh, presets.yaml + platforms.yaml (preset theo nền tảng), carousel. Repo là bộ 118 skill của Gleb Kalinin; chỉ chép thư mục gpt-image-2. Bỏ 2 ảnh PNG > 300KB (screenshot.png, references/vhs-infomercial.png). Cần OpenAI API key. Các repo gpt-image-2 khác đã xem chưa thấy preset theo nền tảng + thinking mode. · Lệnh cài: README repo không ghi lệnh cho skill này nên không đưa ra (không bịa).",
- "commit": "046a4ce050291736afb5e434c2001dae8ea03a06"
+ "install": "git clone -q --depth 1 --filter=blob:none --sparse https://github.com/glebis/claude-skills /tmp/cs && git -C /tmp/cs sparse-checkout set gpt-image-2 && mkdir -p ~/.claude/skills && cp -R /tmp/cs/gpt-image-2 ~/.claude/skills/ && rm -rf /tmp/cs && pip3 install pyyaml",
+ "note": "Khớp nhất mô tả bài: có thinking mode, chỉnh sửa ảnh, presets.yaml + platforms.yaml (preset theo nền tảng), carousel. Repo là bộ 118 skill của Gleb Kalinin; chỉ chép thư mục gpt-image-2. Bỏ 2 ảnh PNG > 300KB (screenshot.png, references/vhs-infomercial.png). Cần OpenAI API key. Các repo gpt-image-2 khác đã xem chưa thấy preset theo nền tảng + thinking mode. · Lệnh cài: README repo không ghi lệnh cho skill này nên không đưa ra (không bịa). · Lệnh trên thẻ là cách cài chung của Claude Code (chép thư mục skill vào ~/.claude/skills), kiểm chạy được ngày 02/11/2026 (khớp commit 046a4ce); repo vẫn không ghi lệnh riêng. SKILL.md ghi cần PyYAML; khoá OPENAI_API_KEY (mặc định) hoặc OPENROUTER_API_KEY; giá theo SKILL.md: nháp 0,006 USD, vừa 0,05, cao 0,21 mỗi ảnh.",
+ "commit": "046a4ce050291736afb5e434c2001dae8ea03a06",
+ "no_preview": "Cần khóa API OpenAI/OpenRouter để sinh ảnh; không dựng ảnh giả làm đầu ra AI, nên không có output mẫu."
 }

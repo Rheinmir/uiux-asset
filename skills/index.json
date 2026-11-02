@@ -514,9 +514,14 @@
    "reason": "remotion-dev/skills không có tệp LICENSE (mặc định bảo lưu mọi quyền). Repo mẹ remotion-dev/remotion dùng 'Remotion License' tuỳ biến: miễn phí cho cá nhân / công ty tới 3 nhân viên / phi lợi nhuận, công ty for-profit lớn hơn cần mua company license; cấm chép/sửa mã để bán, cho thuê, cấp phép lại hay cấp phép phụ bản phái sinh. Không phải giấy phép phân phối lại (MIT/Apache...), nên không chép.",
    "install": "npx skills add remotion-dev/skills",
    "note": "Nguồn chính thức do đội Remotion duy trì (commit 30d4553 ngày 2026-10-26). Gồm remotion-best-practices (router), remotion-captions, -create, -docs, -interactivity, -maps, -markup, -multimedia, -render, -saas, -studio, -upgrade. Chỉ nên liên kết tới repo, người dùng tự cài. Lưu ý: digitalsamba/claude-code-video-toolkit có thư mục remotion-official là bản sao nguyên văn của nó, cũng không được cấp phép lại nên không chép từ đó.",
+   "preview": {
+    "kind": "generated",
+    "src": "preview/sample.jpg",
+    "label": "output mẫu: Claude làm theo SKILL.md (commit c7cb2fd) cho đầu vào «Reel menu 5 giây, món cà phê muối (quán hư cấu)», 02/11/2026; mã nguồn: preview/sample.html",
+    "credit": "tự tạo, không phải ảnh của tác giả skill"
+   },
    "tagline": "Dựng video bằng code",
-   "desc_vi": "Tạo video điện ảnh bằng React: chuyển động, phụ đề, hiệu ứng và xuất video.",
-   "no_preview": "chưa có"
+   "desc_vi": "Tạo video điện ảnh bằng React: chuyển động, phụ đề, hiệu ứng và xuất video."
   },
   {
    "slug": "reels-scripting",
@@ -533,18 +538,23 @@
    "pushed": "2026-10-18T20:20:39Z",
    "path": "skills/reels-scripting",
    "vendored": true,
-   "bytes": 12133,
+   "bytes": 271286,
    "reason": "",
    "install": "/plugin marketplace add charlie947/social-media-skills  rồi  /plugin install social-media-skills",
    "note": "Tên và mô tả khớp (lấy một Reel mẫu, phân tích bằng Apify + Gemini 2.5 Flash, viết kịch bản theo giọng riêng). Là 1 trong 17 skill của Charlie Hills; cần APIFY_API_TOKEN và GOOGLE_AI_API_KEY; đọc about-me.md / voice.md do skill voice-builder tạo (chưa chép skill đó vì thuộc nhóm khác).",
    "commit": "10ca79c0ec0be0f7654d19cd4f0c86b6fa6ed23b",
+   "preview": {
+    "kind": "generated",
+    "src": "preview/sample.jpg",
+    "label": "output mẫu: Claude làm theo SKILL.md (commit 10ca79c) cho đầu vào «bản chép lời Reel hư cấu + chủ đề thói quen 10 phút cuối tuần», 02/11/2026; mã nguồn: preview/sample.html",
+    "credit": "tự tạo, không phải ảnh của tác giả skill"
+   },
    "tagline": "Video ngắn",
    "desc_vi": "Phân tích reels viral rồi viết lại thật tự nhiên theo phong cách của riêng bạn.",
-   "file_count": 3,
+   "file_count": 5,
    "skill_md": [
     "SKILL.md"
-   ],
-   "no_preview": "chưa có"
+   ]
   },
   {
    "slug": "youtube-thumbnail",
@@ -600,16 +610,16 @@
    "vendored": true,
    "bytes": 58950,
    "reason": "",
-   "install": "",
-   "note": "Khớp nhất mô tả bài: có thinking mode, chỉnh sửa ảnh, presets.yaml + platforms.yaml (preset theo nền tảng), carousel. Repo là bộ 118 skill của Gleb Kalinin; chỉ chép thư mục gpt-image-2. Bỏ 2 ảnh PNG > 300KB (screenshot.png, references/vhs-infomercial.png). Cần OpenAI API key. Các repo gpt-image-2 khác đã xem chưa thấy preset theo nền tảng + thinking mode. · Lệnh cài: README repo không ghi lệnh cho skill này nên không đưa ra (không bịa).",
+   "install": "git clone -q --depth 1 --filter=blob:none --sparse https://github.com/glebis/claude-skills /tmp/cs && git -C /tmp/cs sparse-checkout set gpt-image-2 && mkdir -p ~/.claude/skills && cp -R /tmp/cs/gpt-image-2 ~/.claude/skills/ && rm -rf /tmp/cs && pip3 install pyyaml",
+   "note": "Khớp nhất mô tả bài: có thinking mode, chỉnh sửa ảnh, presets.yaml + platforms.yaml (preset theo nền tảng), carousel. Repo là bộ 118 skill của Gleb Kalinin; chỉ chép thư mục gpt-image-2. Bỏ 2 ảnh PNG > 300KB (screenshot.png, references/vhs-infomercial.png). Cần OpenAI API key. Các repo gpt-image-2 khác đã xem chưa thấy preset theo nền tảng + thinking mode. · Lệnh cài: README repo không ghi lệnh cho skill này nên không đưa ra (không bịa). · Lệnh trên thẻ là cách cài chung của Claude Code (chép thư mục skill vào ~/.claude/skills), kiểm chạy được ngày 02/11/2026 (khớp commit 046a4ce); repo vẫn không ghi lệnh riêng. SKILL.md ghi cần PyYAML; khoá OPENAI_API_KEY (mặc định) hoặc OPENROUTER_API_KEY; giá theo SKILL.md: nháp 0,006 USD, vừa 0,05, cao 0,21 mỗi ảnh.",
    "commit": "046a4ce050291736afb5e434c2001dae8ea03a06",
+   "no_preview": "Cần khóa API OpenAI/OpenRouter để sinh ảnh; không dựng ảnh giả làm đầu ra AI, nên không có output mẫu.",
    "tagline": "Tạo ảnh AI",
    "desc_vi": "Tạo ảnh nâng cao với chế độ suy luận, công cụ chỉnh sửa và preset cho từng nền tảng.",
    "file_count": 9,
    "skill_md": [
     "SKILL.md"
-   ],
-   "no_preview": "chưa có"
+   ]
   },
   {
    "slug": "ai-video-toolkit",
@@ -630,9 +640,14 @@
    "reason": "Nguồn chỉ ở mức «gợi ý» (tên không khớp hẳn với skill trong bài), nên theo quyết định của chủ dự án chỉ để liên kết, không chép. Bản chép đã gỡ.",
    "install": "git clone https://github.com/digitalsamba/claude-code-video-toolkit.git",
    "note": "Chọn theo mô tả (quy trình AI từ kịch bản đến MP4 QC) chứ không theo tên: tên 'ai-video-toolkit' không phải tên repo hay skill ở đây (skill chính là video_toolkit). Chép skills/video-toolkit/SKILL.md làm SKILL.md gốc + 12 skill trong .claude/skills vào related/. KHÔNG chép .claude/skills/remotion-official (bản sao remotion-dev/skills, không có giấy phép phân phối lại). Không chép .claude/commands, tools/, templates/ (skill tham chiếu tới chúng, cần clone cả repo để chạy).",
+   "preview": {
+    "kind": "generated",
+    "src": "preview/sample.jpg",
+    "label": "output mẫu: Claude làm theo SKILL.md (commit a8eaaf7) cho đầu vào «brief video dọc về ứng dụng ghi chú hư cấu», 02/11/2026; mã nguồn: preview/sample.html",
+    "credit": "tự tạo, không phải ảnh của tác giả skill"
+   },
    "tagline": "Sản xuất video AI",
-   "desc_vi": "Quy trình làm video bằng AI từ viết kịch bản đến xuất file MP4 hoàn chỉnh.",
-   "no_preview": "chưa có"
+   "desc_vi": "Quy trình làm video bằng AI từ viết kịch bản đến xuất file MP4 hoàn chỉnh."
   },
   {
    "slug": "ai-music-album",
@@ -649,14 +664,20 @@
    "pushed": "2026-10-28T21:44:30Z",
    "path": "skills",
    "vendored": true,
-   "bytes": 1072522,
+   "bytes": 1330059,
    "reason": "",
    "install": "/plugin marketplace add bitwize-music-studio/claude-ai-music-skills  rồi  /plugin install bitwize-music@bitwize-music",
    "note": "Tên 'ai-music-album' lấy từ skill mục lục của nexu-io/open-design, tệp đó ghi 'upstream' trỏ tới repo này; mô tả bài (viết lời, mix, master, phát hành) khớp bộ skill lyric-writer, mix-engineer, mastering-engineer, release-director của repo. Chép toàn bộ thư mục skills/ (53 skill) vào skills/ai-music-album/<tên skill>/; không có SKILL.md gốc ở thư mục này. Không chép reference/, templates/, genres/, tools/, servers/ của repo (skill tham chiếu tới chúng).",
    "commit": "597d928fb2c8316ee13159771405813174aa01de",
+   "preview": {
+    "kind": "generated",
+    "src": "preview/sample.png",
+    "label": "output mẫu: Claude làm theo SKILL.md (commit 597d928) cho đầu vào «album thematic hư cấu Chuyến Cuối», 02/11/2026; mã nguồn: preview/sample.html",
+    "credit": "tự tạo, không phải ảnh của tác giả skill"
+   },
    "tagline": "Sản xuất nhạc AI",
    "desc_vi": "Làm nhạc AI trọn gói: viết lời, mix, master và quy trình phát hành.",
-   "file_count": 100,
+   "file_count": 102,
    "skill_md": [
     "about/SKILL.md",
     "album-art-director/SKILL.md",
@@ -711,8 +732,7 @@
     "validate-album/SKILL.md",
     "verify-sources/SKILL.md",
     "voice-checker/SKILL.md"
-   ],
-   "no_preview": "chưa có"
+   ]
   },
   {
    "slug": "generative-media",
@@ -732,9 +752,14 @@
    "reason": "Nguồn chỉ ở mức «gợi ý» (tên không khớp hẳn với skill trong bài), nên theo quyết định của chủ dự án chỉ để liên kết, không chép. Bản chép đã gỡ.",
    "install": "npx skills add SamurAIGPT/Generative-Media-Skills --all",
    "note": "Hai repo trùng tên. Chọn SamurAIGPT vì mô tả repo ('Multi-modal Generative Media Skills for AI Agents ... image, video, and audio generation') sát câu 'tạo ảnh, video và âm thanh' của bài; calesthio nghiêng về quy trình sản xuất và cũng có thể là nguồn đúng. Chép core/ (3 skill) và library/ (57 skill); bỏ .opencode/skills (bản trùng của library), media_outputs/, schema_data.json (637KB), assets/. Cần muapi-cli và API key muapi.ai.",
+   "preview": {
+    "kind": "generated",
+    "src": "preview/sample.jpg",
+    "label": "output mẫu: Claude làm theo SKILL.md (commit 66b55e2) cho đầu vào «3 cảnh hải đăng hư cấu (Cinema Director)», 02/11/2026; mã nguồn: preview/sample.html",
+    "credit": "tự tạo, không phải ảnh của tác giả skill"
+   },
    "tagline": "AI đa phương thức",
-   "desc_vi": "Bộ công cụ đa nền tảng tạo ảnh, video và âm thanh bằng AI.",
-   "no_preview": "chưa có"
+   "desc_vi": "Bộ công cụ đa nền tảng tạo ảnh, video và âm thanh bằng AI."
   },
   {
    "slug": "notebooklm",
@@ -756,9 +781,9 @@
    "reason": "Nguồn chỉ ở mức «gợi ý» (tên không khớp hẳn với skill trong bài), nên theo quyết định của chủ dự án chỉ để liên kết, không chép. Bản chép đã gỡ.",
    "install": "npx skills add teng-lin/notebooklm-py",
    "note": "Tên notebooklm rất phổ biến, nhiều skill trùng tên. Chọn teng-lin vì skill tạo được audio (podcast), quiz, flashcards, slide-deck, infographic, mind-map từ nguồn (bài viết, PDF, YouTube, web) đúng mô tả bài. Chỉ chép SKILL.md + LICENSE (skill nằm ở gốc repo; repo còn là thư viện Python, cần pip/uv tool install notebooklm-py[browser]). Là API không chính thức của Google NotebookLM.",
+   "no_preview": "Cần đăng nhập Google và cài notebooklm-py (CLI quản lý notebook thật); thiếu tài khoản thì không chạy được, nên không có output mẫu.",
    "tagline": "Tái sử dụng kiến thức",
-   "desc_vi": "Biến bài viết, PDF, video, website thành podcast, câu đố và slide thuyết trình.",
-   "no_preview": "chưa có"
+   "desc_vi": "Biến bài viết, PDF, video, website thành podcast, câu đố và slide thuyết trình."
   },
   {
    "slug": "deep-research",
@@ -777,17 +802,22 @@
    "pushed": "2026-04-11",
    "path": "SKILL.md, reference, schemas, scripts, templates, requirements.txt",
    "vendored": true,
-   "bytes": 189078,
+   "bytes": 592078,
    "install": "",
    "note": "Ứng viên khớp nhất: pipeline 8 pha, chấm độ tin cậy nguồn, kiểm chứng tự động. Tên trong bài chung chung nên chỉ ở mức gợi ý. · Chép theo quyết định của chủ dự án: README ghi MIT là đủ.",
+   "preview": {
+    "kind": "generated",
+    "src": "preview/sample.jpg",
+    "label": "output mẫu: Claude làm theo SKILL.md (commit f2f2c0f) cho đầu vào «câu hỏi «HTTP/3 khác HTTP/2 ở điểm cốt lõi nào, có nhanh hơn không?» (quick)», 02/11/2026; mã nguồn: preview/sample.html",
+    "credit": "tự tạo, không phải ảnh của tác giả skill"
+   },
    "tagline": "Nghiên cứu chuyên sâu",
    "desc_vi": "Nghiên cứu nhiều tầng, kiểm chứng nguồn và tổng hợp thông tin chất lượng cao.",
    "commit": "f2f2c0fa4e7617ca84c86b63f4bb40f77a746933",
-   "file_count": 26,
+   "file_count": 28,
    "skill_md": [
     "SKILL.md"
-   ],
-   "no_preview": "chưa có"
+   ]
   },
   {
    "slug": "academic-research",
@@ -806,9 +836,14 @@
    "reason": "Giấy phép CC BY-NC 4.0 cấm dùng thương mại, không thuộc nhóm cho phân phối lại tự do. Chỉ ghi liên kết.",
    "install": "/plugin marketplace add Imbad0202/academic-research-skills\n/plugin install academic-research-skills",
    "note": "Khớp mô tả: pipeline nghiên cứu -> viết -> phản biện -> sửa; Style Calibration (căn giọng văn) và Writing Quality Check (bắt dấu hiệu văn AI). Repo có sẵn skill 'deep-research' riêng, không dùng cho mục Deep Research của bài vì cùng giấy phép NC.",
+   "preview": {
+    "kind": "generated",
+    "src": "preview/sample.jpg",
+    "label": "output mẫu: Claude làm theo SKILL.md (commit 2e02041) cho đầu vào «câu hỏi «tự kiểm tra có giúp nhớ lâu hơn đọc lại?» (deep-research quick)», 02/11/2026; mã nguồn: preview/sample.html",
+    "credit": "tự tạo, không phải ảnh của tác giả skill"
+   },
    "tagline": "Viết học thuật",
-   "desc_vi": "Quy trình nghiên cứu học thuật trọn gói: sửa bài, căn giọng văn, phát hiện văn AI.",
-   "no_preview": "chưa có"
+   "desc_vi": "Quy trình nghiên cứu học thuật trọn gói: sửa bài, căn giọng văn, phát hiện văn AI."
   },
   {
    "slug": "sm-research",
@@ -830,9 +865,9 @@
    "reason": "Giấy phép cho phép chép nhưng KHÔNG chép vì tên 'SM Research' không khớp tên nào, chỉ khớp một phần mô tả (Reddit + X), và thư mục skill nặng ~17.5MB (~3MB sau khi bỏ 5 tệp nhị phân > 300KB). Tránh gán nhầm nguồn; chép sau nếu người dùng xác nhận đúng skill.",
    "install": "",
    "note": "Máy này đã có skill last30days cài sẵn (cùng mô tả). Nếu người dùng xác nhận, có thể chép skills/last30days/ bỏ assets/*.jpeg|png|mp3.",
+   "no_preview": "cần engine Python 3.12 và khoá/cookie X, Reddit, TikTok; skill cấm báo cáo giả khi chưa chạy engine, nên không dựng mẫu",
    "tagline": "Nghiên cứu mạng xã hội",
-   "desc_vi": "Theo dõi dư luận và xu hướng từ các thảo luận thật trên Reddit và X.",
-   "no_preview": "chưa có"
+   "desc_vi": "Theo dõi dư luận và xu hướng từ các thảo luận thật trên Reddit và X."
   },
   {
    "slug": "jtbd-interview-tool",
@@ -856,9 +891,14 @@
    "reason": "Nguồn chỉ ở mức «gợi ý» (tên không khớp hẳn với skill trong bài), nên theo quyết định của chủ dự án chỉ để liên kết, không chép. Bản chép đã gỡ.",
    "install": "npx skills add glebis/humane-agentic-design\n/plugin marketplace add glebis/humane-agentic-design\n/plugin install humane@humane-agentic-design",
    "note": "Tên gốc skill là 'jtbd'. Khớp mô tả: phỏng vấn -> insight, messaging angles, GTM brief, Push/Pull/Habit/Anxiety. Bản cũ ở glebis/claude-skills đã chuyển sang repo này. Trỏ sang vài skill anh em trong gói humane (không chép).",
+   "preview": {
+    "kind": "generated",
+    "src": "preview/sample.jpg",
+    "label": "output mẫu: Claude làm theo SKILL.md (commit e7d867d) cho đầu vào «phỏng vấn chủ quán hư cấu Cà phê Sương Mai (đặt ly trước)», 02/11/2026; mã nguồn: preview/sample.html",
+    "credit": "tự tạo, không phải ảnh của tác giả skill"
+   },
    "tagline": "Nghiên cứu khách hàng",
-   "desc_vi": "Biến phỏng vấn khách hàng thành insight và thông điệp theo khung Jobs-To-Be-Done.",
-   "no_preview": "chưa có"
+   "desc_vi": "Biến phỏng vấn khách hàng thành insight và thông điệp theo khung Jobs-To-Be-Done."
   },
   {
    "slug": "pm-skills",
@@ -873,14 +913,20 @@
    "pushed": "2026-10-29",
    "path": "pm-*/ (9 plugin, 69 SKILL.md)",
    "vendored": true,
-   "bytes": 463748,
+   "bytes": 725055,
    "reason": "",
    "install": "claude plugin marketplace add phuryn/pm-skills\nclaude plugin install pm-toolkit@pm-skills",
    "note": "Chép 9 thư mục plugin nguyên văn (skills + commands). pm-ai-shipping README ghi đã chuyển sang phuryn/product-engineering nhưng vẫn còn trong commit này.",
+   "preview": {
+    "kind": "generated",
+    "src": "preview/sample.jpg",
+    "label": "output mẫu: Claude làm theo SKILL.md (commit 2a12295) cho đầu vào «ý tưởng hư cấu «Sương Mai Đặt Trước» (skill lean-canvas)», 02/11/2026; mã nguồn: preview/sample.html",
+    "credit": "tự tạo, không phải ảnh của tác giả skill"
+   },
    "tagline": "Quản lý sản phẩm",
    "desc_vi": "Bộ công cụ khám phá sản phẩm, chiến lược, triển khai, định giá và tăng trưởng.",
    "commit": "2a12295a7717569baa7be181b4cfebe3ca38a6bb",
-   "file_count": 140,
+   "file_count": 142,
    "skill_md": [
     "pm-ai-shipping/skills/code-review/SKILL.md",
     "pm-ai-shipping/skills/intended-vs-implemented/SKILL.md",
@@ -951,8 +997,7 @@
     "pm-toolkit/skills/grammar-check/SKILL.md",
     "pm-toolkit/skills/privacy-policy/SKILL.md",
     "pm-toolkit/skills/review-resume/SKILL.md"
-   ],
-   "no_preview": "chưa có"
+   ]
   },
   {
    "slug": "ai-transformation",
@@ -975,9 +1020,14 @@
    "reason": "Không có ứng viên nào khớp rõ cả tên lẫn mô tả; ứng viên tên đúng nhất (shekerkamma) không có license. Không chép để tránh gán nhầm.",
    "install": "",
    "note": "Ứng viên đầu danh sách chỉ khớp một phần ('use-case discovery' + scorecard).",
+   "preview": {
+    "kind": "generated",
+    "src": "preview/sample.jpg",
+    "label": "output mẫu: Claude làm theo SKILL.md (commit b755e01) cho đầu vào «quán cà phê hư cấu Sương Mai, số liệu giả định (workshop rút gọn)», 02/11/2026; mã nguồn: preview/sample.html",
+    "credit": "tự tạo, không phải ảnh của tác giả skill"
+   },
    "tagline": "Tư vấn AI",
-   "desc_vi": "Tìm cơ hội tự động hóa và đánh giá mức sẵn sàng ứng dụng AI của doanh nghiệp.",
-   "no_preview": "chưa có"
+   "desc_vi": "Tìm cơ hội tự động hóa và đánh giá mức sẵn sàng ứng dụng AI của doanh nghiệp."
   },
   {
    "slug": "evidence-dialogue",
@@ -999,9 +1049,14 @@
    "reason": "Nguồn chỉ ở mức «gợi ý» (tên không khớp hẳn với skill trong bài), nên theo quyết định của chủ dự án chỉ để liên kết, không chép. Bản chép đã gỡ.",
    "install": "",
    "note": "Tên gốc skill là 'balanced' (không phải evidence-dialogue); chọn theo mô tả 'evidence-based dialogue mode that avoids sycophancy'. Lệnh cài theo mẫu README repo (README ghi ví dụ tdd), tên balanced có trong marketplace.json. · Lệnh cài: README repo không ghi lệnh cho skill này nên không đưa ra (không bịa).",
+   "preview": {
+    "kind": "generated",
+    "src": "preview/sample.jpg",
+    "label": "output mẫu: Claude làm theo SKILL.md (commit 046a4ce) cho đầu vào «câu hỏi «thức thâu đêm trước hôm thi có nhớ nhiều hơn?» (skill balanced, --refs)», 02/11/2026; mã nguồn: preview/sample.html",
+    "credit": "tự tạo, không phải ảnh của tác giả skill"
+   },
    "tagline": "Tư duy phản biện",
-   "desc_vi": "Thay thói “chiều lòng” của AI bằng phân tích, tranh luận và lập luận có bằng chứng.",
-   "no_preview": "chưa có"
+   "desc_vi": "Thay thói “chiều lòng” của AI bằng phân tích, tranh luận và lập luận có bằng chứng."
   },
   {
    "slug": "daydream",
@@ -1020,18 +1075,23 @@
    "pushed": "2026-10-27",
    "path": "daydream/",
    "vendored": true,
-   "bytes": 17005,
+   "bytes": 341540,
    "reason": "",
    "install": "",
    "note": "Khớp mô tả: đa agent khai thác kết nối ẩn giữa các ghi chú trong vault Obsidian. SKILL.md gốc không có frontmatter (giữ nguyên). Lệnh cài theo mẫu README repo, daydream có trong marketplace.json. · Lệnh cài: README repo không ghi lệnh cho skill này nên không đưa ra (không bịa).",
+   "preview": {
+    "kind": "generated",
+    "src": "preview/sample.jpg",
+    "label": "output mẫu: Claude làm theo SKILL.md (commit 046a4ce) cho đầu vào «vault hư cấu 6 ghi chú của quán Cà phê Sương Mai», 02/11/2026; mã nguồn: preview/sample.html",
+    "credit": "tự tạo, không phải ảnh của tác giả skill"
+   },
    "tagline": "Sáng tạo",
    "desc_vi": "Tự brainstorm để tìm ra những kết nối ẩn trong kho kiến thức của bạn.",
    "commit": "046a4ce050291736afb5e434c2001dae8ea03a06",
-   "file_count": 7,
+   "file_count": 9,
    "skill_md": [
     "SKILL.md"
-   ],
-   "no_preview": "chưa có"
+   ]
   },
   {
    "slug": "marketing-skills",
@@ -1046,14 +1106,20 @@
    "pushed": "2026-10-31",
    "path": "skills/",
    "vendored": true,
-   "bytes": 1203069,
+   "bytes": 1458060,
    "reason": "",
    "install": "npx skills add coreyhaines31/marketingskills",
    "note": "Tên khớp đúng repo; mô tả bài (SEO, mẫu quảng cáo, analytics, video ngắn) khớp các skill seo-audit/ad-creative/analytics/social/video. Tagline 'Content marketing' của bài không khớp hẳn. Repo có 53 skill, chỉ chép 15 (tổng ~1.2MB, gồm references/assets/evals của từng skill). Commit 88c79f6.",
+   "preview": {
+    "kind": "generated",
+    "src": "preview/sample.jpg",
+    "label": "output mẫu: Claude làm theo SKILL.md (sub-skill seo-audit) (commit 88c79f6) cho đầu vào «trang chủ quán «Cà phê Sương Mai» (hư cấu)», 02/11/2026; mã nguồn: preview/sample.html.",
+    "credit": "tự tạo, không phải ảnh của tác giả skill"
+   },
    "tagline": "Content marketing",
    "desc_vi": "Bao quát SEO, mẫu quảng cáo, hệ thống tăng trưởng, phân tích và chiến lược video ngắn.",
    "commit": "88c79f6528a9347420e57ceb1fff9a60de651768",
-   "file_count": 112,
+   "file_count": 114,
    "skill_md": [
     "ad-creative/SKILL.md",
     "ads/SKILL.md",
@@ -1070,8 +1136,7 @@
     "seo-audit/SKILL.md",
     "social/SKILL.md",
     "video/SKILL.md"
-   ],
-   "no_preview": "chưa có"
+   ]
   },
   {
    "slug": "marketing-module",
@@ -1095,9 +1160,14 @@
    "reason": "Repo không có giấy phép. Đây còn là kho tổng hợp cá nhân (\"MEGA SKILLS 3000\"), skill chỉ là bản rút gọn ngắn, không phải bản gốc của một dự án có tên riêng.",
    "install": "",
    "note": "Chỉ tìm thấy khớp chính xác tên + mô tả (SEO, growth, sales, CRO, content automation) ở repo tổng hợp MegaSkillClaude; không tìm ra dự án gốc \"Marketing Module\" độc lập. Các ứng viên MIT (ai-marketing-skills, marketing-os) cùng chủ đề nhưng tên khác nên không ép.",
+   "preview": {
+    "kind": "generated",
+    "src": "preview/sample.jpg",
+    "label": "output mẫu: Claude làm theo SKILL.md (sub-skill CRO) (commit e24fd19) cho đầu vào «trang đích phần mềm đặt lịch «Sổ Ca» (hư cấu)», 02/11/2026; mã nguồn: preview/sample.html.",
+    "credit": "tự tạo, không phải ảnh của tác giả skill"
+   },
    "tagline": "Hệ thống marketing",
-   "desc_vi": "Kho công cụ tự động hóa SEO, tăng trưởng, bán hàng, CRO và content marketing.",
-   "no_preview": "chưa có"
+   "desc_vi": "Kho công cụ tự động hóa SEO, tăng trưởng, bán hàng, CRO và content marketing."
   },
   {
    "slug": "wondelai-skills",
@@ -1112,14 +1182,20 @@
    "pushed": "2026-09-10",
    "path": "(gốc repo; mỗi skill là một thư mục cấp 1)",
    "vendored": true,
-   "bytes": 1496649,
+   "bytes": 1721663,
    "reason": "",
    "install": "npx skills add wondelai/skills --all --global",
    "note": "Tên 'Wondelai' khớp đúng chủ repo (Wondel.ai); mô tả (framework UX/marketing/bán hàng/tăng trưởng/CRO) khớp. Repo ~65 skill, chỉ chép 15 skill marketing/sales/growth/CRO. Cài từng skill: npx skills add wondelai/skills/<tên> --global. Commit c172996.",
+   "preview": {
+    "kind": "generated",
+    "src": "preview/sample.jpg",
+    "label": "output mẫu: Claude làm theo SKILL.md (sub-skill storybrand-messaging) (commit c172996) cho đầu vào «đoạn đầu trang chủ «Bếp Nhà Lan» (hư cấu)», 02/11/2026; mã nguồn: preview/sample.html.",
+    "credit": "tự tạo, không phải ảnh của tác giả skill"
+   },
    "tagline": "Tăng trưởng & sản phẩm",
    "desc_vi": "Bộ skill theo framework: UX, marketing, bán hàng, tăng trưởng và tối ưu chuyển đổi.",
    "commit": "c172996495bed0fcd26896a9416b2093fd7073f0",
-   "file_count": 113,
+   "file_count": 115,
    "skill_md": [
     "contagious/SKILL.md",
     "conversion-optimization/SKILL.md",
@@ -1136,8 +1212,7 @@
     "predictable-revenue/SKILL.md",
     "scorecard-marketing/SKILL.md",
     "storybrand-messaging/SKILL.md"
-   ],
-   "no_preview": "chưa có"
+   ]
   },
   {
    "slug": "kim-barrett-suite",
@@ -1155,13 +1230,19 @@
    "pushed": "2026-03-26",
    "path": "skills",
    "vendored": true,
-   "bytes": 13641,
+   "bytes": 275787,
    "install": "git clone https://github.com/realkimbarrett/advertising-skills.git  (README của repo; rồi chép các thư mục skills/ vào thư mục skill của agent)",
    "note": "Tác giả Kim Barrett, bộ direct-response (headline-matrix, offer-extraction, objection-crusher...) khớp mô tả bài (tiêu đề, ưu đãi, xử lý từ chối). Tên chính xác \"Kim Barrett suite\" chỉ thấy ở repo tổng hợp MegaSkillClaude (không giấy phép), nên để mức gợi ý. · Chép theo quyết định của chủ dự án: README ghi MIT là đủ.",
+   "preview": {
+    "kind": "generated",
+    "src": "preview/sample.png",
+    "label": "output mẫu: Claude làm theo SKILL.md (sub-skill headline-matrix) (commit 45f4a4a) cho đầu vào «gói cold brew «Cà phê Sương Mai» (hư cấu)», 02/11/2026; mã nguồn: preview/sample.html.",
+    "credit": "tự tạo, không phải ảnh của tác giả skill"
+   },
    "tagline": "Copywriting bán hàng",
    "desc_vi": "Bộ direct-response: tiêu đề, ưu đãi, xử lý từ chối và thông điệp chốt đơn.",
    "commit": "45f4a4a1dabe24113193369b55b929b1de4ff04a",
-   "file_count": 17,
+   "file_count": 19,
    "skill_md": [
     "skills/copy-chief/headline-matrix/SKILL.md",
     "skills/copy-chief/mechanism-builder/SKILL.md",
@@ -1175,8 +1256,7 @@
     "skills/operator-os/scroll-stopping-creative/SKILL.md",
     "skills/orchestrators/full-funnel-campaign-orchestrator/SKILL.md",
     "skills/qa/generic-language-killer/SKILL.md"
-   ],
-   "no_preview": "chưa có"
+   ]
   },
   {
    "slug": "email-marketing",
@@ -1199,9 +1279,14 @@
    "reason": "Nguồn chỉ ở mức «gợi ý» (tên không khớp hẳn với skill trong bài), nên theo quyết định của chủ dự án chỉ để liên kết, không chép. Bản chép đã gỡ.",
    "install": "/plugin marketplace add CosmoBlk/email-marketing-bible  rồi  /plugin install email-marketing-bible@email-marketing-bible  (agent khác: npx skills add CosmoBlk/email-marketing-bible)",
    "note": "Tên bài 'Email Marketing' quá chung chung nên chỉ là gợi ý; mô tả (phân khúc, deliverability, flow tự động, giữ chân) khớp nội dung email-marketing-bible (phân khúc, deliverability, flows, win-back). Có nhiều repo email-marketing khác. Commit 962648c.",
+   "preview": {
+    "kind": "generated",
+    "src": "preview/sample.jpg",
+    "label": "output mẫu: Claude làm theo SKILL.md (sub-skill email-marketing-bible) (commit 962648c) cho đầu vào «email chào mừng «Sương Mai Coffee» (hư cấu)», 02/11/2026; mã nguồn: preview/sample.html.",
+    "credit": "tự tạo, không phải ảnh của tác giả skill"
+   },
    "tagline": "Email marketing",
-   "desc_vi": "Hệ thống email trọn gói: phân khúc, tỉ lệ vào inbox, chuỗi tự động và giữ chân khách.",
-   "no_preview": "chưa có"
+   "desc_vi": "Hệ thống email trọn gói: phân khúc, tỉ lệ vào inbox, chuỗi tự động và giữ chân khách."
   },
   {
    "slug": "competitive-ads",
@@ -1224,9 +1309,14 @@
    "reason": "Repo gốc ComposioHQ/awesome-claude-skills không có tệp LICENSE (mặc định bảo lưu mọi quyền). Các repo bên thứ ba ghi MIT/Apache-2.0 chỉ là bản sao do người khác dán nhãn, không phải chủ nội dung nên không dùng làm căn cứ chép.",
    "install": "",
    "note": "Tên skill trong repo là competitive-ads-extractor, mô tả khớp đúng (trích quảng cáo đối thủ từ thư viện quảng cáo Facebook/LinkedIn, phân tích thông điệp). Chỉ một thư mục SKILL.md ~7.9KB. README của repo không ghi lệnh cài chính thức cho riêng skill này.",
+   "preview": {
+    "kind": "generated",
+    "src": "preview/sample.jpg",
+    "label": "output mẫu: Claude làm theo SKILL.md (sub-skill competitive-ads-extractor) (commit be2a406) cho đầu vào «6 quảng cáo tự viết của «Cà phê Hạt Mưa» (hư cấu)», 02/11/2026; mã nguồn: preview/sample.html. Chỉ chạy khung phân tích; bước cào Ad Library không chạy.",
+    "credit": "tự tạo, không phải ảnh của tác giả skill"
+   },
    "tagline": "Nghiên cứu quảng cáo",
-   "desc_vi": "Thu thập quảng cáo đối thủ, phân tích thông điệp để chạy chiến dịch tốt hơn.",
-   "no_preview": "chưa có"
+   "desc_vi": "Thu thập quảng cáo đối thủ, phân tích thông điệp để chạy chiến dịch tốt hơn."
   },
   {
    "slug": "geo-seo-claude",
@@ -1241,14 +1331,20 @@
    "pushed": "2026-11-01",
    "path": "geo/ + skills/geo-* + agents/ + scripts/",
    "vendored": true,
-   "bytes": 533933,
+   "bytes": 849318,
    "reason": "",
    "install": "curl -fsSL https://raw.githubusercontent.com/zubair-trabzada/geo-seo-claude/main/install.sh | bash",
    "note": "Tên khớp đúng repo; mô tả (AI tìm thấy, trích dẫn, độ uy tín thương hiệu) khớp (citability scoring, AI crawler, brand authority). Có nhiều bản fork/mirror (joanby, iamsabbirahamed, ...). Commit 989cae0.",
+   "preview": {
+    "kind": "generated",
+    "src": "preview/sample.jpg",
+    "label": "output mẫu: Claude làm theo SKILL.md (sub-skill geo-citability) (commit 989cae0) cho đầu vào «trang «Cold brew là gì?» của «Cà phê Sương Mai» (hư cấu)», 02/11/2026; mã nguồn: preview/sample.html.",
+    "credit": "tự tạo, không phải ảnh của tác giả skill"
+   },
    "tagline": "SEO cho AI",
    "desc_vi": "Tối ưu nội dung để được AI tìm thấy, trích dẫn và tăng độ uy tín.",
    "commit": "989cae01e8ebbc42a9ec798eb9e7cb423f5ec89c",
-   "file_count": 54,
+   "file_count": 56,
    "skill_md": [
     "geo/SKILL.md",
     "skills/geo-audit/SKILL.md",
@@ -1266,8 +1362,7 @@
     "skills/geo-schema/SKILL.md",
     "skills/geo-technical/SKILL.md",
     "skills/geo-update/SKILL.md"
-   ],
-   "no_preview": "chưa có"
+   ]
   },
   {
    "slug": "post-scorer",
@@ -1287,18 +1382,23 @@
    "pushed": "2026-10-18",
    "path": "skills/post-scorer",
    "vendored": true,
-   "bytes": 11269,
+   "bytes": 228696,
    "reason": "",
    "install": "/plugin marketplace add charlie947/social-media-skills  rồi  /plugin install social-media-skills",
    "note": "Tên khớp đúng; mô tả (chấm điểm bản nháp theo dữ liệu hiệu quả bài cũ) khớp: skill kéo lịch sử bài của người dùng qua Apify rồi chấm bản nháp. Lưu ý: skill chuyên cho bài LinkedIn (bài Facebook mô tả chung hơn). Chọn bản charlie947 vì repo gốc nhiều sao nhất, tạo sớm nhất trong các ứng viên. Commit 10ca79c.",
+   "preview": {
+    "kind": "generated",
+    "src": "preview/sample.jpg",
+    "label": "output mẫu: Claude làm theo SKILL.md (commit 10ca79c) cho đầu vào «bài LinkedIn nháp của xưởng gốm «Gốm Lưng Chừng» (hư cấu)», 02/11/2026; mã nguồn: preview/sample.html.",
+    "credit": "tự tạo, không phải ảnh của tác giả skill"
+   },
    "tagline": "Phân tích nội dung",
    "desc_vi": "Chấm điểm bản nháp dựa trên dữ liệu hiệu quả các bài cũ trước khi đăng.",
    "commit": "10ca79c0ec0be0f7654d19cd4f0c86b6fa6ed23b",
-   "file_count": 3,
+   "file_count": 5,
    "skill_md": [
     "SKILL.md"
-   ],
-   "no_preview": "chưa có"
+   ]
   }
  ]
 }

@@ -1,0 +1,104 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=1200"><title>remotion – output mẫu</title><style>
+*{box-sizing:border-box}body{margin:0;background:#eef0f3;font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:#1c2330}
+.card{width:1200px;margin:0;background:#fff;padding:36px 44px 32px}
+h1{font-size:26px;margin:0 0 4px}h2{font-size:18px;margin:0 0 10px}
+.meta{color:#5b6577;font-size:14px;margin-bottom:22px}
+.chip{display:inline-block;font:700 12px/1 -apple-system,Helvetica,Arial,sans-serif;letter-spacing:.06em;padding:6px 10px;border-radius:4px;margin-bottom:12px}
+.in{background:#e7eefc;color:#1d3f8f}.out{background:#e2f4e8;color:#14683a}.warn{background:#fff1d6;color:#8a5200}
+.box{border:1px solid #d9dee7;border-radius:8px;padding:16px 20px;margin-bottom:22px}
+.box.inb{background:#f6f8fd}.box.outb{background:#fbfdfb}
+pre,code{font:13px/1.5 ui-monospace,Menlo,Consolas,monospace}
+pre{background:#10151f;color:#e6edf6;padding:14px 16px;border-radius:6px;margin:8px 0;white-space:pre-wrap;overflow:hidden}
+table{border-collapse:collapse;width:100%;font-size:14px}th,td{border:1px solid #d9dee7;padding:6px 10px;text-align:left;vertical-align:top}th{background:#f0f3f8}
+.note{background:#fff1d6;border-left:4px solid #e0a030;padding:10px 14px;font-size:14px;margin:14px 0;border-radius:3px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}.small{font-size:13px;color:#5b6577}
+.ok{color:#14683a;font-weight:700}
+
+.code{margin:0;font-size:12px}
+.phone{width:324px;height:576px;position:relative;overflow:hidden;border-radius:12px;background:#1f6f6b;border:1px solid #0003;margin:0 auto}
+.stage{width:1080px;height:1920px;transform:scale(.3);transform-origin:0 0;position:absolute;left:0;top:0}
+.safe{position:absolute;border:2px dashed #fff8;pointer-events:none;left:80px;right:80px;top:100px;bottom:100px}
+</style></head><body><div class="card">
+<h1>remotion: một composition dọc 9:16 cho Reel menu quán cà phê</h1>
+<div class="meta">Skill: remotion-dev/skills · skills/remotion-create + remotion-markup (compositions, multi-scene-video, transitions) · commit c7cb2fd · 02/11/2026</div>
+
+<span class="chip in">ĐẦU VÀO MẪU</span>
+<div class="box inb"><b>Yêu cầu:</b> «Làm video dọc 5 giây giới thiệu món mới của quán cà phê hư cấu Sáu Hẻm: cà phê muối, giá 35.000đ, 3 cảnh, chuyển mờ dần.» <span class="small">(quán, món, giá đều hư cấu)</span></div>
+
+<span class="chip out">ĐẦU RA</span>
+<div class="cols" style="grid-template-columns:690px 1fr;gap:22px">
+<div>
+<h2>Mã composition (theo luật của SKILL)</h2>
+<div class="small" style="margin-bottom:6px">src/Root.tsx: JSX id dạng chuỗi, <code>defaultProps</code> viết thẳng tại chỗ, không đặt ra biến riêng</div>
+<pre class="code">import {Composition} from &#x27;remotion&#x27;;
+import {MenuReel} from &#x27;./MenuReel&#x27;;
+
+export const RemotionRoot = () =&gt; {
+  return (
+    &lt;Composition
+      id=&quot;MenuReel&quot;
+      component={MenuReel}
+      durationInFrames={150}
+      fps={30}
+      width={1080}
+      height={1920}
+      defaultProps={{
+        title: &#x27;Cà phê muối&#x27;,
+        subtitle: &#x27;Món mới của quán Sáu Hẻm&#x27;,
+        price: &#x27;35.000đ&#x27;,
+      }}
+    /&gt;
+  );
+};</pre>
+<div class="small" style="margin:10px 0 6px">src/MenuReel.tsx: mỗi cảnh một <code>TransitionSeries.Sequence</code>, cỡ chữ ≥ 84 px (tiêu đề) và ≥ 44 px (chữ phụ) cho khổ rộng 1080, lề an toàn 100/80 px</div>
+<pre class="code">import {AbsoluteFill, interpolate, useCurrentFrame} from &#x27;remotion&#x27;;
+import {TransitionSeries, linearTiming} from &#x27;@remotion/transitions&#x27;;
+import {fade} from &#x27;@remotion/transitions/fade&#x27;;
+
+type Props = {
+  readonly title: string;
+  readonly subtitle: string;
+  readonly price: string;
+};
+
+const Scene = ({big, small, bg}: {big: string; small: string; bg: string}) =&gt; {
+  const frame = useCurrentFrame();
+  const rise = interpolate(frame, [0, 20], [60, 0], {extrapolateRight: &#x27;clamp&#x27;});
+  return (
+    &lt;AbsoluteFill style={{background: bg, padding: &#x27;100px 80px&#x27;, justifyContent: &#x27;center&#x27;}}&gt;
+      &lt;div style={{fontSize: 120, fontWeight: 800, color: &#x27;#fff&#x27;, transform: `translateY(${rise}px)`}}&gt;{big}&lt;/div&gt;
+      &lt;div style={{fontSize: 52, color: &#x27;#f3e6d0&#x27;, marginTop: 32}}&gt;{small}&lt;/div&gt;
+    &lt;/AbsoluteFill&gt;
+  );
+};
+
+// 3 cảnh x 60 khung - 2 chuyển cảnh x 15 khung = 150 khung (5 giây ở 30 fps)
+export const MenuReel = ({title, subtitle, price}: Props) =&gt; (
+  &lt;TransitionSeries&gt;
+    &lt;TransitionSeries.Sequence durationInFrames={60}&gt;
+      &lt;Scene big=&quot;Món mới&quot; small={subtitle} bg=&quot;#3b2a20&quot; /&gt;
+    &lt;/TransitionSeries.Sequence&gt;
+    &lt;TransitionSeries.Transition presentation={fade()} timing={linearTiming({durationInFrames: 15})} /&gt;
+    &lt;TransitionSeries.Sequence durationInFrames={60}&gt;
+      &lt;Scene big={title} small=&quot;Ngọt dịu, mặn nhẹ&quot; bg=&quot;#1f6f6b&quot; /&gt;
+    &lt;/TransitionSeries.Sequence&gt;
+    &lt;TransitionSeries.Transition presentation={fade()} timing={linearTiming({durationInFrames: 15})} /&gt;
+    &lt;TransitionSeries.Sequence durationInFrames={60}&gt;
+      &lt;Scene big={price} small=&quot;Ghé quán hôm nay&quot; bg=&quot;#8a3b2a&quot; /&gt;
+    &lt;/TransitionSeries.Sequence&gt;
+  &lt;/TransitionSeries&gt;
+);</pre>
+</div>
+<div>
+<h2>Một khung hình (mô phỏng)</h2>
+<div class="phone"><div class="stage" style="background:#1f6f6b;padding:100px 80px;display:flex;flex-direction:column;justify-content:center">
+<div style="font-size:120px;font-weight:800;color:#fff;line-height:1.1">Cà phê muối</div>
+<div style="font-size:52px;color:#f3e6d0;margin-top:32px">Ngọt dịu, mặn nhẹ</div>
+<div class="safe"></div></div></div>
+<p class="small" style="margin-top:10px">Mô phỏng HTML/CSS của khung 75/150 (cảnh 2, đã xong chuyển mờ), vẽ tay theo mã bên trái. Nét đứt là vùng an toàn 80/100 px. Không phải ảnh render từ Remotion.</p>
+<table style="margin-top:8px"><tr><th>Cảnh</th><th>Khung</th><th>Nền</th></tr>
+<tr><td>1 Món mới</td><td>0–59</td><td>nâu</td></tr><tr><td>2 Cà phê muối</td><td>45–104</td><td>xanh lục</td></tr><tr><td>3 Giá</td><td>90–149</td><td>đỏ gạch</td></tr></table>
+</div></div>
+
+<div class="note"><b>Mô phỏng, không phải render.</b> Chưa chạy <code>npx create-video</code>, chưa cài gói, chưa biên dịch: mã chưa được kiểm bằng Remotion Studio hay <code>tsc</code>; chỉ bám các ví dụ và luật trong SKILL.md. Ảnh bên phải là một khung vẽ tay bằng HTML để minh họa bố cục. Tất cả nội dung hư cấu.</div>
+</div></body></html>

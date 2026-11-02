@@ -16,5 +16,11 @@
  "vendored": false,
  "reason": "Nguồn chỉ ở mức «gợi ý» (tên không khớp hẳn với skill trong bài), nên theo quyết định của chủ dự án chỉ để liên kết, không chép. Bản chép đã gỡ.",
  "install": "git clone https://github.com/digitalsamba/claude-code-video-toolkit.git",
- "note": "Chọn theo mô tả (quy trình AI từ kịch bản đến MP4 QC) chứ không theo tên: tên 'ai-video-toolkit' không phải tên repo hay skill ở đây (skill chính là video_toolkit). Chép skills/video-toolkit/SKILL.md làm SKILL.md gốc + 12 skill trong .claude/skills vào related/. KHÔNG chép .claude/skills/remotion-official (bản sao remotion-dev/skills, không có giấy phép phân phối lại). Không chép .claude/commands, tools/, templates/ (skill tham chiếu tới chúng, cần clone cả repo để chạy)."
+ "note": "Chọn theo mô tả (quy trình AI từ kịch bản đến MP4 QC) chứ không theo tên: tên 'ai-video-toolkit' không phải tên repo hay skill ở đây (skill chính là video_toolkit). Chép skills/video-toolkit/SKILL.md làm SKILL.md gốc + 12 skill trong .claude/skills vào related/. KHÔNG chép .claude/skills/remotion-official (bản sao remotion-dev/skills, không có giấy phép phân phối lại). Không chép .claude/commands, tools/, templates/ (skill tham chiếu tới chúng, cần clone cả repo để chạy).",
+ "preview": {
+  "kind": "generated",
+  "src": "preview/sample.jpg",
+  "label": "output mẫu: Claude làm theo SKILL.md (commit a8eaaf7) cho đầu vào «brief video dọc về ứng dụng ghi chú hư cấu», 02/11/2026; mã nguồn: preview/sample.html",
+  "credit": "tự tạo, không phải ảnh của tác giả skill"
+ }
 }

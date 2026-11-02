@@ -1,0 +1,68 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=1200"><title>JTBD Interview Tool - output mẫu</title><style>
+:root{--bg:#f5f3ee;--card:#fff;--ink:#1d1d1f;--mut:#6b6b70;--line:#e2dfd7;--acc:#8a4b1f;--in:#e8f0fe;--inink:#1a4db3;--out:#e6f4ea;--outink:#17692d}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+.wrap{width:1200px;margin:0 auto;padding:28px}
+.top{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid var(--ink);padding-bottom:10px;margin-bottom:18px}
+.top h1{margin:0;font-size:22px}.top .meta{color:var(--mut);font-size:13px}
+.chip{display:inline-block;font:700 12px/1 ui-monospace,Menlo,monospace;letter-spacing:.08em;padding:6px 10px;border-radius:999px;margin-bottom:10px}
+.chip.in{background:var(--in);color:var(--inink)}.chip.out{background:var(--out);color:var(--outink)}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:18px}
+.panel.in{border-left:5px solid var(--inink)}.panel.out{border-left:5px solid var(--outink)}
+h2{font-size:18px;margin:18px 0 6px}h3{font-size:15px;margin:14px 0 4px;color:var(--acc)}p{margin:6px 0}
+table{border-collapse:collapse;width:100%;margin:8px 0;font-size:14px}th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}th{background:#faf8f3}
+code,.mono{font-family:ui-monospace,Menlo,monospace;font-size:13px}pre{background:#f4f1ea;border-radius:8px;padding:12px 14px;overflow:hidden;white-space:pre-wrap;font:13px/1.5 ui-monospace,Menlo,monospace;margin:8px 0}
+ul,ol{margin:6px 0;padding-left:22px}li{margin:3px 0}blockquote{margin:8px 0;padding:6px 14px;border-left:3px solid var(--line);color:#444;background:#faf8f3}
+.grid{display:grid;gap:14px}.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr 1fr}.box{border:1px solid var(--line);border-radius:8px;padding:10px 14px;background:#fffdf9}
+.tag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:999px;background:#eee;margin-left:4px}.ok{background:#d9f0df;color:#17692d}.warn{background:#fdecc8;color:#7a4b00}.bad{background:#f9d8d6;color:#9b1c14}
+.foot{color:var(--mut);font-size:12.5px;border-top:1px solid var(--line);padding-top:10px;margin-top:6px}
+a{color:#1a4db3;word-break:break-all}
+</style></head><body><div class="wrap">
+<div class="top"><h1>JTBD Interview Tool - output mẫu</h1><div class="meta">skill gốc: <code>humane/skills/jtbd</code> - glebis/humane-agentic-design @ e7d867d</div></div>
+<div class="panel in"><span class="chip in">ĐẦU VÀO MẪU</span><p><b>Chế độ:</b> Interview (mặc định). <b>Dự án (hư cấu):</b> «Sương Mai Đặt Trước» - tính năng đặt ly mang đi cho quán <i>Cà phê Sương Mai</i> (quán, người và lời nói đều do tác giả mẫu tự dựng, không phải dữ liệu thật).</p>
+<table><tr><th style="width:26%">Câu hỏi của skill</th><th>Trả lời giả định của chủ quán (chị Mai)</th></tr>
+<tr><td>1. Đây là gì? (1 câu)</td><td>«Một trang đặt ly trước 8h để nhân viên văn phòng quanh quán lấy là đi, không đứng chờ.»</td></tr>
+<tr><td>2. Ai vất vả, lúc nào? Lần gần nhất?</td><td>«Sáng thứ Hai tuần trước, 8h05, một anh ở tòa nhà đối diện đứng chờ 12 phút rồi bỏ đi, ly đã pha xong để nguội.»</td></tr>
+<tr><td>3. Hiện đau ở đâu, đang làm gì?</td><td>«Khách nhắn Zalo, tôi trả lời lúc đang pha, hay nhầm ly. Mỗi sáng cao điểm khoảng 6 tin bị sót.»</td></tr>
+<tr><td>4. Thành công trông thế nào?</td><td>«Khách lấy ly dưới 2 phút từ lúc bước vào quán. Không còn tin Zalo bị sót.»</td></tr>
+<tr><td>Push</td><td>«Đứng chờ 12 phút là mất khách, họ sang quán chuỗi bên kia đường.»</td></tr>
+<tr><td>Pull</td><td>«Họ chỉ cần bước vào, cầm ly, trả tiền luôn.»</td></tr>
+<tr><td>Habit</td><td>«Khách quen quen nhắn Zalo cho tôi, nhắn quen tay rồi.»</td></tr>
+<tr><td>Anxiety</td><td>«Sợ trang đặt hỏng đúng giờ cao điểm, khách đến mà ly chưa có.»</td></tr></table></div>
+<div class="panel out"><span class="chip out">ĐẦU RA</span><p class="mono">Tôi dùng skill humane:jtbd để ghi lại công việc cần làm và các lực chuyển đổi.</p>
+<h2>Granularity Gate (chấm 0-2, dưới 1 thì chặn lưu)</h2>
+<table><tr><th>Chiều</th><th>Điểm</th><th>Căn cứ</th></tr>
+<tr><td>Actor specificity</td><td>1 <span class="tag ok">đạt</span></td><td>anh ở tòa nhà đối diện: có vai và bối cảnh nhưng chưa có tên</td></tr>
+<tr><td>Context / trigger</td><td>2</td><td>8h05 sáng thứ Hai, ly pha xong để nguội</td></tr>
+<tr><td>Current workaround</td><td>2</td><td>Nhắn Zalo cho chủ quán, bị sót ~6 tin mỗi sáng cao điểm, hay nhầm ly</td></tr>
+<tr><td>Measurable outcome</td><td>2</td><td>Lấy ly dưới 2 phút, 0 tin sót</td></tr>
+<tr><td>Evidence quote</td><td>2</td><td>Có trích nguyên văn</td></tr></table>
+<h2>jtbd.json (lõi)</h2>
+<pre>{
+  "name": "suong-mai-dat-truoc",
+  "hook": "Trang đặt ly mang đi trước 8h cho nhân viên văn phòng quanh quán Cà phê Sương Mai.",
+  "jtbd": {
+    "situation": "Khi tôi ghé quán lúc 8h sáng và ly của mình chưa pha xong,",
+    "motivation": "tôi muốn đặt ly từ trước để bước vào là cầm đi,",
+    "outcome": "để lấy ly dưới 2 phút và kịp họp 8h30."
+  },
+  "problem": {"what_hurts": "Đứng chờ 12 phút rồi bỏ đi; ~6 tin Zalo sót mỗi sáng cao điểm."},
+  "switch_forces": {
+    "push": "Chờ 12 phút, ly nguội, khách sang quán chuỗi bên kia đường.",
+    "pull": "Bước vào, cầm ly, trả tiền luôn.",
+    "habit": "Khách quen nhắn Zalo cho chủ quán.",
+    "anxiety": "Trang đặt hỏng đúng giờ cao điểm, khách đến mà ly chưa có."
+  },
+  "evidence": {"source": "interview", "weaknesses": ["Actor specificity = 1 (chưa có người cụ thể)"]},
+  "open_questions": ["Bao nhiêu khách sẵn lòng đổi từ Zalo sang trang đặt? (chưa có số liệu)"]
+}</pre>
+<h2>one-pager.md (rút gọn)</h2>
+<p><b>Công việc:</b> khi <b>ghé quán 8h sáng mà ly chưa pha xong</b>, tôi muốn <b>đặt ly từ trước</b>, để <b>lấy ly dưới 2 phút và kịp họp 8h30</b>.</p>
+<table><tr><th>Lực</th><th>Điều đã nghe</th></tr><tr><td><b>Push</b></td><td>Chờ 12 phút, ly nguội, khách sang quán chuỗi bên kia đường.</td></tr><tr><td><b>Pull</b></td><td>Bước vào, cầm ly, trả tiền luôn.</td></tr><tr><td><b>Habit</b></td><td>Khách quen nhắn Zalo cho chủ quán.</td></tr><tr><td><b>Anxiety</b></td><td>Trang đặt hỏng đúng giờ cao điểm.</td></tr></table>
+<h2>messaging-angles.md (hạt giống, chưa phải quảng cáo hoàn chỉnh)</h2>
+<div class="grid g2">
+<div class="box"><b>Push</b><br>Tiêu đề: «Đừng đứng chờ 12 phút nữa.» Hiện tại: ly nguội, khách bỏ đi.</div>
+<div class="box"><b>Pull</b><br>Tiêu đề: «Bước vào, cầm ly, đi.» Dưới 2 phút từ cửa đến tay.</div>
+<div class="box"><b>Habit-bridging</b><br>Tiêu đề: «Vẫn nhắn Zalo? Giữ nguyên, thêm nút đặt trước.» Bắc cầu từ thói quen hiện tại.</div>
+<div class="box"><b>Anxiety-disarming</b><br>Tiêu đề: «Ly chưa kịp pha thì miễn phí ly đó.» Nêu rõ nỗi sợ và cách đảo ngược. <i>Cam kết này là ý tưởng minh hoạ, chưa được chủ quán xác nhận.</i></div></div>
+<p><b>Bỏ qua trong lần chạy mẫu:</b> Job Map, ODI (chưa đủ 3 kết quả cần chấm), gtm-brief (chỉ tạo khi cả 4 lực đã đầy đủ, ở đây đủ nhưng bỏ cho gọn), đồ thị graph.py.</p></div>
+<div class="foot">Mẫu do Claude tự tạo bằng cách làm theo SKILL.md (commit e7d867d) ngày 02/11/2026. Đầu vào hoàn toàn hư cấu. Không phải ảnh hay demo của tác giả skill; các mẫu messaging được rút từ template của skill, không phải quảng cáo thật.</div></div></body></html>

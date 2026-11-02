@@ -1,0 +1,67 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=1200"><title>Daydream - output mẫu</title><style>
+:root{--bg:#f5f3ee;--card:#fff;--ink:#1d1d1f;--mut:#6b6b70;--line:#e2dfd7;--acc:#8a4b1f;--in:#e8f0fe;--inink:#1a4db3;--out:#e6f4ea;--outink:#17692d}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+.wrap{width:1200px;margin:0 auto;padding:28px}
+.top{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid var(--ink);padding-bottom:10px;margin-bottom:18px}
+.top h1{margin:0;font-size:22px}.top .meta{color:var(--mut);font-size:13px}
+.chip{display:inline-block;font:700 12px/1 ui-monospace,Menlo,monospace;letter-spacing:.08em;padding:6px 10px;border-radius:999px;margin-bottom:10px}
+.chip.in{background:var(--in);color:var(--inink)}.chip.out{background:var(--out);color:var(--outink)}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:18px}
+.panel.in{border-left:5px solid var(--inink)}.panel.out{border-left:5px solid var(--outink)}
+h2{font-size:18px;margin:18px 0 6px}h3{font-size:15px;margin:14px 0 4px;color:var(--acc)}p{margin:6px 0}
+table{border-collapse:collapse;width:100%;margin:8px 0;font-size:14px}th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}th{background:#faf8f3}
+code,.mono{font-family:ui-monospace,Menlo,monospace;font-size:13px}pre{background:#f4f1ea;border-radius:8px;padding:12px 14px;overflow:hidden;white-space:pre-wrap;font:13px/1.5 ui-monospace,Menlo,monospace;margin:8px 0}
+ul,ol{margin:6px 0;padding-left:22px}li{margin:3px 0}blockquote{margin:8px 0;padding:6px 14px;border-left:3px solid var(--line);color:#444;background:#faf8f3}
+.grid{display:grid;gap:14px}.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr 1fr}.box{border:1px solid var(--line);border-radius:8px;padding:10px 14px;background:#fffdf9}
+.tag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:999px;background:#eee;margin-left:4px}.ok{background:#d9f0df;color:#17692d}.warn{background:#fdecc8;color:#7a4b00}.bad{background:#f9d8d6;color:#9b1c14}
+.foot{color:var(--mut);font-size:12.5px;border-top:1px solid var(--line);padding-top:10px;margin-top:6px}
+a{color:#1a4db3;word-break:break-all}
+</style></head><body><div class="wrap">
+<div class="top"><h1>Daydream - output mẫu</h1><div class="meta">skill gốc: <code>daydream/</code> - glebis/claude-skills @ 046a4ce</div></div>
+<div class="panel in"><span class="chip in">ĐẦU VÀO MẪU</span><p><b>Lệnh:</b> <code>/daydream</code>. <b>Vault Obsidian hư cấu</b> của quán «Cà phê Sương Mai», chỉ 6 ghi chú tự soạn (ví dụ rút gọn; skill thật quét tới 200 ghi chú và lấy 50 cặp). Tham số được thu nhỏ cho mẫu: <code>PAIR_COUNT = 6</code>, <code>SCORE_THRESHOLD = 7.0</code> giữ nguyên.</p>
+<table><tr><th>Ghi chú (hư cấu)</th><th>Cũ</th><th>Trọng số</th><th>Trích đoạn</th></tr>
+<tr><td>Cold brew ủ 18 giờ</td><td>2 ngày</td><td>3</td><td>Mẻ 10 lít ủ từ 15h hôm trước, lọc 9h sáng. Đã ủ thì không rút ngắn được.</td></tr>
+<tr><td>Khách quen đổi món khi trời mưa</td><td>5 ngày</td><td>3</td><td>Chiều mưa, khách quen bỏ đá, gọi latte nóng. Lạnh bán chậm hẳn.</td></tr>
+<tr><td>Ý tưởng thẻ tích điểm bằng con dấu</td><td>10 ngày</td><td>2</td><td>10 con dấu đổi 1 ly. Khách hay làm mất thẻ giấy.</td></tr>
+<tr><td>Men bột chua: lịch cho ăn</td><td>20 ngày</td><td>2</td><td>Cho ăn mỗi 12 giờ. Quên một ngày là men yếu, phải nuôi lại.</td></tr>
+<tr><td>Sổ nợ khách quen (ghi tay)</td><td>40 ngày</td><td>1</td><td>Ghi nợ bằng bút bi, nhiều trang đã nhoè, không ai nhớ dòng nào đã thu.</td></tr>
+<tr><td>Lịch bảo trì máy xay</td><td>60 ngày</td><td>1</td><td>Thay lưỡi 6 tháng một lần; vệ sinh phễu mỗi tuần.</td></tr></table>
+<p style="font-size:13px;color:#6b6b70">Chọn cặp: Python <code>random.choice</code> trên nhóm có trọng số (3 nếu ≤7 ngày, 2 nếu ≤30, 1 còn lại), hạt giống 1102, 6 cặp không trùng, đúng như bước 3 của skill.</p></div>
+<div class="panel out"><span class="chip out">ĐẦU RA</span><p class="mono">Vault Daydream xong - 20261102<br>3/6 cặp cho insight (tỉ lệ chấp nhận: 50%)</p>
+<h2>Bước 4-5: nhà tổng hợp (Sonnet) rồi nhà phê bình (Haiku), chấp nhận nếu trung bình ≥ 7.0</h2>
+<table><tr><th>Cặp ghi chú</th><th>Novelty</th><th>Coherence</th><th>Usefulness</th><th>TB</th><th>Kết quả</th></tr><tr><td>Cold brew ủ 18 giờ <b>&harr;</b> Khách quen đổi món khi trời mưa</td><td>8</td><td>9</td><td>7</td><td><b>8.0</b></td><td><span class='tag ok'>accept</span></td></tr><tr><td>Khách quen đổi món khi trời mưa <b>&harr;</b> Ý tưởng thẻ tích điểm bằng con dấu</td><td>7</td><td>8</td><td>7</td><td><b>7.3</b></td><td><span class='tag ok'>accept</span></td></tr><tr><td>Sổ nợ khách quen <b>&harr;</b> Men bột chua: lịch cho ăn</td><td>8</td><td>6</td><td>7</td><td><b>7.0</b></td><td><span class='tag ok'>accept</span></td></tr><tr><td>Cold brew ủ 18 giờ <b>&harr;</b> Ý tưởng thẻ tích điểm bằng con dấu</td><td>5</td><td>5</td><td>4</td><td><b>4.7</b></td><td><span class='tag bad'>reject</span></td></tr><tr><td>Cold brew ủ 18 giờ <b>&harr;</b> Sổ nợ khách quen</td><td>4</td><td>5</td><td>3</td><td><b>4.0</b></td><td><span class='tag bad'>reject</span></td></tr><tr><td>Lịch bảo trì máy xay <b>&harr;</b> Ý tưởng thẻ tích điểm bằng con dấu</td><td>3</td><td>4</td><td>3</td><td><b>3.3</b></td><td><span class='tag bad'>reject</span></td></tr></table>
+<h2>Daydreams/20261102-du-bao-mua-quyet-so-lit-cold-brew.md</h2>
+<pre>---
+created_date: '[[20261102]]'
+type: daydream
+source_notes:
+  - '[[Cold brew ủ 18 giờ]]'
+  - '[[Khách quen đổi món khi trời mưa]]'
+scores: {novelty: 8, coherence: 9, usefulness: 7, average: 8.0}
+---
+
+# Dự báo mưa quyết số lít cold brew
+
+> Connection between [[Cold brew ủ 18 giờ]] and [[Khách quen đổi món khi trời mưa]]
+
+Cold brew là quyết định không đảo ngược được: lượng ủ phải chốt 18 giờ trước khi biết khách sẽ gọi gì. Còn nhu cầu lại đổi theo
+thời tiết trong vài giờ. Hai ghi chú mô tả hai đồng hồ có tốc độ lệch nhau: khâu sản xuất chậm, khâu cầu nhanh.
+
+Chỗ lệch ấy quyết định lượng dư. Mẻ ủ chiều nay bán cho sáng mai, vì vậy biến số cần theo dõi là dự báo mưa của ngày mai,
+không phải doanh số hôm nay.
+
+## Implication
+
+Thử ghi số lít ủ cạnh dự báo mưa trong 3 tuần để xem có quan hệ nào không, rồi mới đặt quy tắc (ví dụ ủ ít hơn khi dự báo mưa).
+
+## Critic's Note
+
+Lệch tốc độ giữa sản xuất và nhu cầu là góc nhìn mới, hành động kiểm chứng đơn giản; chưa có số liệu nên chỉ là giả thuyết.</pre>
+<div class="grid g2">
+<div class="box"><b>#2 Thẻ con dấu nhân đôi khi trời mưa</b> (TB 7.3)<br>[[Khách quen đổi món khi trời mưa]] &harr; [[Ý tưởng thẻ tích điểm bằng con dấu]]<br>Thưởng 2 dấu vào ngày mưa đúng lúc khách có lý do ở nhà: dùng ưu đãi để chống lại biến động theo thời tiết.</div>
+<div class="box"><b>#3 Lịch «cho ăn» cho sổ nợ</b> (TB 7.0)<br>[[Sổ nợ khách quen]] &harr; [[Men bột chua: lịch cho ăn]]<br>Cả hai là thứ sống chỉ khi được cập nhật đều đặn: nhắc lịch rà sổ nợ hằng tuần như lịch cho men ăn. Điểm coherence thấp nhất (6), ở sát ngưỡng.</div></div>
+<h2>Daydreams/digests/20261102-digest.md (phần thống kê)</h2>
+<pre>pairs_sampled: 6 | insights_accepted: 3 | acceptance rate: 50%
+Top: 1. Dự báo mưa quyết số lít cold brew (8.0)  2. Thẻ con dấu nhân đôi khi trời mưa (7.3)  3. Lịch «cho ăn» cho sổ nợ (7.0)</pre>
+<p><b>Bỏ qua khi chạy mẫu:</b> ghi vào ghi chú ngày <code>Daily/20261102.md</code> (mục «## Daydream») và <code>history.json</code> chống trùng; đều là bước ghi tệp trong vault thật. Điểm của Sonnet/Haiku ở đây do Claude chấm tay theo lời nhắc của skill, không chạy song song các tác vụ con.</p></div>
+<div class="foot">Mẫu do Claude tự tạo bằng cách làm theo SKILL.md và instructions.md (commit 046a4ce) ngày 02/11/2026. Vault, ghi chú và nhận định đều hư cấu, chưa kiểm chứng ngoài đời. Không phải ảnh hay demo của tác giả skill.</div></div></body></html>

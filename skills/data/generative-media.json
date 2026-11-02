@@ -15,5 +15,11 @@
  "vendored": false,
  "reason": "Nguồn chỉ ở mức «gợi ý» (tên không khớp hẳn với skill trong bài), nên theo quyết định của chủ dự án chỉ để liên kết, không chép. Bản chép đã gỡ.",
  "install": "npx skills add SamurAIGPT/Generative-Media-Skills --all",
- "note": "Hai repo trùng tên. Chọn SamurAIGPT vì mô tả repo ('Multi-modal Generative Media Skills for AI Agents ... image, video, and audio generation') sát câu 'tạo ảnh, video và âm thanh' của bài; calesthio nghiêng về quy trình sản xuất và cũng có thể là nguồn đúng. Chép core/ (3 skill) và library/ (57 skill); bỏ .opencode/skills (bản trùng của library), media_outputs/, schema_data.json (637KB), assets/. Cần muapi-cli và API key muapi.ai."
+ "note": "Hai repo trùng tên. Chọn SamurAIGPT vì mô tả repo ('Multi-modal Generative Media Skills for AI Agents ... image, video, and audio generation') sát câu 'tạo ảnh, video và âm thanh' của bài; calesthio nghiêng về quy trình sản xuất và cũng có thể là nguồn đúng. Chép core/ (3 skill) và library/ (57 skill); bỏ .opencode/skills (bản trùng của library), media_outputs/, schema_data.json (637KB), assets/. Cần muapi-cli và API key muapi.ai.",
+ "preview": {
+  "kind": "generated",
+  "src": "preview/sample.jpg",
+  "label": "output mẫu: Claude làm theo SKILL.md (commit 66b55e2) cho đầu vào «3 cảnh hải đăng hư cấu (Cinema Director)», 02/11/2026; mã nguồn: preview/sample.html",
+  "credit": "tự tạo, không phải ảnh của tác giả skill"
+ }
 }

@@ -1,0 +1,107 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=1200"><title>ai-video-toolkit – output mẫu</title><style>
+*{box-sizing:border-box}body{margin:0;background:#eef0f3;font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:#1c2330}
+.card{width:1200px;margin:0;background:#fff;padding:36px 44px 32px}
+h1{font-size:26px;margin:0 0 4px}h2{font-size:18px;margin:0 0 10px}
+.meta{color:#5b6577;font-size:14px;margin-bottom:22px}
+.chip{display:inline-block;font:700 12px/1 -apple-system,Helvetica,Arial,sans-serif;letter-spacing:.06em;padding:6px 10px;border-radius:4px;margin-bottom:12px}
+.in{background:#e7eefc;color:#1d3f8f}.out{background:#e2f4e8;color:#14683a}.warn{background:#fff1d6;color:#8a5200}
+.box{border:1px solid #d9dee7;border-radius:8px;padding:16px 20px;margin-bottom:22px}
+.box.inb{background:#f6f8fd}.box.outb{background:#fbfdfb}
+pre,code{font:13px/1.5 ui-monospace,Menlo,Consolas,monospace}
+pre{background:#10151f;color:#e6edf6;padding:14px 16px;border-radius:6px;margin:8px 0;white-space:pre-wrap;overflow:hidden}
+table{border-collapse:collapse;width:100%;font-size:14px}th,td{border:1px solid #d9dee7;padding:6px 10px;text-align:left;vertical-align:top}th{background:#f0f3f8}
+.note{background:#fff1d6;border-left:4px solid #e0a030;padding:10px 14px;font-size:14px;margin:14px 0;border-radius:3px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}.small{font-size:13px;color:#5b6577}
+.ok{color:#14683a;font-weight:700}
+</style></head><body><div class="card">
+<h1>ai-video-toolkit: bản spec cảnh cho video dọc 9:16</h1>
+<div class="meta">Skill: digitalsamba/claude-code-video-toolkit · skills/video-toolkit · commit a8eaaf7 · bước 1 «Write the spec» của SKILL.md · 02/11/2026</div>
+
+<span class="chip in">ĐẦU VÀO MẪU</span>
+<div class="box inb"><b>Brief:</b> «Video dọc khoảng 20 giây giới thiệu ứng dụng ghi chú hư cấu Notebook Small: ghi chú nằm rải rác, gom về một chỗ, tìm theo trí nhớ, kêu gọi theo dõi.» <span class="small">(ứng dụng và nội dung đều hư cấu)</span></div>
+
+<span class="chip out">ĐẦU RA</span>
+<div class="box outb">
+<h2>Spec JSON (4 cảnh, 9:16) và bảng cảnh</h2>
+<table><tr><th>Cảnh</th><th>visual.kind</th><th>Lời đọc</th><th>Từ</th><th>~giây</th></tr><tr><td><code>hook</code></td><td><code>ltx</code></td><td>Your notes are everywhere. Sticky notes, screenshots, a message to yourself at midnight.</td><td>13</td><td>5.4</td></tr><tr><td><code>one-place</code></td><td><code>ideogram</code></td><td>Notebook Small is a fictional app that puts them in one place and finds them by what you remember.</td><td>19</td><td>7.9</td></tr><tr><td><code>search</code></td><td><code>text</code></td><td>Type three words from a note you wrote last month. It shows up first.</td><td>14</td><td>5.8</td></tr><tr><td><code>cta</code></td><td><code>ideogram</code></td><td>Follow for one small tool a week.</td><td>7</td><td>2.9</td></tr>
+<tr><td colspan="3"><b>Tổng</b></td><td><b>53</b></td><td><b>22.1</b></td></tr></table>
+<div class="small" style="margin:6px 0 10px">Ngân sách của skill: ~2,4 từ/giây, 3–5 cảnh, xen cảnh chuyển động (<code>ltx</code>) và cảnh dựng chữ để có «ngắt nhịp» mỗi ~15 giây. Tiêu đề trong thẻ chữ dưới 6 từ, viết hoa (máy kiểm). Cảnh 2 dùng đủ mẫu caption JSON của skill, cảnh 4 dùng dạng ngắn <code>headline/object/description</code> mà skill cho phép.</div>
+<pre style="font-size:11px">{
+ &quot;title&quot;: &quot;One place for your notes&quot;,
+ &quot;format&quot;: &quot;9:16&quot;,
+ &quot;voice&quot;: {
+  &quot;provider&quot;: &quot;qwen3&quot;,
+  &quot;speaker&quot;: &quot;Ryan&quot;,
+  &quot;tone&quot;: &quot;warm&quot;,
+  &quot;maxWpm&quot;: 165
+ },
+ &quot;scenes&quot;: [
+  {
+   &quot;slug&quot;: &quot;hook&quot;,
+   &quot;text&quot;: &quot;Your notes are everywhere. Sticky notes, screenshots, a message to yourself at midnight.&quot;,
+   &quot;visual&quot;: {
+    &quot;kind&quot;: &quot;ltx&quot;,
+    &quot;prompt&quot;: &quot;Slow overhead shot of a cluttered desk, sticky notes and a phone glowing softly, warm morning light, shallow depth of field, no text&quot;
+   }
+  },
+  {
+   &quot;slug&quot;: &quot;one-place&quot;,
+   &quot;text&quot;: &quot;Notebook Small is a fictional app that puts them in one place and finds them by what you remember.&quot;,
+   &quot;visual&quot;: {
+    &quot;kind&quot;: &quot;ideogram&quot;,
+    &quot;caption&quot;: {
+     &quot;high_level_description&quot;: &quot;A dark-navy poster with the headline ONE PLACE FOR NOTES, showing one open notebook with three small cards sliding into it, with clear space in the bottom fifth of the frame.&quot;,
+     &quot;style_description&quot;: {
+      &quot;aesthetics&quot;: &quot;clean, diagrammatic, modern explainer&quot;,
+      &quot;lighting&quot;: &quot;flat even lighting, soft glow on the main object&quot;,
+      &quot;medium&quot;: &quot;flat vector graphic design&quot;,
+      &quot;art_style&quot;: &quot;minimalist infographic poster, generous negative space&quot;,
+      &quot;color_palette&quot;: [&quot;#0A1428&quot;, &quot;#4DA8FF&quot;, &quot;#FFB347&quot;, &quot;#FFFFFF&quot;]
+     },
+     &quot;compositional_deconstruction&quot;: {
+      &quot;background&quot;: &quot;Deep navy gradient, faint tiny stars.&quot;,
+      &quot;elements&quot;: [
+       {
+        &quot;type&quot;: &quot;text&quot;,
+        &quot;bbox&quot;: [80, 80, 200, 920],
+        &quot;text&quot;: &quot;ONE PLACE FOR NOTES&quot;,
+        &quot;desc&quot;: &quot;Bold condensed sans-serif headline, all caps, white, centered at the top.&quot;,
+        &quot;color_palette&quot;: [&quot;#FFFFFF&quot;]
+       },
+       {
+        &quot;type&quot;: &quot;obj&quot;,
+        &quot;bbox&quot;: [280, 150, 760, 850],
+        &quot;desc&quot;: &quot;An open notebook in pale blue with three small orange rounded cards sliding in from the left. No text on it.&quot;,
+        &quot;color_palette&quot;: [&quot;#4DA8FF&quot;, &quot;#FFB347&quot;]
+       }
+      ]
+     }
+    }
+   }
+  },
+  {
+   &quot;slug&quot;: &quot;search&quot;,
+   &quot;text&quot;: &quot;Type three words from a note you wrote last month. It shows up first.&quot;,
+   &quot;visual&quot;: {
+    &quot;kind&quot;: &quot;text&quot;,
+    &quot;headline&quot;: &quot;SEARCH BY MEMORY&quot;,
+    &quot;subline&quot;: &quot;not by folder&quot;
+   }
+  },
+  {
+   &quot;slug&quot;: &quot;cta&quot;,
+   &quot;text&quot;: &quot;Follow for one small tool a week.&quot;,
+   &quot;visual&quot;: {
+    &quot;kind&quot;: &quot;ideogram&quot;,
+    &quot;caption&quot;: {
+     &quot;headline&quot;: &quot;ONE TOOL A WEEK&quot;,
+     &quot;object&quot;: &quot;a small wrench resting on a calendar page&quot;,
+     &quot;description&quot;: &quot;navy poster, flat vector, orange wrench&quot;
+    }
+   }
+  }
+ ]
+}</pre>
+</div>
+<div class="note"><b>Chỉ là bước viết spec.</b> Chưa chạy <code>video_job.py estimate/submit</code> (cần uv, ffmpeg, khóa và GPU đám mây), nên chưa có giá ước tính, chưa có MP4. Không có video hay ảnh AI nào trong thẻ này. Số giây là phép tính từ số từ, chưa đo bằng giọng đọc thật.</div>
+</div></body></html>

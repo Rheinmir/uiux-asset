@@ -49,8 +49,10 @@ def build():
             if pv.get("kind") == "link":
                 if not str(pv.get("src", "")).startswith("https://"):
                     errs.append(f"{p['slug']}: preview kind=link cần src https://")
-            elif not (ROOT / "skills" / p["slug"] / pv.get("src", "-")).is_file() or not d.get("vendored"):
-                errs.append(f"{p['slug']}: preview chép/tạo cần skill đã chép và tệp skills/{p['slug']}/{pv.get('src')}")
+            elif not (ROOT / "skills" / p["slug"] / pv.get("src", "-")).is_file():
+                errs.append(f"{p['slug']}: preview chép/tạo cần tệp skills/{p['slug']}/{pv.get('src')}")
+            if pv.get("kind") == "upstream" and not d.get("vendored"):
+                errs.append(f"{p['slug']}: preview upstream chỉ cho skill đã chép (skill chỉ liên kết thì dùng generated hoặc link)")
             for need in ("label", "credit"):
                 if not pv.get(need):
                     errs.append(f"{p['slug']}: preview thiếu {need}")
