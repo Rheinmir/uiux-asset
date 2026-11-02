@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Sample ComfyUI — uiux-asset</title>
-<link rel="stylesheet" href="../aw.css?v=20f54a528f">
+<link rel="stylesheet" href="../aw.css?v=fcc6463dbe">
 <link rel="stylesheet" href="_m.css">
 <style>
 .k-stage { display: block; padding: 0; min-height: 580px; background: #1b1b21; --nb: #2b2b33; --nt: #e8e8ee; }
@@ -30,7 +30,7 @@
 </style>
 </head>
 <body>
-<main class="aw-wrap"><script src="../aw.js?v=20f54a528f"></script>
+<main class="aw-wrap"><script src="../aw.js?v=fcc6463dbe"></script>
 <div class="aw-crumb">
 <h1>ComfyUI <span class="aw-tag aw-tag--small aw-tag--solid-yellow m-badge">MÔ PHỎNG</span></h1>
 <span>ComfyUI thật là ứng dụng Python/GPU chạy mô hình khuếch tán — không chạy được trên web. Đây là MÔ PHỎNG đồ thị node bằng HTML/SVG: node kéo thả được, dây có hạt dữ liệu, "Queue Prompt" chạy các node lần lượt. KHÔNG có mô hình AI nào; ảnh được tạo bằng canvas thủ tục theo từ khoá trong prompt (hoàng hôn, biển, rừng, núi, thành phố đêm…), "nhiễu rõ dần" chỉ là hiệu ứng làm mờ + phủ nhiễu. · <a href="https://github.com/Comfy-Org/ComfyUI" target="_blank" rel="noopener">Comfy-Org/ComfyUI</a> · <a href="./">← Motion</a></span>
@@ -172,5 +172,5 @@ $('q').onclick = queue; $('rs').onclick = () => nodes.forEach((n) => { n.x = n.o
 addEventListener('hashchange', () => openTab(location.hash.slice(1)));
 openTab(location.hash.slice(1)); requestAnimationFrame(frame); setTimeout(queue, 600);  // chạy sẵn một lần để có ảnh ngay
 </script>
-<script src="_g.js?v=20f54a528f" defer></script>
+<script src="_g.js?v=fcc6463dbe" defer></script>
 </body></html>

@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sổ tay giấy — mock app 4 nhóm chức năng — uiux-asset</title>
+<meta name="description" content="Mock app sổ tay giấy vẽ tay bằng CSS: weekly planner, to-do list, hourly planner, dot grid. Bấm được thật, lưu trong trình duyệt.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Be+Vietnam+Pro:wght@400;600&family=Caveat:wght@500;700&display=swap">
+<link rel="stylesheet" href="../aw.css?v=fcc6463dbe">
+<link rel="stylesheet" href="../motion/_m.css">
+<style>
+/* ===== sổ tay: mọi thứ vẽ bằng CSS, không ảnh. Giấy = kem + nhiễu SVG; bìa = giấy kraft nâu; mực = xanh đen viết tay ===== */
+.nb { --kraft:#8a6a58; --kraft-d:#6b5040; --paper:#f4ecd8; --line:rgba(120,98,66,.28); --ink:#23294a; --red:#b5473a; --hl:rgba(255,221,87,.55);
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .27 0 0 0 0 .15 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  font-family: 'Be Vietnam Pro', system-ui, sans-serif; color: var(--ink); margin: 8px 0 28px; }
+.nb *, .nb *::before, .nb *::after { box-sizing: border-box; }
+.nb button, .nb input, .nb textarea { font: inherit; color: inherit; }
+.nb-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin: 0 0 -1px 18px; position: relative; z-index: 2; }
+.nb-tabs button { border: 0; cursor: pointer; padding: 9px 16px 11px; border-radius: 10px 10px 0 0; background: var(--kraft-d) var(--grain); color: #f3e3d3; font: 400 18px/1 'Bebas Neue', Impact, sans-serif; letter-spacing: .08em; opacity: .78; transition: transform .15s, opacity .15s; }
+.nb-tabs button b { font-weight: 400; opacity: .55; margin-right: 8px; }
+.nb-tabs button:hover { opacity: 1; transform: translateY(-2px); }
+.nb-tabs button[aria-selected=true] { opacity: 1; background: var(--kraft) var(--grain); color: #fff; padding-bottom: 14px; }
+.nb-book { position: relative; background: var(--kraft) var(--grain); border-radius: 10px 20px 20px 10px; padding: 16px 38px 16px 26px; box-shadow: 0 2px 0 #4f3a2e, 0 22px 40px -18px rgba(40,22,10,.55); perspective: 2200px; }
+.nb-book::before { content: ""; position: absolute; left: 11px; top: 14px; bottom: 14px; width: 3px; background: repeating-linear-gradient(#0000 0 14px, #3d2a20 14px 16px); opacity: .55; }  /* đường khâu gáy */
+.nb-band { position: absolute; right: 13px; top: -2px; bottom: -2px; width: 12px; background: #2b2b2b; border-radius: 3px; box-shadow: 1px 0 3px #0006, inset 0 0 0 1px #fff1; pointer-events: none; z-index: 4; }
+.nb-spread { position: relative; display: grid; grid-template-columns: 1fr 1fr; background: var(--paper); border-radius: 6px 12px 12px 6px; min-height: 640px; box-shadow: inset 0 0 0 1px #0002, 0 1px 0 #fff6; }
+.nb-spread::before { content: ""; position: absolute; inset: 0; background: var(--grain); mix-blend-mode: multiply; opacity: .55; pointer-events: none; border-radius: inherit; }
+.nb-spread.cov::before, .nb-spread.cov::after { display: none; }
+.nb-spread::after { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; width: 56px; margin-left: -28px; background: linear-gradient(90deg, #0000, rgba(60,40,15,.2) 46%, rgba(60,40,15,.32) 50%, rgba(60,40,15,.2) 54%, #0000); pointer-events: none; }  /* nếp gáy giữa */
+.nb-page { position: relative; padding: 22px 30px 26px; min-width: 0; }
+.nb-page.l { transform-origin: right center; } .nb-page.r { transform-origin: left center; }
+.nb-flip .nb-page.r { animation: nbr .55s cubic-bezier(.3,.7,.2,1); } .nb-flip .nb-page.l { animation: nbl .55s cubic-bezier(.3,.7,.2,1); }
+@keyframes nbr { from { transform: rotateY(-78deg); filter: brightness(.7); } }
+@keyframes nbl { from { transform: rotateY(78deg); filter: brightness(.7); } }
+.nb-h { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; margin: 0 0 12px; }
+.nb-h h2 { margin: 0; font: 400 40px/.95 'Bebas Neue', Impact, sans-serif; letter-spacing: .05em; color: var(--ink); }
+.nb-h small { display: block; font: 600 11px/1.4 'Be Vietnam Pro', sans-serif; letter-spacing: .08em; text-transform: uppercase; opacity: .6; }
+.nb-nav { display: flex; gap: 6px; align-items: center; }
+.nb-nav button, .nb-btn { border: 1.5px solid var(--ink); background: #0000; border-radius: 99px; padding: 4px 11px; font-size: 12px; cursor: pointer; line-height: 1.3; }
+.nb-nav button:hover, .nb-btn:hover { background: var(--ink); color: var(--paper); }
+.nb-lab { font: 600 11px/1 'Be Vietnam Pro', sans-serif; letter-spacing: .14em; text-transform: uppercase; opacity: .65; margin: 14px 0 4px; display: flex; justify-content: space-between; align-items: baseline; }
+.nb-lab em { font-style: normal; letter-spacing: 0; opacity: .8; text-transform: none; }
+/* dòng kẻ ngang cách 30px; mọi li cao đúng 30px nên chữ nằm trên dòng */
+.nb ul { list-style: none; margin: 0; padding: 0; background: repeating-linear-gradient(#0000 0 29px, var(--line) 29px 30px); }
+.nb li { height: 30px; display: flex; align-items: center; gap: 8px; position: relative; }
+.nb .hw { font: 700 23px/30px 'Caveat', 'Segoe Script', cursive; color: var(--ink); background: none; border: 0; outline: 0; padding: 0; min-width: 0; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transform: rotate(-.4deg); }
+.nb input.hw::placeholder { color: rgba(35,41,74,.28); font-weight: 500; }
+.nb input.hw:focus { background: rgba(255,230,120,.25); border-radius: 4px; }
+.nb li.done .hw { text-decoration: line-through; text-decoration-thickness: 2px; opacity: .5; }
+.chk { flex: none; width: 17px; height: 17px; border-radius: 50%; border: 1.6px dashed var(--ink); background: #0000; padding: 0; cursor: pointer; position: relative; opacity: .8; }
+.chk:hover { background: rgba(35,41,74,.12); }
+li.done .chk { border-style: solid; background: var(--ink); } li.done .chk::after { content: "✓"; color: var(--paper); position: absolute; inset: 0; font-size: 11px; line-height: 14px; text-align: center; }
+.x { flex: none; border: 0; background: none; color: var(--red); font-size: 18px; line-height: 1; cursor: pointer; opacity: 0; padding: 0 2px; } li:hover .x, .x:focus { opacity: .9; }
+.day { position: relative; margin-bottom: 12px; }
+.day h4 { margin: 0 0 2px; display: flex; align-items: baseline; gap: 8px; font: 400 17px/22px 'Bebas Neue', sans-serif; letter-spacing: .12em; border-bottom: 2px solid var(--ink); padding-bottom: 1px; }
+.day h4 span { font-family: 'Be Vietnam Pro', sans-serif; font-size: 11px; opacity: .65; letter-spacing: 0; }
+.day ul { min-height: 90px; }
+.day.today h4 { background: linear-gradient(90deg, #0000 0, var(--hl) 0, var(--hl) 62%, #0000 100%) no-repeat 0 55% / 100% 58%; }
+.day.today h4::after { content: "hôm nay"; margin-left: auto; font: 700 17px 'Caveat', cursive; color: var(--red); letter-spacing: 0; transform: rotate(-3deg); }
+.nb-top li::before { content: ""; width: 14px; height: 14px; border-radius: 50%; border: 1.6px dotted var(--ink); flex: none; display: none; }
+.nb .nb-notes { width: 100%; min-height: 170px; border: 0; outline: 0; resize: none; background: repeating-linear-gradient(#0000 0 29px, var(--line) 29px 30px); font: 700 23px/30px 'Caveat', cursive; color: var(--ink); padding: 0; }
+.nb-hours li { height: 36px; } .nb-hours { background: repeating-linear-gradient(#0000 0 35px, var(--line) 35px 36px); }
+.nb-hours time { flex: none; width: 46px; font: 400 21px/1 'Bebas Neue', sans-serif; letter-spacing: .06em; opacity: .75; border-right: 1.5px solid var(--line); height: 100%; display: flex; align-items: center; }
+.nb-hours li.now { background: linear-gradient(90deg, var(--hl), #0000 85%); } .nb-hours li.now time::after { content: "●"; color: var(--red); font-size: 8px; margin-left: 4px; }
+.nb-stamp { position: absolute; right: 24px; bottom: 22px; width: 120px; opacity: .55; transform: rotate(-12deg); pointer-events: none; mix-blend-mode: multiply; }
+.nb-tape { position: absolute; width: 90px; height: 24px; top: -8px; left: 40px; background: rgba(232,196,120,.7); transform: rotate(-3deg); box-shadow: 0 1px 2px #0003; z-index: 3; clip-path: polygon(0 0, 100% 0, 98% 50%, 100% 100%, 0 100%, 2% 50%); }
+/* dot grid */
+.dg { position: relative; width: 100%; height: 100%; min-height: 560px; border-radius: 4px; background: radial-gradient(circle, rgba(60,48,30,.55) 1.5px, #0000 1.8px) 0 0 / 24px 24px; touch-action: none; }
+.dg canvas { position: absolute; inset: 0; width: 100%; height: 100%; cursor: crosshair; }
+.nb-case { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 12px 0 0; padding: 10px 14px; background: var(--kraft-d) var(--grain); border-radius: 12px; color: #f3e3d3; font-size: 13px; }
+.nb-case button { border: 1.5px solid #f3e3d3aa; background: #0000; color: inherit; border-radius: 99px; padding: 5px 12px; cursor: pointer; }
+.nb-case button[aria-pressed=true], .nb-case button:hover { background: #f3e3d3; color: var(--kraft-d); }
+.nb-case .sw { width: 26px; height: 26px; padding: 0; border-radius: 50%; border: 2px solid #f3e3d3; }
+.nb-case .sw[aria-pressed=true] { outline: 2px solid #f3e3d3; outline-offset: 2px; }
+.nb-case .sep { flex: 1; }
+/* bìa */
+.nb-cover { min-height: 640px; background: radial-gradient(ellipse at 20% 0, #fff2 0, #0000 60%), var(--grain), var(--kraft); border-radius: 6px 12px 12px 6px; position: relative; padding: 38px 44px; display: grid; align-content: space-between; color: #f5e8d8; overflow: hidden; }
+.nb-cover h2 { margin: 0; font: 400 clamp(54px, 9vw, 104px)/.88 'Bebas Neue', sans-serif; letter-spacing: .06em; color: rgba(255,240,225,.92); text-shadow: 0 1px 0 #0004, 0 -1px 0 #fff3; }
+.nb-cover h2 small { display: block; font-size: .3em; letter-spacing: .3em; opacity: .7; }
+.nb-idx { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; position: relative; z-index: 1; }
+.nb-idx button { position: relative; text-align: left; border: 1.5px solid #f3e3d355; background: #0001; border-radius: 12px; padding: 14px 16px 16px; cursor: pointer; overflow: hidden; color: #fff2e4; transition: transform .15s, background .15s; }
+.nb-idx button:hover { transform: translateY(-3px) rotate(-.6deg); background: #0003; }
+.nb-idx i { position: absolute; right: -4px; bottom: -22px; font: 400 96px/1 'Bebas Neue', sans-serif; font-style: normal; opacity: .2; }
+.nb-idx b { display: block; font: 400 28px/1 'Bebas Neue', sans-serif; letter-spacing: .08em; } .nb-idx span { font-size: 12px; opacity: .75; }
+.nb-seal { position: absolute; right: 36px; top: 30px; width: 130px; opacity: .55; transform: rotate(8deg); }
+@media (max-width: 760px) {
+  .nb-spread { grid-template-columns: 1fr; min-height: 0; } .nb-spread::after { display: none; }
+  .nb-page { padding: 18px 16px 20px; } .nb-h h2 { font-size: 32px; } .nb-band { display: none; } .nb-book { padding: 10px 10px 10px 18px; }
+  .dg { min-height: 420px; } .nb-cover { padding: 26px 20px; min-height: 560px; }
+}
+@media (prefers-reduced-motion: reduce) { .nb-flip .nb-page { animation: none !important; } }
+.nb-note { max-width: 78ch; line-height: 1.6; opacity: .85; font-size: 14px; }
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=fcc6463dbe"></script>
+<div class="aw-crumb">
+<h1>Sổ tay giấy. Mock app 4 nhóm chức năng <span class="aw-tag aw-tag--small aw-tag--solid-green m-badge">VẼ TỰ DO, CHẠY THẬT</span></h1>
+<span>Lấy cảm hứng từ dòng sổ tay giấy Noteworthy (bìa kraft, giấy kem, chữ viết tay). Không phải sản phẩm hay mã của hãng. Giấy, bìa, mực đều vẽ bằng CSS; mọi ô bấm và viết được, dữ liệu lưu trong trình duyệt của bạn.</span>
+</div>
+
+<div class="nb" id="nb">
+  <div class="nb-tabs" role="tablist" aria-label="Chức năng"></div>
+  <div class="nb-book"><div class="nb-band"></div><div id="view"></div></div>
+</div>
+
+<h2 class="aw-heading-hr">Bốn nhóm chức năng</h2>
+<ol class="nb-note">
+<li><b>Weekly planner.</b> Bảy ngày Thứ hai đến Chủ nhật, ghi theo ngày, tick xong, chuyển tuần, ô ghi chú cuối tuần. Ngày hôm nay có dải highlight.</li>
+<li><b>To-do list.</b> Ba việc ưu tiên và danh sách dài; tick là việc sang trang «Đã xong» bên phải, xoá hàng loạt được.</li>
+<li><b>Hourly planner.</b> Mỗi giờ 05:00 đến 22:00 một dòng, giờ hiện tại được highlight, đổi ngày, ba ưu tiên trong ngày.</li>
+<li><b>Dot grid.</b> Hai trang chấm: bút tự do, thước kẻ bám chấm, tẩy theo nét, ba màu mực, hoàn tác, xoá trang. Cảm ứng và chuột đều dùng được.</li>
+</ol>
+<p class="nb-note">Xem nhanh không cần bấm: <a href="demo.gif">demo.gif</a> (21 khung, ghi bằng Playwright thật chạy đúng các bước bên trên; tools/e2e-notebook.cjs).</p>
+<p class="nb-note">Lưu ý trung thực: đây là mock thiết kế. Không đồng bộ giữa máy, không tài khoản; xoá dữ liệu trình duyệt là mất. Hiệu ứng lật trang và nhiễu giấy là tự dựng, không lấy từ ảnh tham chiếu.</p>
+</main>
+
+<script>
+(() => {
+  'use strict';
+  const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  // ---- lưu trữ: localStorage có thể ném lỗi (cửa sổ riêng tư) → vẫn chạy, chỉ không nhớ ----
+  let S = {}; try { S = JSON.parse(localStorage.getItem('nw-v1')) || {}; } catch {}
+  S.weekly ||= {}; S.todo ||= { top: ['', '', ''], items: [], done: [] }; S.hourly ||= {}; S.dots ||= { l: [], r: [] };
+  const save = () => { try { localStorage.setItem('nw-v1', JSON.stringify(S)); } catch {} };
+  // ---- ngày giờ ----
+  const pad = (n) => String(n).padStart(2, '0'), key = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+  const monday = (d) => addDays(d, -((d.getDay() + 6) % 7));
+  const isoWeek = (d) => { const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())); t.setUTCDate(t.getUTCDate() + 4 - (t.getUTCDay() || 7)); return Math.ceil(((t - Date.UTC(t.getUTCFullYear(), 0, 1)) / 864e5 + 1) / 7); };
+  const DAYS = ['THỨ HAI', 'THỨ BA', 'THỨ TƯ', 'THỨ NĂM', 'THỨ SÁU', 'THỨ BẢY', 'CHỦ NHẬT'];
+  const today = new Date(); let wk = monday(today), hd = new Date(today);
+  const dm = (d) => `${pad(d.getDate())}/${pad(d.getMonth() + 1)}`;
+
+  const SECTIONS = [['weekly', 'Weekly planner', 'Tuần, bảy ngày'], ['todo', 'To do list', 'Việc cần làm'], ['hourly', 'Hourly planner', 'Từng giờ trong ngày'], ['dotgrid', 'Dotgrid', 'Chấm để vẽ, viết, phác']];
+  const tabs = $('.nb-tabs'), view = $('#view');
+  tabs.innerHTML = `<button role="tab" data-go="cover">Bìa</button>` + SECTIONS.map((s, i) => `<button role="tab" data-go="${s[0]}"><b>0${i + 1}</b>${s[1].toUpperCase()}</button>`).join('');
+  const STAMP = `<svg class="nb-seal" viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2"><circle cx="60" cy="60" r="56"/><circle cx="60" cy="60" r="48"/><path id="c" d="M60 60m-40 0a40 40 0 1 1 80 0a40 40 0 1 1-80 0" stroke="none"/><text font-size="9" letter-spacing="2.2" fill="currentColor" stroke="none" font-family="Be Vietnam Pro"><textPath href="#c">SỔ TAY · VIỆT NAM · GIẤY KEM ·</textPath></text><text x="60" y="68" text-anchor="middle" font-size="26" font-weight="700" fill="currentColor" stroke="none" font-family="Caveat">Note</text></svg>`;
+
+  // ---- vẽ từng trang: trả về [trái, phải] ----
+  const items = (list, k, kind) => (list || []).map((it, i) => `<li class="${it.d ? 'done' : ''}"><button class="chk" data-act="tick" data-kind="${kind}" data-k="${k}" data-i="${i}" aria-label="Đánh dấu xong"></button><span class="hw">${esc(it.t)}</span><button class="x" data-act="del" data-kind="${kind}" data-k="${k}" data-i="${i}" aria-label="Xoá">×</button></li>`).join('');
+  const addRow = (kind, k, ph) => `<li><span class="chk" style="opacity:.3"></span><input class="hw" data-add="${kind}" data-k="${k}" placeholder="${ph}" maxlength="90" autocomplete="off"></li>`;
+  const dayBlock = (d, i) => { const k = key(d), list = S.weekly[k] || []; return `<section class="day${k === key(today) ? ' today' : ''}"><h4>${DAYS[i]}<span>${dm(d)}</span></h4><ul>${items(list, k, 'w')}${addRow('w', k, 'ghi gì đó…')}</ul></section>`; };
+  const pages = {
+    cover: () => [`<div class="nb-cover" >${STAMP}<h2><small>SỔ TAY GIẤY · 2026</small>YEAR<br>PLANNER</h2><div class="nb-idx">${SECTIONS.map((s, i) => `<button data-go="${s[0]}"><i>0${i + 1}</i><b>${s[1].toUpperCase()}</b><span>${s[2]}</span></button>`).join('')}</div></div>`],
+    weekly() {
+      const days = [...Array(7)].map((_, i) => addDays(wk, i)), nk = 'n' + key(wk);
+      return [`<div class="nb-tape"></div><div class="nb-h"><div><small>Tuần ${isoWeek(wk)} · ${dm(days[0])} – ${dm(days[6])}/${days[6].getFullYear()}</small><h2>WEEKLY<br>PLANNER</h2></div><div class="nb-nav"><button data-act="wk" data-n="-1" aria-label="Tuần trước">‹</button><button data-act="wk" data-n="0">Hôm nay</button><button data-act="wk" data-n="1" aria-label="Tuần sau">›</button></div></div>${days.slice(0, 4).map((d, i) => dayBlock(d, i)).join('')}`,
+        `${days.slice(4).map((d, i) => dayBlock(d, i + 4)).join('')}<div class="nb-lab">Ghi chú tuần<em>tự lưu</em></div><textarea class="nb-notes" data-note="${nk}" maxlength="600" placeholder="việc nhớ cho cả tuần…">${esc(S.weekly[nk] || '')}</textarea>`];
+    },
+    todo() {
+      const t = S.todo, n = t.done.length;
+      return [`<div class="nb-h"><div><small>${t.items.length} việc còn lại</small><h2>TO DO<br>LIST</h2></div></div><div class="nb-lab">Top 3 ưu tiên</div><ul>${t.top.map((v, i) => `<li><span class="chk" style="border-style:dotted"></span><input class="hw" data-top="${i}" value="${esc(v)}" maxlength="70" placeholder="${i + 1}." autocomplete="off"></li>`).join('')}</ul><div class="nb-lab">Danh sách</div><ul>${items(t.items, '', 't')}${addRow('t', '', 'thêm việc, Enter…')}</ul>`,
+        `<div class="nb-h"><div><small>${n} việc</small><h2>ĐÃ XONG</h2></div><div class="nb-nav"><button data-act="clr"${n ? '' : ' disabled'}>Xoá hết</button></div></div><ul>${t.done.map((it, i) => `<li class="done"><button class="chk" data-act="undo" data-i="${i}" aria-label="Làm lại"></button><span class="hw">${esc(it.t)}</span></li>`).join('')}</ul>${n ? '' : '<p style="opacity:.55;font:700 22px Caveat,cursive;margin:14px 0 0">Tick một việc bên trái, nó sang đây.</p>'}`];
+    },
+    hourly() {
+      const k = key(hd), D = S.hourly[k] ||= { top: ['', '', ''], h: {} }, nowH = new Date().getHours(), isToday = k === key(today);
+      const row = (h) => `<li${isToday && h === nowH ? ' class="now"' : ''}><time>${pad(h)}:00</time><input class="hw" data-hour="${h}" value="${esc(D.h[h] || '')}" maxlength="70" autocomplete="off"></li>`;
+      const rng = (a, b) => [...Array(b - a + 1)].map((_, i) => row(a + i)).join('');
+      return [`<div class="nb-tape"></div><div class="nb-h"><div><small>${DAYS[(hd.getDay() + 6) % 7]} · ${dm(hd)}/${hd.getFullYear()}</small><h2>HOURLY<br>PLANNER</h2></div><div class="nb-nav"><button data-act="hd" data-n="-1" aria-label="Hôm qua">‹</button><button data-act="hd" data-n="0">Hôm nay</button><button data-act="hd" data-n="1" aria-label="Ngày mai">›</button></div></div><div class="nb-lab">Top 3 ưu tiên</div><ul>${D.top.map((v, i) => `<li><span class="chk" style="border-style:dotted"></span><input class="hw" data-htop="${i}" value="${esc(v)}" maxlength="70" placeholder="${i + 1}." autocomplete="off"></li>`).join('')}</ul><ul class="nb-hours" style="margin-top:14px">${rng(5, 10)}</ul>`,
+        `<ul class="nb-hours" style="margin-top:6px">${rng(11, 22)}</ul><svg class="nb-stamp" viewBox="0 0 120 120" fill="none" stroke="#6b5040" stroke-width="2"><circle cx="60" cy="60" r="52"/><text x="60" y="56" text-anchor="middle" font-size="20" font-family="Bebas Neue" fill="#6b5040" stroke="none" letter-spacing="2">HOURLY</text><text x="60" y="78" text-anchor="middle" font-size="12" font-family="Be Vietnam Pro" fill="#6b5040" stroke="none">05 → 22</text></svg>`];
+    },
+    dotgrid: () => [`<div class="dg" data-side="l"><canvas></canvas></div>`, `<div class="dg" data-side="r"><canvas></canvas></div>`],
+  };
+
+  // ---- dot grid: nét lưu theo px so với góc trên-trái; chấm cách 24px, tâm ở +12 ----
+  const pen = { color: '#23294a', w: 2.4, mode: 'free' }, G = 24;
+  const snap = (v) => Math.round((v - G / 2) / G) * G + G / 2;
+  function mountDots(host) {
+    const side = host.dataset.side, cv = $('canvas', host), ctx = cv.getContext('2d'), list = S.dots[side];
+    const fit = () => { const r = host.getBoundingClientRect(), d = devicePixelRatio || 1; cv.width = Math.round(r.width * d); cv.height = Math.round(r.height * d); ctx.setTransform(d, 0, 0, d, 0, 0); draw(); };
+    const path = (s) => { ctx.beginPath(); const p = s.p; ctx.moveTo(p[0][0], p[0][1]); if (p.length === 1) ctx.lineTo(p[0][0] + .1, p[0][1]); for (let i = 1; i < p.length - 1; i++) ctx.quadraticCurveTo(p[i][0], p[i][1], (p[i][0] + p[i + 1][0]) / 2, (p[i][1] + p[i + 1][1]) / 2); if (p.length > 1) ctx.lineTo(p.at(-1)[0], p.at(-1)[1]); ctx.strokeStyle = s.c; ctx.lineWidth = s.w; ctx.lineCap = ctx.lineJoin = 'round'; ctx.stroke(); };
+    const draw = () => { ctx.clearRect(0, 0, cv.width, cv.height); list.forEach(path); };
+    let cur = null;
+    const pt = (e) => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+    const dseg = (x, y, [a, b], [c, d]) => { const dx = c - a, dy = d - b, t = Math.max(0, Math.min(1, ((x - a) * dx + (y - b) * dy) / (dx * dx + dy * dy || 1))); return Math.hypot(x - a - t * dx, y - b - t * dy); };
+    const near = (s, [x, y]) => s.p.some((q, i) => dseg(x, y, q, s.p[i + 1] || q) < 9);
+    const erase = (e) => { const p = pt(e), i = list.findLastIndex((s) => near(s, p)); if (i >= 0) { list.splice(i, 1); draw(); save(); } };
+    cv.onpointerdown = (e) => { cv.setPointerCapture(e.pointerId); if (pen.mode === 'erase') { cur = 'erase'; return erase(e); } let p = pt(e); if (pen.mode === 'ruler') p = [snap(p[0]), snap(p[1])]; cur = { c: pen.color, w: pen.w, p: [p] }; list.push(cur); if (pen.mode === 'ruler') cur.p.push(p); draw(); };
+    cv.onpointermove = (e) => { if (!cur) return; if (cur === 'erase') return erase(e); const p = pt(e); if (pen.mode === 'ruler') cur.p[1] = [snap(p[0]), snap(p[1])]; else cur.p.push(p); draw(); };
+    cv.onpointerup = cv.onpointercancel = () => { if (cur && cur !== 'erase') save(); cur = null; };
+    host._undo = () => { list.pop(); draw(); save(); }; host._clear = () => { list.length = 0; draw(); save(); };
+    new ResizeObserver(fit).observe(host);
+  }
+  const caseHTML = () => `<div class="nb-case" id="case"><span>Bút</span>${[['#23294a', 'Mực xanh đen'], ['#1d6fb8', 'Mực xanh'], ['#b5473a', 'Mực đỏ']].map(([c, t]) => `<button class="sw" data-pen="${c}" style="background:${c}" title="${t}" aria-label="${t}" aria-pressed="${pen.color === c}"></button>`).join('')}<button data-w="1.5" aria-pressed="${pen.w === 1.5}">Mảnh</button><button data-w="2.4" aria-pressed="${pen.w === 2.4}">Vừa</button><button data-w="4.5" aria-pressed="${pen.w === 4.5}">Đậm</button><span class="sep"></span><button data-mode="free" aria-pressed="${pen.mode === 'free'}">Vẽ tay</button><button data-mode="ruler" aria-pressed="${pen.mode === 'ruler'}">Thước kẻ</button><button data-mode="erase" aria-pressed="${pen.mode === 'erase'}">Tẩy</button><button data-act="undoDot">Hoàn tác</button><button data-act="clearDot">Xoá trang</button></div>`;
+
+  // ---- điều hướng ----
+  let cur = '', focusSel = '';
+  function render(flip) {
+    const name = cur, p = pages[name]();
+    view.innerHTML = name === 'cover' ? `<div class="nb-spread cov" style="grid-template-columns:1fr">${p[0]}</div>` : `<div class="nb-spread${flip ? ' nb-flip' : ''}"><div class="nb-page l">${p[0]}</div><div class="nb-page r">${p[1]}</div></div>${name === 'dotgrid' ? caseHTML() : ''}`;
+    $$('.dg', view).forEach(mountDots);
+    $$('button[data-go]', tabs).forEach((b) => b.setAttribute('aria-selected', b.dataset.go === name));
+    if (focusSel) { const f = $(focusSel, view); f && f.focus(); focusSel = ''; }
+  }
+  function go(name, flip = true) { if (!pages[name]) name = 'cover'; cur = name; try { history.replaceState(null, '', '#' + name); } catch {} render(flip); }
+  const rerender = (sel) => { focusSel = sel || ''; render(false); };
+
+  document.addEventListener('click', (e) => {
+    const g = e.target.closest('[data-go]'); if (g && $('#nb').contains(g)) return go(g.dataset.go);
+    const a = e.target.closest('[data-act],[data-pen],[data-w],[data-mode]'); if (!a || !$('#nb').contains(a)) return;
+    const d = a.dataset;
+    if (d.pen) { pen.color = d.pen; if (pen.mode === 'erase') pen.mode = 'free'; return rerender(); }
+    if (d.w) { pen.w = +d.w; return rerender(); } if (d.mode) { pen.mode = d.mode; return rerender(); }
+    const k = d.k, i = +d.i, list = d.kind === 'w' ? (S.weekly[k] ||= []) : S.todo.items;
+    switch (d.act) {
+      case 'wk': wk = +d.n ? addDays(wk, 7 * d.n) : monday(today); return go('weekly');
+      case 'hd': hd = +d.n ? addDays(hd, +d.n) : new Date(today); return go('hourly');
+      case 'tick': if (d.kind === 'w') list[i].d = !list[i].d; else S.todo.done.unshift(list.splice(i, 1)[0]); S.todo.done.forEach((x) => (x.d = true)); save(); return rerender();
+      case 'del': list.splice(i, 1); save(); return rerender();
+      case 'undo': { const it = S.todo.done.splice(i, 1)[0]; it.d = false; S.todo.items.push(it); save(); return rerender(); }
+      case 'clr': S.todo.done = []; save(); return rerender();
+      case 'undoDot': return $$('.dg', view).reverse().find((h) => S.dots[h.dataset.side].length)?._undo();
+      case 'clearDot': return $$('.dg', view).forEach((h) => h._clear());
+    }
+  });
+  document.addEventListener('keydown', (e) => {
+    const t = e.target; if (e.key !== 'Enter' || !t.dataset || !t.dataset.add) return;
+    const v = t.value.trim(); if (!v) return;
+    (t.dataset.add === 'w' ? (S.weekly[t.dataset.k] ||= []) : S.todo.items).push({ t: v, d: false }); save();
+    rerender(`[data-add="${t.dataset.add}"][data-k="${t.dataset.k}"]`);
+  });
+  document.addEventListener('input', (e) => {
+    const t = e.target, d = t.dataset; if (!d || !$('#nb').contains(t)) return;
+    if (d.note) S.weekly[d.note] = t.value; else if (d.top != null) S.todo.top[d.top] = t.value;
+    else if (d.hour != null) (S.hourly[key(hd)] ||= { top: ['', '', ''], h: {} }).h[d.hour] = t.value;
+    else if (d.htop != null) (S.hourly[key(hd)] ||= { top: ['', '', ''], h: {} }).top[d.htop] = t.value; else return;
+    save();
+  });
+  go((location.hash || '#cover').slice(1), false);
+  addEventListener('hashchange', () => { const n = location.hash.slice(1); if (n !== cur) go(n); });
+})();
+</script>
+<script src="/stats.js?v=fcc6463dbe" defer></script>
+</body></html>

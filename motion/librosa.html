@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Sample librosa — uiux-asset</title>
-<link rel="stylesheet" href="../aw.css?v=20f54a528f">
+<link rel="stylesheet" href="../aw.css?v=fcc6463dbe">
 <link rel="stylesheet" href="_m.css">
 <style>
 .r-stage { display: block; padding: 12px; }
@@ -18,7 +18,7 @@
 </style>
 </head>
 <body>
-<main class="aw-wrap"><script src="../aw.js?v=20f54a528f"></script>
+<main class="aw-wrap"><script src="../aw.js?v=fcc6463dbe"></script>
 <div class="aw-crumb">
 <h1>librosa <span class="aw-tag aw-tag--small aw-tag--solid-yellow m-badge">MÔ PHỎNG</span></h1>
 <span>librosa là thư viện Python nên không chạy được trên web. Đây là MÔ PHỎNG: toàn bộ thuật toán (FFT, STFT, mel, MFCC, chroma, onset/beat DP, YIN, HPSS + ISTFT) được tự cài bằng JavaScript thuần theo cách librosa làm, chạy trên tín hiệu tổng hợp hoặc file âm thanh bạn chọn; kết quả có thể lệch nhỏ so với librosa thật. Khối code bên dưới là đoạn Python tương ứng. · <a href="https://github.com/librosa/librosa" target="_blank" rel="noopener">librosa/librosa</a> · <a href="./">← Motion</a></span>
@@ -176,5 +176,5 @@ fileIn.onchange = async () => { const f = fileIn.files[0]; if (!f) return; try {
 addEventListener('hashchange', () => openTab(location.hash.slice(1)));
 cur = TABS[0]; compute('Chirp 200→4000 Hz', SIGS['Chirp 200→4000 Hz']()); drawWave(); openTab(location.hash.slice(1) || 'stft'); redraw();
 </script>
-<script src="_g.js?v=20f54a528f" defer></script>
+<script src="_g.js?v=fcc6463dbe" defer></script>
 </body></html>
