@@ -78,7 +78,7 @@ const base = opt('base', 'http://127.0.0.1:8791'), frames = opt('frames', '');
   });
   await step('điện thoại 390px: không tràn ngang', async () => {
     await p.setViewportSize({ width: 390, height: 844 }); await p.waitForTimeout(500);
-    assert(await p.evaluate(() => [...document.querySelectorAll('main > *:not(script)')].every((e) => e.getBoundingClientRect().right <= innerWidth + 1)), 'nội dung tràn ngang')   // thanh nav chung của site có thể tràn khi thêm mục: lỗi chung, không thuộc trang này;
+    assert(await p.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), 'trang tràn ngang ở 390px')
   });
   if (errs.length) { console.log('\nLỖI:\n' + errs.join('\n')); await b.close(); process.exit(1); }
   console.log('e2e-notebook: ok'); await b.close();

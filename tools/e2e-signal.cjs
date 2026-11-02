@@ -23,7 +23,7 @@ const base = opt('base', 'http://127.0.0.1:8841'), shot = opt('shot', '');
     const p1 = await pos(); await p.waitForTimeout(5200); const p2 = await pos();
     assert(p1[2] !== p2[2] || p1[0] !== p2[0] || p1[1] !== p2[1], 'vòng cam đứng yên: ' + JSON.stringify([p1, p2]));
   });
-  await step('điện thoại 390px không tràn ngang', async () => { await p.setViewportSize({ width: 390, height: 844 }); await p.waitForTimeout(500); assert(await p.evaluate(() => [...document.querySelectorAll('main > *:not(script)')].every((e) => e.getBoundingClientRect().right <= innerWidth + 1)), 'nội dung tràn ngang'); });
+  await step('điện thoại 390px không tràn ngang', async () => { await p.setViewportSize({ width: 390, height: 844 }); await p.waitForTimeout(500); assert(await p.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), 'trang tràn ngang ở 390px') });
   if (shot) { await p.setViewportSize({ width: 1280, height: 900 }); await p.goto(base + '/signal/', { waitUntil: 'networkidle' }); await p.waitForTimeout(2500); await p.screenshot({ path: shot, fullPage: true }); }
   if (errs.length) { console.log('\nLỖI:\n' + errs.join('\n')); await b.close(); process.exit(1); }
   console.log('e2e-signal: ok'); await b.close();
