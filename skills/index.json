@@ -134,18 +134,23 @@
    "pushed": "2026-10-18T22:53:03Z",
    "path": "skills/dev-browser/",
    "vendored": true,
-   "bytes": 3472,
+   "bytes": 205041,
    "install": "npm install -g dev-browser  /  dev-browser install-skill --claude",
    "note": "Skill chỉ là hướng dẫn dùng CLI dev-browser; cần cài CLI riêng (npm install -g dev-browser).",
    "commit": "e5d746f1fc17a3301d6e7f865f89c034f15f69fb",
    "vendored_date": "2026-11-01",
+   "preview": {
+    "kind": "generated",
+    "src": "preview/sample.jpg",
+    "label": "chạy thật: dev-browser 0.2.9 (npm, binary tải từ release của tác giả) mở trang /skills/ của site này ở chế độ headless, 02/11/2026; khung trên là script và kết quả in ra, khung dưới là ảnh chụp do lệnh lưu; skill commit e5d746f1",
+    "credit": "tự chạy, không phải ảnh của tác giả"
+   },
    "tagline": "Tự động trình duyệt",
    "desc_vi": "Cho AI tự duyệt web để test, tự động hóa và nghiên cứu online.",
-   "file_count": 3,
+   "file_count": 4,
    "skill_md": [
     "SKILL.md"
-   ],
-   "no_preview": "chưa có"
+   ]
   },
   {
    "slug": "web-scraper",
