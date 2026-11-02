@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Góc máy — 8 camera angle chạy thật — uiux-asset</title>
+<meta name="description" content="Landing page motion chuyển cảnh qua 8 góc máy (fisheye, tele, top-down, high angle, dirty frame, snow level, extreme close-up, dutch). Một cảnh 3D dựng bằng CSS, máy quay di chuyển theo cuộn hoặc tự chạy.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=535d2a8fd7">
+<style>
+.cx-track { position: relative; margin-top: 16px; }
+.cx-pin { position: sticky; top: var(--cx-top, 72px); height: calc(100vh - var(--cx-top, 72px)); height: calc(100svh - var(--cx-top, 72px)); display: grid; grid-template-columns: minmax(0, 1.9fr) minmax(280px, 1fr); gap: 20px; padding: 12px 0; box-sizing: border-box; }
+.cx-stage { position: relative; align-self: stretch; min-height: 0; border-radius: var(--aw-rounded-normal, 14px); overflow: hidden; background: #0b0d14; isolation: isolate; touch-action: pan-y; }
+.cx-cam { position: absolute; inset: 0; }
+.cx-sky { position: absolute; left: -100%; width: 300%; will-change: transform; }
+.cx-persp { position: absolute; inset: 0; }
+.cx-world, .o { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform-style: preserve-3d; }
+.fc { position: absolute; backface-visibility: hidden; }
+.cx-ground { position: absolute; width: 12000px; height: 12000px; left: -6000px; top: -6000px; backface-visibility: hidden;
+  background: radial-gradient(circle closest-side, #ffffff 0, #f6f8fc 7%, #dfe6f2 22%, #cdd5e6 44%, #dcd2d8 50%); transform: translateY(170px) rotateX(90deg); }
+.cx-decal { position: absolute; border-radius: 50%; backface-visibility: hidden; }
+.cx-dirty { position: absolute; inset: 0; pointer-events: none; opacity: var(--dirty, 0); }
+.cx-dirty i { position: absolute; display: block; filter: blur(22px); }
+.cx-lens { position: absolute; inset: 0; pointer-events: none; }
+.cx-stage::before, .cx-stage::after { content: ''; position: absolute; left: 0; right: 0; height: 90px; pointer-events: none; z-index: 2; }
+.cx-stage::before { top: 0; background: linear-gradient(rgba(0,0,0,.38), transparent); }
+.cx-stage::after { bottom: 0; background: linear-gradient(transparent, rgba(0,0,0,.42)); }
+.cx-hud, .cx-tele { z-index: 3; }
+.cx-hud { position: absolute; left: 0; right: 0; top: 0; padding: 14px 16px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; pointer-events: none; color: #fff; text-shadow: 0 1px 14px rgba(0,0,0,.55); }
+.cx-lab { font: 800 clamp(18px, 3.2vw, 38px)/1 'Inter', system-ui, sans-serif; letter-spacing: -.02em; text-transform: uppercase; max-width: 80%; transition: opacity .25s; }
+.cx-cnt { font: 600 13px/1 ui-monospace, Menlo, monospace; opacity: .85; white-space: nowrap; }
+.cx-tele { position: absolute; left: 0; right: 0; bottom: 0; padding: 12px 16px; display: flex; flex-wrap: wrap; gap: 6px 14px; color: #fff; font: 500 12px/1.2 ui-monospace, Menlo, monospace; text-shadow: 0 1px 10px rgba(0,0,0,.6); pointer-events: none; }
+.cx-tele b { font-weight: 600; opacity: .7; margin-right: 4px; }
+.cx-panel { display: flex; flex-direction: column; gap: 14px; min-width: 0; overflow: auto; padding: 4px 2px; }
+.cx-num { font: 800 clamp(56px, 8vw, 110px)/1.05 'Inter', system-ui, sans-serif; letter-spacing: -.04em; padding-top: 4px; }
+.cx-num small { font-size: .28em; opacity: .5; letter-spacing: 0; margin-left: 6px; }
+.cx-name { margin: 0; font-size: 22px; line-height: 1.2; }
+.cx-what { margin: 0; line-height: 1.6; }
+.cx-facts { display: grid; gap: 8px; margin: 0; }
+.cx-facts div { padding: 10px 12px; border-radius: 10px; background: var(--aw-nf-bg-2, #eee); line-height: 1.45; font-size: 14px; }
+.cx-facts dt { font-size: 12px; opacity: .6; margin-bottom: 2px; }
+.cx-facts dd { margin: 0; }
+.cx-prompt { font: 12px/1.5 ui-monospace, Menlo, monospace; padding: 8px 12px; border-radius: 10px; border: 1px dashed currentColor; opacity: .85; }
+.cx-ctl { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: auto; }
+.cx-ctl button { font: inherit; font-size: 14px; padding: 8px 14px; border-radius: 999px; border: 1px solid currentColor; background: transparent; color: inherit; cursor: pointer; }
+.cx-ctl button:hover { opacity: .7; }
+.cx-dots { display: flex; gap: 6px; flex-wrap: wrap; }
+.cx-dots button { width: 34px; height: 34px; padding: 0; font: 600 12px ui-monospace, Menlo, monospace; }
+.cx-dots button[aria-current="true"] { background: currentColor; }
+.cx-dots button[aria-current="true"] span { color: var(--aw-bg-primary, #fff); mix-blend-mode: normal; }
+.cx-list { margin: 40px 0 8px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 12px; }
+.cx-list div { padding: 14px 16px; border-radius: 12px; background: var(--aw-nf-bg-2, #eee); line-height: 1.5; font-size: 14px; }
+.cx-list b { display: block; margin-bottom: 4px; font-size: 15px; }
+.cx-note { max-width: 78ch; line-height: 1.6; opacity: .75; font-size: 13px; margin-bottom: 40px; }
+@media (max-width: 820px) {
+  .cx-pin { --cx-top: 8px; }
+  .cx-pin { grid-template-columns: 1fr; grid-template-rows: minmax(0, 58%) minmax(0, 1fr); gap: 8px; padding: 6px 0 4px; }
+  .cx-panel { gap: 8px; }
+  .cx-num { display: none; }
+  .cx-name { font-size: 18px; }
+  .cx-what { font-size: 14px; line-height: 1.5; }
+  .cx-facts, .cx-prompt { display: none; }
+  .cx-what { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cx-dots button { width: 30px; height: 30px; }
+  .cx-lab { font-size: 17px; }
+}
+@media (prefers-reduced-motion: reduce) { .cx-lab { transition: none; } }
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=535d2a8fd7"></script>
+<div class="aw-crumb">
+<h1>Góc máy. 8 camera angle chạy thật <span class="aw-tag aw-tag--small aw-tag--solid-green m-badge">3D DỰNG BẰNG CSS</span></h1>
+<span>Một cảnh nhỏ (hai người ngồi uống trà giữa tuyết) dựng hoàn toàn bằng CSS 3D, không dùng ảnh nào. Máy quay di chuyển qua 8 góc: cuộn trang hoặc để nó tự chạy, bên phải là chú thích góc đó là gì và dùng khi nào. Ý tưởng 8 góc lấy từ video hướng dẫn của Everygen; cảnh ở đây là bản dựng lại, không chép ảnh gốc. · <a href="../motion/">← Motion</a></span>
+</div>
+
+<section class="cx-track" id="track" aria-label="8 góc máy">
+<div class="cx-pin">
+  <div class="cx-stage" id="stage" role="img" aria-label="Cảnh 3D dựng bằng CSS, máy quay đổi góc theo cuộn trang">
+    <div class="cx-cam" id="cam">
+      <div class="cx-sky" id="sky"></div>
+      <div class="cx-persp" id="persp"><div class="cx-world" id="world"></div></div>
+    </div>
+    <div class="cx-dirty" id="dirty"><i style="left:-14%;bottom:-18%;width:62%;height:70%;background:radial-gradient(ellipse at 40% 45%,#2a1210 0,#4a2420 55%,transparent 72%)"></i><i style="left:-10%;top:-12%;width:38%;height:60%;background:radial-gradient(ellipse at 30% 40%,#10080c 0,#241218 60%,transparent 75%)"></i><i style="left:30%;bottom:-24%;width:50%;height:46%;background:radial-gradient(ellipse at 50% 40%,#5a2c26 0,rgba(90,44,38,.6) 50%,transparent 72%)"></i></div>
+    <div class="cx-lens" id="lens"></div>
+    <div class="cx-hud"><div class="cx-lab" id="lab"></div><div class="cx-cnt" id="cnt"></div></div>
+    <div class="cx-tele" id="tele"></div>
+  </div>
+  <aside class="cx-panel" aria-live="polite">
+    <div class="cx-num" id="num"></div>
+    <h2 class="cx-name" id="name"></h2>
+    <p class="cx-what" id="what"></p>
+    <dl class="cx-facts" id="facts"></dl>
+    <div class="cx-prompt" id="prompt"></div>
+    <div class="cx-ctl"><button type="button" id="play" aria-pressed="true">❚❚ Tạm dừng</button><div class="cx-dots" id="dots" role="group" aria-label="Chọn góc máy"></div></div>
+  </aside>
+</div>
+</section>
+
+<h2 class="aw-heading-hr">Tóm tắt 8 góc</h2>
+<div class="cx-list" id="list"></div>
+<p class="cx-note">Cách dựng: một cây div CSS 3D (hộp + trụ, <code>transform-style: preserve-3d</code>) và một “máy quay” là phép biến đổi ngược của cả thế giới (<code>rotateX/Y/Z</code> + <code>perspective</code>); mỗi góc là một bộ số (pitch, yaw, roll, tiêu cự, khoảng cách) được nội suy theo vị trí cuộn. Fisheye là bộ lọc SVG <code>feDisplacementMap</code> với bản đồ méo vẽ bằng canvas lúc chạy. Từ khóa prompt là cách diễn đạt riêng của trang này, không phải bản gốc của video.</p>
+</main>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="cx-fish" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB"><feImage id="cx-map" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="m"/><feDisplacementMap id="cx-disp" in="SourceGraphic" in2="m" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter></svg>
+
+<script>
+(() => {
+  // ---------- dữ liệu 8 góc: pitch(+nhìn xuống) yaw roll P(px, tiêu cự) E(khoảng cách tới mục tiêu) t=[x,y,z] mục tiêu ----------
+  const A = [
+    { id: 'fisheye', en: 'Frontal Fisheye Close-up', vi: 'Cận mặt chính diện, ống fisheye',
+      what: 'Máy đặt ngay trước mặt nhân vật, rất gần, gắn ống góc cực rộng (fisheye). Giữa khung phình to, rìa khung cong lại và bị cắt thành hình tròn như nhìn qua mắt cá.',
+      facts: [['Vị trí máy', 'Chính diện, sát mặt'], ['Ống kính', 'Fisheye ≈ 8–14 mm'], ['Cảm giác', 'Gần, hơi kỳ quặc, nhân vật “nhìn thẳng vào bạn”']],
+      prompt: 'frontal fisheye close-up, ultra-wide lens distortion, circular frame',
+      c: { pitch: 4, yaw: 90, roll: 0, P: 300, E: 105, tx: 270, ty: 4, tz: 0, fish: 1, dirty: 0 }, lens: 'fisheye 12mm' },
+    { id: 'profile', en: 'Side Profile Long Lens', vi: 'Mặt nghiêng, ống tele',
+      what: 'Máy đứng xa bên hông, ngang tầm mắt, dùng ống kính dài (tele). Chiều sâu bị nén lại, hậu cảnh mờ, khuôn mặt nghiêng chiếm khung. Hợp cảnh tĩnh, thân mật.',
+      facts: [['Vị trí máy', 'Ngang tầm mắt, nhìn từ bên hông'], ['Ống kính', 'Tele ≈ 85–200 mm'], ['Cảm giác', 'Tĩnh, riêng tư, điện ảnh']],
+      prompt: 'side profile, long lens, shallow depth of field, compressed background',
+      c: { pitch: 0, yaw: 0, roll: 0, P: 3200, E: 1150, tx: 262, ty: -12, tz: 0, fish: 0, dirty: 0 }, lens: 'tele 135mm' },
+    { id: 'topdown', en: 'Top-down / Tilt-down', vi: 'Từ trên nhìn xuống, nghiêng dần',
+      what: 'Máy ở trên cao nhìn chếch xuống khoảng 60°, rồi nghiêng xuống dần theo hành động. Thấy bàn tay, vật dụng trên bàn rõ hơn gương mặt: kể chuyện bằng chi tiết.',
+      facts: [['Vị trí máy', 'Trên cao ≈ 60°, nghiêng xuống'], ['Ống kính', 'Chuẩn ≈ 35–50 mm'], ['Cảm giác', 'Tỉ mỉ, quan sát hành động']],
+      prompt: 'top-down tilt-down shot, high angle over the hands',
+      c: { pitch: 62, yaw: 38, roll: 0, P: 900, E: 560, tx: 190, ty: 30, tz: 20, fish: 0, dirty: 0 }, lens: 'chuẩn 40mm' },
+    { id: 'high', en: 'High Angle', vi: 'Góc cao, toàn cảnh',
+      what: 'Máy bay cao, gần thẳng đứng nhìn xuống cả hai ghế và chiếc bàn. Người nhỏ lại, bối cảnh lớn lên; bố cục như một tấm bản đồ.',
+      facts: [['Vị trí máy', 'Cao, ≈ 80° nhìn xuống'], ['Ống kính', 'Rộng ≈ 24–35 mm'], ['Cảm giác', 'Nhỏ bé, cô lập, bị quan sát']],
+      prompt: 'high angle, overhead wide shot, subjects small in the frame',
+      c: { pitch: 80, yaw: 0, roll: 0, P: 1000, E: 1000, tx: 0, ty: 60, tz: 0, fish: 0, dirty: 0 }, lens: 'rộng 28mm' },
+    { id: 'dirty', en: 'Dirty Frame', vi: 'Khung “bẩn”: vật chắn ở tiền cảnh',
+      what: 'Có một vật mờ chắn ngay trước ống kính (vai, tường, cây, mảng vải) lấn vào rìa khung. Nhân vật được nhìn qua vật chắn đó, tạo chiều sâu và cảm giác nhìn lén.',
+      facts: [['Vị trí máy', 'Ngang tầm mắt, nấp sau vật chắn'], ['Ống kính', 'Chuẩn ≈ 35–50 mm, nét ở hậu cảnh'], ['Cảm giác', 'Nhìn trộm, có chiều sâu']],
+      prompt: 'dirty frame, out-of-focus foreground object, shot through obstruction',
+      c: { pitch: 6, yaw: 52, roll: 0, P: 1000, E: 560, tx: 268, ty: -4, tz: 0, fish: 0, dirty: 1 }, lens: 'chuẩn 40mm' },
+    { id: 'snow', en: 'Snow Level', vi: 'Sát mặt đất (mặt tuyết)',
+      what: 'Máy nằm sát nền, thấp hơn mọi vật. Chiếc bình và cái cốc thành những khối khổng lồ ở tiền cảnh, nhân vật ngồi xa phía sau trên nền trời.',
+      facts: [['Vị trí máy', 'Sát mặt đất, ngang vật dụng'], ['Ống kính', 'Rộng ≈ 24–35 mm'], ['Cảm giác', 'Vật nhỏ hóa khổng lồ, hùng vĩ']],
+      prompt: 'snow level shot, camera on the ground, low wide angle',
+      c: { pitch: -5, yaw: 12, roll: 0, P: 700, E: 380, tx: 20, ty: 100, tz: 40, fish: 0, dirty: 0 }, lens: 'rộng 28mm' },
+    { id: 'xcu', en: 'Extreme Close-up', vi: 'Siêu cận',
+      what: 'Chỉ một chi tiết lấp kín khung: mắt, môi, tàn nhang. Mọi cử động nhỏ đều bị phóng lớn thành kịch tính; thường dùng để nhấn một cảm xúc.',
+      facts: [['Vị trí máy', 'Sát một chi tiết'], ['Ống kính', 'Macro / tele ngắn ≈ 100 mm'], ['Cảm giác', 'Căng, thân mật, nhấn cảm xúc']],
+      prompt: 'extreme close-up, eyes and lips fill the frame, shallow depth of field',
+      c: { pitch: 0, yaw: 90, roll: 0, P: 1500, E: 190, tx: 270, ty: -26, tz: 0, fish: 0, dirty: 0 }, lens: 'macro 100mm' },
+    { id: 'dutch', en: 'Low Dutch Angle', vi: 'Dutch angle thấp: nhìn lên + nghiêng trục',
+      what: 'Máy đặt thấp nhìn lên, lại xoay nghiêng quanh trục ống kính nên đường chân trời bị lệch. Vật ở tiền cảnh đồ sộ, mọi thứ có vẻ bất ổn.',
+      facts: [['Vị trí máy', 'Thấp, nhìn lên, nghiêng trục ≈ 15–20°'], ['Ống kính', 'Rộng ≈ 24 mm'], ['Cảm giác', 'Bất an, căng thẳng, thế giới lệch']],
+      prompt: 'low dutch angle, tilted horizon, foreground object towering',
+      c: { pitch: -15, yaw: 22, roll: 17, P: 800, E: 420, tx: 60, ty: -10, tz: -20, fish: 0, dirty: 0 }, lens: 'rộng 24mm' },
+  ];
+  const N = A.length, $ = (id) => document.getElementById(id);
+
+  // ---------- dựng cảnh 3D ----------
+  const el = (cls, st, p) => { const e = document.createElement('div'); if (cls) e.className = cls; if (st) Object.assign(e.style, st); if (p) p.append(e); return e; };
+  const hsl = (c, l = 1) => `hsl(${c[0]} ${c[1]}% ${Math.max(4, Math.min(96, c[2] * l))}%)`;
+  const tf = (x = 0, y = 0, z = 0, ry = 0) => `translate3d(${x}px,${y}px,${z}px) rotateY(${ry}deg)`;
+  function box(p, { w, h, d, x = 0, y = 0, z = 0, ry = 0, rx = 0, c }) {
+    const g = el('o', { transform: `${tf(x, y, z, ry)} rotateX(${rx}deg)` }, p);
+    [[w, h, `translateZ(${d / 2}px)`, 1], [w, h, `rotateY(180deg) translateZ(${d / 2}px)`, .78], [d, h, `rotateY(90deg) translateZ(${w / 2}px)`, .86],
+     [d, h, `rotateY(-90deg) translateZ(${w / 2}px)`, .92], [w, d, `rotateX(90deg) translateZ(${h / 2}px)`, 1.14], [w, d, `rotateX(-90deg) translateZ(${h / 2}px)`, .6]]
+      .forEach(([fw, fh, t, l]) => el('fc', { width: fw + 'px', height: fh + 'px', left: -fw / 2 + 'px', top: -fh / 2 + 'px', transform: t, background: hsl(c, l) }, g));
+    return g;
+  }
+  function cyl(p, { r, h, x = 0, y = 0, z = 0, c, n = 18, topc, metal }) {
+    const g = el('o', { transform: tf(x, y, z) }, p), sw = 2 * Math.PI * r / n * 1.05;
+    for (let i = 0; i < n; i++) {
+      const a = i * 360 / n, k = metal ? .62 + .55 * Math.pow(Math.max(0, Math.cos((a - 35) * Math.PI / 180)), 2) + .1 * Math.cos(a * Math.PI / 90) : .78 + .3 * Math.cos((a - 40) * Math.PI / 180);
+      el('fc', { width: sw + 'px', height: h + 'px', left: -sw / 2 + 'px', top: -h / 2 + 'px', transform: `rotateY(${a}deg) translateZ(${r}px)`, background: hsl(c, k) }, g);
+    }
+    el('fc', { width: 2 * r + 'px', height: 2 * r + 'px', left: -r + 'px', top: -r + 'px', borderRadius: '50%', transform: `rotateX(90deg) translateZ(${h / 2}px)`, background: hsl(topc || c, 1.1) }, g);
+    return g;
+  }
+  const STEEL = [210, 8, 66], BROWN = [14, 58, 30], WOOD = [26, 52, 34], BLUE = [222, 78, 30], SKIN = [18, 62, 80], HAIR = [16, 88, 50];
+  function mug(p, x, y, z) { cyl(p, { r: 19, h: 34, x, y, z, c: STEEL, metal: 1, topc: [20, 20, 12] }); }
+  function chair(p, x, ry) {
+    const g = el('o', { transform: tf(x, 0, 0, ry) }, p);
+    box(g, { w: 124, h: 60, d: 116, y: 140, z: -4, c: BROWN }); box(g, { w: 124, h: 120, d: 24, y: 58, z: -52, c: BROWN });
+    box(g, { w: 18, h: 40, d: 100, x: -62, y: 92, c: [14, 55, 24] }); box(g, { w: 18, h: 40, d: 100, x: 62, y: 92, c: [14, 55, 24] });
+    return g;
+  }
+  function figure(p, x, ry, o) {
+    const g = el('o', { transform: tf(x, 0, 0, ry) }, p);
+    [-17, 17].forEach((s) => { box(g, { w: 26, h: 24, d: 84, x: s, y: 98, z: 28, c: o.legs }); box(g, { w: 24, h: 62, d: 24, x: s, y: 140, z: 66, c: o.legs }); box(g, { w: 24, h: 10, d: 36, x: s, y: 166, z: 74, c: [20, 20, 12] }); });
+    box(g, { w: 74, h: 96, d: 44, y: 52, z: -2, c: o.top }); box(g, { w: 52, h: 9, d: 36, y: 6, z: -2, c: o.collar });
+    [-1, 1].forEach((s) => { box(g, { w: 17, h: 46, d: 17, x: s * 42, y: 32, z: 4, c: o.top }); box(g, { w: 15, h: 15, d: 50, x: s * 30, y: 44, z: 34, c: o.top }); box(g, { w: 13, h: 13, d: 14, x: s * 22, y: 38, z: 62, c: SKIN }); });
+    cyl(g, { r: 18, h: 34, y: 28, z: 64, c: STEEL, metal: 1, topc: [20, 20, 12] });
+    const head = el('o', { transform: tf(0, 0, 0) }, g);
+    cyl(head, { r: 30, h: 56, y: -28, c: SKIN, n: 16 });
+    cyl(head, { r: 34, h: 42, y: -38, z: -6, c: o.hair, n: 16 });
+    box(head, { w: 62, h: 12, d: 8, y: -54, z: 28, c: o.hair });
+    box(head, { w: 8, h: 13, d: 10, y: -24, z: 34, c: SKIN }); box(head, { w: 11, h: 3, d: 4, x: -9, y: -33, z: 32, c: [10, 20, 20] }); box(head, { w: 11, h: 3, d: 4, x: 9, y: -33, z: 32, c: [10, 20, 20] }); box(head, { w: 18, h: 5, d: 4, y: -11, z: 31, c: [3, 50, 62] });
+    if (o.cap) cyl(head, { r: 35, h: 14, y: -63, z: -2, c: [40, 30, 86], n: 16 });
+    const face = el('fc', { width: '46px', height: '34px', left: '-23px', top: '-42px', transform: 'translateZ(30.6px)', borderRadius: '10px 10px 18px 18px', backgroundColor: hsl(SKIN),
+      backgroundImage: 'radial-gradient(circle at 22% 62%,rgba(255,120,110,.35) 0 6px,transparent 7px),radial-gradient(circle at 78% 62%,rgba(255,120,110,.35) 0 6px,transparent 7px),' +
+        [[14, 40], [20, 48], [26, 44], [34, 50], [40, 42], [72, 40], [66, 48], [58, 44], [50, 52], [84, 46], [30, 36], [62, 36]].map(([a, b]) => `radial-gradient(circle at ${a}% ${b}%,#b4604a 0 1px,transparent 1.5px)`).join(',') } , head);
+    el('', { position: 'absolute', left: '8px', top: '10px', width: '10px', height: '3px', borderRadius: '3px', background: '#3a2a26' }, face); el('', { position: 'absolute', right: '8px', top: '10px', width: '10px', height: '3px', borderRadius: '3px', background: '#3a2a26' }, face);
+    el('', { position: 'absolute', left: '19px', top: '15px', width: '8px', height: '8px', borderRadius: '50%', background: 'rgba(160,80,60,.28)' }, face);
+    el('', { position: 'absolute', left: '15px', top: '26px', width: '16px', height: '4px', borderRadius: '4px', background: '#c9756e' }, face);
+    return g;
+  }
+  function build(w) {
+    const gr = el('cx-ground', null, w);
+    const sh = (x, z, rw, rd) => el('cx-decal', { left: x - rw / 2 + 'px', top: z - rd / 2 + 'px', width: rw + 'px', height: rd + 'px', background: 'radial-gradient(closest-side,rgba(40,50,90,.38),transparent)', transform: 'translateY(169.4px) rotateX(90deg)' }, w);
+    sh(0, 0, 330, 330); sh(-300, 0, 260, 240); sh(300, 0, 260, 240);
+    const fp = el('cx-decal', { left: '-900px', top: '-700px', width: '1800px', height: '1400px', background: 'radial-gradient(closest-side,#fff 40%,rgba(255,255,255,0))', transform: 'translateY(169.2px) rotateX(90deg)' }, w);
+    // bàn
+    const t = el('o', null, w);
+    box(t, { w: 190, h: 14, d: 190, y: 56, c: WOOD });
+    [[-80, -80], [80, -80], [-80, 80], [80, 80]].forEach(([x, z]) => box(t, { w: 12, h: 106, d: 12, x, y: 117, z, c: [24, 48, 26] }));
+    mug(t, -42, 32, 24);
+    cyl(t, { r: 26, h: 116, x: 48, y: -9, z: -26, c: STEEL, metal: 1, topc: STEEL }); cyl(t, { r: 27, h: 22, x: 48, y: -78, z: -26, c: [0, 0, 18], topc: [0, 0, 22] });
+    chair(w, 300, -90); chair(w, -300, 90);
+    figure(w, 300, -90, { legs: [36, 30, 64], top: BLUE, collar: [28, 40, 52], hair: HAIR, cap: true });
+    figure(w, -300, 90, { legs: [38, 34, 66], top: [40, 28, 74], collar: [0, 0, 94], hair: [24, 30, 14], cap: false });
+    [[-150, 162, 260, 46], [-40, 164, 310, 38], [130, 162, 250, 44], [-230, 163, 120, 34]].forEach(([x, y, z, r]) => cyl(w, { r, h: 20, x, y, z, c: [215, 10, 98], n: 22 }));
+  }
+  const world = $('world'), stage = $('stage'), sky = $('sky'), persp = $('persp'), lens = $('lens');
+  build(world);
+  sky.innerHTML = '<svg viewBox="0 0 1600 700" preserveAspectRatio="none" width="100%" style="position:absolute;left:0;bottom:0;height:35%;filter:blur(var(--bgblur,0px))"><defs><linearGradient id="mt" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8eef9"/><stop offset=".55" stop-color="#9fb0cf"/><stop offset="1" stop-color="#6e7ea6"/></linearGradient></defs><path d="M0 700V420L130 300 230 380 360 180 470 330 560 260 700 460 820 330 960 130 1060 330 1180 250 1300 420 1420 300 1600 460V700Z" fill="url(#mt)"/><path d="M0 700V560L200 470 380 560 560 440 760 580 960 480 1160 590 1360 470 1600 570V700Z" fill="#c9d3e6" opacity=".85"/></svg>';
+
+  // ---------- bản đồ méo fisheye (vẽ bằng canvas, nạp vào feImage) ----------
+  (() => {
+    const S = 256, c = document.createElement('canvas'); c.width = c.height = S; const x = c.getContext('2d'), im = x.createImageData(S, S);
+    for (let j = 0; j < S; j++) for (let i = 0; i < S; i++) {
+      const u = (i + .5) / S * 2 - 1, v = (j + .5) / S * 2 - 1, r2 = u * u + v * v, k = .5, o = (j * S + i) * 4;
+      im.data[o] = Math.max(0, Math.min(255, 128 - k * u * r2 * 127)); im.data[o + 1] = Math.max(0, Math.min(255, 128 - k * v * r2 * 127)); im.data[o + 2] = 128; im.data[o + 3] = 255;
+    }
+    x.putImageData(im, 0, 0); $('cx-map').setAttribute('href', c.toDataURL());
+  })();
+
+  // ---------- nội suy tham số theo vị trí cuộn ----------
+  const KEYS = ['pitch', 'yaw', 'roll', 'P', 'E', 'tx', 'ty', 'tz', 'fish', 'dirty'];
+  const sm = (t) => t * t * (3 - 2 * t), clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function at(p) {                                           // p ∈ [0, N-1]: nửa đầu đoạn giữ nguyên góc, nửa sau chuyển sang góc kế
+    const i = clamp(Math.floor(p), 0, N - 1), f = p - i, j = Math.min(N - 1, i + 1);
+    const k = i === j ? 0 : (reduce ? (f > .75 ? 1 : 0) : sm(clamp((f - .5) / .5, 0, 1)));
+    const out = {}; KEYS.forEach((key) => { out[key] = A[i].c[key] + (A[j].c[key] - A[i].c[key]) * k; });
+    out.i = i + (k > .5 ? 1 : 0); out.k = k; return out;
+  }
+  let W = 900, H = 560, shown = -1;
+  const lab = $('lab'), cnt = $('cnt'), tele = $('tele'), num = $('num'), nm = $('name'), what = $('what'), facts = $('facts'), prompt = $('prompt'), dots = $('dots');
+  function render(p) {
+    const s = at(p), k = Math.min(1, Math.min(W, H * 1.5) / 900), P = s.P * k, sc = P / s.E;   // k: thu cảnh khi sân khấu nhỏ (điện thoại)
+    persp.style.perspective = P + 'px';
+    world.style.transform = `scale3d(${sc},${sc},${sc}) rotateZ(${s.roll}deg) rotateX(${-s.pitch}deg) rotateY(${s.yaw}deg) translate3d(${-s.tx}px,${-s.ty}px,${-s.tz}px)`;
+    const hy = H / 2 - P * Math.tan(clamp(s.pitch, -80, 89.9) * Math.PI / 180);   // đường chân trời trên màn
+    sky.style.top = hy - 2 * H + 'px'; sky.style.height = 3 * H + 'px';
+    sky.style.transformOrigin = `50% ${2.5 * H - hy}px`; sky.style.transform = `translateX(${-s.yaw * 3.2 * k}px) rotate(${s.roll}deg)`;
+    sky.style.background = `linear-gradient(to bottom,#6f86c0 0,#b9a9c9 ${2 * H * .55}px,#f2c3a8 ${2 * H}px,#dce4f1 ${2 * H}px,#eef2f9 100%)`;
+    const nz = Math.max(0, 1 - Math.abs(s.pitch) / 20); sky.style.setProperty('--bgblur', (s.P > 2000 ? 5 : 0) + 'px');
+    stage.style.setProperty('--dirty', s.dirty.toFixed(3));
+    const fx = s.fish, R = (1 - fx) * Math.hypot(W, H) / 2 * 1.06 + fx * Math.min(W, H) / 2 * .97;
+    lens.style.background = `radial-gradient(circle at 50% 50%, transparent ${R - 2}px, #000 ${R}px)`;
+    cam.style.filter = fx > .02 ? 'url(#cx-fish)' : '';
+    if (fx > .02) $('cx-disp').setAttribute('scale', (fx * W * .8).toFixed(1));
+    tele.innerHTML = `<span><b>PITCH</b>${s.pitch.toFixed(0)}°</span><span><b>YAW</b>${s.yaw.toFixed(0)}°</span><span><b>ROLL</b>${s.roll.toFixed(0)}°</span><span><b>LENS</b>${A[s.i].lens}</span>`;
+    if (s.i !== shown) { shown = s.i; const a = A[s.i];
+      lab.textContent = a.en; cnt.textContent = String(s.i + 1).padStart(2, '0') + ' / ' + String(N).padStart(2, '0');
+      num.innerHTML = String(s.i + 1).padStart(2, '0') + '<small>/ 0' + N + '</small>'; nm.textContent = a.en + ' — ' + a.vi; what.textContent = a.what;
+      facts.innerHTML = a.facts.map(([t, d]) => `<div><dt>${t}</dt><dd>${d}</dd></div>`).join(''); prompt.textContent = 'prompt: ' + a.prompt;
+      [...dots.children].forEach((b, n) => b.setAttribute('aria-current', n === s.i)); }
+  }
+  const cam = $('cam');
+
+  // ---------- cuộn + tự chạy ----------
+  const track = $('track'), per = () => innerHeight * .8;
+  const total = () => per() * (N - 1 + .6) + innerHeight, pos = () => clamp(-track.getBoundingClientRect().top / per(), 0, N - 1);
+  const size = () => { track.style.height = total() + 'px'; const r = stage.getBoundingClientRect(); W = r.width; H = r.height; };
+  const top0 = () => track.getBoundingClientRect().top + scrollY;
+  const goto = (n) => scrollTo({ top: top0() + n * per(), behavior: 'smooth' });
+  let play = !reduce, last = 0, userHold = 0, pv = -1;
+  function tick(t) {
+    const dt = Math.min(64, t - (last || t)); last = t;
+    if (play && t > userHold) {
+      const y = scrollY + per() / 3300 * dt, end = top0() + (N - 1 + .5) * per();
+      if (y >= end) scrollTo(0, top0() - 1); else scrollTo(0, y);     // hết 8 góc thì quay lại góc đầu
+    }
+    const p = pos(); if (p !== pv || shown < 0) { pv = p; render(p); }
+    requestAnimationFrame(tick);
+  }
+  A.forEach((a, n) => { const b = document.createElement('button'); b.type = 'button'; b.innerHTML = '<span>' + (n + 1) + '</span>'; b.title = a.en; b.onclick = () => { setPlay(false); goto(n); }; dots.append(b); });
+  const pb = $('play'); function setPlay(v) { play = v; pb.setAttribute('aria-pressed', v); pb.textContent = v ? '❚❚ Tạm dừng' : '▶ Tự chạy'; }
+  pb.onclick = () => setPlay(!play); setPlay(play);
+  ['wheel', 'touchstart', 'keydown'].forEach((e) => addEventListener(e, () => { if (play) setPlay(false); }, { passive: true }));
+  $('list').innerHTML = A.map((a, n) => `<div><b>${String(n + 1).padStart(2, '0')} · ${a.en}</b>${a.what}</div>`).join('');
+  addEventListener('resize', () => { size(); pv = -1; }); size();
+  const m = /^#a(\d)$/.exec(location.hash); if (m) { setPlay(false); scrollTo(0, top0() + (clamp(+m[1], 1, N) - 1) * per()); }   // #a3 = nhảy tới góc 3 (dùng cho test/chụp)
+  window.__cx = { render, N, goto, A };
+  requestAnimationFrame(tick);
+})();
+</script>
+<script src="/search.js?v=535d2a8fd7" defer></script><script src="/stats.js?v=535d2a8fd7" defer></script></body></html>

@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Sample three.quarks — uiux-asset</title>
-<link rel="stylesheet" href="../aw.css?v=fcc6463dbe">
+<link rel="stylesheet" href="../aw.css?v=535d2a8fd7">
 <link rel="stylesheet" href="_m.css">
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/","three.quarks":"https://cdn.jsdelivr.net/npm/three.quarks@0.17.1/dist/three.quarks.esm.js","quarks.core":"https://cdn.jsdelivr.net/npm/quarks.core@0.17.1/dist/quarks.core.esm.js"}}</script>
 <style>.m-bar button[aria-pressed=true]{background:#2a6df4;color:#fff;border-color:#2a6df4}.m-bar input[type=range]{vertical-align:middle}</style>
 </head>
 <body>
-<main class="aw-wrap"><script src="../aw.js?v=fcc6463dbe"></script>
+<main class="aw-wrap"><script src="../aw.js?v=535d2a8fd7"></script>
 <div class="aw-crumb">
 <h1>three.quarks <span class="aw-tag aw-tag--small aw-tag--solid-green m-badge">THƯ VIỆN THẬT</span></h1>
 <span>Chạy <code>three.quarks@0.17.1</code> thật (<code>BatchedRenderer</code> + <code>ParticleSystem</code>): 7 tab = lửa, khói, tia lửa vệt, hình dạng phát, lực/hành vi, hạt mesh 3D, mưa kéo dài. Rê chuột để phát hạt. · <a href="https://github.com/Alchemist0823/three.quarks" target="_blank" rel="noopener">Alchemist0823/three.quarks</a> · <a href="./">← Motion</a></span>
@@ -149,5 +149,5 @@ select(location.hash.slice(1));
 let last = 0;
 renderer.setAnimationLoop((ms) => { const t = ms / 1000, dt = Math.min(t - last, .05); last = t; cur.tick?.(t, dt); cur.batch.update(dt); renderer.render(cur.scene, cur.camera); });
 </script>
-<script src="_g.js?v=fcc6463dbe" defer></script>
+<script src="_g.js?v=535d2a8fd7" defer></script>
 </body></html>
