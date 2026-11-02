@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Font family và palette từ reel «Fresh &amp; Latest Fonts» — uiux-asset</title>
+<meta name="description" content="9 font trong một reel, mỗi font một family card: bản gần giống miễn phí (Google Fonts), thang chữ, đoạn tiếng Việt, mã CSS, bảng màu lấy từ khung hình và trạng thái giấy phép của font thật.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Baloo+2:wght@800&family=Be+Vietnam+Pro:wght@400;600&family=Black+Ops+One&family=Inter+Tight:wght@600&family=Lexend+Exa:wght@600&family=Nunito:wght@900&family=Plus+Jakarta+Sans:wght@800&family=Playfair+Display:wght@800&family=Poppins:wght@700&display=swap">
+<link rel="stylesheet" href="../aw.css?v=7cc303d521">
+<link rel="stylesheet" href="../motion/_m.css">
+<style>
+.ff-bar { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; margin: 4px 0 8px; }
+.ff-bar input { flex: 1 1 260px; min-width: 0; font: inherit; padding: 10px 16px; border-radius: 99px; border: 1px solid currentColor; background: transparent; color: inherit; }
+.ff-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 520px), 1fr)); gap: 22px; }
+.ff-card { min-width: 0; border: 1px solid color-mix(in srgb, currentColor 16%, transparent); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; background: var(--aw-nf-bg-2, transparent); }
+.ff-reel { display: block; width: 100%; aspect-ratio: 720 / 252; object-fit: cover; background: #2b1d17; }
+.ff-body { padding: 16px 18px 18px; display: grid; gap: 14px; }
+.ff-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; }
+.ff-head h3 { margin: 0; font-size: 1.1em; } .ff-head small { opacity: .65; }
+.ff-chip { margin-left: auto; font: 600 12px/1 ui-monospace, Menlo, monospace; padding: 5px 10px; border-radius: 99px; white-space: nowrap; }
+.ff-chip.free { background: color-mix(in srgb, #2fa86a 24%, transparent); } .ff-chip.paid { background: color-mix(in srgb, #d98a2b 26%, transparent); } .ff-chip.unverified { background: color-mix(in srgb, #8a8a8a 26%, transparent); }
+.ff-spec { padding: 18px 16px; border-radius: 12px; background: var(--ff-bg, #2a1d19); color: #fff; overflow: hidden; }
+.ff-big { margin: 0; font-size: clamp(38px, 9vw, 64px); overflow-wrap: anywhere; }
+.ff-scale { display: grid; gap: 6px; margin-top: 10px; }
+.ff-scale div { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ff-vi { margin: 12px 0 0; font-size: 18px; line-height: 1.35; }
+.ff-body-t { font-family: 'Be Vietnam Pro', system-ui, sans-serif; font-size: 14px; line-height: 1.5; opacity: .8; margin-top: 10px; }
+.ff-glyph { margin-top: 10px; font-size: 22px; line-height: 1.3; word-break: break-all; opacity: .9; }
+.ff-sw { display: grid; grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); gap: 8px; }
+.ff-sw button { all: unset; cursor: pointer; border-radius: 10px; overflow: hidden; border: 1px solid color-mix(in srgb, currentColor 18%, transparent); font: 12px/1.35 ui-monospace, Menlo, monospace; }
+.ff-sw button:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+.ff-sw i { display: block; height: 44px; } .ff-sw span { display: block; padding: 5px 7px 6px; } .ff-sw em { display: block; font-style: normal; font-family: 'Be Vietnam Pro', sans-serif; opacity: .65; font-size: 11px; }
+.ff-meta { font-size: 13px; line-height: 1.55; opacity: .85; margin: 0; }
+.ff-meta a { color: inherit; }
+.ff-code { margin: 0; padding: 12px 14px; border-radius: 10px; background: color-mix(in srgb, currentColor 8%, transparent); font: 12.5px/1.55 ui-monospace, Menlo, monospace; overflow-x: auto; white-space: pre; position: relative; }
+.ff-code button { position: absolute; top: 6px; right: 6px; font: 11px ui-monospace, Menlo, monospace; padding: 3px 9px; border-radius: 99px; border: 1px solid currentColor; background: transparent; color: inherit; cursor: pointer; }
+.ff-toast { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); background: #111; color: #fff; padding: 8px 16px; border-radius: 99px; font: 13px ui-monospace, Menlo, monospace; opacity: 0; transition: opacity .2s; pointer-events: none; z-index: 99; } .ff-toast.on { opacity: 1; }
+.ff-poster { border-radius: 18px; padding: clamp(18px, 4vw, 34px); background: #2b1d17; color: #fff; display: grid; gap: 14px; }
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=7cc303d521"></script>
+<div class="aw-crumb">
+<h1>Font family và palette. 9 font từ một reel <span class="aw-tag aw-tag--small aw-tag--solid-green m-badge">BẢN GẦN GIỐNG MIỄN PHÍ</span></h1>
+<span>Nguồn: reel «Fresh &amp; Latest Fonts» của UIUXMaestro, 9 ảnh chụp màn hình do owner gửi. Ảnh chỉ cho thấy tên và kiểu chữ, không có tệp font. Mỗi font có một family card: bản gần giống từ Google Fonts (giấy phép OFL), thang chữ, đoạn tiếng Việt, mã CSS, bảng màu lấy từ khung hình, và trạng thái giấy phép của font thật.</span>
+</div>
+
+<div class="ff-bar"><input id="txt" type="text" value="" placeholder="Gõ chữ để thử trên cả 9 family (để trống = tên font)" aria-label="Chữ thử" maxlength="60"><span class="m-status" id="cnt"></span></div>
+<div class="ff-grid" id="grid"></div>
+
+<h2 class="aw-heading-hr">Ghép thử: một bộ chữ + màu</h2>
+<p class="m-note" style="margin-top:0">Chọn một family để xem nó đặt chung với bảng màu của chính khung hình đó.</p>
+<div class="m-bar" id="pick" role="group" aria-label="Chọn family"></div>
+<div class="ff-poster" id="poster"></div>
+
+<h2 class="aw-heading-hr">Đọc kỹ trước khi dùng</h2>
+<ul class="m-note">
+<li><b>«Gần giống» nghĩa là cùng tinh thần, không phải cùng nét.</b> Tôi chọn font Google theo hình chữ thấy trong ảnh; không so được với font thật vì không có tệp.</li>
+<li><b>Trạng thái giấy phép là kết quả tìm web,</b> chủ yếu từ trang bán hoặc trang tải của bên thứ ba, không phải điều khoản gốc. «Chưa kiểm được» là trung tính, không có nghĩa là trả phí. Trước khi dùng thương mại, mở trang nhà phát hành và đọc EULA.</li>
+<li><b>Không có tệp font thật nào nằm trên site này.</b> Chỉ Poppins là font thật (OFL) và các bản gần giống, tất cả nạp từ Google Fonts.</li>
+<li><b>Màu lấy từ video mờ,</b> nên là màu của khung hình (nâu, xanh màn hình, ánh đèn), không phải bảng màu thương hiệu của font. Xanh lá và trắng là màu chữ thật trong reel.</li>
+<li>Chữ có dấu tiếng Việt: chỉ Poppins không có subset vietnamese trên Google Fonts; thẻ của nó ghi rõ và lấy dấu từ Be Vietnam Pro. Tám font còn lại đều có, và e2e kiểm subset đã nạp thật.</li>
+</ul>
+</main>
+<div class="ff-toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+(async () => {
+  const $ = (s, r = document) => r.querySelector(s), esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const D = await (await fetch('families.json')).json(), STATE = { free: 'Miễn phí', paid: 'Trả phí (thương mại)', unverified: 'Chưa kiểm được' };
+  const BODY = D.body.family, VI = 'Tiếng Việt: ứ ừ ữ ự ở ỡ ợ ằ ẵ ặ ề ễ ệ — Hà Nội, Đà Nẵng, mùa thu';
+  const stack = (f) => `"${f.look.family}", ${f.look.vi ? '' : `"${BODY}", `}system-ui, sans-serif`;
+  const dsp = (f) => `font-family: ${stack(f).replace(/"/g, "'")}; font-weight: ${f.look.weight}; letter-spacing: ${f.ls}; line-height: ${f.lh};${f.caps ? ' text-transform: uppercase;' : ''}`;
+  const lum = (h) => { const n = parseInt(h.slice(1), 16), c = [n >> 16, (n >> 8) & 255, n & 255].map((v) => v / 255); return .2126 * c[0] + .7152 * c[1] + .0722 * c[2]; };
+  const code = (f) => `:root {\n  --font-display: ${stack(f)};\n  --font-body: "${BODY}", system-ui, sans-serif;\n}\n.display { font: ${f.look.weight} clamp(40px, 9vw, 72px)/${f.lh} var(--font-display); letter-spacing: ${f.ls};${f.caps ? ' text-transform: uppercase;' : ''} }\nh2 { font: ${f.look.weight} 32px/${f.lh} var(--font-display); }\nbody { font: 400 16px/1.6 var(--font-body); }`;
+  const toast = (m) => { const t = $('#toast'); t.textContent = m; t.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('on'), 1400); };
+  const copy = async (s, what) => { try { await navigator.clipboard.writeText(s); toast('Đã chép ' + what); } catch { toast('Không chép được: ' + s.slice(0, 24)); } };
+  const bg = (f) => f.palette[0].hex;
+  $('#grid').innerHTML = D.families.map((f) => `<article class="ff-card" data-slug="${f.slug}">
+    <img class="ff-reel" src="shots/${f.slug}.webp" alt="Khung hình reel: ${esc(f.name)}" loading="lazy">
+    <div class="ff-body">
+      <div class="ff-head"><h3>${esc(f.name)}</h3><small>${esc(f.tag)}</small><span class="ff-chip ${f.status.state}" title="Trạng thái font thật">${STATE[f.status.state]}</span></div>
+      <div class="ff-spec" style="--ff-bg:${bg(f)}">
+        <p class="ff-big" data-sample style="${dsp(f)}">${esc(f.name)}</p>
+        <div class="ff-scale" style="${dsp(f)}"><div style="font-size:40px">Display 40 · ${esc(f.tag)}</div><div style="font-size:28px">Heading 28 · Thiết kế giao diện</div><div style="font-size:20px">Subhead 20 · ${esc(f.look.family)} ${f.look.weight}</div></div>
+        <p class="ff-vi" style="${dsp(f)}" data-vi>${f.look.vi ? VI : 'Tiếng Việt: font này không có dấu, dấu lấy từ ' + BODY + ' — Hà Nội, Đà Nẵng, mùa thu'}</p>
+        <div class="ff-body-t">Thân bài ${esc(BODY)} 400: Chữ thân dễ đọc cạnh chữ tiêu đề; ghép một font hiển thị đậm với một font thân trung tính là cách thường dùng.</div>
+        <div class="ff-glyph" style="${dsp(f)}">ABCDEFGHIJKLM NOPQRSTUVWXYZ abcdefghijklm nopqrstuvwxyz 0123456789 &amp;!?@#</div>
+      </div>
+      <p class="ff-meta"><b>${f.real ? 'Font thật' : 'Gần giống'}:</b> ${esc(f.look.family)} ${f.look.weight} (Google Fonts, OFL)${f.real ? '' : ', không phải font gốc'}. ${esc(f.note)}</p>
+      <p class="ff-meta"><b>Font thật, giấy phép:</b> ${esc(f.status.text)}${f.status.sources.length ? ' Trang đã xem: ' + f.status.sources.map((s) => `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.t)}</a>`).join(', ') + '.' : ' Chưa có trang nào xem được.'}</p>
+      <div class="ff-sw">${f.palette.map((c) => `<button type="button" data-hex="${c.hex}" aria-label="Chép màu ${c.hex}, ${c.role}"><i style="background:${c.hex}"></i><span style="color:inherit">${c.hex}<em>${esc(c.role)}</em></span></button>`).join('')}</div>
+      <pre class="ff-code"><button type="button" data-copy>Chép CSS</button>${esc(code(f))}</pre>
+    </div></article>`).join('');
+  $('#cnt').textContent = D.families.length + ' family · ' + D.families.reduce((a, f) => a + f.palette.length, 0) + ' màu';
+  document.addEventListener('click', (e) => {
+    const h = e.target.closest('[data-hex]'); if (h) return copy(h.dataset.hex, h.dataset.hex);
+    const c = e.target.closest('[data-copy]'); if (c) { const f = D.families.find((x) => x.slug === c.closest('.ff-card').dataset.slug); copy(code(f), 'CSS ' + f.name); }
+  });
+  $('#txt').addEventListener('input', (e) => document.querySelectorAll('[data-sample]').forEach((p, i) => { p.textContent = e.target.value || D.families[i].name; }));
+  // ghép thử
+  const P = $('#poster'), pk = $('#pick');
+  pk.innerHTML = D.families.map((f) => `<button type="button" data-p="${f.slug}">${esc(f.name)}</button>`).join('');
+  const show = (slug) => { const f = D.families.find((x) => x.slug === slug), pal = f.palette, bgc = pal[0].hex, fg = lum(bgc) < .5 ? '#fff' : '#111', acc = pal.find((c) => c.role.startsWith('Xanh lá')).hex;
+    P.style.background = bgc; P.style.color = fg;
+    P.innerHTML = `<div style="font:600 13px 'Be Vietnam Pro';letter-spacing:.08em;text-transform:uppercase;color:${acc}">Fresh &amp; Latest Fonts</div><div style="font-size:clamp(44px,10vw,92px);${dsp(f)}">${esc(f.name)}</div><div style="font:400 18px/1.5 '${BODY}';max-width:56ch;opacity:.9">${f.look.vi ? 'Thiết kế giao diện đẹp bắt đầu từ chữ: chọn một family, đặt cạnh bảng màu của nó, rồi thử.' : 'Chữ hiển thị không có dấu tiếng Việt; phần này dùng ' + BODY + '.'}</div><div style="display:flex;flex-wrap:wrap;gap:8px">${pal.map((c) => `<span style="width:44px;height:44px;border-radius:50%;background:${c.hex};border:2px solid ${fg}33" title="${c.hex}"></span>`).join('')}</div><div><span style="display:inline-block;padding:10px 20px;border-radius:99px;background:${acc};color:#111;font:600 15px '${BODY}'">Dùng family này</span></div>`;
+    pk.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.p === slug)); };
+  pk.addEventListener('click', (e) => { const b = e.target.closest('[data-p]'); if (b) show(b.dataset.p); });
+  show(D.families[0].slug);
+  document.documentElement.dataset.ready = '1';
+})();
+</script>
+<script src="/stats.js?v=7cc303d521" defer></script>
+</body></html>
