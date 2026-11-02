@@ -415,9 +415,14 @@
    "install": "npx skills add muthuishere/hand-drawn-diagrams  (thêm -g để cài toàn cục)",
    "note": "Không có repo nào tên đúng 'drawn-diagrams'. Chọn hand-drawn-diagrams vì khớp nhất: Excalidraw vẽ tay, có animated SVG, dùng cho Claude Code. Hai ứng viên kia mạnh về sao nhưng thiên về sơ đồ kiến trúc. Nên người duyệt xác nhận lại. API license báo NOASSERTION nhưng LICENSE thực là MIT.",
    "reason": "Nguồn chỉ ở mức «gợi ý» (tên không khớp hẳn với skill trong bài), nên theo quyết định của chủ dự án chỉ để liên kết, không chép. Bản chép đã gỡ.",
+   "preview": {
+    "kind": "link",
+    "src": "https://raw.githubusercontent.com/muthuishere/hand-drawn-diagrams/main/assets/diagram.png",
+    "label": "assets/diagram.png trong README của repo (không chép về site vì skill ở dạng chỉ liên kết)",
+    "credit": "muthuishere/hand-drawn-diagrams, MIT"
+   },
    "tagline": "Truyền thông trực quan",
-   "desc_vi": "Vẽ sơ đồ, lưu đồ phong cách vẽ tay có chuyển động, dễ hiểu và dễ nhớ.",
-   "no_preview": "chưa có"
+   "desc_vi": "Vẽ sơ đồ, lưu đồ phong cách vẽ tay có chuyển động, dễ hiểu và dễ nhớ."
   },
   {
    "slug": "canvas-design",
@@ -548,18 +553,23 @@
    "pushed": "2026-10-18T20:20:39Z",
    "path": "skills/youtube-thumbnail",
    "vendored": true,
-   "bytes": 9522,
+   "bytes": 129411,
    "reason": "",
    "install": "/plugin marketplace add charlie947/social-media-skills  rồi  /plugin install social-media-skills",
    "note": "Mô tả khớp: tạo prompt thumbnail có thương hiệu theo nguyên tắc CTR cao, đầu ra là prompt cho Gemini, không tự sinh ảnh. Cùng repo với reels-scripting nên nhiều khả năng bài đăng lấy chung một nguồn. Nhiều repo nhỏ cùng tên tồn tại, nhưng chỉ repo này đi cùng reels-scripting.",
    "commit": "10ca79c0ec0be0f7654d19cd4f0c86b6fa6ed23b",
+   "preview": {
+    "kind": "generated",
+    "src": "preview/sample.jpg",
+    "label": "output mẫu: ảnh bìa 1280×720 «Nước lớn sắp tới» dựng bằng HTML theo quy tắc của SKILL.md (skill commit 10ca79c0, 02/11/2026); không gọi AI tạo ảnh; mã nguồn preview/sample.html",
+    "credit": "tự tạo, không phải ảnh của tác giả skill"
+   },
    "tagline": "Thiết kế thumbnail",
    "desc_vi": "Tạo prompt thumbnail tối ưu để tăng lượt nhấp và khơi gợi sự tò mò.",
-   "file_count": 3,
+   "file_count": 5,
    "skill_md": [
     "SKILL.md"
-   ],
-   "no_preview": "chưa có"
+   ]
   },
   {
    "slug": "gpt-image-2",
