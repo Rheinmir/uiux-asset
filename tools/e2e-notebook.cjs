@@ -64,6 +64,12 @@ const base = opt('base', 'http://127.0.0.1:8791'), frames = opt('frames', '');
     await p.click('[data-mode=erase]'); await drag([[160, 195], [160, 215]]); assert.strictEqual(await S(), 4, 'tẩy xoá đúng 1 nét');
     await p.click('[data-act=undoDot]'); assert.strictEqual(await S(), 3, 'hoàn tác'); await shot(3);
   });
+  await step('dấu tiếng Việt: font viết tay + tiêu đề nạp subset vietnamese', async () => {
+    await p.click('button[data-go=weekly]'); await p.waitForTimeout(500);
+    const T = 'ứ ừ ữ ự ở ỡ ợ ằ ẵ ặ ề ễ ệ'; await p.locator('.day.today input[data-add]').fill(T); await p.keyboard.press('Enter');
+    const r = await p.evaluate(async () => { await document.fonts.ready; const vi = (fam) => [...document.fonts].some((f) => f.family.replace(/["']/g, '') === fam && f.status === 'loaded' && /1EA0-1EF9/i.test(f.unicodeRange)); return { hand: vi('Patrick Hand'), title: vi('Oswald'), shown: [...document.querySelectorAll('.day.today span.hw')].pop().textContent }; });
+    assert(r.hand, 'font viết tay chưa nạp subset vietnamese'); assert(r.title, 'font tiêu đề chưa nạp subset vietnamese'); assert.strictEqual(r.shown, T); await shot(3);
+  });
   await step('tải lại: dữ liệu còn', async () => {
     await p.reload({ waitUntil: 'load' }); await p.waitForTimeout(700);
     assert.strictEqual(await p.evaluate(() => JSON.parse(localStorage.getItem('nw-v1')).dots.r.length), 3);

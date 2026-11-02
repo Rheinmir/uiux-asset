@@ -9,5 +9,7 @@ assert(rd('aw.js').includes("['notebook/', 'Sổ tay']"), 'aw.js NAV thiếu S�
 assert(rd('tools/stamp-assets.py').includes('notebook/index.html'), 'stamp-assets thiếu notebook');
 assert(fs.statSync(R('notebook/demo.gif')).size > 50e3 && fs.statSync(R('notebook/demo.gif')).size < 3e6, 'demo.gif ngoài khoảng 50 KB–3 MB');
 assert(fs.statSync(R('notebook/index.html')).size < 1024 * 1024, 'trang quá 1 MB');
+assert(!/Caveat|Bebas/.test(h), 'còn font không có subset vietnamese (Caveat/Bebas Neue): vỡ dấu «ứ ợ ệ»');
+assert(h.includes('Patrick+Hand') && h.includes('Oswald'), 'thiếu font viết tay/tiêu đề có subset vietnamese');
 assert(fs.existsSync(R('tools/e2e-notebook.cjs')), 'thiếu e2e');
 console.log('test-notebook: ok');
