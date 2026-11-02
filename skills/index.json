@@ -323,15 +323,20 @@
    "vendored": true,
    "install": "",
    "note": "Khớp rõ: frontmatter name 'design-auditor', kiểm 19 quy tắc (độ tương phản, a11y, spacing, token...). SKILL.md ~160KB + 15 tệp references, 2 ngôn ngữ (EN/KR). · Chép theo quyết định của chủ dự án: README ghi MIT là đủ.",
-   "bytes": 377965,
+   "bytes": 583724,
+   "preview": {
+    "kind": "generated",
+    "src": "preview/sample.png",
+    "label": "output mẫu: báo cáo kiểm thiết kế theo định dạng trong SKILL.md (điểm + công thức, chặn/nghiêm trọng/cảnh báo/gợi ý, trước/sau) cho một form đăng nhập tự viết; tỉ lệ tương phản tính thật; không chạy skill trên giao diện của ai khác (skill commit e7a1f315, 02/11/2026); mã nguồn preview/sample.html",
+    "credit": "tự tạo, không phải ảnh của tác giả skill"
+   },
    "tagline": "Đánh giá thiết kế",
    "desc_vi": "Soát giao diện theo chuẩn chuyên nghiệp: chữ, khoảng cách, khả năng tiếp cận, nhất quán.",
    "commit": "e7a1f3153d8e7cbf485924a1b92b6110aa0be299",
-   "file_count": 18,
+   "file_count": 20,
    "skill_md": [
     "SKILL.md"
-   ],
-   "no_preview": "chưa có"
+   ]
   },
   {
    "slug": "color-expert",
@@ -372,11 +377,17 @@
    "vendored": true,
    "install": "/plugin marketplace add freshtechbro/claudedesignskills  rồi  /plugin install threejs-webgl",
    "note": "Tên bài 'Claudedesign.skills' khớp tên repo; mô tả 'motion graphics, 3D, animation' khớp. Là BỘ 23 skill, chỉ chép SKILL.md của 15 skill chính (xem SOURCE.md). Repo lâu không cập nhật (push cuối 2025-11).",
-   "bytes": 306706,
+   "bytes": 387068,
+   "preview": {
+    "kind": "generated",
+    "src": "preview/sample.jpg",
+    "label": "output mẫu: hero «chiều sâu nhẹ» (thẻ nghiêng, khối pseudo-3D, nền chấm) theo ý tưởng của lightweight-3d-effects/SKILL.md, dựng bằng CSS thuần, KHÔNG dùng Zdog/Vanta/Vanilla-Tilt (skill commit 1da73feb, 02/11/2026); mã nguồn preview/sample.html",
+    "credit": "tự tạo, không phải ảnh của tác giả skill"
+   },
    "tagline": "3D & Motion Design",
    "desc_vi": "Bộ công cụ motion graphics, cảnh 3D, animation và hình ảnh tương tác như phim.",
    "commit": "1da73febff0c3e1dfefc07f8a5ef8f7d1dfdb6cd",
-   "file_count": 17,
+   "file_count": 19,
    "skill_md": [
     "aframe-webxr/SKILL.md",
     "animejs/SKILL.md",
@@ -393,8 +404,7 @@
     "rive-interactive/SKILL.md",
     "spline-interactive/SKILL.md",
     "threejs-webgl/SKILL.md"
-   ],
-   "no_preview": "chưa có"
+   ]
   },
   {
    "slug": "drawn-diagrams",

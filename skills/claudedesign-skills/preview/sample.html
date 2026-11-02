@@ -1,0 +1,28 @@
+<!doctype html><html lang="vi"><meta charset="utf-8"><title>Hero 3D nhẹ — output mẫu</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0}body{width:1280px;height:720px;overflow:hidden;background:radial-gradient(900px 500px at 70% 30%,#3b2a8a,#14122b 60%,#0b0a1a);color:#f4f2ff;font:16px/1.5 "Inter",system-ui,sans-serif;position:relative}
+nav{display:flex;justify-content:space-between;padding:26px 56px;font-size:15px;opacity:.9}nav b{font-size:19px}nav span{margin-left:26px;opacity:.7}
+.copy{position:absolute;left:56px;top:190px;width:520px}.copy h1{font:700 62px/1.04 system-ui;letter-spacing:-.03em;margin:0 0 18px}.copy h1 i{font-style:normal;background:linear-gradient(90deg,#8ee3ff,#c9a0ff);-webkit-background-clip:text;color:transparent}
+.copy p{opacity:.75;max-width:44ch;margin:0 0 26px}.cta{display:inline-block;padding:13px 24px;border-radius:999px;background:#fff;color:#1a1442;font-weight:600}.cta2{margin-left:14px;opacity:.8}
+.stage{position:absolute;right:40px;top:110px;width:640px;height:520px;perspective:1100px}
+.card{position:absolute;width:250px;height:330px;border-radius:22px;padding:22px;backdrop-filter:blur(6px);box-shadow:0 30px 60px #0008,inset 0 1px 0 #fff4;border:1px solid #fff3;transform-style:preserve-3d}
+.card::after{content:'';position:absolute;inset:0;border-radius:inherit;background:linear-gradient(115deg,#fff6 0,#fff0 38%);pointer-events:none}
+.c1{left:10px;top:70px;background:linear-gradient(160deg,#5b8cff,#6a3df0);transform:rotateY(24deg) rotateX(8deg) translateZ(-30px)}
+.c2{left:190px;top:20px;background:linear-gradient(160deg,#ff7ab8,#f0603d);transform:rotateY(-14deg) rotateX(6deg) translateZ(40px)}
+.c3{left:372px;top:96px;background:linear-gradient(160deg,#28d3b0,#2a7de1);transform:rotateY(-26deg) rotateX(10deg) translateZ(-10px)}
+.card h3{margin:0 0 6px;font:700 22px system-ui}.card small{opacity:.85}.card .pill{position:absolute;left:22px;bottom:22px;padding:5px 12px;border-radius:99px;background:#0003;font-size:12px}
+.card .glyph{position:absolute;right:20px;top:20px;width:46px;height:46px;border-radius:14px;background:#fff3;display:grid;place-items:center;font-size:22px;transform:translateZ(40px)}
+.cube{position:absolute;left:250px;top:360px;width:90px;height:90px;transform-style:preserve-3d;transform:rotateX(-24deg) rotateY(38deg)}
+.cube i{position:absolute;inset:0;border:1px solid #fff6;background:#ffffff22;display:block;backdrop-filter:blur(2px)}
+.cube i:nth-child(1){transform:translateZ(45px)}.cube i:nth-child(2){transform:rotateY(90deg) translateZ(45px);background:#8ee3ff44}.cube i:nth-child(3){transform:rotateY(180deg) translateZ(45px)}.cube i:nth-child(4){transform:rotateY(-90deg) translateZ(45px)}.cube i:nth-child(5){transform:rotateX(90deg) translateZ(45px);background:#c9a0ff55}.cube i:nth-child(6){transform:rotateX(-90deg) translateZ(45px)}
+.shadow{position:absolute;left:236px;top:470px;width:130px;height:24px;border-radius:50%;background:radial-gradient(#0009,#0000 70%);filter:blur(4px)}
+.dots{position:absolute;inset:0;background-image:radial-gradient(#fff3 1px,transparent 1.5px);background-size:34px 34px;opacity:.5;mask-image:radial-gradient(500px 360px at 70% 40%,#000,transparent)}
+.hint{position:absolute;left:56px;bottom:30px;font:12.5px ui-monospace,Menlo,monospace;opacity:.5}
+</style><div class="dots"></div>
+<nav><b>◈ Lumen</b><div><span>Sản phẩm</span><span>Giá</span><span>Tài liệu</span><span>Đăng nhập</span></div></nav>
+<section class="copy"><h1>Chiều sâu cho trang,<br><i>không tốn thư viện nặng.</i></h1><p>Thẻ nghiêng theo con trỏ, khối pseudo-3D và nền chuyển động, tất cả nhẹ để trang vẫn tải nhanh.</p><a class="cta">Dùng thử miễn phí</a><span class="cta2">Xem demo →</span></section>
+<section class="stage"><div class="card c1"><span class="glyph">✦</span><h3>Tilt</h3><small>Nghiêng theo chuột<br>hoặc con quay điện thoại</small><span class="pill">perspective 1100px</span></div>
+<div class="card c2"><span class="glyph">◐</span><h3>Depth</h3><small>Lớp nổi tách khỏi thẻ<br>bằng translateZ</small><span class="pill">preserve-3d</span></div>
+<div class="card c3"><span class="glyph">▲</span><h3>Glow</h3><small>Vệt sáng chạy theo<br>góc nghiêng</small><span class="pill">gradient 115°</span></div>
+<div class="cube"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="shadow"></div></section>
+<div class="hint">output mẫu · dựng bằng CSS thuần, không dùng Zdog / Vanta / Vanilla-Tilt</div>

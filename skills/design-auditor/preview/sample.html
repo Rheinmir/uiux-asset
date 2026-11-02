@@ -1,0 +1,38 @@
+<!doctype html><html lang="vi"><meta charset="utf-8"><title>Báo cáo kiểm thiết kế — form đăng nhập</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f3f1ec;color:#1d1c1a;font:15px/1.55 "Inter",system-ui,sans-serif;width:1000px;padding:36px}
+h1{font:700 26px/1.2 system-ui;margin:0 0 4px}.sub{opacity:.65;margin:0 0 22px}
+.card{background:#fff;border-radius:14px;padding:20px 24px;margin-bottom:16px;box-shadow:0 1px 0 #0001}
+table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:6px 10px 6px 0;text-align:left;border-bottom:1px solid #0001}th{opacity:.6;font-weight:500}
+.bars{font:14px/1.9 ui-monospace,Menlo,monospace;white-space:pre}.big{font:700 40px/1 system-ui}
+.iss{border-left:5px solid;padding:10px 16px;margin:10px 0;border-radius:0 10px 10px 0;background:#fafafa}.iss b{display:block;font-size:15px}.iss p{margin:3px 0;font-size:14px}.iss em{font-style:normal;opacity:.6;font-size:12.5px}
+.blk{border-color:#7a1f8f}.crit{border-color:#d63a2f}.warn{border-color:#e0a030}.tip{border-color:#3aa86b}
+h2{font:700 13px/1 ui-monospace,Menlo,monospace;letter-spacing:.08em;margin:18px 0 8px;opacity:.7}
+.demo{display:grid;grid-template-columns:1fr 1fr;gap:16px}.mini{background:#fff;border-radius:12px;padding:18px;border:1px solid #0002}
+.mini input{display:block;width:100%;height:36px;margin:8px 0;padding:0 10px;border:1px solid #bbb;border-radius:6px;font:14px system-ui}.mini small{display:block;font-size:12px;opacity:.6}
+.bad .btn{height:28px;padding:0 14px;border:0;border-radius:6px;background:#7fb3ff;color:#fff;font:14px system-ui}.bad a{color:#9a9a9a;font-size:13px}
+.good .btn{height:44px;padding:0 18px;border:0;border-radius:6px;background:#1a56db;color:#fff;font:600 14px system-ui}.good a{color:#4a4a4a;font-size:13px}.good label{display:block;font-size:13px;font-weight:600}
+.tag{display:inline-block;font:600 11px ui-monospace;padding:2px 8px;border-radius:99px;margin-right:6px}
+</style>
+<h1>Báo cáo kiểm thiết kế</h1><p class="sub">Output mẫu theo định dạng trong SKILL.md · đầu vào: form đăng nhập (HTML + CSS) tự viết để minh hoạ</p>
+<div class="card"><table><tr><th>Đầu vào</th><td>login-form.html (form đăng nhập)</td><th>Loại</th><td>HTML/CSS</td></tr><tr><th>Độ tin cậy</th><td>🟢 Cao (có mã nguồn)</td><th>Framework</th><td>Không có · chưa thấy design system</td></tr></table></div>
+<div class="card"><div class="bars">📊  ĐIỂM
+Tổng thể      [████████████░░░░░░░░]  <b class="big" style="font-size:20px">59/100</b>
+Khả năng tiếp cận [██████████████░░░░░░]  72/100
+
+Công thức: 100 − (1 × 🚫 12) − (2 × 🔴 8) − (3 × 🟡 4) − (1 × 🟢 1) = <b>59/100</b></div>
+<p style="margin:8px 0 0;font-size:14px">Điểm bị kéo xuống nhiều nhất bởi chữ trắng trên nút xanh nhạt (tương phản 2,14:1) và ô nhập không có nhãn.</p></div>
+<h2>🚫 CHẶN PHÁT HÀNH · −12 điểm mỗi lỗi</h2>
+<div class="iss blk"><b>Tương phản chữ trên nút «Đăng nhập» quá thấp</b><p>Chữ trắng <code>#ffffff</code> trên nền <code>#7fb3ff</code> chỉ đạt 2,14:1; mức tối thiểu cho chữ thường là 4,5:1.</p><p>Cách sửa: đổi nền sang <code>#1a56db</code> (6,18:1) hoặc dùng chữ tối.</p><em>Căn cứ: WCAG 1.4.3 · Vị trí: .btn, dòng 14</em></div>
+<h2>🔴 NGHIÊM TRỌNG · −8 điểm mỗi lỗi</h2>
+<div class="iss crit"><b>Hai ô nhập chỉ có placeholder, không có nhãn</b><p>Placeholder biến mất khi gõ và nhiều trình đọc màn hình không đọc nó như nhãn.</p><p>Cách sửa: thêm <code>&lt;label for&gt;</code> hiển thị phía trên mỗi ô.</p><em>Căn cứ: WCAG 1.3.1, 3.3.2 · Vị trí: input[type=email], input[type=password]</em></div>
+<div class="iss crit"><b>Vùng chạm của nút cao 28 px</b><p>Trên điện thoại ngón tay dễ bấm trượt; khuyến nghị tối thiểu 44 px.</p><p>Cách sửa: <code>min-height: 44px</code>.</p><em>Vị trí: .btn</em></div>
+<h2>🟡 CẢNH BÁO · −4 điểm mỗi lỗi</h2>
+<div class="iss warn"><b>Liên kết «Quên mật khẩu?» tương phản 2,81:1</b><p><code>#9a9a9a</code> trên nền trắng. Đổi sang <code>#4a4a4a</code> hoặc đậm hơn (đạt 8,86:1).</p></div>
+<div class="iss warn"><b>Đã tắt viền focus (<code>outline: none</code>)</b><p>Người dùng bàn phím không biết đang ở ô nào. Thêm <code>:focus-visible</code> có viền rõ.</p></div>
+<div class="iss warn"><b>Thiếu trạng thái lỗi</b><p>Sai mật khẩu hiện chưa có thông báo nào gắn với ô nhập.</p></div>
+<h2>🟢 GỢI Ý · −1 điểm</h2>
+<div class="iss tip"><b>Màu viết cứng, rải rác</b><p>Gom <code>#1a56db</code>, <code>#4a4a4a</code> thành biến CSS (token) để đổi giao diện sáng/tối dễ hơn.</p></div>
+<h2>TRƯỚC / SAU</h2>
+<div class="demo"><div class="mini bad"><span class="tag" style="background:#fde7e5;color:#a02a20">Trước</span><input placeholder="Email"><input placeholder="Mật khẩu" type="password"><button class="btn">Đăng nhập</button> <a>Quên mật khẩu?</a></div>
+<div class="mini good"><span class="tag" style="background:#dcf5e6;color:#1d6b43">Sau</span><label>Email</label><input><label>Mật khẩu</label><input type="password"><button class="btn">Đăng nhập</button> <a>Quên mật khẩu?</a></div></div>
