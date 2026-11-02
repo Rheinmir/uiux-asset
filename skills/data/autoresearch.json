@@ -116,5 +116,11 @@
  "install": "npx skills add uditgoenka/autoresearch",
  "note": "SKILL.md tham chiếu ../../commands/autoresearch/<name>.md nên chép thêm 13 tệp lệnh vào autoresearch/commands/autoresearch/ (đường dẫn tương đối trong repo không giữ nguyên). Bản .agents/skills/autoresearch (cho Codex) khác và không chép.",
  "commit": "7bddd056dfd0b0ded8360588d8101b1ecb5c0baa",
- "vendored_date": "2026-11-01"
+ "vendored_date": "2026-11-01",
+ "preview": {
+  "kind": "generated",
+  "src": "preview/sample.png",
+  "label": "output mẫu ĐÃ CHẠY THẬT: vòng lặp sửa → đo → giữ/bỏ có guard độc lập, tối ưu hàm đếm số nguyên tố, 9 vòng, 405,6 ms → 0,087 ms; một vòng bị guard chặn; Node v22.17.0 trên macOS arm64 (skill commit 7bddd056, 02/11/2026); mã chạy và results.tsv: preview/run.js, variants.js, results.tsv",
+  "credit": "tự tạo, không phải ảnh của tác giả skill"
+ }
 }

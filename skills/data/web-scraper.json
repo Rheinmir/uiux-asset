@@ -16,5 +16,11 @@
  "vendored": false,
  "install": "",
  "note": "Khớp cả 3 ý của mô tả (recon thích ứng + kiểm chứng kết quả, stealth browser, phát hiện API qua bắt traffic). Frontmatter name là \"web-scraping\", chỉ tên repo là web-scraper; tên \"Web Scraper\" quá chung nên chỉ ghi gợi ý. README chỉ nói đặt thư mục vào thư mục skills của Claude Code, không có lệnh cài. Bỏ .git, .gitignore khi chép; LICENSE ở gốc slug.",
- "reason": "Nguồn chỉ ở mức «gợi ý» (tên không khớp hẳn với skill trong bài), nên theo quyết định của chủ dự án chỉ để liên kết, không chép. Bản chép đã gỡ."
+ "reason": "Nguồn chỉ ở mức «gợi ý» (tên không khớp hẳn với skill trong bài), nên theo quyết định của chủ dự án chỉ để liên kết, không chép. Bản chép đã gỡ.",
+ "preview": {
+  "kind": "generated",
+  "src": "preview/sample.png",
+  "label": "output mẫu ĐÃ CHẠY THẬT: báo cáo trinh sát theo quy trình của skill web-scraping (yfe404/web-scraper, commit 40ef9f8c, 02/11/2026) trên chính site của chủ dự án: 5 yêu cầu curl cách 1,5 giây, chọn chiến lược API, kiểm chứng, tự phản biện. Skill KHÔNG được chép vào repo: SKILL.md tải về /tmp để chạy rồi xoá; mã nguồn ảnh preview/sample.html",
+  "credit": "tự tạo, không phải ảnh của tác giả skill; ý tưởng và quy trình: yfe404 (MIT)"
+ }
 }

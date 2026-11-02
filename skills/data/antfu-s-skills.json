@@ -655,5 +655,11 @@
  "install": "pnpx skills add antfu/skills --skill='*'",
  "note": "Bộ skill của Anthony Fu: antfu, vue, nuxt, vite, vitest, unocss, pnpm, pinia, nitro, vitepress, antfu-create-pr/issue-triage/query/simplify. Một số skill (vue, nuxt, ...) được sinh từ tài liệu dự án gốc (xem GENERATION.md trong từng thư mục); README repo tuyên bố toàn bộ skills và scripts là MIT.",
  "commit": "7de210b51c8d48cc405a4eac3e17cbb1396c653b",
- "vendored_date": "2026-11-01"
+ "vendored_date": "2026-11-01",
+ "preview": {
+  "kind": "generated",
+  "src": "preview/sample.png",
+  "label": "output mẫu: bộ khung thư viện TypeScript «tiny-slug» đặt theo quy ước của skill antfu (cấu trúc file, kiểu, test, eslint antfu + antislop, cổng ci); hàm slugify đã chạy kiểm bằng Node, KHÔNG chạy nr ci vì chưa cài phụ thuộc (skill commit 7de210b5, 02/11/2026); mã nguồn preview/sample.html",
+  "credit": "tự tạo, không phải ảnh của tác giả skill"
+ }
 }

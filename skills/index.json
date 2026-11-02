@@ -85,14 +85,20 @@
    "pushed": "2026-10-30T21:17:56Z",
    "path": "skills/ (14 thư mục skill)",
    "vendored": true,
-   "bytes": 734199,
+   "bytes": 980417,
    "install": "pnpx skills add antfu/skills --skill='*'",
    "note": "Bộ skill của Anthony Fu: antfu, vue, nuxt, vite, vitest, unocss, pnpm, pinia, nitro, vitepress, antfu-create-pr/issue-triage/query/simplify. Một số skill (vue, nuxt, ...) được sinh từ tài liệu dự án gốc (xem GENERATION.md trong từng thư mục); README repo tuyên bố toàn bộ skills và scripts là MIT.",
    "commit": "7de210b51c8d48cc405a4eac3e17cbb1396c653b",
    "vendored_date": "2026-11-01",
+   "preview": {
+    "kind": "generated",
+    "src": "preview/sample.png",
+    "label": "output mẫu: bộ khung thư viện TypeScript «tiny-slug» đặt theo quy ước của skill antfu (cấu trúc file, kiểu, test, eslint antfu + antislop, cổng ci); hàm slugify đã chạy kiểm bằng Node, KHÔNG chạy nr ci vì chưa cài phụ thuộc (skill commit 7de210b5, 02/11/2026); mã nguồn preview/sample.html",
+    "credit": "tự tạo, không phải ảnh của tác giả skill"
+   },
    "tagline": "Bộ công cụ lập trình",
    "desc_vi": "Bộ skill kỹ thuật chuẩn production từ một lập trình viên mã nguồn mở hàng đầu.",
-   "file_count": 159,
+   "file_count": 161,
    "skill_md": [
     "antfu-create-pr/SKILL.md",
     "antfu-issue-triage/SKILL.md",
@@ -108,8 +114,7 @@
     "vitepress/SKILL.md",
     "vitest/SKILL.md",
     "vue/SKILL.md"
-   ],
-   "no_preview": "chưa có"
+   ]
   },
   {
    "slug": "dev-browser",
@@ -156,9 +161,14 @@
    "install": "",
    "note": "Khớp cả 3 ý của mô tả (recon thích ứng + kiểm chứng kết quả, stealth browser, phát hiện API qua bắt traffic). Frontmatter name là \"web-scraping\", chỉ tên repo là web-scraper; tên \"Web Scraper\" quá chung nên chỉ ghi gợi ý. README chỉ nói đặt thư mục vào thư mục skills của Claude Code, không có lệnh cài. Bỏ .git, .gitignore khi chép; LICENSE ở gốc slug.",
    "reason": "Nguồn chỉ ở mức «gợi ý» (tên không khớp hẳn với skill trong bài), nên theo quyết định của chủ dự án chỉ để liên kết, không chép. Bản chép đã gỡ.",
+   "preview": {
+    "kind": "generated",
+    "src": "preview/sample.png",
+    "label": "output mẫu ĐÃ CHẠY THẬT: báo cáo trinh sát theo quy trình của skill web-scraping (yfe404/web-scraper, commit 40ef9f8c, 02/11/2026) trên chính site của chủ dự án: 5 yêu cầu curl cách 1,5 giây, chọn chiến lược API, kiểm chứng, tự phản biện. Skill KHÔNG được chép vào repo: SKILL.md tải về /tmp để chạy rồi xoá; mã nguồn ảnh preview/sample.html",
+    "credit": "tự tạo, không phải ảnh của tác giả skill; ý tưởng và quy trình: yfe404 (MIT)"
+   },
    "tagline": "Tự động hóa web",
-   "desc_vi": "Cào dữ liệu đa chiến lược: kiểm tra dữ liệu, duyệt ẩn danh và phát hiện API.",
-   "no_preview": "chưa có"
+   "desc_vi": "Cào dữ liệu đa chiến lược: kiểm tra dữ liệu, duyệt ẩn danh và phát hiện API."
   },
   {
    "slug": "vexor-search",
@@ -228,18 +238,23 @@
    "pushed": "2026-10-31T13:56:11Z",
    "path": "claude-plugin/skills/autoresearch/ (+ claude-plugin/commands/autoresearch/)",
    "vendored": true,
-   "bytes": 146145,
+   "bytes": 316215,
    "install": "npx skills add uditgoenka/autoresearch",
    "note": "SKILL.md tham chiếu ../../commands/autoresearch/<name>.md nên chép thêm 13 tệp lệnh vào autoresearch/commands/autoresearch/ (đường dẫn tương đối trong repo không giữ nguyên). Bản .agents/skills/autoresearch (cho Codex) khác và không chép.",
    "commit": "7bddd056dfd0b0ded8360588d8101b1ecb5c0baa",
    "vendored_date": "2026-11-01",
+   "preview": {
+    "kind": "generated",
+    "src": "preview/sample.png",
+    "label": "output mẫu ĐÃ CHẠY THẬT: vòng lặp sửa → đo → giữ/bỏ có guard độc lập, tối ưu hàm đếm số nguyên tố, 9 vòng, 405,6 ms → 0,087 ms; một vòng bị guard chặn; Node v22.17.0 trên macOS arm64 (skill commit 7bddd056, 02/11/2026); mã chạy và results.tsv: preview/run.js, variants.js, results.tsv",
+    "credit": "tự tạo, không phải ảnh của tác giả skill"
+   },
    "tagline": "Nghiên cứu tự động",
    "desc_vi": "Quy trình AI tự cải tiến: liên tục chỉnh sửa, kiểm chứng và tối ưu công việc.",
-   "file_count": 24,
+   "file_count": 29,
    "skill_md": [
     "SKILL.md"
-   ],
-   "no_preview": "chưa có"
+   ]
   },
   {
    "slug": "frontend-design",

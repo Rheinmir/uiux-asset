@@ -1,0 +1,64 @@
+<!doctype html><html lang="vi"><meta charset="utf-8"><title>antfu — khung dự án TypeScript theo quy ước</title>
+<style>*{box-sizing:border-box}body{margin:0;background:#12141a;color:#e3e6ee;font:14px/1.5 "Inter",system-ui,sans-serif;width:1180px;padding:28px 32px}
+h1{font:700 22px/1.2 system-ui;margin:0 0 4px}.sub{opacity:.6;margin:0 0 18px}.cols{display:grid;grid-template-columns:230px 1fr 300px;gap:14px;align-items:start}
+.card{background:#1a1d26;border:1px solid #2b3040;border-radius:12px;padding:12px 14px}h2{font:700 11px ui-monospace,Menlo,monospace;letter-spacing:.08em;opacity:.55;margin:0 0 8px}
+pre{margin:0;font:12px/1.55 ui-monospace,Menlo,monospace;white-space:pre-wrap;color:#cdd3e0}.tree{color:#9bd1ff}.f{background:#1a1d26;border:1px solid #2b3040;border-radius:10px;margin-bottom:10px;overflow:hidden}.fn{font:600 11.5px ui-monospace,Menlo,monospace;background:#232838;padding:5px 12px;color:#ffd479}.f pre{padding:8px 12px}
+ul{list-style:none;margin:0;padding:0;display:grid;gap:9px}li b{display:block;font-size:13px;color:#7ee0b0}li span{font:11.5px ui-monospace,Menlo,monospace;opacity:.75}.warn{margin-top:12px;font-size:12px;opacity:.7;line-height:1.5}</style>
+<h1>antfu: khung dự án TypeScript theo quy ước trong SKILL.md</h1><p class="sub">Output mẫu: bộ khung thư viện nhỏ «tiny-slug» đặt theo các quy ước của skill (cấu trúc file, kiểu, test, công cụ, cổng ci). Mã hàm slugify đã được chạy kiểm bằng Node với các ví dụ trong test.</p>
+<div class="cols"><div class="card"><h2>CẤU TRÚC</h2><pre class="tree">tiny-slug/
+├─ src/
+│  ├─ index.ts
+│  ├─ slug.ts
+│  ├─ slug.test.ts
+│  ├─ constants.ts
+│  └─ types.ts
+├─ eslint.config.js
+├─ knip.json
+├─ tsdown.config.ts
+├─ tsconfig.json
+├─ pnpm-workspace.yaml
+└─ package.json</pre></div><div><div class='f'><div class='fn'>src/types.ts</div><pre>export interface SlugOptions {
+  separator?: string
+  maxLength?: number
+}</pre></div><div class='f'><div class='fn'>src/constants.ts</div><pre>export const DEFAULT_SEPARATOR = &#x27;-&#x27;
+export const DEFAULT_MAX_LENGTH = 80</pre></div><div class='f'><div class='fn'>src/slug.ts</div><pre>import { DEFAULT_MAX_LENGTH, DEFAULT_SEPARATOR } from &#x27;./constants&#x27;
+import type { SlugOptions } from &#x27;./types&#x27;
+
+export function slugify(input: string, options: SlugOptions = {}): string {
+  const { separator = DEFAULT_SEPARATOR, maxLength = DEFAULT_MAX_LENGTH } = options
+  // NFD tách dấu khỏi chữ cái; đ/Đ không có dạng tách nên phải đổi tay
+  return input
+    .normalize(&#x27;NFD&#x27;)
+    .replace(/[\u0300-\u036F]/g, &#x27;&#x27;)
+    .replace(/đ/gi, &#x27;d&#x27;)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, separator)
+    .replace(new RegExp(`^${separator}|${separator}$`, &#x27;g&#x27;), &#x27;&#x27;)
+    .slice(0, maxLength)
+}</pre></div><div class='f'><div class='fn'>src/slug.test.ts</div><pre>import { describe, expect, it } from &#x27;vitest&#x27;
+import { slugify } from &#x27;./slug&#x27;
+
+describe(&#x27;slugify&#x27;, () =&gt; {
+  it(&#x27;strips Vietnamese diacritics&#x27;, () =&gt; {
+    expect(slugify(&#x27;Lập trình &amp; tự động hóa&#x27;)).toBe(&#x27;lap-trinh-tu-dong-hoa&#x27;)
+  })
+
+  it(&#x27;handles đ and trims separators&#x27;, () =&gt; {
+    expect(slugify(&#x27;  Đường dẫn  Đẹp!! &#x27;)).toBe(&#x27;duong-dan-dep&#x27;)
+  })
+})</pre></div><div class='f'><div class='fn'>eslint.config.js</div><pre>import antfu from &#x27;@antfu/eslint-config&#x27;
+
+export default antfu({
+  type: &#x27;lib&#x27;,
+  pnpm: true,
+  antislop: true,
+})</pre></div><div class='f'><div class='fn'>package.json (scripts)</div><pre>{
+  &quot;scripts&quot;: {
+    &quot;build&quot;: &quot;tsdown&quot;,
+    &quot;lint&quot;: &quot;eslint --cache&quot;,
+    &quot;typecheck&quot;: &quot;tsc&quot;,
+    &quot;knip&quot;: &quot;knip&quot;,
+    &quot;test&quot;: &quot;pnpm run build &amp;&amp; vitest&quot;,
+    &quot;ci&quot;: &quot;pnpm run lint &amp;&amp; pnpm run typecheck &amp;&amp; pnpm run knip &amp;&amp; pnpm run test --run&quot;
+  }
+}</pre></div></div><div class="card"><h2>QUY ƯỚC ĐÃ ÁP DỤNG</h2><ul><li><b>Một file một việc</b><span>types.ts và constants.ts tách riêng khỏi slug.ts</span></li><li><b>Import tương đối</b><span>./constants, ./types; không thêm alias mới</span></li><li><b>Kiểu trả về rõ ràng</b><span>slugify(...): string</span></li><li><b>Chú thích nêu «vì sao»</b><span>NFD tách dấu, đ không tách nên đổi tay</span></li><li><b>Test cạnh file, describe/it</b><span>slug.test.ts cùng thư mục</span></li><li><b>Luôn bật antislop</b><span>antfu({ type: &#x27;lib&#x27;, pnpm: true, antislop: true })</span></li><li><b>Cổng ci trước mỗi commit</b><span>nr lint --fix → nr ci (lint, typecheck, knip, test)</span></li></ul><p class="warn">Đây là khung minh hoạ, không phải kết quả chạy <code>nr ci</code>: chưa cài phụ thuộc nên không đưa ra kết quả lint hay test giả.</p></div></div>

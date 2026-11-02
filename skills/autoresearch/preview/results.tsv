@@ -1,0 +1,11 @@
+# metric_direction: lower_is_better
+iteration	timestamp	metric_ms	delta	guard	status	description
+0	2026-11-02T14:30:55	405.626	-	pass	baseline	baseline: chia thử mọi số nhỏ hơn n
+1	2026-11-02T14:30:56	3.162	-99.2%	pass	keep	chia thử đến √i
+2	2026-11-02T14:30:56	-	-	FAIL	discard (guard fail)	[lỗi cố ý] đổi điều kiện thành d*d < i
+3	2026-11-02T14:30:57	1.543	-51.2%	pass	keep	bỏ số chẵn, chia thử số lẻ đến √i
+4	2026-11-02T14:30:58	0.387	-74.9%	pass	keep	sàng Eratosthenes, mảng boolean
+5	2026-11-02T14:30:59	0.239	-38.3%	pass	keep	sàng với Uint8Array
+6	2026-11-02T14:30:59	0.341	43.1%	pass	discard (không nhanh hơn)	[thử] bảng bit Uint32Array
+7	2026-11-02T14:31:00	-	-	FAIL	discard (guard fail)	sàng chỉ lưu số lẻ (nửa bộ nhớ)
+8	2026-11-02T14:31:00	0.087	-63.7%	pass	keep	sàng số lẻ, sửa tràn 32-bit (p*p > n thì bỏ qua)
