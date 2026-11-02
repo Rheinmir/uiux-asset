@@ -15,7 +15,7 @@ const base = opt('base', 'http://127.0.0.1:8791'), frames = opt('frames', '');
   await p.goto(base + '/notebook/', { waitUntil: 'load' });
   await p.evaluate(() => localStorage.removeItem('nw-v1')); await p.reload({ waitUntil: 'load' }); await p.waitForTimeout(800);
   await shot(3);
-  const step = async (name, fn) => { try { await fn(); console.log('ok  ', name); } catch (e) { errs.push(name + ': ' + e.message.split('\n')[0]); console.log('LỖI', name, '\n  ', e.message.split('\n')[0]); } };
+  const step = async (name, fn) => { try { await fn(); console.log('ok  ', name); } catch (e) { errs.push(name + ': ' + e.message.split('\n').slice(0, 4).join(' | ')); console.log('LỖI', name, '\n  ', e.message.split('\n').slice(0, 4).join(' | ')); } };
 
   await step('bìa có 4 lối vào', async () => { assert.strictEqual(await p.locator('.nb-idx button').count(), 4); });
   await step('weekly: thêm 2 việc, tick 1, qua tuần sau', async () => {
@@ -53,8 +53,9 @@ const base = opt('base', 'http://127.0.0.1:8791'), frames = opt('frames', '');
   });
   await step('dotgrid: vẽ tay, thước kẻ, tẩy, hoàn tác', async () => {
     await p.click('button[data-go=dotgrid]'); await p.waitForTimeout(800);
-    const cv = p.locator('.dg[data-side=r] canvas'), bb = await cv.boundingBox(), S = () => p.evaluate(() => JSON.parse(localStorage.getItem('nw-v1')).dots.r.length);
-    const drag = async (pts) => { await p.mouse.move(bb.x + pts[0][0], bb.y + pts[0][1]); await p.mouse.down(); for (const [x, y] of pts.slice(1)) await p.mouse.move(bb.x + x, bb.y + y, { steps: 6 }); await p.mouse.up(); };
+    const cv = p.locator('.dg[data-side=r] canvas'), S = () => p.evaluate(() => JSON.parse(localStorage.getItem('nw-v1')).dots.r.length);
+    const drag = async (pts) => { await cv.evaluate((el) => el.scrollIntoView({ block: 'center' })); const bb = await cv.boundingBox();   // đo lại mỗi lần: cuộn trang làm đổi toạ độ
+      await p.mouse.move(bb.x + pts[0][0], bb.y + pts[0][1]); await p.mouse.down(); for (const [x, y] of pts.slice(1)) await p.mouse.move(bb.x + x, bb.y + y, { steps: 6 }); await p.mouse.up(); };
     await drag([[60, 80], [120, 40], [200, 110], [260, 60], [330, 130]]); await shot(2);
     assert.strictEqual(await S(), 1);
     await p.click('[data-pen="#b5473a"]'); await p.click('[data-mode=ruler]');
