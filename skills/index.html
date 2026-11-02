@@ -17,6 +17,10 @@
 .sk-code button { position: absolute; top: 6px; right: 6px; font: inherit; font-size: 12px; padding: 3px 10px; border-radius: 999px; border: 1px solid currentColor; background: transparent; color: inherit; cursor: pointer; }
 .sk-card details { font-size: 13px; line-height: 1.55; opacity: .85; }
 .sk-card summary { cursor: pointer; }
+.sk-prev { margin: 0; display: flex; flex-direction: column; gap: 4px; }
+.sk-prev img { width: 100%; height: auto; max-height: 260px; object-fit: contain; border-radius: 8px; background: color-mix(in srgb, currentColor 6%, transparent); }
+.sk-prev figcaption { font-size: 12px; opacity: .75; line-height: 1.45; }
+.sk-none { font-size: 12px; opacity: .6; }
 .sk-files a { display: inline-block; margin: 2px 8px 2px 0; }
 .sk-k { margin-left: 6px; font-size: 11px; opacity: .65; font-variant-numeric: tabular-nums; }
 #cats { flex-wrap: nowrap; }
@@ -50,12 +54,18 @@
   const ST = { copied: 'Đã chép nguyên văn', linked: 'Chỉ liên kết' };
   const stOf = (x) => x.vendored ? 'copied' : 'linked';
   const OSI = /^(MIT|Apache-2\.0|BSD|ISC|CC0|Unlicense|MPL)/i;
+  function preview(x) {
+    const v = x.preview, src = v.kind === 'link' ? v.src : `${x.slug}/${v.src}`;
+    const lab = { upstream: 'Ảnh từ repo gốc', generated: 'Output mẫu', link: 'Ảnh ở repo gốc (không chép)' }[v.kind];
+    return `<figure class="sk-prev"><a href="${esc(src)}" target="_blank" rel="noopener"><img src="${esc(src)}" alt="Sản phẩm mẫu của ${esc(x.name)}" loading="lazy"></a><figcaption><b>${lab}:</b> ${esc(v.label)} · ${esc(v.credit)}</figcaption></figure>`;
+  }
   function card(x) {
     const mds = (x.skill_md || []).slice(0, 8), more = (x.skill_md || []).length - mds.length;
     const lic = esc(String(x.license || '?').split(/[(;,·]/)[0].trim().slice(0, 28));
     return `<article class="sk-card">
       <h3>${esc(x.name)} <span class="aw-tag aw-tag--small">${esc(x.tagline)}</span></h3>
       <p class="aw-desc">${esc(x.desc_vi)}</p>
+      ${x.preview ? preview(x) : `<div class="sk-none">Chưa có ảnh sản phẩm${x.no_preview && x.no_preview !== 'chưa có' ? ': ' + esc(x.no_preview) : ''}</div>`}
       <div class="sk-tags">
         <span class="aw-tag aw-tag--small ${x.vendored ? 'aw-tag--solid-green' : 'aw-tag--solid-yellow'}">${ST[stOf(x)]}</span>
         <span class="aw-tag aw-tag--small ${x.confidence === 'chắc' ? '' : 'aw-tag--red'}" title="Độ chắc rằng repo này đúng là skill trong bài">nguồn: ${esc(x.confidence)}</span>

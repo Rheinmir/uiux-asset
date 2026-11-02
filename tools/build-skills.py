@@ -42,6 +42,20 @@ def build():
             d["skill_md"] = sorted(str(x.relative_to(base)) for x in real if x.name == "SKILL.md")   # trang chỉ cần các SKILL.md thật có trên đĩa, không cần cả danh sách tệp
         elif not d.get("reason"):
             errs.append(f"{p['slug']}: không chép nhưng thiếu reason")
+        pv = d.get("preview")
+        if pv:   # ảnh «sản phẩm trông thế này»: kind upstream|generated|link (link: ảnh ở repo gốc, không chép)
+            if pv.get("kind") not in ("upstream", "generated", "link"):
+                errs.append(f"{p['slug']}: preview.kind phải là upstream|generated|link")
+            if pv.get("kind") == "link":
+                if not str(pv.get("src", "")).startswith("https://"):
+                    errs.append(f"{p['slug']}: preview kind=link cần src https://")
+            elif not (ROOT / "skills" / p["slug"] / pv.get("src", "-")).is_file() or not d.get("vendored"):
+                errs.append(f"{p['slug']}: preview chép/tạo cần skill đã chép và tệp skills/{p['slug']}/{pv.get('src')}")
+            for need in ("label", "credit"):
+                if not pv.get(need):
+                    errs.append(f"{p['slug']}: preview thiếu {need}")
+        elif not d.get("no_preview"):
+            d["no_preview"] = "chưa có"   # trang ghi «chưa có ảnh», không bịa
         d.pop("files", None)
         out.append(d)
     meta = {"source": post["source"], "total": len(out), "vendored": sum(1 for x in out if x.get("vendored")), "skills": out}
