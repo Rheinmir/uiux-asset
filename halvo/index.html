@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nesta — mock dashboard nhà thông minh — uiux-asset</title>
+<meta name="description" content="Mock dashboard điều khiển nhà thông minh (3 màn: Overview, Rooms, Climate) dựng tay bằng HTML/CSS từ ảnh chụp, đo độ khớp pixel với ảnh gốc. Thương hiệu giả: Nesta.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=1a21de124b">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap">
+<style>
+.hv-wrap { margin: 16px 0 8px; }
+.hv-scroll { overflow-x: auto; border-radius: 16px; background: #1a1613; }
+.hv-fit { width: calc(1179px * var(--k, 1)); height: calc(666px * var(--k, 1)); margin: 0 auto; }
+#stage { --k: 1; position: relative; width: 1179px; height: 666px; overflow: hidden; transform: scale(var(--k)); transform-origin: 0 0; font-family: 'Outfit', system-ui, sans-serif; line-height: 1.2; color: #ecebe8; background: #2b241d; border-radius: 22px; user-select: none; }
+#stage * { box-sizing: border-box; }
+#stage .bg { position: absolute; inset: 0; background:
+  linear-gradient(115deg, transparent 0 28%, rgba(120,98,76,.38) 29% 31%, transparent 32% 100%),
+  linear-gradient(70deg, transparent 0 55%, rgba(110,90,70,.34) 56% 58%, transparent 59% 100%),
+  radial-gradient(900px 420px at 55% -8%, rgba(125,104,82,.55), transparent 70%),
+  linear-gradient(#352c24, #241f1a 60%, #1d1a17); transition: filter .5s; }
+#stage[data-v="climate"] .bg { filter: blur(6px) brightness(.95); }
+#stage .bg::after { content: ''; position: absolute; right: 0; top: 150px; width: 330px; bottom: 0; background: linear-gradient(90deg, transparent, rgba(150,130,108,.20)); }
+.g { position: absolute; background: linear-gradient(rgba(58,53,49,.66), rgba(44,40,37,.66)); border: 1px solid rgba(255,255,255,.075); border-radius: 20px; backdrop-filter: blur(14px); }
+.t13 { font-size: 13px; font-weight: 500; } .t11 { font-size: 11px; } .t10 { font-size: 10px; } .dim { color: #a9a39b; } .tl { color: #5fe3c1; }
+.abs { position: absolute; } .tx { position: absolute; white-space: nowrap; }
+.btn { position: absolute; display: flex; align-items: center; justify-content: center; gap: 6px; border: 1px solid rgba(255,255,255,.09); background: rgba(60,56,52,.72); border-radius: 12px; font-size: 12px; font-weight: 500; cursor: pointer; }
+.btn.tealb { background: #5fe3c1; color: #0d3b31; border: 0; font-weight: 600; }
+.chip { position: absolute; display: flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; border-radius: 9px; background: rgba(70,66,62,.6); border: 1px solid rgba(255,255,255,.07); font-size: 11px; color: #cfcac2; white-space: nowrap; }
+.chip.green { background: rgba(70,120,80,.38); color: #8fe3a4; border-color: rgba(120,220,140,.18); }
+.ic { width: 11px; height: 11px; border: 1.4px solid currentColor; border-radius: 4px; opacity: .8; display: inline-block; }
+.nav-i { position: relative; display: flex; align-items: center; gap: 12px; height: 34px; padding: 0 14px; margin: 0 9px; border-radius: 11px; font-size: 12.5px; color: #d9d5ce; cursor: pointer; }
+.nav-i .ic { width: 13px; height: 13px; opacity: .75; }
+.nav-i.on { background: rgba(255,255,255,.085); color: #fff; }
+.nav-i .ch { margin-left: auto; width: 6px; height: 6px; border-right: 1.3px solid #8c867e; border-bottom: 1.3px solid #8c867e; transform: rotate(-45deg); }
+.nav-i.open .ch { transform: rotate(45deg); }
+.nav-i .badge { margin-left: auto; width: 15px; height: 15px; border-radius: 50%; background: rgba(210,150,80,.28); color: #e8a45a; font-size: 9px; display: grid; place-items: center; }
+.nav-i .badge + .ch { margin-left: 8px; }
+.nav-l { height: 16px; margin: 11px 0 4px 24px; font-size: 8.5px; letter-spacing: .14em; color: #8f8981; line-height: 16px; }
+.nav-l:first-child { margin-top: 0; }
+.nav-c { margin: 3px 0 6px 33px; border-left: 1px solid rgba(255,255,255,.1); padding-left: 0; }
+.nav-c div { height: 26px; line-height: 26px; padding-left: 20px; font-size: 10.5px; color: #bdb7af; position: relative; cursor: pointer; }
+.nav-c div.on { color: #5fe3c1; } .nav-c div.on::before { content: ''; position: absolute; left: -1px; top: 6px; bottom: 6px; width: 1.5px; background: #5fe3c1; }
+.tog { position: absolute; width: 36px; height: 21px; border-radius: 11px; background: #5fe3c1; cursor: pointer; transition: background .2s; }
+.tog::after { content: ''; position: absolute; top: 3px; right: 3px; width: 15px; height: 15px; border-radius: 50%; background: #fff; transition: right .2s; }
+.tog.off { background: rgba(255,255,255,.2); } .tog.off::after { right: 18px; }
+.seg { position: absolute; display: flex; padding: 3px; border-radius: 11px; background: rgba(40,37,34,.7); border: 1px solid rgba(255,255,255,.06); font-size: 11px; color: #bdb7af; }
+.seg span { flex: 1; display: flex; align-items: center; justify-content: center; gap: 5px; border-radius: 8px; cursor: pointer; padding: 0 12px; white-space: nowrap; }
+.seg span.on { background: rgba(255,255,255,.12); color: #fff; }
+.seg.tealseg span.on { background: #5fe3c1; color: #0d3b31; font-weight: 600; }
+.bar { position: absolute; height: 5px; border-radius: 3px; background: rgba(255,255,255,.13); } .bar i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 3px; background: #4fd7b6; }
+.card-s { position: absolute; border-radius: 12px; background: rgba(40,37,34,.62); border: 1px solid rgba(255,255,255,.06); }
+.photo { position: absolute; overflow: hidden; border-radius: 12px; background: linear-gradient(#cdbfa8, #b7a78d); }
+.photo.a { background: linear-gradient(#6b5a45 0 22%, #d8c9b0 22% 60%, #8d7358 60%); }
+.photo.b { background: linear-gradient(#e6e2d8 0 40%, #cfcabd 40%); } .photo.b::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 50%; background: repeating-linear-gradient(90deg, #303533 0 4px, #cbd0cc 4px 62px); }
+.photo.c { background: linear-gradient(#e3ded2, #cfc8b8); } .photo.d { background: radial-gradient(circle at 50% 48%, #f2e6c8 0 17%, transparent 18%), linear-gradient(#e7e3da, #d5d0c4); }
+.photo.e { background: linear-gradient(115deg, #c9c9b3, #9aa07e 55%, #d8d6c4); }
+#chrome { position: absolute; inset: 0; z-index: 5; pointer-events: none; } #chrome > * { pointer-events: auto; }
+.view { position: absolute; inset: 0; display: none; } #stage[data-v="overview"] #v-overview, #stage[data-v="rooms"] #v-rooms, #stage[data-v="climate"] #v-climate { display: block; }
+.scene { position: absolute; inset: 0; background: linear-gradient(#a8957a 0 24%, #cdbb9f 24% 66%, #7d6850 66%); }
+.scene .w { position: absolute; top: 60px; height: 160px; width: 105px; border: 4px solid #1f1d1b; background: linear-gradient(#4f5a45, #7b8466 70%, #8a8d72); box-shadow: inset 0 0 0 2px rgba(20,20,20,.25); }
+.scene .w::after { content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 3px; background: #1f1d1b; }
+.scene .sofa { position: absolute; left: 160px; top: 190px; width: 300px; height: 70px; border-radius: 16px 16px 8px 8px; background: #d8cdb9; box-shadow: 0 -22px 0 -8px #cdbfa6; }
+.scene .plant { position: absolute; left: 430px; top: 55px; width: 130px; height: 180px; border-radius: 50% 50% 40% 40%; background: radial-gradient(circle at 40% 40%, #6f7a52, #4f5a3a 70%); opacity: .9; }
+#stage .tip { display: none; position: absolute; left: 74px; top: 32px; padding: 3px 7px; border-radius: 6px; background: #f3f1ec; color: #222; font-size: 10px; }
+.hv-note { max-width: 78ch; line-height: 1.6; opacity: .78; font-size: 13px; margin: 14px 0 40px; }
+.hv-table { border-collapse: collapse; font-size: 14px; margin: 8px 0; } .hv-table td, .hv-table th { padding: 6px 14px 6px 0; text-align: left; }
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=1a21de124b"></script>
+<div class="aw-crumb">
+<h1>Nesta. Mock dashboard nhà thông minh <span class="aw-tag aw-tag--small aw-tag--solid-green m-badge">DỰNG TAY, KHÔNG ẢNH</span></h1>
+<span>Một dashboard điều khiển nhà (Overview, Rooms, Climate) dựng bằng HTML/CSS từ ảnh chụp màn hình của một bản demo, mắt nhìn tay dựng, rồi đo độ khớp pixel với ảnh gốc. Bấm menu bên trái để đổi màn; bấm − / + chỉnh nhiệt độ; công tắc và tab đều bấm được. Thương hiệu trong ảnh gốc đã được thay bằng tên giả «Nesta»; ảnh phòng là hình vẽ CSS, không dùng ảnh thật.</span>
+</div>
+<div class="hv-wrap"><div class="hv-scroll" id="scroll"><div class="hv-fit" id="fit"><div id="stage" data-v="overview">
+  <div class="bg"></div>
+  <div id="chrome"></div>
+  <div class="view" id="v-overview"></div><div class="view" id="v-rooms"></div><div class="view" id="v-climate"></div>
+</div></div></div></div>
+<h2 class="aw-heading-hr">Độ khớp với ảnh gốc</h2>
+<div id="diff"></div>
+<p class="hv-note">Cách đo: chụp trang ở đúng 1179×666 rồi so từng điểm ảnh với khung hình gốc cùng kích thước. «Sai lệch trung bình» là trung bình |Δ| của ba kênh màu trên 255; «điểm lệch» là tỉ lệ điểm ảnh có tổng Δ ba kênh trên 96. Ảnh gốc là khung hình video của người khác nên không đưa lên trang này, chỉ giữ số liệu. Ảnh chụp là video đã nén nên chữ nhỏ và nền ảnh thật khó khớp tuyệt đối. Màn hình nhỏ: kéo ngang để xem hết.</p>
+</main>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const stage = $('stage'), st = { v: 'overview', side: false, set: 21.5, tab: 'Living room', lights: true, lamp: true, away: false, whole: true, therm: 'Thermostat', mode: 'Heat', fan: 'Auto' };
+  const ic = '<i class="ic"></i>';
+  const txt = (x, y, s, cls = '', extra = '') => `<div class="tx ${cls}" style="left:${x}px;top:${y}px;${extra}">${s}</div>`;
+  const box = (cls, x, y, w, h, inner = '', extra = '') => `<div class="${cls}" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;${extra}">${inner}</div>`;
+  const chip = (x, y, w, s, c = '') => `<div class="chip ${c}" style="left:${x}px;top:${y}px;width:${w}px">${ic}${s}</div>`;
+
+  // vòng nhiệt: tick xung quanh 270°, phần đã đạt tô xanh dương nhạt
+  function dial(cx, cy, r, val, big, ticks = 64) {
+    const lo = 10, hi = 30, f = Math.max(0, Math.min(1, (val - lo) / (hi - lo))), a0 = 135, span = 270; let s = '';
+    for (let i = 0; i <= ticks; i++) {
+      const t = i / ticks, a = (a0 + t * span) * Math.PI / 180, on = t <= f, r1 = r - (i % 4 === 0 ? 14 : 10), r2 = r;
+      s += `<line x1="${(cx + r1 * Math.cos(a)).toFixed(1)}" y1="${(cy + r1 * Math.sin(a)).toFixed(1)}" x2="${(cx + r2 * Math.cos(a)).toFixed(1)}" y2="${(cy + r2 * Math.sin(a)).toFixed(1)}" stroke="${on ? '#8ec7e8' : 'rgba(255,255,255,.2)'}" stroke-width="${i % 4 === 0 ? 1.8 : 1.2}"/>`;
+    }
+    const ka = (a0 + f * span) * Math.PI / 180;
+    s += `<circle cx="${(cx + (r - 4) * Math.cos(ka)).toFixed(1)}" cy="${(cy + (r - 4) * Math.sin(ka)).toFixed(1)}" r="${big ? 7 : 5.5}" fill="#eaf6f1"/>`;
+    return `<svg class="abs" style="left:0;top:0" width="1179" height="666">${s}</svg>`;
+  }
+
+  function sidebar() {
+    const nv = st.v, open = st.side || nv !== 'overview';
+    if (!open) return `${box('abs', 33, 28, 33, 33, '<div style="width:33px;height:33px;border-radius:11px;background:#5fe3c1;display:grid;place-items:center;color:#0d3b31"><i class="ic" style="border-color:#0d3b31;opacity:1"></i></div>')}
+      ${box('abs', 74, 36, 18, 19, '›', 'border-radius:50%;background:rgba(60,56,52,.9);border:1px solid rgba(255,255,255,.1);display:grid;place-items:center;cursor:pointer;color:#a9a39b;font-size:13px').replace('class="abs"', 'class="abs" data-side="1" id="chev"')}
+      ${box('g', 16, 88, 56, 554, '', 'border-radius:18px')}
+      ${[114, 149, 183, 248, 282, 316, 350, 384, 448, 482, 517].map((y, i) => `<div class="abs" ${[0, 1, 3].includes(i) ? 'data-go="' + ['overview', 'rooms', '', 'climate'][i] + '"' : ''} style="left:25px;top:${y - 15}px;width:34px;height:30px;border-radius:9px;display:grid;place-items:center;cursor:${[0, 1, 3].includes(i) ? 'pointer' : 'default'};${i === 0 ? 'background:rgba(255,255,255,.1)' : ''}">${ic}</div>`).join('')}
+      ${box('abs', 33, 604, 30, 30, '<i class="ic tl"></i>', 'display:grid;place-items:center;border-radius:9px;background:rgba(95,227,193,.22)')}
+      <div class="tip" id="tip">Expand</div>`;
+    const it = (name, key, extra = '') => `<div class="nav-i ${nv === key ? 'on' : ''} ${extra}" data-go="${key || ''}">${ic}${name}${extra.includes('open') ? '<i class="ch"></i>' : (extra.includes('nb') ? '' : '<i class="ch"></i>')}</div>`;
+    const kids = (arr, on) => `<div class="nav-c">${arr.map((a) => `<div class="${a === on ? 'on' : ''}">${a}</div>`).join('')}</div>`;
+    const rooms = nv === 'rooms', cl = nv === 'climate';
+    return `<div class="g" style="left:16px;top:16px;width:206px;height:626px;border-radius:20px;background:linear-gradient(rgba(44,42,40,.82),rgba(30,29,28,.84))"></div>
+      <div class="abs" style="left:33px;top:29px;width:33px;height:33px;border-radius:11px;background:#5fe3c1;display:grid;place-items:center;color:#0d3b31"><i class="ic" style="border-color:#0d3b31;opacity:1"></i></div>
+      ${txt(74, 28, 'Nesta', '', 'font-size:15px;font-weight:500')}${txt(74, 51, 'Larch House', 't10 dim', 'font-size:8.5px')}
+      ${box('abs', 212, 36, 20, 20, '', 'border-radius:50%;background:rgba(50,48,45,.95);border:1px solid rgba(255,255,255,.14)')}${txt(218, 38, '‹', '', 'font-size:14px')}
+      <div class="abs" style="left:16px;top:77px;width:206px" id="nav">
+        <div class="nav-l">HOME</div>${it('Overview', 'overview', 'nb')}${it('Rooms', 'rooms', rooms ? 'open' : '')}${rooms ? kids(['Living room', 'Kitchen', 'Media room', 'Studio', 'Garden lounge'], 'Living room') : ''}
+        <div class="nav-i">${ic}Devices<span class="badge">1</span><i class="ch"></i></div>
+        <div class="nav-l">CONTROL</div>${it('Climate', 'climate', cl ? 'open' : '')}${cl ? kids(['Thermostat', 'Heating plan', 'Air quality'], st.therm) : ''}
+        <div class="nav-i">${ic}Energy<i class="ch"></i></div><div class="nav-i">${ic}Security<i class="ch"></i></div><div class="nav-i">${ic}Automations<i class="ch"></i></div><div class="nav-i">${ic}Music<i class="ch"></i></div>
+        <div class="nav-l">HOUSEHOLD</div><div class="nav-i">${ic}Family<i class="ch"></i></div>${cl ? `<div class="nav-i">${ic}Settings</div>` : ''}
+      </div>
+      ${box('abs', 25, 594, 189, 46, '', 'border-radius:12px;background:rgba(255,255,255,.07)')}${box('abs', 34, 603, 28, 28, '<i class="ic tl"></i>', 'display:grid;place-items:center;border-radius:8px;background:rgba(95,227,193,.2)')}${txt(72, 603, '21° indoors', '', 'font-size:10.5px;font-weight:500')}${txt(72, 618, 'Heating to 21.5° · 1478 W', 'dim', 'font-size:8px')}`;
+  }
+  function topbar(title) {
+    const open = st.side || st.v !== 'overview', x = open ? 237 : 97;
+    return `${box('g', x, 16, 1163 - x, 50, '', 'border-radius:18px')}${txt(x + 16, 26, title, '', 'font-size:13.5px;font-weight:500')}${txt(x + 16, 46, 'Wednesday 4 November · 19:42', 'dim', 'font-size:8.5px')}
+      ${box('abs', 747, 24, 192, 34, ic + '<span class="dim" style="font-size:11px;margin-left:8px">Search devices, rooms…</span><span class="dim" style="margin-left:auto;font-size:9px;padding:2px 6px;border-radius:5px;background:rgba(255,255,255,.1)">⌘K</span>', 'display:flex;align-items:center;padding:0 12px;border-radius:12px;background:rgba(60,56,52,.7);border:1px solid rgba(255,255,255,.08);color:#a9a39b')}
+      ${box('btn', 958, 24, 36, 34, '☀', 'font-size:14px')}${box('btn', 1000, 24, 36, 34, ic + '<b style="position:absolute;right:5px;top:5px;width:13px;height:13px;border-radius:50%;background:#5fe3c1;color:#0d3b31;font-size:8px;display:grid;place-items:center">3</b>')}
+      ${box('btn tealb', 1042, 24, 70, 34, '＋ New')}${box('abs', 1119, 25, 36, 34, '<span style="font-size:9px;color:#5b4a2a;font-weight:600">AL</span>', 'display:grid;place-items:center;border-radius:50%;background:#f3dba8;border:2px solid rgba(255,255,255,.25)')}
+      ${box('abs', 1146, 47, 9, 9, '', 'border-radius:50%;background:#4fd98a;border:1.5px solid #2b241d')}`;
+  }
+  const curve = (c, w, h, pts) => `<svg class="abs" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" style="${c}"><path d="${pts}" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>`;
+
+  const views = {
+    overview() {
+      const scenes = [['Slow morning', 'Blinds up, pendants warm at 60%, kettle…', 116, 285, '#a8844a'], ['Deep focus', 'Desk lamp cool, purifier quiet, speakers…', 365, 285, '#7e9fb5'], ['Film night', 'Screen and soundbar on, cove at 10%, bl…', 613, 285, '#6b8a72'], ['Dinner party', 'Island at 50%, living speaker on, lamps l…', 116, 346, '#b07860'], ['Away', 'Everything off, every door locked, came…', 365, 346, '#8a8a80'], ['Lights out', 'All lights off, doors locked, heating to 18°', 613, 346, '#6aa89a']];
+      const stat = (x, l, v, u, sub, p) => `${box('g', x, 431, 256, 100, '', 'border-radius:18px')}${txt(x + 17, 444, ic + ' ' + l, 't11 dim')}${txt(x + 16, 465, v + `<span class="dim" style="font-size:11px;margin-left:3px">${u}</span>`, '', 'font-size:18px;font-weight:500')}${txt(x + 17, 505, sub, 't10 dim')}${curve('left:' + (x + 168) + 'px;top:494px;color:' + (p[2]) + ';opacity:.85', 76, 28, p[0])}`;
+      return `${topbar('Overview')}
+        ${box('g', 97, 84, 775, 332, '', 'border-radius:22px')}${txt(116, 103, 'Larch House · Wednesday evening', 't10 dim')}${txt(116, 120, 'Good evening, Amara', '', 'font-size:27px;font-weight:400;letter-spacing:-.01em')}
+        ${box('abs', 805, 103, 28, 28, '<span style="font-size:8px;color:#5b4a2a">AL</span>', 'display:grid;place-items:center;border-radius:50%;background:#f3dba8')}${box('abs', 827, 103, 28, 28, '<span style="font-size:8px;color:#2a4a44">TO</span>', 'display:grid;place-items:center;border-radius:50%;background:#bfe6dd;border:2px solid #3a3531')}
+        ${chip(116, 169, 90, '2 of 3 home')}${chip(215, 169, 91, '9 devices on')}${chip(316, 169, 93, '1.48 kW now')}${chip(417, 169, 118, 'Every door locked', 'green')}
+        ${txt(116, 210, 'Heating holds 21.5° until 22:30, then eases to 17° for the night. The dishwasher<br>finishes at 20:20, and the roof covered 74% of today.', '', 'font-size:12px;line-height:19px;color:#d6d1c9')}
+        ${txt(116, 265, 'SCENES', 'dim', 'font-size:8.5px;letter-spacing:.12em')}
+        ${scenes.map(([n, d, x, y, c]) => `${box('card-s', x, y, 241, 51, '', 'border-radius:13px')}${box('abs', x + 9, y + 9, 33, 33, '<i class="ic" style="border-color:' + c + ';opacity:1"></i>', 'display:grid;place-items:center;border-radius:10px;background:' + c + '33')}${txt(x + 52, y + 11, n, '', 'font-size:11px;font-weight:500')}${txt(x + 52, y + 27, d, 'dim', 'font-size:8.5px')}`).join('')}
+        ${box('g', 888, 84, 275, 332, '', 'border-radius:22px')}${txt(903, 98, 'Climate', '', 'font-size:12.5px;font-weight:500')}${txt(903, 117, 'Whole house · outside 9.5°', 'dim', 'font-size:8.5px')}${box('btn', 1109, 101, 39, 26, 'Plan', 'font-size:9.5px;border-radius:9px')}
+        ${dial(1019, 247, 86, st.set, 0)}${txt(1019 - 30, 208, '♨ HEATING', 'tl', 'font-size:8px;letter-spacing:.08em;left:975px')}${txt(988, 226, st.set.toFixed(1) + '<span style="font-size:18px;vertical-align:top;margin-left:2px;opacity:.8">°C</span>', '', 'font-size:35px;font-weight:400;letter-spacing:-.02em')}${txt(977, 272, 'Indoors 21° · warming', 'dim', 'font-size:8.5px')}
+        ${box('btn', 963, 312, 34, 34, '−', 'border-radius:50%;font-size:16px', ).replace('class="btn"', 'class="btn" data-set="-0.5"')}${box('btn', 1053, 312, 34, 34, '+', 'border-radius:50%;font-size:16px').replace('class="btn"', 'class="btn" data-set="0.5"')}
+        <div class="seg" style="left:906px;top:361px;width:240px;height:31px">${['Heat', 'Eco', 'Cool', 'Auto'].map((m) => `<span class="${m === st.mode ? 'on' : ''}" data-mode="${m}" style="font-size:10px;padding:0 6px">${m}</span>`).join('')}</div>
+        ${stat(97, 'Drawing now', '1,478', 'W', '<span style="color:#4fd98a">●</span> live', ['M0 22 L10 20 L22 12 L36 14 L50 8 L64 9 L76 8', 0, '#c69a4a'])}${stat(368, 'Used today', '15.8', 'kWh', '<span style="padding:1px 6px;border-radius:5px;background:rgba(210,90,80,.3);color:#f0968c">▲ 25%</span> vs yesterday', ['M0 24 L8 20 L16 22 L24 12 L32 16 L40 10 L48 14 L56 8 L64 10 L76 6', 0, '#6c9ec0'])}${stat(638, 'Solar today', '11.7', 'kWh', 'Battery 64%', ['M0 26 C16 26 22 4 38 4 C54 4 60 26 76 26', 0, '#52b08c'])}${stat(908, 'Humidity', '46', '%', 'Comfort band 40–55%', ['M0 14 L76 14', 0, '#52b08c'])}
+        ${box('g', 97, 545, 1066, 140, '', 'border-radius:22px')}${txt(113, 558, 'Rooms', '', 'font-size:12.5px;font-weight:500')}${txt(113, 578, 'Five rooms, two floors', 'dim', 'font-size:8.5px')}${txt(1106, 569, 'All rooms', 'tl', 'font-size:9.5px')}
+        ${['a', 'b', 'c', 'd', 'e'].map((k, i) => box('photo ' + k, 113 + i * 209, 602, 199, 80)).join('')}`;
+    },
+    rooms() {
+      const tabs = [['Living room', 241, 102, 2], ['Kitchen', 345, 62, 1], ['Media room', 410, 82, 1], ['Studio', 498, 62, 1], ['Garden lounge', 580, 104, 0]];
+      return `${topbar('Rooms')}
+        ${box('g', 237, 84, 926, 79, '', 'border-radius:22px')}${txt(251, 96, 'Living room', '', 'font-size:30px;font-weight:400;letter-spacing:-.01em')}${txt(251, 135, 'Ground floor · 2 of 2 lights on · 8 devices drawing 55 W', 'dim', 'font-size:10px')}
+        ${box('btn', 992, 117, 77, 34, '☾ All off', 'font-size:11px')}${box('btn', 1075, 117, 74, 34, '♡ All on', 'font-size:11px;background:rgba(95,227,193,.45);color:#e8fff8')}
+        ${box('g', 237, 184, 477, 38, '', 'border-radius:14px;background:rgba(56,52,48,.8)')}${tabs.map(([n, x, w, c]) => `<div class="abs" data-tab="${n}" style="left:${x}px;top:188px;width:${w}px;height:31px;display:flex;align-items:center;justify-content:center;gap:6px;border-radius:10px;font-size:10.5px;cursor:pointer;${n === st.tab ? 'background:#5fe3c1;color:#0d3b31;font-weight:600' : 'color:#d4cfc7'}">${n}${c ? `<b style="width:15px;height:15px;border-radius:50%;background:${n === st.tab ? 'rgba(13,59,49,.2)' : 'rgba(255,255,255,.15)'};font-size:8px;display:grid;place-items:center">${c}</b>` : ''}</div>`).join('')}
+        <div class="photo" style="left:237px;top:237px;width:620px;height:276px;border-radius:18px"><div class="scene"><i class="w" style="left:160px"></i><i class="w" style="left:250px;width:120px"></i><i class="w" style="left:395px;width:110px"></i><i class="w" style="left:520px;width:100px"></i><i class="plant"></i><i class="sofa"></i></div></div>
+        ${box('abs', 249, 249, 120, 30, '<span style="width:17px;height:17px;border-radius:50%;background:#f3dba8;color:#5b4a2a;font-size:7px;display:grid;place-items:center">AL</span><span style="margin-left:6px;font-size:10px">Amara is in here</span>', 'display:flex;align-items:center;padding:0 8px;border-radius:9px;background:rgba(32,30,28,.7)')}
+        ${[['21°', 'Temperature', 249], ['46%', 'Humidity', 399], ['612', 'CO₂ ppm', 549], ['180', 'Lux', 702]].map(([v, l, x]) => `${box('abs', x, 457, 144, 43, '', 'border-radius:11px;background:rgba(36,34,32,.72)')}${box('abs', x + 8, 466, 24, 24, '<i class="ic tl"></i>', 'display:grid;place-items:center;border-radius:8px;background:rgba(95,227,193,.18)')}${txt(x + 40, 463, v, '', 'font-size:13px;font-weight:500')}${txt(x + 40, 481, l, 'dim', 'font-size:8.5px')}`).join('')}
+        ${box('g', 872, 237, 291, 276, '', 'border-radius:20px')}${txt(887, 250, 'Climate', '', 'font-size:12px;font-weight:500')}${txt(887, 269, 'House set to 21.5° · heat', 'dim', 'font-size:8.5px')}${box('btn', 1074, 253, 75, 27, 'Thermostat', 'font-size:9.5px;border-radius:9px')}
+        ${box('card-s', 887, 294, 261, 55, '', 'border-radius:12px;background:rgba(36,34,32,.7)')}${txt(899, 306, '21°', '', 'font-size:26px;font-weight:400')}${txt(947, 306, '0.3° under the set point', '', 'font-size:9.5px;font-weight:500')}${txt(947, 322, 'Warming toward it now', 'dim', 'font-size:8px')}
+        ${[['Humidity', '46%', 370, 54], ['CO₂', '612', 397, 54], ['PM2.5', '6', 424, 10]].map(([l, v, y, p]) => `${txt(905, y - 4, ic + ' ' + l, 'dim', 'font-size:9.5px')}<div class="bar" style="left:975px;top:${y + 1}px;width:127px"><i style="width:${p}%"></i></div>${txt(1129, y - 4, v, '', 'font-size:9.5px;text-align:right;width:20px;left:1128px')}`).join('')}
+        ${box('abs', 887, 479, 41, 17, 'Fresh', 'font-size:8px;display:grid;place-items:center;border-radius:6px;background:rgba(70,160,100,.35);color:#8fe3a4')}${txt(942, 482, 'Comfort band 40–55% · CO₂ under 800 ppm', 'dim', 'font-size:8px')}
+        ${box('g', 237, 528, 620, 140, '', 'border-radius:20px')}${txt(252, 541, 'Lights', '', 'font-size:12px;font-weight:500')}${txt(252, 560, '2 on · drag to dim, pick a colour', 'dim', 'font-size:8.5px')}<div class="tog ${st.lights ? '' : 'off'}" data-tog="lights" style="left:805px;top:546px"></div>
+        ${box('card-s', 252, 585, 588, 80, '', 'border-radius:12px;background:rgba(36,34,32,.55)')}${box('abs', 260, 603, 38, 38, '<i class="ic" style="border-color:#0d3b31;opacity:1"></i>', 'display:grid;place-items:center;border-radius:11px;background:#5fe3c1')}${txt(309, 594, 'Arc floor lamp', '', 'font-size:10.5px;font-weight:500')}${txt(309, 610, '72% · 2700 K · 9 W', 'dim', 'font-size:8px')}
+        <div class="bar" style="left:551px;top:606px;width:135px;height:6px"><i style="width:100%"></i></div><div class="abs" style="left:550px;top:606px;width:187px;height:6px;border-radius:3px;background:rgba(255,255,255,.14);z-index:-1"></div>${box('abs', 677, 598, 16, 16, '', 'border-radius:50%;background:#f4f2ee')}${txt(762, 603, '72%', 'dim', 'font-size:10px')}<div class="tog ${st.lamp ? '' : 'off'}" data-tog="lamp" style="left:793px;top:614px"></div>
+        ${[['Ember', 309], ['Warm', 366], ['Soft', 431], ['Day', 478]].map(([n, x]) => `${box('abs', x, 633, n === 'Warm' ? 52 : 50, 20, `<i style="width:6px;height:6px;border-radius:50%;background:${n === 'Ember' ? '#e07a5a' : n === 'Warm' ? '#5fe3c1' : n === 'Soft' ? '#bbb' : '#7fb4e0'}"></i><span style="margin-left:5px">${n}</span>`, `display:flex;align-items:center;padding:0 8px;border-radius:8px;font-size:8.5px;border:1px solid ${n === 'Warm' ? '#5fe3c1' : 'rgba(255,255,255,.08)'};background:rgba(255,255,255,.05)`)}`).join('')}
+        ${box('g', 872, 528, 291, 140, '', 'border-radius:20px')}${txt(887, 541, 'Energy today', '', 'font-size:12px;font-weight:500')}${txt(887, 560, 'Third of five rooms', 'dim', 'font-size:8.5px')}${txt(1119, 552, 'Usage', 'tl', 'font-size:9px')}
+        <div class="abs" style="left:887px;top:584px;width:70px;height:70px;border-radius:50%;border:5px solid rgba(255,255,255,.1);border-top-color:#5fe3c1;border-right-color:transparent"></div>${txt(907, 612, '14%', '', 'font-size:14px;font-weight:500')}${txt(900, 630, 'of the house', 'dim', 'font-size:7px')}${txt(984, 609, '0.42 kWh', '', 'font-size:16px;font-weight:500')}${txt(984, 633, 'of 3.09 kWh the used today', 'dim', 'font-size:7.5px')}`;
+    },
+    climate() {
+      const rows = [['Living room', 'Ground floor', '0.3° under', '21°', '46%', 87, 'linear-gradient(90deg,#8aa3b8,#d79a82)'], ['Kitchen', 'Ground floor', '0.9° over', '22.5°', '52%', 92, 'linear-gradient(90deg,#8aa3b8,#d79a60)'], ['Media room', 'Ground floor', '0.9° under', '20.5°', '44%', 70, 'linear-gradient(90deg,#7e97ae,#c99a8a)'], ['Studio', 'First floor', '1.7° under', '20°', '41%', 52, 'linear-gradient(90deg,#6f8aa5,#a3a9b0)'], ['Garden lounge', 'First floor', '1.4° under', '20°', '49%', 55, 'linear-gradient(90deg,#6f8aa5,#b3aaa0)']];
+      return `${topbar('Climate')}
+        ${box('g', 237, 84, 926, 79, '', 'border-radius:22px')}${txt(251, 96, 'Climate', '', 'font-size:28px;font-weight:400')}${txt(251, 135, 'Holding 21.5° · 21° indoors, 9.5° outside.', 'dim', 'font-size:9.5px')}
+        ${box('g', 237, 173, 250, 37, '', 'border-radius:14px;background:rgba(56,52,48,.8)')}${[['Thermostat', 241, 82], ['Heating plan', 327, 78], ['Air quality', 410, 74]].map(([n, x, w]) => `<div class="abs" data-th="${n}" style="left:${x}px;top:176px;width:${w}px;height:31px;display:flex;align-items:center;justify-content:center;border-radius:10px;font-size:10.5px;cursor:pointer;${n === st.therm ? 'background:#5fe3c1;color:#0d3b31;font-weight:600' : 'color:#d4cfc7'}">${n}</div>`).join('')}
+        ${box('g', 237, 224, 541, 426, '', 'border-radius:22px')}${txt(253, 238, 'Whole house', '', 'font-size:11.5px;font-weight:500')}${txt(253, 257, 'Larch House · 5 rooms on one thermostat', 'dim', 'font-size:8.5px')}${txt(704, 247, 'On', 'dim', 'font-size:10px')}<div class="tog ${st.whole ? '' : 'off'}" data-tog="whole" style="left:726px;top:243px"></div>
+        ${dial(368, 457, 103, st.set, 1, 72)}${txt(342, 411, '♨ HEATING', 'tl', 'font-size:8.5px;letter-spacing:.08em;left:356px')}${txt(334, 428, st.set.toFixed(1) + '<span style="font-size:15px;vertical-align:top;margin-left:2px;opacity:.8">°C</span>', '', 'font-size:48px;font-weight:300;letter-spacing:-.02em;left:337px')}${txt(334, 489, 'Indoors 21° · warming', 'dim', 'font-size:8.5px;left:335px')}${txt(300, 537, '10°', 'dim', 'font-size:8px')}${txt(451, 537, '30°', 'dim', 'font-size:8px')}
+        ${box('btn', 322, 553, 34, 34, '−', 'border-radius:50%;font-size:16px;background:rgba(255,255,255,.08)').replace('class="btn"', 'class="btn" data-set="-0.5"')}${box('btn', 412, 553, 34, 34, '+', 'border-radius:50%;font-size:16px;background:rgba(255,255,255,.08)').replace('class="btn"', 'class="btn" data-set="0.5"')}
+        ${txt(534, 298, 'Mode', 'dim', 'font-size:9px')}<div class="seg" style="left:534px;top:319px;width:227px;height:31px">${['Heat', 'Eco', 'Cool', 'Auto'].map((m) => `<span class="${m === st.mode ? 'on' : ''}" data-mode="${m}" style="padding:0 4px">${m}</span>`).join('')}</div>
+        ${txt(534, 363, 'Fan', 'dim', 'font-size:9px')}<div class="seg" style="left:534px;top:384px;width:227px;height:31px">${['Auto', 'Low', 'Mid', 'High'].map((m) => `<span class="${m === st.fan ? 'on' : ''}" data-fan="${m}" style="padding:0 4px">${m}</span>`).join('')}</div>
+        ${box('card-s', 534, 428, 227, 61, '', 'border-radius:12px')}${box('abs', 545, 443, 28, 28, '<i class="ic"></i>', 'display:grid;place-items:center;border-radius:9px;background:rgba(255,255,255,.08)')}${txt(585, 437, 'Away', '', 'font-size:10.5px;font-weight:500')}${txt(585, 453, 'Hold 16° when the house is<br>empty', 'dim', 'font-size:8px;line-height:11px')}<div class="tog off" data-tog="away" style="left:717px;top:449px;width:33px;height:19px;background:rgba(255,255,255,.88)"></div>
+        ${[['Indoors', '21°', 534, 499], ['Humidity', '46%', 651, 499], ['Outside', '9.5°', 534, 563], ['Set point in', '~26 min', 651, 563]].map(([l, v, x, y]) => `${box('card-s', x, y, 110, 57, '', 'border-radius:12px')}${txt(x + 11, y + 11, l, 'dim', 'font-size:8.5px')}${txt(x + 11, y + 28, v, '', 'font-size:12.5px;font-weight:500')}`).join('')}
+        ${box('g', 793, 224, 370, 426, '', 'border-radius:22px')}${txt(808, 238, 'Rooms', '', 'font-size:11.5px;font-weight:500')}${txt(808, 257, 'Each room against the set point of 21.5°', 'dim', 'font-size:8.5px')}${txt(1100, 247, '▏Set point', 'dim', 'font-size:8px')}
+        ${rows.map(([n, f, d, t, h, p, grad], i) => { const y = 290 + i * 50; return `${i ? box('abs', 808, y - 9, 340, 1, '', 'background:rgba(255,255,255,.06)') : ''}${txt(808, y, n, '', 'font-size:9.5px;font-weight:500')}${txt(808, y + 16, f, 'dim', 'font-size:8px')}<div class="bar" style="left:943px;top:${y + 4}px;width:135px;height:6px"><i style="width:${p}%;background:${grad}"></i></div><div class="abs" style="left:1026px;top:${y - 1}px;width:2px;height:16px;background:#e8e6e1"></div>${txt(943, y + 15, d, 'dim', 'font-size:7.5px;' + (d.includes('under') && i > 2 ? 'color:#7fb4e0' : ''))}${txt(1120, y - 3, t, '', 'font-size:10.5px;font-weight:500;width:28px;text-align:right;left:1120px')}${txt(1124, y + 16, h, 'dim', 'font-size:7.5px;width:24px;text-align:right;left:1124px')}`; }).join('')}
+        ${[['16°', 940], ['19°', 982], ['22°', 1033], ['25°', 1079]].map(([l, x]) => txt(x, 546, l, 'dim', 'font-size:7.5px')).join('')}
+        ${[['Warmest', 'Kitchen · 22.5°', 808], ['Coolest', 'Studio · 20°', 923], ['Spread', '2.6°', 1038]].map(([l, v, x]) => `${box('card-s', x, 589, 110, 47, '', 'border-radius:11px')}${txt(x + 10, 598, l, 'dim', 'font-size:8px')}${txt(x + 10, 612, v, '', 'font-size:9.5px;font-weight:500')}`).join('')}`;
+    },
+  };
+
+  function paint() {
+    stage.dataset.v = st.v;
+    $('chrome').innerHTML = sidebar();
+    for (const k of Object.keys(views)) $('v-' + k).innerHTML = k === st.v ? views[k]() : '';
+  }
+  stage.addEventListener('click', (e) => {
+    const t = e.target.closest('[data-go],[data-set],[data-mode],[data-fan],[data-tab],[data-th],[data-tog],[data-side]'); let d = false;
+    if (!t) return;
+    if (t.dataset.side) { st.side = !st.side; d = true; }
+    else if (t.dataset.go) { st.v = t.dataset.go; d = true; }
+    else if (t.dataset.set) { st.set = Math.max(10, Math.min(30, st.set + +t.dataset.set)); d = true; }
+    else if (t.dataset.mode) { st.mode = t.dataset.mode; d = true; }
+    else if (t.dataset.fan) { st.fan = t.dataset.fan; d = true; }
+    else if (t.dataset.tab) { st.tab = t.dataset.tab; d = true; }
+    else if (t.dataset.th) { st.therm = t.dataset.th; d = true; }
+    else if (t.dataset.tog) { st[t.dataset.tog] = !st[t.dataset.tog]; d = true; }
+    if (d) paint();
+  });
+  stage.addEventListener('mouseover', (e) => { const tip = $('tip'); if (tip) tip.style.display = e.target.closest('#chev') ? 'block' : 'none'; });
+  const fit = () => { const sc = $('scroll'), w = sc.clientWidth, k = innerWidth < 820 ? 0.5 : Math.min(1, w / 1179); stage.style.setProperty('--k', k); $('fit').style.setProperty('--k', k); };
+  addEventListener('resize', fit);
+  const h = location.hash.slice(1); if (views[h]) st.v = h;     // #rooms / #climate (dùng cho test đo pixel)
+  paint(); fit();
+  fetch('diff.json').then((r) => r.json()).then((j) => { $('diff').innerHTML = '<table class="hv-table"><tr><th>Màn</th><th>Sai lệch trung bình</th><th>Điểm lệch (Δ>96)</th></tr>' + j.views.map((v) => `<tr><td>${v.name}</td><td>${v.mad}%</td><td>${v.px}%</td></tr>`).join('') + '</table>'; }).catch(() => { $('diff').textContent = 'Chưa có số đo.'; });
+  window.__hv = { st, paint };
+})();
+</script>
+<script src="/search.js?v=1a21de124b" defer></script><script src="/stats.js?v=1a21de124b" defer></script></body></html>

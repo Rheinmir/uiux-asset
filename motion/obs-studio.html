@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Sample OBS Studio — uiux-asset</title>
-<link rel="stylesheet" href="../aw.css?v=535d2a8fd7">
+<link rel="stylesheet" href="../aw.css?v=1a21de124b">
 <link rel="stylesheet" href="_m.css">
 <style>
 .o-stage { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: 12px; padding: 12px; place-items: stretch; align-content: start; }
@@ -45,7 +45,7 @@
 </style>
 </head>
 <body>
-<main class="aw-wrap"><script src="../aw.js?v=535d2a8fd7"></script>
+<main class="aw-wrap"><script src="../aw.js?v=1a21de124b"></script>
 <div class="aw-crumb">
 <h1>OBS Studio <span class="aw-tag aw-tag--small aw-tag--solid-yellow m-badge" id="tb">MÔ PHỎNG</span></h1>
 <span>OBS thật là app native (C++/Qt), không chạy được trên web. Đây là MÔ PHỎNG bằng canvas + WebAudio: scene, source, filter, studio mode do trang tự vẽ; riêng ghi hình (<code>captureStream</code> + <code>MediaRecorder</code>) và bộ trộn âm (WebAudio) chạy API trình duyệt thật. Nhãn từng tab ở bên cạnh tiêu đề. · <a href="https://github.com/obsproject/obs-studio" target="_blank" rel="noopener">obsproject/obs-studio</a> · <a href="./">← Motion</a></span>
@@ -299,5 +299,5 @@ function openTab(id) {
 addEventListener('hashchange', () => openTab(location.hash.slice(1)));
 openTab(location.hash.slice(1)); log('OBS (mô phỏng) khởi động · canvas ' + W + 'x' + H + ' @ rAF'); requestAnimationFrame(frame);
 </script>
-<script src="_g.js?v=535d2a8fd7" defer></script>
+<script src="_g.js?v=1a21de124b" defer></script>
 </body></html>
