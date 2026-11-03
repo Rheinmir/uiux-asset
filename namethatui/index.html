@@ -1,38 +1,53 @@
 <!doctype html>
-<html lang="vi">
+<html lang="vi" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Tên UI — từ điển 91 thành phần giao diện — uiux-asset</title>
-<meta name="description" content="Từ điển tên chuẩn của thành phần giao diện (33 macOS, 58 web), 14 phong cách, 18 cặp dễ nhầm, kèm đặc tả cách site NameThatUI hoạt động. Mô tả viết lại bằng tiếng Việt, demo tự dựng, ghi nguồn.">
-<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
-<link rel="stylesheet" href="../aw.css?v=7cc303d521">
+<title>Gọi tên UI — từ điển 91 thành phần giao diện — uiux-asset</title>
+<meta name="description" content="Từ điển tên chuẩn của thành phần giao diện (33 macOS, 58 web), 14 phong cách, 18 cặp dễ nhầm, kèm đặc tả site NameThatUI. Giao diện vẽ lại bằng mã tự viết; mô tả viết lại bằng tiếng Việt, demo tự dựng, ghi nguồn.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||'dark'}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap">
 <style>
-.nt-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 12px; }
-.nt-tabs button, .nt-chips button { font: inherit; font-size: 14px; padding: 8px 16px; border-radius: 999px; border: 1px solid currentColor; background: transparent; color: inherit; cursor: pointer; }
-.nt-tabs button[aria-selected="true"], .nt-chips button[aria-pressed="true"] { background: currentColor; }
-.nt-tabs button[aria-selected="true"] span, .nt-chips button[aria-pressed="true"] span { color: var(--aw-bg-primary, #fff); }
-.nt-bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 14px; }
-.nt-bar input { flex: 1 1 240px; font: inherit; padding: 10px 16px; border-radius: 999px; border: 1px solid currentColor; background: transparent; color: inherit; min-width: 0; }
-.nt-chips { display: flex; gap: 6px; flex-wrap: wrap; }
-.nt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 14px; }
-.nt-card { display: flex; flex-direction: column; min-width: 0; border-radius: 14px; background: var(--aw-nf-bg-2, #f0f0f0); overflow: hidden; }
-.nt-demo { height: 126px; display: grid; place-items: center; background: color-mix(in srgb, currentColor 6%, transparent); position: relative; overflow: hidden; font-size: 12px; }
-.nt-demo.none { background: repeating-linear-gradient(135deg, color-mix(in srgb, currentColor 5%, transparent) 0 8px, transparent 8px 16px); opacity: .7; }
-.nt-body { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
-.nt-h { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
-.nt-h b { font-size: 15px; line-height: 1.25; }
-.nt-p { margin: 0; line-height: 1.5; font-size: 13.5px; opacity: .85; }
-.nt-foot { display: flex; gap: 10px; margin-top: auto; padding-top: 6px; font-size: 12px; }
-.nt-foot a, .nt-foot button { font: inherit; font-size: 12px; color: inherit; opacity: .75; background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; }
-.nt-tag { font-size: 10.5px; padding: 2px 8px; border-radius: 999px; border: 1px solid currentColor; opacity: .65; white-space: nowrap; }
-.nt-vs { display: grid; gap: 10px; max-width: 80ch; } .nt-vs div { padding: 14px 16px; border-radius: 12px; background: var(--aw-nf-bg-2, #f0f0f0); line-height: 1.55; }
-.nt-vs b { display: block; margin-bottom: 4px; }
-.nt-spec { max-width: 82ch; line-height: 1.7; } .nt-spec h3 { margin: 28px 0 8px; font-size: 18px; } .nt-spec code { font-size: .92em; }
-.nt-spec table { border-collapse: collapse; width: 100%; font-size: 14px; } .nt-spec td, .nt-spec th { padding: 7px 12px 7px 0; text-align: left; vertical-align: top; border-bottom: 1px solid color-mix(in srgb, currentColor 14%, transparent); }
-.nt-spec pre { padding: 14px 16px; border-radius: 12px; background: var(--aw-nf-bg-2, #f0f0f0); overflow: auto; font-size: 12.5px; line-height: 1.55; }
-.nt-lic { padding: 14px 16px; border-radius: 12px; border: 1px dashed currentColor; line-height: 1.6; max-width: 82ch; margin: 8px 0 18px; font-size: 14px; }
-.nt-count { font-size: 13px; opacity: .65; }
+:root{--bg:#0b0c0e;--fg:#edeef0;--mut:#8b8f98;--mut2:#5f636c;--bd:rgba(255,255,255,.08);--bd2:rgba(255,255,255,.16);--card:#111215;--blue:#4c8dff;--dot:rgba(255,255,255,.075);--mat:#0f1013;--chip:rgba(255,255,255,.06);--aw-bg-primary:#0f1013}
+:root[data-theme="light"]{--bg:#fff;--fg:#14151a;--mut:#6b6f78;--mut2:#9a9da5;--bd:rgba(0,0,0,.09);--bd2:rgba(0,0,0,.18);--card:#fafafa;--blue:#1d5fd6;--dot:rgba(0,0,0,.08);--mat:#f6f6f7;--chip:rgba(0,0,0,.05);--aw-bg-primary:#f6f6f7}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 "Geist",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}button{font:inherit;color:inherit}code,.mono{font-family:"Geist Mono",ui-monospace,Menlo,monospace}
+.wrap{max-width:1008px;margin:0 auto;padding:0 16px}
+header.top{border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px)}
+.hd{height:56px;display:flex;align-items:center;gap:22px}.logo{font-weight:600;font-size:15px;letter-spacing:-.01em;white-space:nowrap}.logo b{color:var(--blue);font-weight:600}.logo sup{display:inline-grid;place-items:center;width:15px;height:15px;border-radius:50%;background:#6d4cf0;color:#fff;font:600 9px/1 "Geist",sans-serif;vertical-align:top;margin-left:3px}
+.nav{display:flex;gap:20px;font-size:14px;color:var(--mut);overflow:auto;white-space:nowrap;scrollbar-width:none}.nav a{padding:4px 0;cursor:pointer}.nav a[aria-current="page"]{color:var(--fg)}.nav a:hover{color:var(--fg)}
+.sp{flex:1}.hsearch{display:flex;align-items:center;gap:8px;width:240px;height:32px;padding:0 10px;border:1px solid var(--bd);border-radius:8px;color:var(--mut);font-size:13.5px;cursor:text;background:transparent}.kbd{margin-left:auto;font:11px "Geist Mono",monospace;padding:1px 6px;border:1px solid var(--bd);border-radius:5px;color:var(--mut)}
+.ibtn{width:32px;height:32px;display:grid;place-items:center;border:1px solid var(--bd);border-radius:8px;background:transparent;cursor:pointer;color:var(--mut)}.ibtn:hover{color:var(--fg);border-color:var(--bd2)}
+.hero{text-align:center;padding:92px 0 38px}.hero h1{font-size:clamp(32px,9vw,48px);line-height:1;letter-spacing:-.025em;font-weight:600;margin:0}.hero h1 em{font-style:normal;color:var(--blue)}.hero p.s{color:var(--mut);max-width:448px;margin:16px auto 0;font-size:15px;line-height:1.62}
+.bigsearch{display:flex;align-items:center;gap:12px;max-width:568px;height:56px;margin:36px auto 0;padding:0 16px;border:1px solid var(--bd);border-radius:14px;background:var(--card);text-align:left}.bigsearch:focus-within{border-color:var(--bd2)}.bigsearch input{flex:1;min-width:0;border:0;outline:0;background:transparent;color:var(--fg);font:inherit;font-size:16px}.bigsearch input::placeholder{color:var(--mut)}
+.hint{color:var(--mut);font-size:13.5px;margin-top:24px}.hint a{color:var(--blue);cursor:pointer}.hint2{color:var(--mut2);font-size:13px;margin-top:8px}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--bd);margin-top:46px;flex-wrap:wrap}.tabs{display:flex;gap:6px}.tab{padding:12px 12px;font-size:14px;color:var(--mut);cursor:pointer;border:0;background:none;border-bottom:1px solid transparent;margin-bottom:-1px;white-space:nowrap}.tab small{font:11px "Geist Mono",monospace;margin-left:5px;color:var(--mut2)}.tab[aria-pressed="true"]{color:var(--fg);border-bottom-color:var(--fg)}
+.tools{display:flex;gap:8px;align-items:center;padding-bottom:8px}.seg{display:flex;padding:3px;border:1px solid var(--bd);border-radius:8px;background:var(--chip);font-size:13px}.seg button{border:0;background:none;padding:4px 10px;border-radius:6px;color:var(--mut);cursor:pointer}.seg button[aria-pressed="true"]{background:var(--bg);color:var(--fg);box-shadow:0 0 0 1px var(--bd)}.pill{display:flex;align-items:center;gap:6px;height:32px;padding:0 12px;border:1px solid var(--bd);border-radius:8px;background:none;color:var(--mut);font-size:13px;cursor:pointer}.pill:hover{color:var(--fg);border-color:var(--bd2)}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26px 20px;padding:24px 0 56px}.card{display:block;border-radius:12px;outline-offset:4px;cursor:pointer}
+.mat{position:relative;height:176px;border:1px solid var(--bd);border-radius:12px;background:radial-gradient(var(--dot) 1px,transparent 1.3px) 0 0/14px 14px,var(--mat);display:grid;place-items:center;overflow:hidden;pointer-events:none;transition:border-color .2s}.card:hover .mat{border-color:var(--bd2)}
+.mat.none{background:repeating-linear-gradient(135deg,var(--dot) 0 1px,transparent 1px 10px),var(--mat)}.mat .noy{font-size:12px;color:var(--mut2)}
+.ct{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin:12px 0 0}.ct b{font-size:14.5px;font-weight:600;letter-spacing:-.005em;line-height:1.3}.plat{font:600 9.5px "Geist Mono",monospace;letter-spacing:.08em;color:var(--mut2);text-transform:uppercase}
+.sym{font:12px/1.5 "Geist Mono",monospace;color:var(--blue);margin-top:3px;word-break:break-word}.cd{color:var(--mut);font-size:13.5px;line-height:1.5;margin:4px 0 0}
+.empty{grid-column:1/-1;text-align:center;color:var(--mut);padding:70px 0}
+.crumb{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:22px 0 18px;font-size:13px;color:var(--mut);flex-wrap:wrap}.crumb a:hover{color:var(--fg)}.acts{display:flex;gap:8px}.acts .pill{height:28px;font-size:12.5px}
+.dt{display:grid;grid-template-columns:1fr 1fr;gap:44px;padding-bottom:70px}.dmat{position:sticky;top:76px;height:380px;align-self:start;border:1px solid var(--bd);border-radius:14px;background:radial-gradient(var(--dot) 1px,transparent 1.3px) 0 0/14px 14px,var(--mat);display:grid;place-items:center;overflow:hidden}.dmat>div{transform:scale(1.5);transform-origin:center}
+.dt h1{font-size:30px;letter-spacing:-.02em;margin:0 0 8px;font-weight:600}.dt .symline{font:13px "Geist Mono",monospace;color:var(--blue);margin-bottom:6px}.aka{color:var(--mut);font-size:13.5px;font-style:italic;margin-bottom:16px}.dt p.body{font-size:15.5px;line-height:1.7;color:color-mix(in srgb,var(--fg) 88%,transparent);margin:0 0 6px}
+.dt h2{font:600 11.5px "Geist Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin:30px 0 12px}.quotes{display:flex;flex-wrap:wrap;gap:8px}.quotes span{font-size:13px;font-style:italic;padding:5px 11px;border:1px solid var(--bd);border-radius:8px;color:var(--mut)}
+.anat{border:1px solid var(--bd);border-radius:12px;overflow:hidden}.anat div{display:grid;grid-template-columns:22px 1fr;gap:10px;padding:12px 14px;border-bottom:1px solid var(--bd)}.anat div:last-child{border:0}.anat i{font:600 10px "Geist Mono",monospace;font-style:normal;color:#9b86ff;padding-top:3px}.anat b{font-size:14px;font-weight:600}.anat code{display:block;color:var(--blue);font-size:12px;margin:1px 0}.anat span{display:block;color:var(--mut);font-size:13.5px;line-height:1.55}
+.pbox{border:1px solid var(--bd);border-radius:12px;background:var(--card);padding:14px 16px;font-size:13.5px;line-height:1.65;color:color-mix(in srgb,var(--fg) 85%,transparent);position:relative}.pbox button{position:absolute;right:10px;top:10px}
+.code{border:1px solid var(--bd);border-radius:12px;background:var(--card);overflow:auto;margin-bottom:10px}.code i{display:block;font:600 10.5px "Geist Mono",monospace;font-style:normal;color:var(--mut);padding:7px 14px;border-bottom:1px solid var(--bd)}.code pre{margin:0;padding:12px 14px;font:12.5px/1.6 "Geist Mono",monospace}
+.see{display:grid;gap:8px}.see a{display:flex;justify-content:space-between;padding:10px 14px;border:1px solid var(--bd);border-radius:10px;font-size:14px}.see a:hover{border-color:var(--bd2)}.see span{color:var(--mut);font-size:12px}
+.later{margin-top:26px;padding:14px 16px;border:1px dashed var(--bd2);border-radius:12px;color:var(--mut);font-size:13.5px;line-height:1.6}
+.stitle{text-align:center;padding:76px 0 30px}.stitle small{display:block;font:600 11px "Geist Mono",monospace;letter-spacing:.14em;color:var(--blue);margin-bottom:16px}.stitle h1{font-size:clamp(32px,5.4vw,52px);letter-spacing:-.025em;font-weight:600;margin:0}.stitle h1 em{font-style:normal;color:var(--blue)}.stitle p{color:var(--mut);max-width:560px;margin:18px auto 0;line-height:1.65}
+.sw{height:176px}.sw .s-sw{width:100%;height:100%}.sw .s-sw i{width:140px;height:70px;line-height:70px;font-size:12px}.sg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26px 20px;padding:10px 0 56px}.sc .mat{padding:0;display:block;height:176px}
+.vs{display:grid;gap:12px;max-width:760px;margin:0 auto;padding:30px 0 60px}.vs div{border:1px solid var(--bd);border-radius:12px;padding:16px 18px;background:var(--card);line-height:1.6;color:color-mix(in srgb,var(--fg) 85%,transparent)}.vs b{display:block;color:var(--fg);margin-bottom:4px}.vs a{font-size:12.5px;color:var(--blue)}
+.spec{max-width:760px;margin:0 auto;padding:30px 0 60px;line-height:1.75;color:color-mix(in srgb,var(--fg) 88%,transparent)}.spec h3{margin:34px 0 10px;font-size:19px;letter-spacing:-.01em;color:var(--fg)}.spec table{border-collapse:collapse;width:100%;font-size:14px}.spec td,.spec th{padding:8px 12px 8px 0;text-align:left;vertical-align:top;border-bottom:1px solid var(--bd)}.spec pre{padding:14px 16px;border:1px solid var(--bd);border-radius:12px;background:var(--card);overflow:auto;font:12.5px/1.6 "Geist Mono",monospace}.spec code{font-size:.9em;color:var(--blue)}
+.lic{margin:10px 0 60px;padding:16px 18px;border:1px dashed var(--bd2);border-radius:12px;color:var(--mut);font-size:13.5px;line-height:1.7}.lic b{color:var(--fg)}.lic a{color:var(--blue)}
+footer.ft{border-top:1px solid var(--bd);padding:22px 0 40px;color:var(--mut);font-size:13px}
+@media(max-width:860px){.grid,.sg{grid-template-columns:repeat(2,minmax(0,1fr))}.dt{grid-template-columns:1fr;gap:24px}.dmat{position:static;height:300px}}
+@media(max-width:600px){.hsearch{display:none}.hd{gap:14px}.hero{padding:56px 0 28px}.grid,.sg{grid-template-columns:minmax(0,1fr)}.tools{width:100%;padding-bottom:10px}.bar{margin-top:30px}.tab{padding:10px 8px}.pill span{display:none}}
+
 /* demo nhỏ (tự dựng) */
 .d-tog { width: 38px; height: 22px; border-radius: 11px; background: #3b9; position: relative; } .d-tog::after { content: ''; position: absolute; right: 3px; top: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; }
 .d-row { display: flex; gap: 8px; align-items: center; } .d-pill { padding: 3px 10px; border-radius: 999px; background: #3b9; color: #043; font-size: 11px; } .d-pill.o { background: transparent; border: 1px solid currentColor; color: inherit; }
@@ -102,23 +117,52 @@
 .s-aqua { background: #dfe6ee repeating-linear-gradient(#dfe6ee 0 2px, #e9eef4 2px 4px); } .s-aqua i { border-radius: 28px; background: linear-gradient(#a9d4ff, #2f8cff 50%, #4aa2ff); border: 1px solid #1565c0; box-shadow: inset 0 1px 1px #fffc, 0 1px 3px #0005; color: #fff; }
 .s-windows-aero { background: linear-gradient(135deg, #3a7bd5, #00d2ff); } .s-windows-aero i { border-radius: 8px; background: rgba(255, 255, 255, .3); backdrop-filter: blur(6px); border: 1px solid #fff9; box-shadow: inset 0 0 0 1px #fff4; color: #012; }
 @media (max-width: 600px) { .nt-demo { height: 116px; } }
+/* demo web bổ sung (tự dựng) */
+.w{font:11px/1.25 "Geist",system-ui,sans-serif;color:var(--fg)}.w *{box-sizing:border-box}
+.w-line{height:5px;border-radius:3px;background:var(--bd2)}.w-b{padding:4px 10px;border-radius:6px;border:1px solid var(--bd2);font-size:10.5px;white-space:nowrap}.w-b.p{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.w-dnd{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:200px}.w-dnd>div{display:grid;gap:5px;padding:6px;border:1px dashed var(--bd2);border-radius:8px;min-height:72px;align-content:start}.w-dnd i{display:block;height:16px;border-radius:5px;background:var(--chip);border:1px solid var(--bd)}.w-dnd i.l{background:var(--blue);border-color:var(--blue);transform:rotate(-4deg) translate(22px,6px);box-shadow:0 8px 14px #0006;position:relative;z-index:2}
+.w-scr{position:relative;width:200px;height:112px;border:1px solid var(--bd2);border-radius:8px;overflow:hidden;background:var(--bg)}.w-scr .dm{position:absolute;inset:0;background:rgba(0,0,0,.4)}.w-scr .d1{position:absolute;left:30px;top:26px;width:72px;height:44px;border-radius:7px;background:var(--card);border:1px solid var(--bd2)}.w-scr .d2{position:absolute;right:0;top:0;bottom:0;width:52px;background:var(--card);border-left:1px solid var(--bd2)}.w-scr .d3{position:absolute;left:0;right:0;bottom:0;height:30px;background:var(--card);border-top:1px solid var(--bd2);border-radius:10px 10px 0 0}
+.w-pop{display:flex;gap:12px;align-items:flex-end}.w-tip{padding:3px 7px;border-radius:5px;background:var(--fg);color:var(--bg);font-size:9.5px;margin-bottom:4px}.w-menu{width:62px;border:1px solid var(--bd2);border-radius:7px;background:var(--card);padding:3px;display:grid;gap:1px;font-size:10px}.w-menu span{padding:2px 6px;border-radius:4px}.w-menu .on{background:var(--chip)}.w-box{border:1px solid var(--bd2);border-radius:8px;background:var(--bg)}
+.w-cbx{width:170px}.w-cbx .in{display:flex;justify-content:space-between;padding:6px 9px;border:1px solid var(--blue);border-radius:7px}.w-cbx .ls{margin-top:3px;border:1px solid var(--bd2);border-radius:7px;background:var(--card);padding:3px;display:grid;font-size:10.5px}.w-cbx .ls span{padding:3px 7px;border-radius:4px}.w-cbx .ls .on{background:var(--blue);color:#fff}
+.w-cmd{width:190px;border:1px solid var(--bd2);border-radius:10px;background:var(--card);box-shadow:0 12px 26px #0005;overflow:hidden}.w-cmd .in{padding:8px 10px;border-bottom:1px solid var(--bd);color:var(--mut)}.w-cmd .rw{display:flex;justify-content:space-between;padding:5px 10px;font-size:10.5px}.w-cmd .rw.on{background:var(--chip)}.w-cmd kbd{font:9px "Geist Mono",monospace;color:var(--mut)}
+.w-stk{width:170px;height:104px;border:1px solid var(--bd2);border-radius:8px;overflow:hidden;position:relative}.w-stk .fx{height:18px;background:var(--fg);color:var(--bg);padding:3px 8px;font-size:9.5px}.w-stk .sl{margin:8px 8px 0;padding:3px 7px;background:var(--blue);color:#fff;border-radius:4px;font-size:9.5px;width:60px}.w-stk .w-line{margin:6px 8px}
+.w-hc{position:relative;padding-top:50px}.w-hc .cd{position:absolute;left:-14px;top:0;width:128px;padding:8px;border:1px solid var(--bd2);border-radius:9px;background:var(--card);box-shadow:0 10px 22px #0005;display:flex;gap:7px;align-items:center}.w-hc .av{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#8ee3ff,#c9a0ff);flex:none}.w-hc u{color:var(--blue);font-size:12px}
+.w-tg{display:inline-flex;border:1px solid var(--bd2);border-radius:8px;overflow:hidden}.w-tg span{padding:6px 12px;font-size:12px}.w-tg span+span{border-left:1px solid var(--bd2)}.w-tg .on{background:var(--chip);font-weight:600}
+.w-ff{width:158px;display:grid;gap:4px}.w-ff label{font-weight:600;font-size:11px}.w-ff .in{padding:6px 8px;border:1px solid #e5584a;border-radius:6px}.w-ff small{color:#e5584a;font-size:9.5px}
+.w-lb{position:relative;width:200px;height:112px;border-radius:8px;background:rgba(0,0,0,.55);display:grid;place-items:center;overflow:hidden}.w-lb i{display:block;width:100px;height:66px;border-radius:6px;background:linear-gradient(135deg,#6a8cff,#e884ff)}.w-lb b{position:absolute;right:8px;top:6px;font-size:14px;color:#fff;font-weight:400}.w-lb em{position:absolute;left:8px;top:48px;font-style:normal;color:#fff9;font-size:16px}
+.w-bento{display:grid;grid-template-columns:repeat(4,38px);grid-template-rows:repeat(3,28px);gap:5px}.w-bento i{display:block;border-radius:6px;background:var(--chip);border:1px solid var(--bd2)}.w-bento .a{grid-column:span 2;grid-row:span 2;background:var(--blue);border-color:var(--blue)}.w-bento .b{grid-column:span 2}.w-bento .c{grid-row:span 2}
+.w-msn{display:flex;gap:5px;align-items:flex-start}.w-msn div{display:grid;gap:5px}.w-msn i{display:block;width:38px;border-radius:6px;background:var(--chip);border:1px solid var(--bd2)}
+.w-scm{font:600 15px "Geist Mono",monospace;letter-spacing:.04em;display:grid;gap:6px;text-align:center}.w-scm small{font:400 10px "Geist Mono",monospace;color:var(--mut)}
+.w-car{width:180px}.w-car .sl{height:70px;border-radius:8px;background:linear-gradient(135deg,#5b8cff,#b06bff);position:relative}.w-car .sl::before,.w-car .sl::after{position:absolute;top:26px;width:18px;height:18px;border-radius:50%;background:#fff6;color:#fff;text-align:center;line-height:17px;font-size:11px}.w-car .sl::before{content:'‹';left:6px}.w-car .sl::after{content:'›';right:6px}.w-car .dt{display:flex;gap:5px;justify-content:center;margin-top:8px}.w-car .dt i{width:6px;height:6px;border-radius:50%;background:var(--bd2)}.w-car .dt i:first-child{background:var(--fg)}
+.w-nav{width:208px;border:1px solid var(--bd2);border-radius:8px;display:flex;align-items:center;gap:9px;padding:7px 10px;font-size:10.5px}.w-nav b{font-weight:700}.w-nav .sp{flex:1}
+.w-cardx{width:132px;border:1px solid var(--bd2);border-radius:10px;overflow:hidden;background:var(--card)}.w-cardx .im{height:44px;background:linear-gradient(135deg,#f6a,#68f)}.w-cardx .tx{padding:7px 8px;display:grid;gap:4px}.w-cardx b{font-size:11px}
+.w-rz{position:relative;width:150px;height:84px;border:1px dashed var(--bd2);border-radius:8px;display:grid;place-items:center;color:var(--mut)}.w-rz::after{content:'';position:absolute;right:-1px;bottom:-1px;width:14px;height:14px;background:linear-gradient(135deg,transparent 50%,var(--fg) 50% 56%,transparent 56% 70%,var(--fg) 70% 76%,transparent 76%)}
+.w-si{width:150px;padding:11px;border:1px solid var(--bd2);border-radius:10px;background:var(--card);display:grid;gap:6px}.w-si b{font-size:12px}.w-si .in{padding:5px 8px;border:1px solid var(--bd2);border-radius:6px;color:var(--mut)}.w-si .w-b{text-align:center}
+.w-cal{width:150px;font-size:9.5px;text-align:center}.w-cal .h{display:flex;justify-content:space-between;margin-bottom:4px;font-weight:600;font-size:11px}.w-cal .g{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}.w-cal .g span{padding:3px 0;border-radius:4px;color:var(--mut)}.w-cal .g .on{background:var(--blue);color:#fff}.w-cal .g .tt{color:var(--fg);box-shadow:inset 0 0 0 1px var(--bd2)}
+.w-par{position:relative;width:180px;height:96px;border-radius:8px;overflow:hidden;background:var(--chip)}.w-par i{position:absolute;display:block;border-radius:50%}.w-par .a{width:90px;height:90px;left:10px;top:30px;background:#6a8cff55}.w-par .b{width:60px;height:60px;left:80px;top:6px;background:#c27bff66}.w-par .c{width:30px;height:30px;left:130px;top:52px;background:#ff8ab070}.w-par span{position:absolute;right:6px;bottom:4px;color:var(--mut);font-size:9.5px}
+.w-ms{width:178px}.w-ms .in{display:flex;gap:4px;flex-wrap:wrap;padding:5px;border:1px solid var(--bd2);border-radius:7px}.w-ms .in i{font-style:normal;font-size:10px;padding:2px 7px;border-radius:99px;background:var(--chip);border:1px solid var(--bd2)}.w-ms .ls{margin-top:3px;border:1px solid var(--bd2);border-radius:7px;padding:3px;font-size:10px;background:var(--card)}.w-ms .ls span{display:flex;gap:6px;padding:2px 5px}.w-ms .ls .on::before{content:'✓';color:var(--blue)}
+.w-spy{display:flex;gap:14px;width:190px;height:88px}.w-spy .toc{display:grid;gap:4px;font-size:10px;color:var(--mut);align-content:start;border-left:1px solid var(--bd);padding-left:9px}.w-spy .toc .on{color:var(--fg);font-weight:600;position:relative}.w-spy .toc .on::before{content:'';position:absolute;left:-10px;top:1px;bottom:1px;width:2px;background:var(--blue)}.w-spy .ct{flex:1;display:grid;gap:6px;align-content:start}
+.w-ph{width:96px;height:112px;border:2px solid var(--bd2);border-radius:14px;position:relative;overflow:hidden;background:var(--card)}.w-ph .bt{position:absolute;left:0;right:0;bottom:0;height:26px;border-top:1px solid var(--bd2);display:flex;justify-content:space-around;align-items:center;background:var(--bg)}.w-ph .bt i{width:12px;height:12px;border-radius:4px;background:var(--bd2)}.w-ph .bt i:first-child{background:var(--blue)}
+.w-dt{width:200px;border:1px solid var(--bd2);border-radius:8px;overflow:hidden;font-size:10px}.w-dt div{display:grid;grid-template-columns:1.2fr 1fr .6fr;padding:5px 8px;border-bottom:1px solid var(--bd)}.w-dt div:last-child{border:0}.w-dt .hd{background:var(--chip);font-weight:600;color:var(--mut)}.w-dt .on{background:color-mix(in srgb,var(--blue) 22%,transparent)}
+.w-hv{display:flex;gap:9px}.w-hv div{width:56px;height:62px;border:1px solid var(--bd2);border-radius:9px;display:grid;place-items:center;font-size:9.5px;color:var(--mut);background:var(--card)}.w-hv .l{transform:translateY(-6px);box-shadow:0 12px 18px #0006;color:var(--fg)}.w-hv .c{background:var(--blue);color:#fff;border-color:var(--blue)}.w-hv .s{background:radial-gradient(circle at 60% 30%,#ffffff40,transparent 60%),var(--card);color:var(--fg)}
+.w-ta{display:grid;gap:9px;font:600 14px "Geist",sans-serif;width:170px}.w-ta .cur{display:inline-block;width:2px;height:14px;background:var(--blue);vertical-align:middle;animation:m-bl 1s steps(2) infinite}.w-ta .sw{height:18px;overflow:hidden}.w-ta .sw span{display:block;color:var(--blue)}
+.w-tm{display:flex;gap:6px;align-items:center;font:600 15px "Geist Mono",monospace}.w-tm div{display:grid;gap:3px;text-align:center;height:76px;overflow:hidden;width:34px;border-radius:7px;background:linear-gradient(var(--card),transparent 30%,transparent 70%,var(--card));border:1px solid var(--bd)}.w-tm .on{color:var(--fg);background:var(--chip)}.w-tm .f{color:var(--mut2);font-size:11px}
+.w-pie{display:flex;gap:16px;align-items:center}.w-pie i{display:block;width:70px;height:70px;border-radius:50%;background:conic-gradient(#5b8cff 0 40%,#b06bff 40% 68%,#ff8ab0 68% 85%,#4bd1a0 85%)}.w-pie i.d{position:relative}.w-pie i.d::after{content:'62%';position:absolute;inset:16px;border-radius:50%;background:var(--mat);display:grid;place-items:center;font:600 10px "Geist Mono",monospace}
+.w-fab{position:relative;width:190px;height:100px;border:1px solid var(--bd2);border-radius:8px;background:var(--bg);overflow:hidden}.w-fab .a{position:absolute;right:12px;bottom:12px;width:40px;height:40px;border-radius:50%;background:var(--blue);color:#fff;display:grid;place-items:center;font-size:22px;box-shadow:0 8px 16px #0006}.w-fab .t{position:absolute;right:58px;bottom:22px;padding:3px 8px;border-radius:6px;background:var(--fg);color:var(--bg);font-size:9.5px}.w-fab .w-line{margin:9px 10px}
+.w-sce{position:relative;width:150px;height:100px}.w-sce i{position:absolute;display:block;width:96px;height:62px;border-radius:9px;border:1px solid var(--bd2);background:var(--card)}.w-sce i:nth-child(1){left:0;top:0;opacity:.45}.w-sce i:nth-child(2){left:18px;top:14px;opacity:.75}.w-sce i:nth-child(3){left:36px;top:28px;background:var(--blue);border-color:var(--blue)}.w-sce b{position:absolute;right:0;top:20px;font-weight:400;color:var(--mut)}
+.w-tour{position:relative;width:200px;height:112px;border:1px solid var(--bd2);border-radius:8px;overflow:hidden;background:var(--bg)}.w-tour .dm{position:absolute;inset:0;background:rgba(0,0,0,.55)}.w-tour .hl{position:absolute;left:18px;top:24px;width:56px;height:24px;border-radius:6px;box-shadow:0 0 0 2px var(--blue)}.w-tour .tp{position:absolute;left:18px;top:56px;width:120px;padding:7px 9px;border-radius:8px;background:var(--fg);color:var(--bg);font-size:10px}.w-tour .tp small{display:block;opacity:.6;margin-top:3px}
+.w-casc{display:flex;gap:2px;align-items:flex-start}.w-casc .w-menu{width:76px}.w-casc .w-menu .on{background:var(--blue);color:#fff}.w-casc .w-menu.s{margin-top:8px}
+.mat>div{transform:scale(1.18)}
 </style>
 </head>
-<body>
-<main class="aw-wrap"><script src="../aw.js?v=7cc303d521"></script>
-<div class="aw-crumb">
-<h1>Tên UI. Từ điển thành phần giao diện <span class="aw-tag aw-tag--small aw-tag--solid-green m-badge" id="tot">105 MỤC</span></h1>
-<span>«Cái này tên là gì?» Tra tên chuẩn của 91 thành phần giao diện (33 macOS, 58 web), 14 phong cách thị giác và 18 cặp hay bị nhầm, kèm một bản đặc tả cách site gốc <a href="https://namethatui.com/" target="_blank" rel="noopener">NameThatUI</a> vận hành. · <a href="../motion/">← Motion</a></span>
-</div>
-<div class="nt-lic" id="lic"><b>Nguồn và bản quyền.</b> Ý tưởng và danh sách thuật ngữ lấy từ <a href="https://namethatui.com/" target="_blank" rel="noopener">namethatui.com</a>. Site đó không công bố giấy phép mở (không có LICENSE hay điều khoản; <code>robots.txt</code> cho phép bot nhưng đó không phải giấy phép), nên trang này <b>không chép</b> chữ, demo, mã hay ảnh của họ. Tên thuật ngữ là sự kiện công khai; mô tả được viết lại bằng tiếng Việt; demo nhỏ do mình tự dựng; mỗi thẻ có đường dẫn về trang gốc để xem bản đầy đủ.</div>
-
-<div class="nt-tabs" role="tablist" id="tabs"></div>
-<div id="pane"></div>
-</main>
-<script src="data.js"></script>
+<body><div id="app"></div>
+<script src="data.js"></script><script src="content.js"></script>
 <script>
+
 (() => {
-  const N = window.NT, $ = (id) => document.getElementById(id), esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const N = window.NT, F = window.NT_FULL || {}, $ = (id) => document.getElementById(id), esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  try { const t = localStorage.getItem('ovs-theme'); document.documentElement.dataset.theme = t || 'dark'; } catch { document.documentElement.dataset.theme = 'dark'; }
+
   const D = {   // demo tự dựng, khoá theo cột 4 trong data.js hoặc slug
     dots: '<div class="d-dots">···</div>', divider: '<div class="d-div"></div>', progress: '<div class="d-bar"><i></i></div>', toast: '<div class="d-toast">Đã lưu thay đổi</div>',
     scrim: '<div class="d-scrim"><i></i></div>', skeleton: '<div class="d-sk"><i></i><i style="width:70%"></i><i style="width:85%"></i></div>',
@@ -162,23 +206,93 @@
     "alert": "<div class=\"m m-alert\"><i class=\"m-app\"></i><b>Xoá tệp này?</b><span style=\"opacity:.7\">Thao tác không hoàn tác được.</span><div class=\"m-row\"><span class=\"m-btn\">Huỷ</span><span class=\"m-btn pri\">Xoá</span></div></div>",
     "color-well": "<div class=\"m m-row\"><div class=\"m-well\"><i></i></div><span style=\"opacity:.6\">Màu viền</span></div>",
     "rule-editor": "<div class=\"m\" style=\"width:168px;display:grid;gap:5px\"><div class=\"m-row\"><span class=\"m-btn\">Tên ▾</span><span class=\"m-btn\">chứa ▾</span><span class=\"m-btn\" style=\"padding:3px 6px\">−</span><span class=\"m-btn\" style=\"padding:3px 6px\">+</span></div><div class=\"m-row\"><span class=\"m-btn\">Loại ▾</span><span class=\"m-btn\">là ▾</span><span class=\"m-btn\" style=\"padding:3px 6px\">−</span><span class=\"m-btn\" style=\"padding:3px 6px\">+</span></div></div>",
+    "drag-and-drop": "<div class=\"w w-dnd\"><div><i></i><i class=\"l\"></i></div><div><i></i></div></div>",
+    "dialog-drawer-sheet": "<div class=\"w w-scr\"><div class=\"dm\"></div><i class=\"d1\"></i><i class=\"d2\"></i><i class=\"d3\"></i></div>",
+    "popover-dropdown-tooltip": "<div class=\"w w-pop\"><div style=\"display:grid;justify-items:center;gap:3px\"><span class=\"w-tip\">Lưu</span><span class=\"w-b\">Nút</span></div><div class=\"w-menu\"><span class=\"on\">Sửa</span><span>Chép</span><span>Xoá</span></div><div class=\"w-box\" style=\"padding:8px;width:70px\"><div class=\"w-line\" style=\"margin-bottom:5px\"></div><div class=\"w-line\" style=\"width:70%\"></div></div></div>",
+    "combobox": "<div class=\"w w-cbx\"><div class=\"in\"><span>Hà|</span><span>▾</span></div><div class=\"ls\"><span class=\"on\">Hà Nội</span><span>Hà Giang</span><span>Hà Tĩnh</span></div></div>",
+    "command-palette": "<div class=\"w w-cmd\"><div class=\"in\">⌕ mở trang…</div><div class=\"rw on\"><span>Mở trang chủ</span><kbd>⌘ 1</kbd></div><div class=\"rw\"><span>Đổi giao diện</span><kbd>⌘ T</kbd></div><div class=\"rw\"><span>Tìm tệp</span><kbd>⌘ P</kbd></div></div>",
+    "sticky-fixed": "<div class=\"w w-stk\"><div class=\"fx\">Thanh cố định</div><div class=\"sl\">Mục 2</div><div class=\"w-line\"></div><div class=\"w-line\" style=\"width:70%\"></div></div>",
+    "hover-card": "<div class=\"w w-hc\"><div class=\"cd\"><span class=\"av\"></span><span><b>An Nguyễn</b><br><span style=\"color:var(--mut)\">Thiết kế</span></span></div><u>@an</u></div>",
+    "toggle-group": "<div class=\"w w-tg\"><span class=\"on\">B</span><span>I</span><span>U</span></div>",
+    "form-field": "<div class=\"w w-ff\"><label>Email</label><div class=\"in\">an@</div><small>Email chưa hợp lệ</small></div>",
+    "lightbox": "<div class=\"w w-lb\"><b>×</b><em>‹</em><i></i></div>",
+    "bento-grid": "<div class=\"w w-bento\"><i class=\"a\"></i><i></i><i></i><i class=\"c\"></i><i class=\"b\"></i><i></i><i></i></div>",
+    "masonry": "<div class=\"w w-msn\"><div><i style=\"height:44px\"></i><i style=\"height:26px\"></i><i style=\"height:34px\"></i></div><div><i style=\"height:28px\"></i><i style=\"height:52px\"></i><i style=\"height:24px\"></i></div><div><i style=\"height:36px\"></i><i style=\"height:30px\"></i><i style=\"height:42px\"></i></div></div>",
+    "text-scramble": "<div class=\"w w-scm\"><span>G#7 t@n u!</span><small>↓</small><span>Gọi tên ui</span></div>",
+    "carousel": "<div class=\"w w-car\"><div class=\"sl\"></div><div class=\"dt\"><i></i><i></i><i></i><i></i></div></div>",
+    "header-navbar": "<div class=\"w w-nav\"><b>◈ Logo</b><span>Sản phẩm</span><span>Giá</span><span class=\"sp\"></span><span class=\"w-b p\">Đăng nhập</span></div>",
+    "card": "<div class=\"w w-cardx\"><div class=\"im\"></div><div class=\"tx\"><b>Tiêu đề thẻ</b><div class=\"w-line\"></div><div class=\"w-line\" style=\"width:70%\"></div><span class=\"w-b\" style=\"justify-self:start\">Xem</span></div></div>",
+    "resize-handle": "<div class=\"w w-rz\">Kéo góc</div>",
+    "sign-in-form": "<div class=\"w w-si\"><b>Đăng nhập</b><div class=\"in\">Email</div><div class=\"in\">Mật khẩu</div><div class=\"w-b p\">Tiếp tục</div></div>",
+    "date-picker": "<div class=\"w w-cal\"><div class=\"h\"><span>‹</span><span>Tháng 11</span><span>›</span></div><div class=\"g\"><span>T2</span><span>T3</span><span>T4</span><span>T5</span><span>T6</span><span>T7</span><span>CN</span><span>2</span><span class=\"tt\">3</span><span>4</span><span class=\"on\">5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span></div></div>",
+    "parallax": "<div class=\"w w-par\"><i class=\"a\"></i><i class=\"b\"></i><i class=\"c\"></i><span>↕ cuộn</span></div>",
+    "multi-select": "<div class=\"w w-ms\"><div class=\"in\"><i>Thiết kế ×</i><i>Code ×</i></div><div class=\"ls\"><span class=\"on\">Thiết kế</span><span class=\"on\">Code</span><span>Viết</span></div></div>",
+    "scrollspy": "<div class=\"w w-spy\"><div class=\"toc\"><span>Mở đầu</span><span class=\"on\">Cách dùng</span><span>Ví dụ</span></div><div class=\"ct\"><div class=\"w-line\"></div><div class=\"w-line\" style=\"width:80%\"></div><div class=\"w-line\"></div></div></div>",
+    "bottom-navigation": "<div class=\"w w-ph\"><div class=\"bt\"><i></i><i></i><i></i><i></i></div></div>",
+    "data-table": "<div class=\"w w-dt\"><div class=\"hd\"><span>Tên ↑</span><span>Loại</span><span>SL</span></div><div><span>Alpha</span><span>Web</span><span>12</span></div><div class=\"on\"><span>Beta</span><span>macOS</span><span>8</span></div><div><span>Gamma</span><span>Web</span><span>3</span></div></div>",
+    "hover-effects": "<div class=\"w w-hv\"><div class=\"l\">nổi lên</div><div class=\"c\">đổi màu</div><div class=\"s\">ánh sáng</div></div>",
+    "text-animations": "<div class=\"w w-ta\"><span>Đang gõ<i class=\"cur\"></i></span><span class=\"sw\"><span>nhanh hơn</span></span></div>",
+    "time-pickers": "<div class=\"w w-tm\"><div><span class=\"f\">08</span><span class=\"on\">09</span><span class=\"f\">10</span></div>:<div><span class=\"f\">40</span><span class=\"on\">41</span><span class=\"f\">42</span></div><div><span class=\"f\">AM</span><span class=\"on\">PM</span></div></div>",
+    "pie-donut-chart": "<div class=\"w w-pie\"><i></i><i class=\"d\"></i></div>",
+    "floating-buttons": "<div class=\"w w-fab\"><div class=\"w-line\"></div><div class=\"w-line\" style=\"width:60%\"></div><span class=\"t\">Tạo mới</span><span class=\"a\">+</span></div>",
+    "scroll-effects": "<div class=\"w w-sce\"><i></i><i></i><i></i><b>↓</b></div>",
+    "product-tour": "<div class=\"w w-tour\"><span class=\"w-b\" style=\"position:absolute;left:24px;top:28px;z-index:1\">Lọc</span><div class=\"dm\"></div><div class=\"hl\"></div><div class=\"tp\">Bấm để lọc dữ liệu<small>Bước 2 / 4</small></div></div>",
+    "cascading-menus": "<div class=\"w w-casc\"><div class=\"w-menu\"><span>Tệp</span><span class=\"on\">Chia sẻ ›</span><span>Xuất</span></div><div class=\"w-menu s\"><span>Email</span><span>Liên kết</span></div></div>",
   };
-  const all = [...N.web.map((r) => ({ p: 'Web', r })), ...N.macos.map((r) => ({ p: 'macOS', r }))];
-  const st = { tab: 'dict', plat: 'all', q: '' };
-  const TABS = [['dict', 'Từ điển'], ['styles', 'Phong cách'], ['vs', 'Dễ nhầm'], ['spec', 'Đặc tả site']];
-  $('tabs').innerHTML = TABS.map(([k, t]) => `<button role="tab" data-t="${k}" aria-selected="${k === st.tab}"><span>${t}</span></button>`).join('');
-  $('tot').textContent = (N.macos.length + N.web.length + N.styles.length + N.vs.length) + ' MỤC';
-  const prompt = (p, r) => `Hãy dựng thành phần «${r[1]}» cho ${p === 'macOS' ? 'ứng dụng macOS (SwiftUI/AppKit)' : 'web (HTML/CSS/JS, truy cập được)'}. Mô tả: ${r[2]} Yêu cầu: đủ trạng thái hover, focus, disabled; dùng được bằng bàn phím; đặt đúng vai trò truy cập (ARIA/accessibility).`;
-  function dict() {
-    const q = st.q.trim().toLowerCase(), list = all.filter(({ p, r }) => (st.plat === 'all' || st.plat === p) && (!q || (r[0] + ' ' + r[1] + ' ' + r[2]).toLowerCase().includes(q)));
-    const card = ({ p, r }) => { const d = D[r[3]] || D[r[0]], url = `https://namethatui.com/${p === 'macOS' ? 'macos' : 'web'}/${r[0]}`;
-      return `<article class="nt-card"><div class="nt-demo${d ? '' : ' none'}">${d || '<span style="opacity:.5">chưa có demo</span>'}</div><div class="nt-body"><div class="nt-h"><b>${esc(r[1])}</b><span class="nt-tag">${p}</span></div><p class="nt-p">${esc(r[2])}</p><div class="nt-foot"><button type="button" data-cp="${esc(r[0])}">Chép prompt</button><a href="${url}" target="_blank" rel="noopener">Trang gốc ↗</a></div></div></article>`; };
-    return `<div class="nt-bar"><input id="q" type="search" placeholder="Mô tả cái bạn thấy hoặc gõ tên: «ba chấm», «thanh trượt», «menu»…" value="${esc(st.q)}" aria-label="Tìm thành phần"><div class="nt-chips">${[['all', 'Tất cả'], ['macOS', 'macOS'], ['Web', 'Web']].map(([k, t]) => `<button type="button" data-p="${k}" aria-pressed="${st.plat === k}"><span>${t}</span></button>`).join('')}</div><span class="nt-count">${list.length} / ${all.length}</span></div>
-      <div class="nt-grid">${list.map(card).join('') || '<p class="nt-p">Không khớp mục nào. Thử mô tả hình dạng hoặc vị trí.</p>'}</div>`;
+
+  // ký hiệu API (tên định danh công khai trong tài liệu Apple, ARIA, HTML, CSS); chỉ ghi những cái chắc chắn
+  const SYM = { 'menu-bar': 'NSMenu', 'context-menu': 'contextMenu(menuItems:)', 'disclosure-triangle': 'DisclosureGroup', 'dock-badge': 'NSDockTile.badgeLabel', 'focus-ring': 'NSFocusRingType', 'inspector': 'inspector(isPresented:content:)', 'insertion-caret': 'NSTextInsertionIndicator', 'menu-bar-extra': 'MenuBarExtra', 'panel': 'NSPanel', 'popover': 'NSPopover', 'popup-pulldown-combo': 'NSPopUpButton', 'segmented-control': 'NSSegmentedControl', 'sheet': 'sheet(isPresented:content:)', 'sidebar': 'NavigationSplitView', 'stepper': 'NSStepper', 'toolbar': 'NSToolbar', 'traffic-lights': 'standardWindowButton(_:)', 'vibrancy': 'NSVisualEffectView', 'window': 'NSWindow', 'split-view': 'NSSplitView', 'scroll-view': 'NSScrollView', 'search-field': 'NSSearchField', 'save-panel': 'NSSavePanel', 'token-field': 'NSTokenField', 'combo-button': 'NSComboButton', 'level-indicator': 'NSLevelIndicator', 'column-view': 'NSBrowser', 'outline-view': 'NSOutlineView', 'pointer': 'NSCursor', 'alert': 'NSAlert', 'slider': 'NSSlider', 'color-well': 'NSColorWell', 'rule-editor': 'NSPredicateEditor' };
+  Object.assign(SYM, { 'drag-and-drop': 'draggable="true"', 'divider': '<hr> · role="separator"', 'progress-indicators': '<progress> · role="progressbar"', 'toast': 'role="status"', 'dialog-drawer-sheet': '<dialog>', 'popover-dropdown-tooltip': 'popover · role="tooltip"', 'combobox': 'role="combobox"', 'command-palette': 'role="dialog" + role="combobox"', 'accordion': '<details> · <summary>', 'tabs': 'role="tablist"', 'breadcrumbs': 'aria-label="Breadcrumb"', 'sticky-fixed': 'position: sticky | fixed', 'focus-ring-web': ':focus-visible', 'switch-checkbox-radio': 'role="switch" · type="checkbox" | "radio"', 'form-field': '<label for> · aria-describedby', 'truncation': 'text-overflow: ellipsis', 'hamburger-menu': 'aria-expanded · aria-controls', 'masonry': 'grid-template-rows: masonry', 'easing': 'transition-timing-function', 'spring': 'linear() easing', 'carousel': 'role="region" aria-roledescription="carousel"', 'pagination': '<nav aria-label="Pagination">', 'date-picker': '<input type="date">', 'parallax': 'animation-timeline: scroll()', 'steps': 'aria-current="step"', 'scrollspy': 'IntersectionObserver', 'alert-callout-banner': 'role="alert"', 'timeline': '<ol> · <time>', 'status-dot': 'aria-label', 'data-table': '<table> · role="grid"', 'time-pickers': '<input type="time">', 'waffle-menu': '<button aria-expanded aria-controls>', 'scroll-effects': 'animation-timeline: view()', 'cascading-menus': 'aria-haspopup="menu"', 'hover-effects': ':hover', 'lightbox': '<dialog> + showModal()', 'scrim': '::backdrop', 'multi-select': 'role="listbox" aria-multiselectable' });
+
+  const all = [...N.web.map((r) => ({ p: 'web', r })), ...N.macos.map((r) => ({ p: 'macos', r }))];
+  const st = { tab: 'dict', plat: 'all', sort: 'order', q: '' };
+  const PLAT = { web: 'WEB', macos: 'MACOS' }, byKey = (k) => all.find(({ p, r }) => p + '/' + r[0] === k);
+  const prompt = (p, r) => `Hãy dựng thành phần «${r[1]}» cho ${p === 'macos' ? 'ứng dụng macOS (SwiftUI/AppKit)' : 'web (HTML/CSS/JS, truy cập được)'}. Mô tả: ${r[2]} Yêu cầu: đủ trạng thái hover, focus, disabled; dùng được bằng bàn phím; đặt đúng vai trò truy cập (ARIA/accessibility).`;
+  const ICON = { search: '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="4.6"/><path d="m10.5 10.5 3 3"/></svg>', moon: '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M13 9.5A5.5 5.5 0 0 1 6.5 3a5.5 5.5 0 1 0 6.5 6.5Z"/></svg>', dice: '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="2" width="12" height="12" rx="3"/><circle cx="6" cy="6" r=".8" fill="currentColor"/><circle cx="10" cy="10" r=".8" fill="currentColor"/></svg>' };
+  const demoOf = (p, r) => D[r[3]] || D[r[0]];
+  const href = (p, r) => `#/${p}/${r[0]}`;
+  function header() {
+    const T = [['dict', 'Thành phần'], ['styles', 'Phong cách'], ['vs', 'Dễ nhầm'], ['spec', 'Đặc tả']];
+    return `<header class="top"><div class="wrap hd"><a class="logo" href="#/" data-t="dict">gọi tên <b>ui</b><sup>${all.length > 90 ? 'v' : ''}</sup></a><nav class="nav" aria-label="Chuyên mục">${T.map(([k, t]) => `<a href="#/${k === 'dict' ? '' : k}" data-t="${k}" ${k === st.tab || (st.tab === 'detail' && k === 'dict') ? 'aria-current="page"' : ''}>${t}</a>`).join('')}</nav><span class="sp"></span><a class="hsearch" id="hs" data-focus>${ICON.search}<span>Mô tả cái bạn thấy…</span><span class="kbd">⌘ K</span></a><a class="ibtn" href="../" title="Về uiux-asset" aria-label="Về uiux-asset" style="font-size:12px">↖</a><button class="ibtn" id="theme" aria-label="Đổi giao diện sáng/tối">${ICON.moon}</button></div></header>`;
   }
-  const styles = () => `<p class="nt-p" style="margin-bottom:14px;max-width:70ch">14 phong cách thị giác hay bị gọi lẫn. Mỗi ô mẫu là CSS tự viết, chỉ gợi nét chính của phong cách.</p><div class="nt-grid">${N.styles.map(([k, n, d]) => `<article class="nt-card"><div class="nt-demo s-${k}" style="height:116px"><div class="s-sw"><i>${esc(n.split(' ')[0])}</i></div></div><div class="nt-body"><div class="nt-h"><b>${esc(n)}</b></div><p class="nt-p">${esc(d)}</p><div class="nt-foot"><a href="https://namethatui.com/styles/${k}" target="_blank" rel="noopener">Trang gốc ↗</a></div></div></article>`).join('')}</div>`;
-  const vs = () => `<p class="nt-p" style="margin-bottom:14px;max-width:70ch">Những cặp trông gần giống nhau nhưng khác vai trò. Câu trả lời ngắn do mình viết lại.</p><div class="nt-vs">${N.vs.map(([k, n, d]) => `<div><b>${esc(n)}</b>${esc(d)} <a href="https://namethatui.com/vs/${k}" target="_blank" rel="noopener" style="font-size:12px;opacity:.7">Trang gốc ↗</a></div>`).join('')}</div>`;
-  const spec = () => `<div class="nt-spec">
+  function list() {
+    const q = st.q.trim().toLowerCase();
+    let ls = all.filter(({ p, r }) => (st.plat === 'all' || st.plat === p) && (!q || (r[0] + ' ' + r[1] + ' ' + r[2] + ' ' + (SYM[r[0]] || '')).toLowerCase().includes(q)));
+    if (st.sort === 'az') ls = [...ls].sort((a, b) => a.r[1].localeCompare(b.r[1]));
+    const card = ({ p, r }) => { const d = demoOf(p, r), fc = F[p + '/' + r[0]] || {}, sy = fc.sym || SYM[r[0]];
+      return `<a class="card" href="${href(p, r)}"><div class="mat${d ? '' : ' none'}">${d ? `<div>${d}</div>` : '<span class="noy">chưa có demo</span>'}</div><div class="ct"><b>${esc(r[1])}</b><span class="plat">${PLAT[p]}</span></div>${sy ? `<div class="sym">${esc(sy)}</div>` : ''}<p class="cd">${esc(fc.lead || r[2])}</p></a>`; };
+    return ls.map(card).join('') || '<div class="empty">Không khớp mục nào. Thử mô tả hình dạng hoặc vị trí.</div>';
+  }
+  function dictView() {
+    const cnt = (k) => k === 'all' ? all.length : all.filter(({ p }) => p === k).length;
+    return `<section class="wrap hero"><h1>Cái này tên là gì<em>?</em></h1><p class="s">Từ điển trực quan của giao diện. Mô tả vật bạn thấy bằng lời thường, bạn nhận lại tên chuẩn, ký hiệu API và một prompt dán sẵn cho agent viết code.</p><label class="bigsearch">${ICON.search}<input id="q" type="search" placeholder="«nền nhạt phía sau biểu tượng trên thanh menu»" value="${esc(st.q)}" aria-label="Tìm thành phần"><span class="kbd">⌘ K</span></label><div class="hint">Không gọi được tên của kiểu dáng? <a data-t="styles">Xem phần Phong cách</a></div><div class="hint2">Gõ tên, vị trí hoặc hình dạng; kết quả lọc ngay khi gõ.</div></section>
+      <div class="wrap"><div class="bar"><div class="tabs">${[['all', 'Tất cả'], ['macos', 'macOS'], ['web', 'Web']].map(([k, t]) => `<button class="tab" data-p="${k}" aria-pressed="${st.plat === k}">${t}<small>${cnt(k)}</small></button>`).join('')}</div><div class="tools"><div class="seg">${[['order', 'Thứ tự'], ['az', 'A–Z']].map(([k, t]) => `<button data-sort="${k}" aria-pressed="${st.sort === k}">${t}</button>`).join('')}</div><button class="pill" data-rand>${ICON.dice}<span>Ngẫu nhiên</span></button></div></div><div class="grid" id="grid">${list()}</div></div>`;
+  }
+  function detailView(key) {
+    const it = byKey(key); if (!it) return `<div class="wrap empty">Không có mục «${esc(key)}». <a class="hint" data-t="dict" style="color:var(--blue)">Về danh sách</a></div>`;
+    const { p, r } = it, f = F[key] || {}, U = Object.assign({ anatomy: 'Giải phẫu: từng phần có tên', ifCalled: 'Nếu bạn gọi nó là…', youMeant: 'Ý bạn là', prompt: 'Prompt: dán vào agent của bạn', debug: 'Prompt gỡ lỗi: khi nó hoạt động sai', code: 'Trong code', see: 'Xem thêm' }, (F._ui || {})), d = demoOf(p, r), sy = f.sym || SYM[r[0]];
+    const rel = N.vs.filter(([k]) => k.split('-vs-').some((x) => r[0].startsWith(x) || x.startsWith(r[0]) || r[0].includes(x)));
+    const idx = all.findIndex((x) => x.p === p && x.r[0] === r[0]), nb = all.filter((x) => x.p === p), pos = nb.findIndex((x) => x.r[0] === r[0]);
+    const see = (f.see ? f.see.map(byKey).filter(Boolean) : [nb[(pos + 1) % nb.length], nb[(pos + 2) % nb.length], nb[(pos + 3) % nb.length]]);
+    const sec = (t, h) => h ? `<h2>${t}</h2>${h}` : '';
+    return `<div class="wrap"><div class="crumb"><span><a href="#/" data-t="dict">Chỉ mục</a> / ${p === 'web' ? 'Web' : 'macOS'}</span><div class="acts"><button class="pill" data-cp="${esc(key)}"><span>Chép prompt</span></button><a class="pill" href="https://namethatui.com/${p}/${r[0]}" target="_blank" rel="noopener"><span>Trang gốc ↗</span></a></div></div>
+      <div class="dt"><div><div class="dmat">${d ? `<div>${d}</div>` : '<span class="noy" style="color:var(--mut2)">chưa có demo</span>'}</div>${f.lead ? `<p class="cd" style="margin-top:12px;text-align:center">${esc(f.lead)}</p>` : ''}</div><div><h1>${esc(r[1])}</h1>${sy ? `<div class="symline">/ ${esc(sy)} /</div>` : ''}${f.aka && f.aka.length ? `<div class="aka">còn gọi là ${esc(f.aka.join(', '))}</div>` : ''}<p class="body">${esc(f.def || r[2])}</p>
+      ${f.body ? (Array.isArray(f.body) ? f.body : [f.body]).map((t) => `<p class="body">${esc(t)}</p>`).join('') : ''}
+      ${sec(U.ifCalled, f.phrases && f.phrases.length ? `<div class="quotes">${f.phrases.map((x) => `<span>“${esc(x)}”</span>`).join('')}</div><p class="aka" style="margin:10px 0 0">…${esc(U.youMeant)} <b style="font-style:normal;color:var(--fg)">${esc(r[1])}</b>.</p>` : '')}
+      ${sec(U.anatomy, f.anatomy && f.anatomy.length ? `<div class="anat">${f.anatomy.map((a, i) => `<div><i>${i + 1}</i><p style="margin:0"><b>${esc(a.n)}</b>${a.sym ? `<code>${esc(a.sym)}</code>` : ''}<span>${esc(a.d || '')}</span></p></div>`).join('')}</div>` : '')}
+      ${sec(U.prompt, `${U.promptHint ? `<p class="cd" style="margin:0 0 8px">${esc(U.promptHint)}</p>` : ''}<div class="pbox">${esc(f.prompt || prompt(p, r))}</div>`)}
+      ${sec(U.debug, f.debug ? `${U.debugHint ? `<p class="cd" style="margin:0 0 8px">${esc(U.debugHint)}</p>` : ''}<div class="pbox">${esc(f.debug)}</div>` : '')}
+      ${sec(U.code, f.code && f.code.length ? (U.codeHint ? `<p class="cd" style="margin:0 0 8px">${esc(U.codeHint)}</p>` : '') + f.code.map((c) => `<div class="code"><i>${esc(c.lang || 'code')}</i><pre>${esc(c.text)}</pre></div>`).join('') : '')}
+      ${sec('Dễ nhầm với', rel.length ? `<div class="see">${rel.map(([k, n]) => `<a href="https://namethatui.com/vs/${k}" target="_blank" rel="noopener">${esc(n)}<span>↗</span></a>`).join('')}</div>` : '')}
+      ${sec(U.see, `<div class="see">${see.map(({ p: pp, r: rr }) => `<a href="${href(pp, rr)}">${esc(rr[1])}<span>${PLAT[pp]}</span></a>`).join('')}</div>`)}
+      ${(f.prompt || f.def) ? '' : '<div class="later">Phần giải thích đầy đủ, giải phẫu và prompt gỡ lỗi của mục này đang được viết lại bằng lời của mình; hiện mới có mô tả ngắn.</div>'}
+      </div></div></div>`;
+  }
+  const styleCards = () => { const q = (st.sq || '').trim().toLowerCase(); return N.styles.filter(([k, n, d]) => !q || (k + ' ' + n + ' ' + d).toLowerCase().includes(q)).map(([k, n, d]) => `<div class="sc"><div class="mat s-${k}"><div class="s-sw"><i>${esc(n.split(' ')[0])}</i></div></div><div class="ct"><b>${F['styles/' + k] ? `<a href="#/styles/${k}">${esc(n)}</a>` : esc(n)}</b><a class="plat" href="https://namethatui.com/styles/${k}" target="_blank" rel="noopener">gốc ↗</a></div><p class="cd">${esc((F['styles/' + k] && F['styles/' + k].lead) || d)}</p></div>`).join('') || '<div class="empty">Không khớp phong cách nào.</div>'; };
+  const stylesView = () => `<section class="stitle wrap"><small>PHONG CÁCH THỊ GIÁC</small><h1>Phong cách này là gì<em>?</em></h1><p>Bản đồ các phong cách giao diện. Nhận ra vẻ ngoài, biết tên thật của nó và phân biệt với các phong cách gần giống.</p><label class="bigsearch">${ICON.search}<input id="sq" type="search" placeholder="«nút mềm như nổi lên khỏi nền»" value="${esc(st.sq || '')}" aria-label="Tìm phong cách"><span class="kbd">⌘ K</span></label></section><div class="wrap"><div class="sg" id="sgrid">${styleCards()}</div></div>`;
+  const vsView = () => `<section class="stitle wrap"><small>DỄ NHẦM</small><h1>Hai cái này khác nhau thế nào<em>?</em></h1><p>Những cặp trông gần giống nhau nhưng khác vai trò. Mỗi câu trả lời ngắn do mình viết lại.</p></section><div class="wrap"><div class="vs">${N.vs.map(([k, n, d]) => `<div><b>${F['vs/' + k] ? `<a href="#/vs/${k}">${esc(n)}</a>` : esc(n)}</b>${esc((F['vs/' + k] && F['vs/' + k].lead) || d)} <a href="https://namethatui.com/vs/${k}" target="_blank" rel="noopener">Trang gốc ↗</a></div>`).join('')}</div></div>`;
+
+  const spec = () => `<div class="spec">
     <h3>1. Site này là gì</h3>
     <p>NameThatUI là một «từ điển trực quan» về giao diện. Người dùng mô tả bằng lời thường thứ họ thấy («lớp tối mờ phía sau hộp thoại»), site trả về tên chuẩn, ký hiệu API tương ứng trên từng nền tảng, và một prompt dán sẵn cho agent viết code. Phạm vi: macOS (SwiftUI/AppKit) và web.</p>
     <h3>2. Cấu trúc đường dẫn (đọc từ sitemap công khai)</h3>
@@ -218,19 +332,36 @@
     <h3>8. Đặc tả để dựng lại một bản tương tự (tiêu chí nghiệm thu)</h3>
     <ul><li>Tìm được một thành phần bằng mô tả đời thường, ít nhất khi gõ tên tiếng Việt hay tiếng Anh.</li><li>Mỗi thẻ có demo nhỏ, tên chuẩn, nền tảng, mô tả một câu, nút chép prompt.</li><li>Lọc theo nền tảng, đếm kết quả, trạng thái rỗng có gợi ý.</li><li>Mọi nội dung có nguồn hoặc tự viết; không hotlink ảnh của bên khác.</li><li>Dùng được bằng bàn phím, hiển thị tốt ở 390 px và 1440 px.</li></ul>
   </div>`;
+
+  const licHtml = `<div class="wrap"><div class="lic"><b>Nguồn và bản quyền.</b> Ý tưởng và danh sách thuật ngữ lấy từ <a href="https://namethatui.com/" target="_blank" rel="noopener">namethatui.com</a>. Site đó không công bố giấy phép mở (không có LICENSE hay điều khoản; <code>robots.txt</code> cho phép bot nhưng đó không phải giấy phép), nên trang này <b>không chép</b> chữ, demo, mã hay ảnh của họ. Tên thuật ngữ là sự kiện công khai; mô tả được viết lại bằng tiếng Việt; demo nhỏ do mình tự dựng; mỗi thẻ có đường dẫn về trang gốc để xem bản đầy đủ.</div></div>`;
+  const specView = () => `<section class="stitle wrap"><small>ĐẶC TẢ</small><h1>Site gốc vận hành thế nào<em>?</em></h1></section><div class="wrap">${spec()}</div>`;
+  const pageView = (key) => { const f = F[key]; const [kind, slug] = key.split('/'); const base = kind === 'styles' ? (N.styles.find((x) => x[0] === slug) || []) : kind === 'vs' ? (N.vs.find((x) => x[0] === slug) || []) : [];
+    if (!f && !base[0]) return `<div class="wrap empty">Chưa có trang «${esc(key)}». <a data-t="dict" style="color:var(--blue);cursor:pointer">Về danh sách</a></div>`; const ff = f || {};
+    return `<section class="stitle wrap"><small>${kind === 'styles' ? 'PHONG CÁCH' : kind === 'vs' ? 'DỄ NHẦM' : 'TRANG'}</small><h1>${esc(ff.title || base[1] || slug)}</h1>${(ff.lead || base[2]) ? `<p>${esc(ff.lead || base[2])}</p>` : ''}</section><div class="wrap"><div class="spec">${(ff.sections || []).map((x) => `<h3>${esc(x.h)}</h3>${(x.p || []).map((t) => `<p>${esc(t)}</p>`).join('')}`).join('')}<p><a href="https://namethatui.com/${kind === 'page' ? slug : kind + '/' + slug}" target="_blank" rel="noopener" style="color:var(--blue)">Trang gốc ↗</a></p></div></div>`; };
+  const body = () => st.tab === 'page' ? pageView(st.key) : st.tab === 'detail' ? detailView(st.key) : st.tab === 'styles' ? stylesView() : st.tab === 'vs' ? vsView() : st.tab === 'spec' ? specView() : dictView();
   function paint() {
-    $('pane').innerHTML = { dict, styles, vs, spec }[st.tab]();
-    [...$('tabs').children].forEach((b) => b.setAttribute('aria-selected', b.dataset.t === st.tab));
-    const q = $('q'); if (q) { q.addEventListener('input', () => { st.q = q.value; const pos = q.selectionStart; paint(); const n = $('q'); n.focus(); n.setSelectionRange(pos, pos); }); }
+    $('app').innerHTML = header() + '<main>' + body() + '</main>' + licHtml + '<footer class="ft"><div class="wrap">gọi tên ui · một trang của <a href="../" style="color:var(--blue)">uiux-asset</a> · mô tả và demo tự viết, ý tưởng từ <a href="https://namethatui.com/" target="_blank" rel="noopener" style="color:var(--blue)">NameThatUI</a></div></footer>';
+    const q = $('q'); if (q) q.addEventListener('input', () => { st.q = q.value; $('grid').innerHTML = list(); });
+    const sq = $('sq'); if (sq) sq.addEventListener('input', () => { st.sq = sq.value; $('sgrid').innerHTML = styleCards(); });
+    $('theme').onclick = () => { const d = document.documentElement; d.dataset.theme = d.dataset.theme === 'dark' ? 'light' : 'dark'; try { localStorage.setItem('ovs-theme', d.dataset.theme); } catch { /* bỏ qua */ } };
   }
+  function route() {
+    const h = location.hash.slice(1).replace(/^\//, ''), m = /^(web|macos)\/([a-z0-9-]+)$/.exec(h), m2 = /^(styles|vs|page)\/([a-z0-9-]+)$/.exec(h);
+    if (m) { st.tab = 'detail'; st.key = h; } else if (m2) { st.tab = 'page'; st.key = h; } else st.tab = ['styles', 'vs', 'spec'].includes(h) ? h : 'dict';
+    paint(); scrollTo(0, 0);
+  }
+  const focusSearch = () => { if (st.tab !== 'dict') { location.hash = '#/'; } setTimeout(() => { const q = $('q'); if (q) { q.focus(); q.scrollIntoView({ block: 'center' }); } }, 60); };
   document.addEventListener('click', (e) => {
-    const t = e.target.closest('[data-t],[data-p],[data-cp]'); if (!t) return;
-    if (t.dataset.t) { st.tab = t.dataset.t; history.replaceState(null, '', '#' + st.tab); paint(); }
+    const t = e.target.closest('[data-t],[data-p],[data-sort],[data-rand],[data-cp],[data-focus]'); if (!t) return;
+    if (t.dataset.t) { e.preventDefault(); location.hash = t.dataset.t === 'dict' ? '#/' : '#/' + t.dataset.t; }
     else if (t.dataset.p) { st.plat = t.dataset.p; paint(); }
-    else { const it = all.find(({ r }) => r[0] === t.dataset.cp); if (it) { const txt = prompt(it.p, it.r); (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(() => { t.textContent = 'Đã chép'; }).catch(() => { t.textContent = 'Không chép được'; }); setTimeout(() => { t.textContent = 'Chép prompt'; }, 1500); } }
+    else if (t.dataset.sort) { st.sort = t.dataset.sort; paint(); }
+    else if (t.dataset.rand !== undefined) { const it = all[Math.floor(Math.random() * all.length)]; location.hash = href(it.p, it.r); }
+    else if (t.dataset.focus !== undefined) focusSearch();
+    else { const it = byKey(t.dataset.cp); if (it) { const txt = (F[t.dataset.cp] && F[t.dataset.cp].prompt) || prompt(it.p, it.r), s = t.querySelector('span'); (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(() => { s.textContent = 'Đã chép'; }).catch(() => { s.textContent = 'Không chép được'; }); setTimeout(() => { s.textContent = 'Chép prompt'; }, 1500); } }
   });
-  const h = location.hash.slice(1); if (TABS.some(([k]) => k === h)) st.tab = h;
-  paint(); window.__nt = { st, paint, count: all.length };
+  document.addEventListener('keydown', (e) => { if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); focusSearch(); } });
+  addEventListener('hashchange', route);
+  route(); window.__nt = { st, count: all.length, route };
 })();
-</script>
-<script src="/search.js?v=7cc303d521" defer></script><script src="/stats.js?v=7cc303d521" defer></script></body></html>
+</script></body></html>
