@@ -1,6 +1,7 @@
-/* Demo vẽ lại cho thẻ (HTML/CSS tự viết, toạ độ lấy bằng cách đo ảnh hiển thị trang gốc). .q = bảng vẽ 312×176 trong khung xem trước */
-.mat.qm,.dmat .qq{container-type:inline-size}
-.q{position:absolute;left:-1px;top:-1px;width:calc(100cqw + 2px);height:176px;font:400 9px/1 "Geist",system-ui,sans-serif;color:#edeef0}
-.q i,.q b,.q u,.q s{position:absolute;display:block;font-style:normal;text-decoration:none;white-space:nowrap;box-sizing:border-box;line-height:1}
-.q b{font-weight:inherit}.q svg{position:absolute;display:block}
+/* Demo vẽ lại cho thẻ (HTML/CSS tự viết, toạ độ lấy bằng cách đo ảnh hiển thị trang gốc). .q = bảng vẽ trong khung xem trước của thẻ (cao 176), .qd = trong khung demo trang chi tiết (cao 340) */
+.mat.qm,.dmat .qq,.dmat.dg{container-type:inline-size}
+.q,.qd{position:absolute;left:-1px;top:-1px;font:400 9px/1 "Geist",system-ui,sans-serif;color:#edeef0}
+.q{width:calc(100cqw + 2px);height:176px}.qd{width:calc(100cqw + 2px);height:342px}.dmat.dg>.qd{transform:none}
+.q i,.q b,.q u,.q s,.qd i,.qd b{position:absolute;display:block;font-style:normal;text-decoration:none;white-space:nowrap;box-sizing:border-box;line-height:1}
+.q b,.qd b{font-weight:inherit}.q svg,.qd svg{position:absolute;display:block}
 .q .fr{overflow:hidden}

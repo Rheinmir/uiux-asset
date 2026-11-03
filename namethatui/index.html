@@ -185,11 +185,21 @@ footer.ft{border-top:1px solid var(--bd);padding:22px 0 40px;color:var(--mut);fo
 .ptabs{height:57px;border-bottom:1px solid var(--bd)}.ptabs .wrap{height:100%}.ptabs .nav{display:flex;gap:22px;height:100%;align-items:center;font-size:14px;color:var(--mut);overflow:auto;white-space:nowrap;scrollbar-width:none}.ptabs .nav a{cursor:pointer;padding:4px 0}.ptabs .nav a[aria-current="page"]{color:var(--fg)}.ptabs .nav a:hover{color:var(--fg)}
 @media(min-width:861px){.dmat{top:96px}}
 @media(max-width:600px){.ptabs .nav{display:flex}}
+
+/* co giãn theo độ rộng: bù đệm của khung chung để vùng nội dung rộng bằng trang gốc (lề 16px dưới 640, 24px từ 640) */
+@media(min-width:640px){#app{margin-inline:calc(24px - clamp(16px,3.6vw,52px))}}
+.bar{row-gap:0}
+@media(max-width:860px) and (min-width:601px){.hero p.s,.stitle p{min-height:73px}}
+@media(max-width:360px){.hero p.s,.stitle p{min-height:122px}.rhead{min-height:118px}.dt p.body{min-height:212px}}
+@media(min-width:361px) and (max-width:600px){.dt p.body{min-height:165px}}
+@media(min-width:601px) and (max-width:860px){.dt p.body{min-height:94px}}
+@media(min-width:861px) and (max-width:1279px){.dt p.body{min-height:141px}}
+@media(min-width:1280px){.dt p.body{min-height:118px}}
 </style>
 <link rel="stylesheet" href="/namethatui/demos.css"><link rel="stylesheet" href="/namethatui/demo-detail.css"><link rel="stylesheet" href="/namethatui/style-art.css">
 </head>
 <body><main class="aw-wrap"><script src="/aw.js?v=6cd436c7c7"></script><div id="app"></div></main>
-<script src="/namethatui/style-art.js"></script><script src="/namethatui/demo-detail.js"></script><script src="/namethatui/data.js"></script><script src="/namethatui/content.js"></script><script src="/namethatui/demos.js"></script><script src="/namethatui/demos.gen.js"></script><script src="/namethatui/order.js"></script>
+<script src="/namethatui/style-art.js"></script><script src="/namethatui/demo-detail.js"></script><script src="/namethatui/data.js"></script><script src="/namethatui/content.js"></script><script src="/namethatui/demos.js"></script><script src="/namethatui/demos.gen.js"></script><script src="/namethatui/detail.gen.js"></script><script src="/namethatui/order.js"></script>
 <script>
 
 (() => {
@@ -305,13 +315,13 @@ footer.ft{border-top:1px solid var(--bd);padding:22px 0 40px;color:var(--mut);fo
   }
   function detailView(key) {
     const it = byKey(key); if (!it) return `<div class="wrap empty">Không có mục «${esc(key)}». <a class="hint" data-t="dict" style="color:var(--blue)">Về danh sách</a></div>`;
-    const { p, r } = it, f = F[key] || {}, U = Object.assign({ anatomy: 'Giải phẫu: từng phần có tên', ifCalled: 'Nếu bạn gọi nó là…', youMeant: 'Ý bạn là', prompt: 'Prompt: dán vào agent của bạn', debug: 'Prompt gỡ lỗi: khi nó hoạt động sai', code: 'Trong code', see: 'Xem thêm' }, (F._ui || {})), dd = window.NT_DETAIL && NT_DETAIL[key], d = dd || demoOf(p, r), sy = f.sym || SYM[r[0]];
+    const { p, r } = it, f = F[key] || {}, U = Object.assign({ anatomy: 'Giải phẫu: từng phần có tên', ifCalled: 'Nếu bạn gọi nó là…', youMeant: 'Ý bạn là', prompt: 'Prompt: dán vào agent của bạn', debug: 'Prompt gỡ lỗi: khi nó hoạt động sai', code: 'Trong code', see: 'Xem thêm' }, (F._ui || {})), dd = window.NT_DETAIL && NT_DETAIL[key], dg = !dd && window.NT_DETAIL_GEN && NT_DETAIL_GEN[key], d = dd || dg || demoOf(p, r), sy = f.sym || SYM[r[0]];
     const rel = N.vs.filter(([k]) => k.split('-vs-').some((x) => r[0].startsWith(x) || x.startsWith(r[0]) || r[0].includes(x)));
     const idx = all.findIndex((x) => x.p === p && x.r[0] === r[0]), nb = all.filter((x) => x.p === p), pos = nb.findIndex((x) => x.r[0] === r[0]);
     const see = (f.see ? f.see.map(byKey).filter(Boolean) : [nb[(pos + 1) % nb.length], nb[(pos + 2) % nb.length], nb[(pos + 3) % nb.length]]);
     const sec = (t, h) => h ? `<h2>${t}</h2>${h}` : '';
     return `<div class="wrap wide"><div class="crumb"><span><a href="${H('dict')}" data-t="dict">Chỉ mục</a> / ${p === 'web' ? 'Web' : 'macOS'}</span><div class="acts"><button class="pill" data-save="${esc(key)}"><span>${savedSet().has(key) ? 'Đã lưu' : 'Lưu'}</span></button><button class="pill" data-share="${esc(key)}"><span>Chia sẻ</span></button><button class="pill" data-md="${esc(key)}"><span>Chép dạng Markdown</span></button><button class="pill" data-cp="${esc(key)}"><span>Chép prompt</span></button><a class="pill" href="https://namethatui.com/${p}/${r[0]}" target="_blank" rel="noopener"><span>Trang gốc ↗</span></a></div></div>
-      <div class="dt"><div><div class="dmat${dd ? ' det' : ''}">${d ? `<div>${d.startsWith('<div class="q">') ? `<div class="qq">${d}</div>` : d}</div>` : '<span class="noy" style="color:var(--mut2)">chưa có demo</span>'}</div>${f.lead ? `<p class="cd" style="margin-top:12px;text-align:center">${esc(f.lead)}</p>` : ''}</div><div><div class="rhead"><h1>${esc(r[1])}</h1>${sy ? `<div class="symline">/ ${esc(sy)} /</div>` : ''}${f.aka && f.aka.length ? `<div class="aka">còn gọi là ${esc(f.aka.join(', '))}</div>` : ''}</div><p class="body">${esc(f.def || r[2])}</p>
+      <div class="dt"><div><div class="dmat${dd ? ' det' : ''}${dg ? ' dg' : ''}">${dg ? dg : d ? `<div>${d.startsWith('<div class="q">') ? `<div class="qq">${d}</div>` : d}</div>` : '<span class="noy" style="color:var(--mut2)">chưa có demo</span>'}</div>${f.lead ? `<p class="cd" style="margin-top:12px;text-align:center">${esc(f.lead)}</p>` : ''}</div><div><div class="rhead"><h1>${esc(r[1])}</h1>${sy ? `<div class="symline">/ ${esc(sy)} /</div>` : ''}${f.aka && f.aka.length ? `<div class="aka">còn gọi là ${esc(f.aka.join(', '))}</div>` : ''}</div><p class="body">${esc(f.def || r[2])}</p>
       ${f.body ? (Array.isArray(f.body) ? f.body : [f.body]).map((t) => `<p class="body">${esc(t)}</p>`).join('') : ''}
       ${sec(U.ifCalled, f.phrases && f.phrases.length ? `<div class="quotes">${f.phrases.map((x) => `<span>“${esc(x)}”</span>`).join('')}</div><p class="aka" style="margin:10px 0 0">…${esc(U.youMeant)} <b style="font-style:normal;color:var(--fg)">${esc(r[1])}</b>.</p>` : '')}
       ${sec(U.anatomy, f.anatomy && f.anatomy.length ? `<div class="anat">${f.anatomy.map((a, i) => `<div><i>${i + 1}</i><p style="margin:0"><b>${esc(a.n)}</b>${a.sym ? `<code>${esc(a.sym)}</code>` : ''}<span>${esc(a.d || '')}</span></p></div>`).join('')}</div>` : '')}

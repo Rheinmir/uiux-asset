@@ -1,4 +1,4 @@
-import json,sys,numpy as np
+import json,sys,os,numpy as np
 from PIL import Image
 meta=json.load(open('meta.json')); out={}
 def mask_of(shape,rects):
@@ -8,7 +8,7 @@ def mask_of(shape,rects):
         if x1>x0 and y1>y0: m[y0:y1,x0:x1]=True
     return m
 rows=[]
-for vp in ('d','m'):
+for vp in [int(x) for x in os.environ.get('WIDTHS','1440,390').split(',')]:
     for name in ('hero','grid','grid2','term','styles'):
         a=np.asarray(Image.open(f'{vp}-{name}-orig.png').convert('RGB')).astype(int); b=np.asarray(Image.open(f'{vp}-{name}-mine.png').convert('RGB')).astype(int)
         h=min(a.shape[0],b.shape[0]); a=a[:h]; b=b[:h]; bad=np.abs(a-b).sum(2)>96

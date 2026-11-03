@@ -1,6 +1,7 @@
-import json,sys,numpy as np
+import json,sys,os,numpy as np
+VW=int(os.environ.get('VW','1440')); REFD=f'ref-{VW}'; MD=f'mine-{VW}'
 from PIL import Image
-meta=json.load(open('ref/meta.json')); mine=json.load(open('mine/text.json'))
+meta=json.load(open(REFD+'/meta.json')); mine=json.load(open(MD+'/text.json'))
 def mask(shape,rects,sc=2):
     m=np.zeros(shape,bool)
     for x,y,w,h in rects:
@@ -10,7 +11,7 @@ def mask(shape,rects,sc=2):
 rows=[]
 for key,m in meta.items():
     if key not in mine or mine[key] is None: continue
-    try: b=np.asarray(Image.open('mine/'+key.replace('/','_')+'.png').convert('RGB')).astype(int)
+    try: b=np.asarray(Image.open(MD+'/'+key.replace('/','_')+'.png').convert('RGB')).astype(int)
     except Exception: continue
     a=np.asarray(Image.open(m['file']).convert('RGB')).astype(int)
     h=min(a.shape[0],b.shape[0]); w=min(a.shape[1],b.shape[1]); a=a[:h,:w]; b=b[:h,:w]
