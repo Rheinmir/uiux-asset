@@ -2680,7 +2680,16 @@ window.NT_FULL = {
      "Traffic Lights (Window Controls) (macos): Phần tử macOS"
     ]
    }
-  ]
+  ],
+  "card": {
+   "label": "Ngôn ngữ thiết kế của nhà sản xuất",
+   "quote": "nút Mac đời cũ trông như kẹo xanh",
+   "tags": [
+    "control dạng gel kẹo",
+    "bề mặt kẻ sọc",
+    "nút cửa sổ như viên kẹo gôm"
+   ]
+  }
  },
  "styles/claymorphism": {
   "title": "Claymorphism",
@@ -2778,7 +2787,16 @@ window.NT_FULL = {
      "Glassmorphism: Phong cách (Style)"
     ]
    }
-  ]
+  ],
+  "card": {
+   "label": "Xu hướng do giới ngành đặt tên",
+   "quote": "nút 3D phồng như đất nặn",
+   "tags": [
+    "hai bóng trong cộng một bóng ngoài",
+    "bo góc rất lớn",
+    "các vật thể lơ lửng tô màu riêng biệt"
+   ]
+  }
  },
  "styles/flat-design": {
   "title": "Flat Design",
@@ -2878,7 +2896,16 @@ window.NT_FULL = {
      "Neobrutalism: Phong cách (Style)"
     ]
    }
-  ]
+  ],
+  "card": {
+   "label": "",
+   "quote": "mọi thứ chỉ là màu đặc, không có bóng",
+   "tags": [
+    "mảng màu đặc 2D",
+    "không mô phỏng chiều sâu",
+    "biểu tượng glyph đơn giản"
+   ]
+  }
  },
  "styles/frutiger-aero": {
   "title": "Frutiger Aero",
@@ -2980,7 +3007,16 @@ window.NT_FULL = {
      "Visual Effect Material (Vibrancy) (macos): Phần tử macOS"
     ]
    }
-  ]
+  ],
+  "card": {
+   "label": "Nhãn hồi tưởng",
+   "quote": "bóng bóng loáng, cỏ xanh, cửa sổ cũ, tương lai",
+   "tags": [
+    "thiên nhiên hòa với công nghệ",
+    "bề mặt kính và aqua bóng",
+    "bảng màu xanh trời và xanh cỏ"
+   ]
+  }
  },
  "styles/glassmorphism": {
   "title": "Glassmorphism",
@@ -3083,7 +3119,16 @@ window.NT_FULL = {
      "Scrim (Backdrop / Overlay): Phong cách (Style)"
     ]
    }
-  ]
+  ],
+  "card": {
+   "label": "Xu hướng do giới ngành đặt tên",
+   "quote": "các thẻ mờ như kính đục đặt trên hình nền nhiều màu",
+   "tags": [
+    "tấm trong mờ như kính nhám",
+    "nền rực rỡ lộ xuyên qua",
+    "viền sáng mỏng"
+   ]
+  }
  },
  "styles/liquid-glass": {
   "title": "Liquid Glass",
@@ -3183,7 +3228,16 @@ window.NT_FULL = {
      "Sheet (macos): Phần tử macOS"
     ]
    }
-  ]
+  ],
+  "card": {
+   "label": "Ngôn ngữ thiết kế của nhà sản xuất",
+   "quote": "thiết kế mới của apple mà nút trông như giọt nước",
+   "tags": [
+    "kính là lớp điều khiển",
+    "hiệu ứng thấu kính chứ không chỉ làm mờ",
+    "tự đổi sắc theo nền"
+   ]
+  }
  },
  "styles/minimalism": {
   "title": "Minimalism",
@@ -3280,7 +3334,16 @@ window.NT_FULL = {
      "Web Brutalism: Phong cách (Style)"
     ]
    }
-  ]
+  ],
+  "card": {
+   "label": "",
+   "quote": "trang gần như không có gì",
+   "tags": [
+    "khoảng trống được dùng như vật liệu",
+    "số phần tử bị hạn chế",
+    "bảng màu hạn chế hoặc đơn sắc"
+   ]
+  }
  },
  "styles/neobrutalism": {
   "title": "Neobrutalism",
@@ -3382,7 +3445,16 @@ window.NT_FULL = {
      "Badge vs. Chip vs. Pill vs. Tag: Phong cách (Style)"
     ]
    }
-  ]
+  ],
+  "card": {
+   "label": "Xu hướng do giới ngành đặt tên",
+   "quote": "khối màu sáng có viền đen và bóng cứng",
+   "tags": [
+    "viền đen dày",
+    "bóng đổ lệch cứng",
+    "khối màu phẳng bão hòa"
+   ]
+  }
  },
  "styles/neumorphism": {
   "title": "Neumorphism",
@@ -3481,7 +3553,16 @@ window.NT_FULL = {
      "Neobrutalism: Phong cách (Style)"
     ]
    }
-  ]
+  ],
+  "card": {
+   "label": "Xu hướng do giới ngành đặt tên",
+   "quote": "các nút mềm như bị đẩy nhô ra khỏi nền",
+   "tags": [
+    "một bề mặt liền mạch",
+    "cặp bóng mềm đôi",
+    "trạng thái nhấn lõm vào"
+   ]
+  }
  },
  "styles/skeuomorphism": {
   "title": "Skeuomorphism",
@@ -3582,7 +3663,16 @@ window.NT_FULL = {
      "Aqua: Phong cách (Style)"
     ]
    }
-  ]
+  ],
+  "card": {
+   "label": "",
+   "quote": "app trông như cuốn sổ da thật",
+   "tags": [
+    "mô phỏng chất liệu thật",
+    "mô hình ánh sáng vật lý",
+    "ẩn dụ đồ vật có thật"
+   ]
+  }
  },
  "styles/vernacular-web": {
   "title": "Vernacular Web",
@@ -3681,7 +3771,16 @@ window.NT_FULL = {
      "Y2K Digital Aesthetic: Phong cách (Style)"
     ]
    }
-  ]
+  ],
+  "card": {
+   "label": "Nhãn hồi tưởng",
+   "quote": "trang geocities cũ đầy gif lấp lánh",
+   "tags": [
+    "họa tiết nền lát gạch",
+    "gif động làm đồ trang trí",
+    "huy hiệu và bộ đếm sưu tầm"
+   ]
+  }
  },
  "styles/web-brutalism": {
   "title": "Web Brutalism",
@@ -3779,7 +3878,16 @@ window.NT_FULL = {
      "Focus Ring (:focus-visible): Phong cách (Style)"
     ]
    }
-  ]
+  ],
+  "card": {
+   "label": "Nhãn còn gây tranh cãi",
+   "quote": "website html thô xấu xí",
+   "tags": [
+    "chất liệu mặc định của trình duyệt",
+    "cấu trúc tài liệu phơi ra",
+    "hoàn toàn không có hiệu ứng trang trí"
+   ]
+  }
  },
  "styles/windows-aero": {
   "title": "Windows Aero",
@@ -3880,7 +3988,16 @@ window.NT_FULL = {
      "Aqua: Phong cách (Style)"
     ]
    }
-  ]
+  ],
+  "card": {
+   "label": "Ngôn ngữ thiết kế của nhà sản xuất",
+   "quote": "viền cửa sổ trong suốt của windows 7",
+   "tags": [
+    "khung cửa sổ trong suốt có làm mờ",
+    "vệt phản chiếu và ánh sáng quét",
+    "control phát sáng khi rê chuột"
+   ]
+  }
  },
  "styles/y2k": {
   "title": "Y2K Digital Aesthetic",
@@ -3981,7 +4098,16 @@ window.NT_FULL = {
      "Glassmorphism: Phong cách (Style)"
     ]
    }
-  ]
+  ],
+  "card": {
+   "label": "Nhãn hồi tưởng",
+   "quote": "giao diện kẹo cao su crôm của thời điểm bước sang thiên niên kỷ mới",
+   "tags": [
+    "crôm lỏng và kim loại",
+    "gel và nhựa bóng",
+    "bảng màu xanh bạc ánh cầu vồng"
+   ]
+  }
  },
  "page/swift-vs-electron": {
   "title": "Swift vs Electron",
