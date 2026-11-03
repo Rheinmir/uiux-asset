@@ -17,4 +17,10 @@ for (const r of N.macos) assert(new RegExp(`['"]?${r[0]}['"]?: ['"]`).test(html)
 for (const t of ['dict', 'styles', 'vs', 'spec']) assert(html.includes(`['${t}',`), 'thiếu tab ' + t);
 assert(/\['namethatui\/', 'Tên UI'\]/.test(fs.readFileSync(path.join(__dirname, '..', 'aw.js'), 'utf8')), 'aw.js NAV thiếu namethatui/');
 assert(fs.readFileSync(path.join(__dirname, 'stamp-assets.py'), 'utf8').includes('namethatui/index.html'), 'stamp-assets thiếu namethatui');
+// demo thẻ: đủ 91 (vẽ tay + sinh từ phép đo), không có url()/liên kết ngoài
+global.window = global.window || {}; require(D('demos.js')); require(D('demos.gen.js'));
+const have = Object.assign({}, window.NT_DEMOS_GEN, window.NT_DEMOS);
+for (const [p, list] of [['web', N.web], ['macos', N.macos]]) for (const r of list) assert(have[p + '/' + r[0]], 'thiếu demo vẽ lại: ' + p + '/' + r[0]);
+const demoSrc = fs.readFileSync(D('demos.gen.js'), 'utf8');
+assert(!/url\(|https?:\/\//.test(demoSrc), 'demos.gen.js không được có url() hay liên kết ngoài');
 console.log('test-namethatui: ok');

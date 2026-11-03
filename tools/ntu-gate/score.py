@@ -9,7 +9,7 @@ def mask_of(shape,rects):
     return m
 rows=[]
 for vp in ('d','m'):
-    for name in ('hero','grid','term','styles'):
+    for name in ('hero','grid','grid2','term','styles'):
         a=np.asarray(Image.open(f'{vp}-{name}-orig.png').convert('RGB')).astype(int); b=np.asarray(Image.open(f'{vp}-{name}-mine.png').convert('RGB')).astype(int)
         h=min(a.shape[0],b.shape[0]); a=a[:h]; b=b[:h]; bad=np.abs(a-b).sum(2)>96
         mo,mm=meta[f'{vp}-{name}-orig'],meta[f'{vp}-{name}-mine']
