@@ -22,7 +22,12 @@ const want = process.argv.slice(2).filter((a) => a !== 'all'); const keys = want
     const ok = await p.evaluate(([key, html]) => { const m = document.querySelector(`a.card[href$="#/${key}"] .mat, a.card[href="/namethatui/${key}"] .mat`); if (!m) return false; m.classList.add('qm', 'sk-ref'); m.innerHTML = html; return true; }, [key, html]);
     if (!ok) { res[key] = null; continue; }
     const el = await p.$(`a.card[href$="#/${key}"] .mat, a.card[href="/namethatui/${key}"] .mat`); await el.scrollIntoViewIfNeeded(); await p.evaluate(() => document.fonts.ready); await p.waitForTimeout(150);
-    await el.screenshot({ path: 'sk/' + key.replace('/', '_') + '.png' }); res[key] = 'sk/' + key.replace('/', '_') + '.png';
+    // ô demo bên namethatui.com nằm ở toạ độ trang lẻ khác bên mình: chụp ở 16 độ lệch dưới-điểm-ảnh (0/.25/.5/.75 px mỗi chiều), skeleton_score.py lấy bản khớp nhất
+    const shots = [];
+    for (const sy of [0, .25, .5, .75]) for (const sx of [0, .25, .5, .75]) {
+      await el.evaluate((m, [x, y]) => { m.style.position = 'relative'; m.style.left = x + 'px'; m.style.top = y + 'px'; }, [sx, sy]); await p.waitForTimeout(30);
+      const f = 'sk/' + key.replace('/', '_') + `@${sx}_${sy}.png`; await el.screenshot({ path: f }); shots.push(f); }
+    await el.evaluate((m) => { m.style.left = ''; m.style.top = ''; }); res[key] = shots;
   }
   await b.close(); fs.writeFileSync('sk/shots.json', JSON.stringify(res));
   console.log(JSON.stringify(res));
