@@ -5,7 +5,7 @@
   if (!root) return;
   const GROUP = { 'scroll-effect': 'Hiệu ứng cuộn trang', chip: 'Mẫu chip' };
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-  root.innerHTML = `<label class="ovs-s-l" for="ovs-s-q">Tìm mẫu theo ý bạn muốn — gõ tiếng Việt hay tiếng Anh đều được</label>
+  root.innerHTML = `<label class="ovs-s-l" for="ovs-s-q">Tìm bằng tiếng Việt hoặc tiếng Anh</label>
     <div class="ovs-s-box"><input id="ovs-s-q" type="search" autocomplete="off" spellcheck="false" placeholder="vd: chữ hiện dần khi cuộn, nút xoá tag, parallax…"
       role="combobox" aria-expanded="false" aria-controls="ovs-s-list" aria-autocomplete="list"><kbd aria-hidden="true">/</kbd></div>
     <div class="ovs-s-meta" aria-live="polite"></div><div id="ovs-s-list" class="ovs-s-list" role="listbox" aria-label="Kết quả tìm"></div>`;

@@ -174,6 +174,13 @@ html:has(#ovs-base) body { max-width: none; margin: 0; padding: 8px clamp(16px, 
 html:has(#ovs-base) body:not(:has(> .kpis)) > :not(.aw-site-head, .aw-footer) { max-width: 980px; margin-inline: auto; }
 html:has(#ovs-base) body:has(> .kpis) { height: auto; grid-template-columns: minmax(0, 1fr); grid-template-rows: none; grid-auto-rows: auto; }   /* stats: thêm header/footer nên bỏ khung vừa-màn-hình, để trang cuộn */
 html:has(#ovs-base) :is(h1, h2) { text-transform: uppercase; }
+
+/* Stageshow «Too much»: 14 nav items must not break mid-label; scroll with a fade instead of wrapping */
+.aw-hnav { min-width: 0; overflow-x: auto; scrollbar-width: none; mask-image: linear-gradient(90deg, #000 90%, transparent); }
+.aw-hnav::-webkit-scrollbar { display: none; }
+.aw-hnav > a { white-space: nowrap; flex: none; }
+/* Stageshow «Boxed»: kit previews showed a whole page at 25%; show the top of the kit at 40% so titles and swatches read */
+.aw-card-site .aw-shot iframe { width: 250%; height: 250%; transform: scale(.4); }
 """
 
 
