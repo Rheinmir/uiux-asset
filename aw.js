@@ -8,8 +8,8 @@
   d.dataset.theme = saved || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 
   if (self !== top) return;                                    // trang đang làm ảnh xem trước (iframe ở gallery): chỉ nội dung, không vỏ/giỏ
-  const NAV = [['scroll-effects/', 'Scroll effects'], ['components/', 'Components'], ['ui-kits/', 'UI kits'], ['galaxy/', 'Galaxy'], ['ui-libraries/', 'Thư viện UI'], ['motion/', 'Motion'], ['rebuilds/', 'Dựng lại', ['angles/', 'halvo/', 'notebook/', 'signal/']], ['namethatui/', 'Tên UI'], ['skills/', 'Skills'], ['fonts/', 'Font'], ['stats.html', 'Thống kê']];
-  const links = NAV.map(([p, t, sub = []]) => `<a href="${R + p}"${[p, ...sub].some((x) => location.href.startsWith(R + x)) ? ' aria-current="page"' : ''}>${t}</a>`).join('');
+  const NAV = [['scroll-effects/', 'Scroll effects'], ['components/', 'Components'], ['ui-kits/', 'UI kits'], ['galaxy/', 'Galaxy'], ['ui-libraries/', 'Thư viện UI'], ['motion/', 'Motion'], ['angles/', 'Góc máy'], ['halvo/', 'Nesta'], ['namethatui/', 'Tên UI'], ['skills/', 'Skills'], ['notebook/', 'Sổ tay'], ['signal/', 'Signal'], ['fonts/', 'Font'], ['stats.html', 'Thống kê']];
+  const links = NAV.map(([p, t]) => `<a href="${R + p}"${location.href.startsWith(R + p) ? ' aria-current="page"' : ''}>${t}</a>`).join('');
   const run = '<span><b>uiux-asset</b></span><span class="ms">sentiment_satisfied</span><span>Code gốc nguyên văn — xem chạy thật, copy nguyên file</span>';
 
   const head = document.createElement('div');
