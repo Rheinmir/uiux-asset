@@ -1,0 +1,765 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta name="ui-kit-id" content="uiux-giatbh-angles">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Góc máy UI Kit</title>
+<meta name="description" content="UI kit rút từ trang Góc máy (angles/) của uiux-asset: token aw-*, sân khấu 3D cx-*, bảng chú thích, điều khiển, màn mẫu desktop và mobile.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('angles-kit-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){document.documentElement.dataset.theme='light'}</script>
+<style>
+/* ===== Token + rule .aw-* chép từ aw.css của uiux-asset (vỏ site, sinh từ kit awwwards-com) ===== */
+@import url("https://fonts.googleapis.com/css2?family=Inter+Tight:wght@100..900&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..24,300..500,0..1,0&icon_names=dark_mode,light_mode,open_in_new,search,sentiment_satisfied,shopping_bag&display=block");
+:root {
+  --aw-color-primary:#222; --aw-color-link:#222; --aw-color-white:#fff; --aw-bg-primary:#F8F8F8; --aw-bg-secondary:#222; --aw-bg-3rd:#ededed; --aw-bg-4rd:#f8f8f8; --aw-bg-white:#fff; --aw-border-gray:#ededed; --aw-ch-bg:#E9E9E9; --aw-sf-bg:#ededed; --aw-nf-bg-1:#ededed; --aw-nf-bg-2:#f8f8f8; --aw-nf-bg-3:#fff; --aw-bg-input:#fff; --aw-bg-input-hover:#f8f8f8; --aw-border-input:#ededed; --aw-color-input:#222; --aw-button-bg:#222; --aw-button-color:#fff; --aw-button-hover:#383838; --aw-button-gray:#dedede; --aw-tag-border:#a7a7a7; --aw-muted:rgba(34,34,34,.3); --aw-check-bg:#dedede; --aw-check-bg-checked:#222; --aw-check-ball:#fff; --aw-overlay:rgba(34,34,34,.7); --aw-float-bg:rgba(34,34,34,.8); --aw-float-ink:#dedede; --aw-float-line:#525252; --aw-inverse-bg:#222; --aw-inverse-ink:#fff; --aw-img:#dcdcdc; --aw-img-ink:#8a8a8a; --aw-card:#fff; --aw-checker:rgba(0,0,0,.06);
+  --aw-color-orange:#FA5D29; --aw-color-blue:#49B3FC; --aw-color-featured:#f8f0ee; --aw-alert-green:#e0f4d9; --aw-alert-yellow:#FFF083; --aw-nf-bg-count:#FF9667;
+  --aw-tag-dev:#8eabc6; --aw-tag-sotd:#ce6644; --aw-tag-hm:#726996;
+  --aw-color-inspire:#AAEEC4; --aw-color-inspire-2:#C8E4D3; --aw-color-inspire-3:#E2F4E9; --aw-color-learn:#FFF083; --aw-color-learn-2:#FFF9D0; --aw-color-learn-3:#fffbe2; --aw-color-connect:#FF602C; --aw-color-connect-2:#FFAE94; --aw-color-connect-3:#FFC5B1; --aw-color-read:#c0ab3c; --aw-color-read-2:#CDC38B; --aw-color-read-3:#DBD6C0; --aw-color-awards:#502bd8; --aw-color-awards-2:#6749d1; --aw-color-awards-3:#917eda; --aw-color-jobs:#74bcff; --aw-color-jobs-2:#99ccfc; --aw-color-jobs-3:#b4d7f8;
+  --aw-sticker-1:#ec6237; --aw-sticker-2:#e5d8ca; --aw-sticker-3:#AAEEC4; --aw-sticker-4:#502BD8; --aw-sticker-5:#222; --aw-sticker-6:#502BD8; --aw-sticker-7:#FCB6F2;
+  --aw-menu-color-1:#AAEEC4; --aw-menu-color-2:#C8E4D3; --aw-menu-color-3:#E2F4E9;   /* .style-N gán --menu-color-1..3 = --color-<mục>, -2, -3 */
+  --aw-font: "Inter Tight", Helvetica, Arial, sans-serif;                            /* --font-1 */
+  --aw-mono: ui-monospace, Menlo, "Courier New", monospace;
+  --aw-fw-light:300; --aw-fw-normal:400; --aw-fw-medium:500; --aw-fw-bold:600; --aw-fw-extrabold:700; --aw-fw-black:800;
+  --aw-text-small:11px; --aw-text-primary:14px; --aw-text-medium:18px; --aw-text-large:20px;
+  --aw-rounded-small:4px; --aw-rounded-normal:8px; --aw-rounded-large:8px; --aw-button-rounded:8px; --aw-button-rounded-full:72px; --aw-r-float:12px; --aw-r-figure-lg:14px;
+  --aw-button-height:48px; --aw-button-pad:24px; --aw-height-input:48px; --aw-pad-input:16px; --aw-sf-height:42px; --aw-nf-height:54px; --aw-nf-container-pad:6px;
+  --aw-gutter:20px; --aw-pad-inner:16px; --aw-header-height:71px; --aw-border-thin:.5px;
+  --aw-check-w:80px; --aw-check-h:40px;
+  --aw-float-content:#3e3e3e; --aw-float-line-2:#4e4e4e; --aw-float-hover-line:#a7a7a7; --aw-cookie-btn-hover:#7a7a7a; --aw-plan-right:#2c2c2c; --aw-plan-label:rgba(56,56,56,.5); --aw-line-10:rgba(0,0,0,.1); --aw-promo-bg:#efe8de; --aw-blog-bg:#f3f3f3; --aw-scrim:rgba(0,0,0,.5); --aw-scrim-0:rgba(0,0,0,0); --aw-bullet:rgba(255,255,255,.2); --aw-ua-focus:#005fcc;
+  --aw-cert-1:#e3c352; --aw-cert-2:#80a8ba; --aw-cert-3:#a69382; --aw-cert-4:#adaf40; --aw-cert-5:#ffa41b; --aw-cert-6:#b97e7e;
+  --aw-color-underlined:34, 34, 34; --aw-color-white-rgb:255, 255, 255; --aw-color-red-rgb:250, 93, 41;                                                   /* rgb bộ ba, như --color-underlined của site */
+  --aw-fluid-20: clamp(18px, 16.5915px + 0.28169vw, 22px);                            /* clamp site dùng cho link/tiêu đề thẻ, = 20.65 ở 1440 */
+  color-scheme: light;
+}
+:root[data-mode="dark"] { color-scheme: dark; }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--aw-bg-primary); color: var(--aw-color-primary); font: 300 14px/28px var(--aw-font); -webkit-font-smoothing: antialiased; }
+.ms { font-family: "Material Symbols Rounded"; font-weight: 300; font-style: normal; font-size: 20px; line-height: 1; letter-spacing: normal; text-transform: none; display: inline-block; white-space: nowrap; direction: ltr; font-feature-settings: "liga"; -webkit-font-smoothing: antialiased; user-select: none; }
+code, .code { font-family: var(--aw-mono); font-size: 12px; }
+:focus-visible { outline: 2px solid var(--aw-color-blue); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+:root[data-theme="dark"] { --aw-color-primary:#eee; --aw-color-link:#eee; --aw-color-white:#fff; --aw-bg-primary:#121212; --aw-bg-secondary:#222; --aw-bg-3rd:#383838; --aw-bg-4rd:#1a1a1a; --aw-bg-white:#1c1c1c; --aw-border-gray:#2e2e2e; --aw-ch-bg:#222; --aw-sf-bg:#383838; --aw-nf-bg-1:#222; --aw-nf-bg-2:#2a2a2a; --aw-nf-bg-3:#383838; --aw-bg-input:#1c1c1c; --aw-bg-input-hover:#222; --aw-border-input:#383838; --aw-color-input:#eee; --aw-button-bg:#fff; --aw-button-color:#222; --aw-button-hover:#383838; --aw-button-gray:#383838; --aw-tag-border:#5a5a5a; --aw-muted:rgba(238,238,238,.3); --aw-check-bg:#383838; --aw-check-bg-checked:#eee; --aw-check-ball:#121212; --aw-overlay:rgba(0,0,0,.7); --aw-float-bg:rgba(34,34,34,.8); --aw-float-content:#3e3e3e; --aw-float-ink:#dedede; --aw-float-line:#525252; --aw-float-line-2:#4e4e4e; --aw-inverse-bg:#2a2a2a; --aw-inverse-ink:#fff; --aw-plan-right:#2c2c2c; --aw-plan-label:rgba(56,56,56,.5); --aw-promo-bg:#2a2520; --aw-blog-bg:#1a1a1a; --aw-img:#2a2a2a; --aw-img-ink:#8a8a8a; --aw-card:#181818; --aw-checker:rgba(255,255,255,.06); --aw-color-underlined:238, 238, 238; color-scheme: dark; }
+:root[data-theme="dark"] { --aw-color-primary:#eee; --aw-color-link:#eee; --aw-color-white:#fff; --aw-bg-primary:#121212; --aw-bg-secondary:#222; --aw-bg-3rd:#383838; --aw-bg-4rd:#1a1a1a; --aw-bg-white:#1c1c1c; --aw-border-gray:#2e2e2e; --aw-ch-bg:#222; --aw-sf-bg:#383838; --aw-nf-bg-1:#222; --aw-nf-bg-2:#2a2a2a; --aw-nf-bg-3:#383838; --aw-bg-input:#1c1c1c; --aw-bg-input-hover:#222; --aw-border-input:#383838; --aw-color-input:#eee; --aw-button-bg:#fff; --aw-button-color:#222; --aw-button-hover:#383838; --aw-button-gray:#383838; --aw-tag-border:#5a5a5a; --aw-muted:rgba(238,238,238,.3); --aw-check-bg:#383838; --aw-check-bg-checked:#eee; --aw-check-ball:#121212; --aw-overlay:rgba(0,0,0,.7); --aw-float-bg:rgba(34,34,34,.8); --aw-float-content:#3e3e3e; --aw-float-ink:#dedede; --aw-float-line:#525252; --aw-float-line-2:#4e4e4e; --aw-inverse-bg:#2a2a2a; --aw-inverse-ink:#fff; --aw-plan-right:#2c2c2c; --aw-plan-label:rgba(56,56,56,.5); --aw-promo-bg:#2a2520; --aw-blog-bg:#1a1a1a; --aw-img:#2a2a2a; --aw-img-ink:#8a8a8a; --aw-card:#181818; --aw-checker:rgba(255,255,255,.06); --aw-color-underlined:238, 238, 238; color-scheme: dark; }
+:root { --aw-ink2: #5d5d5d; }                       /* chữ phụ đủ tương phản (kit chỉ có --aw-img-ink #8a8a8a cho ảnh giữ chỗ) */
+:root[data-theme="dark"] { --aw-ink2: #b4b4b4; }
+.aw-btn { --b-bg: var(--aw-button-bg); --b-ink: var(--aw-button-color); --b-bd: var(--aw-button-bg); position: relative; display: inline-flex; justify-content: center; align-items: center; gap: .5em; height: var(--aw-button-height); padding: 0 var(--aw-button-pad); background: var(--b-bg); color: var(--b-ink); border: none; border-radius: var(--aw-button-rounded); font: 300 var(--aw-text-primary)/1 var(--aw-font); white-space: nowrap; text-decoration: none; cursor: pointer; transition: color .3s, background .3s, border .3s, opacity .3s; }
+.aw-btn .ms { font-size: 1.15em; }
+.aw-btn:focus { outline: none; }                                                /* .button:focus { outline: none } */
+.aw-btn:hover, .aw-btn.is-hover { --b-bg: var(--aw-button-hover); --b-ink: var(--aw-color-white); } /* .button:hover */
+.aw-btn--small { min-width: 42px; height: 42px; padding: 0 20px; font-weight: 500; }
+.aw-btn--medium { min-width: 60px; height: 60px; padding: 0 1.2em; font-size: 16px; }
+.aw-btn--large { min-width: 72px; height: 72px; padding: 0 1.6em; font-size: 18px; font-weight: 400; }
+.aw-btn--x-small { min-width: 32px; height: 32px; padding: 0 12px; font-size: 13px; }
+.aw-btn--extra-pad { padding: 0 3em; }
+.aw-btn--full { width: 100%; }
+.aw-btn--circle { padding: 0; aspect-ratio: 1; border-radius: 50%; min-width: 48px; }
+.aw-btn--outline { --b-bg: transparent; --b-ink: var(--aw-color-primary); border: var(--aw-border-thin) solid var(--b-bd); --b-bd: var(--aw-color-primary); }
+.aw-btn--outline:hover, .aw-btn--outline.is-hover { --b-bg: var(--aw-button-hover); --b-ink: var(--aw-color-white); }
+.aw-btn--outline-white { --b-bg: transparent; --b-ink: var(--aw-color-white); border: var(--aw-border-thin) solid var(--aw-color-white); }
+.aw-btn--outline-white:hover, .aw-btn--outline-white.is-hover { --b-bg: var(--aw-color-white); --b-ink: var(--aw-inverse-bg); }
+.aw-btn--white { --b-bg: var(--aw-color-white); --b-ink: var(--aw-inverse-bg); }
+.aw-btn--gray { --b-bg: var(--aw-button-gray); --b-ink: var(--aw-color-primary); }
+.aw-btn--red { --b-bg: var(--aw-color-orange); --b-ink: var(--aw-color-white); }
+.aw-btn--blue { --b-bg: var(--aw-color-blue); --b-ink: var(--aw-color-white); }
+.aw-btn--ch { --b-bg: var(--aw-ch-bg); --b-ink: var(--aw-inverse-bg); font-size: 13px; font-weight: 600; }
+.aw-btn--inspire { --b-bg: var(--aw-color-inspire); --b-ink: var(--aw-inverse-bg); font-size: 13px; font-weight: 600; }
+.aw-btn--ch:hover, .aw-btn--ch.is-hover { --b-bg: var(--aw-ch-bg); --b-ink: var(--aw-inverse-bg); opacity: .8; }
+.aw-btn--inspire:hover, .aw-btn--inspire.is-hover { --b-bg: var(--aw-color-inspire); --b-ink: var(--aw-inverse-bg); opacity: .8; }
+.aw-btn--tag { --b-bg: transparent; --b-ink: var(--aw-color-primary); height: 48px; padding: 0 24px; border: var(--aw-border-thin) solid var(--aw-tag-border); border-radius: var(--aw-button-rounded-full); font-size: var(--aw-text-medium); font-weight: 600; }
+.aw-btn--tag:hover, .aw-btn--tag.is-hover { --b-bg: transparent; --b-ink: var(--aw-color-primary); border-color: var(--aw-color-primary); }
+.aw-btn .spin { display: inline-block; width: 1em; height: 1em; border-radius: 50%; border: 2px solid currentColor; border-right-color: transparent; }
+.aw-btn.is-active .spin, .aw-btn.is-hover .spin, .aw-btn.is-focus .spin { transform: rotate(40deg); }
+.aw-tag { display: inline-flex; align-items: center; justify-content: center; height: 22px; padding-inline: 4px; font: 500 11px/18px var(--aw-font); text-align: center; border-radius: var(--aw-rounded-small); border: var(--aw-border-thin) solid var(--aw-muted); color: var(--aw-color-primary); white-space: nowrap; }
+.aw-tag--small { min-width: 16px; height: 16px; font-size: 10px; line-height: 17px; }
+.aw-tag--medium { height: 23px; padding: 2px 8px 1px; font-size: 14px; }
+.aw-tag--big { height: 30px; padding-inline: 8px; font-size: 16px; line-height: 16px; }
+.aw-tag--bold { font-size: 13px; font-weight: 600; }                         /* .card-academy__row .budget-tag */
+.aw-tag--sotd { border-color: var(--aw-tag-sotd); color: var(--aw-tag-sotd); }
+.aw-tag--dev { border-color: var(--aw-tag-dev); color: var(--aw-tag-dev); }
+.aw-tag--hm { border-color: var(--aw-tag-hm); color: var(--aw-tag-hm); }
+.aw-tag--white { border-color: var(--aw-color-white); color: var(--aw-color-white); }
+.aw-tag--red { border-color: var(--aw-color-orange); color: var(--aw-color-orange); }
+.aw-tag--solid-black { border: none; background: var(--aw-inverse-bg); color: var(--aw-inverse-ink); }
+.aw-tag--solid-yellow { border: none; background: var(--aw-alert-yellow); color: var(--aw-inverse-bg); font-weight: 600; }
+.aw-tag--solid-green { border: none; background: var(--aw-color-inspire); color: var(--aw-inverse-bg); }
+.aw-count { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: var(--aw-rounded-normal); background: var(--aw-nf-bg-count); color: var(--aw-color-white); font: 500 11px/1 var(--aw-font); }
+.aw-count--blue { background: var(--aw-color-blue); }
+.aw-header { display: flex; align-items: center; gap: 20px; height: var(--aw-nf-height); padding: 0 var(--aw-nf-container-pad); background: var(--aw-ch-bg); border-radius: var(--aw-rounded-normal); width: 100%; color: var(--aw-color-primary); }
+.aw-header.is-plain { background: transparent; }
+.aw-header.is-open { border-radius: var(--aw-rounded-normal) var(--aw-rounded-normal) 0 0; background: var(--aw-nf-bg-1); }
+.aw-header .aw-logo { margin: 0 20px 0 10px; }
+.aw-hnav { display: flex; align-items: center; gap: 20px; font: 500 14px/28px var(--aw-font); }
+.aw-hnav > a, .aw-hnav > span { color: inherit; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
+.aw-hnav .ms { font-size: 16px; }
+.aw-header .grow { flex: 1; }
+.aw-header.is-open .aw-search { background: var(--aw-nf-bg-3); }
+.aw-marquee { display: flex; align-items: center; height: 50px; overflow: hidden; background: var(--aw-sf-bg); color: var(--aw-color-primary); width: 100%; white-space: nowrap; font: 300 14px/28px var(--aw-font); }
+.aw-marquee span { padding: 0 12px; display: inline-flex; align-items: center; gap: 8px; }
+.aw-marquee b { font-weight: 600; }
+.aw-marquee .ms { font-size: 20px; }
+.aw-crumb { display: flex; align-items: center; gap: 12px; font: 300 14px/18.2px var(--aw-font); flex-wrap: wrap; }
+.aw-crumb h1 { margin: 0; font: 600 14px/18.2px var(--aw-font); display: inline-flex; gap: 4px; align-items: center; }
+.aw-heading-hr { margin: 0; padding-bottom: 24px; font: 600 14px/18px var(--aw-font); border-bottom: 1px solid var(--aw-border-gray); width: 100%; }
+.aw-sticker { display: inline-block; width: .5em; height: .5em; border-radius: 50%; background: var(--aw-sticker-1); border: .06em solid var(--aw-sticker-5); vertical-align: .25em; margin-left: .1em; }
+.aw-footer { width: 100%; padding: 40px 0 24px; font: 300 14px/28px var(--aw-font); color: var(--aw-color-primary); }
+.aw-wrap { max-width: 1560px; margin: 0 auto; padding: 8px clamp(16px, 3.6vw, 52px) 0; display: flex; flex-direction: column; gap: 24px; }   /* = .d-inner của màn mẫu desktop */
+.aw-site-head { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+.aw-site-head .aw-marquee { border-radius: var(--aw-rounded-normal); }
+.aw-brand { margin: 0 20px 0 10px; font: 800 18px/1 var(--aw-font); color: inherit; text-decoration: none; white-space: nowrap; }
+.aw-hnav a[aria-current="page"] { font-weight: 700; }
+.aw-wrap > .aw-site-head { margin-bottom: 0; }
+a.aw-tag { text-decoration: none; }
+a.aw-tag:hover { border-color: var(--aw-color-primary); }
+.aw-count { width: auto; min-width: 20px; padding: 0 5px; }   /* kit: ô 20px chỉ vừa 2 chữ số */
+.aw-wrap .aw-home-search { width: 100%; max-width: 720px; margin: 0 auto; font-size: 14px; line-height: 20px; }
+.aw-btn[disabled] { opacity: .45; cursor: not-allowed; }
+.aw-site-head { position: sticky; top: -50px; z-index: 50; }
+.aw-site-head .aw-header { box-shadow: 0 0 0 8px var(--aw-bg-primary); }   /* che nội dung trôi phía sau ở mép trên */
+.aw-hnav a { position: relative; }
+.aw-hnav a::after { content: ""; position: absolute; left: 0; right: 0; bottom: 2px; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform .25s ease-out; }
+.aw-hnav a:hover::after, .aw-hnav a[aria-current="page"]::after { transform: scaleX(1); }
+.aw-footer { margin-top: 48px; border-top: 1px solid var(--aw-border-gray); }
+.aw-hnav { min-width: 0; overflow-x: auto; scrollbar-width: none; mask-image: linear-gradient(90deg, #000 90%, transparent); }
+.aw-hnav::-webkit-scrollbar { display: none; }
+.aw-hnav > a { white-space: nowrap; flex: none; }
+.is-m .aw-site-head { position: static; }
+.is-m .aw-site-head .aw-marquee { display: none; }
+.is-m .aw-gh { display: none; }
+.is-m .aw-header .aw-btn { flex: none; }
+.is-m .aw-hnav { flex-wrap: nowrap; overflow-x: auto; white-space: nowrap; scrollbar-width: none; gap: 18px; mask-image: linear-gradient(90deg, #000 85%, transparent); }
+.is-m .aw-hnav::-webkit-scrollbar { display: none; }
+.is-m .aw-header { height: auto; min-height: var(--aw-nf-height); flex-wrap: wrap; gap: 4px 16px; padding: 6px; }
+.is-m .aw-brand { margin: 0 8px; }
+.is-m .aw-hnav { order: 3; flex-basis: 100%; padding: 0 8px 2px; }
+
+/* ===== Token --cx-*: màu cứng trong <style> của angles/index.html, đổi thành biến ===== */
+:root { --cx-stage: #0b0d14; --cx-hud-ink: #fff; --cx-scrim-top: rgba(0,0,0,.38); --cx-scrim-bot: rgba(0,0,0,.42); --cx-hud-shadow: rgba(0,0,0,.55); --cx-tele-shadow: rgba(0,0,0,.6); --cx-ground: radial-gradient(circle closest-side, #ffffff 0, #f6f8fc 7%, #dfe6f2 22%, #cdd5e6 44%, #dcd2d8 50%); }
+
+/* ===== CSS .cx-* nguyên văn của angles/index.html (đã thay màu cứng bằng --cx-*) ===== */
+.cx-track { position: relative; margin-top: 16px; }
+.cx-pin { position: sticky; top: var(--cx-top, 72px); height: calc(100vh - var(--cx-top, 72px)); height: calc(100svh - var(--cx-top, 72px)); display: grid; grid-template-columns: minmax(0, 1.9fr) minmax(280px, 1fr); gap: 20px; padding: 12px 0; box-sizing: border-box; }
+.cx-stage { position: relative; align-self: stretch; min-height: 0; border-radius: var(--aw-rounded-normal, 14px); overflow: hidden; background: var(--cx-stage); isolation: isolate; touch-action: pan-y; }
+.cx-cam { position: absolute; inset: 0; }
+.cx-sky { position: absolute; left: -100%; width: 300%; will-change: transform; }
+.cx-persp { position: absolute; inset: 0; }
+.cx-world, .o { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform-style: preserve-3d; }
+.fc { position: absolute; backface-visibility: hidden; }
+.cx-ground { position: absolute; width: 12000px; height: 12000px; left: -6000px; top: -6000px; backface-visibility: hidden;
+  background: var(--cx-ground); transform: translateY(170px) rotateX(90deg); }
+.cx-decal { position: absolute; border-radius: 50%; backface-visibility: hidden; }
+.cx-dirty { position: absolute; inset: 0; pointer-events: none; opacity: var(--dirty, 0); }
+.cx-dirty i { position: absolute; display: block; filter: blur(22px); }
+.cx-lens { position: absolute; inset: 0; pointer-events: none; }
+.cx-stage::before, .cx-stage::after { content: ''; position: absolute; left: 0; right: 0; height: 90px; pointer-events: none; z-index: 2; }
+.cx-stage::before { top: 0; background: linear-gradient(var(--cx-scrim-top), transparent); }
+.cx-stage::after { bottom: 0; background: linear-gradient(transparent, var(--cx-scrim-bot)); }
+.cx-hud, .cx-tele { z-index: 3; }
+.cx-hud { position: absolute; left: 0; right: 0; top: 0; padding: 14px 16px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; pointer-events: none; color: var(--cx-hud-ink); text-shadow: 0 1px 14px var(--cx-hud-shadow); }
+.cx-lab { font: 800 clamp(18px, 3.2vw, 38px)/1 'Inter', system-ui, sans-serif; letter-spacing: -.02em; text-transform: uppercase; max-width: 80%; transition: opacity .25s; }
+.cx-cnt { font: 600 13px/1 ui-monospace, Menlo, monospace; opacity: .85; white-space: nowrap; }
+.cx-tele { position: absolute; left: 0; right: 0; bottom: 0; padding: 12px 16px; display: flex; flex-wrap: wrap; gap: 6px 14px; color: var(--cx-hud-ink); font: 500 12px/1.2 ui-monospace, Menlo, monospace; text-shadow: 0 1px 10px var(--cx-tele-shadow); pointer-events: none; }
+.cx-tele b { font-weight: 600; opacity: .7; margin-right: 4px; }
+.cx-panel { display: flex; flex-direction: column; gap: 14px; min-width: 0; overflow: auto; padding: 4px 2px; }
+.cx-num { font: 800 clamp(56px, 8vw, 110px)/1.05 'Inter', system-ui, sans-serif; letter-spacing: -.04em; padding-top: 4px; }
+.cx-num small { font-size: .28em; opacity: .5; letter-spacing: 0; margin-left: 6px; }
+.cx-name { margin: 0; font-size: 22px; line-height: 1.2; }
+.cx-what { margin: 0; line-height: 1.6; }
+.cx-facts { display: grid; gap: 8px; margin: 0; }
+.cx-facts div { padding: 10px 12px; border-radius: 10px; background: var(--aw-nf-bg-2, #eee); line-height: 1.45; font-size: 14px; }
+.cx-facts dt { font-size: 12px; opacity: .6; margin-bottom: 2px; }
+.cx-facts dd { margin: 0; }
+.cx-prompt { font: 12px/1.5 ui-monospace, Menlo, monospace; padding: 8px 12px; border-radius: 10px; border: 1px dashed currentColor; opacity: .85; }
+.cx-ctl { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: auto; }
+.cx-ctl button { font: inherit; font-size: 14px; padding: 8px 14px; border-radius: 999px; border: 1px solid currentColor; background: transparent; color: inherit; cursor: pointer; }
+.cx-ctl button:hover { opacity: .7; }
+.cx-dots { display: flex; gap: 6px; flex-wrap: wrap; }
+.cx-dots button { width: 34px; height: 34px; padding: 0; font: 600 12px ui-monospace, Menlo, monospace; }
+.cx-dots button[aria-current="true"] { background: currentColor; }
+.cx-dots button[aria-current="true"] span { color: var(--aw-bg-primary, #fff); mix-blend-mode: normal; }
+.cx-list { margin: 40px 0 8px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 12px; }
+.cx-list div { padding: 14px 16px; border-radius: 12px; background: var(--aw-nf-bg-2, #eee); line-height: 1.5; font-size: 14px; }
+.cx-list b { display: block; margin-bottom: 4px; font-size: 15px; }
+.cx-note { max-width: 78ch; line-height: 1.6; opacity: .75; font-size: 13px; margin-bottom: 40px; }
+
+@media (prefers-reduced-motion: reduce) { .cx-lab { transition: none; } }
+
+/* = @media (max-width: 820px) của trang, gắn vào .is-m cho màn mẫu mobile */
+.is-m .cx-pin { --cx-top: 8px; }
+.is-m .cx-pin { grid-template-columns: 1fr; grid-template-rows: minmax(0, 58%) minmax(0, 1fr); gap: 8px; padding: 6px 0 4px; }
+.is-m .cx-panel { gap: 8px; }
+.is-m .cx-num { display: none; }
+.is-m .cx-name { font-size: 18px; }
+.is-m .cx-what { font-size: 14px; line-height: 1.5; }
+.is-m .cx-facts, .is-m .cx-prompt { display: none; }
+.is-m .cx-what { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+.is-m .cx-dots button { width: 30px; height: 30px; }
+.is-m .cx-lab { font-size: 17px; }
+
+/* ===== trạng thái ép tay cho kit (chép rule :hover / :focus-visible / :active của trang) ===== */
+.cx-ctl button.is-hover { opacity: .7; }
+.aw-hnav a.is-focus, .aw-brand.is-focus, .ua-link.is-focus { outline: 2px solid var(--aw-color-blue); outline-offset: 2px; }
+.ua-link.is-active { color: ActiveText; }
+.aw-btn--outline.is-active { --b-bg: var(--aw-button-hover); --b-ink: var(--aw-color-white); }
+.ms { font-family: system-ui, sans-serif; }   /* kit không nạp Material Symbols: icon thay bằng ký tự */
+
+/* ===== vỏ trang kit (chỉ dùng --aw-*) ===== */
+.shell { display: grid; grid-template-columns: 220px minmax(0, 1fr); min-height: 100vh; }
+.side { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 20px 12px; border-right: 1px solid var(--aw-border-gray); display: flex; flex-direction: column; gap: 2px; }
+.side .brand { padding: 4px 10px 14px; font: 800 18px/1 var(--aw-font); }
+.side .brand small { display: block; margin-top: 6px; font: 400 12px/1.3 var(--aw-font); color: var(--aw-ink2); }
+.side h6 { margin: 14px 10px 4px; font: 600 11px/1 var(--aw-font); letter-spacing: .05em; text-transform: uppercase; color: var(--aw-ink2); }
+.side a { display: block; padding: 6px 10px; border-radius: var(--aw-rounded-normal); color: var(--aw-ink2); text-decoration: none; font: 500 14px/20px var(--aw-font); }
+.side a:hover { color: var(--aw-color-primary); }
+.side a.on { color: var(--aw-color-primary); font-weight: 700; }
+main.kit { padding: 0 32px 96px; min-width: 0; }
+.bar { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; padding: 12px 0; background: var(--aw-bg-primary); border-bottom: 1px solid var(--aw-border-gray); }
+.bar .grow { flex: 1; }
+.bar .lbl { font: 600 12px/1 var(--aw-font); color: var(--aw-ink2); }
+.seg { display: inline-flex; gap: 4px; }
+.seg .aw-btn[aria-pressed="true"] { --b-bg: var(--aw-button-bg); --b-ink: var(--aw-button-color); }
+.intro { padding: 36px 0 8px; max-width: min(100%, 820px); }
+.eyebrow { font: 12px/1.4 var(--aw-mono); color: var(--aw-ink2); }
+.intro h1 { font: 800 clamp(32px, 5vw, 56px)/1.05 var(--aw-font); letter-spacing: -.03em; margin: 10px 0 12px; text-wrap: balance; }
+.intro p { margin: 0; font: 400 16px/1.6 var(--aw-font); color: var(--aw-ink2); max-width: 68ch; }
+.intro p em { font-style: normal; color: var(--aw-color-primary); font-weight: 600; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.fact { font: 12px/1.4 var(--aw-mono); padding: 4px 10px; border-radius: var(--aw-rounded-normal); border: 1px solid var(--aw-border-gray); color: var(--aw-color-primary); }
+section.block { padding-top: 44px; scroll-margin-top: 64px; content-visibility: auto; contain-intrinsic-size: auto 900px; }   /* cảnh 3D ngoài màn hình không chiếm lớp GPU */
+section.block > header { margin-bottom: 14px; }
+section.block > header h2 { margin: 0 0 6px; font: 700 26px/1.2 var(--aw-font); letter-spacing: -.01em; }
+section.block > header h2 small { font-weight: 400; color: var(--aw-ink2); font-size: 16px; margin-left: 8px; }
+section.block > header p { margin: 0; max-width: 72ch; font: 400 14px/1.6 var(--aw-font); color: var(--aw-ink2); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr)); gap: 14px; }
+.spec { background: var(--aw-card); border: 1px solid var(--aw-border-gray); border-radius: var(--aw-r-figure-lg); display: flex; flex-direction: column; min-width: 0; }
+.spec.full { grid-column: 1 / -1; }
+.spec-h { display: flex; align-items: center; gap: 8px; padding: 14px 16px 0; flex-wrap: wrap; }
+.spec-h b { font: 600 15px/1.3 var(--aw-font); }
+.spec-h b i { font-style: normal; font-weight: 400; color: var(--aw-ink2); }
+.kind { font: 11px/18px var(--aw-mono); padding: 0 6px; border-radius: var(--aw-rounded-small); border: var(--aw-border-thin) solid var(--aw-tag-border); color: var(--aw-color-primary); }
+.spec-h .dp { margin-left: auto; font: 11px/1.4 var(--aw-mono); color: var(--aw-ink2); }
+.stage { padding: 18px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; min-height: 90px; overflow-x: auto; }
+.stage.col { flex-direction: column; align-items: stretch; }
+.stage.page { background: var(--aw-bg-primary); margin: 12px 12px 0; border-radius: var(--aw-rounded-normal); }
+.spec-f { display: flex; align-items: center; gap: 8px; padding: 8px 12px 12px 16px; margin-top: auto; }
+.spec-f .note { flex: 1; font: 400 12px/1.5 var(--aw-font); color: var(--aw-ink2); }
+.spec-f .note b { color: var(--aw-color-primary); font-weight: 600; }
+.copy { height: 30px; padding: 0 10px; border-radius: var(--aw-rounded-normal); border: 1px solid var(--aw-border-gray); background: transparent; color: var(--aw-color-primary); font: 500 12px var(--aw-font); cursor: pointer; white-space: nowrap; }
+.copy:hover { border-color: var(--aw-color-primary); }
+.st { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+.st > small { font: 11px/1 var(--aw-mono); color: var(--aw-ink2); }
+.demo-stage { position: relative; width: 100%; height: 340px; }
+.demo-stage .cx-stage { position: absolute; inset: 0; }
+.angles8 { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); gap: 10px; width: 100%; }
+.angles8 figure { margin: 0; display: flex; flex-direction: column; gap: 6px; }
+.angles8 .cx-stage { height: 170px; }
+.angles8 .cx-lab, .mini .cx-lab { font-size: 15px; }
+.angles8 .cx-tele { display: none; }
+.angles8 figcaption { font: 12px/1.4 var(--aw-mono); color: var(--aw-ink2); }
+.prim { position: relative; width: 150px; height: 150px; border-radius: var(--aw-rounded-normal); overflow: hidden; background: var(--cx-stage); perspective: 600px; }
+.prim .cx-world { transform: rotateX(-18deg) rotateY(-32deg); }
+.prim-cap { font: 11px/1.4 var(--aw-mono); color: var(--aw-ink2); text-align: center; margin-top: 4px; }
+/* nền tảng */
+.roles { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 168px), 1fr)); gap: 8px; }
+.role { display: flex; flex-direction: column; gap: 6px; padding: 0; border: 1px solid var(--aw-border-gray); border-radius: var(--aw-rounded-normal); background: var(--aw-card); color: var(--aw-color-primary); text-align: left; cursor: pointer; overflow: hidden; font: inherit; }
+.role i { display: block; height: 44px; border-bottom: 1px solid var(--aw-border-gray); }
+.role b { padding: 0 10px; font: 500 12px/1.3 var(--aw-mono); word-break: break-all; }
+.role code { padding: 0 10px 10px; font-size: 11px; color: var(--aw-ink2); }
+table.tok { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+table.tok th, table.tok td { text-align: left; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--aw-border-gray); font: 400 13px/1.4 var(--aw-font); vertical-align: top; }
+table.tok th { font-weight: 600; color: var(--aw-ink2); font-size: 12px; }
+table.tok td:first-child, table.tok td.m { font-family: var(--aw-mono); font-size: 12px; }
+.scroll { overflow-x: auto; width: 100%; }
+.type-row { display: grid; grid-template-columns: 170px minmax(0, 1fr) 210px; gap: 14px; align-items: baseline; padding: 10px 0; border-bottom: 1px solid var(--aw-border-gray); }
+.type-row .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.type-row .meta { font: 11px/1.4 var(--aw-mono); color: var(--aw-ink2); }
+.shape-cell { display: flex; flex-direction: column; align-items: center; gap: 6px; font: 11px/1.3 var(--aw-mono); color: var(--aw-ink2); text-align: center; }
+.shape-cell i { display: block; width: 64px; height: 64px; background: var(--aw-nf-bg-1); border: 1px solid var(--aw-tag-border); }
+/* màn mẫu */
+.screens { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
+.screens > div { min-width: 0; max-width: 100%; }
+.frame-wrap { overflow-x: auto; max-width: 100%; }
+.frame { position: relative; overflow: hidden; border: 1px solid var(--aw-border-gray); border-radius: var(--aw-r-figure-lg); background: var(--aw-bg-primary); color: var(--aw-color-primary); font: 300 14px/28px var(--aw-font); }
+.frame { transform: scale(var(--z)); transform-origin: 0 0; }
+.frame.desk { --z: .56; width: 1440px; height: 900px; }
+.frame.phone { --z: .62; width: 390px; height: 844px; border-radius: 40px; }
+.frame-box { overflow: hidden; }
+.frame-box.desk { width: calc(1440px * .56); height: calc(900px * .56); }
+.frame-box.phone { width: calc(390px * .62); height: calc(844px * .62); }
+.frame .aw-site-head { position: static; margin-bottom: 0; }
+.frame .cx-pin { position: relative; top: 0; height: 690px; }
+.frame.phone .cx-pin { height: 690px; }
+.frame-cap { font: 12px/1.5 var(--aw-mono); color: var(--aw-ink2); margin: 6px 4px 0; max-width: min(100%, 820px); }
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; transition: all .2s ease-out; z-index: 20; background: var(--aw-inverse-bg); color: var(--aw-inverse-ink); padding: 8px 14px; border-radius: var(--aw-rounded-normal); font: 500 13px/1.4 var(--aw-font); }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; }
+  .side { display: none; }
+  .bar { position: static; }
+  main.kit { padding: 0 16px 80px; }
+  .type-row { grid-template-columns: 1fr; gap: 2px; }
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="cx-fish" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB"><feImage id="cx-map" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="m"/><feDisplacementMap id="cx-disp" in="SourceGraphic" in2="m" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter></svg>
+<div class="shell">
+  <nav class="side" aria-label="Mục lục">
+    <div class="brand">Góc máy UI Kit<small>uiux-asset /angles/</small></div>
+    <h6>Nền tảng</h6>
+    <a href="#color">Màu</a>
+    <a href="#type">Chữ</a>
+    <a href="#shape">Bo góc</a>
+    <a href="#layout">Bố cục &amp; máy quay</a>
+    <h6>Thành phần</h6>
+    <a href="#shell-c">Vỏ site</a>
+    <a href="#stage-c">Sân khấu 3D</a>
+    <a href="#panel-c">Bảng chú thích</a>
+    <a href="#ctl-c">Điều khiển</a>
+    <a href="#content-c">Nội dung dưới cảnh</a>
+    <a href="#footer-c">Chân trang</a>
+    <h6>Mẫu</h6>
+    <a href="#screens">Màn hình mẫu</a>
+  </nav>
+
+  <main class="kit">
+    <div class="bar" role="toolbar" aria-label="Giao diện">
+      <span class="lbl">Chế độ (mode)</span>
+      <div class="seg" id="mode">
+        <button type="button" class="aw-btn aw-btn--x-small aw-btn--outline" data-v="light" aria-pressed="true">Sáng</button>
+        <button type="button" class="aw-btn aw-btn--x-small aw-btn--outline" data-v="dark" aria-pressed="false">Tối</button>
+      </div>
+      <span class="lbl">Góc máy (angle)</span>
+      <div class="seg" id="ang"></div>
+      <div class="grow"></div>
+      <button type="button" class="aw-btn aw-btn--x-small" id="copy-tokens">Copy CSS token</button>
+    </div>
+
+    <div class="intro">
+      <div class="eyebrow">aw.css + angles/index.html → ui-kits/uiux-giatbh-angles</div>
+      <h1>Góc máy: bộ thành phần</h1>
+      <p>Kit chép lại hệ thiết kế đang chạy trên trang <a href="https://uiux.giatbh.io.vn/angles/">Góc máy</a> (camera angles). Vỏ trang mặc token <em>--aw-*</em> của aw.css (sáng và tối). Sân khấu 3D, bảng chú thích và nút điều khiển dùng đúng CSS <em>.cx-*</em> và hàm dựng cảnh của trang, nên mọi cảnh trong kit là cảnh thật, không phải ảnh. Muốn dùng lại: dán khối token, CSS <code>.aw-*</code> + <code>.cx-*</code>, rồi copy HTML từ từng thẻ.</p>
+      <div class="facts"><span class="fact">8 góc máy</span><span class="fact">1 góc = 0.8 × cao màn hình cuộn</span><span class="fact">tự chạy ≈ 3.3 s mỗi góc</span><span class="fact">bố cục 1.9fr / minmax(280px, 1fr)</span><span class="fact">≤ 820px: xếp dọc 58% / 42%</span></div>
+    </div>
+
+    <!-- ================= NỀN TẢNG ================= -->
+    <section class="block" id="color">
+      <header><h2>Màu <small>Color</small></h2><p>Mọi vai trò màu có bản tối trong aw.css, cộng các màu nhấn trang dùng. Giá trị đọc trực tiếp từ CSS đang áp dụng (đổi Sáng/Tối để thấy bản kia). Bấm một ô để copy.</p></header>
+      <div class="roles" id="roles"></div>
+      <header style="margin-top:22px"><h2 style="font-size:18px">Màu riêng của cảnh <small>Scene</small></h2><p>Sân khấu luôn tối ở cả hai chế độ. Vật liệu 3D là bộ HSL trong script của trang, mỗi mặt hộp nhân độ sáng (0.6 đến 1.14) để giả ánh sáng.</p></header>
+      <div class="roles" id="scene-roles"></div>
+    </section>
+
+    <section class="block" id="type">
+      <header><h2>Chữ <small>Type</small></h2><p>Thân trang dùng Inter Tight (aw.css). Nhãn góc máy và số lớn khai <code>'Inter', system-ui</code> nhưng trang không nạp Inter, nên thực tế hiện bằng font hệ thống. Kit giữ nguyên chuỗi font đó.</p></header>
+      <div class="spec"><div class="stage col" id="typescale"></div></div>
+    </section>
+
+    <section class="block" id="shape">
+      <header><h2>Bo góc <small>Radius</small></h2><p>Token bo góc của aw.css và các số trang tự viết trong <code>.cx-*</code>. Không có thang shape đổi được nên kit không có nút Shape.</p></header>
+      <div class="spec"><div class="stage" id="shapes" style="gap:26px"></div></div>
+    </section>
+
+    <section class="block" id="layout">
+      <header><h2>Bố cục &amp; máy quay <small>Layout &amp; camera</small></h2><p>Hằng số khung và bộ số của 8 góc máy, chép từ mảng <code>A</code> trong script của trang. Máy quay nội suy giữa hai góc bằng smoothstep ở nửa sau mỗi đoạn cuộn.</p></header>
+      <div class="grid">
+        <div class="spec"><div class="stage col"><div class="scroll"><table class="tok">
+          <tr><th>Hằng số</th><th>Giá trị</th><th>Nguồn</th></tr>
+          <tr><td>.cx-pin</td><td>sticky, top 72px, cao 100svh − 72px</td><td class="m">--cx-top</td></tr>
+          <tr><td>cột</td><td>minmax(0, 1.9fr) + minmax(280px, 1fr), gap 20</td><td class="m">grid</td></tr>
+          <tr><td>≤ 820px</td><td>1 cột, hàng 58% / 1fr, gap 8, top 8</td><td class="m">@media</td></tr>
+          <tr><td>per()</td><td>innerHeight × 0.8 cho mỗi góc</td><td class="m">script</td></tr>
+          <tr><td>tự chạy</td><td>per() / 3300 px mỗi ms</td><td class="m">tick()</td></tr>
+          <tr><td>thu cảnh</td><td>k = min(W, 1.5H) / 900</td><td class="m">render()</td></tr>
+          <tr><td>.aw-wrap</td><td>max 1560, lề clamp(16px, 3.6vw, 52px)</td><td class="m">aw.css</td></tr>
+          <tr><td>header</td><td>cao 54, pad 6, r 8</td><td class="m">--aw-nf-height</td></tr>
+        </table></div></div></div>
+        <div class="spec"><div class="stage col"><div class="scroll"><table class="tok" id="camtable">
+          <tr><th>#</th><th>Góc (angle)</th><th>pitch</th><th>yaw</th><th>roll</th><th>P</th><th>E</th><th>ống kính</th></tr>
+        </table></div></div><div class="spec-f"><span class="note">P là tiêu cự (perspective, px), E là khoảng cách tới mục tiêu. fish = 1 bật bộ lọc fisheye, dirty = 1 bật lớp chắn tiền cảnh.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= THÀNH PHẦN ================= -->
+    <section class="block" id="shell-c">
+      <header><h2>Vỏ site <small>Site shell</small></h2><p>Do aw.js chèn vào mọi trang của uiux-asset. Mục «Dựng lại» được tô vì Góc máy nằm trong nhóm đó.</p></header>
+      <div class="grid">
+        <div class="spec full" data-sig="7d8b5e039c"><div class="spec-h"><b>Dải chạy <i>Marquee</i></b><span class="kind">.aw-marquee</span><span class="dp">h 50, r 8</span></div>
+          <div class="stage col"><div class="aw-marquee" aria-hidden="true"><span><b>uiux-asset</b></span><span class="ms">☺</span><span>Code gốc nguyên văn — xem chạy thật, copy nguyên file</span><span><b>uiux-asset</b></span><span class="ms">☺</span><span>Code gốc nguyên văn — xem chạy thật, copy nguyên file</span></div></div>
+          <div class="spec-f"><span class="note">Ẩn khi màn hình ≤ 700px.</span></div></div>
+
+        <div class="spec full" data-sig="fced7c3026 57527f15b4 9ecc645a38 c2a4f9094a dc929c4bc7" data-sig-state="c2a4f9094a:focus dc929c4bc7:focus 9ecc645a38:focus"><div class="spec-h"><b>Thanh đầu trang <i>Header + nav</i></b><span class="kind">.aw-header .aw-hnav</span><span class="dp">h 54, gap 20</span></div>
+          <div class="stage col">
+            <header class="aw-header"><a class="aw-brand" href="#">UIUX.</a><nav class="aw-hnav" aria-label="Chuyên mục (mẫu)"><a href="#">Scroll effects</a><a href="#">Components</a><a href="#">UI kits</a><a href="#">Motion</a><a href="#" aria-current="page">Dựng lại</a><a href="#">Tên UI</a></nav><span class="grow"></span><button type="button" class="aw-btn aw-btn--small">Giỏ <span class="aw-count">0</span></button><button type="button" class="aw-btn aw-btn--small aw-btn--outline" aria-label="Đổi giao diện sáng/tối"><span class="ms">◐</span></button></header>
+            <div class="st"><small>focus-visible (viền 2px --aw-color-blue)</small><header class="aw-header"><a class="aw-brand is-focus" href="#">UIUX.</a><nav class="aw-hnav" aria-label="Chuyên mục (mẫu focus)"><a href="#" class="is-focus">Scroll effects</a><a href="#">Components</a><a href="#" aria-current="page" class="is-focus">Dựng lại</a></nav></header></div>
+          </div>
+          <div class="spec-f"><span class="note">Mục đang xem: <b>aria-current="page"</b>, đậm 700 và gạch chân 1px. Di chuột: gạch chân chạy từ trái sang (0.25s).</span></div></div>
+
+        <div class="spec" data-sig="2a73a0e48c c897fe125c 276d1e86bd" data-sig-state="2a73a0e48c:hover c897fe125c:hover c897fe125c:active"><div class="spec-h"><b>Nút nhỏ <i>Button small</i></b><span class="kind">.aw-btn--small</span><span class="dp">h 42, r 8</span></div>
+          <div class="stage">
+            <div class="st"><small>nghỉ</small><button type="button" class="aw-btn aw-btn--small">Giỏ <span class="aw-count">0</span></button></div>
+            <div class="st"><small>hover</small><button type="button" class="aw-btn aw-btn--small is-hover">Giỏ <span class="aw-count">0</span></button></div>
+            <div class="st"><small>outline</small><button type="button" class="aw-btn aw-btn--small aw-btn--outline" aria-label="Đổi giao diện"><span class="ms">◐</span></button></div>
+            <div class="st"><small>hover</small><button type="button" class="aw-btn aw-btn--small aw-btn--outline is-hover" aria-label="Đổi giao diện (hover)"><span class="ms">◐</span></button></div>
+            <div class="st"><small>active</small><button type="button" class="aw-btn aw-btn--small aw-btn--outline is-active" aria-label="Đổi giao diện (active)"><span class="ms">◐</span></button></div>
+          </div>
+          <div class="spec-f"><span class="note">Hover và nhấn giữ: nền --aw-button-hover, chữ trắng. Số đếm <b>.aw-count</b> 20px, nền --aw-nf-bg-count.</span></div></div>
+
+        <div class="spec" data-sig="030b384813 6f44b0f7cd" data-sig-state="6f44b0f7cd:active 6f44b0f7cd:focus"><div class="spec-h"><b>Tiêu đề trang <i>Crumb</i></b><span class="kind">.aw-crumb h1 + .aw-tag--solid-green</span><span class="dp">14 / 18.2</span></div>
+          <div class="stage col">
+            <div class="aw-crumb"><h1 style="font-size:14px">Góc máy. 8 camera angle chạy thật <span class="aw-tag aw-tag--small aw-tag--solid-green">3D DỰNG BẰNG CSS</span></h1><span>Một cảnh nhỏ dựng hoàn toàn bằng CSS 3D. · <a class="ua-link" href="#">← Motion</a></span></div>
+            <div class="st"><small>link: active / focus</small><span><a class="ua-link is-active" href="#">← Motion</a> &nbsp; <a class="ua-link is-focus" href="#">← Motion</a></span></div>
+          </div>
+          <div class="spec-f"><span class="note">Link «← Motion» không được style: màu và màu nhấn (ActiveText) là mặc định trình duyệt, chỉ focus dùng viền xanh của aw.css.</span></div></div>
+      </div>
+    </section>
+
+    <section class="block" id="stage-c">
+      <header><h2>Sân khấu 3D <small>3D stage</small></h2><p>Một cây div với <code>transform-style: preserve-3d</code>. «Máy quay» là phép biến đổi ngược của cả thế giới (scale3d, rotateZ/X/Y, translate3d) dưới một <code>perspective</code>. Mọi khung dưới đây chạy đúng hàm <code>build()</code> của trang.</p></header>
+      <div class="grid">
+        <div class="spec full" data-sig="e7c58182df"><div class="spec-h"><b>Sân khấu <i>Stage + HUD</i></b><span class="kind">.cx-stage .cx-hud .cx-tele</span><span class="dp">r 8, nền --cx-stage</span></div>
+          <div class="stage"><div class="demo-stage"><div class="cx-stage" data-angle="0" role="img" aria-label="Cảnh 3D mẫu"></div></div></div>
+          <div class="spec-f"><span class="note">HUD trên: nhãn góc (800, clamp 18 đến 38px, chữ hoa) và bộ đếm mono 13px. Dưới: PITCH, YAW, ROLL, LENS mono 12px. Hai dải mờ 90px trên/dưới giữ chữ trắng đọc được. Đổi góc ở thanh trên cùng.</span></div></div>
+
+        <div class="spec full" data-sig="e7c58182df"><div class="spec-h"><b>8 góc máy <i>Camera angles</i></b><span class="kind">A[0..7].c</span><span class="dp">8 bộ số</span></div>
+          <div class="stage"><div class="angles8" id="angles8"></div></div></div>
+
+        <div class="spec" data-sig="2de78ce7e7"><div class="spec-h"><b>Lớp phủ ống kính <i>Lens overlays</i></b><span class="kind">.cx-dirty .cx-lens</span><span class="dp">blur 22px</span></div>
+          <div class="stage"><div class="demo-stage mini" style="height:220px"><div class="cx-stage" data-angle="4" role="img" aria-label="Khung bẩn: vật chắn tiền cảnh"></div></div><div class="demo-stage mini" style="height:220px"><div class="cx-stage" data-angle="0" role="img" aria-label="Fisheye: viền tròn"></div></div></div>
+          <div class="spec-f"><span class="note">Dirty frame: 3 mảng <b>&lt;i&gt;</b> radial-gradient, opacity = --dirty. Fisheye: bộ lọc SVG feDisplacementMap + viền tròn radial-gradient.</span></div></div>
+
+        <div class="spec" data-sig="ee04945e1d 777f4ec391 2c686fd7c9 5c871165e4 ebe405e8ea 88f58bd64e bdbbb9d44a 8070137bf1 6b200810fe ffcb282400 4fd98167fa 5f1aeca430 0aa175a4ff 425cdaaa7a 4ede4b6450 f06cb12a4e 6d04aa1d06 6d94726586 0a7fd10d18 e536b3cce8 9cfdbada31 a959d6e768 b04888b0be b3760f53e3 b8a48e2fad 81344e8354 d2efa747d2 ec1adedaee dfd4a94fd0 96948c1c01 7a1fc8939a 9c351409ad c534a77e3a a7ed4b241a be137c1349 bb95a97866 af5ae2bf58 f370e38bdb 7402d09510 98a7f4bc64 b00bb5745c e1a8bbb731 b24ed9d2df 35ed6ec912 0eb09e26e5 3f0b63847c feaa1ad757 30a79ba283 4e4903c630 74532b9232 3dca0d4dc1 6390343b69 532b9e31b2 fbaaa9828d 2b22e8a4f8 71477d217c 1b51d33940 f403a02493 538ea540bd aa088b5cd9 a841fc2d77 9c389b1abf 877ea2b6e8 8801329fda 1e6b509004 8ef551e1dd fb5ba52959 93d79f185f c192e6f7e8 fa993d5e2f 941ff8d116 043967fac4 0974156bee 205f73c28f 575a6764cc cc15aec184 30162cb310 444c94cbb1 28cb4a9261 e11bab511e b7243e5f2b"><div class="spec-h"><b>Khối dựng <i>3D primitives</i></b><span class="kind">box() cyl() .fc .cx-decal</span><span class="dp">81 mẫu mặt</span></div>
+          <div class="stage" id="prims"></div>
+          <div class="spec-f"><span class="note">Mỗi mặt <b>.fc</b> là một div phẳng; hộp có 6 mặt, trụ 16 đến 22 dải. Các mảnh trên mặt (lông mày, má, môi) và bóng đổ <b>.cx-decal</b> cũng là div. Discover thấy 81 chữ ký khác nhau chỉ vì màu và cỡ mặt.</span></div></div>
+      </div>
+    </section>
+
+    <section class="block" id="panel-c">
+      <header><h2>Bảng chú thích <small>Caption panel</small></h2><p>Cột phải <code>.cx-panel</code> (aria-live="polite"), đổi nội dung khi máy quay sang góc mới.</p></header>
+      <div class="grid">
+        <div class="spec" data-sig="3ffb7cb0a2 1ca051e6fb"><div class="spec-h"><b>Số, tên, mô tả <i>Number, name, what</i></b><span class="kind">.cx-num .cx-name .cx-what</span><span class="dp">110 / 22 / 14</span></div>
+          <div class="stage col"><div class="cx-panel" data-panel="0" style="overflow:visible"><div class="cx-num"></div><h2 class="cx-name"></h2><p class="cx-what"></p></div></div>
+          <div class="spec-f"><span class="note">Số lớn ẩn khi ≤ 820px; mô tả khi đó cắt còn 4 dòng.</span></div></div>
+        <div class="spec" data-sig="e0935ee626"><div class="spec-h"><b>Thông số <i>Facts</i></b><span class="kind">dl.cx-facts</span><span class="dp">pad 10/12, r 10</span></div>
+          <div class="stage col"><dl class="cx-facts" data-facts="0"></dl></div>
+          <div class="spec-f"><span class="note">Nền --aw-nf-bg-2. Nhãn dt trên trang là opacity .6 (≈ 4.2:1 ở nền sáng, dưới 4.5:1); kit giữ nguyên để chép đúng, dùng lại thì nên đổi sang --aw-ink2.</span></div></div>
+        <div class="spec" data-sig="991d46f5bd"><div class="spec-h"><b>Prompt gợi ý <i>Prompt</i></b><span class="kind">.cx-prompt</span><span class="dp">mono 12, viền đứt</span></div>
+          <div class="stage col"><div class="cx-prompt" data-prompt="0"></div></div>
+          <div class="spec-f"><span class="note">Câu prompt tiếng Anh để sinh ảnh đúng góc đó. Ẩn khi ≤ 820px.</span></div></div>
+      </div>
+    </section>
+
+    <section class="block" id="ctl-c">
+      <header><h2>Điều khiển <small>Controls</small></h2><p>Nút tạm dừng/tự chạy và 8 chấm chọn góc, nằm cuối bảng chú thích.</p></header>
+      <div class="grid">
+        <div class="spec full" data-sig="be4d1645e4 9d07a60c1f 1fb9c7869f"><div class="spec-h"><b>Nút viên + chấm góc <i>Play toggle + dots</i></b><span class="kind">.cx-ctl .cx-dots</span><span class="dp">pad 8/14, chấm 34 (30 khi ≤ 820)</span></div>
+          <div class="stage col">
+            <div class="cx-ctl" style="margin-top:0"><button type="button" aria-pressed="true">❚❚ Tạm dừng</button><div class="cx-dots" role="group" aria-label="Chọn góc máy (mẫu)" data-dots="0"></div></div>
+            <div class="st"><small>aria-pressed="false", hover (opacity .7)</small><div class="cx-ctl" style="margin-top:0"><button type="button" aria-pressed="false">▶ Tự chạy</button><button type="button" class="is-hover" aria-pressed="false">▶ Tự chạy</button></div></div>
+          </div>
+          <div class="spec-f"><span class="note">Chấm đang chọn: <b>aria-current="true"</b>, nền currentColor, số đổi sang --aw-bg-primary. Lăn chuột, chạm hoặc gõ phím thì tự chạy tắt.</span></div></div>
+      </div>
+    </section>
+
+    <section class="block" id="content-c">
+      <header><h2>Nội dung dưới cảnh <small>Below the fold</small></h2></header>
+      <div class="grid">
+        <div class="spec full" data-sig="8a2d8ba967"><div class="spec-h"><b>Tóm tắt 8 góc <i>Summary grid</i></b><span class="kind">.aw-heading-hr + .cx-list</span><span class="dp">auto-fit 300px, gap 12, r 12</span></div>
+          <div class="stage col"><h2 class="aw-heading-hr">Tóm tắt 8 góc</h2><div class="cx-list" id="list" style="margin:0"></div></div></div>
+        <div class="spec full" data-sig="6022ab38be"><div class="spec-h"><b>Ghi chú cách dựng <i>Note</i></b><span class="kind">.cx-note</span><span class="dp">13 / 1.6, 78ch</span></div>
+          <div class="stage col"><p class="cx-note" style="margin:0">Cách dựng: một cây div CSS 3D (hộp + trụ, <code>transform-style: preserve-3d</code>) và một “máy quay” là phép biến đổi ngược của cả thế giới (<code>rotateX/Y/Z</code> + <code>perspective</code>).</p></div></div>
+      </div>
+    </section>
+
+    <section class="block" id="footer-c">
+      <header><h2>Chân trang <small>Footer</small></h2></header>
+      <div class="grid">
+        <div class="spec full" data-sig="46ae8b0622 e90e1ff26d c5026b7c02 9cd59a01f0 7b2a2f1542 1898069302"><div class="spec-h"><b>Chân trang site <i>aw-footer</i></b><span class="kind">.aw-footer</span><span class="dp">pad 40/24, 5 cột</span></div>
+          <div class="stage col"><footer class="aw-footer" style="margin-top:0"><div class="aw-footer__top"><a class="aw-footer__brand" href="#">UIUX<span class="aw-sticker" aria-hidden="true"></span></a>
+            <ul class="aw-footer__menu"><li><b>Bộ sưu tập</b></li><li><a href="#">Scroll effects</a></li><li><a href="#">Components</a></li><li><a href="#">UI kits</a></li></ul>
+            <ul class="aw-footer__menu"><li><b>Nguồn</b></li><li><a href="#">freefrontend</a></li><li><a href="#">Uiverse.io</a></li><li><a href="#">CodePen</a></li></ul>
+            <ul class="aw-footer__menu"><li><b>Site</b></li><li><a href="#">Thống kê</a></li><li><a href="#">GitHub</a></li></ul>
+            <p class="aw-footer__note">Code gốc nguyên văn, giữ dòng ghi công của tác giả khi copy. Giấy phép theo từng nguồn (đa phần MIT).</p></div>
+            <div class="aw-footer__bottom"><span>uiux-asset · kho pattern UI/UX</span><a href="#top">Lên đầu trang ↑</a></div></footer></div>
+          <div class="spec-f"><span class="note">Link menu màu --aw-ink2, hover về --aw-color-primary. Vạch trên dòng cuối chỉ dài 10%.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= MÀN MẪU ================= -->
+    <section class="block" id="screens">
+      <header><h2>Màn hình mẫu <small>Screens</small></h2><p>Ghép từ đúng các class trên, theo bố cục của trang: desktop 1440 × 900 (cảnh trái, chú thích phải) và mobile 390 × 844 (cảnh trên 58%, chú thích dưới, bỏ số lớn, thông số và prompt).</p></header>
+      <div class="screens">
+        <div><div class="frame-wrap"><div class="frame-box desk"><div class="frame desk"><div class="aw-wrap">
+          <div class="aw-site-head"><div class="aw-marquee" aria-hidden="true"><span><b>uiux-asset</b></span><span class="ms">☺</span><span>Code gốc nguyên văn — xem chạy thật, copy nguyên file</span><span><b>uiux-asset</b></span><span class="ms">☺</span><span>Code gốc nguyên văn — xem chạy thật, copy nguyên file</span><span><b>uiux-asset</b></span></div>
+            <header class="aw-header"><a class="aw-brand" href="#">UIUX.</a><nav class="aw-hnav" aria-label="Chuyên mục (desktop)"><a href="#">Scroll effects</a><a href="#">Components</a><a href="#">UI kits</a><a href="#">Galaxy</a><a href="#">Thư viện UI</a><a href="#">Motion</a><a href="#" aria-current="page">Dựng lại</a><a href="#">Tên UI</a><a href="#">Skills</a><a href="#">Font</a></nav><span class="grow"></span><button type="button" class="aw-btn aw-btn--small">Giỏ <span class="aw-count">0</span></button><button type="button" class="aw-btn aw-btn--small aw-btn--outline" aria-label="Đổi giao diện"><span class="ms">◐</span></button></header></div>
+          <div class="aw-crumb"><h1>Góc máy. 8 camera angle chạy thật <span class="aw-tag aw-tag--small aw-tag--solid-green">3D DỰNG BẰNG CSS</span></h1><span>Máy quay di chuyển qua 8 góc: cuộn trang hoặc để nó tự chạy. · <a class="ua-link" href="#">← Motion</a></span></div>
+          <div class="cx-pin">
+            <div class="cx-stage" data-angle="2" data-sync role="img" aria-label="Cảnh 3D (màn desktop)"></div>
+            <aside class="cx-panel" data-panel="2" data-sync><div class="cx-num"></div><h2 class="cx-name"></h2><p class="cx-what"></p><dl class="cx-facts" data-facts="2"></dl><div class="cx-prompt" data-prompt="2"></div><div class="cx-ctl"><button type="button" aria-pressed="false">▶ Tự chạy</button><div class="cx-dots" role="group" aria-label="Chọn góc (desktop)" data-dots="2"></div></div></aside>
+          </div>
+        </div></div></div></div>
+        <p class="frame-cap">Desktop 1440 × 900: aw-marquee, aw-header, aw-crumb, cx-pin (cx-stage + cx-panel), cx-ctl.</p></div>
+
+        <div><div class="frame-wrap"><div class="frame-box phone"><div class="frame phone is-m"><div class="aw-wrap" style="padding:8px 16px 0;gap:12px">
+          <div class="aw-site-head"><header class="aw-header"><a class="aw-brand" href="#">UIUX.</a><span class="grow"></span><button type="button" class="aw-btn aw-btn--small">Giỏ <span class="aw-count">0</span></button><button type="button" class="aw-btn aw-btn--small aw-btn--outline" aria-label="Đổi giao diện"><span class="ms">◐</span></button><nav class="aw-hnav" aria-label="Chuyên mục (mobile)"><a href="#">Scroll effects</a><a href="#">Components</a><a href="#">UI kits</a><a href="#" aria-current="page">Dựng lại</a></nav></header></div>
+          <div class="cx-pin">
+            <div class="cx-stage" data-angle="7" data-sync role="img" aria-label="Cảnh 3D (màn mobile)"></div>
+            <aside class="cx-panel" data-panel="7" data-sync><div class="cx-num"></div><h2 class="cx-name"></h2><p class="cx-what"></p><dl class="cx-facts" data-facts="7"></dl><div class="cx-prompt" data-prompt="7"></div><div class="cx-ctl"><button type="button" aria-pressed="false">▶ Tự chạy</button><div class="cx-dots" role="group" aria-label="Chọn góc (mobile)" data-dots="7"></div></div></aside>
+          </div>
+        </div></div></div></div>
+        <p class="frame-cap">Mobile 390 × 844: aw-header 2 dòng (nav cuộn ngang), cx-pin 1 cột, chấm 30px.</p></div>
+      </div>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+  const A = [
+    { id: 'fisheye', en: 'Frontal Fisheye Close-up', vi: 'Cận mặt chính diện, ống fisheye',
+      what: 'Máy đặt ngay trước mặt nhân vật, rất gần, gắn ống góc cực rộng (fisheye). Giữa khung phình to, rìa khung cong lại và bị cắt thành hình tròn như nhìn qua mắt cá.',
+      facts: [['Vị trí máy', 'Chính diện, sát mặt'], ['Ống kính', 'Fisheye ≈ 8–14 mm'], ['Cảm giác', 'Gần, hơi kỳ quặc, nhân vật “nhìn thẳng vào bạn”']],
+      prompt: 'frontal fisheye close-up, ultra-wide lens distortion, circular frame',
+      c: { pitch: 4, yaw: 90, roll: 0, P: 300, E: 105, tx: 270, ty: 4, tz: 0, fish: 1, dirty: 0 }, lens: 'fisheye 12mm' },
+    { id: 'profile', en: 'Side Profile Long Lens', vi: 'Mặt nghiêng, ống tele',
+      what: 'Máy đứng xa bên hông, ngang tầm mắt, dùng ống kính dài (tele). Chiều sâu bị nén lại, hậu cảnh mờ, khuôn mặt nghiêng chiếm khung. Hợp cảnh tĩnh, thân mật.',
+      facts: [['Vị trí máy', 'Ngang tầm mắt, nhìn từ bên hông'], ['Ống kính', 'Tele ≈ 85–200 mm'], ['Cảm giác', 'Tĩnh, riêng tư, điện ảnh']],
+      prompt: 'side profile, long lens, shallow depth of field, compressed background',
+      c: { pitch: 0, yaw: 0, roll: 0, P: 3200, E: 1150, tx: 262, ty: -12, tz: 0, fish: 0, dirty: 0 }, lens: 'tele 135mm' },
+    { id: 'topdown', en: 'Top-down / Tilt-down', vi: 'Từ trên nhìn xuống, nghiêng dần',
+      what: 'Máy ở trên cao nhìn chếch xuống khoảng 60°, rồi nghiêng xuống dần theo hành động. Thấy bàn tay, vật dụng trên bàn rõ hơn gương mặt: kể chuyện bằng chi tiết.',
+      facts: [['Vị trí máy', 'Trên cao ≈ 60°, nghiêng xuống'], ['Ống kính', 'Chuẩn ≈ 35–50 mm'], ['Cảm giác', 'Tỉ mỉ, quan sát hành động']],
+      prompt: 'top-down tilt-down shot, high angle over the hands',
+      c: { pitch: 62, yaw: 38, roll: 0, P: 900, E: 560, tx: 190, ty: 30, tz: 20, fish: 0, dirty: 0 }, lens: 'chuẩn 40mm' },
+    { id: 'high', en: 'High Angle', vi: 'Góc cao, toàn cảnh',
+      what: 'Máy bay cao, gần thẳng đứng nhìn xuống cả hai ghế và chiếc bàn. Người nhỏ lại, bối cảnh lớn lên; bố cục như một tấm bản đồ.',
+      facts: [['Vị trí máy', 'Cao, ≈ 80° nhìn xuống'], ['Ống kính', 'Rộng ≈ 24–35 mm'], ['Cảm giác', 'Nhỏ bé, cô lập, bị quan sát']],
+      prompt: 'high angle, overhead wide shot, subjects small in the frame',
+      c: { pitch: 80, yaw: 0, roll: 0, P: 1000, E: 1000, tx: 0, ty: 60, tz: 0, fish: 0, dirty: 0 }, lens: 'rộng 28mm' },
+    { id: 'dirty', en: 'Dirty Frame', vi: 'Khung “bẩn”: vật chắn ở tiền cảnh',
+      what: 'Có một vật mờ chắn ngay trước ống kính (vai, tường, cây, mảng vải) lấn vào rìa khung. Nhân vật được nhìn qua vật chắn đó, tạo chiều sâu và cảm giác nhìn lén.',
+      facts: [['Vị trí máy', 'Ngang tầm mắt, nấp sau vật chắn'], ['Ống kính', 'Chuẩn ≈ 35–50 mm, nét ở hậu cảnh'], ['Cảm giác', 'Nhìn trộm, có chiều sâu']],
+      prompt: 'dirty frame, out-of-focus foreground object, shot through obstruction',
+      c: { pitch: 6, yaw: 52, roll: 0, P: 1000, E: 560, tx: 268, ty: -4, tz: 0, fish: 0, dirty: 1 }, lens: 'chuẩn 40mm' },
+    { id: 'snow', en: 'Snow Level', vi: 'Sát mặt đất (mặt tuyết)',
+      what: 'Máy nằm sát nền, thấp hơn mọi vật. Chiếc bình và cái cốc thành những khối khổng lồ ở tiền cảnh, nhân vật ngồi xa phía sau trên nền trời.',
+      facts: [['Vị trí máy', 'Sát mặt đất, ngang vật dụng'], ['Ống kính', 'Rộng ≈ 24–35 mm'], ['Cảm giác', 'Vật nhỏ hóa khổng lồ, hùng vĩ']],
+      prompt: 'snow level shot, camera on the ground, low wide angle',
+      c: { pitch: -5, yaw: 12, roll: 0, P: 700, E: 380, tx: 20, ty: 100, tz: 40, fish: 0, dirty: 0 }, lens: 'rộng 28mm' },
+    { id: 'xcu', en: 'Extreme Close-up', vi: 'Siêu cận',
+      what: 'Chỉ một chi tiết lấp kín khung: mắt, môi, tàn nhang. Mọi cử động nhỏ đều bị phóng lớn thành kịch tính; thường dùng để nhấn một cảm xúc.',
+      facts: [['Vị trí máy', 'Sát một chi tiết'], ['Ống kính', 'Macro / tele ngắn ≈ 100 mm'], ['Cảm giác', 'Căng, thân mật, nhấn cảm xúc']],
+      prompt: 'extreme close-up, eyes and lips fill the frame, shallow depth of field',
+      c: { pitch: 0, yaw: 90, roll: 0, P: 1500, E: 190, tx: 270, ty: -26, tz: 0, fish: 0, dirty: 0 }, lens: 'macro 100mm' },
+    { id: 'dutch', en: 'Low Dutch Angle', vi: 'Dutch angle thấp: nhìn lên + nghiêng trục',
+      what: 'Máy đặt thấp nhìn lên, lại xoay nghiêng quanh trục ống kính nên đường chân trời bị lệch. Vật ở tiền cảnh đồ sộ, mọi thứ có vẻ bất ổn.',
+      facts: [['Vị trí máy', 'Thấp, nhìn lên, nghiêng trục ≈ 15–20°'], ['Ống kính', 'Rộng ≈ 24 mm'], ['Cảm giác', 'Bất an, căng thẳng, thế giới lệch']],
+      prompt: 'low dutch angle, tilted horizon, foreground object towering',
+      c: { pitch: -15, yaw: 22, roll: 17, P: 800, E: 420, tx: 60, ty: -10, tz: -20, fish: 0, dirty: 0 }, lens: 'rộng 24mm' },
+  ];
+  const N = A.length, $ = (id) => document.getElementById(id);
+
+  // ---------- dựng cảnh 3D ----------
+  const el = (cls, st, p) => { const e = document.createElement('div'); if (cls) e.className = cls; if (st) Object.assign(e.style, st); if (p) p.append(e); return e; };
+  const hsl = (c, l = 1) => `hsl(${c[0]} ${c[1]}% ${Math.max(4, Math.min(96, c[2] * l))}%)`;
+  const tf = (x = 0, y = 0, z = 0, ry = 0) => `translate3d(${x}px,${y}px,${z}px) rotateY(${ry}deg)`;
+  function box(p, { w, h, d, x = 0, y = 0, z = 0, ry = 0, rx = 0, c }) {
+    const g = el('o', { transform: `${tf(x, y, z, ry)} rotateX(${rx}deg)` }, p);
+    [[w, h, `translateZ(${d / 2}px)`, 1], [w, h, `rotateY(180deg) translateZ(${d / 2}px)`, .78], [d, h, `rotateY(90deg) translateZ(${w / 2}px)`, .86],
+     [d, h, `rotateY(-90deg) translateZ(${w / 2}px)`, .92], [w, d, `rotateX(90deg) translateZ(${h / 2}px)`, 1.14], [w, d, `rotateX(-90deg) translateZ(${h / 2}px)`, .6]]
+      .forEach(([fw, fh, t, l]) => el('fc', { width: fw + 'px', height: fh + 'px', left: -fw / 2 + 'px', top: -fh / 2 + 'px', transform: t, background: hsl(c, l) }, g));
+    return g;
+  }
+  function cyl(p, { r, h, x = 0, y = 0, z = 0, c, n = 18, topc, metal }) {
+    const g = el('o', { transform: tf(x, y, z) }, p), sw = 2 * Math.PI * r / n * 1.05;
+    for (let i = 0; i < n; i++) {
+      const a = i * 360 / n, k = metal ? .62 + .55 * Math.pow(Math.max(0, Math.cos((a - 35) * Math.PI / 180)), 2) + .1 * Math.cos(a * Math.PI / 90) : .78 + .3 * Math.cos((a - 40) * Math.PI / 180);
+      el('fc', { width: sw + 'px', height: h + 'px', left: -sw / 2 + 'px', top: -h / 2 + 'px', transform: `rotateY(${a}deg) translateZ(${r}px)`, background: hsl(c, k) }, g);
+    }
+    el('fc', { width: 2 * r + 'px', height: 2 * r + 'px', left: -r + 'px', top: -r + 'px', borderRadius: '50%', transform: `rotateX(90deg) translateZ(${h / 2}px)`, background: hsl(topc || c, 1.1) }, g);
+    return g;
+  }
+  const STEEL = [210, 8, 66], BROWN = [14, 58, 30], WOOD = [26, 52, 34], BLUE = [222, 78, 30], SKIN = [18, 62, 80], HAIR = [16, 88, 50];
+  function mug(p, x, y, z) { cyl(p, { r: 19, h: 34, x, y, z, c: STEEL, metal: 1, topc: [20, 20, 12] }); }
+  function chair(p, x, ry) {
+    const g = el('o', { transform: tf(x, 0, 0, ry) }, p);
+    box(g, { w: 124, h: 60, d: 116, y: 140, z: -4, c: BROWN }); box(g, { w: 124, h: 120, d: 24, y: 58, z: -52, c: BROWN });
+    box(g, { w: 18, h: 40, d: 100, x: -62, y: 92, c: [14, 55, 24] }); box(g, { w: 18, h: 40, d: 100, x: 62, y: 92, c: [14, 55, 24] });
+    return g;
+  }
+  function figure(p, x, ry, o) {
+    const g = el('o', { transform: tf(x, 0, 0, ry) }, p);
+    [-17, 17].forEach((s) => { box(g, { w: 26, h: 24, d: 84, x: s, y: 98, z: 28, c: o.legs }); box(g, { w: 24, h: 62, d: 24, x: s, y: 140, z: 66, c: o.legs }); box(g, { w: 24, h: 10, d: 36, x: s, y: 166, z: 74, c: [20, 20, 12] }); });
+    box(g, { w: 74, h: 96, d: 44, y: 52, z: -2, c: o.top }); box(g, { w: 52, h: 9, d: 36, y: 6, z: -2, c: o.collar });
+    [-1, 1].forEach((s) => { box(g, { w: 17, h: 46, d: 17, x: s * 42, y: 32, z: 4, c: o.top }); box(g, { w: 15, h: 15, d: 50, x: s * 30, y: 44, z: 34, c: o.top }); box(g, { w: 13, h: 13, d: 14, x: s * 22, y: 38, z: 62, c: SKIN }); });
+    cyl(g, { r: 18, h: 34, y: 28, z: 64, c: STEEL, metal: 1, topc: [20, 20, 12] });
+    const head = el('o', { transform: tf(0, 0, 0) }, g);
+    cyl(head, { r: 30, h: 56, y: -28, c: SKIN, n: 16 });
+    cyl(head, { r: 34, h: 42, y: -38, z: -6, c: o.hair, n: 16 });
+    box(head, { w: 62, h: 12, d: 8, y: -54, z: 28, c: o.hair });
+    box(head, { w: 8, h: 13, d: 10, y: -24, z: 34, c: SKIN }); box(head, { w: 11, h: 3, d: 4, x: -9, y: -33, z: 32, c: [10, 20, 20] }); box(head, { w: 11, h: 3, d: 4, x: 9, y: -33, z: 32, c: [10, 20, 20] }); box(head, { w: 18, h: 5, d: 4, y: -11, z: 31, c: [3, 50, 62] });
+    if (o.cap) cyl(head, { r: 35, h: 14, y: -63, z: -2, c: [40, 30, 86], n: 16 });
+    const face = el('fc', { width: '46px', height: '34px', left: '-23px', top: '-42px', transform: 'translateZ(30.6px)', borderRadius: '10px 10px 18px 18px', backgroundColor: hsl(SKIN),
+      backgroundImage: 'radial-gradient(circle at 22% 62%,rgba(255,120,110,.35) 0 6px,transparent 7px),radial-gradient(circle at 78% 62%,rgba(255,120,110,.35) 0 6px,transparent 7px),' +
+        [[14, 40], [20, 48], [26, 44], [34, 50], [40, 42], [72, 40], [66, 48], [58, 44], [50, 52], [84, 46], [30, 36], [62, 36]].map(([a, b]) => `radial-gradient(circle at ${a}% ${b}%,#b4604a 0 1px,transparent 1.5px)`).join(',') } , head);
+    el('', { position: 'absolute', left: '8px', top: '10px', width: '10px', height: '3px', borderRadius: '3px', background: '#3a2a26' }, face); el('', { position: 'absolute', right: '8px', top: '10px', width: '10px', height: '3px', borderRadius: '3px', background: '#3a2a26' }, face);
+    el('', { position: 'absolute', left: '19px', top: '15px', width: '8px', height: '8px', borderRadius: '50%', background: 'rgba(160,80,60,.28)' }, face);
+    el('', { position: 'absolute', left: '15px', top: '26px', width: '16px', height: '4px', borderRadius: '4px', background: '#c9756e' }, face);
+    return g;
+  }
+  function build(w) {
+    const gr = el('cx-ground', null, w);
+    const sh = (x, z, rw, rd) => el('cx-decal', { left: x - rw / 2 + 'px', top: z - rd / 2 + 'px', width: rw + 'px', height: rd + 'px', background: 'radial-gradient(closest-side,rgba(40,50,90,.38),transparent)', transform: 'translateY(169.4px) rotateX(90deg)' }, w);
+    sh(0, 0, 330, 330); sh(-300, 0, 260, 240); sh(300, 0, 260, 240);
+    const fp = el('cx-decal', { left: '-900px', top: '-700px', width: '1800px', height: '1400px', background: 'radial-gradient(closest-side,#fff 40%,rgba(255,255,255,0))', transform: 'translateY(169.2px) rotateX(90deg)' }, w);
+    // bàn
+    const t = el('o', null, w);
+    box(t, { w: 190, h: 14, d: 190, y: 56, c: WOOD });
+    [[-80, -80], [80, -80], [-80, 80], [80, 80]].forEach(([x, z]) => box(t, { w: 12, h: 106, d: 12, x, y: 117, z, c: [24, 48, 26] }));
+    mug(t, -42, 32, 24);
+    cyl(t, { r: 26, h: 116, x: 48, y: -9, z: -26, c: STEEL, metal: 1, topc: STEEL }); cyl(t, { r: 27, h: 22, x: 48, y: -78, z: -26, c: [0, 0, 18], topc: [0, 0, 22] });
+    chair(w, 300, -90); chair(w, -300, 90);
+    figure(w, 300, -90, { legs: [36, 30, 64], top: BLUE, collar: [28, 40, 52], hair: HAIR, cap: true });
+    figure(w, -300, 90, { legs: [38, 34, 66], top: [40, 28, 74], collar: [0, 0, 94], hair: [24, 30, 14], cap: false });
+    [[-150, 162, 260, 46], [-40, 164, 310, 38], [130, 162, 250, 44], [-230, 163, 120, 34]].forEach(([x, y, z, r]) => cyl(w, { r, h: 20, x, y, z, c: [215, 10, 98], n: 22 }));
+  }
+  // ---------- bản đồ méo fisheye (vẽ bằng canvas, nạp vào feImage) ----------
+  (() => {
+    const S = 256, c = document.createElement('canvas'); c.width = c.height = S; const x = c.getContext('2d'), im = x.createImageData(S, S);
+    for (let j = 0; j < S; j++) for (let i = 0; i < S; i++) {
+      const u = (i + .5) / S * 2 - 1, v = (j + .5) / S * 2 - 1, r2 = u * u + v * v, k = .5, o = (j * S + i) * 4;
+      im.data[o] = Math.max(0, Math.min(255, 128 - k * u * r2 * 127)); im.data[o + 1] = Math.max(0, Math.min(255, 128 - k * v * r2 * 127)); im.data[o + 2] = 128; im.data[o + 3] = 255;
+    }
+    x.putImageData(im, 0, 0); $('cx-map').setAttribute('href', c.toDataURL());
+  })();
+
+
+  const SKY = '<svg viewBox="0 0 1600 700" preserveAspectRatio="none" width="100%" style="position:absolute;left:0;bottom:0;height:35%;filter:blur(var(--bgblur,0px))"><defs><linearGradient id="mt" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8eef9"/><stop offset=".55" stop-color="#9fb0cf"/><stop offset="1" stop-color="#6e7ea6"/></linearGradient></defs><path d="M0 700V420L130 300 230 380 360 180 470 330 560 260 700 460 820 330 960 130 1060 330 1180 250 1300 420 1420 300 1600 460V700Z" fill="url(#mt)"/><path d="M0 700V560L200 470 380 560 560 440 760 580 960 480 1160 590 1360 470 1600 570V700Z" fill="#c9d3e6" opacity=".85"/></svg>';
+  const DIRTY = '<i style="left:-14%;bottom:-18%;width:62%;height:70%;background:radial-gradient(ellipse at 40% 45%,#2a1210 0,#4a2420 55%,transparent 72%)"></i><i style="left:-10%;top:-12%;width:38%;height:60%;background:radial-gradient(ellipse at 30% 40%,#10080c 0,#241218 60%,transparent 75%)"></i><i style="left:30%;bottom:-24%;width:50%;height:46%;background:radial-gradient(ellipse at 50% 40%,#5a2c26 0,rgba(90,44,38,.6) 50%,transparent 72%)"></i>';
+  const ROLES = ["--aw-color-primary", "--aw-color-link", "--aw-color-white", "--aw-bg-primary", "--aw-bg-secondary", "--aw-bg-3rd", "--aw-bg-4rd", "--aw-bg-white", "--aw-border-gray", "--aw-ch-bg", "--aw-sf-bg", "--aw-nf-bg-1", "--aw-nf-bg-2", "--aw-nf-bg-3", "--aw-bg-input", "--aw-bg-input-hover", "--aw-border-input", "--aw-color-input", "--aw-button-bg", "--aw-button-color", "--aw-button-hover", "--aw-button-gray", "--aw-tag-border", "--aw-muted", "--aw-check-bg", "--aw-check-bg-checked", "--aw-check-ball", "--aw-overlay", "--aw-float-bg", "--aw-float-content", "--aw-float-ink", "--aw-float-line", "--aw-float-line-2", "--aw-inverse-bg", "--aw-inverse-ink", "--aw-plan-right", "--aw-plan-label", "--aw-promo-bg", "--aw-blog-bg", "--aw-img", "--aw-img-ink", "--aw-card", "--aw-checker", "--aw-ink2", "--aw-color-orange", "--aw-color-blue", "--aw-color-inspire", "--aw-nf-bg-count", "--aw-tag-sotd", "--aw-tag-dev", "--aw-ua-focus"];
+  const TOKENS_CSS = ":root {\n  --aw-color-primary:#222; --aw-color-link:#222; --aw-color-white:#fff; --aw-bg-primary:#F8F8F8; --aw-bg-secondary:#222; --aw-bg-3rd:#ededed; --aw-bg-4rd:#f8f8f8; --aw-bg-white:#fff; --aw-border-gray:#ededed; --aw-ch-bg:#E9E9E9; --aw-sf-bg:#ededed; --aw-nf-bg-1:#ededed; --aw-nf-bg-2:#f8f8f8; --aw-nf-bg-3:#fff; --aw-bg-input:#fff; --aw-bg-input-hover:#f8f8f8; --aw-border-input:#ededed; --aw-color-input:#222; --aw-button-bg:#222; --aw-button-color:#fff; --aw-button-hover:#383838; --aw-button-gray:#dedede; --aw-tag-border:#a7a7a7; --aw-muted:rgba(34,34,34,.3); --aw-check-bg:#dedede; --aw-check-bg-checked:#222; --aw-check-ball:#fff; --aw-overlay:rgba(34,34,34,.7); --aw-float-bg:rgba(34,34,34,.8); --aw-float-ink:#dedede; --aw-float-line:#525252; --aw-inverse-bg:#222; --aw-inverse-ink:#fff; --aw-img:#dcdcdc; --aw-img-ink:#8a8a8a; --aw-card:#fff; --aw-checker:rgba(0,0,0,.06);\n  --aw-color-orange:#FA5D29; --aw-color-blue:#49B3FC; --aw-color-featured:#f8f0ee; --aw-alert-green:#e0f4d9; --aw-alert-yellow:#FFF083; --aw-nf-bg-count:#FF9667;\n  --aw-tag-dev:#8eabc6; --aw-tag-sotd:#ce6644; --aw-tag-hm:#726996;\n  --aw-color-inspire:#AAEEC4; --aw-color-inspire-2:#C8E4D3; --aw-color-inspire-3:#E2F4E9; --aw-color-learn:#FFF083; --aw-color-learn-2:#FFF9D0; --aw-color-learn-3:#fffbe2; --aw-color-connect:#FF602C; --aw-color-connect-2:#FFAE94; --aw-color-connect-3:#FFC5B1; --aw-color-read:#c0ab3c; --aw-color-read-2:#CDC38B; --aw-color-read-3:#DBD6C0; --aw-color-awards:#502bd8; --aw-color-awards-2:#6749d1; --aw-color-awards-3:#917eda; --aw-color-jobs:#74bcff; --aw-color-jobs-2:#99ccfc; --aw-color-jobs-3:#b4d7f8;\n  --aw-sticker-1:#ec6237; --aw-sticker-2:#e5d8ca; --aw-sticker-3:#AAEEC4; --aw-sticker-4:#502BD8; --aw-sticker-5:#222; --aw-sticker-6:#502BD8; --aw-sticker-7:#FCB6F2;\n  --aw-menu-color-1:#AAEEC4; --aw-menu-color-2:#C8E4D3; --aw-menu-color-3:#E2F4E9;   /* .style-N gán --menu-color-1..3 = --color-<mục>, -2, -3 */\n  --aw-font: \"Inter Tight\", Helvetica, Arial, sans-serif;                            /* --font-1 */\n  --aw-mono: ui-monospace, Menlo, \"Courier New\", monospace;\n  --aw-fw-light:300; --aw-fw-normal:400; --aw-fw-medium:500; --aw-fw-bold:600; --aw-fw-extrabold:700; --aw-fw-black:800;\n  --aw-text-small:11px; --aw-text-primary:14px; --aw-text-medium:18px; --aw-text-large:20px;\n  --aw-rounded-small:4px; --aw-rounded-normal:8px; --aw-rounded-large:8px; --aw-button-rounded:8px; --aw-button-rounded-full:72px; --aw-r-float:12px; --aw-r-figure-lg:14px;\n  --aw-button-height:48px; --aw-button-pad:24px; --aw-height-input:48px; --aw-pad-input:16px; --aw-sf-height:42px; --aw-nf-height:54px; --aw-nf-container-pad:6px;\n  --aw-gutter:20px; --aw-pad-inner:16px; --aw-header-height:71px; --aw-border-thin:.5px;\n  --aw-check-w:80px; --aw-check-h:40px;\n  --aw-float-content:#3e3e3e; --aw-float-line-2:#4e4e4e; --aw-float-hover-line:#a7a7a7; --aw-cookie-btn-hover:#7a7a7a; --aw-plan-right:#2c2c2c; --aw-plan-label:rgba(56,56,56,.5); --aw-line-10:rgba(0,0,0,.1); --aw-promo-bg:#efe8de; --aw-blog-bg:#f3f3f3; --aw-scrim:rgba(0,0,0,.5); --aw-scrim-0:rgba(0,0,0,0); --aw-bullet:rgba(255,255,255,.2); --aw-ua-focus:#005fcc;\n  --aw-cert-1:#e3c352; --aw-cert-2:#80a8ba; --aw-cert-3:#a69382; --aw-cert-4:#adaf40; --aw-cert-5:#ffa41b; --aw-cert-6:#b97e7e;\n  --aw-color-underlined:34, 34, 34; --aw-color-white-rgb:255, 255, 255; --aw-color-red-rgb:250, 93, 41;                                                   /* rgb bộ ba, như --color-underlined của site */\n  --aw-fluid-20: clamp(18px, 16.5915px + 0.28169vw, 22px);                            /* clamp site dùng cho link/tiêu đề thẻ, = 20.65 ở 1440 */\n  color-scheme: light;\n}\n:root[data-mode=\"dark\"] { color-scheme: dark; }\n\n:root[data-theme=\"dark\"] { --aw-color-primary:#eee; --aw-color-link:#eee; --aw-color-white:#fff; --aw-bg-primary:#121212; --aw-bg-secondary:#222; --aw-bg-3rd:#383838; --aw-bg-4rd:#1a1a1a; --aw-bg-white:#1c1c1c; --aw-border-gray:#2e2e2e; --aw-ch-bg:#222; --aw-sf-bg:#383838; --aw-nf-bg-1:#222; --aw-nf-bg-2:#2a2a2a; --aw-nf-bg-3:#383838; --aw-bg-input:#1c1c1c; --aw-bg-input-hover:#222; --aw-border-input:#383838; --aw-color-input:#eee; --aw-button-bg:#fff; --aw-button-color:#222; --aw-button-hover:#383838; --aw-button-gray:#383838; --aw-tag-border:#5a5a5a; --aw-muted:rgba(238,238,238,.3); --aw-check-bg:#383838; --aw-check-bg-checked:#eee; --aw-check-ball:#121212; --aw-overlay:rgba(0,0,0,.7); --aw-float-bg:rgba(34,34,34,.8); --aw-float-content:#3e3e3e; --aw-float-ink:#dedede; --aw-float-line:#525252; --aw-float-line-2:#4e4e4e; --aw-inverse-bg:#2a2a2a; --aw-inverse-ink:#fff; --aw-plan-right:#2c2c2c; --aw-plan-label:rgba(56,56,56,.5); --aw-promo-bg:#2a2520; --aw-blog-bg:#1a1a1a; --aw-img:#2a2a2a; --aw-img-ink:#8a8a8a; --aw-card:#181818; --aw-checker:rgba(255,255,255,.06); --aw-color-underlined:238, 238, 238; color-scheme: dark; }\n:root { --aw-ink2: #5d5d5d; }                       /* chữ phụ đủ tương phản (kit chỉ có --aw-img-ink #8a8a8a cho ảnh giữ chỗ) */\n:root[data-theme=\"dark\"] { --aw-ink2: #b4b4b4; }\n:root { --cx-stage: #0b0d14; --cx-hud-ink: #fff; --cx-scrim-top: rgba(0,0,0,.38); --cx-scrim-bot: rgba(0,0,0,.42); --cx-hud-shadow: rgba(0,0,0,.55); --cx-tele-shadow: rgba(0,0,0,.6); --cx-ground: radial-gradient(circle closest-side, #ffffff 0, #f6f8fc 7%, #dfe6f2 22%, #cdd5e6 44%, #dcd2d8 50%); }\n";
+  const root = document.documentElement;
+  const KEYS = ['pitch', 'yaw', 'roll', 'P', 'E', 'tx', 'ty', 'tz', 'fish', 'dirty'];
+  const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+  const pad = (n) => String(n).padStart(2, '0');
+
+  /* ---- sân khấu: cùng phép tính với render() của trang, cho một góc cố định ---- */
+  const stages = [];
+  function mount(stage, i) {
+    stage.innerHTML = '<div class="cx-cam"><div class="cx-sky"></div><div class="cx-persp"><div class="cx-world"></div></div></div><div class="cx-dirty">' + DIRTY + '</div><div class="cx-lens"></div><div class="cx-hud"><div class="cx-lab"></div><div class="cx-cnt"></div></div><div class="cx-tele"></div>';
+    const q = (s) => stage.querySelector(s), world = q('.cx-world'), sky = q('.cx-sky'), persp = q('.cx-persp'), lens = q('.cx-lens'), cam = q('.cx-cam');
+    build(world); sky.innerHTML = SKY;
+    const o = { i, draw() {
+      const s = A[o.i].c, W = stage.offsetWidth || 600, H = stage.offsetHeight || 340;
+      const k = Math.min(1, Math.min(W, H * 1.5) / 900), P = s.P * k, sc = P / s.E;
+      persp.style.perspective = P + 'px';
+      world.style.transform = `scale3d(${sc},${sc},${sc}) rotateZ(${s.roll}deg) rotateX(${-s.pitch}deg) rotateY(${s.yaw}deg) translate3d(${-s.tx}px,${-s.ty}px,${-s.tz}px)`;
+      const hy = H / 2 - P * Math.tan(clamp(s.pitch, -80, 89.9) * Math.PI / 180);
+      sky.style.top = hy - 2 * H + 'px'; sky.style.height = 3 * H + 'px';
+      sky.style.transformOrigin = `50% ${2.5 * H - hy}px`; sky.style.transform = `translateX(${-s.yaw * 3.2 * k}px) rotate(${s.roll}deg)`;
+      sky.style.background = `linear-gradient(to bottom,#6f86c0 0,#b9a9c9 ${2 * H * .55}px,#f2c3a8 ${2 * H}px,#dce4f1 ${2 * H}px,#eef2f9 100%)`;
+      sky.style.setProperty('--bgblur', (s.P > 2000 ? 5 : 0) + 'px');
+      stage.style.setProperty('--dirty', s.dirty);
+      const fx = s.fish, R = (1 - fx) * Math.hypot(W, H) / 2 * 1.06 + fx * Math.min(W, H) / 2 * .97;
+      lens.style.background = `radial-gradient(circle at 50% 50%, transparent ${R - 2}px, #000 ${R}px)`;
+      cam.style.filter = fx > .02 ? 'url(#cx-fish)' : '';
+      if (fx > .02) $('cx-disp').setAttribute('scale', (fx * W * .8).toFixed(1));
+      q('.cx-tele').innerHTML = `<span><b>PITCH</b>${s.pitch}°</span><span><b>YAW</b>${s.yaw}°</span><span><b>ROLL</b>${s.roll}°</span><span><b>LENS</b>${A[o.i].lens}</span>`;
+      q('.cx-lab').textContent = A[o.i].en; q('.cx-cnt').textContent = pad(o.i + 1) + ' / ' + pad(N);
+    } };
+    o.draw(); new ResizeObserver(() => o.draw()).observe(stage);
+    stages.push(o); return o;
+  }
+  /* 8 khung nhỏ, mỗi góc một khung */
+  const a8 = $('angles8');
+  A.forEach((a, n) => { const f = document.createElement('figure'); f.innerHTML = `<div class="cx-stage" data-angle="${n}" role="img" aria-label="${a.en}"></div><figcaption>${pad(n + 1)} ${a.vi}</figcaption>`; a8.append(f); });
+  document.querySelectorAll('.cx-stage[data-angle]').forEach((s) => { const o = mount(s, +s.dataset.angle); o.sync = s.hasAttribute('data-sync') || s.closest('#stage-c .spec:first-child') !== null; });
+
+  /* ---- bảng chú thích + chấm ---- */
+  function fill(i) {
+    document.querySelectorAll('[data-panel]').forEach((p) => { if (p.hasAttribute('data-sync') || !p.closest('#screens')) { const a = A[i];
+      p.querySelector('.cx-num').innerHTML = pad(i + 1) + '<small>/ 0' + N + '</small>'; p.querySelector('.cx-name').textContent = a.en + ' — ' + a.vi; p.querySelector('.cx-what').textContent = a.what; } });
+    document.querySelectorAll('[data-facts]').forEach((d) => { d.innerHTML = A[i].facts.map(([t, v]) => `<div><dt>${t}</dt><dd>${v}</dd></div>`).join(''); });
+    document.querySelectorAll('[data-prompt]').forEach((d) => { d.textContent = 'prompt: ' + A[i].prompt; });
+    document.querySelectorAll('[data-dots]').forEach((d) => { d.innerHTML = ''; A.forEach((a, n) => { const b = document.createElement('button'); b.type = 'button'; b.title = a.en; b.innerHTML = '<span>' + (n + 1) + '</span>'; b.setAttribute('aria-current', n === i); b.onclick = () => setAngle(n); d.append(b); }); });
+  }
+  const angBar = $('ang');
+  A.forEach((a, n) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'aw-btn aw-btn--x-small aw-btn--outline'; b.dataset.v = n; b.textContent = n + 1; b.title = a.en + ' — ' + a.vi; b.setAttribute('aria-label', 'Góc ' + (n + 1) + ': ' + a.vi); b.onclick = () => setAngle(n); angBar.append(b); });
+  const state = { mode: root.dataset.theme === 'dark' ? 'dark' : 'light', angle: 0 };
+  function setAngle(n) {
+    state.angle = n;
+    stages.forEach((o) => { if (o.sync) { o.i = n; o.draw(); } });
+    fill(n);
+    angBar.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', +b.dataset.v === n));
+  }
+  $('list').innerHTML = A.map((a, n) => `<div><b>${pad(n + 1)} · ${a.en}</b>${a.what}</div>`).join('');
+  $('camtable').insertAdjacentHTML('beforeend', A.map((a, n) => `<tr><td>${pad(n + 1)}</td><td>${a.vi}<br><span style="color:var(--aw-ink2)">${a.en}</span></td><td>${a.c.pitch}°</td><td>${a.c.yaw}°</td><td>${a.c.roll}°</td><td>${a.c.P}</td><td>${a.c.E}</td><td class="m">${a.lens}</td></tr>`).join(''));
+
+  /* ---- khối dựng: hộp, trụ kim loại, trụ thường, mặt người, bóng đổ ---- */
+  const prims = $('prims');
+  [['hộp box()', (w) => box(w, { w: 60, h: 40, d: 60, c: WOOD })], ['trụ kim loại cyl(metal)', (w) => cyl(w, { r: 22, h: 60, c: STEEL, metal: 1, topc: STEEL })],
+   ['người figure()', (w) => { w.style.transform += ' scale(.32)'; figure(w, 0, 0, { legs: [36, 30, 64], top: BLUE, collar: [28, 40, 52], hair: HAIR, cap: true }); }],
+   ['bóng .cx-decal', (w) => el('cx-decal', { left: '-60px', top: '-60px', width: '120px', height: '120px', background: 'radial-gradient(closest-side,rgba(40,50,90,.38),transparent)', transform: 'rotateX(90deg)' }, w)]]
+    .forEach(([cap, fn]) => { const c = document.createElement('div'); c.innerHTML = '<div class="prim"><div class="cx-world"></div></div><div class="prim-cap">' + cap + '</div>'; prims.append(c); fn(c.querySelector('.cx-world')); });
+
+  /* ---- màu ---- */
+  const toast = (t) => { const e = $('toast'); e.textContent = t; e.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => e.classList.remove('show'), 1600); };
+  const copy = async (text, msg) => { try { await navigator.clipboard.writeText(text); toast(msg); } catch (e) { toast('Trình duyệt chặn clipboard, hãy copy tay'); } };
+  function renderRoles() {
+    const cs = getComputedStyle(root), box_ = $('roles'); box_.innerHTML = '';
+    ROLES.forEach((r) => { const v = cs.getPropertyValue(r).trim(); const b = document.createElement('button'); b.type = 'button'; b.className = 'role';
+      b.innerHTML = `<i style="background:var(${r})"></i><b>${r.slice(5)}</b><code>${v}</code>`; b.onclick = () => copy(v, 'Đã copy ' + r + ' ' + v); box_.append(b); });
+  }
+  const SC = [['--cx-stage', 'var(--cx-stage)'], ['STEEL', hsl(STEEL)], ['BROWN', hsl(BROWN)], ['WOOD', hsl(WOOD)], ['BLUE', hsl(BLUE)], ['SKIN', hsl(SKIN)], ['HAIR', hsl(HAIR)], ['tuyết [215 10 98]', hsl([215, 10, 98])], ['--cx-ground', 'var(--cx-ground)']];
+  $('scene-roles').innerHTML = SC.map(([n, v]) => `<button type="button" class="role" data-v="${v}"><i style="background:${v}"></i><b>${n}</b><code>${v.startsWith('var') ? getComputedStyle(root).getPropertyValue(v.slice(4, -1)).trim().slice(0, 40) : v}</code></button>`).join('');
+  $('scene-roles').querySelectorAll('.role').forEach((b) => (b.onclick = () => copy(b.querySelector('code').textContent, 'Đã copy ' + b.querySelector('b').textContent)));
+
+  /* ---- chữ ---- */
+  const TYPE = [['aw body', '300 14px/28px var(--aw-font)', '14 / 28, 300, Inter Tight'], ['.aw-crumb h1', '600 14px/18.2px var(--aw-font)', '14 / 18.2, 600'], ['.aw-hnav', '500 14px/28px var(--aw-font)', '14 / 28, 500'],
+    ['.aw-brand', '800 18px/1 var(--aw-font)', '18 / 1, 800'], ['.cx-num', "800 110px/1.05 'Inter', system-ui, sans-serif", 'clamp(56, 8vw, 110), 800, −0.04em'], ['.cx-lab', "800 38px/1 'Inter', system-ui, sans-serif", 'clamp(18, 3.2vw, 38), 800, HOA'],
+    ['.cx-name', '700 22px/1.2 var(--aw-font)', '22 / 1.2, 700 (18 khi ≤ 820)'], ['.cx-what', '300 14px/1.6 var(--aw-font)', '14 / 1.6, 300'], ['.cx-facts dd', '300 14px/1.45 var(--aw-font)', '14 / 1.45 (dt 12)'],
+    ['.cx-note', '300 13px/1.6 var(--aw-font)', '13 / 1.6, opacity .75'], ['.cx-cnt', '600 13px/1 ui-monospace, Menlo, monospace', 'mono 13, 600'], ['.cx-tele, .cx-prompt', '500 12px/1.5 ui-monospace, Menlo, monospace', 'mono 12'],
+    ['.aw-tag--small', '500 10px/17px var(--aw-font)', '10 / 17, 500'], ['.aw-count', '500 11px/1 var(--aw-font)', '11, 500']];
+  $('typescale').innerHTML = TYPE.map(([n, f, m]) => `<div class="type-row"><span class="meta">${n}</span><span class="t" style="font:${f}${n === '.cx-lab' ? ';text-transform:uppercase;letter-spacing:-.02em' : n === '.cx-num' ? ';letter-spacing:-.04em' : ''}">${n === '.cx-num' ? '03' : n === '.cx-lab' ? 'Top-down / Tilt-down' : 'Góc máy nhìn xuống bàn trà'}</span><span class="meta">${m}</span></div>`).join('');
+
+  /* ---- bo góc ---- */
+  $('shapes').innerHTML = [['--aw-rounded-small', '4', 'var(--aw-rounded-small)'], ['--aw-rounded-normal', '8: stage, header', 'var(--aw-rounded-normal)'], ['cx-facts, cx-prompt', '10', '10px'], ['cx-list', '12', '12px'],
+    ['--aw-r-figure-lg', '14', 'var(--aw-r-figure-lg)'], ['cx-ctl, cx-dots', '999: viên', '999px']].map(([n, v, r]) => `<div class="shape-cell"><i style="border-radius:${r}"></i>${n}<br>${v}</div>`).join('');
+
+  /* ---- chế độ sáng/tối (khoá riêng của kit, cùng cơ chế data-theme của site) ---- */
+  function applyMode() {
+    root.dataset.theme = state.mode;
+    document.querySelectorAll('#mode button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.v === state.mode));
+    try { localStorage.setItem('angles-kit-theme', state.mode); } catch (e) {}
+    renderRoles();
+  }
+  document.querySelectorAll('#mode button').forEach((b) => (b.onclick = () => { state.mode = b.dataset.v; applyMode(); }));
+  $('copy-tokens').onclick = () => copy(TOKENS_CSS, 'Đã copy token --aw-* (sáng + tối) và --cx-*');
+
+  /* ---- copy HTML mỗi thẻ ---- */
+  document.querySelectorAll('.spec').forEach((spec) => {
+    const st = spec.querySelector('.stage'); if (!st || !spec.querySelector('.spec-h')) return;
+    let foot = spec.querySelector('.spec-f'); if (!foot) { foot = document.createElement('div'); foot.className = 'spec-f'; foot.innerHTML = '<span class="note"></span>'; spec.append(foot); }
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'copy'; b.textContent = 'Copy HTML';
+    b.onclick = () => copy(st.innerHTML.trim().replace(/\n\s+/g, '\n'), 'Đã copy HTML: ' + spec.querySelector('.spec-h b').firstChild.textContent.trim());
+    foot.append(b);
+  });
+
+  /* ---- mục lục tự tô ---- */
+  const links = [...document.querySelectorAll('.side a')];
+  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) links.forEach((a) => a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id)); }), { rootMargin: '-30% 0px -60% 0px' });
+  document.querySelectorAll('section.block').forEach((s) => io.observe(s));
+
+  applyMode();
+  fill(0); angBar.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.v === '0'));
+  /* màn mẫu giữ góc riêng của nó cho tới khi người xem chọn góc */
+  document.querySelectorAll('#screens [data-panel]').forEach((p) => { const i = +p.dataset.panel, a = A[i];
+    p.querySelector('.cx-num').innerHTML = pad(i + 1) + '<small>/ 0' + N + '</small>'; p.querySelector('.cx-name').textContent = a.en + ' — ' + a.vi; p.querySelector('.cx-what').textContent = a.what;
+    p.querySelector('[data-facts]').innerHTML = a.facts.map(([t, v]) => `<div><dt>${t}</dt><dd>${v}</dd></div>`).join(''); p.querySelector('[data-prompt]').textContent = 'prompt: ' + a.prompt;
+    p.querySelectorAll('[data-dots] button').forEach((b, n) => b.setAttribute('aria-current', n === i)); });
+})();
+</script>
+</body>
+</html>
