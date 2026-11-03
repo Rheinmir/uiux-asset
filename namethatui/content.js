@@ -34,27 +34,30 @@ window.NT_FULL = {
    },
    {
     "h": "Nên gọi tên nào? Ba quy tắc",
-    "p": [
-     "• Theo dự án. Tệp có import SwiftUI và view là struct thì dùng tên SwiftUI. Nếu thấy các lớp NS và import AppKit thì dùng tên AppKit.",
-     "• Với app trộn hai lớp, hãy nêu rõ lớp nào. Ví dụ 'view SwiftUI nằm trong cửa sổ AppKit' hoặc 'NSPanel được mở từ app SwiftUI của tôi'. Ranh giới giữa hai lớp là chỗ agent dễ lạc nhất.",
-     "• Khi chưa chắc, đưa cả hai tên. Chẳng hạn mô tả biểu tượng ở thanh menu và ghi chú: bên SwiftUI là MenuBarExtra, bên AppKit là NSStatusItem. Agent sẽ tự xem dự án rồi chọn cái hợp."
+    "p": [],
+    "b": [
+     "Theo dự án. Tệp có import SwiftUI và view là struct thì dùng tên SwiftUI. Nếu thấy các lớp NS và import AppKit thì dùng tên AppKit.",
+     "Với app trộn hai lớp, hãy nêu rõ lớp nào. Ví dụ 'view SwiftUI nằm trong cửa sổ AppKit' hoặc 'NSPanel được mở từ app SwiftUI của tôi'. Ranh giới giữa hai lớp là chỗ agent dễ lạc nhất.",
+     "Khi chưa chắc, đưa cả hai tên. Chẳng hạn mô tả biểu tượng ở thanh menu và ghi chú: bên SwiftUI là MenuBarExtra, bên AppKit là NSStatusItem. Agent sẽ tự xem dự án rồi chọn cái hợp."
     ]
    },
    {
     "h": "Các prompt mẫu để dán cho agent",
-    "p": [
-     "• Dự án SwiftUI: Trong app macOS SwiftUI này, cho MenuBarExtra mở ra một cửa sổ kiểu popover và giữ nó hiển thị trên thanh menu kể cả khi cửa sổ chính đã đóng.",
-     "• Dự án AppKit: Trong app macOS AppKit này, chỉnh NSStatusItem của NSStatusBar.system: nút của nó dùng ảnh template và hiện một NSMenu khi được bấm.",
-     "• Chưa biết là loại nào: Sửa biểu tượng app nhỏ cạnh đồng hồ Mac, tức menu bar extra, mà bên SwiftUI là MenuBarExtra còn bên AppKit là NSStatusItem. Hãy xem dự án và sửa phần đã có, đừng thêm một cái thứ hai."
+    "p": [],
+    "b": [
+     "Dự án SwiftUI: Trong app macOS SwiftUI này, cho MenuBarExtra mở ra một cửa sổ kiểu popover và giữ nó hiển thị trên thanh menu kể cả khi cửa sổ chính đã đóng.",
+     "Dự án AppKit: Trong app macOS AppKit này, chỉnh NSStatusItem của NSStatusBar.system: nút của nó dùng ảnh template và hiện một NSMenu khi được bấm.",
+     "Chưa biết là loại nào: Sửa biểu tượng app nhỏ cạnh đồng hồ Mac, tức menu bar extra, mà bên SwiftUI là MenuBarExtra còn bên AppKit là NSStatusItem. Hãy xem dự án và sửa phần đã có, đừng thêm một cái thứ hai."
     ]
    },
    {
     "h": "Những câu hỏi ai cũng hỏi",
-    "p": [
-     "• SwiftUI có thay thế AppKit không? Đang dần dần, nhưng chưa xong. Apple khuyến nghị SwiftUI cho app mới, song vẫn tiếp tục phát hành và viết tài liệu cho API AppKit mới. Quy tắc thực tế: màn hình mới viết bằng SwiftUI, chỉ dùng AppKit khi hành vi đặc thù của Mac mà bạn cần chưa có trong SwiftUI.",
-     "• Một app dùng cả hai được không? Được, và đa số app Mac nghiêm túc đều làm vậy. NSViewRepresentable đặt một view AppKit vào trong SwiftUI, còn NSHostingView làm chiều ngược lại. Vì thế việc nêu rõ lớp cần sửa rất quan trọng.",
-     "• Mỗi control SwiftUI có thật sự là control AppKit bên dưới không? Đừng mặc định như thế. Có cái được nối cầu, nhiều cái thì không, và Apple coi đó là chi tiết cài đặt. Hãy xem Button và NSButton là hai API khác nhau tình cờ trông giống nhau.",
-     "• AppKit và UIKit có phải một thứ không? Không: AppKit dành cho Mac, UIKit dành cho iPhone/iPad. Tiền tố cho biết ngay: NSButton thuộc Mac, UIButton thuộc iOS. Mac Catalyst là một thứ thứ ba: app iPad khoác áo Mac."
+    "p": [],
+    "b": [
+     "SwiftUI có thay thế AppKit không? Đang dần dần, nhưng chưa xong. Apple khuyến nghị SwiftUI cho app mới, song vẫn tiếp tục phát hành và viết tài liệu cho API AppKit mới. Quy tắc thực tế: màn hình mới viết bằng SwiftUI, chỉ dùng AppKit khi hành vi đặc thù của Mac mà bạn cần chưa có trong SwiftUI.",
+     "Một app dùng cả hai được không? Được, và đa số app Mac nghiêm túc đều làm vậy. NSViewRepresentable đặt một view AppKit vào trong SwiftUI, còn NSHostingView làm chiều ngược lại. Vì thế việc nêu rõ lớp cần sửa rất quan trọng.",
+     "Mỗi control SwiftUI có thật sự là control AppKit bên dưới không? Đừng mặc định như thế. Có cái được nối cầu, nhiều cái thì không, và Apple coi đó là chi tiết cài đặt. Hãy xem Button và NSButton là hai API khác nhau tình cờ trông giống nhau.",
+     "AppKit và UIKit có phải một thứ không? Không: AppKit dành cho Mac, UIKit dành cho iPhone/iPad. Tiền tố cho biết ngay: NSButton thuộc Mac, UIButton thuộc iOS. Mac Catalyst là một thứ thứ ba: app iPad khoác áo Mac."
     ]
    },
    {
@@ -85,12 +88,14 @@ window.NT_FULL = {
      "Ô tìm kiếm nhận những mô tả bình dân, ví dụ như các câu dưới đây. Bấm ⌘K để mở.",
      "Nếu chẳng khớp mô tả nào, trang báo 'Nothing matched that description' và gợi ý bạn thử tả vẻ ngoài hoặc vị trí của nó, chẳng hạn 'mấy chấm dưới slideshow' hay 'thanh vẫn nằm yên khi tôi cuộn'.",
      "Không gọi tên nổi cả phong cách nhìn? Hãy thử Name That Vibe.",
-     "Nhấn đúp vào bất kỳ từ nào trên site để xem định nghĩa bằng ngôn ngữ thường.",
-     "• nền nhạt phía sau biểu tượng trên thanh menu",
-     "• lớp tối trong suốt phía sau một cửa sổ popup",
-     "• chữ xám trong ô nhập, biến mất khi bạn gõ",
-     "• chấm tròn kéo để chỉnh âm lượng",
-     "• chữ bị cắt và thêm ba chấm"
+     "Nhấn đúp vào bất kỳ từ nào trên site để xem định nghĩa bằng ngôn ngữ thường."
+    ],
+    "b": [
+     "nền nhạt phía sau biểu tượng trên thanh menu",
+     "lớp tối trong suốt phía sau một cửa sổ popup",
+     "chữ xám trong ô nhập, biến mất khi bạn gõ",
+     "chấm tròn kéo để chỉnh âm lượng",
+     "chữ bị cắt và thêm ba chấm"
     ]
    },
    {
@@ -2441,19 +2446,22 @@ window.NT_FULL = {
   "sections": [
    {
     "h": "Một thuật ngữ được thêm vào thế nào",
-    "p": [
-     "• Bắt đầu từ điểm ảnh. Thuật ngữ phải trỏ tới thứ nhìn thấy được và thật sự khó diễn tả. Chúng tôi không thêm tên chỉ vì nghe có vẻ hữu ích.",
-     "• Kiểm tra nền tảng. Tên người dùng thấy được xác minh trong hướng dẫn của nền tảng, tên dùng trong code được xác minh trong tài liệu framework, còn vai trò hay hành vi hỗ trợ tiếp cận được xác minh theo chuẩn liên quan.",
-     "• Làm cho sự khác biệt nhìn thấy được. Phần demo, sơ đồ cấu tạo và lời giải thích bằng ngôn ngữ thường phải giúp phân biệt thuật ngữ với những thứ giống nó nhất, mà không đòi người đọc phải biết sẵn từ vựng."
+    "p": [],
+    "b": [
+     "Bắt đầu từ điểm ảnh. Thuật ngữ phải trỏ tới thứ nhìn thấy được và thật sự khó diễn tả. Chúng tôi không thêm tên chỉ vì nghe có vẻ hữu ích.",
+     "Kiểm tra nền tảng. Tên người dùng thấy được xác minh trong hướng dẫn của nền tảng, tên dùng trong code được xác minh trong tài liệu framework, còn vai trò hay hành vi hỗ trợ tiếp cận được xác minh theo chuẩn liên quan.",
+     "Làm cho sự khác biệt nhìn thấy được. Phần demo, sơ đồ cấu tạo và lời giải thích bằng ngôn ngữ thường phải giúp phân biệt thuật ngữ với những thứ giống nó nhất, mà không đòi người đọc phải biết sẵn từ vựng."
     ]
    },
    {
     "h": "Các nguồn chúng tôi tham khảo",
     "p": [
-     "Nguồn nào được dùng tùy vào điều đang khẳng định. Một bộ hướng dẫn thiết kế có thể đặt tên cho một mẫu hình nhìn thấy được, một đặc tả xác định ngữ nghĩa của nó, còn tài liệu framework cung cấp đúng ký hiệu mà lập trình viên sẽ gõ.",
-     "• Nền tảng Apple: thuật ngữ thành phần, hành vi của nền tảng, cấu tạo đã được tài liệu hóa, cùng các ký hiệu SwiftUI, AppKit và UIKit chính xác. Nguồn: Human Interface Guidelines và Developer Documentation.",
-     "• Mẫu web có thể tiếp cận: vai trò và thuộc tính ARIA, các mẫu widget đã được công nhận, cách tương tác bằng bàn phím và yêu cầu về khả năng tiếp cận. Nguồn: WAI-ARIA, ARIA APG và WCAG.",
-     "• Nền tảng web: ngữ nghĩa và hành vi HTML gốc, API của trình duyệt, bối cảnh triển khai và ghi chú về khả năng tương thích. Nguồn: WHATWG HTML và MDN Web Docs."
+     "Nguồn nào được dùng tùy vào điều đang khẳng định. Một bộ hướng dẫn thiết kế có thể đặt tên cho một mẫu hình nhìn thấy được, một đặc tả xác định ngữ nghĩa của nó, còn tài liệu framework cung cấp đúng ký hiệu mà lập trình viên sẽ gõ."
+    ],
+    "b": [
+     "Nền tảng Apple: thuật ngữ thành phần, hành vi của nền tảng, cấu tạo đã được tài liệu hóa, cùng các ký hiệu SwiftUI, AppKit và UIKit chính xác. Nguồn: Human Interface Guidelines và Developer Documentation.",
+     "Mẫu web có thể tiếp cận: vai trò và thuộc tính ARIA, các mẫu widget đã được công nhận, cách tương tác bằng bàn phím và yêu cầu về khả năng tiếp cận. Nguồn: WAI-ARIA, ARIA APG và WCAG.",
+     "Nền tảng web: ngữ nghĩa và hành vi HTML gốc, API của trình duyệt, bối cảnh triển khai và ghi chú về khả năng tương thích. Nguồn: WHATWG HTML và MDN Web Docs."
     ]
    },
    {
@@ -2499,17 +2507,20 @@ window.NT_FULL = {
    {
     "h": "Bạn nhận được gì",
     "p": [
-     "Bạn là nhà tài trợ duy nhất trên site: không xoay vòng, không ai đứng cạnh. Hãy gửi tên, đường dẫn, một dòng giới thiệu và một ảnh 1200 × 630, đúng cỡ ảnh xem trước khi chia sẻ mạng xã hội nên nhiều khả năng bạn đã có sẵn. Mọi thứ đều được xác nhận qua email trước khi lên sóng, và những thương hiệu không hợp với đối tượng người đọc sẽ bị từ chối.",
-     "• Tên của bạn cùng một dòng nói về sản phẩm, đặt phía trên header ở mọi trang.",
-     "• Ảnh của bạn nằm dưới phần demo trên mọi trang thuật ngữ, và luôn hiện trong tầm mắt khi người ta đọc."
+     "Bạn là nhà tài trợ duy nhất trên site: không xoay vòng, không ai đứng cạnh. Hãy gửi tên, đường dẫn, một dòng giới thiệu và một ảnh 1200 × 630, đúng cỡ ảnh xem trước khi chia sẻ mạng xã hội nên nhiều khả năng bạn đã có sẵn. Mọi thứ đều được xác nhận qua email trước khi lên sóng, và những thương hiệu không hợp với đối tượng người đọc sẽ bị từ chối."
+    ],
+    "b": [
+     "Tên của bạn cùng một dòng nói về sản phẩm, đặt phía trên header ở mọi trang.",
+     "Ảnh của bạn nằm dưới phần demo trên mọi trang thuật ngữ, và luôn hiện trong tầm mắt khi người ta đọc."
     ]
    },
    {
     "h": "Những gì cố ý không có",
-    "p": [
-     "• Không có pixel theo dõi và không có script bên thứ ba. Đường dẫn mang thuộc tính rel=“sponsored”.",
-     "• Không can thiệp vào các mục, định nghĩa hay thứ hạng tìm kiếm. Từ điển vẫn giữ tính biên tập.",
-     "• Không cam kết số lượt nhấp hay chuyển đổi. Bạn đang tài trợ cho một site tham khảo còn non trẻ và lớn rất nhanh."
+    "p": [],
+    "b": [
+     "Không có pixel theo dõi và không có script bên thứ ba. Đường dẫn mang thuộc tính rel=“sponsored”.",
+     "Không can thiệp vào các mục, định nghĩa hay thứ hạng tìm kiếm. Từ điển vẫn giữ tính biên tập.",
+     "Không cam kết số lượt nhấp hay chuyển đổi. Bạn đang tài trợ cho một site tham khảo còn non trẻ và lớn rất nhanh."
     ]
    },
    {
@@ -2601,29 +2612,33 @@ window.NT_FULL = {
    {
     "h": "Nếu bạn từng gọi nó là…",
     "p": [
-     "…thì ý bạn là Aqua.",
-     "• các nút Mac đời cũ trông như kẹo xanh",
-     "• nút gel mà bạn muốn liếm",
-     "• cửa sổ kẻ sọc của Mac OS X thời đầu",
-     "• ba nút cửa sổ đỏ vàng xanh như kẹo gôm",
-     "• thanh cuộn xanh bóng trên Mac cũ",
-     "• nút Save nhấp nháy như đang thở"
+     "…thì ý bạn là Aqua."
+    ],
+    "b": [
+     "các nút Mac đời cũ trông như kẹo xanh",
+     "nút gel mà bạn muốn liếm",
+     "cửa sổ kẻ sọc của Mac OS X thời đầu",
+     "ba nút cửa sổ đỏ vàng xanh như kẹo gôm",
+     "thanh cuộn xanh bóng trên Mac cũ",
+     "nút Save nhấp nháy như đang thở"
     ]
    },
    {
     "h": "Dấu hiệu định nghĩa",
-    "p": [
-     "• Candy-gel controls (chiều sâu và ánh sáng): nút và núm thanh cuộn trông như giọt gel trong mờ, có vệt sáng phản chiếu ở phần trên, quầng sáng bên trong ở dưới và màu như được thắp từ trong ra.",
-     "• Pinstriped surfaces (bề mặt và chất liệu): nền cửa sổ và title bar mang các sọc sáng tối xen kẽ rất mảnh, dấu ấn nhận diện của lớp vỏ Aqua.",
-     "• Gumdrop window controls (hình học và viền): bộ ba đóng/thu nhỏ/phóng to là các quả cầu kẹo bóng đỏ, vàng, xanh ở góc trên trái của title bar.",
-     "• Luminous water blue (màu và độ tương phản): bảng màu xoay quanh chính cái tên Aqua, tức xanh nước bão hòa như được chiếu sáng, dùng cho nút mặc định, vùng chọn, thanh cuộn và tiến độ."
+    "p": [],
+    "b": [
+     "Candy-gel controls (chiều sâu và ánh sáng): nút và núm thanh cuộn trông như giọt gel trong mờ, có vệt sáng phản chiếu ở phần trên, quầng sáng bên trong ở dưới và màu như được thắp từ trong ra.",
+     "Pinstriped surfaces (bề mặt và chất liệu): nền cửa sổ và title bar mang các sọc sáng tối xen kẽ rất mảnh, dấu ấn nhận diện của lớp vỏ Aqua.",
+     "Gumdrop window controls (hình học và viền): bộ ba đóng/thu nhỏ/phóng to là các quả cầu kẹo bóng đỏ, vàng, xanh ở góc trên trái của title bar.",
+     "Luminous water blue (màu và độ tương phản): bảng màu xoay quanh chính cái tên Aqua, tức xanh nước bão hòa như được chiếu sáng, dùng cho nút mặc định, vùng chọn, thanh cuộn và tiến độ."
     ]
    },
    {
     "h": "Style brief: dán vào agent",
     "p": [
      "Hãy dựng bề mặt theo ngôn ngữ thiết kế Aqua gốc của Apple (Mac OS X thời đầu). Dấu hiệu định nghĩa: control dạng gel kẹo, nền xanh nước phát sáng với vệt sáng phản chiếu ở nửa trên và quầng sáng bên trong, ví dụ lớp radial-gradient làm vệt sáng đặt trên linear-gradient(#5f9ff5, #1862d8); bề mặt cửa sổ kẻ sọc mảnh (repeating-linear-gradient, sọc khoảng 1px, tương phản thấp); nút cửa sổ đỏ/vàng/xanh dạng cầu bóng ở góc trên trái; nút mặc định nhấp nháy nhẹ (vòng sáng chậm, tắt khi có prefers-reduced-motion); bóng cửa sổ mềm và sâu. Giữ bố cục và mật độ linh hoạt, vì đây là phần vỏ và control chứ không phải hệ thống bố cục. Đừng trôi sang glassmorphism chung chung: chất liệu của Aqua là gel đục bóng trên nền kẻ sọc, không phải các tấm kính mờ nhòe. Giữ độ tương phản chữ 4.5:1 trên nền gel (chữ trắng kèm bóng đổ nhẹ là đúng thời đó), trạng thái focus bàn phím đầy đủ, và phương án thay thế cho hiệu ứng nhấp nháy khi người dùng giảm chuyển động."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Hay bị nhầm với",
@@ -2632,43 +2647,52 @@ window.NT_FULL = {
      "Y2K Digital Aesthetic: Đây là Aqua vì nó là ngôn ngữ hệ điều hành hoàn chỉnh, có hệ thống của một hãng duy nhất, với cùng nút gel, sọc và nút kẹo gôm trên mọi chiếc Mac. Nó chỉ là Y2K nếu là kiểu tương lai học tự do của thời đó (crôm lỏng, lens flare, chữ công nghệ) mà không có hệ thống riêng của Apple đứng sau. Aqua là hòn đảo mang hình hệ điều hành giữa biển Y2K.",
      "So với Windows Aero: Đây là Aqua vì chất liệu là gel kẹo, tức màu đục phát sáng và bóng, nằm trên nền kẻ sọc. Nó sẽ thành Windows Aero nếu kẹo biến thành kiến trúc: những KHUNG cửa sổ kính trong, mờ, cho thấy màn hình nền qua chúng.",
      "So với Skeuomorphism: Đây là Aqua vì độ bóng là chất liệu riêng của hãng, không phải bắt chước, và nút gel không giả làm một vật thật nào. Nó sẽ thành skeuomorphism nếu bề mặt bắt đầu mô phỏng những thứ gọi tên được như lịch da, sổ giấy, máy phát kim loại chải (điều mà Apple quả thực chồng lên Aqua về sau)."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Full style DNA",
-    "p": [
-     "• Chiều sâu và ánh sáng, cốt lõi: Candy-gel controls. Nút và núm thanh cuộn trông như giọt gel trong mờ, có vệt sáng ở trên, quầng sáng bên trong dưới và màu như thắp từ trong ra.",
-     "• Chiều sâu và ánh sáng, phụ trợ: Soft window shadows. Bóng đổ sâu và mềm làm cửa sổ nổi thành các lớp thật trên màn hình nền, kiểu chiều sâu mà Mac OS 9 chưa từng có.",
-     "• Chiều sâu và ánh sáng, nên tránh: Flat frosted translucency. Một tấm mờ nhòe không có độ bóng gel là ý tưởng khác, ra đời sau, thuộc địa hạt glassmorphism/vibrancy chứ không phải Aqua.",
-     "• Bề mặt và chất liệu, cốt lõi: Pinstriped surfaces. Nền cửa sổ và title bar mang các sọc sáng tối xen kẽ mảnh, dấu ấn đặc trưng của Aqua.",
-     "• Hình học và viền, cốt lõi: Gumdrop window controls. Bộ ba đóng/thu nhỏ/phóng to là các quả cầu kẹo bóng đỏ, vàng, xanh ở góc trên trái title bar.",
-     "• Màu và độ tương phản, cốt lõi: Luminous water blue. Bảng màu xoay quanh xanh nước bão hòa như được chiếu sáng, cho nút mặc định, vùng chọn, thanh cuộn và tiến độ.",
-     "• Chuyển động, phụ trợ: Fluid, liquid motion. Nút mặc định nhấp nháy như thở, còn cửa sổ thu nhỏ qua hiệu ứng genie như chất lỏng; chuyển động giúp bán ẩn dụ nước."
-    ]
+    "p": [],
+    "b": [
+     "Chiều sâu và ánh sáng, cốt lõi: Candy-gel controls. Nút và núm thanh cuộn trông như giọt gel trong mờ, có vệt sáng ở trên, quầng sáng bên trong dưới và màu như thắp từ trong ra.",
+     "Chiều sâu và ánh sáng, phụ trợ: Soft window shadows. Bóng đổ sâu và mềm làm cửa sổ nổi thành các lớp thật trên màn hình nền, kiểu chiều sâu mà Mac OS 9 chưa từng có.",
+     "Chiều sâu và ánh sáng, nên tránh: Flat frosted translucency. Một tấm mờ nhòe không có độ bóng gel là ý tưởng khác, ra đời sau, thuộc địa hạt glassmorphism/vibrancy chứ không phải Aqua.",
+     "Bề mặt và chất liệu, cốt lõi: Pinstriped surfaces. Nền cửa sổ và title bar mang các sọc sáng tối xen kẽ mảnh, dấu ấn đặc trưng của Aqua.",
+     "Hình học và viền, cốt lõi: Gumdrop window controls. Bộ ba đóng/thu nhỏ/phóng to là các quả cầu kẹo bóng đỏ, vàng, xanh ở góc trên trái title bar.",
+     "Màu và độ tương phản, cốt lõi: Luminous water blue. Bảng màu xoay quanh xanh nước bão hòa như được chiếu sáng, cho nút mặc định, vùng chọn, thanh cuộn và tiến độ.",
+     "Chuyển động, phụ trợ: Fluid, liquid motion. Nút mặc định nhấp nháy như thở, còn cửa sổ thu nhỏ qua hiệu ứng genie như chất lỏng; chuyển động giúp bán ẩn dụ nước."
+    ],
+    "fold": true
    },
    {
     "h": "Trong code: các điểm khởi đầu tùy chọn",
     "p": [
-     "Bản brief ở trên không gắn framework nào; dưới đây là vài điểm bám cụ thể nếu stack của bạn khớp.",
-     "• CSS cho nút gel: radial-gradient làm vệt sáng ở trên, linear-gradient từ #6aa6f8 qua #1862d8 tới #0c4cc0, box-shadow gồm inset sáng trên và dưới cùng một bóng ngoài, border-radius: 999px. Ý: vệt sáng ở đỉnh, quầng sáng trong, hình viên thuốc.",
-     "• CSS cho sọc: repeating-linear-gradient 180deg luân phiên #f2f4f7 và #e7eaef, mỗi sọc 2px. Dùng cho vỏ cửa sổ và nền.",
-     "• CSS cho nhịp thở: @keyframes aqua-pulse đổi brightness và saturate ở giữa chu kỳ, chạy 1.8s ease-in-out infinite. Nút mặc định thở; nhớ chặn sau prefers-reduced-motion."
-    ]
+     "Bản brief ở trên không gắn framework nào; dưới đây là vài điểm bám cụ thể nếu stack của bạn khớp."
+    ],
+    "b": [
+     "CSS cho nút gel: radial-gradient làm vệt sáng ở trên, linear-gradient từ #6aa6f8 qua #1862d8 tới #0c4cc0, box-shadow gồm inset sáng trên và dưới cùng một bóng ngoài, border-radius: 999px. Ý: vệt sáng ở đỉnh, quầng sáng trong, hình viên thuốc.",
+     "CSS cho sọc: repeating-linear-gradient 180deg luân phiên #f2f4f7 và #e7eaef, mỗi sọc 2px. Dùng cho vỏ cửa sổ và nền.",
+     "CSS cho nhịp thở: @keyframes aqua-pulse đổi brightness và saturate ở giữa chu kỳ, chạy 1.8s ease-in-out infinite. Nút mặc định thở; nhớ chặn sau prefers-reduced-motion."
+    ],
+    "fold": true
    },
    {
     "h": "Khả năng tiếp cận và dùng sai",
-    "p": [
-     "• Chữ trắng trên gel xanh vừa nằm sát ngưỡng tương phản; giữ phần giữa của gel đủ tối để đạt 4.5:1, như cách gradient tối ở đáy của chính Apple.",
-     "• Nút mặc định nhấp nháy là chuyển động không mang thông tin; hãy dừng nó khi có prefers-reduced-motion và đừng để nhịp nháy là dấu hiệu duy nhất cho hành động mặc định.",
-     "• Sọc phía sau chữ nhỏ gây nhiễu thị giác; hãy giảm tương phản của sọc xuống 2 đến 3 phần trăm hoặc che chúng sau các panel nội dung."
-    ]
+    "p": [],
+    "b": [
+     "Chữ trắng trên gel xanh vừa nằm sát ngưỡng tương phản; giữ phần giữa của gel đủ tối để đạt 4.5:1, như cách gradient tối ở đáy của chính Apple.",
+     "Nút mặc định nhấp nháy là chuyển động không mang thông tin; hãy dừng nó khi có prefers-reduced-motion và đừng để nhịp nháy là dấu hiệu duy nhất cho hành động mặc định.",
+     "Sọc phía sau chữ nhỏ gây nhiễu thị giác; hãy giảm tương phản của sọc xuống 2 đến 3 phần trăm hoặc che chúng sau các panel nội dung."
+    ],
+    "fold": true
    },
    {
     "h": "Nguồn gốc",
     "p": [
      "Do Steve Jobs giới thiệu tại Macworld San Francisco tháng 1 năm 2000, cùng lúc Mac OS X ra mắt công chúng. Aqua có mặt trong Mac OS X 10.0 (2001) và định hình diện mạo Mac suốt thập kỷ, độ bóng gel vang lại phần cứng iMac trong mờ của thời đó.",
      "Nguồn: bài của Apple Newsroom năm 2000 về việc Apple giới thiệu Mac OS X (công bố Aqua), và bài của John Siracusa trên Ars Technica về Mac OS X DP3 và màn ra mắt của Aqua."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Các mục được nhắc",
@@ -2678,7 +2702,8 @@ window.NT_FULL = {
      "Skeuomorphism: Phong cách (Style)",
      "Liquid Glass: Phong cách (Style)",
      "Traffic Lights (Window Controls) (macos): Phần tử macOS"
-    ]
+    ],
+    "fold": true
    }
   ],
   "card": {
@@ -2713,28 +2738,32 @@ window.NT_FULL = {
    {
     "h": "Nếu bạn từng gọi nó là…",
     "p": [
-     "…thì ý bạn là Claymorphism.",
-     "• nút 3D phồng như đất nặn",
-     "• các thẻ trông như bơm phồng như bóng bay",
-     "• giao diện dễ thương, nhìn bóp được",
-     "• nút tròn tròn, ruột mềm như bãi nhão",
-     "• phong cách minh họa đất sét 3D cho dashboard",
-     "• mọi thứ trông như đồ chơi cao su mềm"
+     "…thì ý bạn là Claymorphism."
+    ],
+    "b": [
+     "nút 3D phồng như đất nặn",
+     "các thẻ trông như bơm phồng như bóng bay",
+     "giao diện dễ thương, nhìn bóp được",
+     "nút tròn tròn, ruột mềm như bãi nhão",
+     "phong cách minh họa đất sét 3D cho dashboard",
+     "mọi thứ trông như đồ chơi cao su mềm"
     ]
    },
    {
     "h": "Dấu hiệu định nghĩa",
-    "p": [
-     "• Two inner shadows + one outer (chiều sâu và ánh sáng): công thức đặc trưng: bóng trong sáng ở trên, bóng trong tối hơn ở dưới, và một bóng ngoài mềm bên dưới; bề mặt đọc thành phồng lên chứ không phải khắc lõm.",
-     "• Oversized corner radii (hình học và viền): góc bo tròn cực đại, bán kính khoảng một phần ba chiều cao phần tử, nên mọi hình trông như một cục mềm chứ không bao giờ là thẻ bo góc.",
-     "• Independently colored, floating objects (bề mặt và chất liệu): mỗi phần tử có màu nền riêng khác với nền trang và nổi rõ lên trên đó; không có gì được đùn ra từ chính trang."
+    "p": [],
+    "b": [
+     "Two inner shadows + one outer (chiều sâu và ánh sáng): công thức đặc trưng: bóng trong sáng ở trên, bóng trong tối hơn ở dưới, và một bóng ngoài mềm bên dưới; bề mặt đọc thành phồng lên chứ không phải khắc lõm.",
+     "Oversized corner radii (hình học và viền): góc bo tròn cực đại, bán kính khoảng một phần ba chiều cao phần tử, nên mọi hình trông như một cục mềm chứ không bao giờ là thẻ bo góc.",
+     "Independently colored, floating objects (bề mặt và chất liệu): mỗi phần tử có màu nền riêng khác với nền trang và nổi rõ lên trên đó; không có gì được đùn ra từ chính trang."
     ]
    },
    {
     "h": "Style brief: dán vào agent",
     "p": [
      "Hãy dựng bề mặt theo claymorphism. Dấu hiệu định nghĩa: công thức bóng đất sét cho thẻ và nút, gồm hai bóng trong (sáng ở trên, tối hơn ở dưới) cộng một bóng ngoài mềm, ví dụ trong box-shadow dùng bóng ngoài 0 24px 40px alpha .18, bóng trong dưới 0 -8px 16px alpha .15 và bóng trong trên 0 8px 16px màu trắng alpha .55; góc bo rất lớn (border-radius khoảng 26px trên control cao 56px); mỗi phần tử một màu pastel nhạt riêng, nổi rõ trên nền pha màu mềm; kiểu chữ dày dặn thân thiện. Giữ linh hoạt sắc độ chính xác và phần minh họa. Đừng trôi sang neumorphism: điểm quyết định là vật thể đất sét có màu riêng và bóng đổ nhìn thấy được, chứ không dùng màu của nền rồi để bóng gợi hình. Giữ tương phản chữ 4.5:1 trên nền pastel, trạng thái nhấn/hover làm bóng trong sâu hơn thay vì bỏ chúng đi, và vòng focus nhìn thấy được."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Hay bị nhầm với",
@@ -2742,42 +2771,51 @@ window.NT_FULL = {
      "Trang có phần so sánh cạnh nhau: cùng một app nhỏ được vẽ ở cả hai phong cách, chỉ có phong cách đổi, nên khác biệt bạn thấy chính là khác biệt thật. Cặp so sánh là Claymorphism và Neumorphism, với app mẫu có màn Welcome back, ô email và nút Continue/Cancel.",
      "Neumorphism: Đây là claymorphism vì mỗi phần tử phồng được tô màu riêng và NỔI trên nền nhờ một bóng đổ thật. Nó sẽ thành neumorphism nếu mọi phần tử lấy đúng màu nền và nằm phẳng trong bề mặt, chỉ có cặp bóng sáng/tối gợi hình, như được đúc từ một chất liệu liền mạch thay vì đặt lên trên.",
      "So với Skeuomorphism: Đây là claymorphism vì chất liệu là thứ đồ chơi tự nghĩ ra, không bắt chước đồ vật hay bề mặt nào ngoài đời. Nó sẽ thành skeuomorphism nếu khối mềm bắt đầu mô phỏng những thứ vật lý gọi tên được như vân da, kim loại chải hay một chiếc máy tính thật."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Full style DNA",
-    "p": [
-     "• Chiều sâu và ánh sáng, cốt lõi: Two inner shadows + one outer. Công thức đặc trưng: bóng trong sáng ở trên, bóng trong tối hơn ở dưới, cộng bóng ngoài mềm bên dưới, khiến bề mặt đọc thành phồng chứ không khắc.",
-     "• Hình học và viền, cốt lõi: Oversized corner radii. Góc tròn cực mạnh, bán kính cỡ một phần ba chiều cao phần tử, nên mọi hình đọc như một cục mềm chứ không phải thẻ bo góc.",
-     "• Bề mặt và chất liệu, cốt lõi: Independently colored, floating objects. Mỗi phần tử có màu nền riêng khác với nền và nổi rõ lên trên; không có gì được đùn ra từ chính trang.",
-     "• Bề mặt và chất liệu, nên tránh: Element same color as background. Nếu màu của vật thể trùng với trang và chỉ có bóng gợi hình, bạn đã trượt sang neumorphism; vật thể đất sét luôn có màu riêng.",
-     "• Màu và độ tương phản, phụ trợ: Light pastel palette. Tím oải hương, bạc hà, san hô và kem sữa; bóng cần nền sáng mới đọc ra khối, và tâm trạng đồ chơi cần sự mềm mại đó.",
-     "• Hình ảnh và đồ trang trí, phụ trợ: 3D clay illustration. Nhân vật và vật thể 3D phồng, mịn thường đi kèm control và tạo không khí thế giới đồ chơi chung."
-    ]
+    "p": [],
+    "b": [
+     "Chiều sâu và ánh sáng, cốt lõi: Two inner shadows + one outer. Công thức đặc trưng: bóng trong sáng ở trên, bóng trong tối hơn ở dưới, cộng bóng ngoài mềm bên dưới, khiến bề mặt đọc thành phồng chứ không khắc.",
+     "Hình học và viền, cốt lõi: Oversized corner radii. Góc tròn cực mạnh, bán kính cỡ một phần ba chiều cao phần tử, nên mọi hình đọc như một cục mềm chứ không phải thẻ bo góc.",
+     "Bề mặt và chất liệu, cốt lõi: Independently colored, floating objects. Mỗi phần tử có màu nền riêng khác với nền và nổi rõ lên trên; không có gì được đùn ra từ chính trang.",
+     "Bề mặt và chất liệu, nên tránh: Element same color as background. Nếu màu của vật thể trùng với trang và chỉ có bóng gợi hình, bạn đã trượt sang neumorphism; vật thể đất sét luôn có màu riêng.",
+     "Màu và độ tương phản, phụ trợ: Light pastel palette. Tím oải hương, bạc hà, san hô và kem sữa; bóng cần nền sáng mới đọc ra khối, và tâm trạng đồ chơi cần sự mềm mại đó.",
+     "Hình ảnh và đồ trang trí, phụ trợ: 3D clay illustration. Nhân vật và vật thể 3D phồng, mịn thường đi kèm control và tạo không khí thế giới đồ chơi chung."
+    ],
+    "fold": true
    },
    {
     "h": "Trong code: các điểm khởi đầu tùy chọn",
     "p": [
-     "Bản brief ở trên không gắn framework nào; dưới đây là vài điểm bám cụ thể nếu stack của bạn khớp.",
-     "• CSS cho công thức đầy đủ: border-radius 26px, nền #f4e7fd, box-shadow gồm một bóng ngoài lớn và hai bóng trong (tối ở dưới, trắng sáng ở trên) với màu tím nhạt rgba(120,90,180,...). Đây là trọn bộ công thức, một bóng ngoài cộng hai bóng trong.",
-     "• CSS cho trạng thái nhấn (active): bóng ngoài thu nhỏ, bóng trong dưới đậm hơn và bóng trong trên đổi thành tối nhẹ. Nhấn xuống làm đất sét bị ép: bóng ngoài co lại, ánh sáng phía trên đảo chiều.",
-     "• Tailwind: rounded-[26px] bg-violet-100 cùng một giá trị shadow tùy ý mang đủ ba lớp bóng của công thức trên."
-    ]
+     "Bản brief ở trên không gắn framework nào; dưới đây là vài điểm bám cụ thể nếu stack của bạn khớp."
+    ],
+    "b": [
+     "CSS cho công thức đầy đủ: border-radius 26px, nền #f4e7fd, box-shadow gồm một bóng ngoài lớn và hai bóng trong (tối ở dưới, trắng sáng ở trên) với màu tím nhạt rgba(120,90,180,...). Đây là trọn bộ công thức, một bóng ngoài cộng hai bóng trong.",
+     "CSS cho trạng thái nhấn (active): bóng ngoài thu nhỏ, bóng trong dưới đậm hơn và bóng trong trên đổi thành tối nhẹ. Nhấn xuống làm đất sét bị ép: bóng ngoài co lại, ánh sáng phía trên đảo chiều.",
+     "Tailwind: rounded-[26px] bg-violet-100 cùng một giá trị shadow tùy ý mang đủ ba lớp bóng của công thức trên."
+    ],
+    "fold": true
    },
    {
     "h": "Khả năng tiếp cận và dùng sai",
-    "p": [
-     "• Bẫy là pastel trên pastel: chữ trắng hoặc kem trên nền bạc hà/oải hương thường không đạt 4.5:1; hãy làm chữ đậm hơn chứ đừng làm tối bảng màu đồ chơi.",
-     "• Bóng mềm chỉ để trang trí, không biểu thị trạng thái; hãy kết hợp trạng thái nhấn/chọn với đổi màu hoặc đổi nội dung, đừng chỉ dựa vào độ sâu của bóng.",
-     "• Bóng ba lớp trên nhiều phần tử có thể rung nhấp nháy khi cuộn ở chế độ tiết kiệm điện; chỉ dùng công thức này cho các bề mặt quan trọng."
-    ]
+    "p": [],
+    "b": [
+     "Bẫy là pastel trên pastel: chữ trắng hoặc kem trên nền bạc hà/oải hương thường không đạt 4.5:1; hãy làm chữ đậm hơn chứ đừng làm tối bảng màu đồ chơi.",
+     "Bóng mềm chỉ để trang trí, không biểu thị trạng thái; hãy kết hợp trạng thái nhấn/chọn với đổi màu hoặc đổi nội dung, đừng chỉ dựa vào độ sâu của bóng.",
+     "Bóng ba lớp trên nhiều phần tử có thể rung nhấp nháy khi cuộn ở chế độ tiết kiệm điện; chỉ dùng công thức này cho các bề mặt quan trọng."
+    ],
+    "fold": true
    },
    {
     "h": "Nguồn gốc",
     "p": [
      "Được Michal Malewicz đặt tên năm 2021 như người kế nhiệm thân thiện hơn của neumorphism, đi theo làn sóng minh họa 3D mềm trong tiếp thị fintech và edtech; công thức (hai bóng trong cộng một bóng ngoài, bo góc lớn) lấy từ bài viết gốc của ông.",
      "Nguồn: HYPE4 Academy với bài Claymorphism in User Interfaces (bài đặt tên), và Smashing Magazine với bài viết về Claymorphism như một xu hướng thiết kế UI mới bằng CSS."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Các mục được nhắc",
@@ -2785,7 +2823,8 @@ window.NT_FULL = {
      "Neumorphism: Phong cách (Style)",
      "Neobrutalism: Phong cách (Style)",
      "Glassmorphism: Phong cách (Style)"
-    ]
+    ],
+    "fold": true
    }
   ],
   "card": {
@@ -2820,29 +2859,33 @@ window.NT_FULL = {
    {
     "h": "Nếu bạn từng gọi nó là…",
     "p": [
-     "…thì ý bạn là Flat Design.",
-     "• mọi thứ chỉ là màu đặc, không có bóng",
-     "• nút chỉ là hình chữ nhật màu",
-     "• kiểu iOS 7 khi mọi thứ trở nên phẳng",
-     "• biểu tượng là hình trắng đơn giản trên ô vuông màu",
-     "• không gradient, không vân, chỉ khối màu sạch",
-     "• phong cách thiết kế đã giết các nút bóng loáng"
+     "…thì ý bạn là Flat Design."
+    ],
+    "b": [
+     "mọi thứ chỉ là màu đặc, không có bóng",
+     "nút chỉ là hình chữ nhật màu",
+     "kiểu iOS 7 khi mọi thứ trở nên phẳng",
+     "biểu tượng là hình trắng đơn giản trên ô vuông màu",
+     "không gradient, không vân, chỉ khối màu sạch",
+     "phong cách thiết kế đã giết các nút bóng loáng"
     ]
    },
    {
     "h": "Dấu hiệu định nghĩa",
-    "p": [
-     "• Solid 2D color fills (bề mặt và chất liệu): mọi bề mặt là một màu phẳng, không gradient, không độ bóng, không vân, không chất liệu nào cả.",
-     "• No simulated depth (chiều sâu và ánh sáng): không bóng đổ, vát cạnh hay vệt sáng; các phần tử cùng nằm trên một mặt phẳng và cạnh chỉ được vẽ bằng sự đổi màu.",
-     "• Simple glyph icons (hình ảnh và đồ trang trí): biểu tượng được rút gọn thành bóng hình học tối giản, một hình một màu đủ thể hiện cả vật.",
-     "• Color carries the hierarchy (màu và độ tương phản): các màu khối tươi, thường bão hòa, phân biệt hành động và vùng; màu làm việc mà bóng từng làm."
+    "p": [],
+    "b": [
+     "Solid 2D color fills (bề mặt và chất liệu): mọi bề mặt là một màu phẳng, không gradient, không độ bóng, không vân, không chất liệu nào cả.",
+     "No simulated depth (chiều sâu và ánh sáng): không bóng đổ, vát cạnh hay vệt sáng; các phần tử cùng nằm trên một mặt phẳng và cạnh chỉ được vẽ bằng sự đổi màu.",
+     "Simple glyph icons (hình ảnh và đồ trang trí): biểu tượng được rút gọn thành bóng hình học tối giản, một hình một màu đủ thể hiện cả vật.",
+     "Color carries the hierarchy (màu và độ tương phản): các màu khối tươi, thường bão hòa, phân biệt hành động và vùng; màu làm việc mà bóng từng làm."
     ]
    },
    {
     "h": "Style brief: dán vào agent",
     "p": [
      "Hãy dựng bề mặt theo flat design. Dấu hiệu định nghĩa: mọi bề mặt là một mảng màu đặc duy nhất, không gradient, độ bóng hay vân; không mô phỏng chiều sâu, tức không bóng đổ, vát cạnh hay vệt phản chiếu, cạnh chỉ được vẽ bằng sự đổi màu; biểu tượng là glyph hình học đơn giản một màu; thứ bậc do các khối màu, kích cỡ và kiểu chữ sans-serif sạch đảm nhiệm. Giữ bảng màu và mật độ linh hoạt, vì flat có thể thưa hoặc dày. Trong CSS, điều đó nghĩa là dùng background-color thay cho gradient trong background-image, border: none hoặc 1px solid, và box-shadow: none. Đừng trôi sang skeuomorphism: điểm quyết định là không có gì bắt chước chất liệu vật lý được chiếu sáng. Giữ tương phản chữ 4.5:1, và làm phần tử tương tác nhận ra được mà không cần bóng, nghĩa là có gợi ý màu rõ ràng, trạng thái hover/nhấn thấy được và vòng focus thấy được."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Hay bị nhầm với",
@@ -2850,43 +2893,52 @@ window.NT_FULL = {
      "Trang có phần so sánh cạnh nhau: cùng một app nhỏ được vẽ ở cả hai phong cách, chỉ có phong cách đổi, nên khác biệt bạn thấy chính là khác biệt thật. Cặp so sánh là Flat Design và Skeuomorphism.",
      "Skeuomorphism: Đây là Flat Design vì bề mặt là mảng màu đặc không đổ bóng và biểu tượng là glyph trừu tượng, không gì bắt chước đồ vật hay chất liệu thật. Nó sẽ thành skeuomorphism nếu các mảng màu mọc thêm độ bóng, vân và ánh sáng cho tới khi control đọc như vật thật bạn có thể chạm vào.",
      "So với Minimalism: Đây là Flat Design vì nhận định ở đây nói về CÁCH VẼ: dù trên màn hình có bao nhiêu nội dung, tất cả đều được vẽ bằng màu 2D không đổ bóng. Nó sẽ là minimalism nếu nhận định nói về NỘI DUNG, tức ít phần tử và nhiều khoảng trống, điều mà một UI phẳng hoàn toàn có thể không đạt được (phẳng mà chật là chuyện thường)."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Full style DNA",
-    "p": [
-     "• Bề mặt và chất liệu, cốt lõi: Solid 2D color fills. Mọi bề mặt là một màu phẳng, không gradient, không độ bóng, không vân, không chất liệu nào cả.",
-     "• Chiều sâu và ánh sáng, cốt lõi: No simulated depth. Không bóng đổ, vát cạnh hay vệt sáng; các phần tử cùng một mặt phẳng và cạnh chỉ được vẽ bằng sự đổi màu.",
-     "• Chiều sâu và ánh sáng, nên tránh: Gloss, gradients, textures. Một vệt phản chiếu hay vân da làm vỡ phong cách; đó là cánh cửa quay về skeuomorphism.",
-     "• Hình ảnh và đồ trang trí, cốt lõi: Simple glyph icons. Biểu tượng được rút gọn thành bóng hình học tối giản; một hình một màu đủ thể hiện cả vật.",
-     "• Màu và độ tương phản, cốt lõi: Color carries the hierarchy. Các màu khối tươi, thường bão hòa, phân biệt hành động và vùng; màu làm việc mà bóng từng làm.",
-     "• Kiểu chữ, phụ trợ: Typography does the structure. Chữ sans-serif sạch với các bậc cỡ rõ ràng phân tách các cấp nội dung, thay chỗ cho khung và vát cạnh trước đây.",
-     "• Bố cục và bố trí, biến thiên: Density is free. Flat chỉ chi phối CÁCH VẼ; một UI phẳng có thể là trang landing thưa hoặc dashboard dày."
-    ]
+    "p": [],
+    "b": [
+     "Bề mặt và chất liệu, cốt lõi: Solid 2D color fills. Mọi bề mặt là một màu phẳng, không gradient, không độ bóng, không vân, không chất liệu nào cả.",
+     "Chiều sâu và ánh sáng, cốt lõi: No simulated depth. Không bóng đổ, vát cạnh hay vệt sáng; các phần tử cùng một mặt phẳng và cạnh chỉ được vẽ bằng sự đổi màu.",
+     "Chiều sâu và ánh sáng, nên tránh: Gloss, gradients, textures. Một vệt phản chiếu hay vân da làm vỡ phong cách; đó là cánh cửa quay về skeuomorphism.",
+     "Hình ảnh và đồ trang trí, cốt lõi: Simple glyph icons. Biểu tượng được rút gọn thành bóng hình học tối giản; một hình một màu đủ thể hiện cả vật.",
+     "Màu và độ tương phản, cốt lõi: Color carries the hierarchy. Các màu khối tươi, thường bão hòa, phân biệt hành động và vùng; màu làm việc mà bóng từng làm.",
+     "Kiểu chữ, phụ trợ: Typography does the structure. Chữ sans-serif sạch với các bậc cỡ rõ ràng phân tách các cấp nội dung, thay chỗ cho khung và vát cạnh trước đây.",
+     "Bố cục và bố trí, biến thiên: Density is free. Flat chỉ chi phối CÁCH VẼ; một UI phẳng có thể là trang landing thưa hoặc dashboard dày."
+    ],
+    "fold": true
    },
    {
     "h": "Trong code: các điểm khởi đầu tùy chọn",
     "p": [
-     "Bản brief ở trên không gắn framework nào; dưới đây là vài điểm bám cụ thể nếu stack của bạn khớp.",
-     "• CSS cho nút phẳng: nền màu #2f80ed, không viền, bo góc 4px, tắt hẳn box-shadow. Một màu duy nhất, không ánh sáng ở bất cứ đâu.",
-     "• CSS cho danh sách kiểm tra gỡ skeuomorphism: đặt filter, background-image và text-shadow về none, để không còn gì mô phỏng ánh sáng.",
-     "• Tailwind: bg-sky-600 và text-white, kèm rounded, shadow-none; khi hover thì dùng hover:bg-sky-700. Trạng thái đổi bằng đổi màu chứ không bằng độ nâng."
-    ]
+     "Bản brief ở trên không gắn framework nào; dưới đây là vài điểm bám cụ thể nếu stack của bạn khớp."
+    ],
+    "b": [
+     "CSS cho nút phẳng: nền màu #2f80ed, không viền, bo góc 4px, tắt hẳn box-shadow. Một màu duy nhất, không ánh sáng ở bất cứ đâu.",
+     "CSS cho danh sách kiểm tra gỡ skeuomorphism: đặt filter, background-image và text-shadow về none, để không còn gì mô phỏng ánh sáng.",
+     "Tailwind: bg-sky-600 và text-white, kèm rounded, shadow-none; khi hover thì dùng hover:bg-sky-700. Trạng thái đổi bằng đổi màu chứ không bằng độ nâng."
+    ],
+    "fold": true
    },
    {
     "h": "Khả năng tiếp cận và dùng sai",
-    "p": [
-     "• NN/g đã đo cái giá phải trả: UI phẳng có tín hiệu yếu khiến người dùng không chắc thứ gì bấm được; hãy cho nút và liên kết gợi ý màu không thể nhầm, đừng chỉ dựa vào vị trí gần nhau.",
-     "• Khi bóng đã mất, màu phải gánh hai việc; kiểm tra tương phản 4.5:1 cho chữ VÀ 3:1 cho đường biên của control với nền.",
-     "• Đừng bỏ outline focus chỉ để cho 'sạch'; UI phẳng không có vòng focus thì bàn phím không dùng được."
-    ]
+    "p": [],
+    "b": [
+     "NN/g đã đo cái giá phải trả: UI phẳng có tín hiệu yếu khiến người dùng không chắc thứ gì bấm được; hãy cho nút và liên kết gợi ý màu không thể nhầm, đừng chỉ dựa vào vị trí gần nhau.",
+     "Khi bóng đã mất, màu phải gánh hai việc; kiểm tra tương phản 4.5:1 cho chữ VÀ 3:1 cho đường biên của control với nền.",
+     "Đừng bỏ outline focus chỉ để cho 'sạch'; UI phẳng không có vòng focus thì bàn phím không dùng được."
+    ],
+    "fold": true
    },
    {
     "h": "Nguồn gốc",
     "p": [
      "Nổi lên quanh năm 2012: ngôn ngữ Metro của Microsoft (Windows Phone 7 năm 2010, Windows 8 năm 2012) chứng minh nó ở quy mô hệ điều hành, và bản thiết kế lại iOS 7 của Apple năm 2013 kết thúc hẳn thời skeuomorphism. NN/g truy gốc sâu hơn về phong cách chữ Thụy Sĩ/Quốc tế.",
      "Nguồn: hai bài của Nielsen Norman Group, một về nguồn gốc và vấn đề của Flat Design, một về việc phần tử UI phẳng thu hút ít chú ý hơn và gây bối rối."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Các mục được nhắc",
@@ -2894,7 +2946,8 @@ window.NT_FULL = {
      "Skeuomorphism: Phong cách (Style)",
      "Minimalism: Phong cách (Style)",
      "Neobrutalism: Phong cách (Style)"
-    ]
+    ],
+    "fold": true
    }
   ],
   "card": {
@@ -2929,28 +2982,32 @@ window.NT_FULL = {
    {
     "h": "Nếu bạn từng gọi nó là…",
     "p": [
-     "…thì ý bạn là Frutiger Aero.",
-     "• bóng bóng loáng, cỏ xanh, cửa sổ cũ, tương lai",
-     "• không khí hình nền trời xanh cỏ xanh với nút sáng bóng",
-     "• giọt nước, cá và giao diện thủy tinh năm 2008",
-     "• kiểu công nghệ thiên nhiên bóng sạch như windows cũ",
-     "• bong bóng bay trên nền gradient xanh sáng"
+     "…thì ý bạn là Frutiger Aero."
+    ],
+    "b": [
+     "bóng bóng loáng, cỏ xanh, cửa sổ cũ, tương lai",
+     "không khí hình nền trời xanh cỏ xanh với nút sáng bóng",
+     "giọt nước, cá và giao diện thủy tinh năm 2008",
+     "kiểu công nghệ thiên nhiên bóng sạch như windows cũ",
+     "bong bóng bay trên nền gradient xanh sáng"
     ]
    },
    {
     "h": "Dấu hiệu định nghĩa",
-    "p": [
-     "• Nature fused with tech (hình ảnh và đồ trang trí): bầu trời, nước, cỏ, lá, cá và bong bóng là thế giới bao quanh mà UI nổi trong đó; sinh thái được dùng như lời hứa của công nghệ.",
-     "• Glossy glass and aqua surfaces (bề mặt và chất liệu): tấm và nút trong mờ có vệt sáng cong mạnh, độ bóng ướt đầy ánh sáng chứ không phải lớp mờ đục.",
-     "• Sky-blue / grass-green palette (màu và độ tương phản): xanh lơ phát sáng và xanh lá tươi cùng ánh sáng trắng, tươi, sạch, ấm sáng, không bao giờ đục.",
-     "• Clean humanist sans type (kiểu chữ): sans-serif humanist bo tròn thân thiện (kiểu Frutiger/Segoe) màu trắng hoặc xanh trời đậm, hướng tới sự rõ ràng chứ không phải chất kỹ thuật."
+    "p": [],
+    "b": [
+     "Nature fused with tech (hình ảnh và đồ trang trí): bầu trời, nước, cỏ, lá, cá và bong bóng là thế giới bao quanh mà UI nổi trong đó; sinh thái được dùng như lời hứa của công nghệ.",
+     "Glossy glass and aqua surfaces (bề mặt và chất liệu): tấm và nút trong mờ có vệt sáng cong mạnh, độ bóng ướt đầy ánh sáng chứ không phải lớp mờ đục.",
+     "Sky-blue / grass-green palette (màu và độ tương phản): xanh lơ phát sáng và xanh lá tươi cùng ánh sáng trắng, tươi, sạch, ấm sáng, không bao giờ đục.",
+     "Clean humanist sans type (kiểu chữ): sans-serif humanist bo tròn thân thiện (kiểu Frutiger/Segoe) màu trắng hoặc xanh trời đậm, hướng tới sự rõ ràng chứ không phải chất kỹ thuật."
     ]
    },
    {
     "h": "Style brief: dán vào agent",
     "p": [
      "Hãy dựng sản phẩm theo Frutiger Aero. Dấu hiệu định nghĩa: hình ảnh thiên nhiên hòa với công nghệ (trời xanh, nước, cỏ, bong bóng, tia sáng) làm phông nền bao quanh; bề mặt 'aqua' bóng trong mờ với vệt sáng cong; bảng màu xanh trời và xanh cỏ phát sáng, đầy ánh sáng trắng; chữ sans-serif humanist sạch (kiểu Frutiger/Segoe). Phụ trợ: vòng tròn bokeh, tia nắng, vệt sáng quét chéo. Giữ linh hoạt phần thiên nhiên cụ thể (dưới nước, đồng cỏ, giọt nước). Dùng các lớp gradient radial/linear chồng nhau cho bầu trời và mũ bóng, lớp phủ trắng rgba cho độ lóng lánh, và nhiều panel bo tròn rộng rãi. Đừng trôi sang Y2K; điểm quyết định là thiên nhiên, nếu crôm, chữ kỹ thuật hay lưới mạng thay chỗ bầu trời và cỏ thì bạn đã vượt qua ranh giới. Giữ tương phản chữ 4.5:1 trên nền ảnh (đặt chữ trên một panel), trạng thái focus thấy được, và hỗ trợ giảm chuyển động cho các hiệu ứng lóng lánh và bong bóng."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Hay bị nhầm với",
@@ -2959,43 +3016,52 @@ window.NT_FULL = {
      "Y2K Digital Aesthetic: Đây là Frutiger Aero vì độ bóng phục vụ sự lạc quan công nghệ-thiên nhiên, với trời, nước, cỏ và bong bóng phía sau chữ humanist sạch. Nó sẽ thành Y2K nếu thiên nhiên rút đi và bề mặt trở nên nhân tạo: crôm, nhựa gel, xanh bạc ánh cầu vồng và chữ techno bản rộng.",
      "So với Glassmorphism: Đây là Frutiger Aero vì kính bóng và trông ướt, được chiếu sáng như một ngày nắng, và không tách khỏi hình ảnh thiên nhiên. Nó sẽ thành glassmorphism nếu các panel dẹt thành hình chữ nhật mờ đục trên nền gradient trừu tượng và câu chuyện thiên nhiên biến mất.",
      "So với Skeuomorphism: Đây là Frutiger Aero vì độ bóng diễn đạt một tâm trạng (công nghệ sinh thái tươi mới), không phải bắt chước một vật cụ thể. Nó sẽ thành skeuomorphism nếu bề mặt bắt chước những chất liệu và đồ vật thật cụ thể như da, giấy, thiết bị vật lý cho sự quen thuộc."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Full style DNA",
-    "p": [
-     "• Hình ảnh và đồ trang trí, cốt lõi: Nature fused with tech. Bầu trời, nước, cỏ, lá, cá và bong bóng là thế giới bao quanh mà UI nổi trong đó, sinh thái như lời hứa của công nghệ.",
-     "• Hình ảnh và đồ trang trí, biến thiên: Which slice of nature. Cảnh dưới nước, đồng cỏ, giọt trên lá, cá vàng, tuabin gió; bất cứ thiên nhiên tươi và nhiều nắng nào cũng đọc ra phong cách này.",
-     "• Bề mặt và chất liệu, cốt lõi: Glossy glass and aqua surfaces. Tấm và nút trong mờ có vệt sáng cong mạnh, độ bóng ướt đầy ánh sáng chứ không phải lớp mờ đục.",
-     "• Bề mặt và chất liệu, nên tránh: Chrome and cyber styling. Crôm gương, chữ techno và lưới khung dây kéo không khí về lại chủ nghĩa tương lai Y2K nhân tạo.",
-     "• Màu và độ tương phản, cốt lõi: Sky-blue / grass-green palette. Xanh lơ phát sáng và xanh lá tươi cùng ánh sáng trắng, tươi, sạch, ấm sáng, không bao giờ đục.",
-     "• Kiểu chữ, cốt lõi: Clean humanist sans type. Sans-serif humanist bo tròn thân thiện (kiểu Frutiger/Segoe) màu trắng hoặc xanh trời đậm, hướng tới sự rõ ràng chứ không phải chất kỹ thuật.",
-     "• Chiều sâu và ánh sáng, phụ trợ: Bokeh, rays, and sheen. Vòng sáng mềm, tia nắng xuyên nước và vệt sáng quét chéo cho mọi thứ vẻ lấp lánh như vừa được rửa sạch."
-    ]
+    "p": [],
+    "b": [
+     "Hình ảnh và đồ trang trí, cốt lõi: Nature fused with tech. Bầu trời, nước, cỏ, lá, cá và bong bóng là thế giới bao quanh mà UI nổi trong đó, sinh thái như lời hứa của công nghệ.",
+     "Hình ảnh và đồ trang trí, biến thiên: Which slice of nature. Cảnh dưới nước, đồng cỏ, giọt trên lá, cá vàng, tuabin gió; bất cứ thiên nhiên tươi và nhiều nắng nào cũng đọc ra phong cách này.",
+     "Bề mặt và chất liệu, cốt lõi: Glossy glass and aqua surfaces. Tấm và nút trong mờ có vệt sáng cong mạnh, độ bóng ướt đầy ánh sáng chứ không phải lớp mờ đục.",
+     "Bề mặt và chất liệu, nên tránh: Chrome and cyber styling. Crôm gương, chữ techno và lưới khung dây kéo không khí về lại chủ nghĩa tương lai Y2K nhân tạo.",
+     "Màu và độ tương phản, cốt lõi: Sky-blue / grass-green palette. Xanh lơ phát sáng và xanh lá tươi cùng ánh sáng trắng, tươi, sạch, ấm sáng, không bao giờ đục.",
+     "Kiểu chữ, cốt lõi: Clean humanist sans type. Sans-serif humanist bo tròn thân thiện (kiểu Frutiger/Segoe) màu trắng hoặc xanh trời đậm, hướng tới sự rõ ràng chứ không phải chất kỹ thuật.",
+     "Chiều sâu và ánh sáng, phụ trợ: Bokeh, rays, and sheen. Vòng sáng mềm, tia nắng xuyên nước và vệt sáng quét chéo cho mọi thứ vẻ lấp lánh như vừa được rửa sạch."
+    ],
+    "fold": true
    },
    {
     "h": "Trong code: các điểm khởi đầu tùy chọn",
     "p": [
-     "Bản brief ở trên không gắn framework nào; dưới đây là vài điểm bám cụ thể nếu stack của bạn khớp.",
-     "• CSS cho thế giới trời trên cỏ: linear-gradient dọc đi từ xanh trời nhạt #8fd3ff qua #3fa9f5 rồi sang xanh cỏ #8fd948 và #4a9e2e.",
-     "• CSS cho mũ bóng aqua: gradient với lớp trắng .55 giảm dần về .06 rồi dừng cứng ở khoảng 50% để tách vệt sáng khỏi thân, cộng border-radius 999px.",
-     "• CSS cho điểm sáng bong bóng/giọt nước: radial-gradient tâm lệch về 35% 30% với lõi trắng đậm mờ dần ra viền."
-    ]
+     "Bản brief ở trên không gắn framework nào; dưới đây là vài điểm bám cụ thể nếu stack của bạn khớp."
+    ],
+    "b": [
+     "CSS cho thế giới trời trên cỏ: linear-gradient dọc đi từ xanh trời nhạt #8fd3ff qua #3fa9f5 rồi sang xanh cỏ #8fd948 và #4a9e2e.",
+     "CSS cho mũ bóng aqua: gradient với lớp trắng .55 giảm dần về .06 rồi dừng cứng ở khoảng 50% để tách vệt sáng khỏi thân, cộng border-radius 999px.",
+     "CSS cho điểm sáng bong bóng/giọt nước: radial-gradient tâm lệch về 35% 30% với lõi trắng đậm mờ dần ra viền."
+    ],
+    "fold": true
    },
    {
     "h": "Khả năng tiếp cận và dùng sai",
-    "p": [
-     "• Chữ trắng đặt thẳng lên ảnh trời/cỏ sẽ trượt tương phản ở vùng sáng; hãy đặt chữ lên panel trong mờ và đo đạt 4.5:1.",
-     "• Vệt bóng cắt ngang nửa trên control có thể làm chìm nhãn; hãy giữ vùng nhãn dưới vệt sáng hoặc làm tối nền phía sau.",
-     "• Bong bóng, tia nắng và vệt lóng lánh chỉ là không khí, không bao giờ là ý nghĩa, và phải dừng khi có prefers-reduced-motion."
-    ]
+    "p": [],
+    "b": [
+     "Chữ trắng đặt thẳng lên ảnh trời/cỏ sẽ trượt tương phản ở vùng sáng; hãy đặt chữ lên panel trong mờ và đo đạt 4.5:1.",
+     "Vệt bóng cắt ngang nửa trên control có thể làm chìm nhãn; hãy giữ vùng nhãn dưới vệt sáng hoặc làm tối nền phía sau.",
+     "Bong bóng, tia nắng và vệt lóng lánh chỉ là không khí, không bao giờ là ý nghĩa, và phải dừng khi có prefers-reduced-motion."
+    ],
+    "fold": true
    },
    {
     "h": "Nguồn gốc",
     "p": [
      "Khoảng 2004 đến 2013 trong công nghệ tiêu dùng (thời Windows Vista/7, UI thiết bị bóng loáng, menu thời Wii, thương hiệu Web 2.0). Được đặt tên hồi tố quanh 2017 bởi các biên mục viên của CARI, theo kiểu chữ humanist của Adrian Frutiger cộng Windows Aero; làn sóng hoài niệm đưa nhãn này thành phổ biến trong thập niên 2020.",
      "Nguồn: trang Frutiger Aero của CARI, và bài của AIGA Eye on Design về thẩm mỹ Y2K (thời đại kế bên)."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Các mục được nhắc",
@@ -3005,7 +3071,8 @@ window.NT_FULL = {
      "Glassmorphism: Phong cách (Style)",
      "Skeuomorphism: Phong cách (Style)",
      "Visual Effect Material (Vibrancy) (macos): Phần tử macOS"
-    ]
+    ],
+    "fold": true
    }
   ],
   "card": {
@@ -3040,28 +3107,32 @@ window.NT_FULL = {
    {
     "h": "Nếu bạn từng gọi nó là…",
     "p": [
-     "…thì ý bạn là Glassmorphism.",
-     "• các thẻ mờ như kính đục đặt trên hình nền nhiều màu",
-     "• hiệu ứng thẻ nhòe nhìn xuyên được",
-     "• các panel làm nhòe mọi thứ phía sau",
-     "• thẻ trong suốt đục như sữa với viền sáng mỏng",
-     "• kiểu dashboard trong mờ có nền gradient"
+     "…thì ý bạn là Glassmorphism."
+    ],
+    "b": [
+     "các thẻ mờ như kính đục đặt trên hình nền nhiều màu",
+     "hiệu ứng thẻ nhòe nhìn xuyên được",
+     "các panel làm nhòe mọi thứ phía sau",
+     "thẻ trong suốt đục như sữa với viền sáng mỏng",
+     "kiểu dashboard trong mờ có nền gradient"
     ]
    },
    {
     "h": "Dấu hiệu định nghĩa",
-    "p": [
-     "• Frosted translucent panels (bề mặt và chất liệu): bề mặt bán trong suốt với độ nhòe nền mạnh, nội dung phía sau thấy được nhưng mềm đi như kính mờ.",
-     "• Vivid backdrop showing through (màu và độ tương phản): một gradient, ảnh hay cực quang nhiều màu nằm sau kính; màu của nó thấm qua mọi panel và chiếm phần lớn bảng màu.",
-     "• Thin light edge (hình học và viền): viền trắng bán trong suốt 1px (thường sáng hơn ở trên) bắt lấy mép từng panel, tách kính này với kính kia.",
-     "• Layered floating depth (chiều sâu và ánh sáng): panel nổi trên nền và nổi lên nhau bằng bóng rộng và mềm; chồng các tấm là một phần của diện mạo."
+    "p": [],
+    "b": [
+     "Frosted translucent panels (bề mặt và chất liệu): bề mặt bán trong suốt với độ nhòe nền mạnh, nội dung phía sau thấy được nhưng mềm đi như kính mờ.",
+     "Vivid backdrop showing through (màu và độ tương phản): một gradient, ảnh hay cực quang nhiều màu nằm sau kính; màu của nó thấm qua mọi panel và chiếm phần lớn bảng màu.",
+     "Thin light edge (hình học và viền): viền trắng bán trong suốt 1px (thường sáng hơn ở trên) bắt lấy mép từng panel, tách kính này với kính kia.",
+     "Layered floating depth (chiều sâu và ánh sáng): panel nổi trên nền và nổi lên nhau bằng bóng rộng và mềm; chồng các tấm là một phần của diện mạo."
     ]
    },
    {
     "h": "Style brief: dán vào agent",
     "p": [
      "Hãy dựng bề mặt theo glassmorphism. Dấu hiệu định nghĩa: panel bán trong suốt với độ nhòe nền mạnh; nền gradient rực rỡ hoặc nền ảnh có màu thấm qua mọi panel; viền trắng bán trong suốt 1px ở cạnh mỗi panel; chiều sâu nổi tầng với bóng rộng, mềm. Giữ linh hoạt màu và hình ảnh cụ thể của nền. Dùng CSS backdrop-filter với blur 16px, cùng nền rgba trắng alpha 0.12 (hoặc bản tối tương đương) và viền 1px trắng alpha 0.25. Đừng trôi sang Liquid Glass của Apple; điểm quyết định là glassmorphism là lớp da trang trí cho mọi bề mặt, kể cả thẻ nội dung, còn Liquid Glass dành kính riêng cho lớp control nổi phía trên nội dung. Giữ chữ đọc được trên mọi vùng mà nền có thể tạo ra (thêm lớp scrim tương phản nếu cần), control và trạng thái focus thấy được, cùng phương án thay thế khi giảm chuyển động hoặc giảm độ trong suốt."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Hay bị nhầm với",
@@ -3069,43 +3140,52 @@ window.NT_FULL = {
      "Trang có phần so sánh cạnh nhau: cùng một app nhỏ được vẽ ở cả hai phong cách, chỉ có phong cách đổi, nên khác biệt bạn thấy chính là khác biệt thật. Cặp so sánh là Glassmorphism và Liquid Glass.",
      "Liquid Glass: Đây là glassmorphism vì lớp mờ là lớp da trang trí chung, nên thẻ nội dung, dashboard hay cả panel đều có thể là kính đặt trên hình nền bạn chọn. Nó sẽ thành Liquid Glass nếu kính chỉ dành cho lớp CONTROL, gồm thanh, nút, điều hướng nổi trên nội dung app, dùng chất liệu thích ứng của Apple vốn khúc xạ và đổi sắc theo thứ đang cuộn bên dưới.",
      "So với Neumorphism: Đây là glassmorphism vì panel trong suốt và phụ thuộc vào nền nhiều màu nhòe xuyên qua. Nó sẽ thành neumorphism nếu mọi panel trở nên đục và mờ mịn, mang đúng màu nền, với cặp bóng mềm gánh hết phần việc."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Full style DNA",
-    "p": [
-     "• Bề mặt và chất liệu, cốt lõi: Frosted translucent panels. Bề mặt bán trong suốt với độ nhòe nền mạnh; nội dung phía sau thấy được nhưng mềm đi như kính mờ.",
-     "• Bề mặt và chất liệu, nên tránh: Opaque or unblurred panels. Thẻ đặc (hoặc trong suốt mà không nhòe) mất cảm giác kính mờ; chỉ trong suốt thì mới là độ mờ thấp chứ chưa phải kính.",
-     "• Màu và độ tương phản, cốt lõi: Vivid backdrop showing through. Gradient, ảnh hay cực quang nhiều màu nằm sau kính; màu của nó thấm qua mọi panel và chiếm phần lớn bảng màu.",
-     "• Hình học và viền, cốt lõi: Thin light edge. Viền trắng bán trong suốt 1px (thường sáng hơn ở trên) bắt lấy mép từng panel, tách kính này với kính kia.",
-     "• Chiều sâu và ánh sáng, cốt lõi: Layered floating depth. Các panel nổi trên nền và nổi lên nhau bằng bóng rộng và mềm; chồng các tấm là một phần của diện mạo.",
-     "• Kiểu chữ, phụ trợ: Light ink on glass. Chữ và biểu tượng thường trắng hoặc gần trắng, với các bậc trong suốt nhẹ để phân thứ bậc.",
-     "• Hình ảnh và đồ trang trí, biến thiên: What the backdrop is. Lưới gradient, cực quang, ảnh chụp hay mảng màu thương hiệu; miễn rực rỡ và mềm thì được, công thức kính vẫn giữ nguyên."
-    ]
+    "p": [],
+    "b": [
+     "Bề mặt và chất liệu, cốt lõi: Frosted translucent panels. Bề mặt bán trong suốt với độ nhòe nền mạnh; nội dung phía sau thấy được nhưng mềm đi như kính mờ.",
+     "Bề mặt và chất liệu, nên tránh: Opaque or unblurred panels. Thẻ đặc (hoặc trong suốt mà không nhòe) mất cảm giác kính mờ; chỉ trong suốt thì mới là độ mờ thấp chứ chưa phải kính.",
+     "Màu và độ tương phản, cốt lõi: Vivid backdrop showing through. Gradient, ảnh hay cực quang nhiều màu nằm sau kính; màu của nó thấm qua mọi panel và chiếm phần lớn bảng màu.",
+     "Hình học và viền, cốt lõi: Thin light edge. Viền trắng bán trong suốt 1px (thường sáng hơn ở trên) bắt lấy mép từng panel, tách kính này với kính kia.",
+     "Chiều sâu và ánh sáng, cốt lõi: Layered floating depth. Các panel nổi trên nền và nổi lên nhau bằng bóng rộng và mềm; chồng các tấm là một phần của diện mạo.",
+     "Kiểu chữ, phụ trợ: Light ink on glass. Chữ và biểu tượng thường trắng hoặc gần trắng, với các bậc trong suốt nhẹ để phân thứ bậc.",
+     "Hình ảnh và đồ trang trí, biến thiên: What the backdrop is. Lưới gradient, cực quang, ảnh chụp hay mảng màu thương hiệu; miễn rực rỡ và mềm thì được, công thức kính vẫn giữ nguyên."
+    ],
+    "fold": true
    },
    {
     "h": "Trong code: các điểm khởi đầu tùy chọn",
     "p": [
-     "Bản brief ở trên không gắn framework nào; dưới đây là vài điểm bám cụ thể nếu stack của bạn khớp.",
-     "• CSS cho panel kính cốt lõi: nền trắng alpha .12, backdrop-filter blur 16px, viền 1px trắng alpha .25, border-radius 16px.",
-     "• CSS dự phòng: dùng @supports not (backdrop-filter) để đặt nền tối gần như đục (rgba(30,30,40,.85)) khi trình duyệt không hỗ trợ blur.",
-     "• SwiftUI: .background(.ultraThinMaterial). Material hệ thống xấp xỉ tấm kính mờ (xem thêm Liquid Glass)."
-    ]
+     "Bản brief ở trên không gắn framework nào; dưới đây là vài điểm bám cụ thể nếu stack của bạn khớp."
+    ],
+    "b": [
+     "CSS cho panel kính cốt lõi: nền trắng alpha .12, backdrop-filter blur 16px, viền 1px trắng alpha .25, border-radius 16px.",
+     "CSS dự phòng: dùng @supports not (backdrop-filter) để đặt nền tối gần như đục (rgba(30,30,40,.85)) khi trình duyệt không hỗ trợ blur.",
+     "SwiftUI: .background(.ultraThinMaterial). Material hệ thống xấp xỉ tấm kính mờ (xem thêm Liquid Glass)."
+    ],
+    "fold": true
    },
    {
     "h": "Khả năng tiếp cận và dùng sai",
-    "p": [
-     "• Độ tương phản chữ trên kính không ổn định vì nền chuyển động và thay đổi; hãy đo ở vùng xấu nhất hoặc thêm một lớp scrim tương phản trong mờ phía sau chữ.",
-     "• Tôn trọng prefers-reduced-transparency (và 'Reduce transparency' của hệ điều hành) bằng phương án gần như đục.",
-     "• backdrop-filter tốn kém trên máy yếu; bố cục phải tồn tại được khi thiếu nó, đừng bao giờ giấu nội dung sau một lớp nhòe bị lỗi."
-    ]
+    "p": [],
+    "b": [
+     "Độ tương phản chữ trên kính không ổn định vì nền chuyển động và thay đổi; hãy đo ở vùng xấu nhất hoặc thêm một lớp scrim tương phản trong mờ phía sau chữ.",
+     "Tôn trọng prefers-reduced-transparency (và 'Reduce transparency' của hệ điều hành) bằng phương án gần như đục.",
+     "backdrop-filter tốn kém trên máy yếu; bố cục phải tồn tại được khi thiếu nó, đừng bao giờ giấu nội dung sau một lớp nhòe bị lỗi."
+    ],
+    "fold": true
    },
    {
     "h": "Nguồn gốc",
     "p": [
      "Hiệu ứng đã có hàng chục năm: kính Aero của Windows Vista (2006), các lớp nhòe của iOS 7 (2013), vibrancy của macOS. Nhưng nhãn phong cách bắt nguồn từ bài viết năm 2020 của Michal Malewicz, sau khi diện mạo này lan khắp Dribbble và các bản thiết kế lại thời Big Sur.",
      "Nguồn: bài về Glassmorphism của Nielsen Norman Group, và phần Materials trong Apple HIG."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Các mục được nhắc",
@@ -3117,7 +3197,8 @@ window.NT_FULL = {
      "Frutiger Aero: Phong cách (Style)",
      "Visual Effect Material (Vibrancy) (macos): Phần tử macOS",
      "Scrim (Backdrop / Overlay): Phong cách (Style)"
-    ]
+    ],
+    "fold": true
    }
   ],
   "card": {
@@ -3152,71 +3233,84 @@ window.NT_FULL = {
    {
     "h": "Nếu bạn từng gọi nó là…",
     "p": [
-     "…thì ý bạn là Liquid Glass.",
-     "• thiết kế mới của apple mà nút trông như giọt nước",
-     "• kiểu giao diện swiftui",
-     "• nút ios trông như kính thật, bẻ cong thứ phía sau",
-     "• kiểu toolbar mới của apple, trong suốt và bồng bềnh",
-     "• tab bar bằng kính nổi trên nội dung app"
+     "…thì ý bạn là Liquid Glass."
+    ],
+    "b": [
+     "thiết kế mới của apple mà nút trông như giọt nước",
+     "kiểu giao diện swiftui",
+     "nút ios trông như kính thật, bẻ cong thứ phía sau",
+     "kiểu toolbar mới của apple, trong suốt và bồng bềnh",
+     "tab bar bằng kính nổi trên nội dung app"
     ]
    },
    {
     "h": "Dấu hiệu định nghĩa",
-    "p": [
-     "• Glass = the control layer (bố cục và bố trí): chỉ control và điều hướng là kính; thanh, nút, thanh trượt nổi phía trên app, còn nội dung bên dưới vẫn đục và đủ tương phản.",
-     "• Lensing, not just blur (chiều sâu và ánh sáng): chất liệu hành xử như thấu kính thật: bẻ và gom ánh sáng từ thứ bên dưới, kèm vệt sáng cạnh rực, phong phú hơn lớp mờ phẳng.",
-     "• Adaptive self-tinting (màu và độ tương phản): kính liên tục đổi sắc theo nội dung cuộn dưới nó và tự chuyển giữa dạng sáng và tối để dễ đọc.",
-     "• Capsule and concentric geometry (hình học và viền): control nghiêng về hình viên thuốc; các góc lồng nhau dùng chung một tâm (bán kính đồng tâm), nên hình kính nằm khít về mặt thị giác trong khung chứa của chúng."
+    "p": [],
+    "b": [
+     "Glass = the control layer (bố cục và bố trí): chỉ control và điều hướng là kính; thanh, nút, thanh trượt nổi phía trên app, còn nội dung bên dưới vẫn đục và đủ tương phản.",
+     "Lensing, not just blur (chiều sâu và ánh sáng): chất liệu hành xử như thấu kính thật: bẻ và gom ánh sáng từ thứ bên dưới, kèm vệt sáng cạnh rực, phong phú hơn lớp mờ phẳng.",
+     "Adaptive self-tinting (màu và độ tương phản): kính liên tục đổi sắc theo nội dung cuộn dưới nó và tự chuyển giữa dạng sáng và tối để dễ đọc.",
+     "Capsule and concentric geometry (hình học và viền): control nghiêng về hình viên thuốc; các góc lồng nhau dùng chung một tâm (bán kính đồng tâm), nên hình kính nằm khít về mặt thị giác trong khung chứa của chúng."
     ]
    },
    {
     "h": "Style brief: dán vào agent",
     "p": [
      "Hãy dựng bề mặt theo tinh thần Liquid Glass của Apple. Dấu hiệu định nghĩa: kính chỉ dành cho lớp control nổi (toolbar, tab bar, nút) phía trên nội dung đục; chất liệu khúc xạ thứ bên dưới, tức nhòe cộng vệt sáng cạnh kiểu khúc xạ chứ không phải lớp mờ phẳng; control đổi sắc thích ứng để dễ đọc trên nội dung thay đổi; hình viên thuốc với bán kính góc đồng tâm. Không hạn chế nội dung nằm dưới. Trên nền tảng Apple hãy dùng API thật: SwiftUI .glassEffect(), glassEffect(.regular, in: .capsule), còn thanh chuẩn tự có hiệu ứng này; trên web thì xấp xỉ bằng backdrop-filter blur kèm saturate, các vệt sáng trong chồng lớp và bo tròn viên thuốc. Đừng trôi sang glassmorphism chung chung; điểm quyết định là nội dung không bao giờ thành kính, chỉ control nổi như kính phía trên nó. Giữ khả năng đọc trên mọi vùng nội dung (chất liệu thật tự thích ứng, bản xấp xỉ của bạn cũng phải vậy), trạng thái focus thấy được, và tôn trọng Reduce Transparency / Reduce Motion."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Hay bị nhầm với",
     "p": [
      "Trang có phần so sánh cạnh nhau: cùng một app nhỏ được vẽ ở cả hai phong cách, chỉ có phong cách đổi, nên khác biệt bạn thấy chính là khác biệt thật. Cặp so sánh là Liquid Glass và Glassmorphism.",
      "Glassmorphism: Đây là Liquid Glass vì kính là chất liệu hệ thống có chức năng, dành riêng cho control và điều hướng nổi phía trên nội dung đục, tự điều chỉnh sắc để dễ đọc. Nó sẽ thành glassmorphism nếu lớp mờ lan sang chính nội dung, tức thẻ trong mờ trên hình nền trang trí, và độ nhòe là lớp da chứ không phải lớp control."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Full style DNA",
-    "p": [
-     "• Bố cục và bố trí, cốt lõi: Glass = the control layer. Chỉ control và điều hướng là kính; thanh, nút, thanh trượt nổi phía trên app, còn nội dung bên dưới vẫn đục và đủ tương phản.",
-     "• Chiều sâu và ánh sáng, cốt lõi: Lensing, not just blur. Chất liệu hành xử như thấu kính thật: bẻ và gom ánh sáng từ thứ bên dưới, kèm vệt sáng cạnh rực, phong phú hơn lớp mờ phẳng.",
-     "• Màu và độ tương phản, cốt lõi: Adaptive self-tinting. Kính liên tục đổi sắc theo nội dung cuộn dưới nó và tự chuyển giữa dạng sáng và tối để dễ đọc.",
-     "• Hình học và viền, cốt lõi: Capsule and concentric geometry. Control nghiêng về hình viên thuốc; các góc lồng nhau dùng chung một tâm (bán kính đồng tâm), nên hình kính khít về mặt thị giác trong khung chứa.",
-     "• Chuyển động, phụ trợ: Controls morph fluidly. Các phần tử kính hợp nhất, tách ra và đổi hình khi ngữ cảnh thay đổi: tab bar co lại khi cuộn, nút bung thành menu.",
-     "• Hình ảnh và đồ trang trí, biến thiên: Underlying content. Bất cứ gì cũng có thể nằm dưới kính (ảnh, bản đồ, danh sách); chất liệu thích ứng theo chúng chứ không đòi một phông nền được chọn sẵn.",
-     "• Bề mặt và chất liệu, nên tránh: Glass content cards. Làm chính nội dung trong mờ, tức thẻ kính trên nền kính, chính là điều hướng dẫn của Apple tránh; đó là glassmorphism chung chung và làm mất khả năng đọc."
-    ]
+    "p": [],
+    "b": [
+     "Bố cục và bố trí, cốt lõi: Glass = the control layer. Chỉ control và điều hướng là kính; thanh, nút, thanh trượt nổi phía trên app, còn nội dung bên dưới vẫn đục và đủ tương phản.",
+     "Chiều sâu và ánh sáng, cốt lõi: Lensing, not just blur. Chất liệu hành xử như thấu kính thật: bẻ và gom ánh sáng từ thứ bên dưới, kèm vệt sáng cạnh rực, phong phú hơn lớp mờ phẳng.",
+     "Màu và độ tương phản, cốt lõi: Adaptive self-tinting. Kính liên tục đổi sắc theo nội dung cuộn dưới nó và tự chuyển giữa dạng sáng và tối để dễ đọc.",
+     "Hình học và viền, cốt lõi: Capsule and concentric geometry. Control nghiêng về hình viên thuốc; các góc lồng nhau dùng chung một tâm (bán kính đồng tâm), nên hình kính khít về mặt thị giác trong khung chứa.",
+     "Chuyển động, phụ trợ: Controls morph fluidly. Các phần tử kính hợp nhất, tách ra và đổi hình khi ngữ cảnh thay đổi: tab bar co lại khi cuộn, nút bung thành menu.",
+     "Hình ảnh và đồ trang trí, biến thiên: Underlying content. Bất cứ gì cũng có thể nằm dưới kính (ảnh, bản đồ, danh sách); chất liệu thích ứng theo chúng chứ không đòi một phông nền được chọn sẵn.",
+     "Bề mặt và chất liệu, nên tránh: Glass content cards. Làm chính nội dung trong mờ, tức thẻ kính trên nền kính, chính là điều hướng dẫn của Apple tránh; đó là glassmorphism chung chung và làm mất khả năng đọc."
+    ],
+    "fold": true
    },
    {
     "h": "Trong code: các điểm khởi đầu tùy chọn",
     "p": [
-     "Bản brief ở trên không gắn framework nào; dưới đây là vài điểm bám cụ thể nếu stack của bạn khớp.",
-     "• SwiftUI: .glassEffect(.regular, in: .capsule). Chất liệu thật; toolbar và tab bar chuẩn tự áp dụng.",
-     "• SwiftUI: GlassEffectContainer { … } cho phép các control kính kề nhau hợp nhất và đổi hình cùng nhau.",
-     "• CSS xấp xỉ trên web: backdrop-filter blur 14px kèm saturate 1.6, nền trắng alpha .08, hai box-shadow inset sáng ở cạnh trên và dưới, border-radius 999px. Dáng viên thuốc na ná thấu kính nhưng không có khúc xạ thật."
-    ]
+     "Bản brief ở trên không gắn framework nào; dưới đây là vài điểm bám cụ thể nếu stack của bạn khớp."
+    ],
+    "b": [
+     "SwiftUI: .glassEffect(.regular, in: .capsule). Chất liệu thật; toolbar và tab bar chuẩn tự áp dụng.",
+     "SwiftUI: GlassEffectContainer { … } cho phép các control kính kề nhau hợp nhất và đổi hình cùng nhau.",
+     "CSS xấp xỉ trên web: backdrop-filter blur 14px kèm saturate 1.6, nền trắng alpha .08, hai box-shadow inset sáng ở cạnh trên và dưới, border-radius 999px. Dáng viên thuốc na ná thấu kính nhưng không có khúc xạ thật."
+    ],
+    "fold": true
    },
    {
     "h": "Khả năng tiếp cận và dùng sai",
-    "p": [
-     "• Chất liệu của Apple tự điều chỉnh để dễ đọc, còn bản web tự chế thì không; hãy thử chữ trên nội dung xấu nhất có thể cuộn xuống dưới và thêm xử lý tương phản.",
-     "• Tôn trọng Reduce Transparency (phương án gần như đục) và Reduce Motion (tắt hiệu ứng đổi hình).",
-     "• Đừng đặt chữ quan trọng thẳng lên kính giả khi chưa đo được 4.5:1 so với nền xấu nhất lúc chạy thật."
-    ]
+    "p": [],
+    "b": [
+     "Chất liệu của Apple tự điều chỉnh để dễ đọc, còn bản web tự chế thì không; hãy thử chữ trên nội dung xấu nhất có thể cuộn xuống dưới và thêm xử lý tương phản.",
+     "Tôn trọng Reduce Transparency (phương án gần như đục) và Reduce Motion (tắt hiệu ứng đổi hình).",
+     "Đừng đặt chữ quan trọng thẳng lên kính giả khi chưa đo được 4.5:1 so với nền xấu nhất lúc chạy thật."
+    ],
+    "fold": true
    },
    {
     "h": "Nguồn gốc",
     "p": [
      "Apple giới thiệu tại WWDC 2025 như ngôn ngữ thiết kế thống nhất đầu tiên trên iPhone, iPad, Mac, Watch và TV. Apple nêu quang học kính của visionOS là nguồn cảm hứng, và phát hành nó như chất liệu hệ thống kèm API SwiftUI/UIKit/AppKit chứ không phải một chủ đề hình thức đơn thuần.",
      "Nguồn: trang Liquid Glass trong Technology Overviews của Apple, phần Materials trong Apple HIG, và trang SwiftUI của Apple (framework mà người ta gọi là 'diện mạo SwiftUI')."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Các mục được nhắc",
@@ -3226,7 +3320,8 @@ window.NT_FULL = {
      "Visual Effect Material (Vibrancy) (macos): Phần tử macOS",
      "Toolbar (Unified Title Bar) (macos): Phần tử macOS",
      "Sheet (macos): Phần tử macOS"
-    ]
+    ],
+    "fold": true
    }
   ],
   "card": {
@@ -3261,29 +3356,33 @@ window.NT_FULL = {
    {
     "h": "Nếu bạn từng gọi nó là…",
     "p": [
-     "…thì ý bạn là Minimalism.",
-     "• trang gần như không có gì",
-     "• khoảng trống khổng lồ và một nút",
-     "• tiêu đề khổng lồ và rất nhiều khoảng trắng",
-     "• trang kiểu apple chỉ có một sản phẩm và không gì khác",
-     "• website về cơ bản chỉ là chữ và không khí",
-     "• bỏ hết thứ không cần thiết tới khi chỉ còn thông điệp"
+     "…thì ý bạn là Minimalism."
+    ],
+    "b": [
+     "trang gần như không có gì",
+     "khoảng trống khổng lồ và một nút",
+     "tiêu đề khổng lồ và rất nhiều khoảng trắng",
+     "trang kiểu apple chỉ có một sản phẩm và không gì khác",
+     "website về cơ bản chỉ là chữ và không khí",
+     "bỏ hết thứ không cần thiết tới khi chỉ còn thông điệp"
     ]
    },
    {
     "h": "Dấu hiệu định nghĩa",
-    "p": [
-     "• Negative space as material (bố cục và bố trí): khoảng trống mang tính chủ ý và rộng rãi; nội dung lơ lửng trong không khí, và không gian quanh một vật là thứ khiến nó có ý nghĩa.",
-     "• Restricted element count (bố cục và bố trí): trên màn hình có ít thứ và mỗi thứ phải xứng đáng chỗ đứng: một điều hướng, một thông điệp, một hành động; trang trí bị xóa đi chứ không được tạo kiểu lại.",
-     "• Limited or monochrome palette (màu và độ tương phản): tối đa một hai tông màu, thường chỉ đen/trắng/xám với một màu nhấn; tiết chế màu là một phần của sự tiết chế.",
-     "• Dramatic typography (kiểu chữ): khi hình ảnh và đồ trang trí đã mất, chữ phải lớn lên: tiêu đề cỡ khổng lồ thường là thành phần ồn ào nhất của trang."
+    "p": [],
+    "b": [
+     "Negative space as material (bố cục và bố trí): khoảng trống mang tính chủ ý và rộng rãi; nội dung lơ lửng trong không khí, và không gian quanh một vật là thứ khiến nó có ý nghĩa.",
+     "Restricted element count (bố cục và bố trí): trên màn hình có ít thứ và mỗi thứ phải xứng đáng chỗ đứng: một điều hướng, một thông điệp, một hành động; trang trí bị xóa đi chứ không được tạo kiểu lại.",
+     "Limited or monochrome palette (màu và độ tương phản): tối đa một hai tông màu, thường chỉ đen/trắng/xám với một màu nhấn; tiết chế màu là một phần của sự tiết chế.",
+     "Dramatic typography (kiểu chữ): khi hình ảnh và đồ trang trí đã mất, chữ phải lớn lên: tiêu đề cỡ khổng lồ thường là thành phần ồn ào nhất của trang."
     ]
    },
    {
     "h": "Style brief: dán vào agent",
     "p": [
      "Hãy dựng bề mặt theo minimalism. Dấu hiệu định nghĩa: số phần tử ít nhất mà vẫn làm được việc, tức một điều hướng, một thông điệp, một hành động chính, trang trí bị xóa; khoảng trống rộng rãi quanh mọi thứ (hãy nghĩ tới 40 đến 60 phần trăm khung nhìn để trống); bảng màu hạn chế, gần như đơn sắc với tối đa một màu nhấn; một điểm nhấn chữ gây ấn tượng, tiêu đề cỡ lớn là thứ ồn ào nhất trên màn hình. Cách vẽ linh hoạt, mảng phẳng hay bóng tinh tế đều hợp. Đừng nhầm với flat design: minimalism ràng buộc nội dung và bố cục chứ không ràng buộc cách vẽ, nên nếu bạn thêm nội dung trở lại cho tới khi trang rối thì nó hết là tối giản dù phẳng cỡ nào. Giữ khả năng khám phá: hành động cốt lõi phải thấy được, không giấu sau các biểu tượng bí ẩn chỉ để trang trống, và chữ giữ tương phản 4.5:1 ngay cả trong bảng màu xám trên trắng."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Hay bị nhầm với",
@@ -3291,48 +3390,58 @@ window.NT_FULL = {
      "Trang có phần so sánh cạnh nhau: cùng một app nhỏ được vẽ ở cả hai phong cách, chỉ có phong cách đổi, nên khác biệt bạn thấy chính là khác biệt thật. Cặp so sánh là Minimalism và Flat Design.",
      "Flat Design: Đây là minimalism vì chính nội dung đã được rút gọn, ít phần tử, khoảng trống mênh mông, một tiêu đề gây ấn tượng, bất kể cách vẽ. Nó chỉ đơn thuần là Flat Design nếu màn hình lại đầy nội dung và chỉ còn lại cách vẽ 2D không đổ bóng.",
      "So với Web Brutalism: Đây là minimalism vì sự thưa thớt được trau chuốt và có chỉ đạo nghệ thuật, một bố cục được cân nhắc của chữ, khoảng trống và một hành động. Nó sẽ thành web brutalism nếu bỏ phần trau chuốt và để trang lộ ra mặc định thô, như Times New Roman, link xanh, cấu trúc trần, coi đó là tuyên ngôn."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Full style DNA",
-    "p": [
-     "• Bố cục và bố trí, cốt lõi: Negative space as material. Khoảng trống mang tính chủ ý và rộng rãi; nội dung lơ lửng trong không khí, và không gian quanh một vật là thứ khiến nó có ý nghĩa.",
-     "• Bố cục và bố trí, cốt lõi: Restricted element count. Trên màn hình có ít thứ và mỗi thứ xứng đáng chỗ đứng: một điều hướng, một thông điệp, một hành động; trang trí bị xóa chứ không được tạo kiểu lại.",
-     "• Bố cục và bố trí, nên tránh: Crowding and ornament. Một thông điệp thứ hai tranh chỗ, trang trí hoa mỹ hay một bức tường widget dày đặc đều phá phong cách dù trông phẳng thế nào.",
-     "• Màu và độ tương phản, cốt lõi: Limited or monochrome palette. Tối đa một hai tông, thường chỉ đen/trắng/xám với một màu nhấn; tiết chế màu là một phần của sự tiết chế.",
-     "• Kiểu chữ, cốt lõi: Dramatic typography. Khi hình ảnh và đồ trang trí đã mất, chữ phải lớn lên: tiêu đề cỡ khổng lồ thường là thành phần ồn ào nhất trang.",
-     "• Chiều sâu và ánh sáng, biến thiên: Rendering is free. Phần lớn site tối giản vẽ phẳng, nhưng bóng và chiều sâu vẫn được phép; minimalism ràng buộc thứ GÌ được hiện, không ràng buộc nó được chiếu sáng THẾ NÀO."
-    ]
+    "p": [],
+    "b": [
+     "Bố cục và bố trí, cốt lõi: Negative space as material. Khoảng trống mang tính chủ ý và rộng rãi; nội dung lơ lửng trong không khí, và không gian quanh một vật là thứ khiến nó có ý nghĩa.",
+     "Bố cục và bố trí, cốt lõi: Restricted element count. Trên màn hình có ít thứ và mỗi thứ xứng đáng chỗ đứng: một điều hướng, một thông điệp, một hành động; trang trí bị xóa chứ không được tạo kiểu lại.",
+     "Bố cục và bố trí, nên tránh: Crowding and ornament. Một thông điệp thứ hai tranh chỗ, trang trí hoa mỹ hay một bức tường widget dày đặc đều phá phong cách dù trông phẳng thế nào.",
+     "Màu và độ tương phản, cốt lõi: Limited or monochrome palette. Tối đa một hai tông, thường chỉ đen/trắng/xám với một màu nhấn; tiết chế màu là một phần của sự tiết chế.",
+     "Kiểu chữ, cốt lõi: Dramatic typography. Khi hình ảnh và đồ trang trí đã mất, chữ phải lớn lên: tiêu đề cỡ khổng lồ thường là thành phần ồn ào nhất trang.",
+     "Chiều sâu và ánh sáng, biến thiên: Rendering is free. Phần lớn site tối giản vẽ phẳng, nhưng bóng và chiều sâu vẫn được phép; minimalism ràng buộc thứ GÌ được hiện, không ràng buộc nó được chiếu sáng THẾ NÀO."
+    ],
+    "fold": true
    },
    {
     "h": "Trong code: các điểm khởi đầu tùy chọn",
     "p": [
-     "Bản brief ở trên không gắn framework nào; dưới đây là vài điểm bám cụ thể nếu stack của bạn khớp.",
-     "• CSS cho cột chữ hẹp lơ lửng giữa khoảng trống có chủ ý: bề rộng tối đa 34rem (max-width), căn giữa bằng margin-inline: auto, và đệm trên dưới co giãn bằng clamp(4rem, 18vh, 10rem) ở padding-block.",
-     "• CSS cho tiêu đề làm nhân vật chính của bố cục: font-size co giãn bằng clamp từ 2.5rem tới 6rem theo 8vw, khoảng cách chữ -0.03em (letter-spacing) và chiều cao dòng 1.05 (line-height)."
-    ]
+     "Bản brief ở trên không gắn framework nào; dưới đây là vài điểm bám cụ thể nếu stack của bạn khớp."
+    ],
+    "b": [
+     "CSS cho cột chữ hẹp lơ lửng giữa khoảng trống có chủ ý: bề rộng tối đa 34rem (max-width), căn giữa bằng margin-inline: auto, và đệm trên dưới co giãn bằng clamp(4rem, 18vh, 10rem) ở padding-block.",
+     "CSS cho tiêu đề làm nhân vật chính của bố cục: font-size co giãn bằng clamp từ 2.5rem tới 6rem theo 8vw, khoảng cách chữ -0.03em (letter-spacing) và chiều cao dòng 1.05 (line-height)."
+    ],
+    "fold": true
    },
    {
     "h": "Khả năng tiếp cận và dùng sai",
-    "p": [
-     "• Xám nhạt trên nền trắng là lỗi tương phản kinh điển của minimalism; hãy đo chữ ở 4.5:1, kể cả trong bảng màu dịu.",
-     "• Đừng dọn sạch cả những gợi ý thao tác cùng với đồ trang trí: giấu điều hướng hay nhãn chỉ để giữ trang trống là đổi sự bừa bộn lấy sự bí ẩn.",
-     "• Chữ hiển thị cỡ lớn cần clamp co giãn: tiêu đề 96px vừa trên desktop có thể gãy dòng thành bức tường khó đọc trên điện thoại."
-    ]
+    "p": [],
+    "b": [
+     "Xám nhạt trên nền trắng là lỗi tương phản kinh điển của minimalism; hãy đo chữ ở 4.5:1, kể cả trong bảng màu dịu.",
+     "Đừng dọn sạch cả những gợi ý thao tác cùng với đồ trang trí: giấu điều hướng hay nhãn chỉ để giữ trang trống là đổi sự bừa bộn lấy sự bí ẩn.",
+     "Chữ hiển thị cỡ lớn cần clamp co giãn: tiêu đề 96px vừa trên desktop có thể gãy dòng thành bức tường khó đọc trên điện thoại."
+    ],
+    "fold": true
    },
    {
     "h": "Nguồn gốc",
     "p": [
      "Tinh thần giản lược của các phong trào giữa thế kỷ (Bauhaus, typography Thụy Sĩ, 'ít hơn là nhiều hơn') được đem vào giao diện; trên web nó thành giọng điệu thương hiệu 'nghiêm túc' thống trị suốt thập niên 2010, với các trang sản phẩm của Apple là mẫu được chép nhiều nhất. Nghiên cứu định nghĩa của NN/g ra đời năm 2015.",
      "Nguồn: hai bài của Nielsen Norman Group, một về đặc điểm của minimalism trong thiết kế web, một về Flat Design (trục về cách vẽ, được giữ tách biệt)."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Các mục được nhắc",
     "p": [
      "Flat Design: Phong cách (Style)",
      "Web Brutalism: Phong cách (Style)"
-    ]
+    ],
+    "fold": true
    }
   ],
   "card": {
@@ -3367,28 +3476,32 @@ window.NT_FULL = {
    {
     "h": "Nếu bạn từng gọi nó là…",
     "p": [
-     "…thì ý bạn là Neobrutalism.",
-     "• khối màu sáng có viền đen và bóng cứng",
-     "• nút có viền đen dày và bóng đặc không nhòe",
-     "• kiểu website vàng đen trông như nhãn dán",
-     "• giao diện hoạt hình mập mạp với viền đậm",
-     "• phong cách phẳng đậm kiểu gumroad"
+     "…thì ý bạn là Neobrutalism."
+    ],
+    "b": [
+     "khối màu sáng có viền đen và bóng cứng",
+     "nút có viền đen dày và bóng đặc không nhòe",
+     "kiểu website vàng đen trông như nhãn dán",
+     "giao diện hoạt hình mập mạp với viền đậm",
+     "phong cách phẳng đậm kiểu gumroad"
     ]
    },
    {
     "h": "Dấu hiệu định nghĩa",
-    "p": [
-     "• Thick black outlines (hình học và viền): mọi phần tử, từ thẻ, nút, ô nhập tới cả ảnh, đều mang viền đen đặc đồng nhất dày 2 đến 3px, như khung truyện tranh vẽ mực.",
-     "• Hard offset shadows (chiều sâu và ánh sáng): bóng là hình đen đặc dịch xuống phải với độ nhòe bằng KHÔNG, chiều sâu mang tính đồ họa chứ không phải chiếu sáng mô phỏng; khi nhấn, độ lệch này sụp lại.",
-     "• Saturated flat color blocks (màu và độ tương phản): các mảng màu không ngại ngần như vàng, hồng đậm, xanh chanh, xanh lơ xếp phẳng cạnh nhau trên nền kem hoặc trắng, không gradient.",
-     "• Chunky display type (kiểu chữ): grotesk hoặc font hiển thị đậm, vuông vức, thường cỡ lớn; chữ nội dung để trơn để tiêu đề có thể 'hét lên'."
+    "p": [],
+    "b": [
+     "Thick black outlines (hình học và viền): mọi phần tử, từ thẻ, nút, ô nhập tới cả ảnh, đều mang viền đen đặc đồng nhất dày 2 đến 3px, như khung truyện tranh vẽ mực.",
+     "Hard offset shadows (chiều sâu và ánh sáng): bóng là hình đen đặc dịch xuống phải với độ nhòe bằng KHÔNG, chiều sâu mang tính đồ họa chứ không phải chiếu sáng mô phỏng; khi nhấn, độ lệch này sụp lại.",
+     "Saturated flat color blocks (màu và độ tương phản): các mảng màu không ngại ngần như vàng, hồng đậm, xanh chanh, xanh lơ xếp phẳng cạnh nhau trên nền kem hoặc trắng, không gradient.",
+     "Chunky display type (kiểu chữ): grotesk hoặc font hiển thị đậm, vuông vức, thường cỡ lớn; chữ nội dung để trơn để tiêu đề có thể 'hét lên'."
     ]
    },
    {
     "h": "Style brief: dán vào agent",
     "p": [
      "Hãy dựng bề mặt theo Neobrutalism. Dấu hiệu định nghĩa: viền đen đặc đồng nhất 2 đến 3px trên mọi phần tử; bóng lệch cứng, đen đặc, dịch khoảng 4px xuống phải, độ nhòe bằng 0 (dạng box-shadow với hai độ lệch 4px, bán kính nhòe 0 và màu đen); mảng màu phẳng bão hòa (ví dụ vàng, hồng đậm, xanh chanh) trên nền kem hoặc trắng, không gradient; chữ hiển thị đậm, mập cho tiêu đề. Giữ linh hoạt bảng màu cụ thể và các món trang trí kiểu nhãn dán. Trạng thái active dịch phần tử vào đúng chỗ bóng của nó (transform translate 4px,4px và bỏ bóng). Đừng trôi sang Web Brutalism; điểm quyết định là diện mạo này được tạo kiểu rất kỹ, còn bỏ viền, bóng và màu để chuyển sang mặc định trình duyệt mới là brutalist đúng nghĩa. Giữ tương phản chữ 4.5:1 trên mọi khối màu (chữ đen trên nền bão hòa thường đạt; chữ trắng trên vàng thì không bao giờ), chỉ báo focus thấy được và khác với các viền trang trí, cùng hỗ trợ giảm chuyển động cho hiệu ứng ấn."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Hay bị nhầm với",
@@ -3396,44 +3509,53 @@ window.NT_FULL = {
      "Trang có phần so sánh cạnh nhau: cùng một app nhỏ được vẽ ở cả hai phong cách, chỉ có phong cách đổi, nên khác biệt bạn thấy chính là khác biệt thật. Cặp so sánh là Neobrutalism và Web Brutalism.",
      "Web Brutalism: Đây là Neobrutalism vì sự thô ráp chỉ là bộ trang phục được thiết kế: viền dày đồng nhất, bóng lệch cứng và khối bão hòa là các lựa chọn đồ họa có chủ ý. Nó sẽ thành Web Brutalism nếu phần tạo kiểu bị gỡ bỏ thay vì phóng đại: chữ mặc định của trình duyệt, link xanh trơn, cấu trúc trần và hoàn toàn không có hiệu ứng trang trí.",
      "So với Neumorphism: Đây là Neobrutalism vì cạnh là mực đen tương phản tối đa và bóng là hình đồ họa cứng. Nó sẽ thành neumorphism nếu viền biến mất và chiều sâu chuyển sang mềm, control đúc từ một bề mặt mờ với cặp bóng đôi nhòe."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Full style DNA",
-    "p": [
-     "• Hình học và viền, cốt lõi: Thick black outlines. Mọi phần tử, từ thẻ, nút, ô nhập đến cả ảnh, đều mang viền đen đặc đồng nhất dày 2 đến 3px, như khung truyện tranh vẽ mực.",
-     "• Chiều sâu và ánh sáng, cốt lõi: Hard offset shadows. Bóng là hình đen đặc dịch xuống phải với độ nhòe bằng KHÔNG, chiều sâu mang tính đồ họa chứ không phải chiếu sáng mô phỏng; nhấn xuống làm độ lệch sụp lại.",
-     "• Chiều sâu và ánh sáng, nên tránh: Soft rendering. Bóng nhòe, gradient hay trong suốt làm tan hiệu ứng in mực ngay lập tức; sự mềm là kẻ thù.",
-     "• Màu và độ tương phản, cốt lõi: Saturated flat color blocks. Các mảng màu không ngại ngần như vàng, hồng đậm, xanh chanh, xanh lơ xếp phẳng cạnh nhau trên nền kem hoặc trắng, không gradient.",
-     "• Màu và độ tương phản, biến thiên: Which loud palette. Vàng-đen là mẫu sáo mòn nhưng bộ màu bão hòa cao nào cũng được; viền và bóng mới gánh phong cách, không phải một sắc cụ thể.",
-     "• Kiểu chữ, cốt lõi: Chunky display type. Grotesk hoặc font hiển thị đậm, vuông vức, thường cỡ lớn; chữ nội dung để trơn để tiêu đề có thể 'hét lên'.",
-     "• Hình ảnh và đồ trang trí, phụ trợ: Sticker shapes and doodles. Ngôi sao, huy hiệu bầu bĩnh, mũi tên và nét nguệch ngoạc cùng viền đen, rải như nhãn dán.",
-     "• Chuyển động, phụ trợ: Push-into-shadow presses. Trạng thái hover/active dịch phần tử về phía bóng của nó, như ép phẳng một nhãn dán thật."
-    ]
+    "p": [],
+    "b": [
+     "Hình học và viền, cốt lõi: Thick black outlines. Mọi phần tử, từ thẻ, nút, ô nhập đến cả ảnh, đều mang viền đen đặc đồng nhất dày 2 đến 3px, như khung truyện tranh vẽ mực.",
+     "Chiều sâu và ánh sáng, cốt lõi: Hard offset shadows. Bóng là hình đen đặc dịch xuống phải với độ nhòe bằng KHÔNG, chiều sâu mang tính đồ họa chứ không phải chiếu sáng mô phỏng; nhấn xuống làm độ lệch sụp lại.",
+     "Chiều sâu và ánh sáng, nên tránh: Soft rendering. Bóng nhòe, gradient hay trong suốt làm tan hiệu ứng in mực ngay lập tức; sự mềm là kẻ thù.",
+     "Màu và độ tương phản, cốt lõi: Saturated flat color blocks. Các mảng màu không ngại ngần như vàng, hồng đậm, xanh chanh, xanh lơ xếp phẳng cạnh nhau trên nền kem hoặc trắng, không gradient.",
+     "Màu và độ tương phản, biến thiên: Which loud palette. Vàng-đen là mẫu sáo mòn nhưng bộ màu bão hòa cao nào cũng được; viền và bóng mới gánh phong cách, không phải một sắc cụ thể.",
+     "Kiểu chữ, cốt lõi: Chunky display type. Grotesk hoặc font hiển thị đậm, vuông vức, thường cỡ lớn; chữ nội dung để trơn để tiêu đề có thể 'hét lên'.",
+     "Hình ảnh và đồ trang trí, phụ trợ: Sticker shapes and doodles. Ngôi sao, huy hiệu bầu bĩnh, mũi tên và nét nguệch ngoạc cùng viền đen, rải như nhãn dán.",
+     "Chuyển động, phụ trợ: Push-into-shadow presses. Trạng thái hover/active dịch phần tử về phía bóng của nó, như ép phẳng một nhãn dán thật."
+    ],
+    "fold": true
    },
    {
     "h": "Trong code: các điểm khởi đầu tùy chọn",
     "p": [
-     "Bản brief ở trên không gắn framework nào; dưới đây là vài điểm bám cụ thể nếu stack của bạn khớp.",
-     "• CSS cho cấu trúc thẻ/nút đặc trưng: viền 2px đen đặc, bóng lệch 4px 4px không nhòe màu đen, border-radius 8px.",
-     "• CSS cho tương tác ép vào bóng: ở :active, dịch phần tử đi 4px sang phải và xuống, đồng thời bỏ bóng.",
-     "• Tailwind cho cùng cấu trúc bằng các tiện ích: border-2 border-black, giá trị bóng tùy ý cho độ lệch 4px không nhòe, và ở active thì dịch x, y một đơn vị cùng shadow-none."
-    ]
+     "Bản brief ở trên không gắn framework nào; dưới đây là vài điểm bám cụ thể nếu stack của bạn khớp."
+    ],
+    "b": [
+     "CSS cho cấu trúc thẻ/nút đặc trưng: viền 2px đen đặc, bóng lệch 4px 4px không nhòe màu đen, border-radius 8px.",
+     "CSS cho tương tác ép vào bóng: ở :active, dịch phần tử đi 4px sang phải và xuống, đồng thời bỏ bóng.",
+     "Tailwind cho cùng cấu trúc bằng các tiện ích: border-2 border-black, giá trị bóng tùy ý cho độ lệch 4px không nhòe, và ở active thì dịch x, y một đơn vị cùng shadow-none."
+    ],
+    "fold": true
    },
    {
     "h": "Khả năng tiếp cận và dùng sai",
-    "p": [
-     "• Các mảng bão hòa cần được kiểm tra tương phản chữ: mực đen trên vàng/xanh chanh đạt dễ dàng, còn mực trắng trên vàng, hồng hay xanh lơ thường trượt 4.5:1.",
-     "• Viền đen trang trí trông giống vòng focus; hãy cho focus bàn phím một chỉ báo riêng, dễ thấy hơn (ví dụ viền offset bằng một màu dành riêng).",
-     "• Lời cảnh báo của NN/g: độ ồn ào làm tốn khả năng đọc khi đọc lâu; giữ chữ nội dung trơn và dành sự hét lên cho cấu trúc và hành động."
-    ]
+    "p": [],
+    "b": [
+     "Các mảng bão hòa cần được kiểm tra tương phản chữ: mực đen trên vàng/xanh chanh đạt dễ dàng, còn mực trắng trên vàng, hồng hay xanh lơ thường trượt 4.5:1.",
+     "Viền đen trang trí trông giống vòng focus; hãy cho focus bàn phím một chỉ báo riêng, dễ thấy hơn (ví dụ viền offset bằng một màu dành riêng).",
+     "Lời cảnh báo của NN/g: độ ồn ào làm tốn khả năng đọc khi đọc lâu; giữ chữ nội dung trơn và dành sự hét lên cho cấu trúc và hành động."
+    ],
+    "fold": true
    },
    {
     "h": "Nguồn gốc",
     "p": [
      "Xuất hiện quanh 2020 đến 2022 trên các trang tiếp thị sản phẩm và portfolio (bản thiết kế lại năm 2021 của Gumroad là gương mặt tiêu biểu của thời kỳ), được NN/g lập danh mục năm 2023 như một phản ứng với thiết kế SaaS mềm mại, giống hệt nhau, tức flat design bật hết cỡ với cấu trúc truyện tranh.",
      "Nguồn: bài về Neobrutalism của Nielsen Norman Group, và bài về phát triển web brutalist của Smashing Magazine (trường hợp đối chiếu)."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Các mục được nhắc",
@@ -3443,7 +3565,8 @@ window.NT_FULL = {
      "Flat Design: Phong cách (Style)",
      "Claymorphism: Phong cách (Style)",
      "Badge vs. Chip vs. Pill vs. Tag: Phong cách (Style)"
-    ]
+    ],
+    "fold": true
    }
   ],
   "card": {
@@ -3478,28 +3601,32 @@ window.NT_FULL = {
    {
     "h": "Nếu bạn từng gọi nó là…",
     "p": [
-     "…thì ý bạn là Neumorphism.",
-     "• các nút mềm như bị đẩy nhô ra khỏi nền",
-     "• mọi thứ trông như đúc từ cùng một bề mặt giống đất sét",
-     "• nút gối nổi dập với hai cái bóng",
-     "• control trông như đóng dấu vào trang",
-     "• dashboard xám mềm mà nút không có viền"
+     "…thì ý bạn là Neumorphism."
+    ],
+    "b": [
+     "các nút mềm như bị đẩy nhô ra khỏi nền",
+     "mọi thứ trông như đúc từ cùng một bề mặt giống đất sét",
+     "nút gối nổi dập với hai cái bóng",
+     "control trông như đóng dấu vào trang",
+     "dashboard xám mềm mà nút không có viền"
     ]
    },
    {
     "h": "Dấu hiệu định nghĩa",
-    "p": [
-     "• One continuous surface (bề mặt và chất liệu): control và nền dùng CÙNG một màu mờ; phần tử không được đặt lên trang mà được đúc từ chính nó.",
-     "• Dual soft shadows (chiều sâu và ánh sáng): mỗi phần tử nổi mang hai bóng nhòe: một bóng sáng ở trên trái và một bóng tối ở dưới phải, như được chiếu từ một đèn góc dịu.",
-     "• Pressed (inset) states (chiều sâu và ánh sáng): ô nhập và trạng thái active đảo cặp bóng vào trong, nên phần tử trông như bị ép LÚN vào bề mặt thay vì nhô lên.",
-     "• No borders, whisper contrast (hình học và viền): cạnh chỉ tồn tại ở chỗ bóng nhạt dần; không viền, không màu đặc mạnh; cả UI nằm trong một dải hẹp của một sắc."
+    "p": [],
+    "b": [
+     "One continuous surface (bề mặt và chất liệu): control và nền dùng CÙNG một màu mờ; phần tử không được đặt lên trang mà được đúc từ chính nó.",
+     "Dual soft shadows (chiều sâu và ánh sáng): mỗi phần tử nổi mang hai bóng nhòe: một bóng sáng ở trên trái và một bóng tối ở dưới phải, như được chiếu từ một đèn góc dịu.",
+     "Pressed (inset) states (chiều sâu và ánh sáng): ô nhập và trạng thái active đảo cặp bóng vào trong, nên phần tử trông như bị ép LÚN vào bề mặt thay vì nhô lên.",
+     "No borders, whisper contrast (hình học và viền): cạnh chỉ tồn tại ở chỗ bóng nhạt dần; không viền, không màu đặc mạnh; cả UI nằm trong một dải hẹp của một sắc."
     ]
    },
    {
     "h": "Style brief: dán vào agent",
     "p": [
      "Hãy dựng bề mặt theo neumorphism (Soft UI). Dấu hiệu định nghĩa: control dùng đúng màu mờ của nền; phần tử nổi có cặp bóng mềm (sáng trên trái, tối dưới phải); trạng thái nhấn/ô nhập đảo bóng vào trong (inset); không viền ở bất cứ đâu; góc bo rộng rãi. Giữ linh hoạt sắc nền (kinh điển là xám xanh nhạt như #e0e5ec) và cho phép một màu nhấn bão hòa cho hành động chính. Dùng cặp box-shadow trong CSS, ví dụ phần nổi gồm một bóng trắng alpha .85 lệch -6px -6px nhòe 12px và một bóng xám xanh lệch 6px 6px nhòe 12px; phần nhấn dùng đúng cặp đó nhưng thêm inset. Đừng trôi sang skeuomorphism; điểm quyết định là bề mặt neumorphic là một lớp mờ đồng nhất không có chất liệu, tức không vân, không độ bóng, không bắt chước chất liệu. Giữ độ tương phản chữ đọc được, một dấu hiệu không dựa vào bóng cho focus và trạng thái (tương phản phi văn bản theo WCAG sẽ trượt nếu chỉ có bóng), và hỗ trợ giảm chuyển động."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Hay bị nhầm với",
@@ -3507,42 +3634,51 @@ window.NT_FULL = {
      "Trang có phần so sánh cạnh nhau: cùng một app nhỏ được vẽ ở cả hai phong cách, chỉ có phong cách đổi, nên khác biệt bạn thấy chính là khác biệt thật. Cặp so sánh là Neumorphism và Skeuomorphism.",
      "Skeuomorphism: Đây là neumorphism vì control và nền là một bề mặt mờ không chất liệu, chỉ được tạo hình bằng cặp bóng mềm. Nó sẽ thành skeuomorphism nếu bề mặt bắt đầu bắt chước các chất liệu thật gọi tên được như vân da, nhựa bóng, kim loại chải, kèm họa tiết và ẩn dụ đồ vật.",
      "So với Glassmorphism: Đây là neumorphism vì mọi phần tử đều đục và mang đúng màu nền, chiều sâu đến từ bóng chứ không từ độ trong suốt. Nó sẽ thành glassmorphism nếu panel trở nên trong mờ như kính nhám, để nền nhiều màu nhòe xuyên qua phía sau."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Full style DNA",
-    "p": [
-     "• Bề mặt và chất liệu, cốt lõi: One continuous surface. Control và nền dùng CÙNG một màu mờ; phần tử không được đặt lên trang mà được đúc từ chính nó.",
-     "• Chiều sâu và ánh sáng, cốt lõi: Dual soft shadows. Mỗi phần tử nổi mang hai bóng nhòe, một sáng ở trên trái và một tối ở dưới phải, như được chiếu từ một đèn góc dịu.",
-     "• Chiều sâu và ánh sáng, cốt lõi: Pressed (inset) states. Ô nhập và trạng thái active đảo cặp bóng vào trong, nên phần tử trông bị ép LÚN vào bề mặt thay vì nhô lên.",
-     "• Hình học và viền, cốt lõi: No borders, whisper contrast. Cạnh chỉ tồn tại ở chỗ bóng nhạt dần; không viền, không màu đặc mạnh; cả UI nằm trong một dải hẹp của một sắc.",
-     "• Hình học và viền, phụ trợ: Generous rounded corners. Bán kính lớn và mềm ở mọi nơi; góc sắc sẽ phá ảo giác đúc khối.",
-     "• Màu và độ tương phản, biến thiên: Any single base hue. Kinh điển là xám xanh nhạt (#e0e5ec), nhưng hiệu ứng chạy trên mọi nền sáng, độ bão hòa thấp; một màu nhấn bão hòa có thể được giữ cho hành động chính.",
-     "• Hình ảnh và đồ trang trí, nên tránh: Textures and materials. Da, giấy hay độ bóng sẽ kéo skeuomorphism trở lại; bề mặt neumorphic phải mờ, đồng nhất và không chất liệu."
-    ]
+    "p": [],
+    "b": [
+     "Bề mặt và chất liệu, cốt lõi: One continuous surface. Control và nền dùng CÙNG một màu mờ; phần tử không được đặt lên trang mà được đúc từ chính nó.",
+     "Chiều sâu và ánh sáng, cốt lõi: Dual soft shadows. Mỗi phần tử nổi mang hai bóng nhòe, một sáng ở trên trái và một tối ở dưới phải, như được chiếu từ một đèn góc dịu.",
+     "Chiều sâu và ánh sáng, cốt lõi: Pressed (inset) states. Ô nhập và trạng thái active đảo cặp bóng vào trong, nên phần tử trông bị ép LÚN vào bề mặt thay vì nhô lên.",
+     "Hình học và viền, cốt lõi: No borders, whisper contrast. Cạnh chỉ tồn tại ở chỗ bóng nhạt dần; không viền, không màu đặc mạnh; cả UI nằm trong một dải hẹp của một sắc.",
+     "Hình học và viền, phụ trợ: Generous rounded corners. Bán kính lớn và mềm ở mọi nơi; góc sắc sẽ phá ảo giác đúc khối.",
+     "Màu và độ tương phản, biến thiên: Any single base hue. Kinh điển là xám xanh nhạt (#e0e5ec), nhưng hiệu ứng chạy trên mọi nền sáng, độ bão hòa thấp; một màu nhấn bão hòa có thể được giữ cho hành động chính.",
+     "Hình ảnh và đồ trang trí, nên tránh: Textures and materials. Da, giấy hay độ bóng sẽ kéo skeuomorphism trở lại; bề mặt neumorphic phải mờ, đồng nhất và không chất liệu."
+    ],
+    "fold": true
    },
    {
     "h": "Trong code: các điểm khởi đầu tùy chọn",
     "p": [
-     "Bản brief ở trên không gắn framework nào; dưới đây là vài điểm bám cụ thể nếu stack của bạn khớp.",
-     "• CSS cho phần tử nổi trên nền kinh điển: nền #e0e5ec, hai bóng gồm bóng trắng alpha .85 lệch -6px và bóng xám xanh alpha .6 lệch 6px, mỗi bóng nhòe 12px, border-radius 16px.",
-     "• CSS cho trạng thái nhấn / ô nhập lõm: cặp bóng inset gồm bóng trắng alpha .75 lệch -4px và bóng xám xanh alpha .55 lệch 4px, mỗi bóng nhòe 8px."
-    ]
+     "Bản brief ở trên không gắn framework nào; dưới đây là vài điểm bám cụ thể nếu stack của bạn khớp."
+    ],
+    "b": [
+     "CSS cho phần tử nổi trên nền kinh điển: nền #e0e5ec, hai bóng gồm bóng trắng alpha .85 lệch -6px và bóng xám xanh alpha .6 lệch 6px, mỗi bóng nhòe 12px, border-radius 16px.",
+     "CSS cho trạng thái nhấn / ô nhập lõm: cặp bóng inset gồm bóng trắng alpha .75 lệch -4px và bóng xám xanh alpha .55 lệch 4px, mỗi bóng nhòe 8px."
+    ],
+    "fold": true
    },
    {
     "h": "Khả năng tiếp cận và dùng sai",
-    "p": [
-     "• Dấu ấn của phong cách CHÍNH LÀ vấn đề WCAG: ranh giới chỉ bằng bóng hiếm khi đạt mức tối thiểu 3:1 cho tương phản phi văn bản; hãy thêm vòng focus thật và ít nhất một dấu hiệu trạng thái không dựa vào bóng (màu, biểu tượng, nhãn).",
-     "• Trong neumorphism thuần, trạng thái disabled, enabled và pressed trông na ná nhau; người kém thị lực có thể không tìm ra control. NN/g và chính các tác giả đặt tên cũng cảnh báo đừng phát hành nó cho UI chức năng.",
-     "• Nếu vẫn giữ, hãy dành nó cho các khung trang trí lớn và cho phần tử tương tác độ tương phản mạnh hơn mức phong cách này muốn."
-    ]
+    "p": [],
+    "b": [
+     "Dấu ấn của phong cách CHÍNH LÀ vấn đề WCAG: ranh giới chỉ bằng bóng hiếm khi đạt mức tối thiểu 3:1 cho tương phản phi văn bản; hãy thêm vòng focus thật và ít nhất một dấu hiệu trạng thái không dựa vào bóng (màu, biểu tượng, nhãn).",
+     "Trong neumorphism thuần, trạng thái disabled, enabled và pressed trông na ná nhau; người kém thị lực có thể không tìm ra control. NN/g và chính các tác giả đặt tên cũng cảnh báo đừng phát hành nó cho UI chức năng.",
+     "Nếu vẫn giữ, hãy dành nó cho các khung trang trí lớn và cho phần tử tương tác độ tương phản mạnh hơn mức phong cách này muốn."
+    ],
+    "fold": true
    },
    {
     "h": "Nguồn gốc",
     "p": [
      "Một xu hướng của thời Dribbble: các ảnh 'Skeuomorph Mobile Banking' năm 2019 của Alexander Plyuto lan truyền mạnh, bình luận của Jason Kelley đặt ra cái tên, và các bài 2019 đến 2020 của Michal Malewicz vừa định nghĩa vừa cảnh báo về nó. Nó hầu như chỉ ở dạng ảnh concept, ít sản phẩm phát hành nào chịu nổi cái giá về khả năng tiếp cận.",
      "Nguồn: bài của Michal Malewicz về neumorphism trong giao diện người dùng, và bài Skeuomorphism 101 của Nielsen Norman Group (dòng dõi)."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Các mục được nhắc",
@@ -3551,7 +3687,8 @@ window.NT_FULL = {
      "Claymorphism: Phong cách (Style)",
      "Glassmorphism: Phong cách (Style)",
      "Neobrutalism: Phong cách (Style)"
-    ]
+    ],
+    "fold": true
    }
   ],
   "card": {
@@ -3586,28 +3723,32 @@ window.NT_FULL = {
    {
     "h": "Nếu bạn từng gọi nó là…",
     "p": [
-     "…thì ý bạn là Skeuomorphism.",
-     "• app trông như cuốn sổ da thật",
-     "• nút trông như nút vật lý bóng loáng bạn có thể ấn",
-     "• app iphone cũ có đường khâu và vân giấy",
-     "• cái máy tính trông như máy tính thật",
-     "• vân thật như gỗ và kim loại trong giao diện"
+     "…thì ý bạn là Skeuomorphism."
+    ],
+    "b": [
+     "app trông như cuốn sổ da thật",
+     "nút trông như nút vật lý bóng loáng bạn có thể ấn",
+     "app iphone cũ có đường khâu và vân giấy",
+     "cái máy tính trông như máy tính thật",
+     "vân thật như gỗ và kim loại trong giao diện"
     ]
    },
    {
     "h": "Dấu hiệu định nghĩa",
-    "p": [
-     "• Simulated real materials (bề mặt và chất liệu): bề mặt trông như làm từ vật lý nào đó, như da, giấy, vải lanh, kim loại chải, nỉ xanh, thường kèm vân hoặc thớ nhìn thấy được.",
-     "• Physical lighting model (chiều sâu và ánh sáng): vệt sáng bóng, vát cạnh và bóng trong gợi ra nguồn sáng: nút phồng ra, ô nhập lõm vào, cạnh bắt sáng.",
-     "• Real-object metaphors (hình ảnh và đồ trang trí): UI được vẽ CHÍNH LÀ đồ vật mà nó thay thế: sổ ghi chú giấy kẻ dòng, giá sách đầy bìa, núm xoay.",
-     "• Crafted physical details (hình học và viền): đường khâu, mép giấy rách, chữ dập nổi hoặc in ép, đinh tán; những dấu vết trang trí về cách vật 'thật' được chế tạo."
+    "p": [],
+    "b": [
+     "Simulated real materials (bề mặt và chất liệu): bề mặt trông như làm từ vật lý nào đó, như da, giấy, vải lanh, kim loại chải, nỉ xanh, thường kèm vân hoặc thớ nhìn thấy được.",
+     "Physical lighting model (chiều sâu và ánh sáng): vệt sáng bóng, vát cạnh và bóng trong gợi ra nguồn sáng: nút phồng ra, ô nhập lõm vào, cạnh bắt sáng.",
+     "Real-object metaphors (hình ảnh và đồ trang trí): UI được vẽ CHÍNH LÀ đồ vật mà nó thay thế: sổ ghi chú giấy kẻ dòng, giá sách đầy bìa, núm xoay.",
+     "Crafted physical details (hình học và viền): đường khâu, mép giấy rách, chữ dập nổi hoặc in ép, đinh tán; những dấu vết trang trí về cách vật 'thật' được chế tạo."
     ]
    },
    {
     "h": "Style brief: dán vào agent",
     "p": [
      "Hãy dựng bề mặt theo skeuomorphism. Dấu hiệu định nghĩa: control được vẽ như chất liệu vật lý mô phỏng (ví dụ da, giấy, kim loại chải) với vân nhìn thấy được; một mô hình ánh sáng nhất quán, vệt bóng trên phần tử nổi, bóng trong trên ô lõm; ẩn dụ đồ vật thật cho cả bề mặt (một sổ ghi chú vẽ thành giấy kẻ dòng); chi tiết thủ công vật lý như đường khâu hoặc chữ dập nổi. Giữ linh hoạt bảng chất liệu và mật độ cụ thể. Dùng gradient nhiều lớp có vệt sáng phản chiếu, box-shadow inset cho ô lõm, và ảnh vân hoặc nhiễu tinh tế. Đừng trôi sang neumorphism: điểm quyết định là bề mặt skeuomorphic bắt chước chất liệu thật gọi tên được, không phải một bề mặt mềm đồng nhất đùn lên. Giữ độ tương phản chữ đọc được trên nền có vân, control và trạng thái focus thấy được, và hỗ trợ giảm chuyển động."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Hay bị nhầm với",
@@ -3615,43 +3756,52 @@ window.NT_FULL = {
      "Trang có phần so sánh cạnh nhau: cùng một app nhỏ được vẽ ở cả hai phong cách, chỉ có phong cách đổi, nên khác biệt bạn thấy chính là khác biệt thật. Cặp so sánh là Skeuomorphism và Neumorphism.",
      "Neumorphism: Đây là skeuomorphism vì bề mặt bắt chước chất liệu THẬT, gọi tên được, như da, giấy, kim loại, với ánh sáng, vân và ẩn dụ đồ vật phong phú. Nó sẽ thành neumorphism nếu mọi chất liệu và vân biến mất và toàn bộ control được đùn ra từ một bề mặt mờ liền khối với cặp bóng mềm.",
      "So với Frutiger Aero: Đây là skeuomorphism khi mục đích là bắt chước một đồ vật hay chất liệu vật lý cụ thể ngay trong giao diện. Nó sẽ thành Frutiger Aero nếu độ bóng còn đó nhưng chất liệu chuyển thành không khí công nghệ-thiên nhiên xanh lam-xanh lục trong như thủy tinh, gồm trời, nước, cỏ, chứ không phải một đồ vật nào được bắt chước."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Full style DNA",
-    "p": [
-     "• Bề mặt và chất liệu, cốt lõi: Simulated real materials. Bề mặt trông như làm từ vật lý nào đó, như da, giấy, vải lanh, kim loại chải, nỉ xanh, thường kèm vân hoặc thớ nhìn thấy được.",
-     "• Bề mặt và chất liệu, nên tránh: Flat unshaded fills. Các mảng lớn một màu phẳng không có ánh sáng phá ảo giác; đó là cánh cửa quay về Flat Design.",
-     "• Chiều sâu và ánh sáng, cốt lõi: Physical lighting model. Vệt sáng bóng, vát cạnh và bóng trong gợi ra nguồn sáng: nút phồng ra, ô nhập lõm vào, cạnh bắt sáng.",
-     "• Chiều sâu và ánh sáng, phụ trợ: Glossy gradient controls. Nút và thanh mang gradient dọc có vệt sáng phản chiếu ở trên, vẻ 'gel' hay 'aqua' của nhựa bấm được.",
-     "• Hình ảnh và đồ trang trí, cốt lõi: Real-object metaphors. UI được vẽ CHÍNH LÀ đồ vật mà nó thay thế: sổ ghi chú giấy kẻ dòng, giá sách đầy bìa, núm xoay.",
-     "• Hình học và viền, cốt lõi: Crafted physical details. Đường khâu, mép giấy rách, chữ dập nổi hoặc in ép, đinh tán; những dấu vết trang trí về cách vật 'thật' được chế tạo.",
-     "• Màu và độ tương phản, biến thiên: Palette follows the material. Màu đến từ chất liệu được mô phỏng (da nâu vàng, vải lanh xám), nên gần như bảng màu nào cũng có thể skeuomorphic."
-    ]
+    "p": [],
+    "b": [
+     "Bề mặt và chất liệu, cốt lõi: Simulated real materials. Bề mặt trông như làm từ vật lý nào đó, như da, giấy, vải lanh, kim loại chải, nỉ xanh, thường kèm vân hoặc thớ nhìn thấy được.",
+     "Bề mặt và chất liệu, nên tránh: Flat unshaded fills. Các mảng lớn một màu phẳng không có ánh sáng phá ảo giác; đó là cánh cửa quay về Flat Design.",
+     "Chiều sâu và ánh sáng, cốt lõi: Physical lighting model. Vệt sáng bóng, vát cạnh và bóng trong gợi ra nguồn sáng: nút phồng ra, ô nhập lõm vào, cạnh bắt sáng.",
+     "Chiều sâu và ánh sáng, phụ trợ: Glossy gradient controls. Nút và thanh mang gradient dọc có vệt sáng phản chiếu ở trên, vẻ 'gel' hay 'aqua' của nhựa bấm được.",
+     "Hình ảnh và đồ trang trí, cốt lõi: Real-object metaphors. UI được vẽ CHÍNH LÀ đồ vật mà nó thay thế: sổ ghi chú giấy kẻ dòng, giá sách đầy bìa, núm xoay.",
+     "Hình học và viền, cốt lõi: Crafted physical details. Đường khâu, mép giấy rách, chữ dập nổi hoặc in ép, đinh tán; những dấu vết trang trí về cách vật 'thật' được chế tạo.",
+     "Màu và độ tương phản, biến thiên: Palette follows the material. Màu đến từ chất liệu được mô phỏng (da nâu vàng, vải lanh xám), nên gần như bảng màu nào cũng có thể skeuomorphic."
+    ],
+    "fold": true
    },
    {
     "h": "Trong code: các điểm khởi đầu tùy chọn",
     "p": [
-     "Bản brief ở trên không gắn framework nào; dưới đây là vài điểm bám cụ thể nếu stack của bạn khớp.",
-     "• CSS cho control bóng nổi: gradient dọc từ #fdfdfd tới #d8d8d8, kèm box-shadow gồm vệt sáng inset ở cạnh trên và một bóng đổ nhỏ phía dưới. Vệt sáng trên cộng bóng đổ.",
-     "• CSS cho ô lõm: box-shadow inset 0 2px 4px đen alpha .35 trên nền #f3efe6. Bóng trong nhấn ô xuống bề mặt.",
-     "• CSS cho chữ in ép/dập nổi trên chất liệu sáng: text-shadow 0 1px 0 trắng alpha .6."
-    ]
+     "Bản brief ở trên không gắn framework nào; dưới đây là vài điểm bám cụ thể nếu stack của bạn khớp."
+    ],
+    "b": [
+     "CSS cho control bóng nổi: gradient dọc từ #fdfdfd tới #d8d8d8, kèm box-shadow gồm vệt sáng inset ở cạnh trên và một bóng đổ nhỏ phía dưới. Vệt sáng trên cộng bóng đổ.",
+     "CSS cho ô lõm: box-shadow inset 0 2px 4px đen alpha .35 trên nền #f3efe6. Bóng trong nhấn ô xuống bề mặt.",
+     "CSS cho chữ in ép/dập nổi trên chất liệu sáng: text-shadow 0 1px 0 trắng alpha .6."
+    ],
+    "fold": true
    },
    {
     "h": "Khả năng tiếp cận và dùng sai",
-    "p": [
-     "• Chữ trên nền có vân (da, vải lanh, gỗ) cần được đo tương phản 4.5:1 ở VÙNG RỐI nhất của vân, không phải ở màu trung bình.",
-     "• Vát cạnh và độ bóng trang trí không được là dấu hiệu duy nhất của nhấn/không nhấn; hãy gắn trạng thái với đổi màu hoặc đổi nội dung.",
-     "• Ảnh vân nặng làm tăng dung lượng trang; hãy nén chúng và để UI tự đứng được khi không có chúng."
-    ]
+    "p": [],
+    "b": [
+     "Chữ trên nền có vân (da, vải lanh, gỗ) cần được đo tương phản 4.5:1 ở VÙNG RỐI nhất của vân, không phải ở màu trung bình.",
+     "Vát cạnh và độ bóng trang trí không được là dấu hiệu duy nhất của nhấn/không nhấn; hãy gắn trạng thái với đổi màu hoặc đổi nội dung.",
+     "Ảnh vân nặng làm tăng dung lượng trang; hãy nén chúng và để UI tự đứng được khi không có chúng."
+    ],
+    "fold": true
    },
    {
     "h": "Nguồn gốc",
     "p": [
      "Cổ như chính GUI (ẩn dụ màn hình nền thập niên 1980), nhưng nhãn phong cách thường chỉ về thời 2007 đến 2012 của Apple: lịch da, Game Center nỉ và app Podcasts băng cuộn của iOS dưới thời Scott Forstall, chấm dứt công khai bằng bản thiết kế lại phẳng của iOS 7 năm 2013.",
      "Nguồn: bài Skeuomorphism 101 của Nielsen Norman Group, và bài về Flat Design của họ (phong trào đối lập)."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Các mục được nhắc",
@@ -3661,7 +3811,8 @@ window.NT_FULL = {
      "Frutiger Aero: Phong cách (Style)",
      "Y2K Digital Aesthetic: Phong cách (Style)",
      "Aqua: Phong cách (Style)"
-    ]
+    ],
+    "fold": true
    }
   ],
   "card": {
@@ -3696,29 +3847,33 @@ window.NT_FULL = {
    {
     "h": "Nếu bạn từng gọi nó là…",
     "p": [
-     "…thì ý bạn là Vernacular Web.",
-     "• trang geocities cũ đầy gif lấp lánh",
-     "• biển đang xây dựng và bộ đếm khách",
-     "• nền sao lát gạch với đường kẻ cầu vồng",
-     "• chữ NEW nhấp nháy và link sổ lưu bút",
-     "• kiểu trang chủ cá nhân thập niên 90",
-     "• welcome to my home page với ngọn lửa động"
+     "…thì ý bạn là Vernacular Web."
+    ],
+    "b": [
+     "trang geocities cũ đầy gif lấp lánh",
+     "biển đang xây dựng và bộ đếm khách",
+     "nền sao lát gạch với đường kẻ cầu vồng",
+     "chữ NEW nhấp nháy và link sổ lưu bút",
+     "kiểu trang chủ cá nhân thập niên 90",
+     "welcome to my home page với ngọn lửa động"
     ]
    },
    {
     "h": "Dấu hiệu định nghĩa",
-    "p": [
-     "• Tiled background texture (bề mặt và chất liệu): một ảnh nhỏ lặp kín từ mép này sang mép kia, như bầu trời sao đêm, mây, đá cẩm thạch, phía sau mọi thứ; trang có giấy dán tường chứ không có màu nền.",
-     "• Animated GIF ornaments (hình ảnh và đồ trang trí): các tia lấp lánh, ký hiệu @ xoay, đường kẻ rực lửa, biển UNDER CONSTRUCTION kẻ sọc; những hoạt ảnh nhỏ lặp lại chỉ để trang trí.",
-     "• Collected badges and counters (bố cục và bố trí): bộ đếm khách, 'sign my guestbook', nút prev/next của webring, huy hiệu 'best viewed in Netscape'; những chiếc cúp tham gia xếp ở chân trang.",
-     "• Default type, loud accents (kiểu chữ): chữ serif hệ thống hoặc Comic Sans trên giấy dán tường, căn giữa, kèm đường kẻ ngang cầu vồng và nhấn nhiều màu hoặc nhấp nháy; chữ như một lễ hội chứ không phải hệ thống."
+    "p": [],
+    "b": [
+     "Tiled background texture (bề mặt và chất liệu): một ảnh nhỏ lặp kín từ mép này sang mép kia, như bầu trời sao đêm, mây, đá cẩm thạch, phía sau mọi thứ; trang có giấy dán tường chứ không có màu nền.",
+     "Animated GIF ornaments (hình ảnh và đồ trang trí): các tia lấp lánh, ký hiệu @ xoay, đường kẻ rực lửa, biển UNDER CONSTRUCTION kẻ sọc; những hoạt ảnh nhỏ lặp lại chỉ để trang trí.",
+     "Collected badges and counters (bố cục và bố trí): bộ đếm khách, 'sign my guestbook', nút prev/next của webring, huy hiệu 'best viewed in Netscape'; những chiếc cúp tham gia xếp ở chân trang.",
+     "Default type, loud accents (kiểu chữ): chữ serif hệ thống hoặc Comic Sans trên giấy dán tường, căn giữa, kèm đường kẻ ngang cầu vồng và nhấn nhiều màu hoặc nhấp nháy; chữ như một lễ hội chứ không phải hệ thống."
     ]
    },
    {
     "h": "Style brief: dán vào agent",
     "p": [
      "Hãy dựng bề mặt theo phong cách Vernacular Web, tức một trang chủ cá nhân chân thành thời GeoCities thập niên 90, không phải bản nhại. Dấu hiệu định nghĩa: ảnh nền lát lặp (bầu trời sao nhận ra ngay); đồ trang trí kiểu gif hoạt hình, như tia lấp lánh và huy hiệu đang xây dựng kẻ sọc; một cột chữ serif hệ thống căn giữa với đường kẻ ngang gradient cầu vồng giữa các phần; chân trang sưu tầm huy hiệu tham gia gồm bộ đếm khách chữ số LED xanh lá trên nền đen, link 'sign my guestbook', huy hiệu webring, và dòng 'best viewed at 800x600'. Chữ nhấn nhiều màu hoặc nhấp nháy là đúng thời kỳ. Giữ linh hoạt các món trang trí cụ thể, vì không khí là cuốn sổ lưu niệm trang hoàng của một người nghiệp dư đầy tự hào. Đừng trôi sang web brutalism: trang này được trang trí bằng tình yêu, không bao giờ bị lột trần như một tuyên ngôn. Giữ khả năng đọc (panel đặc hoặc tương phản cao phía sau chữ khi nền lát rối), tôn trọng prefers-reduced-motion bằng cách dừng nhấp nháy và lấp lánh, và giữ bộ đếm và huy hiệu ở vai trò trang trí chứ không phải tuyên bố chức năng."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Hay bị nhầm với",
@@ -3726,50 +3881,60 @@ window.NT_FULL = {
      "Trang có phần so sánh cạnh nhau: cùng một app nhỏ được vẽ ở cả hai phong cách, chỉ có phong cách đổi, nên khác biệt bạn thấy chính là khác biệt thật. Cặp so sánh là Vernacular Web và Web Brutalism.",
      "Web Brutalism: Đây là Vernacular Web vì trang được TRANG TRÍ bằng tình yêu, với giấy dán tường, tia lấp lánh, huy hiệu, bộ đếm, do một người nghiệp dư khoe bộ sưu tập của mình. Nó sẽ thành web brutalism nếu mọi trang trí bị lột bỏ và bộ khung HTML trần, gồm chữ mặc định, link xanh, không đồ trang trí, được phơi ra như một tuyên ngôn có chủ ý của nhà thiết kế.",
      "So với Y2K Digital Aesthetic: Đây là Vernacular Web vì vật liệu là đồ tự làm và sưu tầm, như tia lấp lánh trong bộ gif và giấy dán tường lát gạch, mang tính cá nhân và nghiệp dư. Nó sẽ thành Y2K nếu đồ trang trí trở nên chuyên nghiệp và tương lai, như crôm lỏng, lens flare và gradient ánh cầu vồng lấy từ tờ rơi tiệc rave."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Full style DNA",
-    "p": [
-     "• Bề mặt và chất liệu, cốt lõi: Tiled background texture. Một ảnh nhỏ lặp kín từ mép này sang mép kia (bầu trời sao đêm, mây, đá cẩm thạch) phía sau mọi thứ; trang có giấy dán tường chứ không có màu nền.",
-     "• Hình ảnh và đồ trang trí, cốt lõi: Animated GIF ornaments. Tia lấp lánh, ký hiệu @ xoay, đường kẻ rực lửa, biển UNDER CONSTRUCTION kẻ sọc; hoạt ảnh nhỏ lặp lại chỉ để trang trí.",
-     "• Hình ảnh và đồ trang trí, nên tránh: Knowing irony or rawness. Khi phần trang trí trở thành tuyên bố có chủ ý về chính thiết kế (cấu trúc phơi ra, xấu có chủ đích), nó hết là vernacular mà thành brutalism hoặc phản thiết kế.",
-     "• Bố cục và bố trí, cốt lõi: Collected badges and counters. Bộ đếm khách, 'sign my guestbook', nút prev/next của webring, huy hiệu 'best viewed in Netscape'; những chiếc cúp tham gia xếp ở chân trang.",
-     "• Bố cục và bố trí, phụ trợ: One centered column. Mọi thứ căn giữa xuống một cột hẹp, từng phần một, theo cách thẻ <center> làm cho dễ dàng.",
-     "• Kiểu chữ, cốt lõi: Default type, loud accents. Serif hệ thống hoặc Comic Sans trên giấy dán tường, căn giữa, với đường kẻ ngang cầu vồng và nhấn nhiều màu hoặc nhấp nháy; chữ như lễ hội chứ không phải hệ thống.",
-     "• Chuyển động, biến thiên: Ambient extras. MIDI tự phát, vệt con trỏ, marquee cuộn; những món thêm được yêu thích, khác nhau tùy trang."
-    ]
+    "p": [],
+    "b": [
+     "Bề mặt và chất liệu, cốt lõi: Tiled background texture. Một ảnh nhỏ lặp kín từ mép này sang mép kia (bầu trời sao đêm, mây, đá cẩm thạch) phía sau mọi thứ; trang có giấy dán tường chứ không có màu nền.",
+     "Hình ảnh và đồ trang trí, cốt lõi: Animated GIF ornaments. Tia lấp lánh, ký hiệu @ xoay, đường kẻ rực lửa, biển UNDER CONSTRUCTION kẻ sọc; hoạt ảnh nhỏ lặp lại chỉ để trang trí.",
+     "Hình ảnh và đồ trang trí, nên tránh: Knowing irony or rawness. Khi phần trang trí trở thành tuyên bố có chủ ý về chính thiết kế (cấu trúc phơi ra, xấu có chủ đích), nó hết là vernacular mà thành brutalism hoặc phản thiết kế.",
+     "Bố cục và bố trí, cốt lõi: Collected badges and counters. Bộ đếm khách, 'sign my guestbook', nút prev/next của webring, huy hiệu 'best viewed in Netscape'; những chiếc cúp tham gia xếp ở chân trang.",
+     "Bố cục và bố trí, phụ trợ: One centered column. Mọi thứ căn giữa xuống một cột hẹp, từng phần một, theo cách thẻ <center> làm cho dễ dàng.",
+     "Kiểu chữ, cốt lõi: Default type, loud accents. Serif hệ thống hoặc Comic Sans trên giấy dán tường, căn giữa, với đường kẻ ngang cầu vồng và nhấn nhiều màu hoặc nhấp nháy; chữ như lễ hội chứ không phải hệ thống.",
+     "Chuyển động, biến thiên: Ambient extras. MIDI tự phát, vệt con trỏ, marquee cuộn; những món thêm được yêu thích, khác nhau tùy trang."
+    ],
+    "fold": true
    },
    {
     "h": "Trong code: các điểm khởi đầu tùy chọn",
     "p": [
-     "Bản brief ở trên không gắn framework nào; dưới đây là vài điểm bám cụ thể nếu stack của bạn khớp.",
-     "• CSS cho giấy dán tường và cột căn giữa, chiếm nửa diện mạo chỉ trong một quy tắc: nền đen kèm ảnh stars.gif lặp, chữ căn giữa nhờ text-align, và họ chữ serif là Times New Roman.",
-     "• CSS cho đường kẻ cầu vồng giữa các phần: nền linear-gradient 90deg đi qua đỏ, cam, vàng, xanh chanh, xanh lơ, xanh lam, tím hồng; cao 4px.",
-     "• CSS cho chữ NEW! nhấp nháy: @keyframes blink ẩn phần tử ở giữa chu kỳ, áp lên .new trong 1s theo steps(1), lặp vô hạn. Nhớ chặn sau prefers-reduced-motion."
-    ]
+     "Bản brief ở trên không gắn framework nào; dưới đây là vài điểm bám cụ thể nếu stack của bạn khớp."
+    ],
+    "b": [
+     "CSS cho giấy dán tường và cột căn giữa, chiếm nửa diện mạo chỉ trong một quy tắc: nền đen kèm ảnh stars.gif lặp, chữ căn giữa nhờ text-align, và họ chữ serif là Times New Roman.",
+     "CSS cho đường kẻ cầu vồng giữa các phần: nền linear-gradient 90deg đi qua đỏ, cam, vàng, xanh chanh, xanh lơ, xanh lam, tím hồng; cao 4px.",
+     "CSS cho chữ NEW! nhấp nháy: @keyframes blink ẩn phần tử ở giữa chu kỳ, áp lên .new trong 1s theo steps(1), lặp vô hạn. Nhớ chặn sau prefers-reduced-motion."
+    ],
+    "fold": true
    },
    {
     "h": "Khả năng tiếp cận và dùng sai",
-    "p": [
-     "• Chữ nằm thẳng trên nền lát rối thì không đọc được; hãy đặt nội dung trên một panel đặc và để giấy dán tường cho phần lề.",
-     "• Nhấp nháy và lấp lánh phải dừng khi có prefers-reduced-motion, và không thứ gì được nháy nhanh hơn 3 lần một giây (ngưỡng co giật của WCAG).",
-     "• Chữ màu cầu vồng và neon hiếm khi đạt 4.5:1 trên nền tối; hãy dành chúng để trang trí, còn chữ nội dung giữ trơn và tương phản cao."
-    ]
+    "p": [],
+    "b": [
+     "Chữ nằm thẳng trên nền lát rối thì không đọc được; hãy đặt nội dung trên một panel đặc và để giấy dán tường cho phần lề.",
+     "Nhấp nháy và lấp lánh phải dừng khi có prefers-reduced-motion, và không thứ gì được nháy nhanh hơn 3 lần một giây (ngưỡng co giật của WCAG).",
+     "Chữ màu cầu vồng và neon hiếm khi đạt 4.5:1 trên nền tối; hãy dành chúng để trang trí, còn chữ nội dung giữ trơn và tương phản cao."
+    ],
+    "fold": true
    },
    {
     "h": "Nguồn gốc",
     "p": [
      "Web hosting miễn phí giữa thập niên 1990 (GeoCities, Angelfire, Tripod), nơi hàng triệu tác giả lần đầu trang hoàng trang của mình từ các bộ sưu tập gif dùng chung. Olia Lialina ghi lại và đặt tên cho nền văn hóa này trong 'A Vernacular Web' (2005) và cùng Dragan Espenschied lưu giữ một terabyte GeoCities trước khi nó đóng cửa năm 2009.",
      "Nguồn: bài tiểu luận đặt tên A Vernacular Web của Olia Lialina, và One Terabyte of Kilobyte Age, kho ảnh chụp màn hình GeoCities."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Các mục được nhắc",
     "p": [
      "Web Brutalism: Phong cách (Style)",
      "Y2K Digital Aesthetic: Phong cách (Style)"
-    ]
+    ],
+    "fold": true
    }
   ],
   "card": {
@@ -3804,69 +3969,82 @@ window.NT_FULL = {
    {
     "h": "Nếu bạn từng gọi nó là…",
     "p": [
-     "…thì ý bạn là Web Brutalism.",
-     "• website html thô xấu xí",
-     "• site trông như chưa viết css",
-     "• chỉ có Times New Roman và link xanh",
-     "• diện mạo trơ xương kiểu craigslist",
-     "• trang web phơi cấu trúc ra mà không trang trí"
+     "…thì ý bạn là Web Brutalism."
+    ],
+    "b": [
+     "website html thô xấu xí",
+     "site trông như chưa viết css",
+     "chỉ có Times New Roman và link xanh",
+     "diện mạo trơ xương kiểu craigslist",
+     "trang web phơi cấu trúc ra mà không trang trí"
     ]
    },
    {
     "h": "Dấu hiệu định nghĩa",
-    "p": [
-     "• Browser-default materials (kiểu chữ): serif Times/hệ thống hoặc monospace, link xanh mặc định có gạch chân, tím khi đã thăm; bộ chữ trông như chưa tạo kiểu dù là có chủ ý.",
-     "• Exposed document structure (bố cục và bố trí): trang đọc như một tài liệu: tiêu đề, danh sách, bảng và đường chia <hr> theo thứ tự nguồn; cấu trúc CHÍNH LÀ bố cục.",
-     "• Zero decorative rendering (chiều sâu và ánh sáng): không bóng, gradient, bo góc hay chất liệu bắt chước; tối đa viền đặc 1px. Nền trắng phẳng (hoặc một màu).",
-     "• Utility-first density (bố cục và bố trí): thông tin nén chặt và tải tức thì; lập luận thẩm mỹ là tốc độ và sự trung thực, không phải cái đẹp."
+    "p": [],
+    "b": [
+     "Browser-default materials (kiểu chữ): serif Times/hệ thống hoặc monospace, link xanh mặc định có gạch chân, tím khi đã thăm; bộ chữ trông như chưa tạo kiểu dù là có chủ ý.",
+     "Exposed document structure (bố cục và bố trí): trang đọc như một tài liệu: tiêu đề, danh sách, bảng và đường chia <hr> theo thứ tự nguồn; cấu trúc CHÍNH LÀ bố cục.",
+     "Zero decorative rendering (chiều sâu và ánh sáng): không bóng, gradient, bo góc hay chất liệu bắt chước; tối đa viền đặc 1px. Nền trắng phẳng (hoặc một màu).",
+     "Utility-first density (bố cục và bố trí): thông tin nén chặt và tải tức thì; lập luận thẩm mỹ là tốc độ và sự trung thực, không phải cái đẹp."
     ]
    },
    {
     "h": "Style brief: dán vào agent",
     "p": [
      "Hãy dựng trang theo Web Brutalism chặt chẽ. Dấu hiệu định nghĩa: chất liệu mặc định của trình duyệt (serif Times/hệ thống hoặc monospace, link xanh mặc định có gạch chân); cấu trúc tài liệu lộ ra, gồm tiêu đề, danh sách, bảng, đường kẻ ngang theo thứ tự nguồn; không có hiệu ứng trang trí nào (không bóng, gradient hay bo góc; tối đa viền đặc 1px trên nền trơn); mật độ thực dụng tải ngay lập tức. Giữ linh hoạt việc chọn monospace hay serif và điểm nhấn chữ hoa. Dùng HTML ngữ nghĩa với CSS tối thiểu, vì style mặc định của UA chính là thiết kế; tránh các reset làm mềm chúng. Đừng trôi sang Neobrutalism; điểm quyết định là ở đây không có gì được tạo kiểu để trông thô, còn khối màu bão hòa, viền dày được thiết kế và bóng lệch sẽ biến nó thành một bộ trang phục đồ họa. Giữ cỡ chữ đọc được, focus thấy được, và gợi ý link trung thực (gạch chân được giữ)."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Hay bị nhầm với",
     "p": [
      "Trang có phần so sánh cạnh nhau: cùng một app nhỏ được vẽ ở cả hai phong cách, chỉ có phong cách đổi, nên khác biệt bạn thấy chính là khác biệt thật. Cặp so sánh là Web Brutalism và Neobrutalism.",
      "Neobrutalism: Đây là Web Brutalism vì trang thực sự được dựng từ mặc định của trình duyệt, gồm chữ hệ thống, link xanh, cấu trúc trần, hoàn toàn không có hiệu ứng trang trí. Nó sẽ thành Neobrutalism nếu sự thô ráp được tạo kiểu: khối màu bão hòa, viền đen dày đồng nhất, bóng lệch cứng và chữ hiển thị mập, tức một ngôn ngữ đồ họa được thiết kế chứ không phải mặc định."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Full style DNA",
-    "p": [
-     "• Kiểu chữ, cốt lõi: Browser-default materials. Serif Times/hệ thống hoặc monospace, link xanh mặc định có gạch chân, tím khi đã thăm; bộ chữ trông như chưa tạo kiểu dù là có chủ ý.",
-     "• Kiểu chữ, biến thiên: Monospace / all-caps accents. Nhiều site brutalist đổi sang monospace hoặc chữ hoa 'hét' để có hương vị; số khác giữ serif thuần. Cả hai đều được tính.",
-     "• Bố cục và bố trí, cốt lõi: Exposed document structure. Trang đọc như một tài liệu: tiêu đề, danh sách, bảng và đường chia <hr> theo thứ tự nguồn; cấu trúc CHÍNH LÀ bố cục.",
-     "• Bố cục và bố trí, cốt lõi: Utility-first density. Thông tin nén chặt và tải tức thì; lập luận thẩm mỹ là tốc độ và sự trung thực, không phải cái đẹp.",
-     "• Chiều sâu và ánh sáng, cốt lõi: Zero decorative rendering. Không bóng, gradient, bo góc hay chất liệu bắt chước; tối đa viền đặc 1px. Nền trắng phẳng (hoặc một màu).",
-     "• Màu và độ tương phản, nên tránh: Styled 'rawness'. Khối màu bão hòa, viền dày được thiết kế và bóng lệch cứng là bộ trang phục của sự thô ráp; đó là Neobrutalism."
-    ]
+    "p": [],
+    "b": [
+     "Kiểu chữ, cốt lõi: Browser-default materials. Serif Times/hệ thống hoặc monospace, link xanh mặc định có gạch chân, tím khi đã thăm; bộ chữ trông như chưa tạo kiểu dù là có chủ ý.",
+     "Kiểu chữ, biến thiên: Monospace / all-caps accents. Nhiều site brutalist đổi sang monospace hoặc chữ hoa 'hét' để có hương vị; số khác giữ serif thuần. Cả hai đều được tính.",
+     "Bố cục và bố trí, cốt lõi: Exposed document structure. Trang đọc như một tài liệu: tiêu đề, danh sách, bảng và đường chia <hr> theo thứ tự nguồn; cấu trúc CHÍNH LÀ bố cục.",
+     "Bố cục và bố trí, cốt lõi: Utility-first density. Thông tin nén chặt và tải tức thì; lập luận thẩm mỹ là tốc độ và sự trung thực, không phải cái đẹp.",
+     "Chiều sâu và ánh sáng, cốt lõi: Zero decorative rendering. Không bóng, gradient, bo góc hay chất liệu bắt chước; tối đa viền đặc 1px. Nền trắng phẳng (hoặc một màu).",
+     "Màu và độ tương phản, nên tránh: Styled 'rawness'. Khối màu bão hòa, viền dày được thiết kế và bóng lệch cứng là bộ trang phục của sự thô ráp; đó là Neobrutalism."
+    ],
+    "fold": true
    },
    {
     "h": "Trong code: các điểm khởi đầu tùy chọn",
     "p": [
-     "Bản brief ở trên không gắn framework nào; dưới đây là vài điểm bám cụ thể nếu stack của bạn khớp.",
-     "• HTML: các thẻ <h1>, <hr>, <table>, <ul> với style mặc định của UA. Chất liệu CHÍNH LÀ các phần tử.",
-     "• CSS nếu buộc phải viết: nhắc lại mặc định, tức font serif Times New Roman, link màu #0000ee, link đã thăm màu #551a8b."
-    ]
+     "Bản brief ở trên không gắn framework nào; dưới đây là vài điểm bám cụ thể nếu stack của bạn khớp."
+    ],
+    "b": [
+     "HTML: các thẻ <h1>, <hr>, <table>, <ul> với style mặc định của UA. Chất liệu CHÍNH LÀ các phần tử.",
+     "CSS nếu buộc phải viết: nhắc lại mặc định, tức font serif Times New Roman, link màu #0000ee, link đã thăm màu #551a8b."
+    ],
+    "fold": true
    },
    {
     "h": "Khả năng tiếp cận và dùng sai",
-    "p": [
-     "• Brutalism tình cờ lại dễ tiếp cận: cấu trúc ngữ nghĩa, link trung thực, không trang trí ăn mất tương phản, miễn cỡ chữ vẫn đọc được và mật độ chừa đủ vùng chạm lớn.",
-     "• Xanh mặc định trên nền trắng đạt tương phản; hãy giữ outline focus mặc định (bỏ nó là nước đi thật sự phản brutalist duy nhất).",
-     "• Bảng dày đặc cần header/scope đúng cho trình đọc màn hình; thô về hình thức không là cớ cho thô về cấu trúc."
-    ]
+    "p": [],
+    "b": [
+     "Brutalism tình cờ lại dễ tiếp cận: cấu trúc ngữ nghĩa, link trung thực, không trang trí ăn mất tương phản, miễn cỡ chữ vẫn đọc được và mật độ chừa đủ vùng chạm lớn.",
+     "Xanh mặc định trên nền trắng đạt tương phản; hãy giữ outline focus mặc định (bỏ nó là nước đi thật sự phản brutalist duy nhất).",
+     "Bảng dày đặc cần header/scope đúng cho trình đọc màn hình; thô về hình thức không là cớ cho thô về cấu trúc."
+    ],
+    "fold": true
    },
    {
     "h": "Nguồn gốc",
     "p": [
      "Được đặt tên theo phép ẩn dụ với béton brut của kiến trúc ('bê tông trần'); cách dùng trên web lan rộng giữa thập niên 2010 qua brutalistwebsites.com của Pascal Deville và các bài như 'split personality of brutalist web development' của Smashing Magazine, như một phản ứng với sự giống hệt nhau của các site startup bóng bẩy.",
      "Nguồn: bài về tính cách phân đôi của phát triển web brutalist trên Smashing Magazine, và bài về Neobrutalism của Nielsen Norman Group (người anh em được tạo kiểu)."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Các mục được nhắc",
@@ -3876,7 +4054,8 @@ window.NT_FULL = {
      "Vernacular Web: Phong cách (Style)",
      "Form Field: Phong cách (Style)",
      "Focus Ring (:focus-visible): Phong cách (Style)"
-    ]
+    ],
+    "fold": true
    }
   ],
   "card": {
@@ -3911,29 +4090,33 @@ window.NT_FULL = {
    {
     "h": "Nếu bạn từng gọi nó là…",
     "p": [
-     "…thì ý bạn là Windows Aero.",
-     "• viền cửa sổ trong suốt của windows 7",
-     "• thanh tiêu đề kính mờ từ vista",
-     "• nút đóng sáng đỏ khi rê chuột",
-     "• cửa sổ có khung trong suốt nhòe",
-     "• thanh taskbar bằng kính có phản chiếu",
-     "• thanh tiến độ xanh lấp lánh của windows 7"
+     "…thì ý bạn là Windows Aero."
+    ],
+    "b": [
+     "viền cửa sổ trong suốt của windows 7",
+     "thanh tiêu đề kính mờ từ vista",
+     "nút đóng sáng đỏ khi rê chuột",
+     "cửa sổ có khung trong suốt nhòe",
+     "thanh taskbar bằng kính có phản chiếu",
+     "thanh tiến độ xanh lấp lánh của windows 7"
     ]
    },
    {
     "h": "Dấu hiệu định nghĩa",
-    "p": [
-     "• Transparent blurred window frame (chiều sâu và ánh sáng): title bar và viền cửa sổ là kính trong mờ thật; hình nền và các cửa sổ phía sau nhòe xuyên qua chúng, còn vùng nội dung của cửa sổ vẫn đục.",
-     "• Specular sweeps and reflections (bề mặt và chất liệu): những vệt sáng chéo quét qua kính và control như thể vỏ được đánh bóng; phản chiếu là một phần chất liệu chứ không phải điểm nhấn.",
-     "• Glowing hot controls (màu và độ tương phản): control sáng lên dưới con trỏ: nút đóng ngập đỏ, nút thu/phóng sáng xanh, nút nhận một quầng sáng; phát sáng là ngôn ngữ hover.",
-     "• Luminous depth gradients (màu và độ tương phản): xanh lam và xanh lục phát sáng như có đèn nền, thanh tiến độ xanh lá lấp lánh và nền nút ánh xà cừ, không bao giờ là màu phẳng."
+    "p": [],
+    "b": [
+     "Transparent blurred window frame (chiều sâu và ánh sáng): title bar và viền cửa sổ là kính trong mờ thật; hình nền và các cửa sổ phía sau nhòe xuyên qua chúng, còn vùng nội dung của cửa sổ vẫn đục.",
+     "Specular sweeps and reflections (bề mặt và chất liệu): những vệt sáng chéo quét qua kính và control như thể vỏ được đánh bóng; phản chiếu là một phần chất liệu chứ không phải điểm nhấn.",
+     "Glowing hot controls (màu và độ tương phản): control sáng lên dưới con trỏ: nút đóng ngập đỏ, nút thu/phóng sáng xanh, nút nhận một quầng sáng; phát sáng là ngôn ngữ hover.",
+     "Luminous depth gradients (màu và độ tương phản): xanh lam và xanh lục phát sáng như có đèn nền, thanh tiến độ xanh lá lấp lánh và nền nút ánh xà cừ, không bao giờ là màu phẳng."
     ]
    },
    {
     "h": "Style brief: dán vào agent",
     "p": [
      "Hãy dựng bề mặt theo phong cách Windows Aero (Vista/7). Dấu hiệu định nghĩa: khung cửa sổ là kính trong suốt, nhòe, title bar và viền để lộ cảnh phía sau (backdrop-filter blur 12px kèm saturate 1.3 trên lớp phủ trắng/xanh rgba) trong khi vùng nội dung vẫn đục; vệt sáng phản chiếu chéo quét qua kính (một vệt trắng linear-gradient xoay, độ mờ thấp); nút caption PHÁT SÁNG khi hover, nút đóng ngập đỏ với quầng mềm bên ngoài; gradient phát sáng cho phần nhấn, như thanh tiến độ xanh lá lấp lánh (gradient cộng một vệt sáng chạy chậm); viền trong sáng 1px lót mọi tấm kính; góc vỏ bo mềm. Giữ linh hoạt hình nền và bố cục, vì kính cần có thứ nhiều màu phía sau mới đọc ra được. Đừng trôi sang Frutiger Aero: không bắt buộc hình ảnh thiên nhiên, đây là ngôn ngữ phần vỏ chứ không phải bảng cảm hứng của thời đại. Giữ chữ tiêu đề đọc được trên hình nền không đoán trước được (Aero vẽ quầng sáng mềm sau tiêu đề cửa sổ, hãy tái tạo nó), tương phản 4.5:1 cho chữ nội dung, quầng sáng hover đi kèm trạng thái focus thấy được, và phương án giảm chuyển động cho hiệu ứng lấp lánh và hoạt ảnh cửa sổ."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Hay bị nhầm với",
@@ -3942,43 +4125,52 @@ window.NT_FULL = {
      "Frutiger Aero: Đây là Windows Aero vì nó là chính phần vỏ hệ điều hành, gồm khung cửa sổ kính, nút caption phát sáng, thanh tiến độ sáng, do Microsoft phát hành. Nó sẽ thành Frutiger Aero nếu bạn muốn nói TÂM TRẠNG sinh thái-công nghệ lạc quan của cả thời đại, như hình nền thiên nhiên bóng, giọt nước, bầu trời, thứ bao quanh phần vỏ nhưng không phải phần vỏ.",
      "So với Glassmorphism: Đây là Windows Aero vì kính thuộc về kiến trúc, tức khung và title bar của cửa sổ, kèm vệt sáng quét và control phát sáng trong hệ thống của một hãng. Nó sẽ thành glassmorphism nếu kính tách khỏi phần vỏ cửa sổ để thành những THẺ mờ chung chung nổi trên nền nhiều màu, không bị trói vào hệ điều hành nào.",
      "So với Aqua: Đây là Windows Aero vì chất liệu là kiến trúc trong suốt: bạn nhìn XUYÊN qua phần vỏ thấy màn hình nền phía sau. Nó sẽ thành Aqua nếu độ trong suốt biến thành kẹo đục phát sáng, tức nút gel và sọc mà bạn nhìn VÀO chứ không nhìn xuyên."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Full style DNA",
-    "p": [
-     "• Chiều sâu và ánh sáng, cốt lõi: Transparent blurred window frame. Title bar và viền cửa sổ là kính trong mờ thật; hình nền và các cửa sổ phía sau nhòe xuyên qua chúng, còn vùng nội dung của cửa sổ vẫn đục.",
-     "• Bề mặt và chất liệu, cốt lõi: Specular sweeps and reflections. Những vệt sáng chéo quét qua kính và control như thể vỏ được đánh bóng; phản chiếu là một phần chất liệu chứ không phải điểm nhấn.",
-     "• Màu và độ tương phản, cốt lõi: Glowing hot controls. Control sáng lên dưới con trỏ: nút đóng ngập đỏ, nút thu/phóng sáng xanh, nút nhận quầng sáng; phát sáng là ngôn ngữ hover.",
-     "• Màu và độ tương phản, cốt lõi: Luminous depth gradients. Xanh lam và xanh lục phát sáng như có đèn nền, thanh tiến độ xanh lá lấp lánh và nền nút ánh xà cừ, không bao giờ là màu phẳng.",
-     "• Chuyển động, phụ trợ: Smooth window choreography. Cửa sổ mở bằng hoạt ảnh, thu nhỏ bằng cú lướt, và xếp chồng trong Flip 3D; chuyển động được ghép lớp chính là mục đích của engine kết xuất mới.",
-     "• Hình học và viền, phụ trợ: Softly rounded chrome. Góc cửa sổ và nút bo nhẹ, có các vệt sáng viền 1px lót quanh kính.",
-     "• Hình ảnh và đồ trang trí, nên tránh: Nature imagery as requirement. Cỏ, trời và cá thuộc về tâm trạng thời đại chứ không phải vỏ hệ điều hành; nếu cần đến chúng thì bạn đang mô tả Frutiger Aero."
-    ]
+    "p": [],
+    "b": [
+     "Chiều sâu và ánh sáng, cốt lõi: Transparent blurred window frame. Title bar và viền cửa sổ là kính trong mờ thật; hình nền và các cửa sổ phía sau nhòe xuyên qua chúng, còn vùng nội dung của cửa sổ vẫn đục.",
+     "Bề mặt và chất liệu, cốt lõi: Specular sweeps and reflections. Những vệt sáng chéo quét qua kính và control như thể vỏ được đánh bóng; phản chiếu là một phần chất liệu chứ không phải điểm nhấn.",
+     "Màu và độ tương phản, cốt lõi: Glowing hot controls. Control sáng lên dưới con trỏ: nút đóng ngập đỏ, nút thu/phóng sáng xanh, nút nhận quầng sáng; phát sáng là ngôn ngữ hover.",
+     "Màu và độ tương phản, cốt lõi: Luminous depth gradients. Xanh lam và xanh lục phát sáng như có đèn nền, thanh tiến độ xanh lá lấp lánh và nền nút ánh xà cừ, không bao giờ là màu phẳng.",
+     "Chuyển động, phụ trợ: Smooth window choreography. Cửa sổ mở bằng hoạt ảnh, thu nhỏ bằng cú lướt, và xếp chồng trong Flip 3D; chuyển động được ghép lớp chính là mục đích của engine kết xuất mới.",
+     "Hình học và viền, phụ trợ: Softly rounded chrome. Góc cửa sổ và nút bo nhẹ, có các vệt sáng viền 1px lót quanh kính.",
+     "Hình ảnh và đồ trang trí, nên tránh: Nature imagery as requirement. Cỏ, trời và cá thuộc về tâm trạng thời đại chứ không phải vỏ hệ điều hành; nếu cần đến chúng thì bạn đang mô tả Frutiger Aero."
+    ],
+    "fold": true
    },
    {
     "h": "Trong code: các điểm khởi đầu tùy chọn",
     "p": [
-     "Bản brief ở trên không gắn framework nào; dưới đây là vài điểm bám cụ thể nếu stack của bạn khớp.",
-     "• CSS cho khung kính: nền xanh nhạt trong mờ (rgba 190,215,240 với alpha .35), lớp backdrop-filter nhòe 12px tăng bão hòa 1.3, viền 1px trắng alpha .6, và box-shadow hai lớp gồm viền inset sáng cùng một bóng đổ lớn. Đó là nhòe có pha màu cộng viền sáng kép.",
-     "• CSS cho quầng đỏ đặc trưng của nút đóng: ở .close:hover dùng radial-gradient tâm 50% 40% từ #ff9d8a sang #e81123 ở 70%, kèm box-shadow quầng đỏ 10px.",
-     "• CSS cho ánh lấp lánh thanh tiến độ Windows 7: gradient dọc từ #8ef08e qua #1fbf3a ở 45% tới #0f9e2c, phủ thêm một dải gradient trắng rộng 30% chạy từ trái sang phải mỗi 2 giây. Hãy dừng nó khi có prefers-reduced-motion."
-    ]
+     "Bản brief ở trên không gắn framework nào; dưới đây là vài điểm bám cụ thể nếu stack của bạn khớp."
+    ],
+    "b": [
+     "CSS cho khung kính: nền xanh nhạt trong mờ (rgba 190,215,240 với alpha .35), lớp backdrop-filter nhòe 12px tăng bão hòa 1.3, viền 1px trắng alpha .6, và box-shadow hai lớp gồm viền inset sáng cùng một bóng đổ lớn. Đó là nhòe có pha màu cộng viền sáng kép.",
+     "CSS cho quầng đỏ đặc trưng của nút đóng: ở .close:hover dùng radial-gradient tâm 50% 40% từ #ff9d8a sang #e81123 ở 70%, kèm box-shadow quầng đỏ 10px.",
+     "CSS cho ánh lấp lánh thanh tiến độ Windows 7: gradient dọc từ #8ef08e qua #1fbf3a ở 45% tới #0f9e2c, phủ thêm một dải gradient trắng rộng 30% chạy từ trái sang phải mỗi 2 giây. Hãy dừng nó khi có prefers-reduced-motion."
+    ],
+    "fold": true
    },
    {
     "h": "Khả năng tiếp cận và dùng sai",
-    "p": [
-     "• Kính trên một hình nền chưa biết khiến chữ tiêu đề khó đoán; chính Aero đã vẽ một quầng trắng mềm phía sau caption, bạn hãy làm vậy hoặc bảo đảm một lớp nhuộm tối.",
-     "• Quầng sáng hover vô hình với người dùng bàn phím; mọi control phát sáng cần một xử lý :focus-visible rõ ràng không kém.",
-     "• backdrop-filter trên nội dung có hoạt ảnh rất tốn; trên thiết bị yếu hãy cung cấp phương án đặc (chính Vista đã phát hành 'Aero Basic' vì đúng lý do này)."
-    ]
+    "p": [],
+    "b": [
+     "Kính trên một hình nền chưa biết khiến chữ tiêu đề khó đoán; chính Aero đã vẽ một quầng trắng mềm phía sau caption, bạn hãy làm vậy hoặc bảo đảm một lớp nhuộm tối.",
+     "Quầng sáng hover vô hình với người dùng bàn phím; mọi control phát sáng cần một xử lý :focus-visible rõ ràng không kém.",
+     "backdrop-filter trên nội dung có hoạt ảnh rất tốn; trên thiết bị yếu hãy cung cấp phương án đặc (chính Vista đã phát hành 'Aero Basic' vì đúng lý do này)."
+    ],
+    "fold": true
    },
    {
     "h": "Nguồn gốc",
     "p": [
      "Phát hành cùng Windows Vista năm 2006 (các bản cao cấp) như ngọn cờ đầu của kết xuất ghép lớp mới trong Desktop Window Manager, được tinh chỉnh và trở thành mặc định ở Windows 7 (2009); Windows 8 (2012) gỡ lớp kính để thay bằng vỏ Metro phẳng.",
      "Nguồn: thông báo dòng sản phẩm Windows Vista của Microsoft năm 2006 (có mô tả Aero), và Microsoft Learn về Desktop Window Manager (engine đằng sau lớp kính)."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Các mục được nhắc",
@@ -3986,7 +4178,8 @@ window.NT_FULL = {
      "Frutiger Aero: Phong cách (Style)",
      "Glassmorphism: Phong cách (Style)",
      "Aqua: Phong cách (Style)"
-    ]
+    ],
+    "fold": true
    }
   ],
   "card": {
@@ -4021,28 +4214,32 @@ window.NT_FULL = {
    {
     "h": "Nếu bạn từng gọi nó là…",
     "p": [
-     "…thì ý bạn là Y2K Digital Aesthetic.",
-     "• giao diện kẹo cao su crôm của thời điểm bước sang thiên niên kỷ mới",
-     "• chữ kim loại bóng với lens flare như bìa đĩa CD cũ",
-     "• kiểu tương lai bạc và xanh điện của những năm 2000",
-     "• nút bong bóng nhựa bóng giống Mac thuở đầu",
-     "• kiểu tờ rơi rave nhãn dán crôm ánh cầu vồng"
+     "…thì ý bạn là Y2K Digital Aesthetic."
+    ],
+    "b": [
+     "giao diện kẹo cao su crôm của thời điểm bước sang thiên niên kỷ mới",
+     "chữ kim loại bóng với lens flare như bìa đĩa CD cũ",
+     "kiểu tương lai bạc và xanh điện của những năm 2000",
+     "nút bong bóng nhựa bóng giống Mac thuở đầu",
+     "kiểu tờ rơi rave nhãn dán crôm ánh cầu vồng"
     ]
    },
    {
     "h": "Dấu hiệu định nghĩa",
-    "p": [
-     "• Liquid chrome and metal (bề mặt và chất liệu): crôm bóng gương, thép chải và gradient bạc; chữ và khung được vẽ như thể đã gia công và đánh bóng.",
-     "• Gel and glossy plastic (chiều sâu và ánh sáng): nút và blob trong mờ như kẹo với vệt sáng phản chiếu mạnh, độ bóng 'muốn liếm' của thời Aqua.",
-     "• Iridescent blue-silver palette (màu và độ tương phản): xanh điện, bạc, trắng và những chuyển ánh holographic xanh lơ-hồng tím; màu lạnh, nhân tạo, hiếm khi mang chất đất.",
-     "• Wide techno type (kiểu chữ): font techno bản rộng, bo tròn hoặc vuông (hương vị Eurostile), thường nghiêng, tạo viền hoặc phủ crôm."
+    "p": [],
+    "b": [
+     "Liquid chrome and metal (bề mặt và chất liệu): crôm bóng gương, thép chải và gradient bạc; chữ và khung được vẽ như thể đã gia công và đánh bóng.",
+     "Gel and glossy plastic (chiều sâu và ánh sáng): nút và blob trong mờ như kẹo với vệt sáng phản chiếu mạnh, độ bóng 'muốn liếm' của thời Aqua.",
+     "Iridescent blue-silver palette (màu và độ tương phản): xanh điện, bạc, trắng và những chuyển ánh holographic xanh lơ-hồng tím; màu lạnh, nhân tạo, hiếm khi mang chất đất.",
+     "Wide techno type (kiểu chữ): font techno bản rộng, bo tròn hoặc vuông (hương vị Eurostile), thường nghiêng, tạo viền hoặc phủ crôm."
     ]
    },
    {
     "h": "Style brief: dán vào agent",
     "p": [
      "Hãy dựng sản phẩm theo thẩm mỹ số Y2K. Dấu hiệu định nghĩa: bề mặt crôm lỏng/kim loại (nền gradient bạc có vệt sáng gương); nút gel và blob trong mờ bóng với vệt sáng mạnh ở phía trên; bảng màu xanh điện/bạc/trắng ánh cầu vồng, thỉnh thoảng có chuyển ánh holographic xanh lơ-hồng tím; chữ hiển thị techno bản rộng (hương vị Eurostile, thường nghiêng hoặc phủ crôm). Phần phụ trợ, dùng tiết chế: quả cầu dựng 3D, địa cầu, lưới khung dây, lens flare, nhãn chữ pixel nhỏ xíu. Giữ linh hoạt nhiệt độ bảng màu chính xác và mật độ trang trí. Dùng gradient CSS nhiều lớp cho crôm (các điểm dừng sáng/tối xen kẽ), vệt sáng radial-gradient cho gel, và background-clip: text cho chữ phủ crôm. Đừng trôi sang Frutiger Aero; điểm quyết định là sự lạc quan của Y2K là nhân tạo, không cỏ, nước, trời hay ảnh thiên nhiên. Giữ chữ đọc được (chữ crôm cần nền tối hoặc viền để đạt 4.5:1), trạng thái focus thấy được, và hỗ trợ giảm chuyển động cho mọi vệt sáng quét."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Hay bị nhầm với",
@@ -4050,43 +4247,52 @@ window.NT_FULL = {
      "Trang có phần so sánh cạnh nhau: cùng một app nhỏ được vẽ ở cả hai phong cách, chỉ có phong cách đổi, nên khác biệt bạn thấy chính là khác biệt thật. Cặp so sánh là Y2K Digital Aesthetic và Frutiger Aero.",
      "Frutiger Aero: Đây là Y2K vì sự lạc quan là nhân tạo, gồm crôm, nhựa gel, xanh bạc ánh cầu vồng, chữ techno; tương lai là máy móc và không gian mạng. Nó sẽ thành Frutiger Aero nếu độ bóng còn đó nhưng thiên nhiên tràn vào, tức bầu trời xanh, nước, cỏ và bong bóng hòa với chữ humanist sạch thành sự lạc quan Web 2.0 sinh thái-công nghệ.",
      "So với Skeuomorphism: Đây là Y2K khi độ bóng và crôm là tâm trạng vị lai áp lên đồ họa nói chung. Nó sẽ thành skeuomorphism nếu phần kết xuất bắt chước các đồ vật và chất liệu thật cụ thể vì sự quen thuộc thao tác chứ không vì chủ nghĩa tương lai."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Full style DNA",
-    "p": [
-     "• Bề mặt và chất liệu, cốt lõi: Liquid chrome and metal. Crôm bóng gương, thép chải và gradient bạc; chữ và khung được vẽ như đã gia công và đánh bóng.",
-     "• Chiều sâu và ánh sáng, cốt lõi: Gel and glossy plastic. Nút và blob trong mờ như kẹo với vệt sáng phản chiếu mạnh, độ bóng 'muốn liếm' của thời Aqua.",
-     "• Màu và độ tương phản, cốt lõi: Iridescent blue-silver palette. Xanh điện, bạc, trắng và những chuyển ánh holographic xanh lơ-hồng tím; màu lạnh, nhân tạo, hiếm khi mang chất đất.",
-     "• Kiểu chữ, cốt lõi: Wide techno type. Font techno bản rộng, bo tròn hoặc vuông (hương vị Eurostile), thường nghiêng, tạo viền hoặc phủ crôm.",
-     "• Hình ảnh và đồ trang trí, phụ trợ: Orbs, blobs, and wireframes. Quả cầu dựng, blob lỏng, địa cầu, lưới khung dây và lens flare lơ lửng làm đồ trang trí.",
-     "• Hình ảnh và đồ trang trí, biến thiên: Pixel/cyber garnish. Chữ pixel nhỏ, scanline và vỏ giao diện 'cyber' xuất hiện ở một số nhánh mà không ở nhánh khác.",
-     "• Hình ảnh và đồ trang trí, nên tránh: Nature imagery. Cỏ, nước, cá và trời chuyển tâm trạng từ chủ nghĩa tương lai nhân tạo sang sinh thái-công nghệ; đó là địa hạt Frutiger Aero."
-    ]
+    "p": [],
+    "b": [
+     "Bề mặt và chất liệu, cốt lõi: Liquid chrome and metal. Crôm bóng gương, thép chải và gradient bạc; chữ và khung được vẽ như đã gia công và đánh bóng.",
+     "Chiều sâu và ánh sáng, cốt lõi: Gel and glossy plastic. Nút và blob trong mờ như kẹo với vệt sáng phản chiếu mạnh, độ bóng 'muốn liếm' của thời Aqua.",
+     "Màu và độ tương phản, cốt lõi: Iridescent blue-silver palette. Xanh điện, bạc, trắng và những chuyển ánh holographic xanh lơ-hồng tím; màu lạnh, nhân tạo, hiếm khi mang chất đất.",
+     "Kiểu chữ, cốt lõi: Wide techno type. Font techno bản rộng, bo tròn hoặc vuông (hương vị Eurostile), thường nghiêng, tạo viền hoặc phủ crôm.",
+     "Hình ảnh và đồ trang trí, phụ trợ: Orbs, blobs, and wireframes. Quả cầu dựng, blob lỏng, địa cầu, lưới khung dây và lens flare lơ lửng làm đồ trang trí.",
+     "Hình ảnh và đồ trang trí, biến thiên: Pixel/cyber garnish. Chữ pixel nhỏ, scanline và vỏ giao diện 'cyber' xuất hiện ở một số nhánh mà không ở nhánh khác.",
+     "Hình ảnh và đồ trang trí, nên tránh: Nature imagery. Cỏ, nước, cá và trời chuyển tâm trạng từ chủ nghĩa tương lai nhân tạo sang sinh thái-công nghệ; đó là địa hạt Frutiger Aero."
+    ],
+    "fold": true
    },
    {
     "h": "Trong code: các điểm khởi đầu tùy chọn",
     "p": [
-     "Bản brief ở trên không gắn framework nào; dưới đây là vài điểm bám cụ thể nếu stack của bạn khớp.",
-     "• CSS cho thanh crôm: gradient dọc đi từ #fdfdfd qua #c9cdd4 ở 45%, rồi nhảy đột ngột sang #8f96a3 ở 50% và kết thúc ở #e8ebf0. Điểm dừng cứng ở giữa giả đường chân trời của gương.",
-     "• CSS cho nút gel: radial-gradient trắng đậm mờ dần ở đỉnh làm mũ bóng kẹo, đặt lên nền xanh bão hòa #2f7df6, border-radius 999px thành viên thuốc.",
-     "• CSS cho chữ hiển thị phủ crôm: background-clip: text và color: transparent, lấy từ gradient crôm."
-    ]
+     "Bản brief ở trên không gắn framework nào; dưới đây là vài điểm bám cụ thể nếu stack của bạn khớp."
+    ],
+    "b": [
+     "CSS cho thanh crôm: gradient dọc đi từ #fdfdfd qua #c9cdd4 ở 45%, rồi nhảy đột ngột sang #8f96a3 ở 50% và kết thúc ở #e8ebf0. Điểm dừng cứng ở giữa giả đường chân trời của gương.",
+     "CSS cho nút gel: radial-gradient trắng đậm mờ dần ở đỉnh làm mũ bóng kẹo, đặt lên nền xanh bão hòa #2f7df6, border-radius 999px thành viên thuốc.",
+     "CSS cho chữ hiển thị phủ crôm: background-clip: text và color: transparent, lấy từ gradient crôm."
+    ],
+    "fold": true
    },
    {
     "h": "Khả năng tiếp cận và dùng sai",
-    "p": [
-     "• Chữ gradient crôm về bản chất là trang trí: hãy đặt nó trên một tấm đặc tối hoặc nhân đôi bằng chữ thật tương phản cao, vì các xám giữa của gradient tự nó trượt 4.5:1.",
-     "• Độ bóng phản chiếu ăn mất tương phản của nhãn trên nút gel; hãy giữ mực chữ tối/trắng so với vùng TỐI NHẤT của nút.",
-     "• Lens flare và vệt sáng quét là món chuyển động trang trí; hãy tắt khi có prefers-reduced-motion."
-    ]
+    "p": [],
+    "b": [
+     "Chữ gradient crôm về bản chất là trang trí: hãy đặt nó trên một tấm đặc tối hoặc nhân đôi bằng chữ thật tương phản cao, vì các xám giữa của gradient tự nó trượt 4.5:1.",
+     "Độ bóng phản chiếu ăn mất tương phản của nhãn trên nút gel; hãy giữ mực chữ tối/trắng so với vùng TỐI NHẤT của nút.",
+     "Lens flare và vệt sáng quét là món chuyển động trang trí; hãy tắt khi có prefers-reduced-motion."
+    ],
+    "fold": true
    },
    {
     "h": "Nguồn gốc",
     "p": [
      "Khoảng 1997 đến 2004: iMac G3 trong mờ và Aqua của Apple, CGI thời PlayStation, đồ họa rave kiểu Designers Republic, và thương hiệu 'cyber' của thời dot-com. Được khai quật lại và đặt tên bởi khảo cổ internet những năm 2010 đến 2020 (CARI và các nơi khác) cùng làn sóng thời trang/đồ họa hồi sinh theo sau.",
      "Nguồn: bài của AIGA Eye on Design về việc thẩm mỹ Y2K đã hoàn toàn trở lại, và Consumer Aesthetics Research Institute (CARI) với danh mục thẩm mỹ."
-    ]
+    ],
+    "fold": true
    },
    {
     "h": "Các mục được nhắc",
@@ -4096,7 +4302,8 @@ window.NT_FULL = {
      "Vernacular Web: Phong cách (Style)",
      "Skeuomorphism: Phong cách (Style)",
      "Glassmorphism: Phong cách (Style)"
-    ]
+    ],
+    "fold": true
    }
   ],
   "card": {
@@ -4122,13 +4329,15 @@ window.NT_FULL = {
    {
     "h": "Sự đánh đổi, nói thẳng",
     "p": [
-     "So sánh Swift (native) với Electron (vỏ web) theo từng tiêu chí:",
-     "• Là gì: Swift là ngôn ngữ của Apple cùng các framework gốc (SwiftUI/AppKit). Electron là trình duyệt Chromium cộng Node.js đóng gói quanh app web của bạn.",
-     "• Có giống app Mac không: Swift thì tự nhiên có, với menu, sheet, vibrancy thật. Electron chỉ giống nếu bạn tự dựng lại diện mạo Mac bằng CSS.",
-     "• Dùng cho: Swift hợp với app chỉ cho Mac cần cảm giác bản địa. Electron hợp với app đa nền tảng dùng chung một codebase web.",
-     "• Kích thước app: Swift nhỏ vì dùng framework có sẵn của hệ thống. Electron lớn vì tự mang theo trình duyệt, khoảng 100MB trở lên.",
-     "• Kỹ năng cần có: Swift là ngôn ngữ mới với đa số dev web. Electron dùng HTML/CSS/JS/React, thứ dev web vốn đã biết.",
-     "• Ví dụ nổi tiếng: Swift có Things, Fantastical, Craft. Electron có VS Code, Slack, Discord, Figma."
+     "So sánh Swift (native) với Electron (vỏ web) theo từng tiêu chí:"
+    ],
+    "b": [
+     "Là gì: Swift là ngôn ngữ của Apple cùng các framework gốc (SwiftUI/AppKit). Electron là trình duyệt Chromium cộng Node.js đóng gói quanh app web của bạn.",
+     "Có giống app Mac không: Swift thì tự nhiên có, với menu, sheet, vibrancy thật. Electron chỉ giống nếu bạn tự dựng lại diện mạo Mac bằng CSS.",
+     "Dùng cho: Swift hợp với app chỉ cho Mac cần cảm giác bản địa. Electron hợp với app đa nền tảng dùng chung một codebase web.",
+     "Kích thước app: Swift nhỏ vì dùng framework có sẵn của hệ thống. Electron lớn vì tự mang theo trình duyệt, khoảng 100MB trở lên.",
+     "Kỹ năng cần có: Swift là ngôn ngữ mới với đa số dev web. Electron dùng HTML/CSS/JS/React, thứ dev web vốn đã biết.",
+     "Ví dụ nổi tiếng: Swift có Things, Fantastical, Craft. Electron có VS Code, Slack, Discord, Figma."
     ]
    },
    {
@@ -4140,9 +4349,11 @@ window.NT_FULL = {
    {
     "h": "Prompt đầu tiên: chọn thế giới của bạn",
     "p": [
-     "Tin nhắn đầu tiên bạn gửi quyết định agent sẽ dựng trong thế giới nào. Hãy dán prompt hợp với phía bạn: nó đặt stack, những chi tiết native mà agent hay quên, bộ từ vựng, và một mốc đầu tiên nhìn thấy được.",
-     "• Bắt đầu app Swift (chỉ cho Mac, cảm giác native ngay từ đầu): Tôi đang bắt đầu một app macOS native hoàn toàn mới. Hãy dựng nó thành app Mac SwiftUI (dự án Xcode, macOS 14+): một cửa sổ chính có thanh bên NavigationSplitView, một toolbar hợp nhất, và hỗ trợ sáng/tối ngay từ đầu. Giữ mọi thứ native: font hệ thống, màu nhấn hệ thống, control chuẩn, không tự vẽ khung. Hãy trao đổi với tôi bằng tên SwiftUI/AppKit (window, sidebar, toolbar, sheet), không dùng thuật ngữ web. Mốc đầu tiên: app trống build và chạy được, hiển thị thanh bên và toolbar.",
-     "• Bắt đầu app Electron (công nghệ web, chạy mọi nơi): Tôi đang bắt đầu một app desktop hoàn toàn mới bằng công nghệ web. Hãy dựng thành app Electron với Vite + React + TypeScript: một BrowserWindow có titleBarStyle 'hiddenInset' trên macOS cho gọn gàng, mặc định an toàn (contextIsolation bật, nodeIntegration tắt), và hot reload khi dev. Hãy trao đổi bằng tên web (component, CSS, div, và Tray của Electron cho biểu tượng thanh menu), không dùng thuật ngữ Swift/AppKit. Mốc đầu tiên: cửa sổ mở ra, hiện trang React của tôi, và hot reload hoạt động."
+     "Tin nhắn đầu tiên bạn gửi quyết định agent sẽ dựng trong thế giới nào. Hãy dán prompt hợp với phía bạn: nó đặt stack, những chi tiết native mà agent hay quên, bộ từ vựng, và một mốc đầu tiên nhìn thấy được."
+    ],
+    "b": [
+     "Bắt đầu app Swift (chỉ cho Mac, cảm giác native ngay từ đầu): Tôi đang bắt đầu một app macOS native hoàn toàn mới. Hãy dựng nó thành app Mac SwiftUI (dự án Xcode, macOS 14+): một cửa sổ chính có thanh bên NavigationSplitView, một toolbar hợp nhất, và hỗ trợ sáng/tối ngay từ đầu. Giữ mọi thứ native: font hệ thống, màu nhấn hệ thống, control chuẩn, không tự vẽ khung. Hãy trao đổi với tôi bằng tên SwiftUI/AppKit (window, sidebar, toolbar, sheet), không dùng thuật ngữ web. Mốc đầu tiên: app trống build và chạy được, hiển thị thanh bên và toolbar.",
+     "Bắt đầu app Electron (công nghệ web, chạy mọi nơi): Tôi đang bắt đầu một app desktop hoàn toàn mới bằng công nghệ web. Hãy dựng thành app Electron với Vite + React + TypeScript: một BrowserWindow có titleBarStyle 'hiddenInset' trên macOS cho gọn gàng, mặc định an toàn (contextIsolation bật, nodeIntegration tắt), và hot reload khi dev. Hãy trao đổi bằng tên web (component, CSS, div, và Tray của Electron cho biểu tượng thanh menu), không dùng thuật ngữ Swift/AppKit. Mốc đầu tiên: cửa sổ mở ra, hiện trang React của tôi, và hot reload hoạt động."
     ]
    },
    {
@@ -4276,11 +4487,12 @@ window.NT_FULL = {
   "sections": [
    {
     "h": "Cách phân biệt",
-    "p": [
-     "• Các phần xếp dọc, mỗi phần có mũi tên chevron hoặc tam giác thì đó là accordion.",
-     "• Nhãn nằm trên một hàng ngang ở phía trên thì đó là tabs.",
-     "• Có nhiều hơn một phần mở cùng lúc thì là accordion.",
-     "• Nhãn quá dài để vừa một hàng trên điện thoại thì bạn cần accordion."
+    "p": [],
+    "b": [
+     "Các phần xếp dọc, mỗi phần có mũi tên chevron hoặc tam giác thì đó là accordion.",
+     "Nhãn nằm trên một hàng ngang ở phía trên thì đó là tabs.",
+     "Có nhiều hơn một phần mở cùng lúc thì là accordion.",
+     "Nhãn quá dài để vừa một hàng trên điện thoại thì bạn cần accordion."
     ]
    },
    {
@@ -4288,7 +4500,8 @@ window.NT_FULL = {
     "p": [
      "Accordion (Disclosure) (web) · <details>: Các mục xếp chồng mà tiêu đề của chúng bung ra và thu lại nội dung",
      "Tabs (web) · role=\"tablist\": Một hàng nhãn duy nhất để đổi nội dung của một vùng dùng chung"
-    ]
+    ],
+    "fold": true
    }
   ]
  },
@@ -4298,10 +4511,11 @@ window.NT_FULL = {
   "sections": [
    {
     "h": "Cách phân biệt",
-    "p": [
-     "• Có chấm, mũi tên hoặc thao tác vuốt thì là carousel.",
-     "• Trôi liên tục và không có điều khiển nào thì là marquee.",
-     "• Nội dung lặp liền mạch, không có mục đầu hay mục cuối thì là marquee."
+    "p": [],
+    "b": [
+     "Có chấm, mũi tên hoặc thao tác vuốt thì là carousel.",
+     "Trôi liên tục và không có điều khiển nào thì là marquee.",
+     "Nội dung lặp liền mạch, không có mục đầu hay mục cuối thì là marquee."
     ]
    },
    {
@@ -4309,7 +4523,8 @@ window.NT_FULL = {
     "p": [
      "Carousel (web) · aria-roledescription=\"carousel\": Dải các slide bạn lật qua bằng mũi tên hoặc các chấm nhỏ",
      "Marquee (web) · animation + @keyframes translateX: Nội dung tự cuộn ngang thành vòng lặp bất tận"
-    ]
+    ],
+    "fold": true
    }
   ]
  },
@@ -4319,10 +4534,11 @@ window.NT_FULL = {
   "sections": [
    {
     "h": "Cách phân biệt",
-    "p": [
-     "• Không có nút kích hoạt nào thấy được, menu hiện ra đúng chỗ bạn nhấp chuột phải thì là context menu.",
-     "• Nó treo từ một nút có nhãn hoặc từ dấu ⋯ thì là dropdown menu.",
-     "• Các hành động của nó áp dụng cho mục nằm dưới con trỏ thì là context menu."
+    "p": [],
+    "b": [
+     "Không có nút kích hoạt nào thấy được, menu hiện ra đúng chỗ bạn nhấp chuột phải thì là context menu.",
+     "Nó treo từ một nút có nhãn hoặc từ dấu ⋯ thì là dropdown menu.",
+     "Các hành động của nó áp dụng cho mục nằm dưới con trỏ thì là context menu."
     ]
    },
    {
@@ -4330,7 +4546,8 @@ window.NT_FULL = {
     "p": [
      "Context Menu (macos) · NSMenu: Menu mở ngay tại con trỏ khi nhấp chuột phải hoặc Control-click vào một mục",
      "Popover vs. Dropdown Menu vs. Tooltip (web) · popover: Ba lớp phủ neo vào phần tử với cách kích hoạt, nội dung và luật đóng khác nhau"
-    ]
+    ],
+    "fold": true
    }
   ]
  },
@@ -4340,10 +4557,11 @@ window.NT_FULL = {
   "sections": [
    {
     "h": "Cách phân biệt",
-    "p": [
-     "• Bấm vào một mục mà nó THỰC HIỆN việc gì đó thì là dropdown menu. Bấm vào một mục mà nó ĐIỀN vào control thì là select.",
-     "• Đặt được con trỏ chữ vào và gõ thì là combobox.",
-     "• Khi đóng mà hiện giá trị hiện tại thì là select hoặc combobox; nút menu thì chỉ hiện nhãn cố định của nó."
+    "p": [],
+    "b": [
+     "Bấm vào một mục mà nó THỰC HIỆN việc gì đó thì là dropdown menu. Bấm vào một mục mà nó ĐIỀN vào control thì là select.",
+     "Đặt được con trỏ chữ vào và gõ thì là combobox.",
+     "Khi đóng mà hiện giá trị hiện tại thì là select hoặc combobox; nút menu thì chỉ hiện nhãn cố định của nó."
     ]
    },
    {
@@ -4352,7 +4570,8 @@ window.NT_FULL = {
      "Popover vs. Dropdown Menu vs. Tooltip (web) · popover: Ba lớp phủ neo vào phần tử với cách kích hoạt, nội dung và luật đóng khác nhau",
      "Combobox (Autocomplete / Typeahead) (web) · role=\"combobox\": Ô nhập văn bản đi kèm danh sách gợi ý đã lọc để chọn",
      "Pop-Up Button vs. Pull-Down Button vs. Combo Box (macos) · NSPopUpButton: Ba control macOS trông giống nhau, dùng để chọn giá trị hoặc gọi một hành động trong menu"
-    ]
+    ],
+    "fold": true
    }
   ]
  },
@@ -4362,11 +4581,12 @@ window.NT_FULL = {
   "sections": [
    {
     "h": "Cách phân biệt",
-    "p": [
-     "• Bạn đặt thời lượng bằng mili giây thì là easing.",
-     "• Bạn đặt stiffness và damping, còn thời lượng là bao nhiêu tùy vật lý quyết định thì là spring.",
-     "• Nó vọt quá đích rồi lắc lư vào chỗ thì là spring.",
-     "• Chuyển động kéo rồi thả mà cần thừa hưởng tốc độ của cử chỉ thì dùng spring."
+    "p": [],
+    "b": [
+     "Bạn đặt thời lượng bằng mili giây thì là easing.",
+     "Bạn đặt stiffness và damping, còn thời lượng là bao nhiêu tùy vật lý quyết định thì là spring.",
+     "Nó vọt quá đích rồi lắc lư vào chỗ thì là spring.",
+     "Chuyển động kéo rồi thả mà cần thừa hưởng tốc độ của cử chỉ thì dùng spring."
     ]
    },
    {
@@ -4374,7 +4594,8 @@ window.NT_FULL = {
     "p": [
      "Easing (Timing Function) (web) · transition-timing-function: Đường cong tốc độ của hoạt ảnh, lý do chuyển động trông mượt hay máy móc",
      "Spring Animation (web) · transition={{ type: \"spring\", stiffness, damping }}: Chuyển động theo vật lý, vọt quá đích rồi lắng xuống"
-    ]
+    ],
+    "fold": true
    }
   ]
  },
@@ -4384,10 +4605,11 @@ window.NT_FULL = {
   "sections": [
    {
     "h": "Cách phân biệt",
-    "p": [
-     "• Các hình giữ chỗ xám nhấp nháy thì là skeleton.",
-     "• Một thông điệp thân thiện và nút kiểu \"Create your first…\" thì là empty state.",
-     "• Skeleton nhấp nháy mãi trên một danh sách thật sự trống là lỗi kinh điển; lẽ ra nó phải chuyển thành empty state."
+    "p": [],
+    "b": [
+     "Các hình giữ chỗ xám nhấp nháy thì là skeleton.",
+     "Một thông điệp thân thiện và nút kiểu \"Create your first…\" thì là empty state.",
+     "Skeleton nhấp nháy mãi trên một danh sách thật sự trống là lỗi kinh điển; lẽ ra nó phải chuyển thành empty state."
     ]
    },
    {
@@ -4395,7 +4617,8 @@ window.NT_FULL = {
     "p": [
      "Empty State (web) · <section>: Lời hướng dẫn có chủ đích, hiện khi một màn hình chưa có nội dung",
      "Skeleton vs. Spinner (web) · aria-busy=\"true\": Hai chỉ báo đang tải, một cho bố cục đoán trước được, một cho thời gian chờ không rõ"
-    ]
+    ],
+    "fold": true
    }
   ]
  },
@@ -4405,10 +4628,11 @@ window.NT_FULL = {
   "sections": [
    {
     "h": "Cách phân biệt",
-    "p": [
-     "• Vạch thì là điều hướng. Chấm thì là hành động.",
-     "• Ở góc trên của cả site thì là hamburger.",
-     "• Nằm trên một thẻ, một hàng hay một bài đăng thì là kebab/overflow, và các hành động của nó áp dụng cho mục đó."
+    "p": [],
+    "b": [
+     "Vạch thì là điều hướng. Chấm thì là hành động.",
+     "Ở góc trên của cả site thì là hamburger.",
+     "Nằm trên một thẻ, một hàng hay một bài đăng thì là kebab/overflow, và các hành động của nó áp dụng cho mục đó."
     ]
    },
    {
@@ -4416,7 +4640,8 @@ window.NT_FULL = {
     "p": [
      "Hamburger Menu (Nav Drawer) (web) · aria-expanded + aria-controls: Nút ba vạch và bảng điều hướng trượt ra khi bấm",
      "The Three Dots (Overflow Menu) (web) · <button>: Chấm ngang, chấm dọc, ba vạch và dấu ba chấm mang những nghĩa khác nhau"
-    ]
+    ],
+    "fold": true
    }
   ]
  },
@@ -4426,10 +4651,11 @@ window.NT_FULL = {
   "sections": [
    {
     "h": "Cách phân biệt",
-    "p": [
-     "• Mở từ một ảnh và cho thấy chính ảnh đó lớn hơn thì là lightbox.",
-     "• Có mũi tên trước/sau để đi qua một thư viện ảnh thì là lightbox.",
-     "• Chứa control của form hoặc câu hỏi thì là modal dialog."
+    "p": [],
+    "b": [
+     "Mở từ một ảnh và cho thấy chính ảnh đó lớn hơn thì là lightbox.",
+     "Có mũi tên trước/sau để đi qua một thư viện ảnh thì là lightbox.",
+     "Chứa control của form hoặc câu hỏi thì là modal dialog."
     ]
    },
    {
@@ -4437,7 +4663,8 @@ window.NT_FULL = {
     "p": [
      "Lightbox (web) · <dialog>: Lớp phủ phóng to ảnh khi bấm, làm tối trang phía sau",
      "Modal Dialog vs. Drawer vs. Sheet (web) · <dialog>: Ba mẫu lớp phủ phân biệt theo vị trí, phạm vi và độ sâu của tác vụ"
-    ]
+    ],
+    "fold": true
    }
   ]
  },
@@ -4447,10 +4674,11 @@ window.NT_FULL = {
   "sections": [
    {
     "h": "Cách phân biệt",
-    "p": [
-     "• Mép dưới lởm chởm và không thẳng hàng theo chiều ngang thì là masonry.",
-     "• Các ô thẳng hàng trên những đường lưới chung, với ô lớn và nhỏ được chọn có chủ ý thì là bento.",
-     "• Nội dung đến động (ảnh, bài đăng của người dùng) thì là masonry."
+    "p": [],
+    "b": [
+     "Mép dưới lởm chởm và không thẳng hàng theo chiều ngang thì là masonry.",
+     "Các ô thẳng hàng trên những đường lưới chung, với ô lớn và nhỏ được chọn có chủ ý thì là bento.",
+     "Nội dung đến động (ảnh, bài đăng của người dùng) thì là masonry."
     ]
    },
    {
@@ -4458,7 +4686,8 @@ window.NT_FULL = {
     "p": [
      "Masonry Layout (Pinterest Grid) (web) · columns: Các thẻ cao thấp khác nhau xếp vào cột mà không để hở giữa các hàng",
      "Bento Grid (web) · display: grid + grid-column: span 2: Một lưới duy nhất với các ô cỡ khác nhau, xếp khít như hộp bento"
-    ]
+    ],
+    "fold": true
    }
   ]
  },
@@ -4468,11 +4697,12 @@ window.NT_FULL = {
   "sections": [
    {
     "h": "Cách phân biệt",
-    "p": [
-     "• Có lớp tối mờ phía sau thì là modal (lớp đó là scrim).",
-     "• Nó chỉ vào hoặc chạm vào nút đã mở nó thì là popover.",
-     "• Vẫn cuộn hoặc bấm được trang phía sau thì là popover.",
-     "• Nó đòi một câu trả lời trước khi bạn tiếp tục thì là modal."
+    "p": [],
+    "b": [
+     "Có lớp tối mờ phía sau thì là modal (lớp đó là scrim).",
+     "Nó chỉ vào hoặc chạm vào nút đã mở nó thì là popover.",
+     "Vẫn cuộn hoặc bấm được trang phía sau thì là popover.",
+     "Nó đòi một câu trả lời trước khi bạn tiếp tục thì là modal."
     ]
    },
    {
@@ -4480,7 +4710,8 @@ window.NT_FULL = {
     "p": [
      "Modal Dialog vs. Drawer vs. Sheet (web) · <dialog>: Ba mẫu lớp phủ phân biệt theo vị trí, phạm vi và độ sâu của tác vụ",
      "Popover vs. Dropdown Menu vs. Tooltip (web) · popover: Ba lớp phủ neo vào phần tử với cách kích hoạt, nội dung và luật đóng khác nhau"
-    ]
+    ],
+    "fold": true
    }
   ]
  },
@@ -4490,11 +4721,12 @@ window.NT_FULL = {
   "sections": [
    {
     "h": "Cách phân biệt",
-    "p": [
-     "• Nó mở ra mà không cần bấm, chỉ do con trỏ đặt lên một thứ thì là tooltip.",
-     "• Bên trong có nút, ô nhập hoặc link thì là popover.",
-     "• Nó vẫn mở khi bạn dời chuột đi thì là popover; tooltip chết cùng lúc hết hover.",
-     "• Trên điện thoại nó không thể là tooltip vì không có hover. Bong bóng mở bằng cú chạm là popover."
+    "p": [],
+    "b": [
+     "Nó mở ra mà không cần bấm, chỉ do con trỏ đặt lên một thứ thì là tooltip.",
+     "Bên trong có nút, ô nhập hoặc link thì là popover.",
+     "Nó vẫn mở khi bạn dời chuột đi thì là popover; tooltip chết cùng lúc hết hover.",
+     "Trên điện thoại nó không thể là tooltip vì không có hover. Bong bóng mở bằng cú chạm là popover."
     ]
    },
    {
@@ -4502,7 +4734,8 @@ window.NT_FULL = {
     "p": [
      "Popover vs. Dropdown Menu vs. Tooltip (web) · popover: Ba lớp phủ neo vào phần tử với cách kích hoạt, nội dung và luật đóng khác nhau",
      "Hover Card (web) · HoverCard: Bản xem trước phong phú, không modal, hiện ra từ một tham chiếu đang được rê chuột hoặc focus"
-    ]
+    ],
+    "fold": true
    }
   ]
  },
@@ -4512,10 +4745,11 @@ window.NT_FULL = {
   "sections": [
    {
     "h": "Cách phân biệt",
-    "p": [
-     "• Gắn vào một cửa sổ và di chuyển theo nó thì là sheet.",
-     "• Nhỏ, căn giữa, có biểu tượng, một dòng in đậm và Cancel/OK thì là alert.",
-     "• Đặt tên, lưu, xuất thì là sheet. \"Are you sure?\" thì là alert."
+    "p": [],
+    "b": [
+     "Gắn vào một cửa sổ và di chuyển theo nó thì là sheet.",
+     "Nhỏ, căn giữa, có biểu tượng, một dòng in đậm và Cancel/OK thì là alert.",
+     "Đặt tên, lưu, xuất thì là sheet. \"Are you sure?\" thì là alert."
     ]
    },
    {
@@ -4523,7 +4757,8 @@ window.NT_FULL = {
     "p": [
      "Sheet (macos) · NSWindow.beginSheet(_:completionHandler:): Bảng modal gắn vào một cửa sổ macOS chứ không chiếm cả ứng dụng",
      "Alert (macos) · NSAlert: Cửa sổ nhỏ ở giữa có biểu tượng kèm huy hiệu, một dòng in đậm và các nút Cancel/OK"
-    ]
+    ],
+    "fold": true
    }
   ]
  },
@@ -4533,10 +4768,11 @@ window.NT_FULL = {
   "sections": [
    {
     "h": "Cách phân biệt",
-    "p": [
-     "• Luôn có mặt, nội dung nằm cạnh nó thì là sidebar.",
-     "• Trượt vào trên một trang bị làm tối thì là drawer (lớp tối đó là scrim).",
-     "• Chỉ hiện sau khi chạm vào ba vạch thì là nav drawer."
+    "p": [],
+    "b": [
+     "Luôn có mặt, nội dung nằm cạnh nó thì là sidebar.",
+     "Trượt vào trên một trang bị làm tối thì là drawer (lớp tối đó là scrim).",
+     "Chỉ hiện sau khi chạm vào ba vạch thì là nav drawer."
     ]
    },
    {
@@ -4544,7 +4780,8 @@ window.NT_FULL = {
     "p": [
      "Sidebar (Source List) (macos) · NavigationSplitView: Cột điều hướng trong mờ dọc mép trái cửa sổ macOS",
      "Hamburger Menu (Nav Drawer) (web) · aria-expanded + aria-controls: Nút ba vạch và bảng điều hướng trượt ra khi bấm"
-    ]
+    ],
+    "fold": true
    }
   ]
  },
@@ -4554,10 +4791,11 @@ window.NT_FULL = {
   "sections": [
    {
     "h": "Cách phân biệt",
-    "p": [
-     "• Giá trị chính xác trong khoảng nhỏ (số bản sao: 1 đến 20) thì là stepper.",
-     "• Khoảng liên tục, tùy cảm giác thì là slider.",
-     "• Cần gõ số nữa thì dùng stepper đi kèm ô văn bản của nó."
+    "p": [],
+    "b": [
+     "Giá trị chính xác trong khoảng nhỏ (số bản sao: 1 đến 20) thì là stepper.",
+     "Khoảng liên tục, tùy cảm giác thì là slider.",
+     "Cần gõ số nữa thì dùng stepper đi kèm ô văn bản của nó."
     ]
    },
    {
@@ -4565,7 +4803,8 @@ window.NT_FULL = {
     "p": [
      "Stepper (macos) · NSStepper: Cặp mũi tên lên xuống gọn nhẹ để tăng hoặc giảm một giá trị",
      "Slider (macos) · NSSlider: Núm tròn kéo dọc thanh trượt để chọn một giá trị trong khoảng"
-    ]
+    ],
+    "fold": true
    }
   ]
  },
@@ -4575,10 +4814,11 @@ window.NT_FULL = {
   "sections": [
    {
     "h": "Cách phân biệt",
-    "p": [
-     "• Chuyển đổi làm lộ ra nội dung hoàn toàn khác thì là tabs.",
-     "• Chuyển đổi vẽ lại cùng dữ liệu theo cách khác (danh sách/lưới, ngày/tuần) thì là segmented control.",
-     "• Nó giữ một cài đặt lâu dài mà app ghi nhớ thì là segmented control."
+    "p": [],
+    "b": [
+     "Chuyển đổi làm lộ ra nội dung hoàn toàn khác thì là tabs.",
+     "Chuyển đổi vẽ lại cùng dữ liệu theo cách khác (danh sách/lưới, ngày/tuần) thì là segmented control.",
+     "Nó giữ một cài đặt lâu dài mà app ghi nhớ thì là segmented control."
     ]
    },
    {
@@ -4586,7 +4826,8 @@ window.NT_FULL = {
     "p": [
      "Tabs (web) · role=\"tablist\": Một hàng nhãn duy nhất để đổi nội dung của một vùng dùng chung",
      "Toggle Group (Segmented Control) (web) · ToggleGroup: Một hàng tùy chọn gọn nối liền nhau, luôn có một lựa chọn được giữ"
-    ]
+    ],
+    "fold": true
    }
   ]
  },
@@ -4596,10 +4837,11 @@ window.NT_FULL = {
   "sections": [
    {
     "h": "Cách phân biệt",
-    "p": [
-     "• Tự biến mất sau vài giây thì là toast.",
-     "• Có Cancel/OK và chặn cửa sổ thì là alert.",
-     "• Ở đáy hoặc góc màn hình thì là toast. Chính giữa thì là alert."
+    "p": [],
+    "b": [
+     "Tự biến mất sau vài giây thì là toast.",
+     "Có Cancel/OK và chặn cửa sổ thì là alert.",
+     "Ở đáy hoặc góc màn hình thì là toast. Chính giữa thì là alert."
     ]
    },
    {
@@ -4607,7 +4849,8 @@ window.NT_FULL = {
     "p": [
      "Toast (Snackbar) (web) · role=\"status\": Thông báo ngắn, không chặn thao tác, hiện lên sau một hành động",
      "Alert (macos) · NSAlert: Cửa sổ nhỏ ở giữa có biểu tượng kèm huy hiệu, một dòng in đậm và các nút Cancel/OK"
-    ]
+    ],
+    "fold": true
    }
   ]
  },
@@ -4617,10 +4860,11 @@ window.NT_FULL = {
   "sections": [
    {
     "h": "Cách phân biệt",
-    "p": [
-     "• Ở đầu màn hình và đổi khi bạn chuyển app thì là menu bar.",
-     "• Nằm trong cửa sổ, cạnh các traffic light thì là toolbar.",
-     "• Menu chữ xổ xuống thì là menu bar. Nút biểu tượng tác động ngay lập tức thì là toolbar."
+    "p": [],
+    "b": [
+     "Ở đầu màn hình và đổi khi bạn chuyển app thì là menu bar.",
+     "Nằm trong cửa sổ, cạnh các traffic light thì là toolbar.",
+     "Menu chữ xổ xuống thì là menu bar. Nút biểu tượng tác động ngay lập tức thì là toolbar."
     ]
    },
    {
@@ -4628,7 +4872,8 @@ window.NT_FULL = {
     "p": [
      "Toolbar (Unified Title Bar) (macos) · NSToolbar: Hàng thao tác của cửa sổ, gộp liền vào title bar macOS hiện đại",
      "Menu Bar (macos) · NSApp.mainMenu: Dải trên cùng màn hình Mac, từng phần đều được ghi nhãn"
-    ]
+    ],
+    "fold": true
    }
   ]
  },
@@ -4638,10 +4883,11 @@ window.NT_FULL = {
   "sections": [
    {
     "h": "Cách phân biệt",
-    "p": [
-     "• Vài từ chữ thuần gọi tên một control thì là tooltip.",
-     "• Bản xem trước của một trang hoặc một người khác thì là hover card.",
-     "• Bạn rê chuột vào trong được và bấm các thứ thì là hover card."
+    "p": [],
+    "b": [
+     "Vài từ chữ thuần gọi tên một control thì là tooltip.",
+     "Bản xem trước của một trang hoặc một người khác thì là hover card.",
+     "Bạn rê chuột vào trong được và bấm các thứ thì là hover card."
     ]
    },
    {
@@ -4649,7 +4895,8 @@ window.NT_FULL = {
     "p": [
      "Popover vs. Dropdown Menu vs. Tooltip (web) · popover: Ba lớp phủ neo vào phần tử với cách kích hoạt, nội dung và luật đóng khác nhau",
      "Hover Card (web) · HoverCard: Bản xem trước phong phú, không modal, hiện ra từ một tham chiếu đang được rê chuột hoặc focus"
-    ]
+    ],
+    "fold": true
    }
   ]
  },
