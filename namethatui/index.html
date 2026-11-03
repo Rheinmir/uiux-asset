@@ -182,7 +182,7 @@ footer.ft{border-top:1px solid var(--bd);padding:22px 0 40px;color:var(--mut);fo
 </style>
 </head>
 <body><div id="app"></div>
-<script src="data.js"></script><script src="content.js"></script>
+<script src="/namethatui/data.js"></script><script src="/namethatui/content.js"></script>
 <script>
 
 (() => {
@@ -276,10 +276,13 @@ footer.ft{border-top:1px solid var(--bd);padding:22px 0 40px;color:var(--mut);fo
   const prompt = (p, r) => `Hãy dựng thành phần «${r[1]}» cho ${p === 'macos' ? 'ứng dụng macOS (SwiftUI/AppKit)' : 'web (HTML/CSS/JS, truy cập được)'}. Mô tả: ${r[2]} Yêu cầu: đủ trạng thái hover, focus, disabled; dùng được bằng bàn phím; đặt đúng vai trò truy cập (ARIA/accessibility).`;
   const ICON = { search: '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="4.6"/><path d="m10.5 10.5 3 3"/></svg>', moon: '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M13 9.5A5.5 5.5 0 0 1 6.5 3a5.5 5.5 0 1 0 6.5 6.5Z"/></svg>', dice: '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="2" width="12" height="12" rx="3"/><circle cx="6" cy="6" r=".8" fill="currentColor"/><circle cx="10" cy="10" r=".8" fill="currentColor"/></svg>' };
   const demoOf = (p, r) => D[r[3]] || D[r[0]];
-  const href = (p, r) => `#/${p}/${r[0]}`;
+  const BASE = '/namethatui/', PATHMODE = !/^(127\.0\.0\.1|localhost)$/.test(location.hostname);   // trên site thật dùng đường dẫn thật (có rewrite); chạy cục bộ dùng #/
+  const H = (k) => (k === 'dict' || !k) ? (PATHMODE ? BASE : '#/') : (PATHMODE ? BASE + k : '#/' + k);
+  const go = (k) => { if (PATHMODE) { history.pushState(null, '', H(k) + (location.search || '')); route(); } else { location.hash = (k === 'dict' || !k) ? '#/' : '#/' + k; } };
+  const href = (p, r) => H(p + '/' + r[0]);
   function header() {
     const T = [['dict', 'Thành phần'], ['styles', 'Phong cách'], ['vs', 'Dễ nhầm'], ['spec', 'Đặc tả']];
-    return `<header class="top"><div class="wrap hd"><a class="logo" href="#/" data-t="dict">gọi tên <b>ui</b><sup>${all.length > 90 ? 'v' : ''}</sup></a><nav class="nav" aria-label="Chuyên mục">${T.map(([k, t]) => `<a href="#/${k === 'dict' ? '' : k}" data-t="${k}" ${k === st.tab || (st.tab === 'detail' && k === 'dict') ? 'aria-current="page"' : ''}>${t}</a>`).join('')}</nav><span class="sp"></span><a class="hsearch" id="hs" data-pal>${ICON.search}<span>Mô tả cái bạn thấy…</span><span class="kbd">⌘ K</span></a><button class="ibtn" data-pal aria-label="Tìm kiếm" style="display:none" id="hs2">${ICON.search}</button><a class="ibtn" href="../" title="Về uiux-asset" aria-label="Về uiux-asset" style="font-size:12px">↖</a><button class="ibtn" id="theme" aria-label="Đổi giao diện sáng/tối">${ICON.moon}</button><button class="ibtn burger" id="burger" aria-label="Mở điều hướng" aria-expanded="false">≡</button></div><nav class="mnav" id="mnav" aria-label="Điều hướng">${T.map(([k, t]) => `<a href="#/${k === 'dict' ? '' : k}" data-t="${k}">${t}</a>`).join('')}</nav></header>`;
+    return `<header class="top"><div class="wrap hd"><a class="logo" href="${H('dict')}" data-t="dict">gọi tên <b>ui</b><sup>${all.length > 90 ? 'v' : ''}</sup></a><nav class="nav" aria-label="Chuyên mục">${T.map(([k, t]) => `<a href="${H(k)}" data-t="${k}" ${k === st.tab || (st.tab === 'detail' && k === 'dict') ? 'aria-current="page"' : ''}>${t}</a>`).join('')}</nav><span class="sp"></span><a class="hsearch" id="hs" data-pal>${ICON.search}<span>Mô tả cái bạn thấy…</span><span class="kbd">⌘ K</span></a><button class="ibtn" data-pal aria-label="Tìm kiếm" style="display:none" id="hs2">${ICON.search}</button><a class="ibtn" href="/" title="Về uiux-asset" aria-label="Về uiux-asset" style="font-size:12px">↖</a><button class="ibtn" id="theme" aria-label="Đổi giao diện sáng/tối">${ICON.moon}</button><button class="ibtn burger" id="burger" aria-label="Mở điều hướng" aria-expanded="false">≡</button></div><nav class="mnav" id="mnav" aria-label="Điều hướng">${T.map(([k, t]) => `<a href="${H(k)}" data-t="${k}">${t}</a>`).join('')}</nav></header>`;
   }
   function list() {
     const q = st.q.trim().toLowerCase();
@@ -301,7 +304,7 @@ footer.ft{border-top:1px solid var(--bd);padding:22px 0 40px;color:var(--mut);fo
     const idx = all.findIndex((x) => x.p === p && x.r[0] === r[0]), nb = all.filter((x) => x.p === p), pos = nb.findIndex((x) => x.r[0] === r[0]);
     const see = (f.see ? f.see.map(byKey).filter(Boolean) : [nb[(pos + 1) % nb.length], nb[(pos + 2) % nb.length], nb[(pos + 3) % nb.length]]);
     const sec = (t, h) => h ? `<h2>${t}</h2>${h}` : '';
-    return `<div class="wrap wide"><div class="crumb"><span><a href="#/" data-t="dict">Chỉ mục</a> / ${p === 'web' ? 'Web' : 'macOS'}</span><div class="acts"><button class="pill" data-save="${esc(key)}"><span>${savedSet().has(key) ? 'Đã lưu' : 'Lưu'}</span></button><button class="pill" data-share="${esc(key)}"><span>Chia sẻ</span></button><button class="pill" data-md="${esc(key)}"><span>Chép dạng Markdown</span></button><button class="pill" data-cp="${esc(key)}"><span>Chép prompt</span></button><a class="pill" href="https://namethatui.com/${p}/${r[0]}" target="_blank" rel="noopener"><span>Trang gốc ↗</span></a></div></div>
+    return `<div class="wrap wide"><div class="crumb"><span><a href="${H('dict')}" data-t="dict">Chỉ mục</a> / ${p === 'web' ? 'Web' : 'macOS'}</span><div class="acts"><button class="pill" data-save="${esc(key)}"><span>${savedSet().has(key) ? 'Đã lưu' : 'Lưu'}</span></button><button class="pill" data-share="${esc(key)}"><span>Chia sẻ</span></button><button class="pill" data-md="${esc(key)}"><span>Chép dạng Markdown</span></button><button class="pill" data-cp="${esc(key)}"><span>Chép prompt</span></button><a class="pill" href="https://namethatui.com/${p}/${r[0]}" target="_blank" rel="noopener"><span>Trang gốc ↗</span></a></div></div>
       <div class="dt"><div><div class="dmat">${d ? `<div>${d}</div>` : '<span class="noy" style="color:var(--mut2)">chưa có demo</span>'}</div>${f.lead ? `<p class="cd" style="margin-top:12px;text-align:center">${esc(f.lead)}</p>` : ''}</div><div><div class="rhead"><h1>${esc(r[1])}</h1>${sy ? `<div class="symline">/ ${esc(sy)} /</div>` : ''}${f.aka && f.aka.length ? `<div class="aka">còn gọi là ${esc(f.aka.join(', '))}</div>` : ''}</div><p class="body">${esc(f.def || r[2])}</p>
       ${f.body ? (Array.isArray(f.body) ? f.body : [f.body]).map((t) => `<p class="body">${esc(t)}</p>`).join('') : ''}
       ${sec(U.ifCalled, f.phrases && f.phrases.length ? `<div class="quotes">${f.phrases.map((x) => `<span>“${esc(x)}”</span>`).join('')}</div><p class="aka" style="margin:10px 0 0">…${esc(U.youMeant)} <b style="font-style:normal;color:var(--fg)">${esc(r[1])}</b>.</p>` : '')}
@@ -314,9 +317,9 @@ footer.ft{border-top:1px solid var(--bd);padding:22px 0 40px;color:var(--mut);fo
       ${(f.prompt || f.def) ? '' : '<div class="later">Phần giải thích đầy đủ, giải phẫu và prompt gỡ lỗi của mục này đang được viết lại bằng lời của mình; hiện mới có mô tả ngắn.</div>'}
       </div></div></div>`;
   }
-  const styleCards = () => { const q = (st.sq || '').trim().toLowerCase(); return N.styles.filter(([k, n, d]) => !q || (k + ' ' + n + ' ' + d).toLowerCase().includes(q)).map(([k, n, d]) => `<div class="sc"><div class="mat s-${k}"><div class="s-sw"><i>${esc(n.split(' ')[0])}</i></div></div><div class="txt"><div class="ct"><b>${F['styles/' + k] ? `<a href="#/styles/${k}">${esc(n)}</a>` : esc(n)}</b><a class="plat" href="https://namethatui.com/styles/${k}" target="_blank" rel="noopener">gốc ↗</a></div><p class="cd">${esc((F['styles/' + k] && F['styles/' + k].lead) || d)}</p></div></div>`).join('') || '<div class="empty">Không khớp phong cách nào.</div>'; };
+  const styleCards = () => { const q = (st.sq || '').trim().toLowerCase(); return N.styles.filter(([k, n, d]) => !q || (k + ' ' + n + ' ' + d).toLowerCase().includes(q)).map(([k, n, d]) => `<div class="sc"><div class="mat s-${k}"><div class="s-sw"><i>${esc(n.split(' ')[0])}</i></div></div><div class="txt"><div class="ct"><b>${F['styles/' + k] ? `<a href="${H('styles/' + k)}">${esc(n)}</a>` : esc(n)}</b><a class="plat" href="https://namethatui.com/styles/${k}" target="_blank" rel="noopener">gốc ↗</a></div><p class="cd">${esc((F['styles/' + k] && F['styles/' + k].lead) || d)}</p></div></div>`).join('') || '<div class="empty">Không khớp phong cách nào.</div>'; };
   const stylesView = () => `<section class="stitle wrap"><small>PHONG CÁCH THỊ GIÁC</small><h1>Phong cách này là gì<em>?</em></h1><p>Bản đồ các phong cách giao diện. Nhận ra vẻ ngoài, biết tên thật của nó và phân biệt với các phong cách gần giống.</p><label class="bigsearch">${ICON.search}<input id="sq" type="search" placeholder="«nút mềm như nổi lên khỏi nền»" value="${esc(st.sq || '')}" aria-label="Tìm phong cách"><span class="kbd">⌘ K</span></label></section><div class="wrap"><div class="sg" id="sgrid">${styleCards()}</div></div>`;
-  const vsView = () => `<section class="stitle wrap"><small>DỄ NHẦM</small><h1>Hai cái này khác nhau thế nào<em>?</em></h1><p>Những cặp trông gần giống nhau nhưng khác vai trò. Mỗi câu trả lời ngắn do mình viết lại.</p></section><div class="wrap"><div class="vs">${N.vs.map(([k, n, d]) => `<div><b>${F['vs/' + k] ? `<a href="#/vs/${k}">${esc(n)}</a>` : esc(n)}</b>${esc((F['vs/' + k] && F['vs/' + k].lead) || d)} <a href="https://namethatui.com/vs/${k}" target="_blank" rel="noopener">Trang gốc ↗</a></div>`).join('')}</div></div>`;
+  const vsView = () => `<section class="stitle wrap"><small>DỄ NHẦM</small><h1>Hai cái này khác nhau thế nào<em>?</em></h1><p>Những cặp trông gần giống nhau nhưng khác vai trò. Mỗi câu trả lời ngắn do mình viết lại.</p></section><div class="wrap"><div class="vs">${N.vs.map(([k, n, d]) => `<div><b>${F['vs/' + k] ? `<a href="${H('vs/' + k)}">${esc(n)}</a>` : esc(n)}</b>${esc((F['vs/' + k] && F['vs/' + k].lead) || d)} <a href="https://namethatui.com/vs/${k}" target="_blank" rel="noopener">Trang gốc ↗</a></div>`).join('')}</div></div>`;
 
   const spec = () => `<div class="spec">
     <h3>1. Site này là gì</h3>
@@ -366,23 +369,27 @@ footer.ft{border-top:1px solid var(--bd);padding:22px 0 40px;color:var(--mut);fo
     return `<section class="stitle wrap"><small>${kind === 'styles' ? 'PHONG CÁCH' : kind === 'vs' ? 'DỄ NHẦM' : 'TRANG'}</small><h1>${esc(ff.title || base[1] || slug)}</h1>${(ff.lead || base[2]) ? `<p>${esc(ff.lead || base[2])}</p>` : ''}</section><div class="wrap"><div class="spec">${(ff.sections || []).map((x) => `<h3>${esc(x.h)}</h3>${(x.p || []).map((t) => `<p>${esc(t)}</p>`).join('')}`).join('')}<p><a href="https://namethatui.com/${kind === 'page' ? slug : kind + '/' + slug}" target="_blank" rel="noopener" style="color:var(--blue)">Trang gốc ↗</a></p></div></div>`; };
   const body = () => st.tab === 'page' ? pageView(st.key) : st.tab === 'detail' ? detailView(st.key) : st.tab === 'styles' ? stylesView() : st.tab === 'vs' ? vsView() : st.tab === 'spec' ? specView() : dictView();
   function paint() {
-    $('app').innerHTML = header() + '<main>' + body() + '</main>' + licHtml + '<footer class="ft"><div class="wrap">gọi tên ui · một trang của <a href="../" style="color:var(--blue)">uiux-asset</a> · mô tả và demo tự viết, ý tưởng từ <a href="https://namethatui.com/" target="_blank" rel="noopener" style="color:var(--blue)">NameThatUI</a></div></footer>';
+    $('app').innerHTML = header() + '<main>' + body() + '</main>' + licHtml + '<footer class="ft"><div class="wrap">gọi tên ui · một trang của <a href="/" style="color:var(--blue)">uiux-asset</a> · mô tả và demo tự viết, ý tưởng từ <a href="https://namethatui.com/" target="_blank" rel="noopener" style="color:var(--blue)">NameThatUI</a></div></footer>';
     const q = $('q'); if (q) q.addEventListener('input', () => { st.q = q.value; $('grid').innerHTML = list(); });
     const sq = $('sq'); if (sq) sq.addEventListener('input', () => { st.sq = sq.value; $('sgrid').innerHTML = styleCards(); });
     $('theme').onclick = () => { const d = document.documentElement; d.dataset.theme = d.dataset.theme === 'dark' ? 'light' : 'dark'; try { localStorage.setItem('ovs-theme', d.dataset.theme); } catch { /* bỏ qua */ } };
   }
   function route() {
-    const h = location.hash.slice(1).replace(/^\//, ''), m = /^(web|macos)\/([a-z0-9-]+)$/.exec(h), m2 = /^(styles|vs|page)\/([a-z0-9-]+)$/.exec(h);
+    let h = location.hash.slice(1).replace(/^\//, '');
+    if (!h && PATHMODE) { h = location.pathname.replace(BASE, '').replace(/^\/+|\/+$/g, ''); if (h === 'index.html') h = ''; }
+    if (PATHMODE && location.hash && h) history.replaceState(null, '', BASE + h + (location.search || ''));   // liên kết cũ dạng #/ được đổi sang đường dẫn thật
+    const m = /^(web|macos)\/([a-z0-9-]+)$/.exec(h), m2 = /^(styles|vs|page)\/([a-z0-9-]+)$/.exec(h);
     if (m) { st.tab = 'detail'; st.key = h; } else if (m2) { st.tab = 'page'; st.key = h; } else st.tab = ['styles', 'vs', 'spec'].includes(h) ? h : 'dict';
     paint(); scrollTo(0, 0);
+    const it = st.tab === 'detail' ? byKey(st.key) : null; document.title = (it ? it.r[1] + ' · ' : st.tab === 'dict' ? '' : { styles: 'Phong cách · ', vs: 'Dễ nhầm · ', spec: 'Đặc tả · ', page: '' }[st.tab] || '') + 'Gọi tên UI — uiux-asset';
   }
-  const focusSearch = () => { if (st.tab !== 'dict') { location.hash = '#/'; } setTimeout(() => { const q = $('q'); if (q) { q.focus(); q.scrollIntoView({ block: 'center' }); } }, 60); };
+  const focusSearch = () => { if (st.tab !== 'dict') go('dict'); setTimeout(() => { const q = $('q'); if (q) { q.focus(); q.scrollIntoView({ block: 'center' }); } }, 60); };
   document.addEventListener('click', (e) => {
     const t = e.target.closest('[data-t],[data-p],[data-sort],[data-rand],[data-cp],[data-focus]'); if (!t) return;
-    if (t.dataset.t) { e.preventDefault(); location.hash = t.dataset.t === 'dict' ? '#/' : '#/' + t.dataset.t; }
+    if (t.dataset.t) { e.preventDefault(); go(t.dataset.t); }
     else if (t.dataset.p) { st.plat = t.dataset.p; setUrlPlat(st.plat); paint(); }
     else if (t.dataset.sort) { st.sort = t.dataset.sort; paint(); }
-    else if (t.dataset.rand !== undefined) { const it = all[Math.floor(Math.random() * all.length)]; location.hash = href(it.p, it.r); }
+    else if (t.dataset.rand !== undefined) { const it = all[Math.floor(Math.random() * all.length)]; go(it.p + '/' + it.r[0]); }
     else if (t.dataset.focus !== undefined) focusSearch();
     else { const it = byKey(t.dataset.cp); if (it) { const txt = (F[t.dataset.cp] && F[t.dataset.cp].prompt) || prompt(it.p, it.r), s = t.querySelector('span'); (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(() => { s.textContent = 'Đã chép'; }).catch(() => { s.textContent = 'Không chép được'; }); setTimeout(() => { s.textContent = 'Chép prompt'; }, 1500); } }
   });
@@ -404,7 +411,7 @@ footer.ft{border-top:1px solid var(--bd);padding:22px 0 40px;color:var(--mut);fo
     d.addEventListener('click', (e) => { const r = e.target.closest('.r'), b = e.target.closest('[data-pp]'); if (r) palGo(+r.dataset.i); else if (b) { pal.plat = pal.plat === b.dataset.pp ? 'all' : b.dataset.pp; pal.sel = 0; palPaint(); $('pq').focus(); } });
     $('pq').addEventListener('input', (e) => { pal.q = e.target.value; pal.sel = 0; palPaint(); }); }
   function palClose() { const d = $('palbd'); if (d) d.remove(); pal.open = false; document.body.style.overflow = ''; }
-  function palGo(i) { const x = pal.items[i]; if (!x) return; palClose(); location.hash = '#/' + x.key; }
+  function palGo(i) { const x = pal.items[i]; if (!x) return; palClose(); go(x.key); }
   document.addEventListener('keydown', (e) => {
     if (pal.open) { if (e.key === 'Escape') { e.preventDefault(); palClose(); } else if (e.key === 'ArrowDown') { e.preventDefault(); pal.sel = Math.min(pal.items.length - 1, pal.sel + 1); palPaint(); } else if (e.key === 'ArrowUp') { e.preventDefault(); pal.sel = Math.max(0, pal.sel - 1); palPaint(); } else if (e.key === 'Enter') { e.preventDefault(); palGo(pal.sel); } return; }
     const typing = /INPUT|TEXTAREA|SELECT/.test((document.activeElement || {}).tagName || '');
@@ -426,7 +433,8 @@ footer.ft{border-top:1px solid var(--bd);padding:22px 0 40px;color:var(--mut);fo
     else if (t.dataset.share) { const it = byKey(t.dataset.share); const url = location.href.split('?')[0] + (location.hash || ''); if (navigator.share) navigator.share({ title: it ? it.r[1] : 'Gọi tên UI', url }).catch(() => {}); else copy(url, s, 'Chia sẻ', 'Đã chép liên kết'); }
     else { const set = savedSet(), k = t.dataset.save; if (set.has(k)) set.delete(k); else set.add(k); try { localStorage.setItem('ntu-saved', JSON.stringify([...set])); } catch { /* bỏ qua */ } s.textContent = set.has(k) ? 'Đã lưu' : 'Lưu'; } });
 
-  addEventListener('hashchange', route);
+  addEventListener('hashchange', route); addEventListener('popstate', route);
+  document.addEventListener('click', (e) => { const a = e.target.closest('a[href^="/namethatui/"]'); if (!PATHMODE || !a || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.target === '_blank' || e.defaultPrevented) return; e.preventDefault(); history.pushState(null, '', a.getAttribute('href') + (location.search || '')); route(); });
   route(); window.__nt = { st, count: all.length, route };
 })();
 </script></body></html>

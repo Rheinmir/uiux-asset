@@ -1,6 +1,20 @@
 {
   "rewrites": [
-    { "source": "/c/:id.md", "destination": "/api/cart?id=:id&format=md" },
-    { "source": "/c/:id", "destination": "/api/cart?id=:id" }
+    {
+      "source": "/namethatui/:kind(web|macos|styles|vs|page)/:slug",
+      "destination": "/namethatui/index.html"
+    },
+    {
+      "source": "/namethatui/:tab(styles|vs|spec)",
+      "destination": "/namethatui/index.html"
+    },
+    {
+      "source": "/c/:id.md",
+      "destination": "/api/cart?id=:id&format=md"
+    },
+    {
+      "source": "/c/:id",
+      "destination": "/api/cart?id=:id"
+    }
   ]
 }
