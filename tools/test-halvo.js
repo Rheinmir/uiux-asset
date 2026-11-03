@@ -10,5 +10,7 @@ assert(html.includes('Unsplash') && html.includes('Clay Banks') && html.includes
 const j = JSON.parse(fs.readFileSync(D('diff.json'), 'utf8'));
 assert.strictEqual(j.views.length, 3);
 for (const v of j.views) assert(v.mad > 0 && v.mad < 20 && v.px >= 0 && v.px < 40 && v.px_ui >= 0 && v.px_ui <= v.px, 'số đo diff bất thường: ' + JSON.stringify(v));
-assert(/\['halvo\/', 'Nesta'\]/.test(fs.readFileSync(path.join(__dirname, '..', 'aw.js'), 'utf8')), 'aw.js NAV thiếu halvo/');
+// nav gom 4 màn dựng lại vào «Dựng lại» (rebuilds/): trang vẫn phải tới được từ nav và hub
+assert(fs.readFileSync(path.join(__dirname, '..', 'aw.js'), 'utf8').includes("'halvo/'") && fs.readFileSync(path.join(__dirname, '..', 'aw.js'), 'utf8').includes("['rebuilds/', 'Dựng lại'"), 'aw.js NAV thiếu halvo/ trong nhóm Dựng lại');
+assert(fs.readFileSync(path.join(__dirname, '..', 'rebuilds/index.html'), 'utf8').includes('href="../halvo/"'), 'rebuilds/ thiếu thẻ Nesta');
 console.log('test-halvo: ok');
