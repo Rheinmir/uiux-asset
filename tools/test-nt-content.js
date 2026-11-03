@@ -20,4 +20,6 @@ for (const p of ['home', 'methodology', 'translate', 'sponsor', 'swift-vs-electr
 assert(!/@[a-z0-9_]{4,}/i.test(JSON.stringify(F.__proto__ ? F['page/sponsor'] : '').replace(/@argofowl|sponsor@namethatui\.com/g, '')), 'trang sponsor không được nhắc lại phản hồi của người khác');
 require(path.join(__dirname, '..', 'namethatui', 'style-art.js'));
 for (const r of N.styles) { assert(window.NT_ART[r[0]] && /class="sa sa-/.test(window.NT_ART[r[0]]), 'thiếu ảnh minh hoạ phong cách ' + r[0]); const cd = (F['styles/' + r[0]] || {}).card; assert(cd && cd.quote && cd.tags && cd.tags.length === 3, 'thiếu dữ liệu thẻ phong cách ' + r[0]); }
+const DT = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'namethatui', 'demo-text.json'), 'utf8')), DS = new Set(JSON.parse(fs.readFileSync(path.join(__dirname, 'ntu-gate', 'demo-strings.json'), 'utf8')).strings);
+for (const [k, v] of Object.entries(DT)) { assert(DS.has(k), 'demo-text.json: khoá không nằm trong demo-strings.json: ' + k); assert(typeof v === 'string' && v.trim() && v !== k, 'demo-text.json: bản dịch rỗng hoặc trùng gốc: ' + k); }
 console.log(`test-nt-content: ok · ${n} thuật ngữ · ${N.styles.length} style · ${N.vs.length} cặp vs · 8 trang`);
