@@ -5,15 +5,16 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Gọi tên UI — từ điển 91 thành phần giao diện — uiux-asset</title>
 <meta name="description" content="Từ điển tên chuẩn của thành phần giao diện (33 macOS, 58 web), 14 phong cách, 18 cặp dễ nhầm, kèm đặc tả site NameThatUI. Giao diện vẽ lại bằng mã tự viết; mô tả viết lại bằng tiếng Việt, demo tự dựng, ghi nguồn.">
-<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||'dark'}catch(e){}</script>
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="/aw.css?v=6cd436c7c7">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap">
 <style>
 :root{--bg:#0b0c0e;--fg:#edeef0;--mut:#8b8f98;--mut2:#5f636c;--bd:rgba(255,255,255,.08);--bd2:rgba(255,255,255,.16);--card:#111215;--blue:#4c8dff;--dot:rgba(255,255,255,.075);--mat:#0f1013;--chip:rgba(255,255,255,.06);--aw-bg-primary:#0f1013}
 :root[data-theme="light"]{--bg:#fff;--fg:#14151a;--mut:#6b6f78;--mut2:#9a9da5;--bd:rgba(0,0,0,.09);--bd2:rgba(0,0,0,.18);--card:#fafafa;--blue:#1d5fd6;--dot:rgba(0,0,0,.08);--mat:#f6f6f7;--chip:rgba(0,0,0,.05);--aw-bg-primary:#f6f6f7}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 "Geist",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}html{scroll-behavior:smooth}#app{background:var(--bg);color:var(--fg);font:16px/1.5 "Geist",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;border-radius:var(--aw-rounded-normal,14px);margin-top:16px}
 a{color:inherit;text-decoration:none}button{font:inherit;color:inherit}code,.mono{font-family:"Geist Mono",ui-monospace,Menlo,monospace}
-.wrap{max-width:1008px;margin:0 auto;padding:0 16px}
+.wrap{max-width:976px;margin:0 auto;padding:0}
 header.top{border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px)}
 .hd{height:56px;display:flex;align-items:center;gap:22px}.logo{font-weight:600;font-size:15px;letter-spacing:-.01em;white-space:nowrap}.logo b{color:var(--blue);font-weight:600}.logo sup{display:inline-grid;place-items:center;width:15px;height:15px;border-radius:50%;background:#6d4cf0;color:#fff;font:600 9px/1 "Geist",sans-serif;vertical-align:top;margin-left:3px}
 .nav{display:flex;min-width:0;gap:20px;font-size:14px;color:var(--mut);overflow:auto;white-space:nowrap;scrollbar-width:none}.nav a{padding:4px 0;cursor:pointer}.nav a[aria-current="page"]{color:var(--fg)}.nav a:hover{color:var(--fg)}
@@ -161,7 +162,7 @@ footer.ft{border-top:1px solid var(--bd);padding:22px 0 40px;color:var(--mut);fo
 .grid{gap:32px 20px;padding-top:24px}.card .txt{min-height:111px;padding-top:12px}.card .ct{margin-top:0}
 .stitle{padding:66px 0 0}.stitle small{display:block;height:14px;line-height:14px;margin-bottom:16px}.stitle h1{font-size:48px;line-height:1;margin:0}.stitle p{max-width:448px;min-height:73px;margin:16px auto 0;font-size:15px;line-height:1.62}.stitle .bigsearch{max-width:576px;margin-top:32px}
 .sg{padding-top:56px;row-gap:33px}.sc{min-height:264px}.sc .txt{min-height:88px;padding-top:12px}.sc .ct{margin-top:0}
-.wrap.wide{max-width:1136px}.crumb{height:88px;padding:0}.dt{grid-template-columns:minmax(0,11fr) minmax(0,9fr);gap:0 40px}.dt>*{min-width:0}.dmat{height:340px;top:80px}
+.wrap.wide{max-width:1104px}.crumb{height:88px;padding:0}.dt{grid-template-columns:minmax(0,11fr) minmax(0,9fr);gap:0 40px}.dt>*{min-width:0}.dmat{height:340px;top:80px}
 .dt h1{font-size:30px;line-height:40px;margin:0}.rhead{min-height:100px}.dt p.body{font-size:14.5px;line-height:1.625;margin:20px 0 0;min-height:118px;overflow-wrap:anywhere}.dt h2{margin:28px 0 10px;line-height:17px}
 .symline,.sym,.aka,.dt h1{overflow-wrap:anywhere}.code pre{overflow-x:auto;max-width:100%}.code{max-width:100%}.pbox,.spec p,.anat span,.cd{overflow-wrap:anywhere}.spec table{display:block;overflow-x:auto;max-width:100%}.see a{flex-wrap:wrap;gap:6px}
 @media(max-width:860px){.dt{grid-template-columns:minmax(0,1fr);gap:32px 0}.dmat{position:relative;top:auto;height:340px}.crumb{height:80px}.rhead{min-height:96px}.dt p.body{min-height:165px}}
@@ -179,16 +180,20 @@ footer.ft{border-top:1px solid var(--bd);padding:22px 0 40px;color:var(--mut);fo
 .pal .ft{display:flex;justify-content:space-between;padding:8px 14px;border-top:1px solid var(--bd);font:11px "Geist Mono",monospace;color:var(--mut2)}.pal .none{padding:26px;text-align:center;color:var(--mut);font-size:13.5px}
 .burger{display:none}.mnav{display:none}#hs2{display:none}@media(max-width:600px){#hs2{display:grid!important}}
 @media(max-width:600px){.nav{display:none}.burger{display:grid}.mnav.on{display:grid;position:absolute;left:0;right:0;top:57px;background:var(--bg);border-bottom:1px solid var(--bd);padding:8px 16px 14px;gap:2px;z-index:29}.mnav a{padding:10px 4px;border-bottom:1px solid var(--bd);color:var(--mut);font-size:15px}.mnav a[aria-current="page"]{color:var(--fg)}}
+
+/* thanh chuyên mục trong trang (thay header riêng) */
+.ptabs{height:57px;border-bottom:1px solid var(--bd)}.ptabs .wrap{height:100%}.ptabs .nav{display:flex;gap:22px;height:100%;align-items:center;font-size:14px;color:var(--mut);overflow:auto;white-space:nowrap;scrollbar-width:none}.ptabs .nav a{cursor:pointer;padding:4px 0}.ptabs .nav a[aria-current="page"]{color:var(--fg)}.ptabs .nav a:hover{color:var(--fg)}
+@media(min-width:861px){.dmat{top:96px}}
+@media(max-width:600px){.ptabs .nav{display:flex}}
 </style>
 <link rel="stylesheet" href="/namethatui/demos.css"><link rel="stylesheet" href="/namethatui/demo-detail.css"><link rel="stylesheet" href="/namethatui/style-art.css">
 </head>
-<body><div id="app"></div>
+<body><main class="aw-wrap"><script src="/aw.js?v=6cd436c7c7"></script><div id="app"></div></main>
 <script src="/namethatui/style-art.js"></script><script src="/namethatui/demo-detail.js"></script><script src="/namethatui/data.js"></script><script src="/namethatui/content.js"></script><script src="/namethatui/demos.js"></script><script src="/namethatui/demos.gen.js"></script><script src="/namethatui/order.js"></script>
 <script>
 
 (() => {
   const N = window.NT, F = window.NT_FULL || {}, $ = (id) => document.getElementById(id), esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-  try { const t = localStorage.getItem('ovs-theme'); document.documentElement.dataset.theme = t || 'dark'; } catch { document.documentElement.dataset.theme = 'dark'; }
 
   const D = {   // demo tự dựng, khoá theo cột 4 trong data.js hoặc slug
     dots: '<div class="d-dots">···</div>', divider: '<div class="d-div"></div>', progress: '<div class="d-bar"><i></i></div>', toast: '<div class="d-toast">Đã lưu thay đổi</div>',
@@ -281,9 +286,9 @@ footer.ft{border-top:1px solid var(--bd);padding:22px 0 40px;color:var(--mut);fo
   const H = (k) => (k === 'dict' || !k) ? (PATHMODE ? BASE : '#/') : (PATHMODE ? BASE + k : '#/' + k);
   const go = (k) => { if (PATHMODE) { history.pushState(null, '', H(k) + (location.search || '')); route(); } else { location.hash = (k === 'dict' || !k) ? '#/' : '#/' + k; } };
   const href = (p, r) => H(p + '/' + r[0]);
-  function header() {
+  function header() {   // thanh chuyên mục TRONG trang (nav site do khung chung lo); cao 57px như thanh đầu của trang gốc
     const T = [['dict', 'Thành phần'], ['styles', 'Phong cách'], ['vs', 'Dễ nhầm'], ['spec', 'Đặc tả']];
-    return `<header class="top"><div class="wrap hd"><a class="logo" href="${H('dict')}" data-t="dict">gọi tên <b>ui</b><sup>${all.length > 90 ? 'v' : ''}</sup></a><nav class="nav" aria-label="Chuyên mục">${T.map(([k, t]) => `<a href="${H(k)}" data-t="${k}" ${k === st.tab || (st.tab === 'detail' && k === 'dict') ? 'aria-current="page"' : ''}>${t}</a>`).join('')}</nav><span class="sp"></span><a class="hsearch" id="hs" data-pal>${ICON.search}<span>Mô tả cái bạn thấy…</span><span class="kbd">⌘ K</span></a><button class="ibtn" data-pal aria-label="Tìm kiếm" style="display:none" id="hs2">${ICON.search}</button><a class="ibtn" href="/" title="Về uiux-asset" aria-label="Về uiux-asset" style="font-size:12px">↖</a><button class="ibtn" id="theme" aria-label="Đổi giao diện sáng/tối">${ICON.moon}</button><button class="ibtn burger" id="burger" aria-label="Mở điều hướng" aria-expanded="false">≡</button></div><nav class="mnav" id="mnav" aria-label="Điều hướng">${T.map(([k, t]) => `<a href="${H(k)}" data-t="${k}">${t}</a>`).join('')}</nav></header>`;
+    return `<div class="ptabs"><div class="wrap"><nav class="nav" aria-label="Chuyên mục">${T.map(([k, t]) => `<a href="${H(k)}" data-t="${k}" ${k === st.tab || (st.tab === 'detail' && k === 'dict') ? 'aria-current="page"' : ''}>${t}</a>`).join('')}</nav></div></div>`;
   }
   function list() {
     const q = st.q.trim().toLowerCase();
@@ -295,7 +300,7 @@ footer.ft{border-top:1px solid var(--bd);padding:22px 0 40px;color:var(--mut);fo
   }
   function dictView() {
     const cnt = (k) => k === 'all' ? all.length : all.filter(({ p }) => p === k).length;
-    return `<section class="wrap hero"><h1>Cái này tên là gì<em>?</em></h1><p class="s">Từ điển trực quan của giao diện. Mô tả vật bạn thấy bằng lời thường, bạn nhận lại tên chuẩn, ký hiệu API và một prompt dán sẵn cho agent viết code.</p><label class="bigsearch">${ICON.search}<input id="q" type="search" placeholder="«nền nhạt phía sau biểu tượng trên thanh menu»" value="${esc(st.q)}" aria-label="Tìm thành phần"><span class="kbd">⌘ K</span></label><div class="hint">Không gọi được tên của kiểu dáng? <a data-t="styles">Xem phần Phong cách</a></div><div class="hint2">Gõ tên, vị trí hoặc hình dạng; kết quả lọc ngay khi gõ.</div></section>
+    return `<section class="wrap hero"><h1>Cái này tên là gì<em>?</em></h1><p class="s">Từ điển trực quan của giao diện. Mô tả vật bạn thấy bằng lời thường, bạn nhận lại tên chuẩn, ký hiệu API và một prompt dán sẵn cho agent viết code.</p><label class="bigsearch">${ICON.search}<input id="q" type="search" placeholder="«nền nhạt phía sau biểu tượng trên thanh menu»" value="${esc(st.q)}" aria-label="Tìm thành phần"></label><div class="hint">Không gọi được tên của kiểu dáng? <a data-t="styles">Xem phần Phong cách</a></div><div class="hint2">Gõ tên, vị trí hoặc hình dạng; kết quả lọc ngay khi gõ.</div></section>
       <div class="wrap"><div class="bar"><div class="tabs">${[['all', 'Tất cả'], ['macos', 'macOS'], ['web', 'Web']].map(([k, t]) => `<button class="tab" data-p="${k}" aria-pressed="${st.plat === k}">${t}<small>${cnt(k)}</small></button>`).join('')}</div><div class="tools"><div class="seg">${[['newest', 'Mới nhất'], ['popular', 'Phổ biến']].map(([k, t]) => `<button data-sort="${k}" aria-pressed="${st.sort === k}" title="Thứ tự theo namethatui.com">${t}</button>`).join('')}</div><button class="pill" data-rand>${ICON.dice}<span>Ngẫu nhiên</span></button></div></div><div class="grid" id="grid">${list()}</div></div>`;
   }
   function detailView(key) {
@@ -320,7 +325,7 @@ footer.ft{border-top:1px solid var(--bd);padding:22px 0 40px;color:var(--mut);fo
   }
   const cardOf = (k) => (F['styles/' + k] || {}).card;
   const styleCards = () => { const q = (st.sq || '').trim().toLowerCase(); return N.styles.filter(([k, n, d]) => !q || (k + ' ' + n + ' ' + d).toLowerCase().includes(q)).map(([k, n, d]) => `<div class="sc"><div class="mat s-${k}">${(window.NT_ART || {})[k] || `<div class="s-sw"><i>${esc(n.split(' ')[0])}</i></div>`}</div><div class="txt"><div class="ct"><b>${F['styles/' + k] ? `<a href="${H('styles/' + k)}">${esc(n)}</a>` : esc(n)}</b>${cardOf(k) && cardOf(k).label ? `<span class="plat">${esc(cardOf(k).label)}</span>` : ''}</div><p class="cd q">${cardOf(k) ? '“' + esc(cardOf(k).quote) + '”' : esc((F['styles/' + k] && F['styles/' + k].lead) || d)}</p>${cardOf(k) ? `<div class="tg">${cardOf(k).tags.map((t) => `<i>${esc(t)}</i>`).join('')}</div>` : ''}</div></div>`).join('') || '<div class="empty">Không khớp phong cách nào.</div>'; };
-  const stylesView = () => `<section class="stitle wrap"><small>PHONG CÁCH THỊ GIÁC</small><h1>Phong cách này là gì<em>?</em></h1><p>Bản đồ các phong cách giao diện. Nhận ra vẻ ngoài, biết tên thật của nó và phân biệt với các phong cách gần giống.</p><label class="bigsearch">${ICON.search}<input id="sq" type="search" placeholder="«nút mềm như nổi lên khỏi nền»" value="${esc(st.sq || '')}" aria-label="Tìm phong cách"><span class="kbd">⌘ K</span></label></section><div class="wrap"><div class="sg" id="sgrid">${styleCards()}</div></div>`;
+  const stylesView = () => `<section class="stitle wrap"><small>PHONG CÁCH THỊ GIÁC</small><h1>Phong cách này là gì<em>?</em></h1><p>Bản đồ các phong cách giao diện. Nhận ra vẻ ngoài, biết tên thật của nó và phân biệt với các phong cách gần giống.</p><label class="bigsearch">${ICON.search}<input id="sq" type="search" placeholder="«nút mềm như nổi lên khỏi nền»" value="${esc(st.sq || '')}" aria-label="Tìm phong cách"></label></section><div class="wrap"><div class="sg" id="sgrid">${styleCards()}</div></div>`;
   const vsView = () => `<section class="stitle wrap"><small>DỄ NHẦM</small><h1>Hai cái này khác nhau thế nào<em>?</em></h1><p>Những cặp trông gần giống nhau nhưng khác vai trò. Mỗi câu trả lời ngắn do mình viết lại.</p></section><div class="wrap"><div class="vs">${N.vs.map(([k, n, d]) => `<div><b>${F['vs/' + k] ? `<a href="${H('vs/' + k)}">${esc(n)}</a>` : esc(n)}</b>${esc((F['vs/' + k] && F['vs/' + k].lead) || d)} <a href="https://namethatui.com/vs/${k}" target="_blank" rel="noopener">Trang gốc ↗</a></div>`).join('')}</div></div>`;
 
   const spec = () => `<div class="spec">
@@ -371,10 +376,9 @@ footer.ft{border-top:1px solid var(--bd);padding:22px 0 40px;color:var(--mut);fo
     return `<section class="stitle wrap"><small>${kind === 'styles' ? 'PHONG CÁCH' : kind === 'vs' ? 'DỄ NHẦM' : 'TRANG'}</small><h1>${esc(ff.title || base[1] || slug)}</h1>${(ff.lead || base[2]) ? `<p>${esc(ff.lead || base[2])}</p>` : ''}</section><div class="wrap"><div class="spec">${(ff.sections || []).map((x) => `<h3>${esc(x.h)}</h3>${(x.p || []).map((t) => `<p>${esc(t)}</p>`).join('')}`).join('')}<p><a href="https://namethatui.com/${kind === 'page' ? slug : kind + '/' + slug}" target="_blank" rel="noopener" style="color:var(--blue)">Trang gốc ↗</a></p></div></div>`; };
   const body = () => st.tab === 'page' ? pageView(st.key) : st.tab === 'detail' ? detailView(st.key) : st.tab === 'styles' ? stylesView() : st.tab === 'vs' ? vsView() : st.tab === 'spec' ? specView() : dictView();
   function paint() {
-    $('app').innerHTML = header() + '<main>' + body() + '</main>' + licHtml + '<footer class="ft"><div class="wrap">gọi tên ui · một trang của <a href="/" style="color:var(--blue)">uiux-asset</a> · mô tả và demo tự viết, ý tưởng từ <a href="https://namethatui.com/" target="_blank" rel="noopener" style="color:var(--blue)">NameThatUI</a></div></footer>';
+    $('app').innerHTML = header() + '<main>' + body() + '</main>' + licHtml;
     const q = $('q'); if (q) q.addEventListener('input', () => { st.q = q.value; $('grid').innerHTML = list(); });
     const sq = $('sq'); if (sq) sq.addEventListener('input', () => { st.sq = sq.value; $('sgrid').innerHTML = styleCards(); });
-    $('theme').onclick = () => { const d = document.documentElement; d.dataset.theme = d.dataset.theme === 'dark' ? 'light' : 'dark'; try { localStorage.setItem('ovs-theme', d.dataset.theme); } catch { /* bỏ qua */ } };
   }
   function route() {
     let h = location.hash.slice(1).replace(/^\//, '');
@@ -396,30 +400,6 @@ footer.ft{border-top:1px solid var(--bd);padding:22px 0 40px;color:var(--mut);fo
     else { const it = byKey(t.dataset.cp); if (it) { const txt = (F[t.dataset.cp] && F[t.dataset.cp].prompt) || prompt(it.p, it.r), s = t.querySelector('span'); (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(() => { s.textContent = 'Đã chép'; }).catch(() => { s.textContent = 'Không chép được'; }); setTimeout(() => { s.textContent = 'Chép prompt'; }, 1500); } }
   });
 
-  // ---------- bảng lệnh ⌘K ----------
-  const pal = { open: false, q: '', plat: 'all', sel: 0, items: [] };
-  const palSearch = () => { const q = pal.q.trim().toLowerCase(); const toks = q.split(/\s+/).filter(Boolean);
-    const rows = [...all.filter(({ p }) => pal.plat === 'all' || pal.plat === p).map(({ p, r }) => { const f = F[p + '/' + r[0]] || {}; return { kind: p, key: p + '/' + r[0], title: r[1], sym: f.sym || SYM[r[0]] || '', sum: f.lead || r[2], hay: [r[0], r[1], r[2], f.sym || SYM[r[0]] || '', (f.aka || []).join(' '), (f.phrases || []).join(' ')].join(' ').toLowerCase(), tag: PLAT[p] }; }),
-      ...(pal.plat === 'all' ? N.styles.map(([k, n, d]) => ({ kind: 'styles', key: 'styles/' + k, title: n, sym: '', sum: (F['styles/' + k] && F['styles/' + k].lead) || d, hay: (k + ' ' + n + ' ' + d).toLowerCase(), tag: 'PHONG CÁCH' })) : [])];
-    const scored = rows.map((x) => { if (!toks.length) return [x, 1]; let sc = 0; for (const t of toks) { if (x.title.toLowerCase().startsWith(t)) sc += 5; else if (x.title.toLowerCase().includes(t)) sc += 3; else if (x.hay.includes(t)) sc += 1; else return [x, 0]; } return [x, sc]; }).filter(([, sc]) => sc > 0).sort((a, b) => b[1] - a[1]);
-    return scored.slice(0, 8).map(([x]) => x); };
-  function palPaint(keepFocus) { const el = $('pal'); if (!el) return; pal.items = palSearch(); if (pal.sel >= pal.items.length) pal.sel = 0;
-    el.querySelector('.rs').innerHTML = pal.items.length ? pal.items.map((x, i) => `<div class="r" role="option" data-i="${i}" aria-selected="${i === pal.sel}"><b>${esc(x.title)}</b><span class="tg">${x.tag}</span>${x.sym ? `<span class="sy">${esc(x.sym)}</span>` : ''}<p>${esc(x.sum)}</p></div>`).join('') : '<div class="none">Không khớp mục nào. Thử mô tả hình dạng hoặc vị trí.</div>';
-    el.querySelectorAll('.hs button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.pp === pal.plat))); const s = el.querySelector('.rs [aria-selected="true"]'); if (s) s.scrollIntoView({ block: 'nearest' }); }
-  function palOpen() { if (pal.open) return; pal.open = true; pal.q = ''; pal.sel = 0; const d = document.createElement('div'); d.className = 'pal-bd'; d.id = 'palbd';
-    d.innerHTML = `<div class="pal" id="pal" role="dialog" aria-modal="true" aria-label="Tìm thành phần"><div class="pi">${ICON.search}<input id="pq" placeholder="Mô tả thứ bạn thấy…" autocomplete="off" aria-label="Tìm"><span class="kbd">esc</span></div><div class="rs" role="listbox"></div><div class="hs"><span>Chưa chắc? Bạn thấy nó ở đâu?</span><button data-pp="web">Trên website</button><button data-pp="macos">Trong app Mac</button></div><div class="ft"><span>${all.length} thành phần · ${N.styles.length} phong cách</span><span>↑↓ chọn · ↵ mở · esc đóng</span></div></div>`;
-    document.body.append(d); document.body.style.overflow = 'hidden'; palPaint(); $('pq').focus();
-    d.addEventListener('mousedown', (e) => { if (e.target === d) palClose(); });
-    d.addEventListener('click', (e) => { const r = e.target.closest('.r'), b = e.target.closest('[data-pp]'); if (r) palGo(+r.dataset.i); else if (b) { pal.plat = pal.plat === b.dataset.pp ? 'all' : b.dataset.pp; pal.sel = 0; palPaint(); $('pq').focus(); } });
-    $('pq').addEventListener('input', (e) => { pal.q = e.target.value; pal.sel = 0; palPaint(); }); }
-  function palClose() { const d = $('palbd'); if (d) d.remove(); pal.open = false; document.body.style.overflow = ''; }
-  function palGo(i) { const x = pal.items[i]; if (!x) return; palClose(); go(x.key); }
-  document.addEventListener('keydown', (e) => {
-    if (pal.open) { if (e.key === 'Escape') { e.preventDefault(); palClose(); } else if (e.key === 'ArrowDown') { e.preventDefault(); pal.sel = Math.min(pal.items.length - 1, pal.sel + 1); palPaint(); } else if (e.key === 'ArrowUp') { e.preventDefault(); pal.sel = Math.max(0, pal.sel - 1); palPaint(); } else if (e.key === 'Enter') { e.preventDefault(); palGo(pal.sel); } return; }
-    const typing = /INPUT|TEXTAREA|SELECT/.test((document.activeElement || {}).tagName || '');
-    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); palOpen(); } else if (e.key === '/' && !typing && !e.metaKey && !e.ctrlKey) { e.preventDefault(); palOpen(); }
-  }, true);
-  document.addEventListener('click', (e) => { if (e.target.closest('[data-pal]')) { e.preventDefault(); palOpen(); } const bg = e.target.closest('#burger'); if (bg) { const m = $('mnav'); const on = m.classList.toggle('on'); bg.setAttribute('aria-expanded', String(on)); bg.setAttribute('aria-label', on ? 'Đóng điều hướng' : 'Mở điều hướng'); } else if (e.target.closest('#mnav a')) { $('mnav').classList.remove('on'); } });
   // ---------- nền tảng trong URL (?platform=) ----------
   const urlPlat = () => { try { const v = new URLSearchParams(location.search).get('platform'); return ['web', 'macos'].includes(v) ? v : 'all'; } catch { return 'all'; } };
   const setUrlPlat = (v) => { try { const u = new URL(location.href); if (v === 'all') u.searchParams.delete('platform'); else u.searchParams.set('platform', v); history.replaceState(null, '', u); } catch { /* bỏ qua */ } };
