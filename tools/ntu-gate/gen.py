@@ -23,7 +23,8 @@ def sty_box(n):
     return s.replace('"',"'")
 def text_html(t,ox,oy):
     x=t['rx']-ox; y=t['ry']-oy
-    s=f"left:{f(x)}px;top:{f(y)}px;font-size:{t['fs']};font-weight:{t['fw']};color:{t['col']};line-height:{f(t['h'])}px;"
+    fs=float(t['fs'][:-2])*SCALE
+    s=f"left:{f(x)}px;top:{f(y)}px;font-size:{f(fs)}px;font-weight:{t['fw']};color:{t['col']};line-height:{f(t['h'])}px;"
     if t['ls'] not in ('normal','0px'): s+=f"letter-spacing:{t['ls']};"
     if t['tt']!='none': s+=f"text-transform:{t['tt']};"
     if t['ff']=='m': s+="font-family:'Geist Mono',ui-monospace,monospace;"
@@ -71,8 +72,19 @@ def emit(nodes,ox,oy):
             out.append(''.join(text_html(t,ox,oy) for t in n.get('texts',[])))
             out.append(emit(n.get('kids',[]),ox,oy))
     return ''.join(out)
+def texts(nodes):
+    for n in nodes:
+        yield from n.get('texts',[]); yield from texts(n.get('kids',[]))
+# Chữ trong demo bị thu nhỏ bằng transform: trace ghi font-size CHƯA thu nhỏ nhưng chiều cao dòng ĐÃ thu nhỏ -> chữ to gấp đôi, đè nhau.
+# Dòng chữ thường có h/fs ~1.14; median của demo < 0.9 thì demo đó bị thu nhỏ, hệ số = median/1.14.
+# ponytail: ước lượng theo median cả demo, đúng khi cả demo cùng một transform; ghi scale thật trong trace.cjs nếu có demo trộn nhiều tỉ lệ.
+def demo_scale(nodes):
+    r=sorted(t['h']/float(t['fs'][:-2]) for t in texts(nodes) if t['lines']==1 and float(t['fs'][:-2])>0)
+    if not r: return 1
+    m=r[len(r)//2]; return m/1.14 if m<0.9 else 1
 res={}
 for key,t in d.items():
+    SCALE=demo_scale(t['kids'])
     res[key]='<div class="q">'+emit(t['kids'],0,0)+'</div>'
 sfx=sys.argv[1] if len(sys.argv)>1 else '/Users/giatran/orca/setup/uiux-asset-kanoa/namethatui/demos.gen.js'
 open(sfx,'w',encoding='utf-8').write('// Demo sinh bằng công cụ tự viết từ phép đo hiển thị (xem tools/ntu-gate/trace.cjs + gen.py): hộp/chữ định vị tuyệt đối, tên lớp riêng.\nwindow.NT_DEMOS_GEN = '+json.dumps(res,ensure_ascii=False)+';\n')
