@@ -2707,7 +2707,7 @@ window.NT_FULL = {
    }
   ],
   "card": {
-   "label": "Ngôn ngữ thiết kế của nhà sản xuất",
+   "label": "Ngôn ngữ của hãng",
    "quote": "nút Mac đời cũ trông như kẹo xanh",
    "tags": [
     "control dạng gel kẹo",
@@ -2828,12 +2828,12 @@ window.NT_FULL = {
    }
   ],
   "card": {
-   "label": "Xu hướng do giới ngành đặt tên",
+   "label": "Xu hướng giới ngành",
    "quote": "nút 3D phồng như đất nặn",
    "tags": [
-    "hai bóng trong cộng một bóng ngoài",
+    "hai bóng trong, một bóng ngoài",
     "bo góc rất lớn",
-    "các vật thể lơ lửng tô màu riêng biệt"
+    "vật thể lơ lửng, màu riêng"
    ]
   }
  },
@@ -3202,8 +3202,8 @@ window.NT_FULL = {
    }
   ],
   "card": {
-   "label": "Xu hướng do giới ngành đặt tên",
-   "quote": "các thẻ mờ như kính đục đặt trên hình nền nhiều màu",
+   "label": "Xu hướng giới ngành",
+   "quote": "thẻ mờ như kính trên nền nhiều màu",
    "tags": [
     "tấm trong mờ như kính nhám",
     "nền rực rỡ lộ xuyên qua",
@@ -3325,11 +3325,11 @@ window.NT_FULL = {
    }
   ],
   "card": {
-   "label": "Ngôn ngữ thiết kế của nhà sản xuất",
-   "quote": "thiết kế mới của apple mà nút trông như giọt nước",
+   "label": "Ngôn ngữ của hãng",
+   "quote": "giao diện mới Apple, nút như giọt nước",
    "tags": [
     "kính là lớp điều khiển",
-    "hiệu ứng thấu kính chứ không chỉ làm mờ",
+    "thấu kính, không chỉ làm mờ",
     "tự đổi sắc theo nền"
    ]
   }
@@ -3570,8 +3570,8 @@ window.NT_FULL = {
    }
   ],
   "card": {
-   "label": "Xu hướng do giới ngành đặt tên",
-   "quote": "khối màu sáng có viền đen và bóng cứng",
+   "label": "Xu hướng giới ngành",
+   "quote": "khối sáng, viền đen, bóng cứng",
    "tags": [
     "viền đen dày",
     "bóng đổ lệch cứng",
@@ -3692,8 +3692,8 @@ window.NT_FULL = {
    }
   ],
   "card": {
-   "label": "Xu hướng do giới ngành đặt tên",
-   "quote": "các nút mềm như bị đẩy nhô ra khỏi nền",
+   "label": "Xu hướng giới ngành",
+   "quote": "nút mềm như nhô ra khỏi nền",
    "tags": [
     "một bề mặt liền mạch",
     "cặp bóng mềm đôi",
@@ -4059,12 +4059,12 @@ window.NT_FULL = {
    }
   ],
   "card": {
-   "label": "Nhãn còn gây tranh cãi",
+   "label": "Nhãn gây tranh cãi",
    "quote": "website html thô xấu xí",
    "tags": [
-    "chất liệu mặc định của trình duyệt",
+    "đồ mặc định của trình duyệt",
     "cấu trúc tài liệu phơi ra",
-    "hoàn toàn không có hiệu ứng trang trí"
+    "không trang trí gì cả"
    ]
   }
  },
@@ -4183,12 +4183,12 @@ window.NT_FULL = {
    }
   ],
   "card": {
-   "label": "Ngôn ngữ thiết kế của nhà sản xuất",
+   "label": "Ngôn ngữ của hãng",
    "quote": "viền cửa sổ trong suốt của windows 7",
    "tags": [
-    "khung cửa sổ trong suốt có làm mờ",
-    "vệt phản chiếu và ánh sáng quét",
-    "control phát sáng khi rê chuột"
+    "khung cửa sổ trong, mờ",
+    "phản chiếu và ánh sáng quét",
+    "control sáng lên khi rê"
    ]
   }
  },
@@ -4308,11 +4308,11 @@ window.NT_FULL = {
   ],
   "card": {
    "label": "Nhãn hồi tưởng",
-   "quote": "giao diện kẹo cao su crôm của thời điểm bước sang thiên niên kỷ mới",
+   "quote": "giao diện kẹo crôm thời đầu 2000",
    "tags": [
     "crôm lỏng và kim loại",
     "gel và nhựa bóng",
-    "bảng màu xanh bạc ánh cầu vồng"
+    "xanh bạc ánh cầu vồng"
    ]
   }
  },

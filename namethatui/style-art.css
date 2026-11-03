@@ -147,4 +147,6 @@
 .y2-b i{top:86px;width:24px;height:24px;border-radius:50%;background:radial-gradient(circle at 35% 25%,#9fe0ff,#2a78f0 60%,#1b44b0);box-shadow:0 0 8px #3a9cff88}.y2-b i:nth-child(1){left:52px}.y2-b i.big{left:84px;top:81px;width:34px;height:34px}.y2-b i:nth-child(3){left:127px}
 
 /* thẻ danh sách phong cách: nhãn loại, câu tìm, ba dấu hiệu */
-.sc .q{font-style:italic;font-size:12.5px;line-height:17px;margin:2px 0 0}.sc .tg{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}.sc .tg i{font:500 10px/14px "Geist Mono",monospace;padding:0 6px;border-radius:4px;background:var(--chip);color:var(--mut);font-style:normal}
+.sc .qt{font-style:italic;font-size:12.5px;line-height:17px;margin:2px 0 0}.sc .tg{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}.sc .tg i{font:500 10px/14px "Geist Mono",monospace;padding:0 6px;border-radius:4px;background:var(--chip);color:var(--mut);font-style:normal}
+
+.sc .txt{height:var(--th,auto);min-height:0;box-sizing:border-box}
