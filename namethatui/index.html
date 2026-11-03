@@ -180,10 +180,10 @@ footer.ft{border-top:1px solid var(--bd);padding:22px 0 40px;color:var(--mut);fo
 .burger{display:none}.mnav{display:none}#hs2{display:none}@media(max-width:600px){#hs2{display:grid!important}}
 @media(max-width:600px){.nav{display:none}.burger{display:grid}.mnav.on{display:grid;position:absolute;left:0;right:0;top:57px;background:var(--bg);border-bottom:1px solid var(--bd);padding:8px 16px 14px;gap:2px;z-index:29}.mnav a{padding:10px 4px;border-bottom:1px solid var(--bd);color:var(--mut);font-size:15px}.mnav a[aria-current="page"]{color:var(--fg)}}
 </style>
-<link rel="stylesheet" href="/namethatui/demos.css">
+<link rel="stylesheet" href="/namethatui/demos.css"><link rel="stylesheet" href="/namethatui/style-art.css">
 </head>
 <body><div id="app"></div>
-<script src="/namethatui/data.js"></script><script src="/namethatui/content.js"></script><script src="/namethatui/demos.js"></script><script src="/namethatui/demos.gen.js"></script><script src="/namethatui/order.js"></script>
+<script src="/namethatui/style-art.js"></script><script src="/namethatui/data.js"></script><script src="/namethatui/content.js"></script><script src="/namethatui/demos.js"></script><script src="/namethatui/demos.gen.js"></script><script src="/namethatui/order.js"></script>
 <script>
 
 (() => {
@@ -318,7 +318,8 @@ footer.ft{border-top:1px solid var(--bd);padding:22px 0 40px;color:var(--mut);fo
       ${(f.prompt || f.def) ? '' : '<div class="later">Phần giải thích đầy đủ, giải phẫu và prompt gỡ lỗi của mục này đang được viết lại bằng lời của mình; hiện mới có mô tả ngắn.</div>'}
       </div></div></div>`;
   }
-  const styleCards = () => { const q = (st.sq || '').trim().toLowerCase(); return N.styles.filter(([k, n, d]) => !q || (k + ' ' + n + ' ' + d).toLowerCase().includes(q)).map(([k, n, d]) => `<div class="sc"><div class="mat s-${k}"><div class="s-sw"><i>${esc(n.split(' ')[0])}</i></div></div><div class="txt"><div class="ct"><b>${F['styles/' + k] ? `<a href="${H('styles/' + k)}">${esc(n)}</a>` : esc(n)}</b><a class="plat" href="https://namethatui.com/styles/${k}" target="_blank" rel="noopener">gốc ↗</a></div><p class="cd">${esc((F['styles/' + k] && F['styles/' + k].lead) || d)}</p></div></div>`).join('') || '<div class="empty">Không khớp phong cách nào.</div>'; };
+  const cardOf = (k) => (F['styles/' + k] || {}).card;
+  const styleCards = () => { const q = (st.sq || '').trim().toLowerCase(); return N.styles.filter(([k, n, d]) => !q || (k + ' ' + n + ' ' + d).toLowerCase().includes(q)).map(([k, n, d]) => `<div class="sc"><div class="mat s-${k}">${(window.NT_ART || {})[k] || `<div class="s-sw"><i>${esc(n.split(' ')[0])}</i></div>`}</div><div class="txt"><div class="ct"><b>${F['styles/' + k] ? `<a href="${H('styles/' + k)}">${esc(n)}</a>` : esc(n)}</b>${cardOf(k) && cardOf(k).label ? `<span class="plat">${esc(cardOf(k).label)}</span>` : ''}</div><p class="cd q">${cardOf(k) ? '“' + esc(cardOf(k).quote) + '”' : esc((F['styles/' + k] && F['styles/' + k].lead) || d)}</p>${cardOf(k) ? `<div class="tg">${cardOf(k).tags.map((t) => `<i>${esc(t)}</i>`).join('')}</div>` : ''}</div></div>`).join('') || '<div class="empty">Không khớp phong cách nào.</div>'; };
   const stylesView = () => `<section class="stitle wrap"><small>PHONG CÁCH THỊ GIÁC</small><h1>Phong cách này là gì<em>?</em></h1><p>Bản đồ các phong cách giao diện. Nhận ra vẻ ngoài, biết tên thật của nó và phân biệt với các phong cách gần giống.</p><label class="bigsearch">${ICON.search}<input id="sq" type="search" placeholder="«nút mềm như nổi lên khỏi nền»" value="${esc(st.sq || '')}" aria-label="Tìm phong cách"><span class="kbd">⌘ K</span></label></section><div class="wrap"><div class="sg" id="sgrid">${styleCards()}</div></div>`;
   const vsView = () => `<section class="stitle wrap"><small>DỄ NHẦM</small><h1>Hai cái này khác nhau thế nào<em>?</em></h1><p>Những cặp trông gần giống nhau nhưng khác vai trò. Mỗi câu trả lời ngắn do mình viết lại.</p></section><div class="wrap"><div class="vs">${N.vs.map(([k, n, d]) => `<div><b>${F['vs/' + k] ? `<a href="${H('vs/' + k)}">${esc(n)}</a>` : esc(n)}</b>${esc((F['vs/' + k] && F['vs/' + k].lead) || d)} <a href="https://namethatui.com/vs/${k}" target="_blank" rel="noopener">Trang gốc ↗</a></div>`).join('')}</div></div>`;
 

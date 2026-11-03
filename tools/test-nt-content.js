@@ -18,4 +18,6 @@ for (const g of ['macos', 'web']) for (const r of N[g]) {
 for (const g of ['styles', 'vs']) for (const r of N[g]) { const f = F[g + '/' + r[0]]; assert(f && f.title && (f.lead || (f.sections || []).length), 'thiếu trang ' + g + '/' + r[0]); }
 for (const p of ['home', 'methodology', 'translate', 'sponsor', 'swift-vs-electron', 'appkit-vs-swiftui', 'styles', 'vs']) assert(F['page/' + p] && F['page/' + p].sections.length, 'thiếu page/' + p);
 assert(!/@[a-z0-9_]{4,}/i.test(JSON.stringify(F.__proto__ ? F['page/sponsor'] : '').replace(/@argofowl|sponsor@namethatui\.com/g, '')), 'trang sponsor không được nhắc lại phản hồi của người khác');
+require(path.join(__dirname, '..', 'namethatui', 'style-art.js'));
+for (const r of N.styles) { assert(window.NT_ART[r[0]] && /class="sa sa-/.test(window.NT_ART[r[0]]), 'thiếu ảnh minh hoạ phong cách ' + r[0]); const cd = (F['styles/' + r[0]] || {}).card; assert(cd && cd.quote && cd.tags && cd.tags.length === 3, 'thiếu dữ liệu thẻ phong cách ' + r[0]); }
 console.log(`test-nt-content: ok · ${n} thuật ngữ · ${N.styles.length} style · ${N.vs.length} cặp vs · 8 trang`);

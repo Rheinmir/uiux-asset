@@ -1,0 +1,150 @@
+/* Ảnh minh hoạ 14 phong cách (312×176), tự dựng; xem style-art.js. Cảnh đặt giữa thẻ, nền phủ kín thẻ. */
+.sc .mat{height:176px;display:flex;align-items:center;justify-content:center;background-image:none}
+.sc .mat>.sa{transform:none}
+.sa{z-index:1;position:relative;width:312px;height:176px;flex:none;font:10px/1.2 Geist,system-ui,sans-serif;color:#222}
+.sa *{box-sizing:border-box;margin:0;padding:0;white-space:nowrap}
+.sa i,.sa u,.sa s,.sa em,.sa span,.sa b,.sa small,.sa strong,.sa p,.sa div{position:absolute;display:block;font-style:normal;text-decoration:none}
+/* 1 skeuomorphism */
+.sc .mat.s-skeuomorphism{background:radial-gradient(ellipse at 50% 50%,#0000 55%,#0007),repeating-linear-gradient(90deg,#5d4835 0 28px,#503d2c 28px 56px)}
+.sk-top{left:62px;top:38px;width:188px;height:31px;border-radius:9px 9px 0 0;background:linear-gradient(#a06f3c,#7a4b22);box-shadow:0 8px 14px #0008;outline:1px dashed #e9d3a2;outline-offset:-4px}
+.sk-top b{left:11px;top:9px;font:500 10px Georgia,serif;color:#f6e8c9;text-shadow:0 -1px 0 #0006}
+.sk-top i{right:10px;top:8px;width:36px;height:16px;border-radius:5px;background:linear-gradient(#6fb0f5,#2c63cb);border:1px solid #1d4a9a;color:#fff;font:600 8px/14px Geist,sans-serif;text-align:center}
+.sk-pg{left:62px;top:69px;width:188px;height:70px;border-radius:0 0 7px 7px;background:#fcf4e0 repeating-linear-gradient(#0000 0 17px,#a9bcd9 17px 18px);box-shadow:0 10px 14px #0007}
+.sk-pg s{left:24px;top:0;bottom:0;width:1px;background:#df8c8c}
+.sk-pg p{left:38px;font:italic 9px/18px Georgia,serif;color:#2a2a2a;width:140px;white-space:nowrap}
+.sk-pg p:nth-of-type(1){top:0}.sk-pg p:nth-of-type(2){top:18px}.sk-pg p:nth-of-type(3){top:36px}.sk-pg p.g{color:#8c8c80}
+/* 2 neumorphism */
+.sc .mat.s-neumorphism{background:#e0e5ec}
+.nm-c{left:62px;top:22px;width:188px;height:130px;border-radius:20px;background:#e0e5ec;box-shadow:9px 9px 18px #bcc3cf,-9px -9px 18px #fff}
+.nm-c b{left:15px;top:21px;font:600 10px Geist,sans-serif;color:#566079}
+.nm-tag{right:15px;top:15px;width:29px;height:18px;border-radius:9px;box-shadow:3px 3px 6px #bcc3cf,-3px -3px 6px #fff;font:7px/18px Geist,sans-serif;text-align:center;color:#7a8398}
+.nm-bar{left:15px;top:44px;width:158px;height:9px;border-radius:5px;box-shadow:inset 2px 2px 4px #bcc3cf,inset -2px -2px 4px #fff}
+.nm-bar u{left:0;top:0;width:95px;height:9px;border-radius:5px;background:#7189b6}
+.nm-c small{left:15px;top:58px;font:7px Geist,sans-serif;color:#8a93a8}.nm-c small.r{left:auto;right:15px}
+.nm-b em{top:74px;width:30px;height:30px;border-radius:50%;background:#e0e5ec;box-shadow:4px 4px 8px #bcc3cf,-4px -4px 8px #fff}
+.nm-b em:nth-child(1){left:12px;top:83px}.nm-b em:nth-child(3){left:146px;top:83px}
+.nm-b em.big{left:72px;top:76px;width:44px;height:44px}
+.nm-b em::after{content:"";position:absolute;left:50%;top:50%;width:0;height:0;border-left:7px solid #4a5268;border-top:5px solid transparent;border-bottom:5px solid transparent;transform:translate(-30%,-50%)}
+.nm-b em:nth-child(1)::after{border-left:0;border-right:6px solid #4a5268;transform:translate(-65%,-50%)}
+.nm-b em:nth-child(3)::after{transform:translate(-45%,-50%);border-left-width:6px}
+/* 3 glassmorphism */
+.sc .mat.s-glassmorphism{background:radial-gradient(circle at 6% 10%,#6a2bd0 0,#0000 44%),radial-gradient(circle at 82% 4%,#d8307f 0,#0000 36%),radial-gradient(circle at 74% 100%,#0e8aa6 0,#0000 40%),radial-gradient(circle at 30% 100%,#1b3a9c 0,#0000 38%),#150f3e}
+.gl-c{left:66px;top:32px;width:180px;height:112px;border-radius:16px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.34);backdrop-filter:blur(6px)}
+.gl-c small{left:14px;top:14px;font:8px Geist,sans-serif;color:#fffc}
+.gl-c strong{left:14px;top:26px;font:600 24px/1 Geist,sans-serif;color:#fff}
+.gl-sun{right:14px;top:14px;width:32px;height:32px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffe3a1,#f2a447)}
+.gl-t{left:10px;top:70px;width:160px;height:34px}
+.gl-t i{top:0;width:31px;height:33px;border-radius:8px;background:rgba(255,255,255,.17);border:1px solid rgba(255,255,255,.34);font:600 7px/1.5 Geist,sans-serif;color:#fff;text-align:center;padding-top:6px}
+.gl-t i b{position:static;font:7px/1.4 Geist,sans-serif;opacity:.8;display:block}
+.gl-t i:nth-child(1){left:0}.gl-t i:nth-child(2){left:38px}.gl-t i:nth-child(3){left:76px}.gl-t i:nth-child(4){left:114px}
+.gl-aq{left:165px;top:105px;width:100px;height:53px;border-radius:11px;background:rgba(255,255,255,.24);border:1px solid rgba(255,255,255,.42);backdrop-filter:blur(8px)}
+.gl-aq small{left:8px;top:9px;font:6.5px Geist,sans-serif;color:#fffd}.gl-aq b{left:8px;top:22px;font:600 11px Geist,sans-serif;color:#fff}
+.gl-aq u{left:8px;top:40px;width:82px;height:3px;border-radius:2px;background:rgba(255,255,255,.3)}.gl-aq u::after{content:"";position:absolute;left:0;top:0;width:34px;height:3px;border-radius:2px;background:#fff}
+/* 4 liquid glass */
+.sc .mat.s-liquid-glass{background:linear-gradient(#151840 0,#222a64 34%,#463e84 60%,#a47aab 78%,#6a5287 88%,#231d47 100%)}
+.sc .mat.s-liquid-glass::after{z-index:0;content:"";position:absolute;left:0;right:0;bottom:0;height:54px;background:linear-gradient(#27234f,#16142f);clip-path:polygon(0 70%,10% 52%,24% 64%,40% 36%,56% 60%,70% 44%,86% 62%,100% 50%,100% 100%,0 100%)}
+.lg-sun{left:44px;top:14px;width:62px;height:62px;border-radius:50%;background:radial-gradient(circle,#fbf3d3 0,#efe5b8 40%,#0000 72%)}
+.lg-time{left:117px;top:27px;width:77px;height:33px;border-radius:12px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.5);font:600 19px/31px Geist,sans-serif;color:#fff;text-align:center;box-shadow:0 4px 12px #0004}
+.lg-n{left:58px;top:76px;width:196px;height:49px;border-radius:16px;background:linear-gradient(rgba(255,255,255,.2),rgba(196,140,236,.42));border:1px solid rgba(255,255,255,.4);backdrop-filter:blur(6px)}
+.lg-n span{left:8px;top:11px;width:24px;height:24px;border-radius:7px;background:linear-gradient(#67d673,#2fa84a)}
+.lg-n div{left:40px;top:8px;right:8px;position:absolute}.lg-n b{position:static;display:inline;font:600 9px Geist,sans-serif;color:#fff}
+.lg-n em{right:0;top:1px;font:7px Geist,sans-serif;color:#fffb}.lg-n p{position:static;margin-top:4px;font:8px Geist,sans-serif;color:#fff;white-space:nowrap}
+.lg-m{left:58px;top:130px;width:196px;height:27px;border-radius:14px;background:rgba(20,18,50,.45);border:1px solid rgba(255,255,255,.4);font:8px/23px Geist,sans-serif;color:#fff;padding-left:24px}
+.lg-m i{left:9px;top:7px;width:9px;height:9px;border:2px solid #fff;border-radius:50%}
+.lg-m u{right:10px;top:7px;width:14px;height:10px}.lg-m u s{bottom:0;width:2px;background:#fff;border-radius:1px}.lg-m u s:nth-child(1){left:0;height:6px}.lg-m u s:nth-child(2){left:5px;height:10px}.lg-m u s:nth-child(3){left:10px;height:4px}
+.lg-b{top:110px;width:35px;height:35px;border-radius:50%;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.5)}.lg-b.l{left:22px}.lg-b.r{left:258px}
+.lg-h{left:125px;top:166px;width:61px;height:3px;border-radius:2px;background:#fff9}
+/* 5 minimalism */
+.sc .mat.s-minimalism{background:#f6f5f2}
+.mn-nav{left:54px;top:9px;width:204px;height:10px}.mn-nav span{top:0;font:7px Geist,sans-serif;letter-spacing:.12em;color:#6a6a66}.mn-nav span:last-child{right:0}
+.sa-mn h4{left:54px;top:36px;font:600 29px/29px Geist,system-ui,"Helvetica Neue",Arial,sans-serif;letter-spacing:-.03em;color:#1c1c1b;position:absolute}.sa-mn h4 i{position:static;display:inline;color:#999}
+.sa-mn>p{font:8px/12px Geist,sans-serif;left:54px;top:105px;color:#8d8d88}
+.mn-btn{left:54px;top:143px;width:102px;height:26px;border:1px solid #222;font:7px/24px Geist,sans-serif;letter-spacing:.1em;text-align:center;color:#222}
+/* 6 neobrutalism */
+.sc .mat.s-neobrutalism{background:#f4f0df}
+.nb-h{left:58px;top:6px;width:200px;height:48px}.nb-h b{left:0;top:0;font:900 25px/1 Geist,sans-serif;color:#0c0c0c;letter-spacing:-.02em}
+.nb-h b.t{left:0;top:25px;width:196px;height:23px;background:#25a395;color:#fff;font-size:20px;line-height:23px;padding-left:2px}
+.nb-star{left:228px;top:-2px;width:42px;height:38px;background:#ff6fb7;clip-path:polygon(50% 0,60% 20%,82% 8%,78% 32%,100% 36%,82% 54%,96% 76%,72% 74%,66% 98%,50% 80%,34% 98%,28% 74%,4% 76%,18% 54%,0 36%,22% 32%,18% 8%,40% 20%)}
+.nb-star span{left:0;top:13px;width:100%;text-align:center;font:900 8px Geist,sans-serif;color:#111}
+.nb-c{left:60px;top:61px;width:194px;height:106px;border-radius:14px;background:#ffcc00;border:3px solid #111;box-shadow:5px 5px 0 #111}
+.nb-r,.nb-r2{left:0;top:0;width:100%;height:100%}.nb-r i{left:10px;top:9px;width:38px;height:16px;border:2px solid #111;border-radius:9px;background:#ff9ed0;font:900 7px/12px Geist,sans-serif;text-align:center}.nb-r em{right:10px;top:12px;font:700 9px Geist,sans-serif}
+.nb-c p{left:10px;top:33px;width:172px;white-space:normal;font:700 10.5px/13px Geist,sans-serif;color:#111}
+.nb-r2 b{top:70px;height:24px;border:2px solid #111;border-radius:8px;font:800 9px/20px Geist,sans-serif;text-align:center;box-shadow:3px 3px 0 #111;background:#fff}
+.nb-r2 b.g{left:10px;width:58px;background:#b6f03f}.nb-r2 b:not(.g){left:76px;width:44px}
+/* 7 claymorphism */
+.sc .mat.s-claymorphism{background:linear-gradient(135deg,#f1dcee,#e2e5fa)}
+.cl-c{left:65px;top:28px;width:187px;height:121px;border-radius:28px;background:#fcf9ff;box-shadow:0 14px 22px #d9c5ef,inset 0 -6px 10px #e9defa,inset 0 4px 8px #fff}
+.cl-badge{left:160px;top:-13px;width:52px;height:21px;border-radius:11px;background:#ffc7d2;font:600 7.5px/21px Geist,sans-serif;color:#c24468;text-align:center;box-shadow:0 5px 8px #e9a8bb88,inset 0 -3px 5px #f19bb0}
+.cl-h i{left:15px;top:16px;width:30px;height:30px;border-radius:10px;background:linear-gradient(#f9cf9b,#f0a95e);font:14px/30px sans-serif;text-align:center;box-shadow:0 4px 6px #e8b88a88}
+.cl-h b{left:53px;top:19px;font:600 9.5px Geist,sans-serif;color:#3f3858}.cl-h small{left:53px;top:33px;font:7.5px Geist,sans-serif;color:#9c97ae}
+.cl-p{left:15px;top:56px}.cl-p s{top:0;width:26px;height:11px;border-radius:6px;box-shadow:0 3px 4px #cfc2e655}
+.cl-p s:nth-child(1){left:0;background:#ffb9cc}.cl-p s:nth-child(2){left:32px;background:#a9d6ff}.cl-p s:nth-child(3){left:64px;background:#bdeec7}.cl-p s:nth-child(4){left:96px;background:#ffd6a1}.cl-p s:nth-child(5){left:128px;background:#ebe7f6}
+.cl-btn{left:15px;top:84px;width:158px;height:26px;border-radius:14px;background:linear-gradient(#b8a6f2,#9e8ae6);font:600 9px/26px Geist,sans-serif;color:#fff;text-align:center;box-shadow:0 6px 10px #b9a8ee99,inset 0 3px 5px #d9cdfa}
+/* 8 flat design */
+.sc .mat.s-flat-design{background:#272549}
+.fl-t{height:49px;color:#fff;overflow:hidden}.fl-t.w2{width:108px}
+.fl-t em{left:6px;bottom:4px;font:6.5px Geist,sans-serif}
+.fl-t.bl{left:45px;top:36px;background:#2c6ff0}.fl-t.tl{left:158px;top:36px;width:51px;background:#10a3a0}.fl-t.or{left:215px;top:36px;width:51px;background:#e0522c}
+.fl-t.pu{left:45px;top:92px;width:51px;background:#8a1aa0}.fl-t.gr{left:102px;top:92px;width:51px;background:#17a31a}.fl-t.vi{left:158px;top:92px;background:#6a1cf4}
+.fl-t small{left:6px;top:5px;font:6px Geist,sans-serif}.fl-t strong{left:6px;top:15px;font:500 16px Geist,sans-serif}
+.fl-t.or small{left:auto;right:6px;top:5px}.fl-t.or strong{left:auto;right:6px;top:13px;font-size:17px}
+.fl-t.bl .sun{right:10px;top:12px;width:12px;height:12px;border-radius:50%;background:#ffd445;box-shadow:0 0 0 3px #2c6ff0,0 0 0 4px #ffd445}
+.fl-t.tl b{right:6px;bottom:4px;font:600 7px Geist,sans-serif}
+/* 9 frutiger aero */
+.sc .mat.s-frutiger-aero{background:radial-gradient(ellipse at 6% 8%,#fffe 0,#fff6 22%,#0000 46%),radial-gradient(ellipse at 80% 30%,#fff7 0,#0000 22%),linear-gradient(#7fc8f2 0,#b9e3fa 36%,#e6f4f9 66%,#9ddb62 71%,#5aae2c 100%)}
+.fa-c{left:64px;top:45px;width:184px;height:86px;border-radius:12px;background:rgba(255,255,255,.78);border:1px solid #fffc;box-shadow:0 8px 16px #2a6a9a33,inset 0 1px 0 #fff;backdrop-filter:blur(5px)}
+.fa-c b{left:14px;top:14px;font:600 10px Geist,sans-serif;color:#1e6b88}.fa-c small{left:14px;top:32px;font:7.5px Geist,sans-serif;color:#4a7a8c}
+.fa-c div{left:14px;top:56px}.fa-c u{height:18px;border-radius:9px;font:600 8px/16px Geist,sans-serif;text-align:center;color:#245;border:1px solid #fff9;background:linear-gradient(#e9f7ff,#bfe5f7)}
+.fa-c u.g{left:0;width:56px;height:20px;line-height:18px;color:#fff;background:linear-gradient(#8bd36a,#3b9220);border-color:#2f7d1c}.fa-c u:not(.g){left:64px;width:50px;height:20px;line-height:18px}
+.fa-b{border-radius:50%;background:radial-gradient(circle at 30% 25%,#fffd,#fff2 45%,#fff0 70%);border:1px solid #fff9}
+.fa-b.b1{left:38px;top:101px;width:35px;height:35px}.fa-b.b2{left:243px;top:52px;width:25px;height:25px}.fa-b.b3{left:274px;top:108px;width:16px;height:16px}
+/* 10 vernacular web */
+.sc .mat.s-vernacular-web{background:radial-gradient(#fff 0.6px,#0000 1px) 0 0/37px 31px,radial-gradient(#fff9 0.5px,#0000 0.9px) 14px 9px/23px 29px,#05061f}
+.sa-vw>h4{left:48px;top:20px;width:216px;white-space:normal;font:italic 700 12.5px/17px "Comic Sans MS","Comic Neue",cursive;text-align:center;letter-spacing:0;background:linear-gradient(90deg,#ff7a3c,#ffe14a,#7aff6a,#4acfff,#c27aff,#ff5ac8);-webkit-background-clip:text;background-clip:text;color:transparent}
+.vw-r{left:67px;top:56px;width:177px;height:4px;background:linear-gradient(90deg,#f33,#fb3,#4e4,#3cf,#a4f,#f4a)}
+.vw-n{left:0;top:76px;width:312px;height:14px}.vw-n b{top:0;font:italic 700 8px/12px Georgia,serif}.vw-n .n{left:88px;color:#ff3b3b}.vw-n .u{left:117px;width:92px;height:12px;background:repeating-linear-gradient(-45deg,#ffdf00 0 5px,#111 5px 10px);color:#fff;font-size:6px;line-height:12px;text-align:center}
+.vw-t{left:20px;top:88px;width:272px;font:italic 7px/10px Georgia,serif;color:#ddd;text-align:center}.vw-t a{position:static;display:inline;color:#4aa8ff;text-decoration:underline}
+.vw-c{left:85px;top:116px;width:200px;font:italic 6.5px/12px Georgia,serif;color:#ddd}
+.vw-c span{top:0;width:11px;height:12px;background:#0a3a0a;border:1px solid #3c3;color:#4f4;font:7px/10px "Courier New",monospace;text-align:center}
+.vw-c span:nth-of-type(1){left:75px}.vw-c span:nth-of-type(2){left:87.5px}.vw-c span:nth-of-type(3){left:100px}.vw-c span:nth-of-type(4){left:112.5px}.vw-c span:nth-of-type(5){left:125px}.vw-c span:nth-of-type(6){left:137.5px}.vw-f{left:20px;top:147px;width:272px;font:6px/10px Georgia,serif;color:#9aa;text-align:center}
+.vw-l{left:20px;top:133px;width:272px;font:6.5px/10px Georgia,serif;color:#cfd;text-align:center}.vw-l a{position:static;display:inline;color:#4aa8ff;text-decoration:underline}
+/* 11 aqua */
+.sc .mat.s-aqua{background:linear-gradient(135deg,#4d79c8,#2f529e)}
+.aq-w{left:56px;top:33px;width:200px;height:114px;border-radius:5px;background:#e9e9e9;box-shadow:0 10px 22px #0006,0 0 0 1px #0004;overflow:hidden}
+.aq-t{left:0;top:0;width:200px;height:16px;background:linear-gradient(#f4f4f4,#cfcfcf);border-bottom:1px solid #9a9a9a}
+.aq-t i{top:3px;width:10px;height:10px;border-radius:50%;box-shadow:inset 0 -1px 2px #0004}.aq-t i.r{left:7px;background:radial-gradient(circle at 40% 30%,#ffb0a8,#f0463a)}.aq-t i.y{left:21px;background:radial-gradient(circle at 40% 30%,#ffe9a0,#f3b719)}.aq-t i.g{left:35px;background:radial-gradient(circle at 40% 30%,#b7f0a0,#3fb83a)}
+.aq-t b{left:0;right:0;top:3px;text-align:center;font:500 8px Geist,sans-serif;color:#333}
+.aq-b{left:0;top:17px;width:200px;height:97px;background:repeating-linear-gradient(#e4e4e4 0 2px,#f3f3f3 2px 4px)}
+.aq-b small{left:10px;top:13px;font:7.5px Geist,sans-serif;color:#333}
+.aq-f{left:9px;top:32px;width:170px;height:23px;border-radius:4px;background:#fff;border:1px solid #8c9bb5;box-shadow:inset 0 1px 3px #0003;font:8px/21px Geist,sans-serif;padding-left:8px;color:#222}
+.aq-bt u{top:65px;height:19px;border-radius:9px;font:600 8px/15px Geist,sans-serif;text-align:center;color:#222;background:linear-gradient(#fdfdfd,#c9d0da);border:1px solid #9aa5b6}.aq-bt u:first-child{left:77px;width:51px}.aq-bt u.p{left:134px;width:44px;color:#fff;background:linear-gradient(#78b4ff,#1d5fd6);border-color:#1c4fae}
+.aq-b s{left:187px;top:12px;width:9px;height:86px;border-radius:4px;background:linear-gradient(#5f8fe0 0 38%,#d6dae2 38%);border:1px solid #7b8fb8}
+/* 12 web brutalism */
+.sc .mat.s-web-brutalism{background:#fff}
+.sa-wb h5{left:56px;top:7px;font:700 17px/1 "Times New Roman",Georgia,serif;color:#000;position:absolute}
+.sa-wb>small{left:56px;top:29px;font:7.5px "Times New Roman",serif;color:#555}
+.sa-wb>hr{position:absolute;left:56px;top:41px;width:202px;border:0;border-top:1px solid #777}
+.sa-wb ul{position:absolute;left:56px;top:46px;list-style:disc;padding-left:15px;width:200px;font:9.5px/16px "Times New Roman",serif}.sa-wb li{position:static;display:list-item;color:#00e}.sa-wb li a{color:#00e;text-decoration:underline;position:static;display:inline}
+.sa-wb table{position:absolute;left:56px;top:101px;width:202px;border-collapse:collapse;font:8px/11px "Times New Roman",serif}.sa-wb td,.sa-wb th{border:1px solid #888;padding:2px 4px;text-align:left;position:static;display:table-cell}.sa-wb th{font-weight:700}
+.sa-wb>div:last-child{left:56px;top:149px;width:202px;height:20px}.sa-wb>div button{position:static;display:inline-block;font:9px/13px Arial,sans-serif;padding:2px 10px;border:2px outset #ddd;background:#e0e0e0;color:#000}.sa-wb>div em{position:static;display:inline;font:7.5px "Times New Roman",serif;margin-left:6px}
+/* 13 windows aero */
+.sc .mat.s-windows-aero{background:radial-gradient(circle at 8% 90%,#124d34 0,#0000 44%),radial-gradient(circle at 92% 10%,#0f4a58 0,#0000 44%),linear-gradient(135deg,#091a22,#0b1f22)}
+.wa-w{left:52px;top:30px;width:208px;height:117px;border-radius:7px;background:rgba(190,225,235,.42);border:1px solid rgba(255,255,255,.55);box-shadow:0 8px 20px #0007;backdrop-filter:blur(6px)}
+.wa-t{left:0;top:0;width:206px;height:21px}.wa-t b{left:12px;top:5px;font:500 8.5px Geist,sans-serif;color:#fff;text-shadow:0 0 4px #000a}
+.wa-t i{right:34px;top:1px;width:22px;height:14px;border-radius:0 0 4px 4px;background:rgba(255,255,255,.35);border:1px solid #fff8}.wa-t i.x{right:4px;width:28px;background:linear-gradient(#e87a6a,#c2301f)}
+.wa-b{left:5px;top:21px;width:196px;height:91px;background:#f1f5f9;border:1px solid #9fb0bf}
+.wa-b p{left:9px;top:9px;font:8.5px Geist,sans-serif;color:#222}.wa-b small{left:9px;top:23px;font:7px Geist,sans-serif;color:#667}
+.wa-p{left:9px;top:38px;width:176px;height:14px;border:1px solid #8a97a3;background:#e4e8ec;border-radius:2px;overflow:hidden}.wa-p u{left:0;top:0;width:42%;height:100%;background:linear-gradient(#78e08a,#27a23a)}
+.wa-c{right:9px;top:63px;width:48px;height:17px;border:1px solid #8995a3;border-radius:3px;background:linear-gradient(#f4f6f8,#d7dde4);font:7.5px/15px Geist,sans-serif;text-align:center}
+/* 14 y2k */
+.sc .mat.s-y2k{background:repeating-linear-gradient(#27c8e43d 0 1px,#0000 1px 9px) bottom/100% 30% no-repeat,radial-gradient(circle at 92% 22%,#3a2a8a 0,#0000 30%),linear-gradient(#07103a,#0a1850 62%,#0b2a5a)}
+.y2-c{left:54px;top:21px;width:204px;height:132px;border:3px solid #fff;border-radius:22px;background:linear-gradient(#0a1238,#0a1a4a);box-shadow:0 0 18px #6aa8ff66}
+.y2-h,.y2-b{left:0;top:0;width:100%;height:100%}.y2-h b{left:14px;top:12px;font:italic 800 13px Geist,sans-serif;letter-spacing:.06em;color:#eaf0ff}.y2-h small{right:14px;top:14px;font:7px "Geist Mono",monospace;color:#37c8ff}
+.y2-s{left:14px;top:38px;width:175px;height:42px;border:1px solid #1f4a90;border-radius:6px;background:#091536}
+.y2-s span{left:7px;top:6px;font:7px "Geist Mono",monospace;color:#37c8ff}.y2-s span.r{left:auto;right:7px}
+.y2-eq{left:7px;bottom:5px;width:154px;height:18px}.y2-eq s{bottom:0;width:6px;background:linear-gradient(#3ad0ff,#1a5fe0)}
+.y2-eq s:nth-child(1){left:0;height:6px}.y2-eq s:nth-child(2){left:10px;height:12px}.y2-eq s:nth-child(3){left:20px;height:9px}.y2-eq s:nth-child(4){left:30px;height:15px}.y2-eq s:nth-child(5){left:40px;height:7px}.y2-eq s:nth-child(6){left:50px;height:11px}.y2-eq s:nth-child(7){left:60px;height:16px}.y2-eq s:nth-child(8){left:70px;height:9px}.y2-eq s:nth-child(9){left:80px;height:14px}.y2-eq s:nth-child(10){left:90px;height:7px}.y2-eq s:nth-child(11){left:100px;height:15px}.y2-eq s:nth-child(12){left:110px;height:10px}.y2-eq s:nth-child(13){left:120px;height:12px}.y2-eq s:nth-child(14){left:130px;height:6px}.y2-eq s:nth-child(15){left:140px;height:11px}.y2-eq s:nth-child(16){left:150px;height:5px}
+.y2-b i{top:86px;width:24px;height:24px;border-radius:50%;background:radial-gradient(circle at 35% 25%,#9fe0ff,#2a78f0 60%,#1b44b0);box-shadow:0 0 8px #3a9cff88}.y2-b i:nth-child(1){left:52px}.y2-b i.big{left:84px;top:81px;width:34px;height:34px}.y2-b i:nth-child(3){left:127px}
+
+/* thẻ danh sách phong cách: nhãn loại, câu tìm, ba dấu hiệu */
+.sc .q{font-style:italic;font-size:12.5px;line-height:17px;margin:2px 0 0}.sc .tg{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}.sc .tg i{font:500 10px/14px "Geist Mono",monospace;padding:0 6px;border-radius:4px;background:var(--chip);color:var(--mut);font-style:normal}
