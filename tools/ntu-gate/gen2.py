@@ -131,5 +131,5 @@ def emit(nodes,key):
     return ''.join(out)
 res={k:f'<div class="{CLS}">'+emit(t['kids'],k)+'</div>' for k,t in T[1440].items()}
 dst=sys.argv[1] if len(sys.argv)>1 else ('detail.gen.js' if MODE=='detail' else 'demos.gen.js')
-open(dst,'w',encoding='utf-8').write('// Demo co giãn sinh bằng công cụ tự viết từ phép đo hiển thị ở nhiều độ rộng (tools/ntu-gate/trace.cjs|dtrace.cjs + gen2.py): hộp/chữ định vị bằng calc() theo cqw, tên lớp riêng.\nwindow.NT_DEMOS_GEN = '+json.dumps(res,ensure_ascii=False)+';\n')
+open(dst,'w',encoding='utf-8').write('// Demo co giãn sinh bằng công cụ tự viết từ phép đo hiển thị ở nhiều độ rộng (tools/ntu-gate/trace.cjs|dtrace.cjs + gen2.py): hộp/chữ định vị bằng calc() theo cqw, tên lớp riêng.\nwindow.'+VAR+' = '+json.dumps(res,ensure_ascii=False)+';\n')
 print(len(res),'demo;',sum(len(v) for v in res.values())//1024,'KB')
