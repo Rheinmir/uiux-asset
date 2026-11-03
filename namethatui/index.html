@@ -180,10 +180,10 @@ footer.ft{border-top:1px solid var(--bd);padding:22px 0 40px;color:var(--mut);fo
 .burger{display:none}.mnav{display:none}#hs2{display:none}@media(max-width:600px){#hs2{display:grid!important}}
 @media(max-width:600px){.nav{display:none}.burger{display:grid}.mnav.on{display:grid;position:absolute;left:0;right:0;top:57px;background:var(--bg);border-bottom:1px solid var(--bd);padding:8px 16px 14px;gap:2px;z-index:29}.mnav a{padding:10px 4px;border-bottom:1px solid var(--bd);color:var(--mut);font-size:15px}.mnav a[aria-current="page"]{color:var(--fg)}}
 </style>
-<link rel="stylesheet" href="/namethatui/demos.css"><link rel="stylesheet" href="/namethatui/style-art.css">
+<link rel="stylesheet" href="/namethatui/demos.css"><link rel="stylesheet" href="/namethatui/demo-detail.css"><link rel="stylesheet" href="/namethatui/style-art.css">
 </head>
 <body><div id="app"></div>
-<script src="/namethatui/style-art.js"></script><script src="/namethatui/data.js"></script><script src="/namethatui/content.js"></script><script src="/namethatui/demos.js"></script><script src="/namethatui/demos.gen.js"></script><script src="/namethatui/order.js"></script>
+<script src="/namethatui/style-art.js"></script><script src="/namethatui/demo-detail.js"></script><script src="/namethatui/data.js"></script><script src="/namethatui/content.js"></script><script src="/namethatui/demos.js"></script><script src="/namethatui/demos.gen.js"></script><script src="/namethatui/order.js"></script>
 <script>
 
 (() => {
@@ -300,13 +300,13 @@ footer.ft{border-top:1px solid var(--bd);padding:22px 0 40px;color:var(--mut);fo
   }
   function detailView(key) {
     const it = byKey(key); if (!it) return `<div class="wrap empty">Không có mục «${esc(key)}». <a class="hint" data-t="dict" style="color:var(--blue)">Về danh sách</a></div>`;
-    const { p, r } = it, f = F[key] || {}, U = Object.assign({ anatomy: 'Giải phẫu: từng phần có tên', ifCalled: 'Nếu bạn gọi nó là…', youMeant: 'Ý bạn là', prompt: 'Prompt: dán vào agent của bạn', debug: 'Prompt gỡ lỗi: khi nó hoạt động sai', code: 'Trong code', see: 'Xem thêm' }, (F._ui || {})), d = demoOf(p, r), sy = f.sym || SYM[r[0]];
+    const { p, r } = it, f = F[key] || {}, U = Object.assign({ anatomy: 'Giải phẫu: từng phần có tên', ifCalled: 'Nếu bạn gọi nó là…', youMeant: 'Ý bạn là', prompt: 'Prompt: dán vào agent của bạn', debug: 'Prompt gỡ lỗi: khi nó hoạt động sai', code: 'Trong code', see: 'Xem thêm' }, (F._ui || {})), dd = window.NT_DETAIL && NT_DETAIL[key], d = dd || demoOf(p, r), sy = f.sym || SYM[r[0]];
     const rel = N.vs.filter(([k]) => k.split('-vs-').some((x) => r[0].startsWith(x) || x.startsWith(r[0]) || r[0].includes(x)));
     const idx = all.findIndex((x) => x.p === p && x.r[0] === r[0]), nb = all.filter((x) => x.p === p), pos = nb.findIndex((x) => x.r[0] === r[0]);
     const see = (f.see ? f.see.map(byKey).filter(Boolean) : [nb[(pos + 1) % nb.length], nb[(pos + 2) % nb.length], nb[(pos + 3) % nb.length]]);
     const sec = (t, h) => h ? `<h2>${t}</h2>${h}` : '';
     return `<div class="wrap wide"><div class="crumb"><span><a href="${H('dict')}" data-t="dict">Chỉ mục</a> / ${p === 'web' ? 'Web' : 'macOS'}</span><div class="acts"><button class="pill" data-save="${esc(key)}"><span>${savedSet().has(key) ? 'Đã lưu' : 'Lưu'}</span></button><button class="pill" data-share="${esc(key)}"><span>Chia sẻ</span></button><button class="pill" data-md="${esc(key)}"><span>Chép dạng Markdown</span></button><button class="pill" data-cp="${esc(key)}"><span>Chép prompt</span></button><a class="pill" href="https://namethatui.com/${p}/${r[0]}" target="_blank" rel="noopener"><span>Trang gốc ↗</span></a></div></div>
-      <div class="dt"><div><div class="dmat">${d ? `<div>${d.startsWith('<div class="q">') ? `<div class="qq">${d}</div>` : d}</div>` : '<span class="noy" style="color:var(--mut2)">chưa có demo</span>'}</div>${f.lead ? `<p class="cd" style="margin-top:12px;text-align:center">${esc(f.lead)}</p>` : ''}</div><div><div class="rhead"><h1>${esc(r[1])}</h1>${sy ? `<div class="symline">/ ${esc(sy)} /</div>` : ''}${f.aka && f.aka.length ? `<div class="aka">còn gọi là ${esc(f.aka.join(', '))}</div>` : ''}</div><p class="body">${esc(f.def || r[2])}</p>
+      <div class="dt"><div><div class="dmat${dd ? ' det' : ''}">${d ? `<div>${d.startsWith('<div class="q">') ? `<div class="qq">${d}</div>` : d}</div>` : '<span class="noy" style="color:var(--mut2)">chưa có demo</span>'}</div>${f.lead ? `<p class="cd" style="margin-top:12px;text-align:center">${esc(f.lead)}</p>` : ''}</div><div><div class="rhead"><h1>${esc(r[1])}</h1>${sy ? `<div class="symline">/ ${esc(sy)} /</div>` : ''}${f.aka && f.aka.length ? `<div class="aka">còn gọi là ${esc(f.aka.join(', '))}</div>` : ''}</div><p class="body">${esc(f.def || r[2])}</p>
       ${f.body ? (Array.isArray(f.body) ? f.body : [f.body]).map((t) => `<p class="body">${esc(t)}</p>`).join('') : ''}
       ${sec(U.ifCalled, f.phrases && f.phrases.length ? `<div class="quotes">${f.phrases.map((x) => `<span>“${esc(x)}”</span>`).join('')}</div><p class="aka" style="margin:10px 0 0">…${esc(U.youMeant)} <b style="font-style:normal;color:var(--fg)">${esc(r[1])}</b>.</p>` : '')}
       ${sec(U.anatomy, f.anatomy && f.anatomy.length ? `<div class="anat">${f.anatomy.map((a, i) => `<div><i>${i + 1}</i><p style="margin:0"><b>${esc(a.n)}</b>${a.sym ? `<code>${esc(a.sym)}</code>` : ''}<span>${esc(a.d || '')}</span></p></div>`).join('')}</div>` : '')}

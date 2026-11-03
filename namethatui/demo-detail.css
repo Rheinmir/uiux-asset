@@ -1,0 +1,24 @@
+/* Demo trang chi tiết (xem demo-detail.js). Bố cục thật, chữ tự giãn; khung thiết kế 585 px, co bằng --k khi hẹp. */
+.dmat.det{position:relative}@media(min-width:861px){.dmat.det{position:sticky}}
+.dmat.det>div{position:absolute;left:50%;top:50%;width:585px;max-width:none;transform:translate(-50%,-50%) scale(var(--k,1))}
+.cm{position:relative;box-sizing:border-box;width:585px;height:340px;padding:78px 6px 0;font:400 11.5px/1.2 "Geist",system-ui,sans-serif;color:#d8dae0;display:flex;flex-direction:column;align-items:center}
+.cm-row{display:flex;align-items:flex-start;justify-content:center;gap:20px;width:100%}
+.cm-g{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0}
+.cm-t{position:relative;height:24px;display:flex;align-items:center}
+.cm-btn{all:unset;box-sizing:border-box;display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 9px;border:1px solid rgba(255,255,255,.16);border-radius:7px;background:#1a1b1f;color:#e6e7ea;white-space:nowrap;font:500 11.5px/1 "Geist",system-ui,sans-serif}
+.cm-btn.cm-sel{border-color:#4c8dff;box-shadow:0 0 0 2px rgba(76,141,255,.25)}
+.cm-m{display:flex;gap:4px;align-items:flex-start;height:107px}
+.cm-w{position:relative;display:flex;gap:1px;padding:4px;border:1px solid rgba(255,255,255,.1);border-radius:10px;background:#1b1c20;box-shadow:0 10px 26px -10px rgba(0,0,0,.6)}
+.cm-m .cm-w+.cm-w{margin-left:0}
+.cm-l{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;min-width:64px}
+.cm-l+.cm-l{border-left:1px solid rgba(255,255,255,.08);padding-left:4px;margin-left:3px}
+.cm-l li{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 8px;height:24px;border-radius:6px;white-space:nowrap;color:#d5d7dc}
+.cm-l li.on{background:#2b2d34;color:#fff}.cm-l li.sel{background:rgba(76,141,255,.2);color:#a9c7ff}
+.cm-l li.back{font-weight:600;color:#fff;gap:6px;justify-content:flex-start;border-bottom:1px solid rgba(255,255,255,.08);border-radius:6px 6px 0 0;margin-bottom:2px}
+.cm .cv{flex:none;opacity:.7}
+.cm-dd{min-width:108px}
+.bd{position:absolute;z-index:2;width:17px;height:17px;border-radius:50%;background:#7c3aed;color:#fff;font:600 9.5px/17px "Geist",system-ui,sans-serif;text-align:center;font-style:normal;top:-9px;right:-7px;box-shadow:0 0 0 2px var(--mat,#0f1013)}
+.cm-t .bd{top:-12px;left:-6px;right:auto}
+.cm-c{margin:9px 0 0;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center}
+.cm-c b{font:500 11.5px/1 "Geist",system-ui,sans-serif;color:#aeb2bb}.cm-c span{font:400 9.5px/1.25 "Geist",system-ui,sans-serif;color:#6f747e;max-width:150px}
+.cm-n{position:absolute;left:0;right:0;bottom:34px;margin:0 auto;font:400 11px/1.45 "Geist",system-ui,sans-serif;color:#8b8f98;text-align:center;max-width:470px}
