@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Topo — dựng lại sơ đồ «Build Your AI App» — uiux-asset</title>
+<meta name="description" content="Sơ đồ topo «Build Your AI App» dựng tay bằng HTML/CSS/SVG từ một ảnh: rê nút để xem nhánh, kéo và zoom; kèm ảnh gốc, ảnh lệch và % khớp pixel.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=b37260903e">
+<link rel="stylesheet" href="../motion/_m.css">
+<style>
+.tp-live { position: relative; height: min(72vh, 980px); border-radius: 14px; overflow: hidden; background: #010003; border: 1px solid color-mix(in srgb, currentColor 18%, transparent); }
+.tp-live iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.tp-sum { width: 100%; border-collapse: collapse; margin: 8px 0 4px; font-variant-numeric: tabular-nums; }
+.tp-sum th, .tp-sum td { text-align: right; padding: 8px 12px; border-bottom: 1px solid color-mix(in srgb, currentColor 14%, transparent); }
+.tp-sum th:first-child, .tp-sum td:first-child { text-align: left; }
+.tp-tri { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 14px; margin-top: 10px; }
+.tp-p { min-width: 0; } .tp-p small { display: block; margin-bottom: 6px; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; opacity: .65; }
+.tp-p img { display: block; width: 100%; height: auto; aspect-ratio: 702 / 950; border-radius: 12px; background: #000; border: 1px solid color-mix(in srgb, currentColor 18%, transparent); }
+.m-badge { white-space: normal; }
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=b37260903e"></script>
+<div class="aw-crumb">
+<h1>Topo. Sơ đồ «Build Your AI App» dựng bằng HTML <span class="aw-tag aw-tag--small aw-tag--solid-green m-badge">DỰNG TỪ MỘT ẢNH</span></h1>
+<span>Chỉ có một ảnh chụp sơ đồ (702×950). Mọi nút, cạnh và logo vẽ lại bằng HTML/CSS/SVG tự viết, toạ độ đo từ ảnh. Rê chuột lên một nút để sáng nhánh nối với nó và đọc chú thích. Kéo để di chuyển, cuộn hoặc chụm hai ngón để zoom, bấm đúp để về vừa khung.</span>
+</div>
+
+<div class="tp-live"><iframe src="mock.html" title="Sơ đồ topo tương tác"></iframe></div>
+
+<h2 class="aw-heading-hr">Độ khớp pixel</h2>
+<p class="m-note" style="margin-top:0"><b>Khớp</b> = % pixel mà cả ba kênh màu lệch không quá 32/255. <b>Che chữ</b> = bỏ khung chữ (nới 4 px) khỏi phép so: chữ gốc là font viết tay khác, đặt lệch vài px, so từng nét không có nghĩa. Chụp bằng Playwright đúng khung 702×950.</p>
+<div style="overflow-x:auto"><table class="tp-sum"><thead><tr><th>Phép so</th><th>Khớp</th><th>Giống</th></tr></thead><tbody id="sum"></tbody></table></div>
+<div class="tp-tri">
+<div class="tp-p"><small>Ảnh gốc</small><img src="shots/orig.webp" alt="Ảnh gốc sơ đồ Build Your AI App" loading="lazy"></div>
+<div class="tp-p"><small>Bản dựng (chụp HTML)</small><img src="shots/mock.webp" alt="Ảnh chụp bản dựng HTML" loading="lazy"></div>
+<div class="tp-p"><small>Lệch &gt; 32/255 (đỏ) · chữ đã che (xanh)</small><img src="shots/diff.webp" alt="Ảnh lệch" loading="lazy"></div>
+</div>
+
+<h2 class="aw-heading-hr">Ghi chú trung thực</h2>
+<ul class="m-note">
+<li>Chữ chép từ ảnh. Font Fredoka, Comic Neue, Caveat là đoán theo hình chữ; font gốc có vẻ là một font comic đơn cách, không xác nhận được.</li>
+<li>Logo Next.js, Streamlit, Vercel, Ollama, Notion, Chroma, Qdrant, MCP, GitHub, Slack, Docker, Cloudflare, Hugging Face, SQLite, DuckDB, Supabase, Phoenix vẽ lại bằng SVG đơn giản, chỉ giống đại thể. Các tên là thương hiệu của chủ sở hữu.</li>
+<li>Chú thích khi rê chuột là phần thêm, ảnh gốc không có.</li>
+<li>Ảnh gốc là bản chụp của bên thứ ba, đưa vào đây chỉ để đối chiếu nghiệm thu.</li>
+<li>Tái lập số: <code>NODE_PATH=$(npm root -g) node tools/topo-diff.cjs</code> (cần một server tĩnh cổng 8842 ở gốc repo).</li>
+</ul>
+</main>
+<script>
+fetch('match.json').then((r) => r.json()).then((d) => {
+  const f = (n) => n.toFixed(2).replace('.', ',') + '%';
+  document.getElementById('sum').innerHTML = `<tr><td>Cả khung</td><td><b>${f(d.match)}</b></td><td>${f(d.like)}</td></tr><tr><td>Che chữ (${f(d.masked_pct)} diện tích)</td><td><b>${f(d.match_masked)}</b></td><td>${f(d.like_masked)}</td></tr>`;
+}).catch(() => {});
+</script>
+<script src="/stats.js?v=b37260903e" defer></script>
+</body></html>

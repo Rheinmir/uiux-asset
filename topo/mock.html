@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mock «Build Your AI App» — sơ đồ topo dựng tay</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500&family=Comic+Neue:wght@400;700&family=Fredoka:wght@600&display=swap">
+<style>
+/* Bảng vẽ 702×950 px = đúng khung ảnh gốc; mọi toạ độ là px của ảnh. ?shot=1 = đứng yên khung 1:1, không nút (để chấm pixel). */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; background: #010003; overflow: hidden; }
+body { font-family: 'Comic Neue', 'Comic Sans MS', cursive; letter-spacing: .35px; color: #eef0f1; -webkit-font-smoothing: antialiased; touch-action: none; }
+#vp { position: absolute; inset: 0; cursor: grab; } #vp.drag { cursor: grabbing; }
+#art { position: absolute; left: 0; top: 0; width: 702px; height: 950px; transform-origin: 0 0; }
+.a { position: absolute; white-space: nowrap; line-height: 1; }
+.c { transform: translate(-50%, -50%); text-align: center; } .l { transform: translateY(-50%); }
+svg { position: absolute; left: 0; top: 0; overflow: visible; }
+#edges path { fill: none; stroke: #c4c4c9; stroke-width: 1.6; transition: stroke .2s, opacity .2s; }
+.n { position: absolute; border: 2px solid var(--k); border-radius: 6px; background: #040608; box-shadow: 0 0 0 1px color-mix(in srgb, var(--k) 28%, transparent), inset 0 0 0 1px color-mix(in srgb, var(--k) 14%, transparent); transition: border-color .2s, box-shadow .2s, opacity .2s, transform .2s; }
+.n svg { position: absolute; }
+.g { --h: #9fe0c4; } .b { --h: #7fa8e0; } .p { --h: #b39ae8; } .y { --h: #e8c87e; } .k { --h: #e9879c; } .w { --h: #d0d6d8; } .s { --h: #8fb0d0; }
+/* viền: màu đo trên ảnh gốc (trung vị 2 px sáng nhất của mỗi cạnh) */
+#start { --k: #686f72; } #q1 { --k: #7f958c; } #q2 { --k: #587187; } #q3 { --k: #6f6582; } #q4 { --k: #918772; } #q5 { --k: #9c7d88; } #t1 { --k: #656d6f; } #t2 { --k: #4b5e75; } #t3 { --k: #534c68; } #t4 { --k: #766b5b; } #t5 { --k: #715760; } #how { --k: #7d8787; } #pred { --k: #7b8e8b; } #dyn { --k: #5b6b7d; } #wf { --k: #788580; } #ag { --k: #5b6978; } #multi { --k: #818687; } #single { --k: #78887e; } #ma { --k: #635575; } #obs { --k: #516474; }
+/* chữ */
+.h { font-weight: 700; font-size: 13px; } .h2 { font-weight: 700; font-size: 12.5px; line-height: 16px; }
+.sm { font-size: 11px; letter-spacing: .5px; color: #cfd1d3; margin-top: -3px; } .h, .h2 { margin-top: -3px; } .xs { font-size: 8.5px; color: #c6c8ca; }
+.tl { font-weight: 700; font-size: 12px; } .tli { font-size: 10.5px; color: #dfe1e2; }
+.gr { color: #a9e5cb; } .bl { color: #c4d8ec; } .pu { color: #c6aef0; }
+.hand { font-family: 'Caveat', cursive; font-size: 15.5px; line-height: 15px; color: #b9e6d2; white-space: pre; }
+/* tương tác: rê lên một nút → sáng nút + cạnh + nút kề, mờ phần còn lại */
+#art.hov .n:not(.on), #art.hov #edges path:not(.on) { opacity: .28; }
+#art.hov .n.on { border-color: var(--h); box-shadow: 0 0 18px -2px var(--h); }
+#art.hov .n.me { transform: translateY(-1px); }
+#edges path.on { stroke: #fff; }
+#tip { position: fixed; z-index: 3; pointer-events: none; max-width: 260px; padding: 8px 10px; border-radius: 8px; background: rgba(20,22,28,.94); border: 1px solid #3a3f48; font: 12px/1.4 system-ui, sans-serif; color: #e9ebee; opacity: 0; transition: opacity .15s; }
+#ctl { position: fixed; right: 12px; bottom: 12px; z-index: 3; display: flex; gap: 6px; }
+#ctl button { width: 34px; height: 34px; border-radius: 8px; border: 1px solid #3a3f48; background: rgba(20,22,28,.9); color: #e9ebee; font: 600 16px system-ui, sans-serif; cursor: pointer; }
+#ctl button:hover { border-color: #a9e5cb; }
+.shot #ctl, .shot #tip { display: none; } .shot #vp { cursor: default; }
+@media (prefers-reduced-motion: reduce) { .n, #edges path { transition: none; } }
+</style>
+</head>
+<body>
+<div id="vp"><div id="art">
+<svg id="edges" width="702" height="950" aria-hidden="true"><g id="eg" transform="translate(.5 .5)">
+<defs><marker id="ar" viewBox="0 0 10 10" refX="5" refY="8.5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 4 5 8.5 9 4" fill="none" stroke="context-stroke" stroke-width="1.6"/></marker></defs></g>
+</svg>
+<svg id="deco" width="702" height="950" aria-hidden="true" fill="none" stroke="#b9e6d2" stroke-width="1.5" stroke-linecap="round">
+<path d="M300 131 Q350 126 401 131" stroke="#a9e5cb" stroke-width="2.4"/>
+<path d="M584 137 Q574 150 579 168 M574 161 579 169 585 162"/>
+<path d="M64 812 Q70 834 95 842 M86 845 96 842 90 834"/>
+<path d="M660 838 Q656 852 640 857 M648 860 640 857 645 849"/>
+<path d="M262 770 C243 771 233 781 232 793 M228 788 232 794 236 788" stroke="#d8d8dc"/>
+<path d="M455 770 C474 771 486 781 487 793 M483 788 487 794 491 788" stroke="#d8d8dc"/>
+<path d="M357 942 V950" stroke="#c6c6ca"/>
+<circle cx="60" cy="962" r="16" fill="#fff" stroke="none"/>
+</svg>
+
+<div class="a c" style="left:356px;top:81px;font:600 42px/1 Fredoka,sans-serif;letter-spacing:.3px">Build Your <span class="gr">AI App</span></div>
+<div class="a c" style="left:355px;top:117px;font-size:17.5px;letter-spacing:.8px;color:#e6e8ea">A practical path from idea to production.</div>
+<div class="a hand" style="left:592px;top:84px;transform:rotate(-13deg);transform-origin:0 0">Different apps.
+Different needs.
+Same building blocks.</div>
+<div class="a hand" style="left:34px;top:760px;transform:rotate(-14deg);transform-origin:0 0">Start simple.
+Add complexity
+when you need it.</div>
+<div class="a hand" style="left:606px;top:788px;transform:rotate(-20deg);transform-origin:0 0">Modular.
+Open.
+Yours to customize.</div>
+<div class="a c" style="left:211px;top:778px;font:italic 700 13px/1 'Comic Neue',cursive;color:#d8d8dc">No</div>
+<div class="a c" style="left:503px;top:778px;font:italic 700 13px/1 'Comic Neue',cursive;color:#d8d8dc">Yes</div>
+
+<!-- Start -->
+<div class="n w" id="start" style="left:250px;top:153px;width:215px;height:60px" data-tip="Điểm xuất phát: bạn đang dựng app gì? Năm nhánh bên dưới là năm câu hỏi cần trả lời.">
+<svg viewBox="0 0 30 30" width="40" height="40" style="left:22px;top:8px" fill="none" stroke="#e7c27a" stroke-width="1.7" stroke-linecap="round"><path d="M10.5 17.5a6 6 0 1 1 9 0c-1 1-1.5 2-1.5 3.5h-6c0-1.5-.5-2.5-1.5-3.5zM12 23.5h6M12.8 26h4.4M15 3V1M5 8 3.5 6.5M25 8l1.5-1.5M3 15H1M29 15h-2"/></svg>
+<div class="a l h gr" style="left:81px;top:22px;font-size:15px">Start Here</div>
+<div class="a l sm" style="left:81px;top:42px">What are you building?</div>
+</div>
+
+<!-- 5 câu hỏi -->
+<div class="n g" id="q1" style="left:25px;top:248px;width:118px;height:81px" data-tip="Giao diện người dùng: chọn khung front-end hoặc nơi host.">
+<svg viewBox="0 0 28 24" width="33" height="29" style="left:41px;top:10px" fill="none" stroke="#9fd9bf" stroke-width="2" stroke-linejoin="round"><rect x="2" y="2" width="24" height="15" rx="1.5"/><path d="M14 17v4M9 22h10"/></svg>
+<div class="a c h" style="left:58px;top:59px">Need a UI?</div></div>
+<div class="n b" id="q2" style="left:159px;top:248px;width:119px;height:81px" data-tip="Trí tuệ: mô hình ngôn ngữ chạy local hoặc qua API.">
+<svg viewBox="0 0 28 26" width="33" height="32" style="left:42px;top:8px" fill="none" stroke="#86b4e0" stroke-width="1.8" stroke-linecap="round"><path d="M14 4c-2-3-7-2-7 2-4 0-5 5-2 7-3 2-1 7 3 6 1 4 6 4 6 0V4zM14 4c2-3 7-2 7 2 4 0 5 5 2 7 3 2 1 7-3 6-1 4-6 4-6 0M10 9c1 1 2 1 4 0M18 9c-1 1-2 1-4 0M9 15h5M19 15h-5"/></svg>
+<div class="a c h" style="left:59px;top:59px">Need intelligence?</div></div>
+<div class="n p" id="q3" style="left:295px;top:248px;width:126px;height:81px" data-tip="Tri thức riêng: nguồn tài liệu + cơ sở dữ liệu vector để tìm theo nghĩa (RAG).">
+<svg viewBox="0 0 24 26" width="26" height="30" style="left:49px;top:8px" fill="none" stroke="#b49be6" stroke-width="2.1"><ellipse cx="12" cy="5" rx="9" ry="3.2"/><path d="M3 5v16c0 1.8 4 3.2 9 3.2s9-1.4 9-3.2V5M3 10.5c0 1.8 4 3.2 9 3.2s9-1.4 9-3.2M3 16c0 1.8 4 3.2 9 3.2s9-1.4 9-3.2"/></svg>
+<div class="a c h2" style="left:63px;top:51px">Need your own</div><div class="a c h2" style="left:63px;top:67px">knowledge?</div></div>
+<div class="n y" id="q4" style="left:437px;top:248px;width:120px;height:81px" data-tip="Hành động: cho model gọi công cụ thật qua MCP.">
+<svg viewBox="0 0 22 28" width="22" height="30" style="left:47px;top:8px" fill="none" stroke="#e8c87e" stroke-width="2.1" stroke-linecap="round"><path d="M7 2v6M15 2v6M3 8h16v5a8 8 0 0 1-16 0zM11 21v6"/></svg>
+<div class="a c h2" style="left:59px;top:51px">Need to take</div><div class="a c h2" style="left:59px;top:67px">actions?</div></div>
+<div class="n k" id="q5" style="left:573px;top:248px;width:117px;height:81px" data-tip="Triển khai: đóng gói, chạy ở edge, hoặc host demo.">
+<svg viewBox="0 0 28 28" width="30" height="30" style="left:38px;top:10px" fill="none" stroke="#e9879c" stroke-width="1.9" stroke-linejoin="round"><path d="M17 4c4-2 7-2 7-2s0 3-2 7l-8 8-5-5zM11 9H6l-3 4 5 1M19 17v5l-4 3-1-5M7 19c-2 1-3 4-3 5 1 0 4-1 5-3"/><circle cx="18" cy="10" r="1.8"/></svg>
+<div class="a c h" style="left:58px;top:59px">Need to deploy?</div></div>
+
+<!-- 5 bộ công cụ -->
+<div class="n g t" id="t1" style="left:25px;top:350px;width:118px;height:142px" data-tip="Next.js (React, full-stack) · Streamlit (Python, app dữ liệu nhanh) · Vercel (host + deploy).">
+<svg viewBox="0 0 26 26" width="26" height="26" style="left:17px;top:20px"><circle cx="13" cy="13" r="12" fill="#000" stroke="#fff" stroke-width="1.4"/><path d="M9 18V8l9 11.5M17 8v7" fill="none" stroke="#fff" stroke-width="1.7"/></svg>
+<div class="a l tl" style="left:54px;top:33px">Next.js</div>
+<svg viewBox="0 0 26 18" width="26" height="18" style="left:17px;top:59px"><path d="M1 3l6 6 6-8 6 8 6-6-3 14H4z" fill="#ff4b4b"/></svg>
+<div class="a l tl" style="left:54px;top:68px">Streamlit</div>
+<svg viewBox="0 0 24 21" width="24" height="21" style="left:18px;top:89px"><path d="M12 0 24 21H0z" fill="#fff"/></svg>
+<div class="a l tl" style="left:54px;top:100px">Vercel</div></div>
+<div class="n b t" id="t2" style="left:159px;top:350px;width:119px;height:142px" data-tip="Ollama: chạy mô hình mở trên máy (Llama, Mistral, Gemma, Phi…).">
+<svg viewBox="0 0 30 40" width="38" height="46" style="left:39px;top:16px" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 15V5c0-3 3-4 4-1l1 8M23 15V5c0-3-3-4-4-1l-1 8M7 15c-3 3-4 7-3 12l2 11M23 15c3 3 4 7 3 12l-2 11M12 12h6"/><circle cx="11" cy="20" r="1.4" fill="#fff"/><circle cx="19" cy="20" r="1.4" fill="#fff"/><path d="M12 26c1 2 5 2 6 0M15 24v1"/></svg>
+<div class="a c tl" style="left:59px;top:75px;font-size:13px">Ollama</div>
+<div class="a c xs" style="left:59px;top:101px;line-height:15px;white-space:pre;font-size:10px">(Llama, Mistral,
+Gemma, Phi, etc.)</div></div>
+<div class="n p t" id="t3" style="left:295px;top:350px;width:126px;height:142px" data-tip="Notion (nguồn tri thức) · Chroma, Qdrant (cơ sở dữ liệu vector).">
+<svg viewBox="0 0 24 24" width="26" height="26" style="left:18px;top:11px"><rect x="1" y="1" width="22" height="22" rx="3" fill="#fff" stroke="#111" stroke-width="1.2"/><path d="M6 6h4l6 9V6h-1.5M6 6v12h2.5M8.5 18H6M16 6h2M16 18l-8-12" fill="none" stroke="#111" stroke-width="1.8"/></svg>
+<div class="a l tl" style="left:55px;top:23px">Notion</div><div class="a l xs" style="left:55px;top:39px">(Knowledge source)</div>
+<svg viewBox="0 0 34 20" width="29" height="18" style="left:16px;top:60px"><circle cx="10" cy="10" r="9" fill="#327eff"/><circle cx="23" cy="10" r="9" fill="#ffde2d"/><path d="M16.5 3.8a9 9 0 0 1 0 12.4 9 9 0 0 1 0-12.4z" fill="#ff6446"/></svg>
+<div class="a l tl" style="left:55px;top:70px">Chroma</div>
+<svg viewBox="0 0 24 27" width="24" height="28" style="left:18px;top:89px"><path d="M12 1 23 7.3v12.4L12 26 1 19.7V7.3z" fill="#dc244c"/><path d="M12 6 18 9.5v8L12 21l-6-3.5v-8z" fill="#9ec5ff"/><path d="M14 15l4 5" stroke="#2f6fde" stroke-width="2.4"/></svg>
+<div class="a l tl" style="left:55px;top:102px">Qdrant</div><div class="a l xs" style="left:55px;top:120px">(Vector DB)</div></div>
+<div class="n y t" id="t4" style="left:437px;top:350px;width:120px;height:142px" data-tip="MCP (Model Context Protocol): một chuẩn cắm GitHub, Slack, CSDL, tệp, API vào model.">
+<svg viewBox="0 0 26 26" width="26" height="26" style="left:22px;top:12px" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M3 12 13 2a3.5 3.5 0 0 1 5 5l-9 9M10 15l8.5-8.5a3.5 3.5 0 0 1 5 5l-9.5 9.5a1.5 1.5 0 0 0 0 2l2 2M16 4.5 7 13.5a3.5 3.5 0 0 0 5 5L21 9.5"/></svg>
+<div class="a l tl" style="left:62px;top:25px">MCP</div>
+<svg viewBox="0 0 16 16" width="13" height="13" style="left:22px;top:51px"><path fill="#fff" d="M8 0a8 8 0 0 0-2.5 15.6c.4 0 .5-.2.5-.4v-1.5c-2.2.5-2.7-1-2.7-1-.4-.9-.9-1.2-.9-1.2-.7-.5.1-.5.1-.5.8.1 1.2.8 1.2.8.7 1.3 1.9.9 2.4.7 0-.5.3-.9.5-1.1-1.8-.2-3.6-.9-3.6-4 0-.9.3-1.6.8-2.1-.1-.2-.4-1 .1-2.1 0 0 .7-.2 2.2.8a7.4 7.4 0 0 1 4 0c1.5-1 2.2-.8 2.2-.8.4 1.1.2 1.9.1 2.1.5.6.8 1.3.8 2.1 0 3.1-1.9 3.8-3.6 4 .3.3.5.8.5 1.5v2.2c0 .2.1.5.6.4A8 8 0 0 0 8 0z"/></svg>
+<div class="a l tli" style="left:52px;top:58px">GitHub</div>
+<svg viewBox="0 0 16 16" width="13" height="13" style="left:22px;top:68px" stroke-linecap="round" stroke-width="3"><path d="M6 1.5v5M3 6h-1.5" stroke="#36c5f0"/><path d="M14.5 6h-5M10 3V1.5" stroke="#2eb67d"/><path d="M10 14.5v-5M13 10h1.5" stroke="#ecb22e"/><path d="M1.5 10h5M6 13v1.5" stroke="#e01e5a"/></svg>
+<div class="a l tli" style="left:52px;top:74px">Slack</div>
+<svg viewBox="0 0 14 16" width="12" height="13" style="left:23px;top:85px" fill="none" stroke="#ddd" stroke-width="1.3"><ellipse cx="7" cy="3" rx="5.5" ry="2"/><path d="M1.5 3v10c0 1.1 2.5 2 5.5 2s5.5-.9 5.5-2V3M1.5 6.5c0 1.1 2.5 2 5.5 2s5.5-.9 5.5-2M1.5 10c0 1.1 2.5 2 5.5 2s5.5-.9 5.5-2"/></svg>
+<div class="a l tli" style="left:52px;top:91px">Databases</div>
+<svg viewBox="0 0 14 16" width="12" height="13" style="left:23px;top:101px" fill="none" stroke="#ddd" stroke-width="1.3" stroke-linejoin="round"><path d="M1 1h7l4 4v10H1zM8 1v4h4"/></svg>
+<div class="a l tli" style="left:52px;top:107px">Files</div>
+<svg viewBox="0 0 16 16" width="13" height="13" style="left:22px;top:117px" fill="none" stroke="#ddd" stroke-width="1.2"><circle cx="8" cy="8" r="7"/><path d="M1 8h14M8 1c-3 4-3 10 0 14M8 1c3 4 3 10 0 14"/></svg>
+<div class="a l tli" style="left:52px;top:120px">APIs</div><div class="a l tli" style="left:52px;top:134px;font-size:10px">and more...</div></div>
+<div class="n k t" id="t5" style="left:573px;top:350px;width:117px;height:142px" data-tip="Docker (đóng gói) · Cloudflare Workers (chạy ở edge) · Hugging Face (host model + demo).">
+<svg viewBox="0 0 32 22" width="27" height="20" style="left:13px;top:21px"><path d="M1 11h25c1-3 3-4 5-3-1 2-3 3-4 3-2 7-9 10-15 10C6 21 2 17 1 11z" fill="#1d91e6"/><g fill="#1d91e6"><rect x="5" y="7" width="3.6" height="3.2"/><rect x="9.2" y="7" width="3.6" height="3.2"/><rect x="13.4" y="7" width="3.6" height="3.2"/><rect x="17.6" y="7" width="3.6" height="3.2"/><rect x="9.2" y="3.4" width="3.6" height="3.2"/><rect x="13.4" y="3.4" width="3.6" height="3.2"/><rect x="13.4" y="-.2" width="3.6" height="3.2"/></g></svg>
+<div class="a l tl" style="left:55px;top:31px">Docker</div>
+<svg viewBox="0 0 34 18" width="34" height="22" style="left:13px;top:57px"><path d="M4 17h24c3 0 5-2 5-4.5S31 8 28 8h-.5C26.5 3.5 23 1 19 1c-4 0-7 2.5-8 6-1-.5-2-.7-3-.7-3.5 0-6 2.7-6 5.7 0 .5 0 1 .2 1.5" fill="#f48120"/><path d="M8 13h17" stroke="#fff" stroke-width="1"/></svg>
+<div class="a l tl" style="left:55px;top:66px">Cloudflare</div><div class="a l tl" style="left:55px;top:80px">Workers</div>
+<svg viewBox="0 0 26 26" width="25" height="25" style="left:16px;top:95px"><path d="M13 1C6 1 2 6 2 12c0 4 1 7 3 9l-3 3h22l-3-3c2-2 3-5 3-9 0-6-4-11-11-11z" fill="#ffd21e"/><circle cx="9" cy="11" r="1.6" fill="#3a3b45"/><circle cx="17" cy="11" r="1.6" fill="#3a3b45"/><path d="M8.5 15.5c2 3 7 3 9 0" fill="#a2211f" stroke="#3a3b45" stroke-width="1"/><path d="M2 18c2-2 4 0 4 2M24 18c-2-2-4 0-4 2" fill="#ff9d0b"/></svg>
+<div class="a l tl" style="left:55px;top:109px">Hugging Face</div></div>
+
+<!-- dòng chảy -->
+<div class="n w" id="how" style="left:247px;top:532px;width:220px;height:49px" data-tip="Cách app chạy: luồng cố định (workflow) hay để model tự quyết (agent)?">
+<svg viewBox="0 0 26 26" width="30" height="30" style="left:21px;top:7px" fill="none" stroke="#a9e5cb" stroke-width="1.8" stroke-linejoin="round"><path d="M11 1.5h4l.7 3.3 2.2 1 2.9-1.8 2.8 2.8-1.8 2.9 1 2.2 3.3.7v4l-3.3.7-1 2.2 1.8 2.9-2.8 2.8-2.9-1.8-2.2 1-.7 3.3h-4l-.7-3.3-2.2-1-2.9 1.8-2.8-2.8 1.8-2.9-1-2.2-3.3-.7v-4l3.3-.7 1-2.2-1.8-2.9L5.4 4l2.9 1.8 2.2-1z" transform="scale(.92) translate(1 1)"/><circle cx="13" cy="13" r="4"/></svg>
+<div class="a l h" style="left:65px;top:16px">How should it work?</div>
+<div class="a l sm" style="left:65px;top:33px">Choose the right control flow.</div></div>
+<div class="n g" id="pred" style="left:90px;top:587px;width:196px;height:48px" data-tip="Các bước biết trước, lần nào cũng chạy giống nhau.">
+<div class="a c h" style="left:97px;top:16px">Predictable steps?</div><div class="a c sm" style="left:97px;top:33px">Same flow every time.</div></div>
+<div class="n b" id="dyn" style="left:429px;top:587px;width:196px;height:48px" data-tip="Cần quyết định động: để model chọn bước tiếp.">
+<div class="a c h bl" style="left:97px;top:16px">Needs dynamic decisions?</div><div class="a c sm" style="left:97px;top:33px">Let the model decide.</div></div>
+<div class="n g" id="wf" style="left:113px;top:657px;width:152px;height:52px" data-tip="Workflow: chuỗi bước cố định, dễ test, dễ đoán.">
+<svg viewBox="0 0 28 28" width="32" height="28" style="left:13px;top:11px" fill="none" stroke="#fff" stroke-width="2"><rect x="10" y="1" width="8" height="7" rx="1"/><rect x="1" y="20" width="8" height="7" rx="1"/><rect x="19" y="20" width="8" height="7" rx="1"/><path d="M14 8v6M5 20v-6h18v6"/></svg>
+<div class="a l h gr" style="left:58px;top:18px">Workflow</div><div class="a l xs" style="left:58px;top:35px">(Simple, deterministic)</div></div>
+<div class="n b" id="ag" style="left:452px;top:657px;width:151px;height:49px" data-tip="Agent: model tự lặp suy nghĩ → gọi công cụ → quan sát (vd LangGraph, CrewAI).">
+<svg viewBox="0 0 30 32" width="32" height="34" style="left:17px;top:5px" fill="none" stroke="#fff" stroke-width="2.1"><circle cx="15" cy="3" r="2"/><path d="M15 5v4"/><rect x="4" y="9" width="22" height="18" rx="7"/><path d="M1 16v5M29 16v5"/><circle cx="11" cy="17" r="1.6" fill="#fff"/><circle cx="19" cy="17" r="1.6" fill="#fff"/><path d="M11.5 21.5c2 1.6 5 1.6 7 0"/></svg>
+<div class="a l h bl" style="left:62px;top:18px">Agent</div><div class="a l xs" style="left:62px;top:35px">(LangGraph / CrewAI)</div></div>
+<div class="n w" id="multi" style="left:258px;top:728px;width:201px;height:50px" data-tip="Có cần nhiều agent chuyên trách, mỗi agent một việc?">
+<div class="a c h" style="left:100px;top:17px">Need multiple specialists?</div><div class="a c sm" style="left:100px;top:34px">Different agents for different tasks.</div></div>
+<div class="n g" id="single" style="left:150px;top:795px;width:164px;height:54px" data-tip="Một agent, một mục tiêu: nên bắt đầu từ đây.">
+<svg viewBox="0 0 30 32" width="32" height="34" style="left:18px;top:8px" fill="none" stroke="#fff" stroke-width="2.1"><circle cx="15" cy="3" r="2"/><path d="M15 5v4"/><rect x="4" y="9" width="22" height="18" rx="7"/><path d="M1 16v5M29 16v5"/><circle cx="11" cy="17" r="1.6" fill="#fff"/><circle cx="19" cy="17" r="1.6" fill="#fff"/><path d="M11.5 21.5c2 1.6 5 1.6 7 0"/></svg>
+<div class="a l h gr" style="left:60px;top:20px">Single Agent</div><div class="a l xs" style="left:60px;top:37px">(One agent, one goal)</div></div>
+<div class="n p" id="ma" style="left:408px;top:795px;width:158px;height:54px" data-tip="Nhiều agent chuyên trách phối hợp với nhau.">
+<svg viewBox="0 0 34 26" width="32" height="30" style="left:20px;top:11px" fill="none" stroke="#b49be6" stroke-width="2" stroke-linecap="round"><circle cx="17" cy="8" r="5"/><path d="M8 25c0-6 4-9 9-9s9 3 9 9z"/><circle cx="7" cy="9" r="4"/><path d="M1 22c0-4 2-7 5-7.5M27 9a4 4 0 1 0 0 0M33 22c0-4-2-7-5-7.5"/><circle cx="27" cy="9" r="4"/></svg>
+<div class="a l h pu" style="left:64px;top:20px">Multi-Agent</div><div class="a l xs" style="left:64px;top:37px">(Specialized agents)</div></div>
+<div class="n s" id="obs" style="left:45px;top:877px;width:625px;height:65px" data-tip="Quan sát, đánh giá, cải thiện: trace, log, eval, vòng phản hồi. SQLite · DuckDB · Supabase · Phoenix (Arize).">
+<svg viewBox="0 0 28 28" width="28" height="28" style="left:24px;top:18px" fill="#7fd0a6"><rect x="1" y="17" width="6" height="10" rx="1.5"/><rect x="11" y="10" width="6" height="17" rx="1.5"/><rect x="21" y="2" width="6" height="25" rx="1.5"/></svg>
+<div class="a l h bl" style="left:69px;top:23px;font-size:15.5px;color:#d6e4ef">Observe, Evaluate, Improve</div>
+<div class="a l sm" style="left:69px;top:43px">Traces, logs, evals, and feedback loops.</div>
+<svg width="300" height="65" style="left:345px;top:0" stroke="#5c6670" stroke-width="1.2"><path d="M4 12v42M70 12v42M135 12v42M203 12v42"/></svg>
+<svg viewBox="0 0 20 26" width="20" height="27" style="left:371px;top:11px"><path d="M17 1C10 3 5 10 4 20l-2 5 3-4c8-2 12-9 12-20z" fill="#e8e8ea"/><path d="M15 4 5 21" stroke="#8a8a90" stroke-width=".9"/></svg>
+<div class="a c xs" style="left:381px;top:48px;font-size:9.5px">SQLite</div>
+<svg viewBox="0 0 26 26" width="24" height="24" style="left:432px;top:11px"><circle cx="13" cy="13" r="12" fill="#111" stroke="#fff" stroke-width="1.2"/><circle cx="11" cy="13" r="5" fill="#fff100"/><rect x="17" y="11.5" width="5" height="3" rx="1.5" fill="#fff100"/></svg>
+<div class="a c xs" style="left:447px;top:48px;font-size:9.5px">DuckDB</div>
+<svg viewBox="0 0 22 24" width="22" height="22" style="left:501px;top:13px"><path d="M12 1 2 14h9l-1 9 10-13h-9z" fill="#3ecf8e"/></svg>
+<div class="a c xs" style="left:512px;top:48px;font-size:9.5px">Supabase</div>
+<svg viewBox="0 0 30 24" width="34" height="26" style="left:564px;top:11px"><path d="M2 3c4 1 7 4 9 8 0-4 2-8 6-10-1 3 0 6 2 8 1-2 4-3 7-3-3 2-4 5-4 8 0 5-4 9-9 9s-9-4-9-9c0-4-1-8-2-11z" fill="#e8622a"/><path d="M9 14c2 0 4 2 5 4M15 11c1 2 1 4 0 6" stroke="#7a2108" stroke-width="1" fill="none"/></svg>
+<div class="a c xs" style="left:583px;top:48px;font-size:9.5px">Phoenix</div></div>
+</div></div>
+<div id="tip" role="tooltip"></div>
+<div id="ctl"><button id="zin" aria-label="Phóng to">+</button><button id="zout" aria-label="Thu nhỏ">−</button><button id="zfit" aria-label="Vừa khung">⤢</button></div>
+<script>
+(() => {
+  const $ = (s) => document.querySelector(s), art = $('#art'), vp = $('#vp'), ns = 'http://www.w3.org/2000/svg';
+  const shot = new URLSearchParams(location.search).has('shot'); if (shot) document.body.classList.add('shot');
+  // Cạnh: [từ, tới, đường SVG]. Đường vẽ theo toạ độ đo trên ảnh gốc (px).
+  const C = [83, 218, 357, 496, 631], E = [];
+  C.forEach((x, i) => {
+    E.push(['start', 'q' + (i + 1), `M357 213 V221 H${x} V246`]);
+    E.push(['q' + (i + 1), 't' + (i + 1), `M${x} 329 V348`]);
+    E.push(['t' + (i + 1), 'how', `M${x} 492 V511 H357 V530`]);
+  });
+  E.push(['how', 'pred', 'M247 556 H192 Q186 556 186 562 V585'], ['how', 'dyn', 'M467 556 H521 Q527 556 527 562 V585'],
+    ['pred', 'wf', 'M188 635 V655'], ['dyn', 'ag', 'M527 635 V655'],
+    ['wf', 'multi', 'M188 709 V739 Q188 745 194 745 H256'], ['ag', 'multi', 'M527 706 V739 Q527 745 521 745 H461'],
+    ['multi', 'single', ''], ['multi', 'ma', ''],
+    ['single', 'obs', 'M232 849 V852 Q232 858 238 858 H357 V875'], ['ma', 'obs', 'M487 849 V852 Q487 858 481 858 H357 V875']);
+  const g = $('#eg');
+  const P = E.map(([a, b, d]) => {
+    if (!d) return null;                                         // 2 nhánh No/Yes là nét cong vẽ sẵn trong #deco
+    const p = document.createElementNS(ns, 'path'); p.setAttribute('d', d);
+    p.setAttribute('marker-end', 'url(#ar)');
+    g.append(p); return p;
+  });
+  // rê nút: sáng nút + cạnh nối + nút kề
+  const tip = $('#tip');
+  document.querySelectorAll('.n').forEach((n) => {
+    n.addEventListener('pointerenter', (e) => {
+      art.classList.add('hov'); n.classList.add('on', 'me');
+      E.forEach(([a, b], i) => { if (a === n.id || b === n.id) { P[i]?.classList.add('on'); $('#' + (a === n.id ? b : a)).classList.add('on'); } });
+      tip.textContent = n.dataset.tip || ''; tip.style.opacity = tip.textContent ? 1 : 0;
+    });
+    n.addEventListener('pointermove', (e) => { tip.style.left = Math.min(e.clientX + 14, innerWidth - 270) + 'px'; tip.style.top = (e.clientY + 16) + 'px'; });
+    n.addEventListener('pointerleave', () => { art.classList.remove('hov'); document.querySelectorAll('.on,.me').forEach((x) => x.classList.remove('on', 'me')); tip.style.opacity = 0; });
+  });
+  // kéo / cuộn để zoom / nút + − vừa khung
+  let s = 1, x = 0, y = 0;
+  const put = () => { art.style.transform = `translate(${x}px,${y}px) scale(${s})`; };
+  const fit = () => { s = shot ? 1 : Math.min(innerWidth / 702, innerHeight / 950); x = (innerWidth - 702 * s) / 2; y = (innerHeight - 950 * s) / 2; if (shot) x = y = 0; put(); };
+  const zoom = (k, cx = innerWidth / 2, cy = innerHeight / 2) => { const n = Math.min(4, Math.max(.3, s * k)); x = cx - (cx - x) * n / s; y = cy - (cy - y) * n / s; s = n; put(); };
+  if (!shot) {
+    vp.addEventListener('wheel', (e) => { e.preventDefault(); zoom(Math.exp(-e.deltaY / 400), e.clientX, e.clientY); }, { passive: false });
+    const pts = new Map(); let pinch = 0;
+    vp.addEventListener('pointerdown', (e) => { pts.set(e.pointerId, [e.clientX, e.clientY]); vp.setPointerCapture(e.pointerId); vp.classList.add('drag'); });
+    vp.addEventListener('pointermove', (e) => {
+      const o = pts.get(e.pointerId); if (!o) return;
+      if (pts.size === 2) {                                    // hai ngón: zoom quanh trung điểm
+        pts.set(e.pointerId, [e.clientX, e.clientY]); const [a, b] = [...pts.values()], d = Math.hypot(a[0] - b[0], a[1] - b[1]);
+        if (pinch) zoom(d / pinch, (a[0] + b[0]) / 2, (a[1] + b[1]) / 2); pinch = d; return;
+      }
+      x += e.clientX - o[0]; y += e.clientY - o[1]; pts.set(e.pointerId, [e.clientX, e.clientY]); put();
+    });
+    const up = (e) => { pts.delete(e.pointerId); pinch = 0; if (!pts.size) vp.classList.remove('drag'); };
+    vp.addEventListener('pointerup', up); vp.addEventListener('pointercancel', up);
+    vp.addEventListener('dblclick', fit);
+    $('#zin').onclick = () => zoom(1.25); $('#zout').onclick = () => zoom(.8); $('#zfit').onclick = fit;
+    addEventListener('resize', fit);
+  }
+  fit();
+  document.fonts.ready.then(() => { document.documentElement.dataset.ready = '1'; });
+})();
+</script>
+</body>
+</html>
