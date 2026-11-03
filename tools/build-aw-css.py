@@ -179,6 +179,8 @@ html:has(#ovs-base) :is(h1, h2) { text-transform: uppercase; }
 .aw-hnav { min-width: 0; overflow-x: auto; scrollbar-width: none; mask-image: linear-gradient(90deg, #000 90%, transparent); }
 .aw-hnav::-webkit-scrollbar { display: none; }
 .aw-hnav > a { white-space: nowrap; flex: none; }
+@media (min-width: 1100px) { .aw-hnav { gap: 16px; } }   /* 14 mục vừa ở 1440 (trước: «Thống kê» bị mờ/cắt) */
+.aw-hnav.is-fit { mask-image: none; }                  /* vừa hết thì không cần dải mờ cuối */
 /* Stageshow «Boxed»: kit previews showed a whole page at 25%; show the top of the kit at 40% so titles and swatches read */
 .aw-card-site .aw-shot iframe { width: 250%; height: 250%; transform: scale(.4); }
 """
