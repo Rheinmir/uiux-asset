@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta name="ui-kit-id" content="jang-work-design-system-thoi-chua-du">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bài Design system · UI kit</title>
+<meta name="description" content="UI kit rút từ bài “Design system thôi chưa đủ” trên jang.work: token kit D trong style của bài, component đo bằng trình duyệt.">
+<meta name="ui-kit-skip" content="4b08670e6d:khung hero toàn trang (1440 × 2491), không phải component;a2ee3d8efa:sân khấu bản đồ tri thức dính toàn màn (1440 × 900), vẽ bằng SVG động;3b020f2da2:khung cuối trang (1440 × 778) gom credits + sc-row, đã có thẻ riêng">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;700&family=JetBrains+Mono:wght@400;500&family=Merriweather:wght@400;700&display=swap">
+<style>
+/* ===== token thật của bài: <style> :root, [data-kit="D"] + khối --c-* của thanh nav/cuối bài ===== */
+:root{ --bg:#ffffff;--surface:#f4f6f8;--surface-2:#ffffff;--hairline:rgba(15,40,70,.14);--ink:#111111;--text:#222222;--ink-2:#596069;--ink-dim:rgba(17,17,17,.48);--active-fill:#111111;--active-ink:#ffffff;--relation:#1A5FD0;--violation:#A85A00;--c-fg:#202020;--c-muted:#646464;--c-panel:#f0f0f0;--c-chip:#e8e8e8;--c-control-deep:#e0e0e0;--c-border:#e8e8e8;--c-border-heavy:#d9d9d9;--c-canvas:#ffffff;--c-shadow:#202020;
+  --font-ui:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;--font-display:"Merriweather",Georgia,"Times New Roman",serif;--font-body:Arial,"Helvetica Neue",sans-serif;
+  --stack-mono:"JetBrains Mono",ui-monospace,monospace;--col-text:720px;--col-wide:1040px;
+  --r-card:14px;--r-sm:8px;--r-xs:4px;--r-3:8px;--r-4:12px;--r-pill:9999px;--fs-13:13px;--fs-16:16px;--fs-21:21px;
+  --sc-ease:cubic-bezier(.23,1,.32,1);
+  --shadow-highlight:color-mix(in srgb,var(--c-canvas) 30%,transparent);--shadow-highlight-strong:color-mix(in srgb,var(--c-canvas) 70%,transparent);
+  --shadow-ink-15:color-mix(in srgb,var(--c-shadow) 15%,transparent);--shadow-ink-30:color-mix(in srgb,var(--c-shadow) 30%,transparent);
+  --sc-grad-btn:linear-gradient(to bottom,var(--c-chip),var(--c-control-deep));--sc-grad-btn-hover:linear-gradient(to bottom,var(--c-panel),var(--c-chip));
+  --sc-shadow-card:0 0 0 1px color-mix(in srgb,var(--c-shadow) 6%,transparent),0 1px 2px -1px color-mix(in srgb,var(--c-shadow) 6%,transparent),0 2px 4px 0 color-mix(in srgb,var(--c-shadow) 4%,transparent);
+  --sc-shadow-card-hover:0 0 0 1px color-mix(in srgb,var(--c-shadow) 8%,transparent),0 1px 2px -1px color-mix(in srgb,var(--c-shadow) 8%,transparent),0 2px 4px 0 color-mix(in srgb,var(--c-shadow) 6%,transparent);
+  color-scheme:light;
+}
+/* biến của VỎ KIT (không phải token của bài) — trỏ về token bài để trang kit mặc đúng giao diện */
+:root{--c-raised:var(--bg);--c-elevated:var(--surface);--c-border-subtle:var(--hairline);--c-glyph:var(--ink-dim);--c-faint:var(--ink-dim);--c-fg-2:var(--text);
+  --c-accent:var(--relation);--c-focus:var(--relation);--font-sans:var(--font-ui);--font-mono:var(--stack-mono);--font-serif:var(--font-display);
+  --fw-body:400;--fw-book:450;--fw-medium:500;--fw-heading:500;--lh-text:1.6;--lh-heading:1.35;--lh-display:1.18;--track-heading:0;--track-hero:-.01em;--track-wordmark:-.08em;
+  --fs-26:26px;--sp-5:5px;--sp-8:8px;--sp-13:13px;--sp-21:21px;--sp-34:34px;--sp-55:55px;--sp-89:89px;--r-1:4px;--r-5:14px;
+  --dur-base:.2s;--ease-enter:var(--sc-ease);--shadow-custom:var(--sc-shadow-card);--shadow-custom-hover:var(--sc-shadow-card-hover)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:400 16px/1.6 var(--font-ui)}
+code,pre{font-family:var(--stack-mono)}
+code{font-size:.85em;background:var(--surface);padding:1px 5px;border-radius:var(--r-xs)}
+a{color:var(--relation);text-underline-offset:3px}
+:focus-visible{outline:3px solid var(--relation);outline-offset:3px;border-radius:var(--r-xs)}
+::selection{background:var(--active-fill);color:var(--active-ink)}
+svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.ph{display:grid;place-items:center;color:var(--ink-2);font:400 12px/1.3 var(--stack-mono);text-align:center;width:100%;height:100%;
+  background:repeating-linear-gradient(135deg,transparent 0 9px,var(--hairline) 9px 10px),var(--surface)}
+/* ===== vỏ trang kit ===== */
+.app{display:grid;grid-template-columns:220px minmax(0,1fr);min-height:100vh}
+.side{position:sticky;top:0;height:100vh;overflow:auto;padding:var(--sp-21) var(--sp-13);border-right:1px solid var(--c-border);background:var(--c-canvas)}
+.side .wm{font-weight:600;letter-spacing:var(--track-wordmark);display:block;margin:0 8px var(--sp-21)}
+.side h4{margin:var(--sp-21) 8px var(--sp-5);font:var(--fw-book) var(--fs-13)/1.4 var(--font-sans);color:var(--c-muted)}
+.side a{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:var(--r-3);color:var(--c-muted);text-decoration:none;font-size:var(--fs-13)}
+.side a::before{content:"";width:13px;height:1px;background:var(--c-glyph);transition:width var(--dur-base) var(--ease-enter)}
+.side a:hover{color:var(--c-fg)}
+.side a.on{color:var(--c-fg)}.side a.on::before{width:21px;background:var(--c-fg)}
+main{min-width:0}
+.bar{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;gap:var(--sp-8) var(--sp-21);align-items:center;padding:var(--sp-8) var(--sp-21);
+  background:color-mix(in srgb,var(--c-raised) 88%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--c-border)}
+.bar label{font-size:var(--fs-13);color:var(--c-muted);display:flex;align-items:center;gap:8px}
+.bar .grp{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.bar .note{font:var(--fw-body) 12px var(--font-mono);color:var(--c-muted)}
+.bar .sp{flex:1}
+#swatches{display:flex;gap:4px;flex-wrap:wrap}
+#swatches button{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px 0 8px;border-radius:var(--r-pill);border:0;background:transparent;
+  color:var(--c-muted);font:var(--fw-medium) var(--fs-13) var(--font-sans);cursor:pointer}
+#swatches button i{width:14px;height:14px;border-radius:50%;box-shadow:var(--shadow-custom)}
+#swatches button[aria-pressed=true]{background:var(--c-panel);color:var(--c-fg)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 var(--sp-21) var(--sp-89)}
+.intro{padding:var(--sp-55) 0 var(--sp-34)}
+.eyebrow{font:var(--fw-body) var(--fs-13)/1.5 var(--font-mono);color:var(--c-muted);margin:0 0 var(--sp-13);overflow-wrap:anywhere}
+.intro h1{font:var(--fw-medium) clamp(34px,6vw,55px)/var(--lh-display) var(--font-sans);letter-spacing:var(--track-hero);margin:0 0 var(--sp-21)}
+.intro h1 em{font:italic 400 1em var(--font-serif);letter-spacing:0}
+.intro p{max-width:680px;color:var(--c-muted);margin:0 0 var(--sp-13)}
+.facts{display:flex;flex-wrap:wrap;gap:var(--sp-8);margin-top:var(--sp-21);padding:0;list-style:none}
+.facts li{background:var(--c-canvas);box-shadow:var(--shadow-custom);border-radius:var(--r-4);padding:var(--sp-8) var(--sp-13);font-size:var(--fs-13);color:var(--c-muted)}
+.facts b{display:block;color:var(--c-fg);font:var(--fw-heading) var(--fs-16) var(--font-mono)}
+.block{margin-top:var(--sp-55);scroll-margin-top:72px}
+.block>header h2{font:var(--fw-heading) var(--fs-26)/var(--lh-heading) var(--font-sans);letter-spacing:var(--track-heading);margin:0 0 var(--sp-8)}
+.block>header p{color:var(--c-muted);max-width:720px;margin:0 0 var(--sp-21)}
+.cards{display:grid;gap:var(--sp-21)}
+.spec{background:var(--c-canvas);border:1px solid var(--c-border);border-radius:var(--r-5);overflow:hidden;min-width:0}
+.spec-h{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;padding:var(--sp-13) var(--sp-21);border-bottom:1px solid var(--c-border-subtle)}
+.spec-h b{font-weight:var(--fw-heading)}
+.spec-h .kind{font:var(--fw-body) 12px var(--font-mono);background:var(--c-panel);padding:2px 8px;border-radius:var(--r-pill);color:var(--c-fg-2);overflow-wrap:anywhere}
+.spec-h .dp{font:var(--fw-body) 12px var(--font-mono);color:var(--c-muted);margin-left:auto}
+.stage{display:flex;flex-wrap:wrap;gap:var(--sp-13);align-items:flex-start;padding:var(--sp-21);background:var(--c-raised);min-width:0;overflow-x:auto}
+.stage.col{flex-direction:column;align-items:stretch}
+.states{display:flex;flex-wrap:wrap;gap:var(--sp-13);padding:var(--sp-13) var(--sp-21);border-top:1px dashed var(--c-border)}
+.states figure{margin:0;display:grid;gap:6px;min-width:0}
+.states figcaption{font:var(--fw-body) 12px var(--font-mono);color:var(--c-muted)}
+.spec-f{display:flex;gap:var(--sp-13);align-items:center;justify-content:space-between;padding:var(--sp-8) var(--sp-21);border-top:1px solid var(--c-border-subtle);font-size:var(--fs-13);color:var(--c-muted)}
+.spec-f p{margin:0}
+.copy{flex:none;height:28px;padding:0 10px;border-radius:var(--r-pill);border:0;background:var(--c-canvas);box-shadow:var(--shadow-custom);font:var(--fw-medium) 12px var(--font-sans);color:var(--c-fg);cursor:pointer}
+.copy:hover{box-shadow:var(--shadow-custom-hover)}
+/* nền tảng */
+.swgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:var(--sp-8)}
+.sw{border:0;padding:0;text-align:left;border-radius:var(--r-4);overflow:hidden;background:var(--c-canvas);box-shadow:var(--shadow-custom);cursor:pointer;font:inherit;color:inherit}
+.sw .chip{height:64px;display:flex;align-items:flex-end;padding:6px 10px;font:var(--fw-medium) 12px var(--font-sans)}
+.sw .meta{padding:8px 10px;font-size:12px;line-height:1.4}
+.sw .meta b{display:block;font:var(--fw-medium) 12px var(--font-mono)}
+.sw .meta span{color:var(--c-muted)}
+.sub-h{font:var(--fw-heading) var(--fs-16) var(--font-sans);margin:var(--sp-21) 0 var(--sp-8)}
+.trow{display:grid;grid-template-columns:minmax(120px,190px) minmax(0,1fr);gap:var(--sp-13);align-items:baseline;padding:var(--sp-13) 0;border-bottom:1px solid var(--c-border-subtle)}
+.trow small{font:var(--fw-body) 12px/1.5 var(--font-mono);color:var(--c-muted)}
+.trow div{overflow-wrap:anywhere;min-width:0}
+.rgrid{display:flex;flex-wrap:wrap;gap:var(--sp-21)}
+.rgrid figure{margin:0;text-align:center;font:var(--fw-body) 12px var(--font-mono);color:var(--c-muted)}
+.rgrid i{display:block;width:84px;height:84px;background:var(--c-panel);border:1px solid var(--c-border-heavy);margin-bottom:6px}
+.tw{overflow-x:auto;max-width:100%}
+table.tbl{border-collapse:collapse;font-size:var(--fs-13);width:100%;min-width:420px}
+.tbl th,.tbl td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--c-border-subtle)}
+.tbl th{color:var(--c-muted);font-weight:var(--fw-medium)}
+.tbl td:first-child{font-family:var(--font-mono)}
+.spbar{height:10px;background:var(--c-accent);border-radius:2px}
+/* danh mục */
+.cat-h{font:var(--fw-heading) var(--fs-16) var(--font-sans);margin:var(--sp-34) 0 var(--sp-8)}
+.cat-h small{font:var(--fw-body) 12px var(--font-mono);color:var(--c-muted)}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:var(--sp-8)}
+.mcard{margin:0;background:var(--c-canvas);border:1px solid var(--c-border);border-radius:var(--r-4);overflow:hidden;min-width:0;display:flex;flex-direction:column}
+.mstage{padding:var(--sp-13);background:var(--c-raised);min-height:70px;display:flex;align-items:center;overflow:hidden}
+.mcard figcaption{padding:8px 10px;font:var(--fw-body) 11px/1.5 var(--font-mono);color:var(--c-muted);border-top:1px solid var(--c-border-subtle);overflow-wrap:anywhere}
+.jw-m{border:0;background:none;padding:0;color:inherit;font:inherit;display:block;max-width:100%;line-height:1.35;text-align:left;overflow:hidden;text-overflow:ellipsis;cursor:default;text-decoration:none;appearance:none;margin:0}
+.st-pair{display:flex;gap:8px;align-items:center;padding:var(--sp-13);background:var(--c-raised);min-height:70px;overflow:hidden}
+.st-pair>*{flex:1 1 0;min-width:0}.st-pair>span{flex:none;color:var(--c-faint)}
+/* màn mẫu */
+.screens{display:grid;gap:var(--sp-34)}
+.screens>*{min-width:0}.screens .row{display:flex;flex-wrap:wrap;gap:var(--sp-34)}.screens .row>div{flex:1 1 320px;min-width:0;max-width:100%}
+.frame{overflow:auto;max-width:100%;border-radius:var(--r-5);border:1px solid var(--c-border);background:var(--c-panel);padding:var(--sp-13)}
+.desk{width:1440px;height:900px;zoom:.6;background:var(--c-raised);overflow:hidden;border-radius:12px;box-shadow:var(--shadow-custom);position:relative}
+.phone{width:390px;height:844px;zoom:.8;background:var(--c-raised);overflow:hidden;border-radius:40px;box-shadow:0 0 0 10px var(--c-fg),var(--shadow-custom);margin:10px;position:relative}
+.cap-l{font-size:var(--fs-13);color:var(--c-muted);margin:var(--sp-8) 0 0}
+.toast{position:fixed;left:50%;bottom:24px;translate:-50% 20px;opacity:0;background:var(--c-fg);color:var(--c-canvas);padding:8px 16px;border-radius:var(--r-pill);font-size:var(--fs-13);transition:all var(--dur-base) var(--ease-enter);pointer-events:none;z-index:9}
+.toast.on{opacity:1;translate:-50% 0}
+
+
+.side a{color:var(--ink-2)}.bar .note b{color:var(--ink)}
+.sw .chip small{opacity:.8;margin-left:6px}
+
+/* ===== COMPONENT (chỉ dùng biến của bài) ===== */
+.is-focus{outline:3px solid var(--relation);outline-offset:3px;border-radius:var(--r-xs)}
+.ar-toggle{min-height:44px;padding:0 14px;border:0;border-radius:var(--r-sm);background:transparent;box-shadow:inset 0 0 0 1px var(--ink-2);color:var(--ink);font:500 13px var(--font-ui);cursor:pointer}
+.ar-toggle.sq{width:44px;padding:0;font-size:20px}
+.ar-toggle.txt{font-size:16px}
+.ar-toggle:hover,.ar-toggle.is-hover{box-shadow:inset 0 0 0 1px var(--ink)}
+.ar-toggle[aria-pressed=true]{background:var(--active-fill);color:var(--active-ink)}
+.ar-lp{width:min(340px,100%);background:var(--surface-2);box-shadow:0 0 0 1px var(--hairline);border-radius:var(--r-xs);padding:14px 14px 16px;font:400 13px/1.4 var(--font-ui);color:var(--text)}
+.ar-lp__t{margin:0 0 10px;font:500 16px/1.3 var(--font-ui);color:var(--ink)}
+.ar-lp__a{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 14px;padding:6px;border-radius:var(--r-xs)}
+.ar-lp.flag .ar-lp__a{outline:1px dashed var(--violation)}
+.ar-btn{display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 12px;border-radius:var(--r-xs);background:var(--active-fill);color:var(--active-ink);font:500 13px/1 var(--font-ui);white-space:nowrap}
+.ar-btn.sm{height:30px}
+.ar-btn.sec{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink-2)}
+.ar-btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ar-lp__rows{display:grid;gap:8px}
+.ar-lp__row{display:grid;grid-template-columns:1.1fr 1.6fr .8fr;gap:10px}
+.ar-lp__row i{display:block;height:10px;border-radius:var(--r-xs);background:var(--hairline)}
+.ar-lp__row i:first-child,.ar-lp__row.h i{background:var(--ink-dim)}.ar-lp__row.h i{height:8px}
+.ar-skip{display:inline-block;padding:10px 16px;border-radius:var(--r-sm);background:var(--active-fill);color:var(--active-ink);font:500 16px var(--font-ui);text-decoration:none}
+.ar-hero{max-width:880px}
+.ar-hero .kicker{margin:0 0 14px;font:500 16px/1.3 var(--font-ui);color:var(--relation)}
+.ar-hero h1{margin:0 0 22px;font:700 clamp(31px,4.6vw,49px)/1.18 var(--font-display);color:var(--ink);text-wrap:balance}
+.ar-hero .deck{margin:0 0 20px;max-width:720px;font:500 20px/1.6 var(--font-ui);color:var(--ink)}
+.ar-hero .byline{margin:0;font:400 16px/1.5 var(--font-ui);color:var(--ink-2)}
+.ar-col{max-width:var(--col-text);font:400 20px/1.7 var(--font-body);color:var(--text)}
+.ar-col p,.ar-col li{margin:0 0 1.1em}.ar-col li{margin-bottom:.5em}.ar-col ul{margin:0;padding-left:1.3em}
+.ar-h2{margin:0 0 18px;font:400 31px/1.3 var(--font-display);color:var(--ink);text-wrap:balance}
+.ar-h3{margin:0;font:400 25px/1.35 var(--font-display);color:var(--ink)}
+.ar-a{color:var(--relation);text-underline-offset:3px}
+.ar-pull{margin:0;max-width:var(--col-text)}
+.ar-pull p{margin:0 0 10px;font:400 25px/1.45 var(--font-display);color:var(--ink);text-wrap:balance}
+.ar-pull cite{font:normal 400 16px/1.5 var(--font-ui);color:var(--ink-2)}
+.ar-note{width:min(720px,100%);padding:20px 24px;background:var(--surface);border-radius:var(--r-card);font:400 16px/1.7 var(--font-body);color:var(--text)}
+.ar-note h2{margin:0 0 8px;font:500 20px/1.4 var(--font-ui);color:var(--ink)}
+.ar-note ul{margin:0;padding-left:1.2em}.ar-note li{margin:0 0 6px}
+.ar-credits{width:min(720px,100%);padding:16px 0 0;border-top:1px solid var(--hairline);text-align:right;font:400 16px/1.7 var(--font-ui);color:var(--ink-2)}
+.ar-credits strong{color:var(--ink)}.ar-credits p{margin:0}
+.ar-tbl{width:min(720px,100%);overflow-x:auto;border-radius:var(--r-card);box-shadow:0 0 0 1px var(--hairline)}
+.ar-tbl table{width:100%;min-width:420px;border-collapse:collapse;font:400 16px/1.5 var(--font-ui)}
+.ar-tbl th,.ar-tbl td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--hairline);color:var(--text)}
+.ar-tbl tbody tr:last-child td{border-bottom:0}
+.ar-tbl th,.ar-tbl td:first-child{color:var(--ink);font-weight:500}
+.ar-layers{margin:0;width:min(720px,100%)}
+.ar-layers__bar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 10px}
+.ar-layers__bar p{margin:0;font:400 13px/1.4 var(--font-ui);color:var(--ink-2)}
+.ar-layer{padding:16px 18px;border-radius:var(--r-card);margin-bottom:10px}
+.ar-layer h3,.ar-rc h3,.ar-rc h4{margin:0 0 6px;font:500 20px/1.35 var(--font-ui);color:var(--ink)}
+.ar-layer p{margin:0;font:400 16px/1.55 var(--font-ui);color:var(--text)}
+.ar-layer.onto{background:var(--surface-2);box-shadow:0 0 0 1.5px var(--relation)}
+.ar-layer.base{background:var(--surface);box-shadow:0 0 0 1px var(--hairline)}
+.ar-rc{width:min(300px,100%);padding:16px 18px;background:var(--surface);border-radius:var(--r-card)}
+.ar-rc p{margin:0 0 8px;font:400 16px/1.55 var(--font-ui);color:var(--text)}.ar-rc p:last-child{margin:0}
+.ar-rc .lbl{color:var(--ink-2);font-weight:500}.ar-rc .ex{color:var(--ink-2)}
+.ar-rc.no{background:transparent;outline:1px dashed var(--ink-2);outline-offset:-1px}
+.ar-illus-fig{margin:0;width:min(720px,100%)}
+.ar-illus{padding:14px 12px 12px;background:var(--surface);outline:1px dashed var(--ink-2);outline-offset:-1px;border-radius:var(--r-card)}
+.ar-illus__label{margin:0 0 12px;font:500 13px/1.4 var(--font-ui);color:var(--ink-2)}
+.ar-illus-fig figcaption,.ar-art figcaption{margin:10px 0 0;font:400 16px/1.55 var(--font-ui);color:var(--ink-2)}
+.ar-art figcaption{font-size:13px;line-height:1.5}
+.ar-tl{margin:0;width:min(720px,100%)}
+.ar-tl ol{list-style:none;margin:0;padding:0}
+.ar-tl li{display:grid;grid-template-columns:84px minmax(0,1fr);column-gap:18px;padding:14px 0;border-top:1px solid var(--hairline)}
+.ar-tl time{font:500 20px/1.4 var(--font-ui);color:var(--ink);font-variant-numeric:tabular-nums}
+.ar-tl p{margin:0;font:400 16px/1.55 var(--font-ui);color:var(--text)}.ar-tl strong{display:block;font-weight:500}
+.ar-ladder{margin:0;width:min(420px,100%)}
+.ar-ladder ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column-reverse;gap:6px}
+.ar-ladder li{padding:10px 16px;border-radius:var(--r-sm);background:var(--surface);color:var(--ink-2);font:400 16px/1.5 var(--font-ui)}
+.ar-ladder li.lit{background:var(--active-fill);color:var(--active-ink);font-weight:500}
+.ar-journey{display:flex;align-items:stretch;margin:0;padding:2px 2px 4px;list-style:none;overflow-x:auto;max-width:100%}
+.ar-journey li{display:flex;align-items:center;flex:1 1 0;min-width:96px}
+.ar-journey li+li::before{content:"";width:16px;height:1px;background:var(--ink-dim)}
+.ar-chip{display:flex;flex-direction:column;gap:2px;flex:1;height:100%;padding:7px 10px;text-decoration:none;color:inherit;border-radius:var(--r-xs);background:var(--surface-2);box-shadow:0 0 0 1px var(--hairline)}
+.ar-chip.dash{background:transparent;box-shadow:none;outline:1px dashed var(--ink-2);outline-offset:-1px}
+.ar-chip .n{font:500 13px/1.3 var(--font-ui);color:var(--ink-2)}.ar-chip .t{font:500 16px/1.3 var(--font-ui);color:var(--ink)}
+@media (hover:hover){a.ar-chip:hover{box-shadow:0 0 0 1.5px var(--ink)}}
+.ar-chart{margin:0;width:min(1040px,100%);padding:20px 20px 12px;background:var(--surface);border-radius:var(--r-card)}
+.ar-chart h3{margin:0 0 6px;font:500 20px/1.35 var(--font-ui);color:var(--ink)}
+.ar-chart .sub{margin:0 0 14px;font:400 16px/1.55 var(--font-ui);color:var(--ink-2)}
+.ar-chart .src{margin:10px 0 0;font:400 13px/1.5 var(--font-ui);color:var(--ink-2)}
+.ar-chart .ph{background:repeating-linear-gradient(135deg,transparent 0 9px,var(--hairline) 9px 10px),var(--surface-2)}
+.ar-dt{width:min(560px,100%)}
+.ar-dt summary,.ar-dt .sum{display:flex;align-items:center;min-height:44px;cursor:pointer;font:500 16px var(--font-ui);color:var(--relation)}
+.ar-ts{max-height:260px;overflow:auto;background:var(--surface);border-radius:var(--r-sm);box-shadow:0 0 0 1px var(--hairline)}
+.ar-ts table{width:100%;border-collapse:collapse;font:400 13px/1.45 var(--font-ui);font-variant-numeric:tabular-nums}
+.ar-ts th,.ar-ts td{padding:6px 12px;text-align:left;border-bottom:1px solid var(--hairline);color:var(--text);font-weight:400}
+.ar-ts thead th{position:sticky;top:0;background:var(--surface);color:var(--ink);font-weight:500}
+.ar-ts tbody tr:last-child>*{border-bottom:0}
+.ar-step,.ar-mcard{width:min(360px,100%);padding:18px 20px;border-radius:var(--r-card);background:var(--surface-2);box-shadow:0 0 0 1px var(--hairline)}
+.ar-mcard{width:min(420px,100%);background:color-mix(in srgb,var(--surface-2) 94%,transparent)}
+.ar-step.on,.ar-mcard.on{box-shadow:0 0 0 1.5px var(--ink)}
+.ar-step h3,.ar-mcard h3{margin:0 0 8px;font:500 20px/1.35 var(--font-ui);color:var(--ink)}
+.ar-step .n,.ar-mcard .n{margin-right:8px;font:500 13px var(--font-ui);color:var(--ink-2)}.ar-mcard .n{display:block;margin:0 0 4px}
+.ar-step p,.ar-mcard p{margin:0 0 .6em;font:400 16px/1.6 var(--font-ui);color:var(--text)}.ar-step p:last-child,.ar-mcard p:last-child{margin:0}
+.ar-step .plus{color:var(--ink-2)}.ar-step .plus strong{color:var(--ink)}
+.ar-kgp{width:min(420px,100%);padding:14px 16px;border-radius:var(--r-card);background:var(--surface);box-shadow:0 0 0 1px var(--hairline)}
+.ar-kgp h3{margin:0 0 6px;font:500 20px/1.35 var(--font-ui);color:var(--ink)}
+.ar-kgl{display:flex;flex-wrap:wrap;gap:4px 14px;margin:0;padding:0;list-style:none;font:400 13px/1.4 var(--font-ui);color:var(--ink-2)}
+.ar-kgl li{display:inline-flex;align-items:center;gap:6px}
+.ar-kgl .dot{width:12px;height:12px;border-radius:var(--r-xs);border:1.5px solid var(--ink-2);background:var(--bg)}.ar-kgl .dot.dash{border-style:dashed}
+.ar-kgl .edge{width:14px;height:2px;background:var(--relation)}
+.ar-art{margin:0;width:min(560px,100%)}
+.ar-sc{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;min-height:48px;width:100%}
+.ar-wm{font:600 16px/1 var(--font-ui);letter-spacing:-.08em;color:var(--c-fg);text-decoration:none}
+.ar-wm span{font:400 13px var(--stack-mono);vertical-align:top;margin-left:5px;letter-spacing:0}
+.ar-tabs{display:flex;flex-wrap:wrap;align-items:center;gap:4px}
+.ar-tab{height:32px;padding:0 16px;display:inline-flex;align-items:center;border-radius:var(--r-pill);color:var(--c-muted);font:500 13px/1 var(--font-ui);text-decoration:none}
+.ar-tab:hover,.ar-tab.is-hover{color:var(--c-fg)}
+.ar-tab[aria-current=page]{background:var(--c-panel);color:var(--c-fg)}
+.ar-scbtn{height:36px;padding:0 20px;display:inline-flex;align-items:center;border-radius:var(--r-3);background:var(--sc-grad-btn);color:var(--c-fg);font:500 13px/1 var(--font-ui);text-decoration:none;
+  box-shadow:0 0 0 1px var(--c-border-heavy),inset 0 1px 0 0 var(--shadow-highlight),0 3px 4px -1px var(--shadow-ink-15)}
+.ar-scbtn:hover,.ar-scbtn.is-hover{background:var(--sc-grad-btn-hover);box-shadow:0 0 0 1px var(--c-border),inset 0 1px 0 0 var(--shadow-highlight-strong),0 3px 8px -2px var(--shadow-ink-30)}
+.ar-scrow{display:grid;grid-template-columns:minmax(80px,140px) 1fr auto;align-items:center;gap:13px;min-height:66px;border-top:1px solid var(--c-border);color:var(--c-fg);font:500 16px var(--font-ui);text-decoration:none}
+.ar-scrow small,.ar-next small{font:400 13px var(--font-ui);color:var(--c-muted)}
+.ar-next{display:grid;gap:5px;margin-top:21px;padding:21px;border-radius:var(--r-4);background:var(--c-canvas);color:var(--c-fg);text-decoration:none;box-shadow:var(--sc-shadow-card);transition:box-shadow .2s var(--sc-ease)}
+.ar-next .d{font-size:13px;color:var(--c-muted)}
+.ar-next:hover,.ar-next.is-hover{box-shadow:var(--sc-shadow-card-hover)}
+@media (max-width:900px){.app{grid-template-columns:1fr}.side{display:none}}
+@media (max-width:560px){.bar{position:static}.spec-h .dp{margin-left:0}.trow{grid-template-columns:1fr}.wrap{padding-inline:16px}.bar{padding-inline:16px}.stage{padding:var(--sp-13)}.ar-h2{font-size:25px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<symbol id="arrow" viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4"/></symbol>
+<symbol id="dl" viewBox="0 0 16 16"><path d="M8 2v8M4.5 6.5 8 10l3.5-3.5M3 13h10"/></symbol>
+</svg>
+<div class="app">
+<nav class="side" aria-label="Mục lục">
+  <span class="wm">Bài DS · kit</span>
+  <h4>Nền tảng</h4><a href="#color">Màu</a><a href="#type">Chữ</a><a href="#shape">Hình khối</a><a href="#layout">Bố cục &amp; kích thước</a>
+  <h4>Thành phần</h4><a href="#controls">Điều khiển</a><a href="#text">Chữ trong bài</a><a href="#blocks">Khối nội dung</a><a href="#data">Biểu đồ &amp; cuộn</a><a href="#chrome">Nav &amp; cuối bài</a><a href="#catalog">Danh mục đo được</a><a href="#states">Trạng thái đo được</a>
+  <h4>Mẫu</h4><a href="#screens">Màn hình mẫu</a>
+</nav>
+<main>
+<div class="bar" role="toolbar" aria-label="Chủ đề">
+  <span class="note">Palette: <b>kit “D”</b> (bài chỉ khai một kit)</span>
+  <span class="note" title="Không có prefers-color-scheme, .dark hay data-theme trong style của bài">Chế độ: chỉ sáng (color-scheme: light)</span>
+  <span class="sp"></span>
+  <button class="copy" id="copy-tokens">Copy CSS token</button>
+</div>
+<div class="wrap">
+<section class="intro">
+  <p class="eyebrow">jang.work/writing/design-system-thoi-chua-du &lt;style&gt; :root, [data-kit="D"] → ui-kits/jang-work-design-system-thoi-chua-du</p>
+  <h1>Bài “Design system thôi chưa đủ” · <em>UI kit</em></h1>
+  <p>Hệ giao diện của một bài viết dữ liệu trên jang.work. Bài tự khai token trong <code>&lt;style&gt;</code>: 12 vai trò màu (paper, thẻ trắng, hairline, ink, relation xanh cho quan hệ, violation cam cho vi phạm), ba font (Merriweather, Arial, Inter), ba mức bo (4 · 8 · 14). Quy ước của bài: viền đứt = ví dụ giả định, xanh = quan hệ, cam = vi phạm, “không dùng màu đỏ”.</p>
+  <p>Màu và số đo chép từ CSS của bài và từ <code>getComputedStyle</code> trên 72 pattern. Muốn dùng lại: bấm “Copy CSS token”, rồi “Copy HTML” từng thẻ; class <code>.ar-*</code> chỉ tham chiếu biến.</p>
+  <ul class="facts"><li><b>720px</b>--col-text</li><li><b>1040px</b>--col-wide</li><li><b>20 / 1.7</b>thân bài Arial</li><li><b>14 · 8 · 4</b>--r-card · sm · xs</li><li><b>44px</b>vùng chạm toggle</li><li><b>3px</b>focus relation</li></ul>
+</section>
+<section class="block" id="color"><header><h2>Màu</h2><p>Bấm một ô để copy giá trị. Hai biến có alpha (<code>--hairline</code>, <code>--ink-dim</code>) hiện màu đã trộn trên nền trắng, nhưng copy ra giá trị gốc.</p></header>
+  <h3 class="sub-h">Bài · kit “D”</h3><div class="swgrid" id="sw-art"></div>
+  <h3 class="sub-h">Thanh nav &amp; cuối bài (--c-*)</h3><div class="swgrid" id="sw-chrome"></div>
+  <h3 class="sub-h">Màu đo được, không có biến</h3><div class="swgrid" id="sw-measured"></div>
+</section>
+<section class="block" id="type"><header><h2>Chữ</h2><p>Merriweather 400/700 cho tiêu đề và trích dẫn · Arial cho thân bài · Inter cho giao diện, bảng, chú thích. Cỡ đọc chính 20, cỡ phụ 16, nhãn 13.</p></header>
+  <div class="spec"><div class="stage col" id="typescale"></div></div></section>
+<section class="block" id="shape"><header><h2>Hình khối</h2><p>Bài không có thang shape đổi được (nên không có nút Shape). Ba mức của bài và ba mức của phần chrome:</p></header>
+  <div class="spec"><div class="stage rgrid" id="shapes"></div></div></section>
+<section class="block" id="layout"><header><h2>Bố cục &amp; kích thước</h2><p>Hai cột: chữ 720px, khối rộng 1040px; cả hai trừ lề 20px mỗi bên (<code>width: calc(100% − 40px)</code>).</p></header>
+  <div class="cards">
+  <div class="spec"><div class="spec-h"><b>Cột &amp; khoảng cách</b><span class="kind">--col-* · margin</span></div><div class="stage col"><div class="tw"><table class="tbl"><thead><tr><th>Phần</th><th>Giá trị</th><th>Ghi chú</th></tr></thead><tbody>
+    <tr><td>--col-text</td><td>720px</td><td>.col, .pull, .tbl, .layers, .timeline</td></tr><tr><td>--col-wide</td><td>1040px</td><td>.chart--wide, .rcs, .quads, .journey, .art-fig</td></tr>
+    <tr><td>lề cột</td><td>20px</td><td>padding 0 20px</td></tr><tr><td>h2 trên/dưới</td><td>72 / 18px</td><td>mở mục mới</td></tr>
+    <tr><td>khối hình</td><td>32–40px</td><td>margin dọc figure, chart</td></tr><tr><td>.hero</td><td>clamp(40px, 7vw, 88px)</td><td>đệm trên đầu bài, max 880</td></tr>
+    <tr><td>.step / .mcard</td><td>80svh</td><td>khoảng cuộn giữa các bước</td></tr></tbody></table></div></div></div>
+  <div class="spec"><div class="spec-h"><b>Kích thước component</b><span class="kind">số đo trong CSS</span></div><div class="stage col"><div class="tw"><table class="tbl"><thead><tr><th>Component</th><th>Cao</th><th>Đệm</th><th>Bo</th><th>Chữ</th></tr></thead><tbody>
+    <tr><td>.toggle</td><td>≥ 44</td><td>0 14</td><td>8</td><td>13/500</td></tr><tr><td>.btn (mock)</td><td>40 · small 30</td><td>0 12</td><td>4</td><td>13/500</td></tr>
+    <tr><td>.chip</td><td>auto</td><td>7 10</td><td>4</td><td>13 + 16/500</td></tr><tr><td>.chart__table summary</td><td>≥ 44</td><td>—</td><td>—</td><td>16/500</td></tr>
+    <tr><td>.step</td><td>auto</td><td>18 20</td><td>14</td><td>20 + 16</td></tr><tr><td>.sc-tab · .sc-btn</td><td>32 · 36</td><td>16 · 20</td><td>pill · 8</td><td>13/500</td></tr></tbody></table></div></div></div>
+  </div></section>
+<section class="block" id="controls"><header><h2>Điều khiển</h2><p>Toggle là nút duy nhất người đọc bấm trong bài: bật/tắt layer, đổi size, mở rộng danh sách. Bản đang bật dùng <code>--active-fill</code>.</p></header><div class="cards"><div class="spec" data-sig="233fab2843 185cf01333 479bbfdf35 5c38404c20 663659f98e"><div class="spec-h"><b>Toggle</b><span class="kind">.toggle · .toggle--text · aria-pressed</span><span class=dp>min-h 44 · pad 14 · r 8 · 13/500 · viền trong 1px ink-2</span></div><div class="stage"><button class="ar-toggle" aria-pressed="false">Tắt layer ontology</button><button class="ar-toggle" aria-pressed="true">size của Button</button><button class="ar-toggle sq" aria-label="Thêm bậc">+</button><button class="ar-toggle txt">Đặt lại</button><button class="ar-toggle" aria-expanded="false">Chỉ xem ba loại đầu</button></div><div class="states" data-sig-state="233fab2843:hover 233fab2843:focus 185cf01333:hover 185cf01333:focus 479bbfdf35:hover 479bbfdf35:focus 479bbfdf35:selected 5c38404c20:hover 5c38404c20:focus 663659f98e:hover 663659f98e:focus"><figure><figcaption>mặc định</figcaption><div><button class="ar-toggle">Tắt layer ontology</button></div></figure><figure><figcaption><b>hover</b> · viền trong ink</figcaption><div><button class="ar-toggle is-hover">Tắt layer ontology</button></div></figure><figure><figcaption><b>selected</b> (aria-pressed)</figcaption><div><button class="ar-toggle" aria-pressed="true">size của Button</button></div></figure><figure><figcaption><b>focus-visible</b> · 3px relation, lệch 3</figcaption><div><button class="ar-toggle is-focus">Tắt layer ontology</button></div></figure></div><div class="spec-f"><p>Nút “+” cỡ chữ 20, “Đặt lại” cỡ 16 (<code>.toggle--text</code>).</p></div></div><div class="spec" data-sig="9c47b0968f b7745d01cb"><div class="spec-h"><b>Nút trong mock trang</b><span class="kind">.lp .btn · .btn--export · is-small · is-secondary · has-icon</span><span class=dp>h 40 (small 30) · pad 12 · r 4 · 13/500</span></div><div class="stage"><div class="ar-lp"><p class="ar-lp__t">Đơn hàng</p><div class="ar-lp__a"><span class="ar-btn">Export báo cáo</span><span class="ar-btn">Create order</span></div><div class="ar-lp__rows"><div class="ar-lp__row h"><i></i><i></i><i></i></div><div class="ar-lp__row"><i></i><i></i><i></i></div><div class="ar-lp__row"><i></i><i></i><i></i></div></div></div><div class="ar-lp flag"><p class="ar-lp__t">Đơn hàng · is-flagged</p><div class="ar-lp__a"><span class="ar-btn sm sec"><svg aria-hidden="true"><use href="#dl"/></svg>Export</span><span class="ar-btn sm">Create order</span></div></div></div><div class="spec-f"><p>Mock wireframe, không phải nút thật. <code>is-flagged</code> viền đứt màu <code>--violation</code> quanh hàng nút; thanh dữ liệu là khối <code>--hairline</code> / <code>--ink-dim</code>.</p></div></div><div class="spec" data-sig="45d6360ea5"><div class="spec-h"><b>Skip link</b><span class="kind">.skip</span><span class=dp>pad 10/16 · r 8 · 16/500</span></div><div class="stage"><a class="ar-skip" href="#controls">Bỏ qua đến nội dung</a></div><div class="states" data-sig-state="45d6360ea5:focus"><figure><figcaption><b>focus</b></figcaption><div><a class="ar-skip is-focus" href="#controls">Bỏ qua đến nội dung</a></div></figure></div><div class="spec-f"><p>Nằm ngoài màn (top −60px), chỉ hiện khi focus bằng phím. Kit hiện thường trực.</p></div></div></div></section><section class="block" id="text"><header><h2>Chữ trong bài</h2><p>Hai giọng chữ: Merriweather cho tiêu đề và trích dẫn, Arial 20/1.7 cho thân bài, Inter (<code>--font-ui</code>) cho mọi thứ thuộc giao diện (kicker, deck, bảng, chú thích).</p></header><div class="cards"><div class="spec" data-sig="dfe74e026a a055339d92 4a21627351 0fd1c5ef70"><div class="spec-h"><b>Đầu bài</b><span class="kind">.hero · .kicker · h1 · .deck · .byline</span><span class=dp>h1 clamp(31, 4.6vw, 49)/1.18 · deck 20/500</span></div><div class="stage"><header class="ar-hero"><p class="kicker">Chuyên mục</p><h1>Tiêu đề bài dài hai dòng ở Merriweather đậm</h1><p class="deck">Deck nêu câu hỏi của bài và câu trả lời ngắn, Inter 20/500 màu ink.</p><p class="byline">Tác giả · 11/11/2026</p></header></div><div class="spec-f"><p></p></div></div><div class="spec" data-sig="fafbe76a94 9fdf00a5dc"><div class="spec-h"><b>Tiêu đề mục</b><span class="kind">h2 · h3.sec</span><span class=dp>h2 31/1.3 (≤ 640: 25) · h3 25/1.35 · weight 400</span></div><div class="stage"><div class="ar-col"><h2 class="ar-h2">Tiêu đề mục cấp hai</h2><h3 class="ar-h3">Tiêu đề phụ cấp ba</h3></div></div><div class="spec-f"><p>Tiêu đề ở weight 400, không đậm; chỉ h1 dùng 700.</p></div></div><div class="spec" data-sig="a0cf8c4b03 dedeea740a 296b2889f2 5179da3fe8"><div class="spec-h"><b>Thân bài · danh sách · link</b><span class="kind">.col p · .col ul/ol · a</span><span class=dp>Arial 20/1.7 · cột 720 · đoạn cách 1.1em</span></div><div class="stage"><div class="ar-col"><p>Đoạn thân bài mẫu với <a href="#text">một liên kết nguồn</a> giữa câu, gạch dưới lệch 3px.</p><ul><li>Mục danh sách thứ nhất.</li><li>Mục danh sách thứ hai.</li></ul></div></div><div class="states" data-sig-state="296b2889f2:focus"><figure><figcaption><b>focus</b> link</figcaption><div><a class="ar-a is-focus" href="#text">liên kết nguồn</a></div></figure></div><div class="spec-f"><p></p></div></div><div class="spec" data-sig="2d3917f4e6 d6fb5f155a"><div class="spec-h"><b>Pull quote</b><span class="kind">.pull p · cite</span><span class=dp>Merriweather 25/1.45 · cite 16 ink-2</span></div><div class="stage"><blockquote class="ar-pull"><p>Câu trích nổi bật, cân dòng bằng text-wrap: balance.</p><cite>Nguồn trích</cite></blockquote></div><div class="spec-f"><p>Không viền, không dấu ngoặc; chỉ đổi font và cỡ.</p></div></div><div class="spec" data-sig="43672d50a7 7567cf42b4 7c1e5199e5"><div class="spec-h"><b>Ghi chú dữ liệu · credits</b><span class="kind">.data-note · .credits</span><span class=dp>pad 20/24 · r 14 · 16/1.7 · credits căn phải</span></div><div class="stage"><aside class="ar-note"><h2>Về dữ liệu và phương pháp</h2><ul><li>Nguồn: mô tả nguồn đo.</li><li>Cách đếm và giới hạn.</li></ul></aside><div class="ar-credits"><p><strong>Nội dung</strong> · Dữ liệu · Đồ hoạ: Tác giả</p></div></div><div class="spec-f"><p></p></div></div></div></section><section class="block" id="blocks"><header><h2>Khối nội dung</h2><p>Khối trong bài chia hai tầng: <b>paper</b> (<code>--surface</code>, không viền) và <b>thẻ trắng</b> (<code>--surface-2</code> + vòng <code>--hairline</code>). Ví dụ giả định luôn có viền đứt <code>--ink-2</code>.</p></header><div class="cards"><div class="spec" data-sig="3713fdf1dd 8793729a79 c5b62fb097 28992c11d0"><div class="spec-h"><b>Bảng so sánh</b><span class="kind">.tbl</span><span class=dp>r 14 · vòng hairline · 16/1.5 · pad 10/12</span></div><div class="stage"><div class="ar-tbl"><table><thead><tr><th>Điểm so sánh</th><th>Baseline</th><th>Có ontology</th></tr></thead><tbody><tr><td>Câu hỏi nó trả lời</td><td>Cái này là gì</td><td>Nối với cái gì, vì sao</td></tr><tr><td>Ai đọc</td><td>Người</td><td>Người và agent</td></tr></tbody></table></div></div><div class="spec-f"><p>Cột đầu và tiêu đề cột: màu ink, 500.</p></div></div><div class="spec" data-sig="7c3497ea29 b1d84977f7"><div class="spec-h"><b>Hai tầng layer</b><span class="kind">.layers · .layer--base · .layer--onto · .layers__bar</span><span class=dp>pad 16/18 · r 14 · onto: vòng 1.5px relation</span></div><div class="stage"><figure class="ar-layers"><div class="ar-layers__bar"><p>Bật/tắt tầng trên</p><button class="ar-toggle" aria-pressed="false">Tắt layer ontology</button></div><div class="ar-layer onto"><h3>Layer ontology</h3><p>Tầng ghi quan hệ có tên giữa các thành phần.</p></div><div class="ar-layer base"><h3>Baseline</h3><p>Design system hiện có: token, component, rule.</p></div></figure></div><div class="spec-f"><p><code>.layers.is-off</code> ẩn tầng onto.</p></div></div><div class="spec" data-sig="d30195b1f5 a3798aa946"><div class="spec-h"><b>Thẻ câu hỏi · ô góc phần tư</b><span class="kind">.rc · .q · .q--no · .lbl</span><span class=dp>pad 16/18 · r 14 · h3 20/500</span></div><div class="stage"><div class="ar-rc"><h3>Status Badge</h3><p><span class="lbl">Câu hỏi:</span> chữ nào đi kèm trạng thái này?</p></div><div class="ar-rc"><h4>Data</h4><p>Các danh từ: token, component.</p><p class="ex">Ví dụ: Button, Badge.</p></div><div class="ar-rc no"><h4>Ô trống</h4><p>Chưa có trong chuẩn.</p></div></div><div class="spec-f"><p><code>.rcs</code> xếp lưới 6 cột (mỗi thẻ span 2, hàng sau lùi vào giữa); ≤ 640px về 1 cột. <code>.q--no</code>: nền trong, viền đứt.</p></div></div><div class="spec" data-sig="de41b445d5 58892c47f2 6b8b5d8bab"><div class="spec-h"><b>Khung minh hoạ giả định</b><span class="kind">.illus · .illus__label · .illus-fig figcaption</span><span class=dp>pad 14/12/12 · r 14 · viền đứt 1px ink-2</span></div><div class="stage"><figure class="ar-illus-fig"><div class="ar-illus"><p class="ar-illus__label">Ví dụ minh hoạ, chưa phải kết quả đo</p><div class="ph" style="height:90px">nội dung ví dụ</div></div><figcaption>Chú thích 16 ink-2.</figcaption></figure></div><div class="spec-f"><p>Viền đứt là quy ước của bài cho mọi thứ “chưa phải số đo”.</p></div></div><div class="spec" data-sig="01b662e5f4 e2f314ab28"><div class="spec-h"><b>Dòng thời gian</b><span class="kind">.timeline · li · time</span><span class=dp>cột 84 + 1fr · gap 18 · pad 14 · time 20/500</span></div><div class="stage"><figure class="ar-tl"><ol><li><time>2020</time><p><strong>Sự kiện mốc</strong>Mô tả ngắn 16/1.55.</p></li><li><time>2024</time><p><strong>Sự kiện tiếp theo</strong>Mô tả ngắn.</p></li></ol></figure></div><div class="spec-f"><p></p></div></div><div class="spec" data-sig="e832660002"><div class="spec-h"><b>Bậc thang</b><span class="kind">.ladder-fig · .ladder li · .is-lit</span><span class=dp>pad 10/16 · r 8 · gap 6 · xếp ngược (column-reverse)</span></div><div class="stage"><figure class="ar-ladder"><ol><li>Bậc một</li><li>Bậc hai</li><li class="lit">Bậc ba (đang chọn)</li><li>Bậc bốn</li></ol></figure></div><div class="spec-f"><p>Bậc sáng: nền <code>--active-fill</code>, chữ trắng, 500. Bậc chọn bằng toggle ở <code>.ladder-pick</code>.</p></div></div><div class="spec" data-sig="113bb6e659"><div class="spec-h"><b>Hành trình</b><span class="kind">.journey · .journey__track · .chip · .chip--dashed</span><span class=dp>chip pad 7/10 · r 4 · n 13/500 · t 16/500 · nối 16px</span></div><div class="stage"><ol class="ar-journey"><li><a class="ar-chip" href="#blocks"><span class="n">Bước 1</span><span class="t">Yêu cầu</span></a></li><li><a class="ar-chip" href="#blocks"><span class="n">Bước 2</span><span class="t">Hỏi ontology</span></a></li><li><span class="ar-chip dash"><span class="n">Bước 3</span><span class="t">Chưa có</span></span></li></ol></div><div class="spec-f"><p>Hover chip: vòng 1.5px ink (trong <code>@media (hover)</code>; trình duyệt không ép được nên không có trong số đo).</p></div></div></div></section><section class="block" id="data"><header><h2>Biểu đồ & kể chuyện cuộn</h2><p>Biểu đồ nằm trong khối rộng 1040px trên paper. Scrollytelling: thẻ bước trắng trôi qua một sân khấu dính; bước đang xem có vòng 1.5px ink.</p></header><div class="cards"><div class="spec" data-sig="8866c24309 db8af31b2e 194f87a35c"><div class="spec-h"><b>Khung biểu đồ rộng</b><span class="kind">.chart.chart--wide · .chart__title · .chart__sub · .chart__source</span><span class=dp>max 1040 · pad 20/20/12 · r 14 · title 20/500</span></div><div class="stage"><figure class="ar-chart"><h3>Tiêu đề biểu đồ một câu</h3><p class="sub">Câu phụ 16 ink-2 giải thích cách đọc.</p><div class="ph" style="height:120px;border-radius:var(--r-card)">vùng vẽ SVG (tk-*)</div><p class="src">Nguồn: tên nguồn đo.</p></figure></div><div class="spec-f"><p>Nét và chữ trong SVG dùng lớp <code>tk-*</code>: tick ink 1.1, tick vi phạm <code>--violation</code>, chữ số 20/500 tabular. Vùng vẽ thay bằng khối giữ chỗ.</p></div></div><div class="spec" data-sig="d8e0d76161 0132fc4a95 a92858c071 47007778e1"><div class="spec-h"><b>Xem bảng số liệu</b><span class="kind">details.chart__table · summary · .table-scroll</span><span class=dp>summary min-h 44 · 16/500 relation · bảng 13/1.45 · cuộn ≤ 260</span></div><div class="stage"><details class="ar-dt" open><summary>Xem bảng số liệu</summary><div class="ar-ts"><table><thead><tr><th>Nhóm</th><th>Số Button</th><th>Có leading icon</th></tr></thead><tbody><tr><th>Nhóm A</th><td>120</td><td>48</td></tr><tr><th>Nhóm B</th><td>64</td><td>11</td></tr></tbody></table></div></details></div><div class="states" data-sig-state="d8e0d76161:focus 0132fc4a95:focus"><figure><figcaption><b>focus</b> summary</figcaption><div><div class="ar-dt"><div class="sum is-focus">Xem bảng số liệu</div></div></div></figure></div><div class="spec-f"><p>Tiêu đề cột dính (sticky) trên nền surface.</p></div></div><div class="spec" data-sig="36c13f9e7e c4d0b01633"><div class="spec-h"><b>Thẻ bước</b><span class="kind">.step · .step.is-active · .step__n · .step__plus</span><span class=dp>max 360 · pad 18/20 · r 14 · h3 20/500 · p 16/1.6</span></div><div class="stage"><div class="ar-step"><h3><span class="n">1/8</span>Bước đang đọc</h3><p>Cần biết: câu ngắn.</p><p class="plus">Ontology thêm: <strong>một quan hệ</strong>.</p></div><div class="ar-step on"><h3><span class="n">3/8</span>Bước active</h3><p>Vòng 1.5px ink.</p></div></div><div class="spec-f"><p></p></div></div><div class="spec" data-sig="a2f3ac25e8 75e57737db 60570514b1 12de63b32c"><div class="spec-h"><b>Thẻ bản đồ tri thức</b><span class="kind">.mcard · .mcard.is-active · .kgmap__panel · .kgmap__legend</span><span class=dp>max 420 · nền trắng 94% · r 14</span></div><div class="stage"><div class="ar-mcard"><span class="n">Bước 2</span><h3>Thẻ chú thích trôi trên bản đồ</h3><p>Nội dung ngắn.</p></div><div class="ar-mcard on"><span class="n">Bước 3</span><h3>Thẻ đang xem</h3><p>Vòng 1.5px ink.</p></div><div class="ar-kgp"><h3>Tiêu đề panel</h3><ul class="ar-kgl"><li><i class="dot"></i>node</li><li><i class="edge"></i>quan hệ</li><li><i class="dot dash"></i>record mồ côi</li></ul></div></div><div class="spec-f"><p>Panel dính góc trái sân khấu bản đồ; ≤ 640px ẩn câu phụ và chú giải.</p></div></div><div class="spec" data-sig="f022789fbe 154c9bead2 618568a333 99ff2d3c7d efbe0868fc 04f92671ad"><div class="spec-h"><b>Minh hoạ AI · video cuộn</b><span class="kind">.art-fig · .art-stack · .art-morph · .art-sweep · .clip-start</span><span class=dp>max 1040 · r 14 · tỉ lệ 1376/768</span></div><div class="stage"><figure class="ar-art"><div class="ph" style="height:160px;border-radius:var(--r-card)">ảnh/video minh hoạ AI của tác giả</div><figcaption>Chú thích 13 ink-2: minh hoạ tạo bằng AI, không biểu diễn số liệu.</figcaption></figure></div><div class="spec-f"><p>Ảnh và video của tác giả không nhúng (RULE-09). Trên site, ảnh đổi bằng mask gradient theo tiến độ cuộn (<code>art-morph</code>, <code>art-sweep</code>).</p></div></div></div></section><section class="block" id="chrome"><header><h2>Thanh nav & cuối bài</h2><p>Phần dùng chung với shell của site, nhúng lại trong bài bằng biến <code>--c-*</code> và tiền tố <code>sc-</code>.</p></header><div class="cards"><div class="spec" data-sig="1988fa4b4c 2c40904287 cc7b140652 9963e366a3 010720bedf"><div class="spec-h"><b>Thanh nav</b><span class="kind">.sc-nav · .sc-wordmark · .sc-tab · .sc-btn</span><span class=dp>h 48 · tab 32 pill 13/500 · btn 36 r 8</span></div><div class="stage"><nav class="ar-sc" aria-label="Mẫu"><a class="ar-wm" href="#chrome">WORDMARK<span>®</span></a><div class="ar-tabs"><a class="ar-tab" href="#chrome">Work</a><a class="ar-tab" aria-current="page" href="#chrome">Writing</a><a class="ar-tab" href="#chrome">Building</a><a class="ar-scbtn" href="#chrome">GitHub</a></div></nav></div><div class="states" data-sig-state="cc7b140652:hover cc7b140652:focus 9963e366a3:focus 2c40904287:focus 010720bedf:hover 010720bedf:focus"><figure><figcaption><b>hover</b> tab · chữ fg</figcaption><div><a class="ar-tab is-hover" href="#chrome">Work</a></div></figure><figure><figcaption><b>focus</b> tab</figcaption><div><a class="ar-tab is-focus" href="#chrome">Writing</a></div></figure><figure><figcaption><b>hover</b> GitHub · gradient sáng, bóng 3/8</figcaption><div><a class="ar-scbtn is-hover" href="#chrome">GitHub</a></div></figure><figure><figcaption><b>focus</b> GitHub</figcaption><div><a class="ar-scbtn is-hover is-focus" href="#chrome">GitHub</a></div></figure><figure><figcaption><b>focus</b> wordmark</figcaption><div><a class="ar-wm is-focus" href="#chrome">WORDMARK<span>®</span></a></div></figure></div><div class="spec-f"><p>Wordmark gốc là tên tác giả; kit thay bằng “WORDMARK” (RULE-09).</p></div></div><div class="spec" data-sig="1f8ff8ac71 4d676d09d4 17888aa441 b6ec271b06"><div class="spec-h"><b>Hàng cuối bài · bài tiếp theo</b><span class="kind">.sc-row (author · back · building) · .sc-next</span><span class=dp>hàng 680 × 66 · next r 12 · pad 21</span></div><div class="stage"><div style="width:100%;max-width:560px"><a class="ar-scrow" href="#chrome"><small>Tác giả</small><span>Tên tác giả</span><svg class="i" aria-hidden="true"><use href="#arrow"/></svg></a><a class="ar-scrow" href="#chrome"><small>Writing</small><span>Các bài khác</span><svg class="i" aria-hidden="true"><use href="#arrow"/></svg></a><a class="ar-next" href="#chrome"><small>Bài tiếp theo</small><b>Tiêu đề bài kế</b><span class="d">Một dòng tóm tắt.</span><svg class="i" aria-hidden="true"><use href="#arrow"/></svg></a></div></div><div class="states" data-sig-state="b6ec271b06:hover b6ec271b06:focus"><figure><figcaption><b>hover</b> · bóng card-hover 8%</figcaption><div><a class="ar-next is-hover" style="width:240px" href="#chrome"><small>Bài tiếp theo</small><b>Tiêu đề</b><svg class="i" aria-hidden="true"><use href="#arrow"/></svg></a></div></figure></div><div class="spec-f"><p></p></div></div></div></section>
+<section class="block" id="catalog"><header><h2>Danh mục đo được</h2><p>3 pattern còn lại, dựng lại từ số đo (font, cỡ, màu quy về biến, bo, đệm, khung). Chữ của tác giả thay bằng chữ mẫu.</p></header><div class="mgrid"><figure class="mcard" data-sig="b2998e8b16"><div class="mstage"><div class="jw-m" style="font-family:var(--font-ui);font-size:13px;font-weight:400;color:var(--text);padding:6px 12px;width:min(132px,100%);height:51px;overflow:hidden;">Nội dung khối</div></div><figcaption><code>td</code> ×21<br>132×51 · Inter 13/400 · r 0px</figcaption></figure><figure class="mcard" data-sig="426c9391a9"><div class="mstage"><div class="jw-m" style="font-family:var(--font-ui);font-size:16px;font-weight:400;color:var(--text);padding:10px 12px;width:min(233px,100%);height:69px;overflow:hidden;">Nội dung khối</div></div><figcaption><code>td</code> ×6<br>233×69 · Inter 16/400 · r 0px</figcaption></figure><figure class="mcard" data-sig="ec0924db20"><div class="mstage"><div class="jw-m" style="font-family:var(--font-ui);font-size:13px;font-weight:500;color:var(--ink);background:var(--surface);padding:6px 12px;width:min(132px,100%);height:50px;overflow:hidden;">Nội dung khối</div></div><figcaption><code>th</code> ×3<br>132×50 · Inter 13/500 · r 0px</figcaption></figure></div></section>
+<section class="block" id="states"><header><h2>Trạng thái đo được</h2><p>0 trạng thái còn lại, ép bằng CDP <code>CSS.forcePseudoState</code>: trái là nghỉ, phải là sau khi áp diff đo được. Focus của bài là viền 3px <code>--relation</code>, tự style chứ không phải viền mặc định của trình duyệt.</p></header><div class="mgrid"></div></section>
+<section class="block" id="screens"><header><h2>Màn hình mẫu</h2><p>Ghép từ class <code>.ar-*</code> theo bố cục của bài: một cột chữ 720px giữa trang, khối hình rộng tới 1040px.</p></header>
+<div class="screens">
+<div><div class="frame"><div class="desk" style="background:var(--bg)">
+  <div style="max-width:1040px;margin:0 auto;padding:0 20px"><nav class="ar-sc" aria-label="Mẫu"><a class="ar-wm" href="#screens">WORDMARK<span>®</span></a><div class="ar-tabs"><a class="ar-tab" href="#screens">Work</a><a class="ar-tab" aria-current="page" href="#screens">Writing</a><a class="ar-tab" href="#screens">Building</a><a class="ar-scbtn" href="#screens">GitHub</a></div></nav></div>
+  <div style="max-width:880px;margin:0 auto;padding:60px 20px 8px"><header class="ar-hero"><p class="kicker">Chuyên mục</p><h1>Tiêu đề bài dài hai dòng ở serif đậm</h1><p class="deck">Deck nêu câu hỏi của bài, Inter 20/500.</p><p class="byline">Tác giả · 11/11/2026</p></header></div>
+  <div style="max-width:1040px;margin:30px auto 0;padding:0 20px"><figure class="ar-art" style="width:100%"><div class="ph" style="height:300px;border-radius:var(--r-card)">ảnh minh hoạ AI</div><figcaption>Chú thích 13 ink-2.</figcaption></figure></div>
+  <div style="max-width:760px;margin:40px auto 0;padding:0 20px"><h2 class="ar-h2">Tiêu đề mục cấp hai</h2><div class="ar-col"><p>Đoạn thân bài Arial 20/1.7 với <a href="#screens">liên kết</a>.</p></div></div>
+</div></div><p class="cap-l">Desktop 1440 × 900 (thu 60%) · đầu bài: sc-nav, sc-tab, sc-btn, hero (kicker, h1, deck, byline), art-fig, h2, col.</p></div>
+<div class="row">
+<div><div class="frame"><div class="phone" style="background:var(--bg)"><div style="padding:44px 20px 0">
+  <nav class="ar-sc" aria-label="Mẫu"><a class="ar-wm" href="#screens">WORDMARK<span>®</span></a><div class="ar-tabs"><a class="ar-tab" aria-current="page" href="#screens">Writing</a></div></nav>
+  <h2 class="ar-h2" style="font-size:25px;margin-top:21px">Tiêu đề mục</h2>
+  <figure class="ar-layers"><div class="ar-layers__bar"><p>Bật/tắt</p><button class="ar-toggle" aria-pressed="true">Tắt layer ontology</button></div><div class="ar-layer onto"><h3>Layer ontology</h3><p>Quan hệ có tên.</p></div><div class="ar-layer base"><h3>Baseline</h3><p>Design system hiện có.</p></div></figure>
+  <div class="ar-rc" style="width:100%;margin-top:12px"><h3>Status Badge</h3><p><span class="lbl">Câu hỏi:</span> chữ nào đi kèm?</p></div>
+</div></div></div><p class="cap-l">Mobile 390 × 844 · khối: h2 (25 ở ≤ 640), layers + toggle, rc.</p></div>
+<div><div class="frame"><div class="phone" style="background:var(--surface)"><div style="padding:44px 16px 0">
+  <div class="ph" style="height:300px;border-radius:var(--r-card);margin-bottom:16px">sân khấu dính (biểu đồ / bản đồ)</div>
+  <div class="ar-step on" style="width:100%"><h3><span class="n">3/8</span>Bước đang xem</h3><p>Thẻ trôi qua sân khấu khi cuộn.</p><p class="plus">Ontology thêm: <strong>một quan hệ</strong>.</p></div>
+  <details class="ar-dt" style="margin-top:12px"><summary>Xem bảng số liệu</summary></details>
+</div></div></div><p class="cap-l">Mobile 390 × 844 · scrollytelling: stage dính, step.is-active, chart__table.</p></div>
+</div></div></section>
+</div></main></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+const D={"art": [["--bg", "#ffffff", "#ffffff", "nền trang"], ["--surface", "#f4f6f8", "#f4f6f8", "paper: khối, stage, bảng"], ["--surface-2", "#ffffff", "#ffffff", "thẻ trắng nổi trên paper, giữ bằng hairline"], ["--hairline", "rgba(15,40,70,.14)", "#dbdfe3", "viền 1px, đường kẻ bảng"], ["--ink", "#111111", "#111111", "tiêu đề, chữ đậm"], ["--text", "#222222", "#222222", "thân bài"], ["--ink-2", "#596069", "#596069", "chữ phụ, byline, nguồn, viền đứt"], ["--ink-dim", "rgba(17,17,17,.48)", "#8d8d8d", "chấm, thanh mờ trong mock"], ["--active-fill", "#111111", "#111111", "nền nút/toggle đang bật, bậc sáng"], ["--active-ink", "#ffffff", "#ffffff", "chữ trên active-fill"], ["--relation", "#1A5FD0", "#1a5fd0", "link, kicker, cạnh quan hệ, focus · 5,85:1 trên #fff"], ["--violation", "#A85A00", "#a85a00", "vi phạm rule, ngoặc cảnh báo"]], "chrome": [["--c-fg", "#202020", "chữ thanh nav + cuối bài"], ["--c-muted", "#646464", "tab nghỉ"], ["--c-panel", "#f0f0f0", "tab đang chọn"], ["--c-chip", "#e8e8e8", "đỉnh gradient sc-btn"], ["--c-control-deep", "#e0e0e0", "đáy gradient sc-btn"], ["--c-border", "#e8e8e8", "viền hàng sc-row"], ["--c-border-heavy", "#d9d9d9", "vòng ngoài sc-btn"], ["--c-canvas", "#ffffff", "nền sc-next"], ["--c-shadow", "#202020", "màu bóng"]], "measured": [], "type": [["h1", 49, 700, "1.18", "display", "h1 · clamp(31px, 4.6vw, 49px)"], ["h2", 31, 400, "1.3", "display", "h2 (≤ 640px: 25)"], ["h3.sec", 25, 400, "1.35", "display", "h3.sec"], ["pull", 25, 400, "1.45", "display", ".pull p"], ["deck", 20, 500, "1.6", "ui", ".deck"], ["thân bài", 20, 400, "1.7", "body", "body · .col p"], ["tiêu đề khối", 20, 500, "1.35", "ui", ".chart__title · .rc h3 · .step h3"], ["kicker", 16, 500, "1.3", "ui", ".kicker (màu relation)"], ["đọc phụ", 16, 400, "1.55", "ui", ".chart__sub · figcaption · .step p"], ["bảng", 16, 400, "1.5", "ui", ".tbl table"], ["nhãn nhỏ", 13, 500, "1.4", "ui", ".illus__label · .chip__n · .toggle"], ["nguồn", 13, 400, "1.5", "ui", ".chart__source · .art-fig figcaption"], ["số lớn SVG", 39, 500, "1", "ui", ".tk-big (tabular)"]], "fam": {"display": "var(--font-display)", "ui": "var(--font-ui)", "body": "var(--font-body)"}, "radii": [["--r-xs", 4, ".lp · .btn · .chip"], ["--r-sm", 8, ".toggle · .skip · .ladder li · .table-scroll"], ["--r-card", 14, ".tbl · .layer · .rc · .chart--wide · .step"], ["--r-3", 8, ".sc-btn (chrome)"], ["--r-4", 12, ".sc-next (chrome)"], ["--r-pill", 9999, ".sc-tab (chrome)"]]};
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('on'),1600)}
+async function copy(text,what){try{await navigator.clipboard.writeText(text);toast('Đã copy '+what)}catch(e){const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();let ok=false;try{ok=document.execCommand('copy')}catch(_){}ta.remove();toast(ok?'Đã copy '+what:'Trình duyệt chặn clipboard, hãy copy tay')}}
+function lum(hx){const c=hx.replace('#','').match(/../g).map(x=>{x=parseInt(x,16)/255;return x<=.03928?x/12.92:((x+.055)/1.055)**2.4});return .2126*c[0]+.7152*c[1]+.0722*c[2]}
+function sw(v,val,hx,note){const ink=lum(hx)>.4?'#111111':'#ffffff';return `<button class="sw" data-val="${val}"><div class="chip" style="background:var(${v});color:${ink}">${val}</div><div class="meta"><b>${v}</b><span>${note}</span></div></button>`}
+$('#sw-art').innerHTML=D.art.map(([v,val,hx,n])=>sw(v,val,hx,n)).join('');
+$('#sw-chrome').innerHTML=D.chrome.map(([v,hx,n])=>sw(v,hx,hx,n)).join('');
+$('#sw-measured').innerHTML=D.measured.length?D.measured.map(([v,hx])=>sw(v,hx,hx,'đo bằng getComputedStyle')).join(''):'<p class="cap-l">Không có: mọi màu đo được đều khớp một biến của bài.</p>';
+document.addEventListener('click',e=>{const s=e.target.closest('.sw');if(s)copy(s.dataset.val,s.dataset.val)});
+$('#typescale').innerHTML=D.type.map(([n,fs,fw,lh,fam,code])=>`<div class="trow"><small>${n}<br>${fs}/${lh} · ${fw}<br>${code}</small><div style="font:${fw} ${fs}px/${lh} ${D.fam[fam]};color:var(--ink)">Ontology nối các thành phần 0123</div></div>`).join('');
+$('#shapes').innerHTML=D.radii.map(([v,px,use])=>`<figure><i style="border-radius:var(${v})"></i>${v} · ${px===9999?'pill':px+'px'}<br><span style="font-size:11px">${use}</span></figure>`).join('');
+$('#copy-tokens').addEventListener('click',()=>{const lines=[...D.art.map(([v,val])=>`  ${v}:${val};`),...D.chrome.map(([v,hx])=>`  ${v}:${hx};`),...D.measured.map(([v,hx])=>`  ${v}:${hx};`),
+  '  --font-ui:"Inter",system-ui,sans-serif;','  --font-display:"Merriweather",Georgia,serif;','  --font-body:Arial,"Helvetica Neue",sans-serif;','  --col-text:720px;','  --col-wide:1040px;','  --r-card:14px;','  --r-sm:8px;','  --r-xs:4px;'];
+  copy(':root{\n'+lines.join('\n')+'\n}\n','khối :root (kit D)')});
+$$('.spec').forEach(s=>{const f=$('.spec-f',s),st=$('.stage',s);if(!f||!st)return;const b=document.createElement('button');b.className='copy';b.textContent='Copy HTML';b.addEventListener('click',()=>copy(st.innerHTML.trim(),'HTML'));f.appendChild(b)});
+$$('a[href^="#"]').forEach(a=>{if(a.closest('.stage,.states,.mcard,.desk,.phone'))a.addEventListener('click',e=>e.preventDefault())});
+const links=$$('.side a');const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(l=>l.classList.toggle('on',l.getAttribute('href')==='#'+e.target.id))}),{rootMargin:'-40% 0px -55% 0px'});
+$$('main section[id]').forEach(s=>io.observe(s));
+</script>
+</body>
+</html>
