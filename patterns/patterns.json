@@ -8,13 +8,206 @@
     "added": "2026-11-19",
     "from": "8 ảnh chụp của owner (bài Threads gom tab bar app), phòng Hang uiux-giatbh, tin m1a1f25da1b36523",
     "variants": [
-      { "id": "split", "vi": "Nút tạo tách rời", "en": "Split action", "use": "Một hành động chính đứng riêng, tab chỉ để đi.", "seen": "corner" },
-      { "id": "ink", "vi": "Thanh đen chỉ icon", "en": "Ink icon bar", "use": "Nền sáng, ít tab, icon dễ hiểu, tương phản mạnh.", "seen": "Character AI" },
-      { "id": "sticker", "vi": "Nhãn dán màu", "en": "Sticker tabs", "use": "App vui, game hoá: icon hình dán nhiều màu.", "seen": "Finch" },
-      { "id": "nested", "vi": "Viên lồng viên", "en": "Nested pill", "use": "Hai tab chính và một nút tìm nổi riêng.", "seen": "Pool" },
-      { "id": "textpill", "vi": "Viên chữ trên nền đen", "en": "Text pill tabs", "use": "Tab chỉ có chữ ngắn, ảnh đại diện ở đầu.", "seen": "Phantom" },
-      { "id": "edge", "vi": "Vạch chỉ báo cạnh", "en": "Edge indicator", "use": "Icon nét mảnh, tab chọn có vạch ở mép.", "seen": "Lungy" },
-      { "id": "glass", "vi": "Viên kính tím", "en": "Glass pill", "use": "Nền màu mạnh, tab chọn nở ra hiện chữ.", "seen": "GO Club" }
+      {
+        "id": "split",
+        "vi": "Nút tạo tách rời",
+        "en": "Split action",
+        "use": "Một hành động chính đứng riêng, tab chỉ để đi.",
+        "seen": "corner"
+      },
+      {
+        "id": "ink",
+        "vi": "Thanh đen chỉ icon",
+        "en": "Ink icon bar",
+        "use": "Nền sáng, ít tab, icon dễ hiểu, tương phản mạnh.",
+        "seen": "Character AI"
+      },
+      {
+        "id": "sticker",
+        "vi": "Nhãn dán màu",
+        "en": "Sticker tabs",
+        "use": "App vui, game hoá: icon hình dán nhiều màu.",
+        "seen": "Finch"
+      },
+      {
+        "id": "nested",
+        "vi": "Viên lồng viên",
+        "en": "Nested pill",
+        "use": "Hai tab chính và một nút tìm nổi riêng.",
+        "seen": "Pool"
+      },
+      {
+        "id": "textpill",
+        "vi": "Viên chữ trên nền đen",
+        "en": "Text pill tabs",
+        "use": "Tab chỉ có chữ ngắn, ảnh đại diện ở đầu.",
+        "seen": "Phantom"
+      },
+      {
+        "id": "edge",
+        "vi": "Vạch chỉ báo cạnh",
+        "en": "Edge indicator",
+        "use": "Icon nét mảnh, tab chọn có vạch ở mép.",
+        "seen": "Lungy"
+      },
+      {
+        "id": "glass",
+        "vi": "Viên kính tím",
+        "en": "Glass pill",
+        "use": "Nền màu mạnh, tab chọn nở ra hiện chữ.",
+        "seen": "GO Club"
+      }
+    ]
+  },
+  {
+    "id": "taste-library",
+    "vi": "Bộ mẫu có gu",
+    "en": "Taste library",
+    "use": "20 mẫu chạy thật: 3 hero website, 8 màn app, 9 widget. Mở khi cần một khung có gu để bắt đầu.",
+    "page": "taste.html",
+    "added": "2026-11-20",
+    "from": "Video 11 s trong bài X của @tobiadonadon_ (status 2123183823785435153), owner gửi ở phòng Hang uiux-giatbh, tin m1a1f538213a4e60",
+    "variants": [
+      {
+        "id": "hero",
+        "kind": "web",
+        "vi": "Hero thư viện",
+        "en": "Library hero",
+        "use": "Trang chủ sản phẩm cho dev. Hai dòng tiêu đề, dòng hai xám. Hai nút, một hàng công cụ hỗ trợ."
+      },
+      {
+        "id": "agent",
+        "kind": "web",
+        "vi": "Hero agent code",
+        "en": "Coding agent hero",
+        "use": "Landing cho công cụ dev. Tiêu đề đen rất đậm, nền code mờ, bảng chạy việc tự tích từng bước."
+      },
+      {
+        "id": "blood",
+        "kind": "web",
+        "vi": "Hero xét nghiệm máu",
+        "en": "Blood test hero",
+        "use": "Sản phẩm y tế cao cấp. Nền tối, một vật thể phát sáng làm hero, số đo lớn đặt ngay trên vật."
+      },
+      {
+        "id": "pay",
+        "kind": "app",
+        "vi": "Gửi và nhận tiền",
+        "en": "Send & get paid",
+        "use": "App chuyển tiền. Số tiền dựng đứng chạy dọc mép, avatar là khối màu, một nút gửi tròn lớn."
+      },
+      {
+        "id": "weather",
+        "kind": "app",
+        "vi": "Thời tiết mặt số",
+        "en": "Weather dial",
+        "use": "Thời tiết trong ngày. Nền gradient theo nhiệt, mặt số chấm ở giữa, hai ô gió và không khí."
+      },
+      {
+        "id": "orbit",
+        "kind": "app",
+        "vi": "Lịch quanh quả cầu",
+        "en": "Orbit launcher",
+        "use": "Trợ lý lịch. Thẻ \"sắp tới\" đếm ngược, các việc là bi bóng xếp vòng quanh quả cầu chính."
+      },
+      {
+        "id": "budget",
+        "kind": "app",
+        "vi": "Ngân sách khối mềm",
+        "en": "Blob budget",
+        "use": "Chia tiền tháng. Mỗi khoản là một khối, to nhỏ theo tiền. Thanh trên chia phần trăm cần, muốn, để dành."
+      },
+      {
+        "id": "sleep",
+        "kind": "app",
+        "vi": "Giấc ngủ xếp thẻ",
+        "en": "Stacked sleep",
+        "use": "Báo cáo sức khoẻ trong ngày. Thẻ xếp chồng, thẻ trước là số chính bằng chữ chấm lớn."
+      },
+      {
+        "id": "task",
+        "kind": "app",
+        "vi": "Agent làm việc",
+        "en": "Agent at work",
+        "use": "Trợ lý AI đang làm một việc. Khối đen sống ở giữa, lệnh gốc, rồi từng bước xong kèm thời gian."
+      },
+      {
+        "id": "shop",
+        "kind": "app",
+        "vi": "Trang sản phẩm",
+        "en": "Product page",
+        "use": "Shop một món. Nền theo màu sản phẩm, đổi màu là đổi cả trang. Thước chọn cỡ thay cho dropdown."
+      },
+      {
+        "id": "onboard",
+        "kind": "app",
+        "vi": "Giới thiệu xếp đá",
+        "en": "Stacked onboarding",
+        "use": "Màn chào app mới. Nền một màu mạnh, hình 3D lớn, câu ngắn, thanh tiến trình 3 bước, một nút."
+      },
+      {
+        "id": "globe",
+        "kind": "ui",
+        "vi": "Quả cầu chấm",
+        "en": "Dot globe",
+        "use": "Mạng lưới toàn cầu, số người dùng theo nước. Quả cầu chấm xoay chậm, vài điểm sáng là văn phòng."
+      },
+      {
+        "id": "eyes",
+        "kind": "ui",
+        "vi": "Mắt nhìn theo chuột",
+        "en": "Watching eyes",
+        "use": "Linh vật nhỏ cho trang trống, trang 404, ô đăng nhập. Mắt nhìn theo chuột, thỉnh thoảng chớp."
+      },
+      {
+        "id": "vinyl",
+        "kind": "ui",
+        "vi": "Đĩa than đang phát",
+        "en": "Vinyl player",
+        "use": "Trình phát nhạc nhỏ. Đĩa trượt ra khỏi bìa và quay khi phát, dừng thì đĩa đứng."
+      },
+      {
+        "id": "skycard",
+        "kind": "ui",
+        "vi": "Thẻ thời tiết kéo giờ",
+        "en": "Scrub weather card",
+        "use": "Widget thời tiết. Kéo thước giờ ở đáy để xem nhiệt, mưa, gió theo giờ."
+      },
+      {
+        "id": "battery",
+        "kind": "ui",
+        "vi": "Pin thiết bị",
+        "en": "Device batteries",
+        "use": "Widget pin nhiều thiết bị. Cột cao theo phần trăm, thiết bị yếu (dưới 20%) đổi màu cam."
+      },
+      {
+        "id": "clock",
+        "kind": "ui",
+        "vi": "Đồng hồ lịch họp",
+        "en": "Meeting clock",
+        "use": "Widget giờ hiện tại và cuộc họp đang diễn ra. Thước giờ có kim, các họp là viên màu trên thước."
+      },
+      {
+        "id": "mapsheet",
+        "kind": "ui",
+        "vi": "Bản đồ và thẻ địa điểm",
+        "en": "Place sheet",
+        "use": "App bản đồ. Ghim trên bản đồ, thẻ kéo lên ở đáy có tên, giờ mở, 4 nút: đi, gọi, lưu, chia sẻ."
+      },
+      {
+        "id": "table",
+        "kind": "ui",
+        "vi": "Bảng có thanh nền",
+        "en": "Bar data table",
+        "use": "Bảng xếp hạng khách hàng. Nền mỗi dòng dài theo giá trị đang sắp. Bấm tiêu đề cột để đổi cách sắp."
+      },
+      {
+        "id": "toolbar",
+        "kind": "ui",
+        "vi": "Thanh định dạng nổi",
+        "en": "Floating format bar",
+        "use": "Trình soạn văn bản. Chọn chữ thì thanh nổi hiện lên. Mỗi nút bật tắt kiểu chữ, có nhóm ngăn bằng vạch."
+      }
     ]
   }
 ]

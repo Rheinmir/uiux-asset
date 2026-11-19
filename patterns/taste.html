@@ -1,0 +1,574 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bộ mẫu có gu — 20 mẫu — uiux-asset</title>
+<meta name="description" content="20 giao diện dựng lại từ một video: 3 hero website, 8 màn app, 9 widget. Chạy thật, bấm được, kèm code HTML/CSS/JS chép thẳng.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=d81f7d099d">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Doto:wght@900&family=Inter:wght@300..800&display=swap">
+<style>
+.tx-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px; }
+.tx-chips { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; }
+.tx-chips button { min-height: 44px; padding: 0 20px; border: 0; border-radius: 999px; background: var(--aw-bg-white); color: var(--aw-color-primary); font: 500 16px/1 var(--aw-font); cursor: pointer; box-shadow: inset 0 0 0 1px var(--aw-border-gray); }
+.tx-chips button small { margin-left: 6px; font-size: 14px; opacity: .55; }
+.tx-chips button[aria-pressed=true] { background: var(--aw-color-primary); color: var(--aw-bg-primary); box-shadow: none; }
+.tx-sec { display: flex; flex-direction: column; gap: 16px; }
+.tx-sec[hidden] { display: none; }
+.tx-sec > h2 { margin: 8px 0 0; text-align: center; font: 600 28px/1.2 var(--aw-font); }
+.tx-sec > h2 small { margin-left: 8px; font-size: 16px; font-weight: 400; color: var(--aw-ink2); }
+.tx-grid { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 700px) { .tx-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .tx-grid--web .tx-card:first-child { grid-column: span 2; } }
+@media (min-width: 1100px) { .tx-grid--app { grid-template-columns: repeat(4, minmax(0, 1fr)); } .tx-grid--ui { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.tx-card { display: flex; flex-direction: column; border-radius: 24px; overflow: hidden; background: #efefef; }
+:root[data-theme=dark] .tx-card { background: #1b1b1b; }
+.tx-stage { display: grid; place-items: center; padding: 28px 16px; overflow: hidden; }
+.tx-grid--ui .tx-stage { padding: 0; }
+.tx-box { position: relative; }
+.tx-fit { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+.tx-foot { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; background: var(--aw-bg-white); color: var(--aw-color-primary); }
+.tx-foot h3 { margin: 0; font: 600 18px/1.25 var(--aw-font); }
+.tx-foot h3 small { font-weight: 400; font-size: 14px; color: var(--aw-ink2); margin-left: 6px; }
+.tx-foot p { margin: 0; font: 400 14px/1.5 var(--aw-font); color: var(--aw-ink2); }
+.tx-foot summary { cursor: pointer; font: 500 14px/44px var(--aw-font); min-height: 44px; }
+.tx-code { position: relative; }
+.tx-code pre { margin: 0; max-height: 320px; overflow: auto; padding: 14px; border-radius: 10px; background: var(--aw-bg-primary); font: 12px/1.5 ui-monospace, Menlo, monospace; white-space: pre; }
+.tx-code .aw-btn { position: absolute; top: 8px; right: 8px; min-height: 32px; }
+@keyframes tx-spin { to { transform: rotate(360deg); } }
+@keyframes tx-breathe { 50% { transform: scale(1.06); opacity: .8; } }
+@keyframes tx-wobble { 50% { border-radius: 58% 42% 50% 50% / 45% 55% 45% 55%; } }
+@media (prefers-reduced-motion: reduce) { .tx-card * { animation: none !important; transition: none !important; } }
+</style>
+<style id="tx-variants"></style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=d81f7d099d"></script>
+<div class="tx-page">
+  <div class="aw-sotd" style="padding-top:16px">
+    <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">20 mẫu</span></p>
+    <h1 class="aw-h1" style="--aw-h1:clamp(40px,7vw,96px)">Bộ mẫu có gu</h1>
+    <p class="aw-lead">Taste library. Dựng lại từ một video 11 giây. Mọi mẫu chạy thật, bấm được, chép code được.</p>
+  </div>
+  <div class="tx-chips" role="group" aria-label="Lọc theo loại" id="tx-chips"></div>
+  <div id="tx"></div>
+</div>
+</main>
+<script>
+// Mẫu dựng lại bằng CSS/SVG/canvas. Tên thương hiệu trong mẫu là tên tự đặt; không chép ảnh, logo hay linh vật gốc.
+const SB = `<svg width="46" height="11" viewBox="0 0 46 11" fill="currentColor" aria-hidden="true"><rect y="7" width="3" height="4" rx="1"/><rect x="5" y="5" width="3" height="6" rx="1"/><rect x="10" y="2.5" width="3" height="8.5" rx="1"/><path d="M20 3.6a8 8 0 0 1 10 0l-1.3 1.5a6 6 0 0 0-7.4 0zM22.4 6.3a4.4 4.4 0 0 1 5.2 0L25 9.4z"/><rect x="33" y="1.5" width="12" height="8" rx="2.6"/></svg>`;
+const PH = (cls, body) => `<div class="tx-phone ${cls}"><div class="tx-sb"><b>9:41</b><i></i>${SB}</div>${body}<u class="tx-home"></u></div>`;
+const G = {
+  arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>', ne: '<path d="M7 17 17 7M8 7h9v9"/>', check: '<path d="m5 12.5 4.5 4.5L19 7.5"/>',
+  back: '<path d="M15 5l-7 7 7 7"/>', bag: '<path d="M5 8h14l-1 12H6zM9 8a3 3 0 0 1 6 0"/>', pause: '<path d="M8 5v14M16 5v14"/>',
+  play: '<path d="M7 4.5v15L19.5 12z" fill="currentColor"/>', prev: '<path d="M6 5v14M19 5 9 12l10 7z" fill="currentColor"/>', next: '<path d="M18 5v14M5 5l10 7-10 7z" fill="currentColor"/>',
+  send: '<path d="M21 3 10 14M21 3l-7 18-4-7-7-4z"/>', mic: '<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',
+  menu: '<path d="M4 7h16M4 12h16M4 17h10"/>', sound: '<path d="M4 9h4l5-4v14l-5-4H4zM16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/>',
+  key: '<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 10h.01M11 10h.01M15 10h.01M8 14h8"/>', chat: '<path d="M4 5h16v11H9l-5 4z"/>',
+  x: '<path d="M6 6l12 12M18 6 6 18"/>', nav: '<path d="M12 2 4 20l8-4 8 4z" fill="currentColor"/>', phone: '<path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2z" fill="currentColor"/>',
+  save: '<path d="M6 3h12v18l-6-4-6 4z"/>', share: '<path d="M12 3v12M7 8l5-5 5 5M5 13v8h14v-8"/>',
+  home: '<path d="M4 11 12 4l8 7v9H4z"/>', bell: '<path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 21h4"/>', doc: '<path d="M6 3h9l4 4v14H6zM9 12h7M9 16h7"/>',
+  mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>', list: '<path d="M9 6h11M9 12h11M9 18h11M4.5 6h.01M4.5 12h.01M4.5 18h.01"/>', clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  cam: '<rect x="3" y="7" width="13" height="10" rx="2"/><path d="m16 11 5-3v8l-5-3z"/>', loop: '<path d="M4 12a8 8 0 0 1 14-5l2-2v6h-6l2.5-2.5A5 5 0 0 0 7 12M20 12a8 8 0 0 1-14 5l-2 2v-6h6l-2.5 2.5A5 5 0 0 0 17 12"/>',
+  B: '<path d="M7 4h6a4 4 0 0 1 0 8H7zM7 12h7a4 4 0 0 1 0 8H7z"/>', I: '<path d="M10 4h8M6 20h8M14 4l-4 16"/>', U: '<path d="M7 4v7a5 5 0 0 0 10 0V4M5 21h14"/>', S: '<path d="M4 12h16M16 6.5C15 5 13.6 4 12 4c-2.8 0-4.5 1.6-4.5 3.6M8 17.5C9 19 10.4 20 12 20c2.8 0 4.5-1.6 4.5-3.6"/>',
+  link: '<path d="M10 14a4 4 0 0 0 6 0l3-3a4 4 0 0 0-6-6l-1 1M14 10a4 4 0 0 0-6 0l-3 3a4 4 0 0 0 6 6l1-1"/>', code: '<path d="m8 7-5 5 5 5M16 7l5 5-5 5"/>', note: '<path d="M4 4h16v12h-9l-5 4v-4H4z"/>',
+  spark: '<path d="M12 2v20M2 12h20M5 5l14 14M19 5 5 19"/>', hex: '<path d="M12 2.5 20.5 7.5v9L12 21.5 3.5 16.5v-9z"/><circle cx="12" cy="12" r="3"/>', nodes: '<circle cx="6" cy="7" r="3"/><circle cx="18" cy="7" r="3"/><circle cx="12" cy="18" r="3"/><path d="M8.5 8.5 11 16M15.5 8.5 13 16M9 7h6"/>'
+};
+const I = (n, s = 20) => `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${G[n]}</svg>`;
+
+// Khung điện thoại + chữ số chấm dùng chung cho mọi màn app.
+const BASE = `.tx-phone{position:relative;width:300px;height:620px;border-radius:48px;border:8px solid #0d0d0d;overflow:hidden;font-family:Inter,system-ui,sans-serif;box-shadow:0 30px 60px -24px rgba(0,0,0,.45);box-sizing:border-box}
+.tx-phone *{box-sizing:border-box}
+.tx-sb{position:absolute;inset:0 0 auto;height:46px;display:flex;align-items:center;justify-content:space-between;padding:0 22px 0 30px;font:600 13px/1 Inter,system-ui;z-index:5}
+.tx-sb i{position:absolute;left:50%;top:10px;width:86px;height:26px;margin-left:-43px;border-radius:20px;background:#000}
+.tx-home{position:absolute;left:50%;bottom:7px;width:108px;height:4px;margin-left:-54px;border-radius:4px;background:currentColor;opacity:.9;z-index:5}
+.tx-dot{font-family:Doto,ui-monospace,monospace;font-weight:900;letter-spacing:-.02em}
+.tx-btn{display:grid;place-items:center;border:0;border-radius:50%;cursor:pointer;color:inherit;background:none;padding:0}`;
+
+const V = [
+// ───────── WEBSITES ─────────
+{ id: 'hero', kind: 'web', w: 1100, h: 620, vi: 'Hero thư viện', en: 'Library hero',
+  use: 'Trang chủ sản phẩm cho dev. Hai dòng tiêu đề, dòng hai xám. Hai nút, một hàng công cụ hỗ trợ.',
+  css: `.tx-hero{width:1100px;height:620px;position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;background:#fbfbfb;color:#111;font-family:Inter,system-ui,sans-serif;text-align:center}
+.tx-hero::before{content:"";position:absolute;left:50%;top:60%;width:480px;height:480px;margin:-240px;border-radius:50%;background:radial-gradient(circle,#7b6cf0 1.3px,transparent 1.9px) 0 0/9px 9px;-webkit-mask:radial-gradient(closest-side,#000,transparent);mask:radial-gradient(closest-side,#000,transparent);opacity:.5;animation:tx-breathe 6s ease-in-out infinite}
+.tx-hero>*{position:relative;margin:0}
+.tx-hero .badge{padding:10px 16px;border:1px solid #e3e3e3;border-radius:999px;background:#fff;font:600 14px/1 ui-monospace,Menlo,monospace;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.tx-hero .badge b{color:#2a32c8;margin-right:6px}
+.tx-hero h2{font:600 92px/.96 Inter,system-ui;letter-spacing:-.05em}
+.tx-hero h2 span{color:#8e8e88}
+.tx-hero p{max-width:540px;font:400 18px/1.45 Inter,system-ui;color:#444}
+.tx-hero .cta{display:flex;gap:10px}
+.tx-hero .cta a{display:flex;align-items:center;gap:10px;height:52px;padding:0 26px;border-radius:999px;font:500 17px/1 Inter,system-ui;text-decoration:none}
+.tx-hero .pri{background:#111;color:#fff;box-shadow:0 8px 18px rgba(0,0,0,.18)}
+.tx-hero .sec{background:#fff;color:#111;border:1px solid #e2e2e2}
+.tx-hero .sec b{color:#2a32c8}
+.tx-hero .tools{display:flex;gap:8px}
+.tx-hero .tools button{width:44px;height:44px;display:grid;place-items:center;border:1px solid #e5e5e5;border-radius:12px;background:#fff;color:#222;cursor:pointer}
+.tx-hero .tools [aria-pressed=true]{background:#2433b8;border-color:#2433b8;color:#fff}
+.tx-hero small{font:400 16px/1 Inter,system-ui;color:#777}
+.tx-hero small b{color:#111;font-weight:600}`,
+  html: `<section class="tx-hero"><span class="badge"><b>›</b>158 designs, every one live</span><h2>Your AI codes.<br><span>Now it designs.</span></h2><p>Hand-made components, website heroes and app screens. Connect once, and your coding agent drops the real thing into your project.</p><div class="cta"><a class="pri" href="#">Open the library ${I('arrow', 18)}</a><a class="sec" href="#"><b>›</b> Connect your AI</a></div><div class="tools" role="group" aria-label="Agent">${['spark', 'code', 'hex', 'nodes'].map((n, i) => `<button type="button" aria-pressed="${i === 1}" aria-label="${n}">${I(n)}</button>`).join('')}</div><small>Join <b>1,361</b> designers and developers</small></section>`,
+  js: (el) => el.querySelectorAll('.tools button').forEach((b, _, all) => b.onclick = () => all.forEach((x) => x.setAttribute('aria-pressed', x === b))) },
+
+{ id: 'agent', kind: 'web', w: 1100, h: 620, vi: 'Hero agent code', en: 'Coding agent hero',
+  use: 'Landing cho công cụ dev. Tiêu đề đen rất đậm, nền code mờ, bảng chạy việc tự tích từng bước.',
+  css: `.tx-agent{width:1100px;height:620px;position:relative;overflow:hidden;background:#fff;color:#0b0b0b;font-family:Inter,system-ui,sans-serif}
+.tx-agent nav{display:flex;align-items:center;gap:26px;padding:26px 32px;font:500 13px/1 Inter}
+.tx-agent nav b{font:800 16px/1 Inter;margin-right:20px}
+.tx-agent nav span:last-child{margin-left:auto}
+.tx-agent h2{margin:30px 0 0 32px;font:800 76px/.9 Inter;letter-spacing:-.065em}
+.tx-agent h2 span{display:block;padding-left:100px}
+.tx-agent .sub{display:flex;align-items:center;gap:22px;margin:26px 0 0 132px}
+.tx-agent .sub p{width:330px;margin:0;font:400 13px/1.45 Inter;color:#222}
+.tx-agent .sub a{display:flex;align-items:center;gap:8px;height:36px;padding:0 16px;border-radius:7px;background:#0b0b0b;color:#fff;font:600 13px/1 Inter;text-decoration:none}
+.tx-agent .sub small{font:400 11px/1 Inter;color:#666}
+.tx-agent pre{position:absolute;left:32px;bottom:0;width:820px;height:230px;margin:0;padding:24px 0 0 260px;font:italic 400 13px/1.85 ui-monospace,Menlo,monospace;color:#333;background:radial-gradient(420px 120px at 420px 120px,rgba(255,170,60,.22),transparent);-webkit-mask:linear-gradient(90deg,transparent,#000 40%);mask:linear-gradient(90deg,transparent,#000 40%)}
+.tx-agent pre .del{background:#f87171;color:#fff;padding:1px 10px;border-radius:3px}
+.tx-agent pre .add{background:#fde68a;padding:1px 10px;border-radius:3px}
+.tx-agent pre i{color:#999}
+.tx-agent .run{position:absolute;right:34px;bottom:36px;width:290px;padding:14px;border-radius:10px;background:#111;color:#ddd;font:11px/1 ui-monospace,Menlo,monospace;box-shadow:0 24px 50px rgba(0,0,0,.3)}
+.tx-agent .run header{display:flex;justify-content:space-between;color:#888}
+.tx-agent .run header b{color:#f97316}
+.tx-agent .run h4{margin:14px 0 12px;font:600 14px/1 Inter;color:#fff}
+.tx-agent .run ol{margin:0;padding:0;list-style:none;display:grid;gap:9px}
+.tx-agent .run li{display:flex;gap:8px;align-items:center;opacity:.35;transition:opacity .3s}
+.tx-agent .run li::before{content:"";width:9px;height:9px;border-radius:50%;border:1px solid #666}
+.tx-agent .run li.on{opacity:1}
+.tx-agent .run li.on::before{background:#e5e5e5;border-color:#e5e5e5}
+.tx-agent .run li.now::before{background:#f97316;border-color:#f97316}
+.tx-agent .run footer{display:flex;gap:6px;margin-top:16px}
+.tx-agent .run footer span{padding:6px 9px;border-radius:5px;background:#262626}
+.tx-agent .run footer span:first-child{background:#7c2d12;color:#fdba74}`,
+  html: `<section class="tx-agent"><nav><b>⌘ Patch</b><span>Product</span><span>Docs</span><span>Pricing</span><span>Changelog</span><span>Sign in</span></nav><h2>The coding agent<span>that ships the fix.</span></h2><div class="sub"><p>Patch reads your whole repo, writes the change, runs your tests until they pass and opens the pull request. You review one diff, not forty prompts.</p><a href="#">Start a run ${I('arrow', 14)}</a><small>GitHub, GitLab or your terminal</small></div><pre>  <span class="del">await using lock = await lockCart(cartId);</span>
+    return db.lock('cart:' + cartId, { ttl, retries: 3 });
+  <span class="add">const cart = await db.cart.find(cartId, {</span>
+    <i>// Called by the payment webhook once checkout confirms.</i>
+  export async function settle(cartId, intent) {
+    const total = await cartTotal(cartId);
+    await db.order.create({ cartId, intent, total });</pre><div class="run"><header><span><b>●</b> run 7f3a · main</span><span>176s</span></header><h4>Fix the flaky checkout test</h4><ol><li>Read 214 files</li><li>Found a race in cart/total.ts</li><li>Wrote the fix in 3 files</li><li>412 tests passed</li><li>Opened pull request #2481</li><li>Deployed to production</li></ol><footer><span>Flaky test</span><span>Payments</span><span>React 19</span></footer></div></section>`,
+  js: (el) => { const li = [...el.querySelectorAll('.run li')]; let n = 0;
+    setInterval(() => { n = (n + 1) % (li.length + 2); li.forEach((x, i) => { x.classList.toggle('on', i < n); x.classList.toggle('now', i === n - 1); }); }, 900); } },
+
+{ id: 'blood', kind: 'web', w: 1100, h: 620, vi: 'Hero xét nghiệm máu', en: 'Blood test hero',
+  use: 'Sản phẩm y tế cao cấp. Nền tối, một vật thể phát sáng làm hero, số đo lớn đặt ngay trên vật.',
+  css: `.tx-blood{width:1100px;height:620px;position:relative;overflow:hidden;background:radial-gradient(900px 500px at 30% 70%,#1a2433,#07090d);color:#fff;font-family:Inter,system-ui,sans-serif}
+.tx-blood nav{display:flex;gap:26px;padding:24px 34px;font:400 12px/1 Inter;color:#9aa3ae}
+.tx-blood nav b{color:#fff;font:600 16px/1 Inter;margin-right:12px}
+.tx-blood nav span:last-child{margin-left:auto}
+.tx-blood h2{margin:18px 0 0 34px;font:500 78px/.92 Inter;letter-spacing:-.05em}
+.tx-blood h2 span{color:#6f7884}
+.tx-blood aside{position:absolute;right:34px;top:96px;width:240px;font:400 12px/1.5 Inter;color:#8d96a1}
+.tx-blood aside a{display:inline-flex;margin:12px 0 10px;padding:10px 14px;border-radius:7px;background:#e8eaed;color:#111;font:600 12px/1 Inter;text-decoration:none}
+.tx-blood aside u{display:block;color:#aab2bc}
+.tx-blood .tube{position:absolute;left:84px;top:350px;width:820px;height:120px;border-radius:60px 14px 14px 60px;background:linear-gradient(180deg,rgba(255,255,255,.35),rgba(255,255,255,0) 22%,rgba(0,0,0,0) 70%,rgba(0,0,0,.5)),linear-gradient(90deg,#4a0509,#d0141e 22%,#9b0c13 60%,#560609);box-shadow:0 0 90px rgba(220,20,30,.5),0 40px 60px -20px rgba(220,20,30,.4)}
+.tx-blood .tube::after{content:"";position:absolute;right:-96px;top:-10px;width:110px;height:140px;border-radius:12px 22px 22px 12px;background:linear-gradient(180deg,#3a3f46,#15181c 60%,#0b0d10)}
+.tx-blood .lab{position:absolute;left:150px;top:300px;font:600 10px/1 ui-monospace,Menlo,monospace;letter-spacing:.08em;color:#8d96a1}
+.tx-blood .lab b{display:block;margin-top:10px;font:500 17px/1 Inter;letter-spacing:0;color:#fff}
+.tx-blood .num{position:absolute;left:150px;top:358px;font:300 110px/1 Inter;letter-spacing:-.04em;text-shadow:0 2px 20px rgba(0,0,0,.4)}
+.tx-blood .num small{font-size:15px;letter-spacing:0;color:#d5d9de;margin-left:6px}
+.tx-blood .ticks{position:absolute;left:120px;top:490px;width:720px;height:10px;background:repeating-linear-gradient(90deg,rgba(220,30,40,.7) 0 1px,transparent 1px 6px)}
+.tx-blood footer{position:absolute;left:34px;right:34px;bottom:24px;display:flex;align-items:center;gap:36px;font:500 11px/1 Inter;color:#cfd4da}
+.tx-blood footer i{display:inline-block;width:6px;height:6px;margin-right:6px;border-radius:50%;background:#fff}
+.tx-blood footer input{width:240px;accent-color:#fff}
+.tx-blood footer span:last-child{margin-left:auto;color:#707986}`,
+  html: `<section class="tx-blood"><nav><b>◎ Ruby</b><span>What we test</span><span>Physicians</span><span>Clinics</span><span>Pricing</span><span>Sign in</span></nav><h2>A full read<br><span>of your blood.</span></h2><aside>112 biomarkers from one morning draw, read with you by a physician on a 30-minute call. Twice a year.<br><a href="#">Book your first draw · £390 →</a><u>See all 112 markers</u></aside><div class="tube"></div><div class="lab">005 / 112 &nbsp;HEART<b>ApoB</b></div><div class="num"><span>72</span><small>mg/dL</small></div><div class="ticks"></div><footer><span><i></i>In range</span><input type="range" min="40" max="140" value="72" aria-label="ApoB mg/dL"><span>Down 9 since September</span><span>Sample 4417 · drawn 08:12</span></footer></section>`,
+  js: (el) => { const n = el.querySelector('.num span'), r = el.querySelector('input'); r.oninput = () => n.textContent = r.value; } },
+
+// ───────── APPS ─────────
+{ id: 'pay', kind: 'app', w: 300, h: 620, vi: 'Gửi và nhận tiền', en: 'Send & get paid',
+  use: 'App chuyển tiền. Số tiền dựng đứng chạy dọc mép, avatar là khối màu, một nút gửi tròn lớn.',
+  css: `.tx-pay{background:#080808;color:#fff}
+.tx-pay .top{position:absolute;top:58px;left:22px;right:22px;display:flex;justify-content:space-between;font:500 12px/1 Inter}
+.tx-pay .top b::before{content:"";display:inline-block;width:11px;height:9px;margin-right:5px;border-radius:50% 50% 40% 60%;background:#ff3fa4}
+.tx-pay .top span{font-weight:400;color:#777}
+.tx-pay .top span em{font-style:normal;color:#fff}
+.tx-pay h3{position:absolute;top:92px;left:22px;margin:0;font:400 38px/1.05 Inter;letter-spacing:-.04em}
+.tx-pay h3 span{display:block;color:#4d4d4d}
+.tx-pay .frame{position:absolute;left:10px;top:210px;width:200px;height:345px;border:1px solid rgba(255,63,164,.35);border-radius:70px 70px 70px 90px}
+.tx-pay .blob{position:absolute;left:26px;top:228px;width:140px;height:140px;display:grid;place-items:center;font:600 34px/1 Inter;letter-spacing:-.04em;color:#111}
+.tx-pay .blob svg{position:absolute;inset:0;animation:tx-spin 24s linear infinite}
+.tx-pay .blob b{position:relative}
+.tx-pay .who{position:absolute;left:22px;top:384px;font:500 17px/1.2 Inter;letter-spacing:-.02em}
+.tx-pay .who small{display:block;font:400 10px/1.6 Inter;color:#666}
+.tx-pay .ppl{position:absolute;left:20px;top:432px;display:flex;gap:6px}
+.tx-pay .ppl button{width:28px;height:24px;border:0;border-radius:40%;background:#1c1c1c;color:#666;font:600 8px/1 Inter;cursor:pointer}
+.tx-pay .ppl [aria-pressed=true]{background:#ff3fa4;color:#111}
+.tx-pay .go{position:absolute;left:30px;top:484px;width:62px;height:62px;background:#fff;color:#111;box-shadow:0 0 0 14px rgba(255,63,164,.08)}
+.tx-pay .lands{position:absolute;left:104px;top:494px;font:500 13px/1.05 Inter}
+.tx-pay .lands small{display:block;font:400 9px/1.6 Inter;color:#666}
+.tx-pay .amt{position:absolute;left:200px;top:552px;transform:rotate(-90deg);transform-origin:0 0;font:500 118px/1 Inter;letter-spacing:-.05em;color:#ff3fa4;white-space:nowrap}`,
+  html: PH('tx-pay', `<div class="top"><b>bloop</b><span><em>€12,406.20</em> ready</span></div><h3>send<span>get paid</span></h3><div class="frame"></div><div class="blob"><svg viewBox="0 0 100 100" aria-hidden="true"><path fill="#ff3fa4" d="M50 6c12 0 18 10 20 18 8-2 22 2 24 16s-8 18-12 20c4 6 6 22-8 28s-20-2-24-6c-4 4-12 12-26 6S8 66 12 60C6 56-2 44 8 32s18-8 24-8c2-8 8-18 18-18z"/></svg><b>ln</b></div><div class="who"><span>linh nguyen</span><small>photographer · hanoi</small></div><div class="ppl" role="group" aria-label="Người nhận">${['ln', 'sb', 'tv', 'po', 'kp'].map((x, i) => `<button type="button" aria-pressed="${i === 0}">${x}</button>`).join('')}</div><button type="button" class="tx-btn go" aria-label="Gửi">${I('ne', 26)}</button><div class="lands">lands in<br>seconds<small>no fee</small></div><div class="amt">€1,840</div>`),
+  js: (el) => { const P = { ln: ['linh nguyen', 'photographer · hanoi', '€1,840'], sb: ['sami berg', 'chef · oslo', '€420'], tv: ['tomas vale', 'cellist · porto', '€96'], po: ['pia ortiz', 'architect · lima', '€2,310'], kp: ['kim park', 'student · seoul', '€55'] };
+    el.querySelectorAll('.ppl button').forEach((b, _, all) => b.onclick = () => { all.forEach((x) => x.setAttribute('aria-pressed', x === b)); const [n, r, a] = P[b.textContent];
+      el.querySelector('.blob b').textContent = b.textContent; el.querySelector('.who span').textContent = n; el.querySelector('.who small').textContent = r; el.querySelector('.amt').textContent = a; }); } },
+
+{ id: 'weather', kind: 'app', w: 300, h: 620, vi: 'Thời tiết mặt số', en: 'Weather dial',
+  use: 'Thời tiết trong ngày. Nền gradient theo nhiệt, mặt số chấm ở giữa, hai ô gió và không khí.',
+  css: `.tx-weather{color:#111;background:radial-gradient(160px 140px at 72% 26%,rgba(255,255,255,.6),transparent),linear-gradient(175deg,#ffe86a 0%,#ffa23a 30%,#ff2f63 52%,#ff79a8 70%,#fbe5ef 88%,#fff 100%)}
+.tx-weather .city{position:absolute;top:56px;left:22px;font:600 22px/1 Inter;letter-spacing:-.02em}
+.tx-weather .city small{display:block;margin-top:4px;font:400 10px/1 Inter;opacity:.7}
+.tx-weather .now{position:absolute;top:56px;right:22px;text-align:right;font-size:26px;line-height:1;opacity:.85}
+.tx-weather .now small{display:block;font:400 9px/1.6 Inter}
+.tx-weather .dial{position:absolute;left:40px;top:120px;width:220px;height:220px;border-radius:50%;background:repeating-conic-gradient(from -130deg,rgba(0,0,0,.55) 0 .5deg,transparent .5deg 6deg);-webkit-mask:radial-gradient(closest-side,transparent 88%,#000 89% 95%,transparent 96%);mask:radial-gradient(closest-side,transparent 88%,#000 89% 95%,transparent 96%)}
+.tx-weather .sun{position:absolute;left:206px;top:146px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 0 0 6px rgba(255,255,255,.5),0 0 24px #fff}
+.tx-weather .deg{position:absolute;left:0;right:0;top:184px;text-align:center;font-size:82px;line-height:1}
+.tx-weather .feel{position:absolute;left:0;right:0;top:290px;text-align:center;font:500 12px/1.4 Inter}
+.tx-weather .feel small{display:block;font-size:9px;opacity:.7}
+.tx-weather .bars{position:absolute;left:20px;right:20px;top:372px;display:grid;grid-template-columns:1fr 1fr;gap:16px;font:600 9px/1 Inter}
+.tx-weather .bars div{display:flex;justify-content:space-between;padding-bottom:10px;background:repeating-linear-gradient(90deg,rgba(0,0,0,.4) 0 1px,transparent 1px 4px) 0 100%/100% 5px no-repeat}
+.tx-weather .bars span{font-weight:400;opacity:.7}
+.tx-weather .tiles{position:absolute;left:16px;right:16px;top:410px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tx-weather .tiles div{height:116px;padding:10px;border-radius:16px;display:flex;flex-direction:column;justify-content:space-between;font:600 10px/1 Inter}
+.tx-weather .tiles div:first-child{background:radial-gradient(circle at 50% 55%,#2f6df6,#7fb2ff 50%,#dff0ff)}
+.tx-weather .tiles div:last-child{background:radial-gradient(circle at 50% 50%,rgba(17,17,17,.55) 1.2px,transparent 1.7px) 0 0/6px 6px,radial-gradient(circle,#ff5a4f,#ffb3a6 70%,#ffe1db)}
+.tx-weather .tiles div>*{position:relative;padding:2px 4px;border-radius:6px;background:rgba(255,255,255,.55);align-self:flex-start}
+.tx-weather .tiles b{font-size:24px;line-height:1}
+.tx-weather .tiles small{font-weight:400;font-size:7px;margin-left:4px}
+.tx-weather .bar{position:absolute;left:16px;right:16px;bottom:30px;display:flex;justify-content:space-between;align-items:center}
+.tx-weather .bar .tx-btn{width:40px;height:40px;background:#fff;font:600 12px/1 Inter;box-shadow:0 4px 10px rgba(0,0,0,.08)}
+.tx-weather .bar .pill{display:flex;align-items:center;gap:6px;height:40px;padding:0 16px;border:0;border-radius:999px;background:#111;color:#fff;font:500 12px/1 Inter;cursor:pointer}`,
+  html: PH('tx-weather', `<div class="city">Madrid<small>Tuesday 26 May</small></div><div class="now tx-dot">16:50<small>in 7 h 19</small></div><div class="dial"></div><div class="sun"></div><div class="deg tx-dot">29°</div><div class="feel">Hot and clear<small>Feels 31°</small></div><div class="bars"><div>UV 6<span>High</span></div><div>Rain 10%<span>Slight</span></div></div><div class="tiles"><div>Wind<span><b class="tx-dot">21</b><small>km/h · gusts 32</small></span></div><div>Air<span><b class="tx-dot">89</b><small>AQI · PM2.5 18</small></span></div></div><div class="bar"><button type="button" class="tx-btn" aria-label="Đổi độ">°C</button><button type="button" class="pill">${I('pause', 14)}<span>Pause the day</span></button><button type="button" class="tx-btn" aria-label="Vị trí">${I('send', 16)}</button></div>`),
+  js: (el) => { const d = el.querySelector('.deg'), u = el.querySelector('.bar .tx-btn'); let c = true;
+    u.onclick = () => { c = !c; u.textContent = c ? '°C' : '°F'; d.textContent = c ? '29°' : '84°'; }; } },
+
+{ id: 'orbit', kind: 'app', w: 300, h: 620, vi: 'Lịch quanh quả cầu', en: 'Orbit launcher',
+  use: 'Trợ lý lịch. Thẻ "sắp tới" đếm ngược, các việc là bi bóng xếp vòng quanh quả cầu chính.',
+  css: `.tx-orbit{background:#f6f5f8;color:#111}
+.tx-orbit .top{position:absolute;top:56px;left:20px;right:20px;display:flex;justify-content:space-between;font:600 14px/1 Inter}
+.tx-orbit .top small{font:400 10px/1.4 Inter;color:#777}
+.tx-orbit .next{position:absolute;left:14px;right:14px;top:80px;height:182px;padding:14px;border-radius:20px;color:#fff;background:radial-gradient(160px 120px at 85% 10%,#ff6a2b,transparent),radial-gradient(200px 160px at 10% 90%,#ff2e88,transparent),linear-gradient(135deg,#5b0b4a,#2a0726)}
+.tx-orbit .next b{font:600 14px/1 Inter}
+.tx-orbit .next small{display:block;font:400 9px/1.6 Inter;opacity:.75}
+.tx-orbit .next .t{margin-top:8px;font-size:52px;line-height:1}
+.tx-orbit .next i{display:block;height:8px;margin:6px 0 10px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.5) 0 1px,transparent 1px 5px)}
+.tx-orbit .next em{font:600 14px/1.3 Inter;font-style:normal}
+.tx-orbit .next .ne{position:absolute;right:12px;top:12px;width:28px;height:28px;border:1.5px solid rgba(255,255,255,.7)}
+.tx-orbit .core{position:absolute;left:90px;top:340px;width:104px;height:104px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#ff9db6 30%,#ff3b6b 70%,#d81b50);box-shadow:0 0 0 30px rgba(255,90,130,.05),0 0 0 60px rgba(255,90,130,.04),0 14px 30px rgba(255,59,107,.4);animation:tx-breathe 4s ease-in-out infinite}
+.tx-orbit .ball{position:absolute;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#fff;box-shadow:inset -4px -6px 10px rgba(0,0,0,.18),inset 4px 5px 8px rgba(255,255,255,.55),0 8px 14px rgba(0,0,0,.12)}
+.tx-orbit .ball sup{position:absolute;right:-2px;top:-2px;width:15px;height:15px;border-radius:50%;background:#111;font:600 8px/15px Inter;text-align:center}
+.tx-orbit .bar{position:absolute;left:18px;right:18px;bottom:30px;display:flex;align-items:center;justify-content:space-between;color:#555}
+.tx-orbit .bar .mic{display:flex;align-items:center;gap:8px;height:42px;padding:0 18px;border:0;border-radius:999px;background:#2433f0;color:#fff;cursor:pointer}
+.tx-orbit .bar .mic span{width:72px;height:6px;background:radial-gradient(circle,#fff 1px,transparent 1.5px) 0 0/4px 6px}`,
+  html: PH('tx-orbit', `<div class="top"><span>Orbit</span><small>Tue 18 Nov · 8 live</small></div><div class="next"><b>Next up</b><small>Starts in</small><div class="t tx-dot">12:46</div><i></i><em>Pricing review</em><small>10:30 · Room 2 · Ines, Kofi and 2 more</small><span class="tx-btn ne">${I('ne', 14)}</span></div><div class="core"></div>${[['cam', 120, 280, '#ff2d55', ''], ['home', 34, 330, '#ff7ab8', ''], ['bell', 210, 330, '#e6f34a', 3], ['clock', 0, 420, '#c9ccd3', ''], ['doc', 250, 420, '#2ed9a3', ''], ['list', 40, 510, '#ff9a2e', 3], ['mail', 210, 510, '#45d6f0', 4]].map(([n, x, y, c, s]) => `<span class="ball" style="left:${x}px;top:${y}px;background:radial-gradient(circle at 35% 30%,#fff,${c} 45%)">${I(n, 16)}${s ? `<sup>${s}</sup>` : ''}</span>`).join('')}<div class="bar">${I('key', 18)}<button type="button" class="mic" aria-label="Nói">${I('mic', 16)}<span></span></button>${I('loop', 18)}</div>`),
+  js: (el) => { const t = el.querySelector('.t'); let s = 12 * 60 + 46;
+    setInterval(() => { s = s > 0 ? s - 1 : 12 * 60 + 46; t.textContent = String(s / 60 | 0).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'); }, 1000); } },
+
+{ id: 'budget', kind: 'app', w: 300, h: 620, vi: 'Ngân sách khối mềm', en: 'Blob budget',
+  use: 'Chia tiền tháng. Mỗi khoản là một khối, to nhỏ theo tiền. Thanh trên chia phần trăm cần, muốn, để dành.',
+  css: `.tx-budget{color:#fff;background:radial-gradient(rgba(255,255,255,.12) 1px,transparent 1.5px) 0 0/12px 12px,#060606}
+.tx-budget .top{position:absolute;top:56px;left:20px;right:20px;display:flex;justify-content:space-between;font:500 13px/1 Inter}
+.tx-budget .top b::before{content:"";display:inline-block;width:10px;height:10px;margin-right:6px;border-radius:50%;background:#d7ff3a}
+.tx-budget .top span{font-weight:400;color:#777}
+.tx-budget .top em{font-style:normal;color:#fff}
+.tx-budget .amt{position:absolute;top:82px;left:18px;font:500 72px/1 Inter;letter-spacing:-.06em}
+.tx-budget .amt sup{font-size:26px;vertical-align:42px;margin-right:4px;color:#aaa}
+.tx-budget .split{position:absolute;top:172px;left:18px;right:18px;display:flex;gap:4px;font:600 9px/22px Inter;color:#111}
+.tx-budget .split span{border-radius:999px;padding:0 8px}
+.tx-budget .blobs{position:absolute;left:10px;top:206px;width:270px;height:250px}
+.tx-budget .blobs div{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#111;font:600 10px/1.15 Inter;animation:tx-wobble 7s ease-in-out infinite}
+.tx-budget .blobs small{display:block;font-weight:400;font-size:8px}
+.tx-budget .pots{position:absolute;left:20px;right:20px;bottom:44px;font:400 8px/1 Inter;color:#777}
+.tx-budget .pots div{display:flex;gap:18px;margin-top:8px;color:#fff;font-size:9px;text-align:center}
+.tx-budget .pots i{display:block;width:26px;height:22px;margin:0 auto 4px;border-radius:50% 40% 55% 45%}
+.tx-budget .ok{position:absolute;right:18px;bottom:42px;width:58px;height:58px;background:#fff;color:#111}`,
+  html: PH('tx-budget', `<div class="top"><b>december</b><span><em>€1,310</em> still loose</span></div><div class="amt"><sup>€</sup>2,890</div><div class="split"><span style="flex:75;background:#d7ff3a">75%<b style="float:right;font-weight:400">needs</b></span><span style="background:#4b5bff;color:#fff">8%</span><span style="background:#fff">17%</span></div><div class="blobs"><div style="left:20px;top:0;width:190px;height:150px;background:#d7ff3a;border-radius:46% 54% 40% 60%/55% 45% 55% 45%">rent<small>€1,150</small></div><div style="left:160px;top:6px;width:96px;height:100px;background:#d7ff3a;border-radius:50% 46% 54% 50%">tax pot<small>€640</small></div><div style="left:130px;top:106px;width:110px;height:84px;background:#d7ff3a;border-radius:50% 50% 42% 58%;animation-delay:-2s">groceries<small>€380</small></div><div style="left:50px;top:146px;width:92px;height:92px;background:#f2f2ee;border-radius:58% 42% 50% 50%;animation-delay:-4s">savings<small>€500</small></div><div style="left:160px;top:170px;width:90px;height:56px;background:#4b5bff;color:#fff;border-radius:50%;animation-delay:-1s">eating out<small>€220</small></div></div><div class="pots">pots you can add<div><span><i style="background:#4b5bff"></i>travel<br>€300</span><span><i style="background:#4b5bff"></i>gifts<br>€180</span><span><i style="background:#eee"></i>cushion<br>€250</span></div></div><button type="button" class="tx-btn ok" aria-label="Xong">${I('check', 22)}</button>`) },
+
+{ id: 'sleep', kind: 'app', w: 300, h: 620, vi: 'Giấc ngủ xếp thẻ', en: 'Stacked sleep',
+  use: 'Báo cáo sức khoẻ trong ngày. Thẻ xếp chồng, thẻ trước là số chính bằng chữ chấm lớn.',
+  css: `.tx-sleep{background:#050505;color:#fff}
+.tx-sleep .top{position:absolute;top:58px;left:22px;right:20px;display:flex;justify-content:space-between;align-items:flex-start}
+.tx-sleep .top b{font:300 28px/1 Inter;letter-spacing:-.03em}
+.tx-sleep .top small{display:block;margin-bottom:6px;font:400 10px/1 Inter;color:#777}
+.tx-sleep .top span{padding:6px 10px;border-radius:999px;background:#1a1a1a;font:500 10px/1 Inter;color:#aaa}
+.tx-sleep .card{position:absolute;left:24px;right:24px;border-radius:22px}
+.tx-sleep .c1{top:138px;height:60px;background:linear-gradient(90deg,#b0145a,#5a0b6d);opacity:.8;transform:scale(.88)}
+.tx-sleep .c2{top:154px;height:60px;background:linear-gradient(90deg,#0f8f7a,#1d3f8a);transform:scale(.94)}
+.tx-sleep .c3{top:172px;height:310px;padding:16px;background:radial-gradient(90px 90px at 62% 58%,#fff,rgba(255,255,255,0)),radial-gradient(circle at 60% 55%,#8b6bff,#3b1fd1 45%,#170a5c 85%);box-shadow:0 20px 40px rgba(60,30,200,.4)}
+.tx-sleep .c3 b{font:500 15px/1 Inter}
+.tx-sleep .c3 small{display:block;font:400 10px/1.6 Inter;opacity:.7}
+.tx-sleep .c3 .h{position:absolute;left:16px;bottom:16px}
+.tx-sleep .c3 .t{font-size:66px;line-height:1}
+.tx-sleep p{position:absolute;left:22px;right:22px;top:500px;margin:0;font:400 11px/1.5 Inter;color:#bbb}
+.tx-sleep .bar{position:absolute;left:20px;right:20px;bottom:28px;display:flex;justify-content:space-between;align-items:center}
+.tx-sleep .bar .tx-btn{width:36px;height:36px;background:#1a1a1a;color:#aaa}
+.tx-sleep .bar .live{height:36px;padding:0 22px;border:0;border-radius:999px;background:#b9c3ff;color:#111;font:600 12px/1 Inter;cursor:pointer}`,
+  html: PH('tx-sleep', `<div class="top"><div><small>Wed 18 Nov</small><b>Today</b></div><span>◌ Ring 82%</span></div><div class="card c1"></div><div class="card c2"></div><div class="card c3"><b>Sleep</b><small>Long and deep</small><div class="h"><small>hours asleep</small><div class="t tx-dot">7:42</div></div></div><p>Asleep at 23:18, up at 07:00. Deep sleep ran 1 h 52, your best this week.</p><div class="bar"><button type="button" class="tx-btn" aria-label="Trước">${I('back', 16)}</button><button type="button" class="live">Live</button><button type="button" class="tx-btn" aria-label="Vòng">${I('clock', 16)}</button></div>`) },
+
+{ id: 'task', kind: 'app', w: 300, h: 620, vi: 'Agent làm việc', en: 'Agent at work',
+  use: 'Trợ lý AI đang làm một việc. Khối đen sống ở giữa, lệnh gốc, rồi từng bước xong kèm thời gian.',
+  css: `.tx-task{background:#fff;color:#111}
+.tx-task .top{position:absolute;top:54px;left:16px;right:16px;display:flex;justify-content:space-between;align-items:center;color:#555}
+.tx-task .top span{padding:7px 12px;border-radius:999px;background:#f3f3f3;font:600 10px/1 Inter;color:#111}
+.tx-task .top span::before{content:"●";color:#2433f0;margin-right:5px}
+.tx-task .orb{position:absolute;left:50px;top:100px;width:200px;height:200px;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.035),transparent);animation:tx-spin 14s linear infinite}
+.tx-task .orb svg{position:absolute;inset:30px}
+.tx-task .orb i{position:absolute;width:12px;height:12px;border-radius:50%;background:#111}
+.tx-task .q{position:absolute;left:22px;right:22px;top:326px;margin:0;font:400 13px/1.4 Inter;color:#333}
+.tx-task ol{position:absolute;left:22px;right:22px;top:378px;margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.tx-task li{display:flex;align-items:center;gap:8px;padding-bottom:8px;border-bottom:1px solid #eee;font:500 11px/1 Inter;opacity:0;transform:translateY(6px);transition:.35s}
+.tx-task li.on{opacity:1;transform:none}
+.tx-task li::before{content:"✓";width:14px;height:14px;border-radius:50%;background:#111;color:#fff;font-size:8px;line-height:14px;text-align:center}
+.tx-task li small{margin-left:auto;white-space:nowrap;font:400 9px/1 ui-monospace,Menlo,monospace;color:#aaa}
+.tx-task .bar{position:absolute;left:14px;right:14px;bottom:26px;display:flex;align-items:center;gap:10px;color:#555}
+.tx-task .bar .stop{flex:1;height:40px;border:0;border-radius:999px;background:#f3f3f3;font:600 12px/1 Inter;cursor:pointer}`,
+  html: PH('tx-task', `<div class="top">${I('menu', 18)}<span>Working · 4 of 4</span>${I('sound', 18)}</div><div class="orb"><svg viewBox="0 0 140 140" aria-hidden="true"><defs><radialGradient id="txg" cx=".38" cy=".3" r=".8"><stop offset="0" stop-color="#fff"/><stop offset=".08" stop-color="#555"/><stop offset=".45" stop-color="#0a0a0a"/><stop offset=".85" stop-color="#0b1a5a"/><stop offset="1" stop-color="#2a4dff"/></radialGradient></defs><path fill="url(#txg)" d="M40 30c20-14 56-20 76-6 14 10 4 40 6 60s-12 40-40 34-42-18-58-26S20 44 40 30z"/></svg><i style="left:158px;top:10px"></i><i style="left:10px;top:120px;width:16px;height:16px"></i><i style="left:170px;top:150px"></i></div><p class="q">Move Thursday's supplier call to Friday morning and tell Dario why.</p><ol><li>Found it: Thu 19 Nov, 15:00 with Dario<small>0.7 s</small></li><li>Friday is free for both until 11:00<small>1.1 s</small></li><li>Moved the call to Fri 20 Nov, 09:30<small>0.9 s</small></li><li>Wrote Dario a two-line note<small>1.2 s</small></li></ol><div class="bar">${I('key', 18)}<button type="button" class="stop">■ Stop</button>${I('chat', 18)}</div>`),
+  js: (el) => { const li = [...el.querySelectorAll('li')]; let n = 0;
+    setInterval(() => { n = (n + 1) % (li.length + 3); li.forEach((x, i) => x.classList.toggle('on', i < n)); }, 800); } },
+
+{ id: 'shop', kind: 'app', w: 300, h: 620, vi: 'Trang sản phẩm', en: 'Product page',
+  use: 'Shop một món. Nền theo màu sản phẩm, đổi màu là đổi cả trang. Thước chọn cỡ thay cho dropdown.',
+  css: `.tx-shop{--c:#1d5b3a;color:#fff;background:radial-gradient(260px 300px at 50% 30%,color-mix(in srgb,var(--c),#fff 12%),var(--c) 60%,color-mix(in srgb,var(--c),#000 45%));transition:background .4s}
+.tx-shop .top{position:absolute;top:52px;left:16px;right:16px;display:flex;justify-content:space-between;align-items:center;font:700 14px/1 Inter;letter-spacing:.3em}
+.tx-shop .top .tx-btn{width:32px;height:32px;background:rgba(255,255,255,.12)}
+.tx-shop .big{position:absolute;left:0;right:0;top:92px;text-align:center;font:800 170px/1 Inter;letter-spacing:-.06em;color:rgba(255,255,255,.07)}
+.tx-shop svg.pot{position:absolute;left:40px;top:120px;width:220px;filter:drop-shadow(0 20px 20px rgba(0,0,0,.35))}
+.tx-shop .sw{position:absolute;left:20px;top:330px;display:flex;align-items:center;gap:8px;font:500 11px/1 Inter}
+.tx-shop .sw button{width:18px;height:18px;border-radius:50%;border:2px solid transparent;cursor:pointer;padding:0}
+.tx-shop .sw [aria-pressed=true]{box-shadow:0 0 0 2px #fff}
+.tx-shop .name{position:absolute;left:20px;right:20px;top:362px;font:400 8px/1 Inter;opacity:.75}
+.tx-shop .name b{display:flex;justify-content:space-between;margin-top:6px;font:800 30px/1 Inter;letter-spacing:-.03em;opacity:1}
+.tx-shop .name b span{font-size:20px}
+.tx-shop .name p{margin:8px 0 0;font:400 9px/1.5 Inter}
+.tx-shop .size{position:absolute;left:20px;right:20px;top:450px;font:400 9px/1 Inter;opacity:.85}
+.tx-shop .size header{display:flex;justify-content:space-between}
+.tx-shop .size div{display:flex;justify-content:space-around;margin-top:8px;padding-top:16px;border-radius:12px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.4) 0 1px,transparent 1px 12px) 0 6px/100% 10px no-repeat,rgba(0,0,0,.15)}
+.tx-shop .size button{height:36px;border:0;background:none;color:rgba(255,255,255,.5);font:500 12px/1 Inter;cursor:pointer}
+.tx-shop .size [aria-pressed=true]{color:#fff;font-size:18px;font-weight:700}
+.tx-shop .add{position:absolute;left:14px;right:14px;bottom:24px;display:flex;justify-content:space-between;align-items:center;height:44px;padding:0 18px;border:0;border-radius:999px;background:#fff;color:#111;font:600 12px/1 Inter;cursor:pointer}`,
+  html: PH('tx-shop', `<div class="top"><span class="tx-btn">${I('back', 16)}</span><span>FERRO</span><span class="tx-btn">${I('bag', 16)}</span></div><div class="big">24</div><svg class="pot" viewBox="0 0 220 180" aria-hidden="true"><defs><linearGradient id="txp" x1="0" x2="1"><stop offset="0" stop-color="#000" stop-opacity=".45"/><stop offset=".35" stop-color="#fff" stop-opacity=".18"/><stop offset="1" stop-color="#000" stop-opacity=".5"/></linearGradient></defs><ellipse cx="110" cy="166" rx="80" ry="10" fill="#000" opacity=".3"/><rect x="8" y="78" width="30" height="16" rx="8" class="c"/><rect x="182" y="78" width="30" height="16" rx="8" class="c"/><path class="c" d="M26 74h168v58c0 22-30 36-84 36s-84-14-84-36z"/><path fill="url(#txp)" d="M26 74h168v58c0 22-30 36-84 36s-84-14-84-36z"/><ellipse class="c" cx="110" cy="72" rx="90" ry="22"/><ellipse fill="#fff" opacity=".12" cx="110" cy="66" rx="70" ry="12"/><rect x="100" y="34" width="20" height="18" rx="4" fill="#c9a24a"/><ellipse cx="110" cy="34" rx="18" ry="6" fill="#e2c06a"/></svg><div class="sw" role="group" aria-label="Màu">${[['#1d5b3a', 'Pine green'], ['#c99a1a', 'Mustard'], ['#b8325c', 'Rosehip']].map(([c, n], i) => `<button type="button" aria-pressed="${i === 0}" aria-label="${n}" data-c="${c}" style="background:${c}"></button>`).join('')}<span>Pine green</span></div><div class="name">Enamelled cast iron · Nº2<b>Cocotte<span>€189</span></b><p>Poured in one piece. Oven to table, any hob, 30-year guarantee.</p></div><div class="size"><header><span>Size</span><span class="l">4.2 L · serves 4</span></header><div role="group" aria-label="Cỡ">${[20, 24, 28, 32].map((s) => `<button type="button" aria-pressed="${s === 24}">${s}</button>`).join('')}</div></div><button type="button" class="add"><span>${I('bag', 14)} Add to bag</span><b>€189</b></button>`),
+  js: (el) => { const ph = el.querySelector('.tx-shop'), paint = (c) => { ph.style.setProperty('--c', c); el.querySelectorAll('.pot .c').forEach((p) => p.setAttribute('fill', c)); };
+    paint('#1d5b3a');
+    el.querySelectorAll('.sw button').forEach((b, _, all) => b.onclick = () => { all.forEach((x) => x.setAttribute('aria-pressed', x === b)); paint(b.dataset.c); el.querySelector('.sw span').textContent = b.getAttribute('aria-label'); });
+    el.querySelectorAll('.size button').forEach((b, _, all) => b.onclick = () => { all.forEach((x) => x.setAttribute('aria-pressed', x === b)); const s = +b.textContent;
+      el.querySelector('.big').textContent = s; el.querySelector('.l').textContent = (s * s / 137).toFixed(1) + ' L · serves ' + (s / 6 | 0); el.querySelector('.add b').textContent = el.querySelector('.name span').textContent = '€' + (s * 8 - 3); }); } },
+
+{ id: 'onboard', kind: 'app', w: 300, h: 620, vi: 'Giới thiệu xếp đá', en: 'Stacked onboarding',
+  use: 'Màn chào app mới. Nền một màu mạnh, hình 3D lớn, câu ngắn, thanh tiến trình 3 bước, một nút.',
+  css: `.tx-onboard{background:#ec2a1c;color:#fff}
+.tx-onboard .top{position:absolute;top:56px;left:20px;right:20px;display:flex;justify-content:space-between;font:600 13px/1 Inter}
+.tx-onboard .top span{font-weight:500;opacity:.85}
+.tx-onboard .stones{position:absolute;left:50%;top:86px;width:200px;height:250px;margin-left:-100px;display:flex;flex-direction:column-reverse;align-items:center}
+.tx-onboard .stones i{display:block;margin-top:-6px;border-radius:40%/50%;box-shadow:inset 0 -10px 14px rgba(0,0,0,.35),inset 0 6px 10px rgba(255,255,255,.25),0 10px 14px rgba(0,0,0,.2);transition:transform .5s}
+.tx-onboard .plan{position:absolute;left:20px;top:360px;font:500 10px/1 Inter;opacity:.8}
+.tx-onboard h3{position:absolute;left:20px;right:20px;top:376px;margin:0;font:800 23px/1.05 Inter;letter-spacing:-.04em}
+.tx-onboard p{position:absolute;left:20px;right:24px;top:456px;margin:0;font:400 10px/1.5 Inter;opacity:.85}
+.tx-onboard .steps{position:absolute;left:20px;right:20px;top:516px;display:flex;gap:6px}
+.tx-onboard .steps i{flex:1;height:2px;background:rgba(255,255,255,.3)}
+.tx-onboard .steps .on{background:#fff}
+.tx-onboard .go{position:absolute;left:14px;right:14px;bottom:26px;height:44px;border:0;border-radius:999px;background:#111;color:#fff;font:600 12px/1 Inter;cursor:pointer}`,
+  html: PH('tx-onboard', `<div class="top"><b>▲ Stack</b><span>Skip</span></div><div class="stones">${[[170, 56, '#3a3a3a'], [150, 52, '#e9dccb'], [160, 48, '#e8341f'], [130, 40, '#4a4a4a'], [80, 40, '#efe6d8']].map(([w, h, c]) => `<i style="width:${w}px;height:${h}px;background:${c}"></i>`).join('')}</div><div class="plan">Plan</div><h3>Your whole day, stacked in the right order.</h3><p>Stack reads your calendar and your list and builds the day around the one thing that matters most.</p><div class="steps"><i class="on"></i><i></i><i></i></div><button type="button" class="go">Continue</button>`),
+  js: (el) => { const S = [['Plan', 'Your whole day, stacked in the right order.'], ['Focus', 'One stone at a time. The rest can wait.'], ['Review', 'At six, see what moved and what fell off.']]; let n = 0;
+    el.querySelector('.go').onclick = () => { n = (n + 1) % 3; el.querySelector('.plan').textContent = S[n][0]; el.querySelector('h3').textContent = S[n][1];
+      el.querySelectorAll('.steps i').forEach((x, i) => x.classList.toggle('on', i <= n)); el.querySelectorAll('.stones i').forEach((x, i) => x.style.transform = `translateX(${(i % 2 ? 1 : -1) * n * 4}px) rotate(${(i - 2) * n}deg)`); }; } },
+
+// ───────── COMPONENTS ─────────
+{ id: 'globe', kind: 'ui', w: 460, h: 340, vi: 'Quả cầu chấm', en: 'Dot globe',
+  use: 'Mạng lưới toàn cầu, số người dùng theo nước. Quả cầu chấm xoay chậm, vài điểm sáng là văn phòng.',
+  css: `.tx-globe{width:460px;height:340px;display:grid;place-items:center;border-radius:22px;background:radial-gradient(circle at 50% 50%,#141a2e,#05060a 70%)}
+.tx-globe canvas{width:300px;height:300px}`,
+  html: `<div class="tx-globe"><canvas width="600" height="600" aria-label="Quả cầu xoay"></canvas></div>`,
+  js: (el) => { const c = el.querySelector('canvas'), x = c.getContext('2d'), R = 270, pins = [[48, 2], [40, -74], [-23, -46], [35, 139], [1, 104], [-34, 18]];
+    // ponytail: lục địa là hàm sóng giả, không phải bản đồ thật; muốn đúng thì nạp mặt nạ đất 1-bit.
+    const land = (la, lo) => Math.sin(lo * .05 + 1) * Math.cos(la * .07) + Math.sin(lo * .11 - la * .05) * .6 + Math.cos(la * .12 + lo * .03) * .35 > -.05;
+    let a = 0; const draw = () => { x.clearRect(0, 0, 600, 600); x.fillStyle = '#0b0e1c'; x.beginPath(); x.arc(300, 300, R, 0, 7); x.fill();
+      const g = x.createRadialGradient(300, 300, R * .8, 300, 300, R + 8); g.addColorStop(0, 'rgba(60,80,255,0)'); g.addColorStop(1, 'rgba(70,90,255,.55)'); x.fillStyle = g; x.beginPath(); x.arc(300, 300, R + 8, 0, 7); x.fill();
+      for (let la = -80; la <= 80; la += 3.2) for (let lo = -180; lo < 180; lo += 3.2 / Math.cos(la * Math.PI / 180)) {
+        const p = la * Math.PI / 180, l = (lo + a) * Math.PI / 180, z = Math.cos(p) * Math.cos(l); if (z < 0) continue;
+        const on = land(la, lo); x.fillStyle = on ? `rgba(235,238,255,${.35 + z * .65})` : `rgba(110,130,255,${.08 + z * .3})`;
+        x.beginPath(); x.arc(300 + R * Math.cos(p) * Math.sin(l), 300 - R * Math.sin(p), on ? 2.6 : 1.4, 0, 7); x.fill(); }
+      pins.forEach(([la, lo]) => { const p = la * Math.PI / 180, l = (lo + a) * Math.PI / 180; if (Math.cos(p) * Math.cos(l) < .1) return;
+        x.strokeStyle = '#6d7bff'; x.lineWidth = 3; x.beginPath(); x.arc(300 + R * Math.cos(p) * Math.sin(l), 300 - R * Math.sin(p), 7, 0, 7); x.stroke(); });
+      a = (a + .15) % 360; requestAnimationFrame(draw); }; draw(); } },
+
+{ id: 'eyes', kind: 'ui', w: 460, h: 340, vi: 'Mắt nhìn theo chuột', en: 'Watching eyes',
+  use: 'Linh vật nhỏ cho trang trống, trang 404, ô đăng nhập. Mắt nhìn theo chuột, thỉnh thoảng chớp.',
+  css: `.tx-eyes{width:460px;height:340px;display:grid;place-items:center;border-radius:22px;background:#ececec}
+.tx-eyes .body{position:relative;width:170px;height:140px;margin-top:50px;border-radius:46% 46% 30% 30%/60% 60% 40% 40%;background:radial-gradient(circle at 30% 25%,#3a3a3a,#050505 60%);box-shadow:0 18px 22px -12px rgba(0,0,0,.35)}
+.tx-eyes .eye{position:absolute;top:-34px;width:84px;height:84px;border-radius:50%;background:#0a0a0a;display:grid;place-items:center}
+.tx-eyes .eye:first-child{left:4px}.tx-eyes .eye:nth-child(2){right:4px}
+.tx-eyes .eye b{width:56px;height:56px;border-radius:50%;background:#fff;display:grid;place-items:center;transition:transform .12s}
+.tx-eyes .eye i{width:24px;height:24px;border-radius:50%;background:#0a0a0a;transition:transform .08s}
+.tx-eyes.blink .eye b{transform:scaleY(.08)}`,
+  html: `<div class="tx-eyes"><div class="body"><span class="eye"><b><i></i></b></span><span class="eye"><b><i></i></b></span></div></div>`,
+  js: (el) => { const root = el.querySelector('.tx-eyes');
+    addEventListener('pointermove', (e) => el.querySelectorAll('.eye').forEach((s) => { const r = s.getBoundingClientRect(), dx = e.clientX - r.left - r.width / 2, dy = e.clientY - r.top - r.height / 2, d = Math.min(14, Math.hypot(dx, dy) / 20), t = Math.atan2(dy, dx);
+      s.querySelector('i').style.transform = `translate(${Math.cos(t) * d}px,${Math.sin(t) * d}px)`; }));
+    setInterval(() => { root.classList.add('blink'); setTimeout(() => root.classList.remove('blink'), 140); }, 3800); } },
+
+{ id: 'vinyl', kind: 'ui', w: 460, h: 340, vi: 'Đĩa than đang phát', en: 'Vinyl player',
+  use: 'Trình phát nhạc nhỏ. Đĩa trượt ra khỏi bìa và quay khi phát, dừng thì đĩa đứng.',
+  css: `.tx-vinyl{width:460px;height:340px;position:relative;border-radius:22px;background:#ececec;font-family:Inter,system-ui,sans-serif;color:#111}
+.tx-vinyl .rec{position:absolute;left:150px;top:22px;width:190px;height:190px;border-radius:50%;background:radial-gradient(circle,#111 0 4px,#0f2a1a 5px 30px,#111 31px),repeating-radial-gradient(circle,#161616 0 2px,#0c0c0c 2px 4px);transition:left .5s cubic-bezier(.2,.7,.2,1)}
+.tx-vinyl.on .rec{left:200px;animation:tx-spin 2.4s linear infinite}
+.tx-vinyl .cover{position:absolute;left:100px;top:22px;width:190px;height:190px;padding:12px;background:radial-gradient(circle at 70% 70%,#2e5a2a,transparent 50%),radial-gradient(circle at 40% 40%,rgba(255,255,255,.18) 1px,transparent 2px) 0 0/9px 11px,linear-gradient(160deg,#16301c,#0b1a10);color:#fff;font:500 10px/1.4 Inter;box-shadow:0 10px 20px rgba(0,0,0,.25)}
+.tx-vinyl .cover small{display:block;opacity:.6}
+.tx-vinyl .meta{position:absolute;left:40px;top:236px;font:500 20px/1 Inter;letter-spacing:-.02em}
+.tx-vinyl .meta small{display:block;margin-top:6px;font:400 13px/1 Inter;color:#666;letter-spacing:0}
+.tx-vinyl .ctl{position:absolute;right:40px;top:232px;display:flex;align-items:center;gap:10px}
+.tx-vinyl .ctl .tx-btn{width:32px;height:32px}
+.tx-vinyl .ctl .pp{width:46px;height:46px;background:#111;color:#fff;box-shadow:0 6px 12px rgba(0,0,0,.25)}
+.tx-vinyl .bar{position:absolute;left:40px;right:40px;top:292px;height:3px;border-radius:3px;background:#d6d6d6}
+.tx-vinyl .bar i{display:block;height:100%;border-radius:3px;background:#111;position:relative}
+.tx-vinyl .bar i::after{content:"";position:absolute;right:-7px;top:-6px;width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.tx-vinyl .tm{position:absolute;left:40px;right:40px;top:306px;display:flex;justify-content:space-between;font:500 11px/1 ui-monospace,Menlo,monospace;color:#555}`,
+  html: `<div class="tx-vinyl"><div class="rec"></div><div class="cover">Slow Water<small>Ines Calder</small></div><div class="meta">Slow Water<small>Ines Calder</small></div><div class="ctl"><button type="button" class="tx-btn" aria-label="Bài trước">${I('prev', 16)}</button><button type="button" class="tx-btn pp" aria-label="Phát">${I('play', 18)}</button><button type="button" class="tx-btn" aria-label="Bài sau">${I('next', 16)}</button></div><div class="bar"><i style="width:33%"></i></div><div class="tm"><span>1:15</span><span>3:48</span></div></div>`,
+  js: (el) => { const r = el.querySelector('.tx-vinyl'), pp = el.querySelector('.pp'), bar = el.querySelector('.bar i'), now = el.querySelector('.tm span'); let t = 75, on = false;
+    const f = (s) => (s / 60 | 0) + ':' + String(s % 60).padStart(2, '0');
+    pp.onclick = () => { on = !on; r.classList.toggle('on', on); pp.innerHTML = on ? I('pause', 18) : I('play', 18); pp.setAttribute('aria-label', on ? 'Dừng' : 'Phát'); };
+    el.querySelectorAll('.ctl .tx-btn:not(.pp)').forEach((b) => b.onclick = () => { t = 0; });
+    setInterval(() => { if (!on) return; t = (t + 1) % 228; bar.style.width = t / 2.28 + '%'; now.textContent = f(t); }, 1000); } },
+
+{ id: 'skycard', kind: 'ui', w: 460, h: 340, vi: 'Thẻ thời tiết kéo giờ', en: 'Scrub weather card',
+  use: 'Widget thời tiết. Kéo thước giờ ở đáy để xem nhiệt, mưa, gió theo giờ.',
+  css: `.tx-sky{width:460px;height:340px;display:grid;place-items:center;border-radius:22px;background:#ececec}
+.tx-sky .card{position:relative;width:400px;height:270px;overflow:hidden;border-radius:30px;color:#fff;font-family:Inter,system-ui,sans-serif;background:radial-gradient(120px 50px at 70% 72%,rgba(255,255,255,.75),transparent),radial-gradient(160px 60px at 30% 70%,rgba(230,235,245,.8),transparent),radial-gradient(140px 50px at 90% 88%,rgba(255,255,255,.6),transparent),radial-gradient(200px 70px at 20% 95%,rgba(200,210,225,.85),transparent),linear-gradient(180deg,#14284f,#2d4b80 50%,#6f88ad);box-shadow:0 20px 40px -14px rgba(20,40,80,.5)}
+.tx-sky .city{position:absolute;left:22px;top:20px;font:500 18px/1.3 Inter}
+.tx-sky .city small{display:block;font:400 13px/1 Inter;opacity:.8}
+.tx-sky .info{position:absolute;right:22px;top:22px;text-align:right;font:400 12px/1.6 Inter}
+.tx-sky .info span{opacity:.75}
+.tx-sky .deg{position:absolute;left:22px;top:96px;font:300 92px/1 Inter;letter-spacing:-.05em;text-shadow:0 4px 20px rgba(0,0,0,.25)}
+.tx-sky .ruler{position:absolute;left:22px;right:22px;bottom:16px;height:60px}
+.tx-sky .ruler::before{content:"";position:absolute;left:0;right:0;bottom:18px;height:14px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.8) 0 1.5px,transparent 1.5px 16px)}
+.tx-sky .ruler .lbl{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;font:500 10px/1 Inter;opacity:.8}
+.tx-sky .tip{position:absolute;bottom:22px;width:2px;height:30px;margin-left:-1px;background:#fff}
+.tx-sky .tip b{position:absolute;left:50%;bottom:34px;transform:translateX(-50%);padding:4px 8px;border-radius:999px;background:#fff;color:#111;font:600 11px/1 ui-monospace,Menlo,monospace}
+.tx-sky input{position:absolute;inset:0;width:100%;opacity:0;cursor:ew-resize}`,
+  html: `<div class="tx-sky"><div class="card"><div class="city">Lisbon<small>Partly cloudy</small></div><div class="info"><span>High</span> 24° <span>Low</span> 16°<br><span>Rain</span> <b class="r">10%</b><br><span>Wind</span> <b class="w">7 km/h NW</b></div><div class="deg">23°</div><div class="ruler"><div class="tip"><b>15:25</b></div><div class="lbl"><span>12</span><span>15</span><span>18</span><span>21</span></div><input type="range" min="0" max="540" value="205" aria-label="Giờ"></div></div></div>`,
+  js: (el) => { const r = el.querySelector('input'), tip = el.querySelector('.tip'), q = (s) => el.querySelector(s);
+    const set = () => { const m = +r.value, h = 12 + m / 60, p = m / 540;
+      tip.style.left = p * 100 + '%'; tip.querySelector('b').textContent = String(h | 0).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0');
+      q('.deg').textContent = Math.round(24 - Math.pow((h - 14.5) / 3, 2)) + '°'; q('.r').textContent = Math.round(10 + p * 50) + '%'; q('.w').textContent = Math.round(7 + p * 14) + ' km/h NW'; };
+    r.oninput = set; set(); } },
+
+{ id: 'battery', kind: 'ui', w: 460, h: 340, vi: 'Pin thiết bị', en: 'Device batteries',
+  use: 'Widget pin nhiều thiết bị. Cột cao theo phần trăm, thiết bị yếu (dưới 20%) đổi màu cam.',
+  css: `.tx-bat{width:460px;height:340px;display:flex;justify-content:center;align-items:center;gap:20px;border-radius:22px;background:#ececec;font-family:Inter,system-ui,sans-serif;color:#111}
+.tx-bat button{display:flex;flex-direction:column;align-items:center;gap:8px;border:0;background:none;cursor:pointer;padding:0;color:inherit}
+.tx-bat .cell{position:relative;width:84px;height:150px;border-radius:30px;background:#fff;overflow:hidden;box-shadow:0 10px 18px -8px rgba(0,0,0,.2)}
+.tx-bat .cell::before{content:"";position:absolute;left:30px;top:-1px;width:24px;height:6px;border-radius:0 0 4px 4px;background:#d8d8d8;z-index:1}
+.tx-bat .cell i{position:absolute;left:0;right:0;bottom:0;height:var(--p);background:#0b0b0b;transition:height .8s cubic-bezier(.2,.7,.2,1)}
+.tx-bat .low i{background:#f29a0c}
+.tx-bat b{font:500 28px/1 Inter;letter-spacing:-.03em}
+.tx-bat b small{font-size:13px;color:#888}
+.tx-bat span{font:400 14px/1 Inter;color:#666}`,
+  html: `<div class="tx-bat">${[[64, 'Phone'], [17, 'Watch'], [88, 'Buds']].map(([p, n]) => `<button type="button" aria-label="${n} ${p}%"><span class="cell${p < 20 ? ' low' : ''}"><i style="--p:${p}%"></i></span><b>${p}<small>%</small></b><span>${n}</span></button>`).join('')}</div>`,
+  js: (el) => el.querySelectorAll('.tx-bat button').forEach((b) => b.onclick = () => { const c = b.querySelector('.cell'), v = b.querySelector('b'), p = Math.min(100, parseInt(v.textContent) + 10);
+    c.querySelector('i').style.setProperty('--p', p + '%'); c.classList.toggle('low', p < 20); v.innerHTML = p + '<small>%</small>'; }) },
+
+{ id: 'clock', kind: 'ui', w: 460, h: 340, vi: 'Đồng hồ lịch họp', en: 'Meeting clock',
+  use: 'Widget giờ hiện tại và cuộc họp đang diễn ra. Thước giờ có kim, các họp là viên màu trên thước.',
+  css: `.tx-clock{width:460px;height:340px;position:relative;overflow:hidden;border-radius:22px;background:#ececec;font-family:Inter,system-ui,sans-serif;color:#111;text-align:center}
+.tx-clock .d{margin-top:34px;font:400 14px/1 Inter;color:#666}
+.tx-clock .t{margin-top:6px;font:500 80px/1 Inter;letter-spacing:-.05em}
+.tx-clock .ev{margin-top:8px;font:500 24px/1 Inter;letter-spacing:-.02em}
+.tx-clock .ev::before{content:"";display:inline-block;width:11px;height:11px;margin-right:8px;border-radius:50%;background:#ec1f7a;vertical-align:4px}
+.tx-clock .ev small{display:block;margin-top:6px;font:400 14px/1 Inter;color:#666;letter-spacing:0}
+.tx-clock .rail{position:absolute;left:0;bottom:24px;width:920px;height:84px;transition:transform 1s linear}
+.tx-clock .rail span{position:absolute;bottom:52px;font:500 10px/1 Inter;color:#888;transform:translateX(-50%)}
+.tx-clock .rail i{position:absolute;bottom:30px;width:1.5px;height:12px;background:#999}
+.tx-clock .rail i.h{height:20px;background:#555}
+.tx-clock .rail b{position:absolute;bottom:0;height:24px;border-radius:7px;font:500 10px/24px Inter;color:#fff;white-space:nowrap;overflow:hidden}
+.tx-clock .needle{position:absolute;left:50%;bottom:28px;width:2px;height:46px;margin-left:-1px;background:#111}
+.tx-clock .needle::before{content:"";position:absolute;left:-4px;top:-4px;width:10px;height:10px;border-radius:50%;background:#111}`,
+  html: `<div class="tx-clock"><div class="d"></div><div class="t">10:25</div><div class="ev">Design review<small></small></div><div class="rail"></div><div class="needle"></div></div>`,
+  js: (el) => { const rail = el.querySelector('.rail'), W = 230; // 230px = 1 giờ
+    const tick = () => { const n = new Date(), h0 = n.getHours(), m = n.getMinutes(), base = h0 - 2;
+      el.querySelector('.d').textContent = n.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+      el.querySelector('.t').textContent = String(h0).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+      el.querySelector('.ev small').textContent = `${String(h0).padStart(2, '0')}:00 — ${String(h0 + 1).padStart(2, '0')}:00 · ${60 - m} min left`;
+      let s = ''; for (let q = 0; q <= 16; q++) { const x = q * W / 4; s += `<i class="${q % 4 ? '' : 'h'}" style="left:${x}px"></i>` + (q % 4 ? '' : `<span style="left:${x}px">${String((base + q / 4 + 24) % 24).padStart(2, '0')}</span>`); }
+      rail.innerHTML = s + `<b style="left:${W * 1.25}px;width:${W * .4}px;background:#7b8cff"></b><b style="left:${W * 2 + 4}px;width:${W - 8}px;background:#ec1f7a">Design review</b>`;
+      rail.style.transform = `translateX(${230 - W * 2 - m / 60 * W}px)`; };
+    tick(); setInterval(tick, 30000); } },
+
+{ id: 'mapsheet', kind: 'ui', w: 460, h: 340, vi: 'Bản đồ và thẻ địa điểm', en: 'Place sheet',
+  use: 'App bản đồ. Ghim trên bản đồ, thẻ kéo lên ở đáy có tên, giờ mở, 4 nút: đi, gọi, lưu, chia sẻ.',
+  css: `.tx-map{width:460px;height:340px;display:grid;place-items:end center;border-radius:22px;background:#ececec;font-family:Inter,system-ui,sans-serif;color:#111}
+.tx-map .ph{position:relative;width:300px;height:300px;border:8px solid #0d0d0d;border-top:0;border-radius:0 0 44px 44px;overflow:hidden;background:linear-gradient(90deg,transparent 46%,#fff 46% 50%,transparent 50%) 0 0/90px 100%,linear-gradient(transparent 46%,#fff 46% 52%,transparent 52%) 0 0/100% 70px,#e7e9ec;margin-bottom:18px}
+.tx-map .pin{position:absolute;left:150px;top:30px;color:#2f6df6;font:500 11px/1 Inter;display:flex;align-items:center;gap:6px}
+.tx-map .pin svg{filter:drop-shadow(0 2px 3px rgba(0,0,0,.3))}
+.tx-map .sheet{position:absolute;left:0;right:0;bottom:0;height:196px;padding:12px 16px;border-radius:24px 24px 0 0;background:#fff;box-shadow:0 -6px 20px rgba(0,0,0,.08)}
+.tx-map .sheet::before{content:"";display:block;width:36px;height:4px;margin:0 auto 10px;border-radius:4px;background:#d4d4d4}
+.tx-map h4{margin:0;font:600 20px/1.2 Inter;letter-spacing:-.02em}
+.tx-map .sheet p{margin:4px 0 14px;font:400 12px/1 Inter;color:#666}
+.tx-map .sheet p b{font-weight:500;color:#16a34a}
+.tx-map .x{position:absolute;right:14px;top:22px;width:28px;height:28px;background:#f0f0f0;color:#555}
+.tx-map .acts{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.tx-map .acts button{height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;border:0;border-radius:12px;background:#f2f3f5;color:#2f6df6;font:500 11px/1 Inter;cursor:pointer}
+.tx-map .acts button span{color:#111}
+.tx-map .acts .go{background:#2f6df6;color:#fff}.tx-map .acts .go span{color:#fff}
+.tx-map .acts [aria-pressed=true] svg{fill:currentColor}`,
+  html: `<div class="tx-map"><div class="ph"><div class="pin"><svg width="24" height="32" viewBox="0 0 24 32" aria-hidden="true"><path fill="#2f6df6" d="M12 0a12 12 0 0 1 12 12c0 9-12 20-12 20S0 21 0 12A12 12 0 0 1 12 0z"/><circle cx="12" cy="12" r="4.5" fill="#fff"/></svg>Mora Bakery</div><div class="sheet"><h4>Mora Bakery</h4><p>Bakery · <b>Open</b> until 17:00 · 0.6 km</p><button type="button" class="tx-btn x" aria-label="Đóng">${I('x', 14)}</button><div class="acts"><button type="button" class="go">${I('nav', 16)}<span>12 min</span></button><button type="button">${I('phone', 16)}<span>Call</span></button><button type="button" aria-pressed="false" class="sv">${I('save', 16)}<span>Save</span></button><button type="button">${I('share', 16)}<span>Share</span></button></div></div></div></div>`,
+  js: (el) => { const s = el.querySelector('.sv'); s.onclick = () => { const on = s.getAttribute('aria-pressed') !== 'true'; s.setAttribute('aria-pressed', on); s.querySelector('span').textContent = on ? 'Saved' : 'Save'; }; } },
+
+{ id: 'table', kind: 'ui', w: 460, h: 340, vi: 'Bảng có thanh nền', en: 'Bar data table',
+  use: 'Bảng xếp hạng khách hàng. Nền mỗi dòng dài theo giá trị đang sắp. Bấm tiêu đề cột để đổi cách sắp.',
+  css: `.tx-table{width:460px;height:340px;padding:30px 30px 0;border-radius:22px;background:#ececec;font-family:Inter,system-ui,sans-serif;color:#111;box-sizing:border-box}
+.tx-table header,.tx-table li{display:grid;grid-template-columns:24px 1fr 50px 74px;align-items:center;gap:8px}
+.tx-table header{padding:0 6px 10px 0;font:400 12px/1 Inter;color:#666}
+.tx-table header button{border:0;background:none;padding:6px 0;font:inherit;color:inherit;text-align:right;cursor:pointer}
+.tx-table header button:first-of-type{text-align:left}
+.tx-table header [aria-pressed=true]{color:#111;font-weight:500}
+.tx-table header [aria-pressed=true]::after{content:" ↓"}
+.tx-table ol{margin:0;padding:0;list-style:none;display:grid;gap:6px}
+.tx-table li{position:relative;height:42px;padding-right:6px;font:500 14px/1 Inter;counter-increment:r}
+.tx-table li::before{content:counter(r);font:400 11px/1 Inter;color:#999;text-align:center}
+.tx-table li i{position:absolute;left:32px;top:0;bottom:0;width:calc((100% - 32px) * var(--w));border-radius:12px;background:#dcdcdc;transition:width .5s cubic-bezier(.2,.7,.2,1)}
+.tx-table li:first-child i{background:#c9d0f5}
+.tx-table li span{position:relative;display:flex;align-items:center;gap:8px;padding-left:6px}
+.tx-table li span em{width:28px;height:28px;border-radius:50%;background:#fff;font:600 9px/28px Inter;font-style:normal;text-align:center;color:#555}
+.tx-table li b,.tx-table li s{position:relative;text-align:right;font-weight:500;text-decoration:none}
+.tx-table li b{color:#888;font-weight:400}`,
+  html: `<div class="tx-table"><header><span></span><button type="button" data-k="n" aria-pressed="false">Customer</button><button type="button" data-k="s" aria-pressed="false">Seats</button><button type="button" data-k="m" aria-pressed="true">MRR</button></header><ol></ol></div>`,
+  js: (el) => { const D = [['Pellucid Health', 48, 1920], ['Halden Studio', 12, 1480], ['Brightline Freight', 64, 880], ['Northwind Labs', 7, 640], ['Ortega & Vale', 31, 360]];
+    const ol = el.querySelector('ol'), draw = (k) => { const i = { n: 0, s: 1, m: 2 }[k], rows = [...D].sort((a, b) => k === 'n' ? a[0].localeCompare(b[0]) : b[i] - a[i]), mx = k === 'n' ? 1 : rows[0][i];
+      ol.innerHTML = rows.map((r) => `<li><i style="--w:${k === 'n' ? .9 : .25 + .75 * r[i] / mx}"></i><span><em>${r[0].split(/ & | /).map((w) => w[0]).join('').slice(0, 2)}</em>${r[0]}</span><b>${r[1]}</b><s>€${r[2].toLocaleString('en')}</s></li>`).join(''); };
+    el.querySelectorAll('header button').forEach((b, _, all) => b.onclick = () => { all.forEach((x) => x.setAttribute('aria-pressed', x === b)); draw(b.dataset.k); }); draw('m'); } },
+
+{ id: 'toolbar', kind: 'ui', w: 460, h: 340, vi: 'Thanh định dạng nổi', en: 'Floating format bar',
+  use: 'Trình soạn văn bản. Chọn chữ thì thanh nổi hiện lên. Mỗi nút bật tắt kiểu chữ, có nhóm ngăn bằng vạch.',
+  css: `.tx-fmt{width:460px;height:340px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:34px;border-radius:22px;background:#ececec;font-family:Inter,system-ui,sans-serif;color:#111}
+.tx-fmt [role=toolbar]{display:flex;align-items:center;gap:4px;padding:8px 10px;border-radius:16px;background:#fff;box-shadow:0 10px 24px rgba(0,0,0,.08),0 0 0 1px rgba(0,0,0,.04)}
+.tx-fmt [role=toolbar] hr{width:1px;height:20px;margin:0 4px;border:0;background:#e2e2e2}
+.tx-fmt [role=toolbar] button{width:36px;height:36px;display:grid;place-items:center;border:0;border-radius:9px;background:none;color:#222;cursor:pointer}
+.tx-fmt [role=toolbar] [aria-pressed=true]{background:#e8ebff;color:#2433f0}
+.tx-fmt .txt{position:relative;padding:4px 10px;border:1.5px solid #4d5ff5;border-radius:4px;background:#dfe3ff;font:400 34px/1.2 Inter;letter-spacing:-.03em}
+.tx-fmt .txt.b{font-weight:700}.tx-fmt .txt.i{font-style:italic}.tx-fmt .txt.u{text-decoration:underline}.tx-fmt .txt.s{text-decoration:line-through}.tx-fmt .txt.u.s{text-decoration:underline line-through}
+.tx-fmt .txt.k{font-family:ui-monospace,Menlo,monospace;font-size:26px}.tx-fmt .txt.l{color:#2433f0;text-decoration-color:#2433f0}
+.tx-fmt .txt.li::before{content:"• "}
+.tx-fmt .txt.n::after{content:"1";position:absolute;right:-12px;top:-12px;width:22px;height:22px;border-radius:50%;background:#f5b400;color:#111;font:600 11px/22px Inter;text-align:center}`,
+  html: `<div class="tx-fmt"><div role="toolbar" aria-label="Định dạng">${[['B', 'b', 'Đậm'], ['I', 'i', 'Nghiêng'], ['U', 'u', 'Gạch dưới'], ['S', 's', 'Gạch ngang'], 0, ['link', 'l', 'Liên kết'], ['code', 'k', 'Mã'], 0, ['list', 'li', 'Danh sách'], ['note', 'n', 'Ghi chú']].map((b) => b ? `<button type="button" aria-pressed="false" aria-label="${b[2]}" data-f="${b[1]}">${I(b[0], 18)}</button>` : '<hr>').join('')}</div><span class="txt">Churn fell to 2.1%</span></div>`,
+  js: (el) => { const t = el.querySelector('.txt'); el.querySelectorAll('[data-f]').forEach((b) => b.onclick = () => b.setAttribute('aria-pressed', t.classList.toggle(b.dataset.f))); } }
+];
+
+const K = { web: ['Website', 'Hero website'], app: ['App', 'Màn app'], ui: ['Thành phần', 'Widget'] };
+const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const pretty = (h) => h.replace(/></g, '>\n<');
+document.getElementById('tx-variants').textContent = BASE + '\n' + V.map((v) => v.css).join('\n');
+document.getElementById('tx').innerHTML = Object.keys(K).map((k) => { const vs = V.filter((v) => v.kind === k);
+  return `<section class="tx-sec" data-kind="${k}"><h2>${K[k][1]}<small>${vs.length}</small></h2><div class="tx-grid tx-grid--${k}">${vs.map((v) => `<article class="tx-card" id="${v.id}">
+  <div class="tx-stage"><div class="tx-box" data-w="${v.w}" data-h="${v.h}"><div class="tx-fit" style="width:${v.w}px;height:${v.h}px">${v.html}</div></div></div>
+  <div class="tx-foot"><h3>${v.vi}<small>${v.en}</small></h3><p>${v.use}</p>
+  <details><summary>Code HTML + CSS${v.js ? ' + JS' : ''}</summary><div class="tx-code"><button type="button" class="aw-btn aw-btn--small" data-copy>Chép</button>
+  <pre><code>${esc(`<style>\n${/tx-(phone|btn|dot)/.test(v.html) ? BASE + '\n' : ''}${v.css}\n</style>\n${pretty(v.html)}${v.js ? `\n<script>\n(${v.js})(document)\n<\/script>` : ''}`)}</code></pre></div></details></div></article>`).join('')}</div></section>`; }).join('');
+V.forEach((v) => v.js && v.js(document.getElementById(v.id)));
+
+// Lọc theo loại.
+const chips = [['all', 'Tất cả', V.length], ...Object.keys(K).map((k) => [k, K[k][0], V.filter((v) => v.kind === k).length])];
+const bar = document.getElementById('tx-chips');
+bar.innerHTML = chips.map(([k, t, n], i) => `<button type="button" data-k="${k}" aria-pressed="${i === 0}">${t}<small>${n}</small></button>`).join('');
+bar.onclick = (e) => { const b = e.target.closest('button'); if (!b) return;
+  bar.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', x === b));
+  document.querySelectorAll('.tx-sec').forEach((s) => s.hidden = b.dataset.k !== 'all' && s.dataset.kind !== b.dataset.k); fit(); };
+
+// Mẫu vẽ ở cỡ thật rồi thu nhỏ cho vừa ô, không cắt.
+const fit = () => document.querySelectorAll('.tx-box').forEach((b) => { const w = +b.dataset.w, h = +b.dataset.h, st = getComputedStyle(b.parentNode), room = b.parentNode.clientWidth - parseFloat(st.paddingLeft) - parseFloat(st.paddingRight);
+  const k = Math.min(1, room / w); b.style.width = w * k + 'px'; b.style.height = h * k + 'px'; b.firstElementChild.style.transform = `scale(${k})`; });
+fit(); addEventListener('resize', fit); document.fonts.ready.then(fit);
+document.addEventListener('click', (e) => { const b = e.target.closest('[data-copy]'); if (!b) return;
+  navigator.clipboard.writeText(b.nextElementSibling.textContent).then(() => { b.textContent = 'Đã chép'; setTimeout(() => b.textContent = 'Chép', 1500); }); });
+</script>
+<script src="/search.js?v=d81f7d099d" defer></script><script src="/stats.js?v=d81f7d099d" defer></script>
+</body>
+</html>
