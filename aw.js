@@ -8,8 +8,15 @@
   d.dataset.theme = saved || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 
   if (self !== top) return;                                    // trang đang làm ảnh xem trước (iframe ở gallery): chỉ nội dung, không vỏ/giỏ
-  const NAV = [['scroll-effects/', 'Scroll effects'], ['components/', 'Components'], ['ui-kits/', 'UI kits'], ['galaxy/', 'Galaxy'], ['ui-libraries/', 'Thư viện UI'], ['motion/', 'Motion'], ['angles/', 'Góc máy'], ['halvo/', 'Nesta'], ['patterns/', 'Patterns'], ['namethatui/', 'Tên UI'], ['skills/', 'Skills'], ['notebook/', 'Sổ tay'], ['signal/', 'Signal'], ['topo/', 'Topo'], ['fonts/', 'Font'], ['stats.html', 'Thống kê']];
-  const links = NAV.map(([p, t]) => `<a href="${R + p}"${location.href.startsWith(R + p) ? ' aria-current="page"' : ''}>${t}</a>`).join('');
+  // Owner (phòng uiux-giatbh): gom tab, đừng tách nhiều → 4 nhóm thả xuống thay 15 link phẳng.
+  const NAV = [
+    ['Thành phần', [['components/', 'Components'], ['patterns/', 'Patterns'], ['galaxy/', 'Galaxy'], ['namethatui/', 'Tên UI']]],
+    ['Hiệu ứng', [['scroll-effects/', 'Scroll effects'], ['motion/', 'Motion'], ['angles/', 'Góc máy']]],
+    ['Dựng lại', [['halvo/', 'Nesta'], ['notebook/', 'Sổ tay'], ['signal/', 'Signal'], ['topo/', 'Topo'], ['fonts/', 'Font']]],
+    ['Tài nguyên', [['ui-libraries/', 'Thư viện UI'], ['ui-kits/', 'UI kits'], ['skills/', 'Skills'], ['stats.html', 'Thống kê']]]];
+  const here = (p) => location.href.startsWith(R + p);
+  const links = NAV.map(([g, items], i) => `<div class="aw-dd"><button type="button" class="aw-dd__btn" aria-expanded="false" aria-controls="aw-dd-${i}"${items.some(([p]) => here(p)) ? ' aria-current="true"' : ''}>${g}</button>
+    <div class="aw-dd__menu" id="aw-dd-${i}" hidden>${items.map(([p, t]) => `<a class="aw-mitem" href="${R + p}"${here(p) ? ' aria-current="page"' : ''}>${t}</a>`).join('')}</div></div>`).join('');
   const run = '<span><b>uiux-asset</b></span><span class="ms">sentiment_satisfied</span><span>Code gốc nguyên văn — xem chạy thật, copy nguyên file</span>';
 
   const head = document.createElement('div');
@@ -20,8 +27,11 @@
     <button type="button" class="aw-btn aw-btn--small aw-btn--outline" id="aw-theme" aria-label="Đổi giao diện sáng/tối"><span class="ms"></span></button>
     <a class="aw-btn aw-btn--small aw-gh" href="https://github.com/Rheinmir/uiux-asset" target="_blank" rel="noopener">GitHub</a></header>`;
   me.after(head);
-  const hn = head.querySelector('.aw-hnav'), fit = () => hn.classList.toggle('is-fit', hn.scrollWidth <= hn.clientWidth);   // vừa hết thì bỏ dải mờ cuối
-  fit(); addEventListener('resize', fit); addEventListener('load', fit);
+  const dds = [...head.querySelectorAll('.aw-dd__btn')];   // mở một nhóm thì đóng nhóm khác; bấm ra ngoài hoặc Esc thì đóng hết
+  const shut = (keep) => dds.forEach((b) => { if (b !== keep) { b.setAttribute('aria-expanded', 'false'); b.nextElementSibling.hidden = true; } });
+  dds.forEach((b) => b.onclick = () => { const open = b.getAttribute('aria-expanded') !== 'true'; shut(b); b.setAttribute('aria-expanded', open); b.nextElementSibling.hidden = !open; });
+  document.addEventListener('click', (e) => { if (!e.target.closest('.aw-dd')) shut(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') shut(); });
   const cs = document.createElement('script'); cs.src = R + 'cart.js' + new URL(me.src).search; document.head.append(cs);   // giỏ mẫu (nút "+ Giỏ" trên mọi thẻ)
 
   const btn = head.querySelector('#aw-theme'), ico = btn.firstChild;
@@ -40,7 +50,7 @@
     const host = me.parentElement, foot = document.createElement('footer');
     foot.className = 'aw-footer';
     foot.innerHTML = `<div class="aw-footer__top"><a class="aw-footer__brand" href="${R}">UIUX<span class="aw-sticker" aria-hidden="true"></span></a>
-      <ul class="aw-footer__menu"><li><b>Bộ sưu tập</b></li>${NAV.slice(0, 5).map(([p, t]) => `<li><a href="${R + p}">${t}</a></li>`).join('')}</ul>
+      <ul class="aw-footer__menu"><li><b>Bộ sưu tập</b></li>${NAV.flatMap(([, it]) => it).filter(([p]) => ['scroll-effects/', 'components/', 'ui-kits/', 'galaxy/', 'ui-libraries/'].includes(p)).map(([p, t]) => `<li><a href="${R + p}">${t}</a></li>`).join('')}</ul>
       <ul class="aw-footer__menu"><li><b>Nguồn</b></li><li><a href="https://freefrontend.com/javascript-scroll-effects/" target="_blank" rel="noopener">freefrontend</a></li><li><a href="https://uiverse.io" target="_blank" rel="noopener">Uiverse.io</a></li><li><a href="https://codepen.io" target="_blank" rel="noopener">CodePen</a></li></ul>
       <ul class="aw-footer__menu"><li><b>Site</b></li><li><a href="${R}stats.html">Thống kê</a></li><li><a href="https://rheinmir.github.io/uiux-asset/ui-kits/awwwards-com/latest/" target="_blank" rel="noopener">Giao diện: kit awwwards-com</a></li><li><a href="https://github.com/Rheinmir/uiux-asset" target="_blank" rel="noopener">GitHub</a></li></ul>
       <p class="aw-footer__note">Code gốc nguyên văn, giữ dòng ghi công của tác giả khi copy. Giấy phép theo từng nguồn (đa phần MIT).</p></div>

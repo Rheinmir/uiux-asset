@@ -6,7 +6,7 @@
 <title>Patterns — uiux-asset</title>
 <meta name="description" content="Sổ pattern giao diện dựng lại từ ảnh chụp: tên, khi dùng, code chạy thật. Dữ liệu cho agent: patterns/patterns.json.">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
-<link rel="stylesheet" href="../aw.css?v=221b4f86bd">
+<link rel="stylesheet" href="../aw.css?v=d81f7d099d">
 <style>
 .pt-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
 .pt-list { display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); }
@@ -19,7 +19,7 @@
 </style>
 </head>
 <body>
-<main class="aw-wrap"><script src="../aw.js?v=221b4f86bd"></script>
+<main class="aw-wrap"><script src="../aw.js?v=d81f7d099d"></script>
 <div class="pt-page">
   <div class="aw-sotd" style="padding-top:16px">
     <p class="aw-sotd__sub"><span>Sổ pattern</span><span class="aw-tag aw-tag--medium" id="pt-n">…</span></p>
@@ -37,6 +37,6 @@ fetch('patterns.json').then((r) => r.json()).then((all) => {
     <ul>${p.variants.map((v) => `<li class="aw-tag aw-tag--small">${v.vi}</li>`).join('')}</ul></a>`).join('');
 });
 </script>
-<script src="/search.js?v=221b4f86bd" defer></script><script src="/stats.js?v=221b4f86bd" defer></script>
+<script src="/search.js?v=d81f7d099d" defer></script><script src="/stats.js?v=d81f7d099d" defer></script>
 </body>
 </html>
