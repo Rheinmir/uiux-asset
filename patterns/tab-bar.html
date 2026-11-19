@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Thanh tab nổi — 7 kiểu — uiux-asset</title>
+<meta name="description" content="Pattern thanh tab nổi trên di động: 7 kiểu dựng lại từ ảnh chụp, bấm được, xoay dọc/ngang, kèm code HTML/CSS chép thẳng.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=221b4f86bd">
+<style>
+.tb-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+.tb-tools { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
+.tb-tools > span { font: 500 14px/1 var(--aw-font); color: var(--aw-ink2); }
+.tb-seg { display: inline-flex; gap: 6px; }
+.tb-seg .aw-btn { min-height: 44px; min-width: 88px; }
+.tb-seg .aw-btn[aria-pressed=false] { --b-bg: transparent; --b-ink: var(--aw-color-primary); border: 1px solid var(--aw-border-gray); }
+.tb-grid { display: grid; gap: 20px; grid-template-columns: 1fr; }
+@media (min-width: 700px) { .tb-grid { grid-template-columns: repeat(2, 1fr); } .tb-card:last-child { grid-column: span 2; } }
+@media (min-width: 1200px) { .tb-grid { grid-template-columns: repeat(4, 1fr); } }
+.tb-card { display: flex; flex-direction: column; border: 1px solid var(--aw-border-gray); border-radius: 16px; overflow: hidden; background: var(--aw-bg-white); }
+.tb-stage { height: 460px; display: grid; grid-template: minmax(0, 1fr) / minmax(0, 1fr); place-items: center; overflow: hidden; transition: height .45s cubic-bezier(.2,.7,.2,1); }
+[data-dir=h] .tb-stage { height: 220px; }
+.tb-rot { scale: var(--k, 1); transition: transform .45s cubic-bezier(.2,.7,.2,1), scale .45s; }
+[data-dir=v] .tb-rot { transform: rotate(-90deg); }
+@media (prefers-reduced-motion: reduce) { .tb-stage, .tb-rot { transition: none; } }
+.tb-foot { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; }
+.tb-foot h3 { margin: 0; font: 600 18px/1.25 var(--aw-font); }
+.tb-foot h3 small { font-weight: 400; font-size: 14px; color: var(--aw-ink2); margin-left: 6px; }
+.tb-foot p { margin: 0; font: 400 14px/1.5 var(--aw-font); color: var(--aw-ink2); }
+.tb-foot details { margin-top: 4px; }
+.tb-foot summary { cursor: pointer; font: 500 14px/44px var(--aw-font); min-height: 44px; }
+.tb-code { position: relative; }
+.tb-code pre { margin: 0; max-height: 320px; overflow: auto; padding: 14px; border-radius: 10px; background: var(--aw-bg-primary); font: 12px/1.5 ui-monospace, Menlo, monospace; white-space: pre; }
+.tb-code .aw-btn { position: absolute; top: 8px; right: 8px; min-height: 32px; }
+.tb-src { align-self: flex-start; }
+
+/* nền sân khấu (chỉ để xem, không thuộc code thanh tab) */
+.bg-grid { background: linear-gradient(rgba(0,0,0,.05) 1px, transparent 1px) 0 0/24px 24px, linear-gradient(90deg, rgba(0,0,0,.05) 1px, transparent 1px) 0 0/24px 24px, #e6e9ee; }
+.bg-dots { background: radial-gradient(rgba(0,0,0,.13) 1px, transparent 1.5px) 0 0/18px 18px, #ececee; }
+.bg-sky { background: radial-gradient(rgba(42,120,159,.25) 1.2px, transparent 2px) 0 0/28px 28px, #d4eaf4; }
+.bg-ring { background: repeating-radial-gradient(circle at 50% 50%, transparent 0 14px, rgba(90,140,200,.10) 15px 16px), #eef5fc; }
+.bg-wave { background: repeating-linear-gradient(170deg, transparent 0 16px, rgba(255,255,255,.12) 17px 18px), #ab9ef2; }
+.bg-iris { background: repeating-radial-gradient(circle at 50% 50%, transparent 0 22px, rgba(255,255,255,.07) 23px 25px), #5a4ddf; }
+.bg-volt { background: repeating-radial-gradient(circle at 50% 50%, transparent 0 22px, rgba(255,255,255,.08) 23px 25px), #2e22ef; }
+</style>
+<style id="tb-variants"></style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=221b4f86bd"></script>
+<div class="tb-page" id="tb" data-dir="v">
+  <div class="aw-sotd" style="padding-top:16px">
+    <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">7 kiểu</span></p>
+    <h1 class="aw-h1" style="--aw-h1:clamp(40px,7vw,96px)">Thanh tab nổi</h1>
+    <p class="aw-lead">Floating tab bar. Bấm tab để đổi. Xoay dọc như ảnh gốc, hoặc ngang như trong app.</p>
+  </div>
+  <div class="tb-tools">
+    <span id="dir-l">Hướng</span>
+    <div class="tb-seg" role="group" aria-labelledby="dir-l">
+      <button type="button" class="aw-btn aw-btn--small" data-dir="v" aria-pressed="true">Dọc</button>
+      <button type="button" class="aw-btn aw-btn--small" data-dir="h" aria-pressed="false">Ngang</button>
+    </div>
+  </div>
+  <div class="tb-grid" id="tb-grid"></div>
+</div>
+</main>
+<script>
+// Icon nét tự vẽ (24×24). Không dùng logo / linh vật của app gốc.
+const P = {
+  plus: '<path d="M12 5v14M5 12h14"/>',
+  find: '<circle cx="10" cy="14" r="6"/><path d="M14.5 9.5 19.5 4.5"/>',
+  layers: '<path d="M6 4h12l-2.5 8L18 20H6l2.5-8z"/><path d="M8.5 12h7"/>',
+  people: '<circle cx="7.5" cy="7" r="3"/><circle cx="16.5" cy="7" r="3"/><ellipse cx="7.5" cy="17" rx="3" ry="4"/><ellipse cx="16.5" cy="17" rx="3" ry="4"/>',
+  toggle: '<rect x="2" y="7" width="20" height="10" rx="5" fill="currentColor" stroke="none" opacity=".5"/><circle cx="16" cy="12" r="3.5" fill="#fff" stroke="none"/>',
+  face: '<circle cx="12" cy="12" r="10" fill="currentColor" stroke="none"/><circle cx="8.5" cy="11" r="2.4" fill="#000" stroke="none"/><circle cx="15.5" cy="11" r="2.4" fill="#000" stroke="none"/>',
+  panel: '<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M16 8v5"/><circle cx="16" cy="16.2" r=".6" fill="currentColor"/>',
+  add: '<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>',
+  chat: '<path d="M12 3a9 9 0 1 0 4.6 16.7L21 21l-1.3-4.4A9 9 0 0 0 12 3z"/>',
+  tag: '<path d="M3 9.5 7.5 5H21v14H7.5L3 14.5z" fill="currentColor" stroke="none"/>',
+  spark: '<path d="M13 3l2.2 6.8L22 12l-6.8 2.2L13 21l-2.2-6.8L4 12l6.8-2.2z" fill="currentColor" stroke="none"/><path d="M5 3v4M3 5h4"/>',
+  drop: '<path d="M4 13c0-5 5-8 14-9-1 9-4 15-9 15a5 5 0 0 1-5-6z" fill="currentColor" stroke="none"/>',
+  bolt: '<path d="M13 2 4 14h7l-1 8 9-12h-7z" fill="currentColor" stroke="none"/>',
+  user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+  branch: '<path d="M12 21V9M12 14 6.5 8.5M12 11l5.5-6"/>',
+  moon: '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
+  wind: '<path d="M3 8h10a3 3 0 1 0-3-3M3 16h14a3 3 0 1 1-3 3M3 12h17"/>',
+  sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>'
+};
+const I = (n) => `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n]}</svg>`;
+const T = (on, label, inner) => `<button type="button" role="tab" aria-selected="${on}" aria-label="${label}">${inner}</button>`;
+
+// Mỗi kiểu: tên Việt + Anh, khi dùng, nơi gặp, nền sân khấu, CSS + HTML (đúng code đang chạy trên trang).
+const V = [
+{ id: 'split', vi: 'Nút tạo tách rời', en: 'Split action', bg: 'bg-grid', seen: 'corner',
+  use: 'App có một hành động chính (tạo mới). Nút tạo đứng riêng, tab chỉ để đi.',
+  css: `.tb-split{display:flex;align-items:center;gap:10px}
+.tb-split [role=tablist]{display:flex;gap:4px;padding:6px 10px;background:#fff;border-radius:999px;box-shadow:0 10px 28px rgba(0,0,0,.12),inset 0 -2px 4px rgba(0,0,0,.05)}
+.tb-split [role=tab],.tb-split .fab{display:grid;place-items:center;border:0;cursor:pointer;border-radius:50%}
+.tb-split [role=tab]{width:44px;height:44px;background:none;color:#a3a3a3}
+.tb-split [aria-selected=true]{color:#111}
+.tb-split .fab{width:58px;height:58px;background:#fff;color:#8a8a8a;box-shadow:0 10px 28px rgba(0,0,0,.12)}`,
+  html: `<nav class="tb-split"><div role="tablist">${T(true, 'Bạn bè', I('people'))}${T(false, 'Bộ sưu tập', I('layers'))}${T(false, 'Tìm', I('find'))}${T(false, 'Chế độ', I('toggle'))}</div><button type="button" class="fab" aria-label="Tạo mới">${I('plus')}</button></nav>` },
+{ id: 'ink', vi: 'Thanh đen chỉ icon', en: 'Ink icon bar', bg: 'bg-dots', seen: 'Character AI',
+  use: 'Nền sáng, ít tab, icon ai cũng hiểu. Tương phản mạnh nên rất dễ thấy.',
+  css: `.tb-ink [role=tablist]{display:flex;gap:6px;padding:8px;background:#0b0b0b;border-radius:22px}
+.tb-ink [role=tab]{width:52px;height:52px;display:grid;place-items:center;border:0;border-radius:14px;background:none;color:#fff;opacity:.55;cursor:pointer}
+.tb-ink [role=tab] svg{width:28px;height:28px}
+.tb-ink [aria-selected=true]{opacity:1}`,
+  html: `<nav class="tb-ink"><div role="tablist">${T(true, 'Thẻ', I('tag'))}${T(false, 'Trò chuyện', I('chat'))}${T(false, 'Tạo mới', I('add'))}${T(false, 'Thông báo', I('panel'))}${T(false, 'Hồ sơ', I('face'))}</div></nav>` },
+{ id: 'sticker', vi: 'Nhãn dán màu', en: 'Sticker tabs', bg: 'bg-sky', seen: 'Finch',
+  use: 'App vui, trẻ em, game hoá. Icon là hình dán nhiều màu, chữ trắng đậm.',
+  css: `.tb-sticker [role=tablist]{display:flex;gap:2px;padding:6px;background:#2a789f;border-radius:14px}
+.tb-sticker [role=tab]{width:54px;height:66px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:0;border-radius:12px;background:none;color:#fff;font:700 10px/1 system-ui,sans-serif;cursor:pointer}
+.tb-sticker [role=tab] b{font-size:26px;line-height:1;filter:drop-shadow(0 0 1.5px #fff) drop-shadow(0 1px 1px rgba(0,0,0,.25))}
+.tb-sticker [aria-selected=true]{background:rgba(255,255,255,.28)}`,
+  html: `<nav class="tb-sticker"><div role="tablist">${[['🏠', 'Nhà'], ['📜', 'Việc'], ['🏪', 'Chợ'], ['🌵', 'Bạn'], ['🎒', 'Túi'], ['☀️', 'Nắng']].map(([e, t], i) => T(i === 0, t, `<b aria-hidden="true">${e}</b>${t}`)).join('')}</div></nav>` },
+{ id: 'nested', vi: 'Viên lồng viên', en: 'Nested pill', bg: 'bg-ring', seen: 'Pool',
+  use: 'Chỉ 2 tab chính, cộng một nút tìm nổi riêng. Tab đang chọn là viên kính sáng hơn.',
+  css: `.tb-nested{display:flex;align-items:center;gap:16px}
+.tb-nested [role=tablist]{display:flex;padding:6px;border-radius:999px;background:linear-gradient(#a8d1fb,#7db6f4);box-shadow:0 12px 28px rgba(70,130,210,.3)}
+.tb-nested [role=tab]{height:54px;padding:0 22px;border:1.5px solid transparent;border-radius:999px;background:none;color:#fff;font:600 17px/1 system-ui,sans-serif;cursor:pointer}
+.tb-nested [aria-selected=true]{background:linear-gradient(#d3e8ff,#a3ccf8);border-color:rgba(255,255,255,.85);box-shadow:0 4px 12px rgba(70,130,210,.25)}
+.tb-nested .fab{width:62px;height:62px;display:grid;place-items:center;border:0;border-radius:50%;background:linear-gradient(#a8d1fb,#7db6f4);color:#fff;box-shadow:0 12px 28px rgba(70,130,210,.35);cursor:pointer}`,
+  html: `<nav class="tb-nested"><div role="tablist">${T(true, 'Nhà', 'Nhà')}${T(false, 'Hồ bơi', 'Hồ bơi')}</div><button type="button" class="fab" aria-label="Tìm">${I('find')}</button></nav>` },
+{ id: 'textpill', vi: 'Viên chữ trên nền đen', en: 'Text pill tabs', bg: 'bg-wave', seen: 'Phantom',
+  use: 'Tab là chữ, không icon. Hợp app tài chính, tên tab ngắn. Ảnh đại diện ở đầu thanh.',
+  css: `.tb-textpill{display:flex;align-items:center;gap:5px;padding:5px;background:#0c0c0c;border-radius:999px}
+.tb-textpill .me{width:44px;height:44px;border:0;border-radius:50%;background:#ff6a3d;color:#fff;display:grid;place-items:center;cursor:pointer}
+.tb-textpill [role=tablist]{display:flex;gap:5px}
+.tb-textpill [role=tab]{height:44px;padding:0 11px;border:0;border-radius:999px;background:#262626;color:#a0a0a0;font:600 13px/1 system-ui,sans-serif;white-space:nowrap;cursor:pointer}
+.tb-textpill [aria-selected=true]{background:#b4a7f8;color:#111}`,
+  html: `<nav class="tb-textpill"><button type="button" class="me" aria-label="Hồ sơ">${I('user')}</button><div role="tablist">${T(true, 'Nhà', 'Nhà')}${T(false, 'Giao dịch', 'Giao dịch')}${T(false, 'Dự đoán', 'Dự đoán')}${T(false, 'Khám phá', 'Khám phá')}</div></nav>` },
+{ id: 'edge', vi: 'Vạch chỉ báo cạnh', en: 'Edge indicator', bg: 'bg-iris', seen: 'Lungy',
+  use: 'App sức khoẻ, thiền. Icon nét mảnh. Tab chọn đổi màu đậm và có vạch ở mép.',
+  css: `.tb-edge [role=tablist]{display:flex;gap:4px;padding:8px;background:#fff;border-radius:20px;box-shadow:0 16px 40px rgba(30,20,120,.35)}
+.tb-edge [role=tab]{position:relative;width:62px;white-space:nowrap;height:72px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border:0;background:none;color:#c4bcf4;font:600 11px/1 system-ui,sans-serif;cursor:pointer}
+.tb-edge [role=tab] svg{width:28px;height:28px}
+.tb-edge [aria-selected=true]{color:#4a3fd8}
+.tb-edge [aria-selected=true]::before{content:"";position:absolute;top:-8px;left:16px;right:16px;height:4px;border-radius:0 0 3px 3px;background:#4a3fd8}`,
+  html: `<nav class="tb-edge"><div role="tablist">${[['sun', 'Hôm nay'], ['wind', 'Thở'], ['moon', 'Ngủ'], ['branch', 'Tạo'], ['user', 'Bạn']].map(([n, t], i) => T(i === 0, t, I(n) + t)).join('')}</div></nav>` },
+{ id: 'glass', vi: 'Viên kính tím', en: 'Glass pill', bg: 'bg-volt', seen: 'GO Club',
+  use: 'Nền màu mạnh. Tab chọn nở ra, hiện chữ. Tab khác chỉ icon, tiết kiệm chỗ.',
+  css: `.tb-glass [role=tablist]{display:flex;align-items:center;gap:6px;padding:8px;border-radius:999px;background:rgba(206,196,255,.88);border:1.5px solid rgba(255,255,255,.7);backdrop-filter:blur(12px);box-shadow:0 16px 40px rgba(10,0,120,.35)}
+.tb-glass [role=tab]{height:58px;min-width:58px;padding:0 16px;display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid transparent;border-radius:999px;background:none;color:#111;font:600 16px/1 system-ui,sans-serif;cursor:pointer;transition:padding .3s}
+.tb-glass [role=tab] svg{width:28px;height:28px}
+.tb-glass [role=tab] span{display:none}
+.tb-glass [aria-selected=true]{padding:0 22px;background:rgba(255,255,255,.32);border-color:rgba(255,255,255,.65)}
+.tb-glass [aria-selected=true] span{display:inline}`,
+  html: `<nav class="tb-glass"><div role="tablist">${[['bolt', 'Tập'], ['drop', 'Dinh dưỡng'], ['spark', 'Kế hoạch']].map(([n, t], i) => T(i === 2, t, I(n) + `<span>${t}</span>`)).join('')}</div></nav>` }
+];
+
+// JS dùng chung: bấm tab → đổi aria-selected trong cùng tablist.
+const JS = `document.addEventListener('click', (e) => {
+  const t = e.target.closest('[role=tab]'); if (!t) return;
+  t.closest('[role=tablist]').querySelectorAll('[role=tab]').forEach((b) => b.setAttribute('aria-selected', b === t));
+});`;
+new Function(JS)();
+
+const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const pretty = (h) => h.replace(/></g, '>\n<');
+document.getElementById('tb-variants').textContent = V.map((v) => v.css).join('\n');
+document.getElementById('tb-grid').innerHTML = V.map((v) => `<article class="tb-card" id="${v.id}">
+  <div class="tb-stage ${v.bg}"><div class="tb-rot">${v.html}</div></div>
+  <div class="tb-foot"><h3>${v.vi}<small>${v.en}</small></h3><p>${v.use}</p>
+  <span class="aw-tag aw-tag--small tb-src">Gặp ở: ${v.seen}</span>
+  <details><summary>Code HTML + CSS</summary><div class="tb-code"><button type="button" class="aw-btn aw-btn--small" data-copy="${v.id}">Chép</button>
+  <pre><code>${esc(`<style>\n${v.css}\n</style>\n${pretty(v.html)}\n<script>\n${JS}\n<\/script>`)}</code></pre></div></details></div></article>`).join('');
+
+const root = document.getElementById('tb');
+document.querySelectorAll('.tb-seg button').forEach((b) => b.onclick = () => {
+  root.dataset.dir = b.dataset.dir;
+  document.querySelectorAll('.tb-seg button').forEach((x) => x.setAttribute('aria-pressed', x === b)); fit();
+});
+// Thanh dài hơn chỗ (điện thoại, lưới 4 cột) thì thu nhỏ cho vừa, không cắt.
+const fit = () => document.querySelectorAll('.tb-stage').forEach((s) => {
+  const room = (root.dataset.dir === 'v' ? 460 : s.clientWidth) - 32;
+  s.firstElementChild.style.setProperty('--k', Math.min(1, room / s.querySelector('nav').offsetWidth).toFixed(3));
+});
+fit(); addEventListener('resize', fit); document.fonts.ready.then(fit);
+document.addEventListener('click', (e) => {
+  const b = e.target.closest('[data-copy]'); if (!b) return;
+  navigator.clipboard.writeText(b.nextElementSibling.textContent).then(() => { b.textContent = 'Đã chép'; setTimeout(() => b.textContent = 'Chép', 1500); });
+});
+</script>
+<script src="/search.js?v=221b4f86bd" defer></script><script src="/stats.js?v=221b4f86bd" defer></script>
+</body>
+</html>
