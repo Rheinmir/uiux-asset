@@ -173,22 +173,29 @@ html:has(#ovs-base) body:not(:has(> .kpis)) > :not(.aw-site-head, .aw-footer) { 
 html:has(#ovs-base) body:has(> .kpis) { height: auto; grid-template-columns: minmax(0, 1fr); grid-template-rows: none; grid-auto-rows: auto; }   /* stats: thêm header/footer nên bỏ khung vừa-màn-hình, để trang cuộn */
 html:has(#ovs-base) :is(h1, h2) { text-transform: uppercase; }
 
-/* Owner «gom tab, đừng tách nhiều» (phòng uiux-giatbh): 4 nhóm thả xuống thay 15 link phẳng — không cần cuộn ngang nữa */
-.aw-hnav { gap: 6px; }
-.aw-dd { position: relative; }
-.aw-dd__btn { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 12px; border: 0; border-radius: var(--aw-rounded-normal); background: none; color: inherit; font: 500 14px/1 var(--aw-font); white-space: nowrap; cursor: pointer; }
-.aw-dd__btn::after { content: ""; width: 6px; height: 6px; border: solid currentColor; border-width: 0 1.5px 1.5px 0; transform: translateY(-2px) rotate(45deg); transition: transform .2s; }
-.aw-dd__btn[aria-expanded="true"]::after { transform: translateY(1px) rotate(-135deg); }
-.aw-dd__btn:hover, .aw-dd__btn[aria-expanded="true"] { background: var(--aw-nf-bg-1); }
-.aw-dd__btn[aria-current] { font-weight: 700; }
-.aw-dd__menu { position: absolute; top: calc(100% + 8px); left: 0; z-index: 60; min-width: 200px; display: flex; flex-direction: column; gap: 2px; padding: 6px; background: var(--aw-bg-white); border: 1px solid var(--aw-border-gray); border-radius: 12px; box-shadow: 0 12px 32px rgba(0,0,0,.14); }
-.aw-dd__menu[hidden] { display: none; }
-.aw-dd__menu .aw-mitem { height: 44px; padding-inline: 12px; }
-.aw-dd__menu .aw-mitem:hover, .aw-dd__menu .aw-mitem[aria-current="page"] { background: var(--aw-nf-bg-1); }
-.aw-dd__menu .aw-mitem[aria-current="page"] { font-weight: 700; }
-.aw-hnav .aw-mitem::after { content: none; }
-.aw-dd:last-child .aw-dd__menu { left: auto; right: 0; }
-@media (max-width: 700px) { .aw-hnav { justify-content: space-between; gap: 2px; } .aw-dd__btn { padding: 0 4px; gap: 4px; } }   /* 4 nhóm vừa một hàng ở 390 */
+/* Owner (phòng uiux-giatbh, 20/11): một bộ nhóm chung — menu 4 link phẳng, trang chủ 4 khu */
+.aw-hnav { gap: 4px; }
+.aw-hnav > a { display: inline-flex; align-items: center; min-height: 40px; padding: 0 12px; border-radius: var(--aw-rounded-normal); white-space: nowrap; }
+.aw-hnav > a:hover, .aw-hnav > a[aria-current="page"] { background: var(--aw-nf-bg-1); }
+.aw-hnav > a::after { content: none; }
+@media (max-width: 700px) { .aw-hnav { justify-content: space-between; gap: 2px; } .aw-hnav > a { min-height: 44px; padding: 0 6px; } }
+.aw-kpis--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 899px) { .aw-kpis--4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .aw-kpis--4 a:nth-child(odd) { border-left: 0; } .aw-kpis--4 a:nth-child(even), .aw-kpis--4 a:last-child { border-left: 1px solid var(--aw-border-gray); grid-column: auto; }
+  .aw-kpis--4 a:nth-child(n+3) { border-top: 1px solid var(--aw-border-gray); } .aw-kpis--4 a:nth-child(-n+2) { border-top: 0; } }
+.aw-cat { scroll-margin-top: 120px; }
+.aw-cat .aw-sec-h span { font: 400 14px/20px var(--aw-font); color: var(--aw-ink2); }
+.aw-cat .aw-sec-h b { font-variant-numeric: tabular-nums; color: var(--aw-color-primary); font-weight: 600; margin-right: 6px; }
+.aw-cat__grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px 20px; margin-top: 20px; }
+.aw-cat__grid > * { min-width: 0; max-width: none; }
+.aw-cat__grid:has(> :nth-child(5):last-child) > :first-child { grid-column: span 2; grid-row: span 2; }
+.aw-cat__grid:has(> :nth-child(5):last-child) > :first-child .aw-fig { flex: 1; }
+.aw-cat__grid:has(> :nth-child(5):last-child) > :first-child :is(.aw-shot, img) { height: 100%; aspect-ratio: auto; object-fit: cover; }
+.aw-cat__grid .aw-card-slide { display: flex; flex-direction: column; }
+.aw-cat__grid .aw-fig img { width: 100%; aspect-ratio: 16 / 12; object-fit: cover; display: block; }
+.aw-card-slide__foot p { margin: 0; flex-basis: 100%; font: 400 13px/18px var(--aw-font); color: var(--aw-ink2); }
+@media (max-width: 899px) { .aw-cat__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .aw-cat__grid { gap: 20px 12px; } .aw-cat__grid:has(> :nth-child(5):last-child) > :first-child { grid-row: auto; } .aw-cat__grid:has(> :nth-child(5):last-child) > :first-child :is(.aw-shot, img) { height: auto; aspect-ratio: 16 / 10; } .aw-cat__grid .aw-card-slide__title { font-size: 17px; } }   /* phone: 2 cột, thẻ lớn chiếm cả hàng — nửa chiều cuộn so với 1 cột */
 /* Stageshow «Boxed»: kit previews showed a whole page at 25%; show the top of the kit at 40% so titles and swatches read */
 .aw-card-site .aw-shot iframe { width: 250%; height: 250%; transform: scale(.4); }
 """

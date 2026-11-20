@@ -16,6 +16,6 @@ for (const f of d.families) {
 assert.strictEqual(d.families.filter((f) => f.real).map((f) => f.slug).join(), 'poppins', 'chỉ Poppins là font thật');
 assert(h.includes('gần giống') && h.includes('Chưa kiểm được') || h.includes('Chưa kiểm được'), 'trang phải nói rõ gần giống / chưa kiểm được');
 for (const f of fs.readdirSync(R('fonts'))) assert(!/\.(ttf|otf|woff2?)$/i.test(f), 'không đưa tệp font vào repo: ' + f);
-assert(rd('aw.js').includes("['fonts/', 'Font']"), 'aw.js NAV thiếu Font');
+assert(rd('aw.js').includes("['fonts/', 'Font',"), 'aw.js NAV thiếu Font');
 assert(rd('tools/stamp-assets.py').includes('fonts/index.html'), 'stamp-assets thiếu fonts');
 console.log('test-fonts: ok · ' + d.families.length + ' family · ' + d.families.reduce((a, f) => a + f.palette.length, 0) + ' màu');

@@ -10,5 +10,5 @@ assert(html.includes('Unsplash') && html.includes('Clay Banks') && html.includes
 const j = JSON.parse(fs.readFileSync(D('diff.json'), 'utf8'));
 assert.strictEqual(j.views.length, 3);
 for (const v of j.views) assert(v.mad > 0 && v.mad < 20 && v.px >= 0 && v.px < 40 && v.px_ui >= 0 && v.px_ui <= v.px, 'số đo diff bất thường: ' + JSON.stringify(v));
-assert(/\['halvo\/', 'Nesta'\]/.test(fs.readFileSync(path.join(__dirname, '..', 'aw.js'), 'utf8')), 'aw.js NAV thiếu halvo/');
+assert(/\['halvo\/', 'Nesta',/.test(fs.readFileSync(path.join(__dirname, '..', 'aw.js'), 'utf8')), 'aw.js NAV thiếu halvo/');
 console.log('test-halvo: ok');

@@ -15,7 +15,7 @@ assert(html.includes('namethatui.com') && html.includes('không công bố giấ
 assert(!/<img\b/i.test(html) && !/url\(\s*['"]?https?:/i.test(html), 'không hotlink ảnh');
 for (const r of N.macos) assert(new RegExp(`['"]?${r[0]}['"]?: ['"]`).test(html), 'thẻ macOS thiếu demo: ' + r[0]);
 for (const t of ['dict', 'styles', 'vs', 'spec']) assert(html.includes(`['${t}',`), 'thiếu tab ' + t);
-assert(/\['namethatui\/', 'Tên UI'\]/.test(fs.readFileSync(path.join(__dirname, '..', 'aw.js'), 'utf8')), 'aw.js NAV thiếu namethatui/');
+assert(/\['namethatui\/', 'Tên UI',/.test(fs.readFileSync(path.join(__dirname, '..', 'aw.js'), 'utf8')), 'aw.js NAV thiếu namethatui/');
 assert(fs.readFileSync(path.join(__dirname, 'stamp-assets.py'), 'utf8').includes('namethatui/index.html'), 'stamp-assets thiếu namethatui');
 // demo thẻ: đủ 91 (vẽ tay + sinh từ phép đo), không có url()/liên kết ngoài
 global.window = global.window || {}; require(D('demos.js')); require(D('demos.gen.js'));

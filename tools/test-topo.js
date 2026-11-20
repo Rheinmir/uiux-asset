@@ -13,7 +13,7 @@ const ids = new Set([...h.matchAll(/class="n [^"]*" id="([a-z0-9]+)"/g)].map((x)
 assert(ids.size === 20, 'cần 20 nút, có ' + ids.size);
 for (const [, a, b] of h.matchAll(/\['([a-z0-9]+)', '([a-z0-9]+)', '[^']*'\]/g)) assert(ids.has(a) && ids.has(b), `cạnh ${a}→${b} trỏ nút không có`);
 assert(rd('topo/index.html').includes('match.json') && rd('topo/index.html').includes('mock.html'), 'index.html thiếu match.json/mock.html');
-assert(rd('aw.js').includes("['topo/', 'Topo']"), 'aw.js NAV thiếu nút Topo');
+assert(rd('aw.js').includes("['topo/', 'Topo',"), 'aw.js NAV thiếu nút Topo');
 assert(rd('tools/stamp-assets.py').includes('topo/index.html'), 'stamp-assets thiếu topo');
 for (const f of ['topo/index.html', 'topo/mock.html']) assert(fs.statSync(R(f)).size < 200 * 1024, f + ' quá 200 KB');
 console.log(`test-topo: ok · khớp ${m.match}% · che chữ ${m.match_masked}%`);

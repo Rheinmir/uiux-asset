@@ -1,42 +1,4 @@
-<!doctype html>
-<html lang="vi">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Patterns — uiux-asset</title>
-<meta name="description" content="Sổ pattern giao diện dựng lại từ ảnh chụp: tên, khi dùng, code chạy thật. Dữ liệu cho agent: patterns/patterns.json.">
-<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
-<link rel="stylesheet" href="../aw.css?v=d81f7d099d">
-<style>
-.pt-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
-.pt-list { display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); }
-.pt-card { display: flex; flex-direction: column; gap: 8px; padding: 20px; border: 1px solid var(--aw-border-gray); border-radius: 16px; background: var(--aw-bg-white); color: inherit; text-decoration: none; }
-.pt-card:hover { border-color: var(--aw-color-primary); }
-.pt-card h3 { margin: 0; font: 600 20px/1.25 var(--aw-font); }
-.pt-card h3 small { font-weight: 400; font-size: 14px; color: var(--aw-ink2); margin-left: 6px; }
-.pt-card p { margin: 0; font: 400 14px/1.5 var(--aw-font); color: var(--aw-ink2); }
-.pt-card ul { margin: 4px 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 6px; }
-</style>
-</head>
-<body>
-<main class="aw-wrap"><script src="../aw.js?v=d81f7d099d"></script>
-<div class="pt-page">
-  <div class="aw-sotd" style="padding-top:16px">
-    <p class="aw-sotd__sub"><span>Sổ pattern</span><span class="aw-tag aw-tag--medium" id="pt-n">…</span></p>
-    <h1 class="aw-h1" style="--aw-h1:clamp(40px,7vw,96px)">Patterns</h1>
-    <p class="aw-lead">Dựng lại từ ảnh chụp. Mỗi pattern có tên, khi dùng, code chạy thật.</p>
-  </div>
-  <div class="pt-list" id="pt"></div>
-</div>
-</main>
-<script>
-fetch('patterns.json').then((r) => r.json()).then((all) => {
-  document.getElementById('pt-n').textContent = all.length + ' pattern';
-  document.getElementById('pt').innerHTML = all.map((p) => `<a class="pt-card" href="${p.page}">
-    <h3>${p.vi}<small>${p.en}</small></h3><p>${p.use}</p>
-    <ul>${p.variants.map((v) => `<li class="aw-tag aw-tag--small">${v.vi}</li>`).join('')}</ul></a>`).join('');
-});
-</script>
-<script src="/search.js?v=d81f7d099d" defer></script><script src="/stats.js?v=d81f7d099d" defer></script>
-</body>
-</html>
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><title>Patterns — uiux-asset</title>
+<!-- Owner (phòng uiux-giatbh, 20/11): mọi bộ sưu tập về một bộ nhóm chung ở trang chủ; trang này chỉ chuyển hướng -->
+<meta http-equiv="refresh" content="0;url=../#thanh-phan"><link rel="canonical" href="../#thanh-phan"></head>
+<body><a href="../#thanh-phan">Patterns đã gộp vào trang chủ</a></body></html>

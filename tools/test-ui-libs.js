@@ -6,9 +6,7 @@ const libs = JSON.parse(R('ui-libraries/libs.json')).libs;
 const have = new Set(libs.map((x) => x.repo.toLowerCase()));
 const X20 = 'remotion-dev/remotion remotion-dev/skills juliangarnier/anime motiondivision/motion ManimCommunity/manim airbnb/lottie-web ahujasid/mcp-for-blender mrdoob/three.js gkjohnson/three-gpu-pathtracer jrouwe/JoltPhysics pmndrs/postprocessing Alchemist0823/three.quarks cocopon/tweakpane Comfy-Org/ComfyUI QwenAudio/CosyVoice librosa/librosa m-bain/whisperX obsproject/obs-studio mifi/lossless-cut FFmpeg/FFmpeg'.split(' ');
 for (const r of X20) { assert(have.has(r.toLowerCase()), 'thiếu ' + r); assert.strictEqual(libs.find((x) => x.repo.toLowerCase() === r.toLowerCase()).kind, 'motion', r + ' phải là motion'); }
-const home = R('index.html');
-assert(home.includes(`<b>${libs.length}</b><span>thư viện UI`), 'trang chủ: số thư viện UI khác ' + libs.length);
-assert(home.includes(`aw-tag--bold">${libs.length}<`), 'trang chủ: thẻ số khác ' + libs.length);
+assert(new RegExp(`\\['ui-libraries/', 'Thư viện UI', '[^']*', ${libs.length}\\]`).test(R('aw.js')), 'aw.js CAT: số thư viện UI khác ' + libs.length);   // trang chủ vẽ số từ CAT
 console.log('test-ui-libs: ok', libs.length, 'mục');
 // 28 sample motion: mỗi repo X20 + 8 repo «Hiệu ứng» cũ có trang motion/<slug>.html, đứng trong gallery motion/index.html, và thẻ ở ui-libraries trỏ tới đúng trang đó.
 const OLD8 = 'DavidHDev/react-bits magicuidesign/magicui imskyleen/animate-ui ibelick/motion-primitives nolly-studio/cult-ui unovue/inspira-ui shader-effects-inc/shaders uiverse-io/galaxy'.split(' ');
