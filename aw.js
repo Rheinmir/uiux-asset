@@ -14,7 +14,7 @@
   const CAT = [
     ['thanh-phan', 'Thành phần', 'Nút, ô nhập, thẻ, tab, widget', [
       ['galaxy/', 'Galaxy', 'Element Uiverse: nút, ô nhập, thẻ, loader', 3802, '@galaxy'],
-      ['namethatui/', 'Tên UI', 'Từ điển thành phần, có code mẫu', 91],
+      ['namethatui/', 'Name That UI', 'Cái này tên là gì? Từ điển 91 thành phần', 91, 'namethatui/thumb.jpg'],
       ['components/', 'Chip', 'Hình chip và nhãn trạng thái', 29, 'components/chip.html'],
       ['patterns/tab-bar.html', 'Thanh tab nổi', 'Điều hướng app di động', 7],
       ['patterns/taste.html?k=ui', 'Widget có gu', 'Đồng hồ, bản đồ, bảng, máy nghe nhạc', 9]]],
