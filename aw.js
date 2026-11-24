@@ -27,6 +27,7 @@
       ['notebook/', 'Sổ tay', 'App sổ tay giấy, 4 nhóm chức năng', 0],
       ['signal/', 'Signal', 'Bảng tin «20 hot repos»', 5],
       ['patterns/growbot.html', 'Bot nội dung', 'Dashboard 6 bot làm Instagram', 1],
+      ['patterns/saltmere.html', 'Saltmere 3D', 'Trang đích tối, hạt 3D tan theo chuột', 10],
       ['topo/', 'Topo', 'Sơ đồ «Build Your AI App»', 0, 'topo/shots/mock.webp']]],
     ['chuyen-dong', 'Chuyển động', 'Cuộn trang, motion, 3D', [
       ['scroll-effects/', 'Scroll effects', 'Hiệu ứng cuộn trang, CodePen', 65, 'scroll-effects/thumbs/interactive-cicada-genomics-landing-page.jpg'],
