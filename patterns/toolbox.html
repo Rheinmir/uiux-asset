@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hộp đồ nghề web — 50 trang — uiux-asset</title>
+<meta name="description" content="50 trang web miễn phí hay dùng: ảnh, code, PDF, nghiên cứu, riêng tư, âm thanh. Lọc theo nhóm, tìm theo tên.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=f6200c6072">
+<style>
+.tx-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+.tx-tools { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; align-items: center; }
+.tx-tools input { height: 44px; width: min(320px, 100%); padding: 0 14px; border-radius: 10px; border: 1px solid var(--aw-border-gray); background: var(--aw-bg-white); color: inherit; font: 15px var(--aw-font); }
+.tx-tools button { min-height: 44px; }
+.tx-tools button[aria-pressed=false] { --b-bg: transparent; --b-ink: var(--aw-color-primary); border: 1px solid var(--aw-border-gray); }
+.tx-grid { display: grid; gap: 10px; grid-template-columns: 1fr; }
+@media (min-width: 700px) { .tx-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1100px) { .tx-grid { grid-template-columns: repeat(3, 1fr); } }
+.tx-it { display: flex; gap: 12px; align-items: center; padding: 12px 14px; min-height: 64px; border-radius: 12px; border: 1px solid var(--aw-border-gray); background: var(--aw-bg-white); color: inherit; text-decoration: none; transition: transform .15s; }
+.tx-it:hover { transform: translateY(-2px); }
+.tx-it i { flex: none; width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; font: 700 16px/1 var(--aw-font); font-style: normal; background: var(--c); color: #fff; }
+.tx-it b { display: block; font: 600 15px/1.3 var(--aw-font); }
+.tx-it span { display: block; font: 400 13px/1.4 var(--aw-font); color: var(--aw-ink2); }
+.tx-it[hidden] { display: none; }
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=f6200c6072"></script>
+<div class="tx-page">
+  <div class="aw-sotd" style="padding-top:16px">
+    <p class="aw-sotd__sub"><span>Tài nguyên</span><span class="aw-tag aw-tag--medium">50 trang</span></p>
+    <h1 class="aw-h1" style="--aw-h1:clamp(40px,7vw,96px)">Hộp đồ nghề web</h1>
+    <p class="aw-lead">50 trang miễn phí hay dùng. Lọc theo nhóm hoặc gõ tên. Nguồn: bài X của @abir35627.</p>
+  </div>
+  <div class="tx-tools">
+    <input type="search" id="tx-q" placeholder="Tìm: pdf, ảnh, regex…" aria-label="Tìm trang">
+    <div id="tx-g" role="group" aria-label="Nhóm"></div>
+  </div>
+  <div class="tx-grid" id="tx-grid"></div>
+</div>
+</main>
+<script>
+const G = { read: ['Đọc và học', '#3d7be0'], media: ['Ảnh và video', '#e0703d'], code: ['Code', '#2f9e6b'], safe: ['Riêng tư', '#b8453d'], sound: ['Âm thanh', '#8a5cd6'], research: ['Nghiên cứu', '#c79a1e'], util: ['Tiện ích', '#5a6472'] };
+// [nhóm, tên miền, việc làm được]
+const L = [
+['research','unpaywall.org','Bài báo khoa học miễn phí'],['read','openlibrary.org','Mượn sách online'],['research','doaj.org','Tạp chí học thuật miễn phí'],['util','alternativeto.net','Tìm app thay thế'],['media','justwatch.com','Phim đang chiếu ở đâu'],
+['read','archive.org','Kho lưu trữ internet'],['read','gutenberg.org','70K+ sách miễn phí'],['read','openstax.org','Giáo trình miễn phí'],['read','openculture.com','Khoá học miễn phí'],['research','wolframalpha.com','Giải bài toán khó'],
+['media','photopea.com','Photoshop trên web'],['media','squoosh.app','Nén ảnh'],['media','remove.bg','Xoá nền ảnh'],['media','cleanup.pictures','Xoá vật thể trong ảnh'],['media','unscreen.com','Xoá nền video'],
+['code','carbon.now.sh','Ảnh code đẹp'],['code','ray.so','Chụp ảnh code'],['media','shots.so','Mockup sản phẩm'],['media','smartmockups.com','Tạo mockup'],['safe','haveibeenpwned.com','Kiểm tra lộ dữ liệu'],
+['safe','virustotal.com','Quét file và link'],['safe','privnote.com','Ghi chú tự huỷ'],['safe','temp-mail.org','Email tạm'],['util','file.io','Gửi file tạm'],['read','archive.ph','Lưu trang web'],
+['util','similarsites.com','Tìm trang tương tự'],['sound','radio.garden','Radio khắp thế giới'],['sound','everynoise.com','Khám phá thể loại nhạc'],['sound','tunefind.com','Nhạc trong phim'],['sound','musicforprogramming.net','Nhạc tập trung'],
+['sound','mynoise.net','Âm nền tuỳ chỉnh'],['sound','coffitivity.com','Tiếng quán cà phê'],['research','elicit.org','Trợ lý nghiên cứu'],['research','consensus.app','Trả lời có dẫn nghiên cứu'],['research','connectedpapers.com','Mạng liên kết bài báo'],
+['research','semanticscholar.org','Tìm bài học thuật'],['research','scispace.com','Đọc hiểu bài báo'],['util','summarize.tech','Tóm tắt YouTube'],['code','phind.com','AI cho lập trình'],['code','regex101.com','Thử regex'],
+['code','codebeautify.org','Định dạng code'],['code','jsonformatter.org','Định dạng JSON'],['code','explainshell.com','Giải thích lệnh terminal'],['util','raindrop.io','Quản lý bookmark'],['util','downdetector.com','Xem dịch vụ có sập không'],
+['media','tineye.com','Tìm ảnh ngược'],['util','fast.com','Đo tốc độ mạng'],['util','smallpdf.com','Công cụ PDF'],['util','ilovepdf.com','Gộp, tách PDF'],['safe','10minutemail.com','Email tạm 10 phút']];
+const V = L.map(([g, d, u]) => ({ id: d.replace(/\./g, '-'), vi: u, en: d, use: G[g][0] }));
+const grid = document.getElementById('tx-grid'), q = document.getElementById('tx-q'), gb = document.getElementById('tx-g');
+grid.innerHTML = L.map(([g, d, u]) => `<a class="tx-it" data-g="${g}" href="https://${d}" target="_blank" rel="noopener" style="--c:${G[g][1]}"><i>${d[0].toUpperCase()}</i><div><b>${d}</b><span>${u}</span></div></a>`).join('');
+gb.innerHTML = [['all', 'Tất cả'], ...Object.entries(G).map(([k, [n]]) => [k, n])].map(([k, n], i) => `<button type="button" class="aw-btn aw-btn--small" data-k="${k}" aria-pressed="${i === 0}">${n}</button>`).join(' ');
+let g = 'all';
+const run = () => { const s = q.value.trim().toLowerCase(); grid.querySelectorAll('.tx-it').forEach((a) => a.hidden = !((g === 'all' || a.dataset.g === g) && a.textContent.toLowerCase().includes(s))); };
+gb.onclick = (e) => { const b = e.target.closest('button'); if (!b) return; g = b.dataset.k; gb.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', x === b)); run(); };
+q.oninput = run;
+</script>
+<script src="/search.js?v=f6200c6072" defer></script><script src="/stats.js?v=f6200c6072" defer></script>
+</body>
+</html>
