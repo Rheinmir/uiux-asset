@@ -1,0 +1,38 @@
+<style>
+.u261{position:relative;width:340px;height:340px;border-radius:30px;overflow:hidden;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);color:var(--ux-ink)}
+.u261-tp{position:absolute;left:18px;right:18px;top:18px;display:flex;gap:16px;align-items:center}
+.u261-av{flex:none;width:96px;text-align:center}
+.u261-av b{display:block;font-size:36px;line-height:1;font-weight:900;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.u261-st{position:relative;display:inline-block;margin-top:5px;font-size:14px;letter-spacing:1px;line-height:1;color:var(--ux-line)}
+.u261-st i{position:absolute;left:0;top:0;overflow:hidden;white-space:nowrap;color:#F59E0B;font-style:normal;width:0;transition:width 1s cubic-bezier(.3,.8,.3,1) .2s}
+.u261-av small{display:block;margin-top:5px;font-size:10px;font-weight:700;color:var(--ux-ink-3)}
+.u261-bs{flex:1;display:flex;flex-direction:column;gap:3px}
+.u261-br{display:flex;align-items:center;gap:7px;height:19px;padding:0 6px;margin:0 -6px;border:0;border-radius:7px;background:none;color:var(--ux-ink-2);font:inherit;font-size:10px;font-weight:800;cursor:pointer;transition:opacity .25s,background .2s}
+.u261-br:hover,.u261-br.g-hov{background:var(--ux-surface-2)}
+.u261-br:focus-visible{outline:2px solid var(--ux-accent);outline-offset:1px}
+.u261-br>span:first-child{width:22px;text-align:left;font-variant-numeric:tabular-nums}
+.u261-br em{flex:1;height:7px;border-radius:4px;background:var(--ux-surface-3);overflow:hidden}
+.u261-br em i{display:block;height:100%;border-radius:4px;background:#F59E0B;transform:scaleX(0);transform-origin:0 50%;transition:transform .8s cubic-bezier(.3,1.1,.4,1)}
+.u261-br>span:last-child{width:30px;text-align:right;color:var(--ux-ink-3);font-variant-numeric:tabular-nums}
+.u261.is-f .u261-br{opacity:.38}
+.u261.is-f .u261-br.is-on{opacity:1;background:var(--ux-surface-2)}
+.u261-hd{position:absolute;left:18px;right:18px;top:132px;display:flex;align-items:center;font-size:11.5px;font-weight:850}
+.u261-hd span{margin-left:6px;font-size:10px;color:var(--ux-ink-3);font-weight:750}
+.u261-ls{position:absolute;left:14px;right:14px;top:156px;bottom:12px;overflow:hidden}
+.u261-rv{padding:10px 11px;margin-bottom:7px;border-radius:13px;background:var(--ux-surface-2);box-shadow:inset 0 0 0 1px var(--ux-line);animation:u261-in .4s cubic-bezier(.3,1.2,.5,1) backwards}
+@keyframes u261-in{from{opacity:0;transform:translateY(10px)}}
+.u261-rv header{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:800;color:var(--ux-ink-3)}
+.u261-rv header i{font-style:normal;color:#F59E0B;letter-spacing:-.5px}
+.u261-rv p{margin:4px 0 0;font-size:11px;line-height:1.4;font-weight:650}
+.u261-hp{margin-left:auto;display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border:0;border-radius:999px;background:var(--ux-surface);box-shadow:inset 0 0 0 1px var(--ux-line);color:var(--ux-ink-2);font:inherit;font-size:9.5px;font-weight:800;cursor:pointer;transition:background .2s,color .2s}
+.u261-hp[aria-pressed="true"]{background:var(--ux-ink);color:var(--ux-surface);box-shadow:none}
+.u261-hp svg{width:10px;height:10px;transition:transform .35s cubic-bezier(.3,1.8,.5,1)}
+.u261-hp[aria-pressed="true"] svg{transform:rotate(-12deg) scale(1.2)}
+.u261-hp:focus-visible{outline:2px solid var(--ux-accent);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){.u261-st i,.u261-br em i{transition:none}.u261-rv{animation:none}}
+</style>
+<div class="ux u261">
+  <div class="u261-tp"><div class="u261-av"><b>4.6</b><span class="u261-st" aria-hidden="true">★★★★★<i>★★★★★</i></span><small>리뷰 1,248개</small></div><div class="u261-bs"></div></div>
+  <div class="u261-hd"><span class="u261-tt"></span></div>
+  <div class="u261-ls" aria-live="polite"></div>
+</div>

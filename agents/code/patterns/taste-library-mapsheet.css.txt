@@ -1,0 +1,15 @@
+.tx-map{width:460px;height:340px;display:grid;place-items:end center;border-radius:22px;background:#ececec;font-family:Inter,system-ui,sans-serif;color:#111}
+.tx-map .ph{position:relative;width:300px;height:300px;border:8px solid #0d0d0d;border-top:0;border-radius:0 0 44px 44px;overflow:hidden;background:linear-gradient(90deg,transparent 46%,#fff 46% 50%,transparent 50%) 0 0/90px 100%,linear-gradient(transparent 46%,#fff 46% 52%,transparent 52%) 0 0/100% 70px,#e7e9ec;margin-bottom:18px}
+.tx-map .pin{position:absolute;left:150px;top:30px;color:#2f6df6;font:500 11px/1 Inter;display:flex;align-items:center;gap:6px}
+.tx-map .pin svg{filter:drop-shadow(0 2px 3px rgba(0,0,0,.3))}
+.tx-map .sheet{position:absolute;left:0;right:0;bottom:0;height:196px;padding:12px 16px;border-radius:24px 24px 0 0;background:#fff;box-shadow:0 -6px 20px rgba(0,0,0,.08)}
+.tx-map .sheet::before{content:"";display:block;width:36px;height:4px;margin:0 auto 10px;border-radius:4px;background:#d4d4d4}
+.tx-map h4{margin:0;font:600 20px/1.2 Inter;letter-spacing:-.02em}
+.tx-map .sheet p{margin:4px 0 14px;font:400 12px/1 Inter;color:#666}
+.tx-map .sheet p b{font-weight:500;color:#16a34a}
+.tx-map .x{position:absolute;right:14px;top:22px;width:28px;height:28px;background:#f0f0f0;color:#555}
+.tx-map .acts{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.tx-map .acts button{height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;border:0;border-radius:12px;background:#f2f3f5;color:#2f6df6;font:500 11px/1 Inter;cursor:pointer}
+.tx-map .acts button span{color:#111}
+.tx-map .acts .go{background:#2f6df6;color:#fff}.tx-map .acts .go span{color:#fff}
+.tx-map .acts [aria-pressed=true] svg{fill:currentColor}

@@ -1,0 +1,33 @@
+<style>
+.u306{position:relative;width:340px;height:340px;border-radius:30px;overflow:hidden;background:radial-gradient(60% 50% at 50% 62%,var(--ux-accent-soft),transparent 75%),var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);color:var(--ux-ink)}
+.u306-hd{position:absolute;left:0;right:0;top:22px;z-index:3;text-align:center}
+.u306-hd small{font-size:10px;font-weight:850;letter-spacing:.08em;color:var(--ux-accent)}
+.u306-hd h3{margin:4px 0 0;font-size:19px;font-weight:900;letter-spacing:-.035em}
+.u306-cp{display:block;height:16px;margin-top:6px;font-size:11px;font-weight:700;color:var(--ux-ink-2);transition:opacity .2s}
+.u306-cp b{color:var(--ux-ink);font-weight:850}
+.u306-st{position:absolute;left:50%;top:212px;width:0;height:0}
+.u306-rg{position:absolute;left:0;top:0;width:0;height:0;animation:u306-r var(--t) linear infinite;animation-direction:var(--dir)}
+.u306-rg::before{content:"";position:absolute;left:calc(var(--r) * -1);top:calc(var(--r) * -1);width:calc(var(--r) * 2);height:calc(var(--r) * 2);border-radius:50%;border:1px dashed color-mix(in srgb,var(--ux-ink) 16%,transparent)}
+.u306.is-hold .u306-rg,.u306.is-hold .u306-up{animation-play-state:paused}
+@keyframes u306-r{to{transform:rotate(360deg)}}
+.u306-sl{position:absolute;left:0;top:0}
+.u306-up{position:absolute;left:-19px;top:-19px;animation:u306-r var(--t) linear infinite;animation-direction:var(--rdir)}
+.u306-ic{display:grid;place-items:center;width:38px;height:38px;padding:0;border:0;border-radius:12px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 8px 16px -8px var(--ux-shadow-strong);color:var(--c);cursor:pointer;transition:transform .3s cubic-bezier(.3,1.6,.5,1),box-shadow .3s}
+.u306-ic svg{width:18px;height:18px}
+.u306-ic.is-on{transform:scale(1.22);box-shadow:0 0 0 2px var(--c),0 10px 22px -8px var(--c)}
+.u306-ic:focus-visible{outline:2px solid var(--ux-accent);outline-offset:3px}
+.u306-hb{position:absolute;left:-30px;top:-30px;width:60px;height:60px;border-radius:19px;background:var(--ux-grad);display:grid;place-items:center;box-shadow:0 14px 30px -10px color-mix(in srgb,var(--ux-accent) 70%,transparent);z-index:2}
+.u306-hb::before{content:"";position:absolute;inset:-10px;border-radius:26px;border:2px solid color-mix(in srgb,var(--ux-accent) 40%,transparent);animation:u306-p 2.6s ease-out infinite}
+@keyframes u306-p{from{transform:scale(.85);opacity:1}to{transform:scale(1.35);opacity:0}}
+.u306-hb svg{width:28px;height:28px}
+.u306-ln{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.u306-ln path{fill:none;stroke-width:2;stroke-linecap:round;stroke-dasharray:3 7;opacity:0;transition:opacity .25s}
+.u306-ln path.is-on{opacity:1;animation:u306-fl .6s linear infinite}
+@keyframes u306-fl{to{stroke-dashoffset:-10}}
+@media (prefers-reduced-motion: reduce){.u306-rg,.u306-up,.u306-hb::before,.u306-ln path.is-on{animation:none}}
+</style>
+<div class="ux u306">
+  <div class="u306-hd"><small>연동</small><h3>쓰던 도구 그대로 연결</h3><span class="u306-cp" aria-live="polite"></span></div>
+  <svg class="u306-ln" viewBox="0 0 340 340" aria-hidden="true"><path d=""/></svg>
+  <div class="u306-st"><div class="u306-hb" aria-hidden="true"><svg viewBox="0 0 28 28"><path d="M8 18.5c0-5 2.8-9 6-9s6 4 6 9" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/><circle cx="14" cy="9.5" r="3" fill="#fff"/></svg></div></div>
+</div>

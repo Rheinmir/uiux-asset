@@ -1,0 +1,15 @@
+<style>
+.u330{position:relative;width:340px;height:330px;border-radius:30px;overflow:hidden;background:radial-gradient(circle at 50% 50%,#0B1230,#02030A 70%);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);color:#fff}
+.u330-cv{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair}
+.u330-hud{position:absolute;left:18px;top:16px;display:flex;align-items:center;gap:8px;font:700 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace;pointer-events:none}
+.u330-hud b{padding:4px 8px;border-radius:999px;background:rgba(255,255,255,.12)}
+.u330.is-warp .u330-hud b{background:#4DABF7;color:#03122B}
+.u330-wp{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);height:38px;padding:0 18px;border:1px solid rgba(255,255,255,.25);border-radius:999px;background:rgba(255,255,255,.1);color:#fff;font-size:12.5px;font-weight:800;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);user-select:none;-webkit-user-select:none;transition:background-color .2s,transform .2s}
+.u330.is-warp .u330-wp{background:rgba(77,171,247,.35);transform:translateX(-50%) scale(.96)}
+.u330-wp:focus-visible{outline:2px solid #4DABF7;outline-offset:3px}
+</style>
+<div class="ux u330">
+  <canvas class="u330-cv" role="img" aria-label="별빛 공간, 길게 눌러 워프"></canvas>
+  <div class="u330-hud" aria-live="off"><b></b><span></span></div>
+  <button class="u330-wp" type="button">길게 눌러 워프</button>
+</div>

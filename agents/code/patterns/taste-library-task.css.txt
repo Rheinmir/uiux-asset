@@ -1,0 +1,15 @@
+.tx-task{background:#fff;color:#111}
+.tx-task .top{position:absolute;top:54px;left:16px;right:16px;display:flex;justify-content:space-between;align-items:center;color:#555}
+.tx-task .top span{padding:7px 12px;border-radius:999px;background:#f3f3f3;font:600 10px/1 Inter;color:#111}
+.tx-task .top span::before{content:"●";color:#2433f0;margin-right:5px}
+.tx-task .orb{position:absolute;left:50px;top:100px;width:200px;height:200px;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.035),transparent);animation:tx-spin 14s linear infinite}
+.tx-task .orb svg{position:absolute;inset:30px}
+.tx-task .orb i{position:absolute;width:12px;height:12px;border-radius:50%;background:#111}
+.tx-task .q{position:absolute;left:22px;right:22px;top:326px;margin:0;font:400 13px/1.4 Inter;color:#333}
+.tx-task ol{position:absolute;left:22px;right:22px;top:378px;margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.tx-task li{display:flex;align-items:center;gap:8px;padding-bottom:8px;border-bottom:1px solid #eee;font:500 11px/1 Inter;opacity:0;transform:translateY(6px);transition:.35s}
+.tx-task li.on{opacity:1;transform:none}
+.tx-task li::before{content:"✓";width:14px;height:14px;border-radius:50%;background:#111;color:#fff;font-size:8px;line-height:14px;text-align:center}
+.tx-task li small{margin-left:auto;white-space:nowrap;font:400 9px/1 ui-monospace,Menlo,monospace;color:#aaa}
+.tx-task .bar{position:absolute;left:14px;right:14px;bottom:26px;display:flex;align-items:center;gap:10px;color:#555}
+.tx-task .bar .stop{flex:1;height:40px;border:0;border-radius:999px;background:#f3f3f3;font:600 12px/1 Inter;cursor:pointer}

@@ -1,0 +1,26 @@
+<style>
+.u392{position:relative;width:340px;height:300px;display:flex;flex-direction:column;padding:22px 22px 16px;border-radius:28px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);overflow:hidden}
+.u392-k{margin:0;font-size:12px;font-weight:750;color:var(--ux-ink-3)}
+.u392-bx{position:relative;margin-top:14px}
+.u392-p{position:relative;z-index:1;margin:0;font-size:20px;line-height:1.75;font-weight:700;letter-spacing:-.03em;color:var(--ux-ink)}
+.u392-p b{font-weight:850}
+.u392-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:2}
+.u392-svg path{fill:none;stroke:var(--ux-danger);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.u392-svg path.b{stroke-width:1.6;opacity:.7}
+.u392-ft{margin-top:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:4px;border-radius:14px;background:var(--ux-surface-2)}
+.u392-ty{height:34px;border:0;border-radius:10px;background:none;font-size:12.5px;font-weight:700;color:var(--ux-ink-3);transition:background-color .25s,color .25s}
+.u392-ty[aria-pressed="true"]{background:var(--ux-surface);color:var(--ux-ink);box-shadow:0 0 0 1px var(--ux-line),0 4px 10px -6px var(--ux-shadow-strong)}
+</style>
+<div class="ux u392">
+  <p class="u392-k">분기 계획 메모</p>
+  <div class="u392-bx">
+    <p class="u392-p">이번 분기 목표는 <b>가입 전환율</b>을 <b>두 배로</b> 올리고, 첫 주 <b>이탈</b>을 절반으로 줄이는 것입니다.</p>
+    <svg class="u392-svg" aria-hidden="true"></svg>
+  </div>
+  <div class="u392-ft" role="group" aria-label="표시 종류">
+    <button class="u392-ty" type="button" aria-pressed="true">밑줄</button>
+    <button class="u392-ty" type="button" aria-pressed="false">동그라미</button>
+    <button class="u392-ty" type="button" aria-pressed="false">상자</button>
+    <button class="u392-ty" type="button" aria-pressed="false">취소선</button>
+  </div>
+</div>

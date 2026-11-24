@@ -1,0 +1,33 @@
+<style>
+.u077{position:relative;width:350px;height:310px;display:flex;flex-direction:column;justify-content:flex-end;gap:10px;padding:18px;border-radius:26px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong)}
+.u077-msg{display:flex;gap:10px}
+.u077-av{width:34px;height:34px;flex:none;border-radius:50%;background:var(--g)}
+.u077-bub{max-width:250px;padding:10px 14px;border-radius:6px 18px 18px 18px;background:var(--ux-surface-2);font-size:14px;line-height:1.5}
+.u077-bub b{display:block;margin-bottom:2px;font-size:12.5px;font-weight:800;color:var(--ux-ink-2)}
+.u077-rx{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0 44px}
+.u077-chip{height:32px;padding:0 10px;border:0;border-radius:999px;display:inline-flex;align-items:center;gap:5px;background:var(--ux-surface-2);box-shadow:inset 0 0 0 1.5px transparent;font-size:15px;transition:box-shadow .2s,background-color .2s,transform .3s var(--ux-spring)}
+.u077-chip b{font-size:12.5px;font-weight:800;color:var(--ux-ink-2);font-variant-numeric:tabular-nums}
+.u077-chip[aria-pressed="true"]{background:var(--ux-accent-soft);box-shadow:inset 0 0 0 1.5px var(--ux-accent)}
+.u077-chip[aria-pressed="true"] b{color:var(--ux-accent)}
+.u077-chip:active{transform:scale(.9)}
+.u077-chip.pop{animation:u077-pop .5s var(--ux-spring)}
+@keyframes u077-pop{0%{transform:scale(.4)}60%{transform:scale(1.15)}100%{transform:none}}
+.u077-add{width:32px;height:32px;border:0;padding:0;border-radius:50%;display:grid;place-items:center;background:var(--ux-surface-2);color:var(--ux-ink-2);transition:background-color .2s,transform .3s var(--ux-spring)}
+.u077-add:hover,.u077-add[aria-expanded="true"]{background:var(--ux-surface-3);color:var(--ux-ink)}
+.u077-add svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round}
+.u077-chip:focus-visible,.u077-add:focus-visible,.u077-e:focus-visible{outline:2px solid var(--ux-accent);outline-offset:2px}
+.u077-pop{position:absolute;z-index:4;left:0;top:0;width:260px;padding:10px;border-radius:20px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 24px 44px -18px var(--ux-shadow-strong);transform-origin:var(--ox,30px) calc(100% + 10px);transform:translate(var(--x,0px),var(--y,0px));transition:transform .45s var(--ux-spring),opacity .2s}
+.u077-pop.closed{transform:translate(var(--x,0px),var(--y,0px)) scale(.3);opacity:0;pointer-events:none;transition:transform .3s var(--ux-ease),opacity .2s}
+.u077-pop::after{content:"";position:absolute;left:var(--ox,30px);bottom:-6px;width:12px;height:12px;margin-left:-6px;border-radius:2px;background:var(--ux-surface);transform:rotate(45deg);box-shadow:1px 1px 0 0 var(--ux-line)}
+.u077-pop small{display:block;padding:2px 6px 8px;font-size:11.5px;font-weight:800;letter-spacing:.04em;color:var(--ux-ink-3)}
+.u077-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:2px}
+.u077-e{height:38px;border:0;padding:0;border-radius:11px;background:none;font-size:22px;line-height:1;transition:transform .25s var(--ux-spring),background-color .15s}
+.u077-e:hover,.u077-e:focus-visible{background:var(--ux-surface-2);transform:scale(1.18)}
+.u077-e:active{transform:scale(.9)}
+</style>
+<div class="ux u077">
+  <div class="u077-msg"><span class="u077-av" style="--g:linear-gradient(140deg,#22C3A6,#0EA5E9)" aria-hidden="true"></span><div class="u077-bub"><b>윤하린</b>시안 v3 올렸어요! 버튼 전환 속도를 0.3초로 줄였어요.</div></div>
+  <div><div class="u077-msg"><span class="u077-av" style="--g:linear-gradient(140deg,#8B6CFF,#5B8CFF)" aria-hidden="true"></span><div class="u077-bub"><b>한도윤</b>오, 훨씬 가볍게 느껴지네요. 이대로 배포해도 될 것 같아요 🙌</div></div>
+  <div class="u077-rx" role="group" aria-label="반응"><button class="u077-chip" type="button" aria-pressed="false" data-e="👍"><span aria-hidden="true">👍</span><b>3</b></button><button class="u077-chip" type="button" aria-pressed="false" data-e="🎉"><span aria-hidden="true">🎉</span><b>1</b></button><button class="u077-add" type="button" aria-haspopup="dialog" aria-expanded="true" aria-label="반응 추가"><svg viewBox="0 0 18 18"><circle cx="9" cy="9" r="6.5"/><path d="M6.5 10.5a3 3 0 0 0 5 0M7 7h.01M11 7h.01"/></svg></button></div></div>
+  <div class="u077-pop" role="dialog" aria-label="반응 고르기"><small>자주 쓰는 반응</small><div class="u077-grid"></div></div>
+</div>

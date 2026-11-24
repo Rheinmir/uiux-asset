@@ -1,0 +1,30 @@
+<style>
+.u315{position:relative;width:340px;height:330px;padding:18px;border-radius:28px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);overflow:hidden}
+.u315-k{margin:0;font-size:12px;font-weight:750;color:var(--ux-ink-3)}
+.u315-f{position:absolute;width:88px;height:96px;border:0;padding:0;border-radius:16px;background:var(--ux-surface-2);box-shadow:inset 0 0 0 1px var(--ux-line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:grab;touch-action:none;transition:box-shadow .25s,background-color .25s}
+.u315-f.drag{cursor:grabbing;z-index:5;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line-2),0 18px 30px -12px var(--ux-shadow-strong)}
+.u315-f.gone{visibility:hidden}
+.u315-ic{position:relative;width:34px;height:42px;border-radius:6px 12px 6px 6px;background:var(--c);clip-path:polygon(0 0,70% 0,100% 28%,100% 100%,0 100%)}
+.u315-ic::after{content:attr(data-t);position:absolute;left:0;right:0;bottom:6px;text-align:center;font:800 8.5px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:#fff}
+.u315-f span{font-size:12px;font-weight:700;color:var(--ux-ink-2)}
+.u315-bin{position:absolute;right:20px;bottom:20px;width:72px;height:84px;border:0;padding:0;background:none}
+.u315-bin svg{width:100%;height:100%;overflow:visible}
+.u315-lid{fill:var(--ux-ink-2);transform-box:view-box;transform-origin:58px 22px;transition:transform .25s var(--ux-ease)}
+.u315-can{fill:var(--ux-surface-3);stroke:var(--ux-ink-2);stroke-width:2.5}
+.u315-can-l{stroke:var(--ux-ink-3);stroke-width:2;stroke-linecap:round}
+.u315-bin.hot .u315-can{fill:color-mix(in srgb,var(--ux-danger) 18%,var(--ux-surface-3));stroke:var(--ux-danger)}
+.u315-bin.hot .u315-lid{fill:var(--ux-danger)}
+.u315-n{position:absolute;right:-6px;top:6px;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:var(--ux-danger);color:#fff;font-size:12px;font-weight:800;line-height:22px;text-align:center;transform:scale(0);transition:transform .45s var(--ux-spring)}
+.u315-n.on{transform:scale(1)}
+.u315-un{position:absolute;left:18px;bottom:20px;height:38px;padding:0 15px;border:0;border-radius:999px;background:var(--ux-ink);color:var(--ux-page);font-size:13px;font-weight:750;transition:transform .35s var(--ux-spring),opacity .3s}
+.u315-un:disabled{opacity:.3}
+.u315-un:active{transform:scale(.93)}
+</style>
+<div class="ux u315">
+  <p class="u315-k">내 파일</p>
+  <button class="u315-bin" type="button" aria-label="휴지통">
+    <svg viewBox="0 0 72 84" aria-hidden="true"><path class="u315-can" d="M12 28h48l-5 50a5 5 0 0 1-5 4H22a5 5 0 0 1-5-4z"/><path class="u315-can-l" d="M29 40v30M43 40v30"/><g class="u315-lid"><rect x="6" y="18" width="60" height="8" rx="4"/><rect x="28" y="12" width="16" height="7" rx="3"/></g></svg>
+    <span class="u315-n" aria-hidden="true">0</span>
+  </button>
+  <button class="u315-un" type="button" disabled>되돌리기</button>
+</div>

@@ -1,0 +1,18 @@
+/* file: src/plugins/scroll-nav/variants.css */
+@custom-variant hs-scroll-nav-active {
+
+  &.active {
+    @slot;
+  }
+}
+
+@custom-variant hs-scroll-nav-disabled {
+
+  &.disabled {
+    @slot;
+  }
+
+  .disabled & {
+    @slot;
+  }
+}

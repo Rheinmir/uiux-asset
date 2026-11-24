@@ -1,0 +1,33 @@
+<style>
+.u388{position:relative;width:340px;height:330px;display:flex;flex-direction:column;padding:22px 22px 16px;border-radius:28px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);overflow:hidden}
+.u388-qm{position:absolute;right:16px;top:-6px;font:900 120px/1 Georgia,serif;color:var(--ux-accent-soft);pointer-events:none}
+.u388-st{position:relative;flex:1}
+.u388-q{position:absolute;left:0;right:0;top:4px;margin:0;font-size:22px;line-height:1.42;font-weight:780;letter-spacing:-.035em;color:var(--ux-ink)}
+.u388-w{display:inline-block;filter:blur(10px);opacity:0;transform:translateY(-10px) scale(1.12);transition:filter .7s var(--ux-ease),opacity .6s var(--ux-ease),transform .9s var(--ux-spring);transition-delay:calc(var(--i) * 55ms)}
+.u388-q.in .u388-w{filter:none;opacity:1;transform:none}
+.u388-q.out .u388-w{filter:blur(8px);opacity:0;transform:translate(var(--dx),8px) scale(.92);transition-duration:.45s;transition-delay:calc(var(--r) * 1ms)}
+.u388-by{position:absolute;left:0;bottom:0;display:flex;align-items:center;gap:10px;overflow:hidden;height:44px}
+.u388-by>div{transition:transform .6s var(--ux-spring),opacity .4s}
+.u388-by.swap>div{transform:translateY(100%);opacity:0;transition:none}
+.u388-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--a1),var(--a2))}
+.u388-by b{display:block;font-size:14px;font-weight:800}
+.u388-role{font-size:12px;font-weight:650;color:var(--ux-ink-3)}
+.u388-ft{display:flex;align-items:center;gap:8px;margin-top:14px}
+.u388-dots{display:flex;gap:2px;flex:1}
+.u388-dot{position:relative;flex:1;height:22px;border:0;background:none;padding:0}
+.u388-dot::before{content:"";position:absolute;left:0;right:0;top:9px;height:4px;border-radius:4px;background:var(--ux-line-2)}
+.u388-dot i{position:absolute;left:0;top:9px;height:4px;width:100%;border-radius:4px;background:var(--ux-ink);transform-origin:0 50%;transform:scaleX(0)}
+.u388-dot.past i{transform:scaleX(1)}
+.u388-pv,.u388-nx{width:36px;height:36px;border:0;border-radius:50%;display:grid;place-items:center;background:var(--ux-surface-2);color:var(--ux-ink);transition:transform .35s var(--ux-spring)}
+.u388-pv:active,.u388-nx:active{transform:scale(.9)}
+.u388-ft svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+</style>
+<div class="ux u388">
+  <span class="u388-qm" aria-hidden="true">&ldquo;</span>
+  <div class="u388-st"><blockquote class="u388-q in" aria-live="polite"></blockquote><div class="u388-by"></div></div>
+  <div class="u388-ft">
+    <div class="u388-dots" role="group" aria-label="인용구 고르기"></div>
+    <button class="u388-pv" type="button" aria-label="이전 인용구"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+    <button class="u388-nx" type="button" aria-label="다음 인용구"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+  </div>
+</div>

@@ -1,0 +1,26 @@
+<style>
+.u329{position:relative;width:300px;height:500px;border-radius:30px;background:var(--bg,#FF8A65);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);overflow:hidden;color:#1B1B22}
+.u329-sc{position:absolute;inset:0;overflow-y:auto;scrollbar-width:none;outline:none}
+.u329-sc::-webkit-scrollbar{display:none}
+.u329-stage{position:sticky;top:0;height:500px;display:flex;align-items:flex-start;justify-content:center;padding-top:74px;pointer-events:none}
+.u329-can{position:relative;width:104px;height:196px;border-radius:26px 26px 22px 22px;background:linear-gradient(90deg,rgba(0,0,0,.25),rgba(255,255,255,.35) 30%,rgba(255,255,255,.05) 55%,rgba(0,0,0,.28)),var(--can,#E64A19);box-shadow:0 30px 40px -24px rgba(0,0,0,.45);transform:rotate(var(--r,0deg));overflow:hidden}
+.u329-can::before{content:"";position:absolute;left:8px;right:8px;top:0;height:14px;border-radius:0 0 8px 8px;background:linear-gradient(#E9ECEF,#ADB5BD)}
+.u329-lab{position:absolute;left:0;right:0;top:64px;height:80px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(255,255,255,.9);transform:translateX(var(--lx,0px))}
+.u329-lab b{font-size:16px;font-weight:900;letter-spacing:-.02em;color:var(--can,#E64A19)}
+.u329-lab i{font-size:9px;font-style:normal;font-weight:800;letter-spacing:.2em;color:#555}
+.u329-k{position:absolute;left:20px;top:20px;margin:0;font-size:13px;font-weight:800;opacity:.75}
+.u329-dots{position:absolute;right:18px;top:50%;display:flex;flex-direction:column;gap:7px;transform:translateY(-50%)}
+.u329-dots i{width:6px;height:6px;border-radius:50%;background:rgba(0,0,0,.25);transition:transform .3s,background-color .3s}
+.u329-dots i.on{background:#1B1B22;transform:scale(1.5)}
+.u329-secs{position:relative;margin-top:-500px}
+.u329-sec{height:420px;display:flex;flex-direction:column;justify-content:flex-end;padding:0 22px 30px}
+.u329-sec:first-child{height:500px}
+.u329-sec b{font-size:30px;font-weight:900;letter-spacing:-.04em}
+.u329-sec span{font-size:14px;font-weight:700;opacity:.75}
+</style>
+<div class="ux u329">
+  <div class="u329-sc" tabindex="0" aria-label="맛 소개, 스크롤해서 보기">
+    <div class="u329-stage" aria-hidden="true"><p class="u329-k">탄산수 네 가지 맛</p><div class="u329-can"><div class="u329-lab"><i>SPARKLING</i><b></b></div></div><div class="u329-dots"></div></div>
+    <div class="u329-secs"></div>
+  </div>
+</div>

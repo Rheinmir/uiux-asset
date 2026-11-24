@@ -1,0 +1,5 @@
+.tb-nested{display:flex;align-items:center;gap:16px}
+.tb-nested [role=tablist]{display:flex;padding:6px;border-radius:999px;background:linear-gradient(#a8d1fb,#7db6f4);box-shadow:0 12px 28px rgba(70,130,210,.3)}
+.tb-nested [role=tab]{height:54px;padding:0 22px;border:1.5px solid transparent;border-radius:999px;background:none;color:#fff;font:600 17px/1 system-ui,sans-serif;cursor:pointer}
+.tb-nested [aria-selected=true]{background:linear-gradient(#d3e8ff,#a3ccf8);border-color:rgba(255,255,255,.85);box-shadow:0 4px 12px rgba(70,130,210,.25)}
+.tb-nested .fab{width:62px;height:62px;display:grid;place-items:center;border:0;border-radius:50%;background:linear-gradient(#a8d1fb,#7db6f4);color:#fff;box-shadow:0 12px 28px rgba(70,130,210,.35);cursor:pointer}

@@ -1,0 +1,37 @@
+<style>
+.u177{position:relative;width:340px;height:356px;padding:16px;box-sizing:border-box;border-radius:28px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);color:var(--ux-ink);font-variant-numeric:tabular-nums}
+.u177-st{position:relative;height:132px;border-radius:16px;background:radial-gradient(var(--ux-line) 1px,transparent 1.5px) 0 0/14px 14px,var(--ux-surface-2);overflow:hidden}
+.u177-sh{position:absolute;left:50%;top:50%;width:64px;height:64px;margin:-32px 0 0 -32px;background:var(--c,#4D78C9);box-shadow:0 14px 22px -12px var(--c,#4D78C9);transition:transform .55s cubic-bezier(.3,1.35,.5,1),border-radius .5s var(--ux-spring),background-color .4s,box-shadow .4s}
+.u177-ch{position:absolute;left:10px;top:10px;padding:4px 9px;border-radius:999px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line);font-size:11px;font-weight:750;color:var(--ux-ink-2)}
+.u177-ch.pop{animation:u177-pop .4s var(--ux-spring)}
+@keyframes u177-pop{from{opacity:0;transform:translateY(-6px) scale(.9)}}
+.u177-tools{display:flex;gap:6px;margin-top:10px}
+.u177-tl{flex:1;height:34px;border:0;border-radius:10px;background:var(--ux-surface-2);color:var(--ux-ink);font-size:12px;font-weight:750;display:flex;align-items:center;justify-content:center;gap:5px;transition:transform .25s var(--ux-spring),background-color .2s}
+.u177-tl:hover{background:color-mix(in srgb,var(--ux-ink) 9%,var(--ux-surface-2))}
+.u177-tl:active{transform:scale(.94)}
+.u177-tl i{font-style:normal;color:#4D78C9}
+.u177-gr{position:relative;height:104px;margin-top:10px;border-radius:14px;box-shadow:inset 0 0 0 1px var(--ux-line);overflow:hidden}
+.u177-cv{position:absolute;left:0;top:0;height:100%;transition:transform .45s var(--ux-ease)}
+.u177-cv svg{position:absolute;left:0;top:0;width:600px;height:104px;overflow:visible}
+.u177-cv path{fill:none;stroke-width:2;transition:stroke .3s,opacity .3s}
+.u177-nd{position:absolute;left:0;top:0;width:24px;height:24px;margin:-12px 0 0 -12px;border:0;padding:0;border-radius:50%;background:#4D78C9;color:#fff;font-size:10px;font-weight:900;line-height:24px;transition:transform .45s cubic-bezier(.3,1.25,.5,1),background-color .3s,opacity .3s,box-shadow .3s}
+.u177-nd.fut{background:var(--ux-surface);color:#4D78C9;box-shadow:inset 0 0 0 2px #4D78C9;opacity:.7}
+.u177-nd.side{background:var(--ux-surface);color:var(--ux-ink-3);box-shadow:inset 0 0 0 1.5px var(--ux-line-2)}
+.u177-nd.cur{box-shadow:0 0 0 3px var(--ux-surface),0 0 0 5.5px #4D78C9}
+.u177-nd.cur::after{content:"";position:absolute;inset:-9px;border-radius:50%;border:2px solid #4D78C9;opacity:0;animation:u177-ring 1.6s ease-out infinite}
+@keyframes u177-ring{0%{opacity:.6;transform:scale(.7)}100%{opacity:0;transform:scale(1.35)}}
+.u177-nd.new{animation:u177-in .45s cubic-bezier(.3,1.5,.5,1)}
+@keyframes u177-in{from{scale:0}}
+.u177-nd:focus-visible,.u177-tl:focus-visible,.u177-bt button:focus-visible{outline:2px solid var(--ux-accent);outline-offset:3px}
+.u177-bt{display:flex;align-items:center;gap:8px;margin-top:10px}
+.u177-bt button{width:38px;height:32px;border:0;border-radius:10px;background:var(--ux-ink);color:var(--ux-surface);font-size:17px;font-weight:700;transition:opacity .2s,transform .25s var(--ux-spring)}
+.u177-bt button:disabled{opacity:.25}
+.u177-bt button:not(:disabled):active{transform:scale(.92)}
+.u177-bt span{margin-left:auto;font-size:11.5px;font-weight:700;color:var(--ux-ink-3)}
+</style>
+<div class="ux u177">
+  <div class="u177-st"><div class="u177-sh" role="img" aria-label="편집 중인 도형"></div><span class="u177-ch" aria-live="polite"></span></div>
+  <div class="u177-tools" role="group" aria-label="편집 도구"></div>
+  <div class="u177-gr" role="group" aria-label="작업 기록"><div class="u177-cv"><svg aria-hidden="true"></svg></div></div>
+  <div class="u177-bt"><button class="u177-un" type="button" aria-label="실행 취소">↶</button><button class="u177-rd" type="button" aria-label="다시 실행">↷</button><span></span></div>
+</div>

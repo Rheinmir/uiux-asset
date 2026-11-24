@@ -1,0 +1,29 @@
+<style>
+.u317{position:relative;width:340px;height:350px;display:flex;flex-direction:column;padding:16px;border-radius:28px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);overflow:hidden}
+.u317-ss{display:flex;gap:4px;padding:4px;border-radius:13px;background:var(--ux-surface-2)}
+.u317-s{flex:1;height:32px;border:0;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:4px;background:none;font-size:12.5px;font-weight:750;color:var(--ux-ink-3)}
+.u317-s[aria-pressed="true"]{background:var(--ux-surface);color:var(--ux-ink);box-shadow:0 0 0 1px var(--ux-line)}
+.u317-s svg{width:10px;height:10px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;transition:transform .35s var(--ux-spring);opacity:0}
+.u317-s[aria-pressed="true"] svg{opacity:1}
+.u317-s.desc svg{transform:rotate(180deg)}
+.u317-ls{position:relative;margin:10px 0 0;padding:0;list-style:none}
+.u317-r{position:absolute;left:0;right:0;top:0;height:44px;display:flex;align-items:center;gap:8px;padding:0 8px;border-radius:12px;background:var(--ux-surface);transition:transform .6s cubic-bezier(.3,1.1,.4,1),box-shadow .3s}
+.u317-r.up{z-index:2;box-shadow:0 10px 22px -12px var(--ux-shadow-strong)}
+.u317-r.dn{z-index:0;opacity:.9}
+.u317-r i{flex:none;width:28px;height:28px;border-radius:9px;background:linear-gradient(135deg,var(--a),var(--b))}
+.u317-r b{flex:1;min-width:0;font-size:13px;font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.u317-r span{flex:none;text-align:right;font:650 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--ux-ink-3);font-variant-numeric:tabular-nums}
+.u317-r span.p{width:66px}
+.u317-r span.s{width:40px}
+.u317-r span.k{color:var(--ux-ink);font-weight:800}
+.u317-r em{width:26px;font-style:normal;font:700 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;text-align:right;opacity:0;transition:opacity .3s}
+.u317-r em.show{opacity:1}
+</style>
+<div class="ux u317">
+  <div class="u317-ss" role="group" aria-label="정렬 기준">
+    <button class="u317-s" type="button" aria-pressed="true">이름<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M5 8V2M2 5l3-3 3 3"/></svg></button>
+    <button class="u317-s" type="button" aria-pressed="false">가격<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M5 8V2M2 5l3-3 3 3"/></svg></button>
+    <button class="u317-s" type="button" aria-pressed="false">평점<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M5 8V2M2 5l3-3 3 3"/></svg></button>
+  </div>
+  <ul class="u317-ls" aria-live="polite"></ul>
+</div>

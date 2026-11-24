@@ -1,0 +1,14 @@
+<style>
+.u357{position:relative;width:340px;height:340px;border-radius:30px;overflow:hidden;background:#101014;box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);color:#F4F1EA}
+.u357-tx{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:0;pointer-events:none;font-family:system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+.u357-ln{display:flex;justify-content:center}
+.u357-c{display:inline-block;text-align:center;font-size:40px;line-height:1.18;letter-spacing:-.02em;font-weight:var(--w,400);transform:scale(var(--s,1));color:hsl(40 30% calc(60% + var(--k,0) * 36%))}
+.u357-hit{position:absolute;inset:0;border:0;padding:0;background:transparent;cursor:crosshair;border-radius:inherit}
+.u357-hit:focus-visible{outline:2px solid #F4F1EA;outline-offset:-6px}
+.u357-md{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);padding:4px 11px;border-radius:999px;background:rgba(244,241,234,.1);font-size:11px;font-weight:750;color:rgba(244,241,234,.75);pointer-events:none}
+</style>
+<div class="ux u357">
+  <div class="u357-tx" aria-hidden="true"></div>
+  <button type="button" class="u357-hit" aria-label="가까울수록 굵어지는 제목, 눌러서 모드 바꾸기"></button>
+  <div class="u357-md" aria-live="polite"></div>
+</div>

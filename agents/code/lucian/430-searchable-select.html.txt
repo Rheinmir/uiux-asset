@@ -1,0 +1,46 @@
+<style>
+.u430{position:relative;width:340px;height:300px}
+.u430-w{position:absolute;left:40px;right:40px;top:14px}
+.u430-tr{display:flex;align-items:center;gap:11px;width:100%;height:52px;padding:0 14px 0 10px;border:0;border-radius:14px;background:var(--ux-surface);background:light-dark(var(--ux-surface),var(--ux-surface-2));box-shadow:0 0 0 1px var(--ux-line-2),0 10px 24px -14px var(--ux-shadow-strong);text-align:left;transform:scale(var(--k,1));transition:box-shadow .2s var(--ux-ease),transform .45s cubic-bezier(.34,1.7,.5,1)}
+.u430-tr:active{--k:.96;transition:transform .1s var(--ux-ease)}
+.u430.is-open .u430-tr,.u430 .u430-tr:focus-visible{outline:none;box-shadow:0 0 0 1.5px var(--ux-accent),0 0 0 5px var(--ux-accent-soft),0 10px 24px -14px var(--ux-shadow-strong)}
+.u430-tr.is-new .u430-who{animation:u430-swap .5s cubic-bezier(.3,1.5,.5,1)}
+@keyframes u430-swap{from{opacity:0;transform:translateY(8px)}}
+.u430-who{flex:1;min-width:0;display:flex;align-items:center;gap:11px}
+.u430-tx{min-width:0}
+.u430-tx b{display:block;font-size:14px;font-weight:650;letter-spacing:-.01em}
+.u430-tx small{display:block;font-size:11.5px;color:var(--ux-ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.u430-tr>svg{flex:none;width:16px;height:16px;fill:none;stroke:var(--ux-ink-3);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .45s cubic-bezier(.3,1.5,.5,1)}
+.u430.is-open .u430-tr>svg{transform:rotate(180deg)}
+.u430-av{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;color:#fff;background:var(--c)}
+.u430-pop{margin-top:8px;padding:6px;border-radius:14px;background:var(--ux-surface);background:light-dark(var(--ux-surface),var(--ux-surface-2));box-shadow:0 0 0 1px var(--ux-line-2),0 22px 44px -18px var(--ux-shadow-strong);transform-origin:50% 0;opacity:0;transform:translateY(-10px) scale(.94);visibility:hidden;transition:opacity .15s var(--ux-ease),transform .2s var(--ux-ease),visibility 0s linear .2s}
+.u430.is-open .u430-pop{opacity:1;transform:none;visibility:visible;transition:opacity .18s var(--ux-ease),transform .55s cubic-bezier(.28,1.45,.5,1),visibility 0s}
+.u430-s{display:flex;align-items:center;gap:8px;height:36px;margin-bottom:4px;padding:0 10px;border-radius:9px;background:var(--ux-surface-2);background:light-dark(var(--ux-surface-2),var(--ux-surface-3))}
+.u430-s svg{flex:none;width:14px;height:14px;fill:none;stroke:var(--ux-ink-3);stroke-width:2;stroke-linecap:round}
+.u430-q{flex:1;min-width:0;height:100%;padding:0;border:0;background:none;outline:none;font-size:13px;color:var(--ux-ink)}
+.u430-q::placeholder{color:var(--ux-ink-3);opacity:1}
+.u430 .u430-q:focus-visible{outline:none}
+.u430-lb{position:relative}
+.u430-o{display:flex;align-items:center;gap:10px;height:40px;padding:0 10px 0 8px;border-radius:9px;cursor:pointer;transition:background-color .12s}
+.u430.is-open .u430-o{animation:u430-row .5s cubic-bezier(.3,1.4,.5,1) both;animation-delay:calc(var(--i) * 40ms + 60ms)}
+@keyframes u430-row{from{opacity:0;transform:translateY(-8px)}}
+.u430-o.is-act{background:color-mix(in srgb,var(--ux-ink) 6%,transparent)}
+.u430-o .u430-av{width:26px;height:26px;font-size:11px}
+.u430-o b{flex:1;min-width:0;font-size:13px;font-weight:550}
+.u430-o mark{background:none;color:inherit;font-weight:750}
+.u430-o small{font-size:11.5px;color:var(--ux-ink-3)}
+.u430-ck{flex:none;width:18px;height:18px;fill:none;stroke:var(--ux-accent);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;opacity:0;transform:scale(.2) rotate(-30deg);transition:opacity .15s,transform .2s var(--ux-ease)}
+.u430-o[aria-selected="true"] .u430-ck{opacity:1;transform:none;transition:opacity .15s,transform .55s cubic-bezier(.3,1.9,.5,1)}
+.u430-no{padding:12px 10px;font-size:12.5px;color:var(--ux-ink-3)}
+.u430-live{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+</style>
+<div class="ux u430">
+  <div class="u430-w">
+    <button type="button" class="u430-tr" aria-haspopup="listbox" aria-expanded="false" aria-label="담당자 선택"><span class="u430-who"></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></button>
+    <div class="u430-pop">
+      <label class="u430-s"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg><input class="u430-q" type="text" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-label="이름 검색" placeholder="이름 검색" autocomplete="off" spellcheck="false"></label>
+      <div class="u430-lb" role="listbox" aria-label="담당자"></div>
+    </div>
+  </div>
+  <p class="u430-live" role="status"></p>
+</div>

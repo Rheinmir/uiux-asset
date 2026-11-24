@@ -1,0 +1,51 @@
+<style>
+.u233{position:relative;width:340px;height:340px;border-radius:30px;overflow:hidden;background:radial-gradient(90% 60% at 50% 0%,color-mix(in srgb,var(--ux-accent) 16%,transparent),transparent 70%),var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);color:var(--ux-ink)}
+/* 기다릴 때는 제목·입력창·칩 묶음이 카드 가운데에 있다가, 만들기 시작하면 위로 올라가 결과 자리를 엽니다 */
+.u233-g{position:absolute;inset:0;transform:translateY(46px);transition:transform .6s cubic-bezier(.3,1,.3,1)}
+.u233.is-run .u233-g,.u233.is-done .u233-g{transform:none}
+.u233-h{position:absolute;left:0;right:0;top:30px;margin:0;text-align:center;font-size:22px;font-weight:900;letter-spacing:-.035em}
+.u233-s{position:absolute;left:0;right:0;top:62px;text-align:center;font-size:11.5px;font-weight:650;color:var(--ux-ink-3)}
+.u233-bx{position:absolute;left:18px;right:18px;top:92px;height:92px;border-radius:20px;padding:1.5px;background:conic-gradient(from var(--u233-a,0deg),var(--ux-accent),#22D3EE,#F472B6,var(--ux-accent));animation:u233-spin 6s linear infinite}
+@property --u233-a{syntax:'<angle>';inherits:false;initial-value:0deg}
+@keyframes u233-spin{to{--u233-a:360deg}}
+.u233-in{position:relative;height:100%;border-radius:18.5px;background:var(--ux-surface);padding:12px 14px}
+.u233-tx{display:block;width:100%;height:46px;border:0;padding:0;background:none;resize:none;font:inherit;font-size:13px;line-height:1.45;font-weight:650;color:var(--ux-ink);outline:none}
+.u233-ph{position:absolute;left:14px;top:12px;right:56px;font-size:13px;line-height:1.45;font-weight:600;color:var(--ux-ink-3);pointer-events:none}
+.u233-ph::after{content:"";display:inline-block;width:1.5px;height:1.05em;margin-left:1px;vertical-align:-2px;background:var(--ux-accent);animation:u233-cur 1s steps(2) infinite}
+@keyframes u233-cur{50%{opacity:0}}
+.u233-go{position:absolute;right:10px;bottom:10px;width:32px;height:32px;border:0;border-radius:50%;background:var(--ux-ink);color:var(--ux-surface);display:grid;place-items:center;cursor:pointer;transition:transform .2s,background .2s}
+.u233-go:disabled{opacity:.35;cursor:default}
+.u233-go svg{width:14px;height:14px}
+.u233-go .u233-sp{display:none;width:14px;height:14px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:u233-rot .7s linear infinite}
+.u233.is-run .u233-go svg{display:none}
+.u233.is-run .u233-go .u233-sp{display:block}
+@keyframes u233-rot{to{transform:rotate(360deg)}}
+.u233-go:focus-visible,.u233-ch:focus-visible,.u233-nw:focus-visible{outline:2px solid var(--ux-accent);outline-offset:2px}
+.u233-chs{position:absolute;left:18px;right:18px;top:194px;display:flex;justify-content:center;gap:6px;transition:opacity .3s,transform .3s}
+.u233-ch{border:0;padding:6px 11px;border-radius:999px;background:var(--ux-surface-2);box-shadow:inset 0 0 0 1px var(--ux-line);color:var(--ux-ink-2);font:inherit;font-size:11px;font-weight:750;cursor:pointer;transition:background .2s,color .2s}
+.u233-ch:hover{background:var(--ux-accent-soft);color:var(--ux-ink)}
+.u233.is-run .u233-chs,.u233.is-done .u233-chs{opacity:0;transform:translateY(6px);pointer-events:none}
+.u233-gen{position:absolute;left:18px;right:18px;top:196px;height:124px;border-radius:16px;background:var(--ux-surface-2);box-shadow:inset 0 0 0 1px var(--ux-line);padding:12px 14px;opacity:0;transform:translateY(14px) scale(.97);transition:opacity .35s,transform .45s cubic-bezier(.2,.9,.3,1.1);pointer-events:none}
+.u233.is-run .u233-gen{transition-delay:.18s}
+.u233.is-run .u233-gen,.u233.is-done .u233-gen{opacity:1;transform:none;pointer-events:auto}
+.u233-gh{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:850}
+.u233-gh i{width:8px;height:8px;border-radius:50%;background:var(--ux-accent);box-shadow:0 0 0 0 var(--ux-accent);animation:u233-pl 1.2s ease-out infinite}
+.u233.is-done .u233-gh i{background:var(--ux-mint);animation:none}
+@keyframes u233-pl{70%{box-shadow:0 0 0 7px transparent}}
+.u233-gs{font-size:10px;font-weight:650;color:var(--ux-ink-3);margin:3px 0 10px}
+.u233-ln{height:9px;border-radius:5px;margin-top:7px;background:linear-gradient(90deg,var(--ux-line) 0 30%,color-mix(in srgb,var(--ux-accent) 40%,var(--ux-surface)) 50%,var(--ux-line) 70%);background-size:300% 100%;animation:u233-sh 1.4s linear infinite;transform-origin:0 50%;transition:transform .5s}
+@keyframes u233-sh{from{background-position:100% 0}to{background-position:-100% 0}}
+.u233.is-done .u233-ln{animation:none;background:color-mix(in srgb,var(--ux-accent) 22%,var(--ux-surface))}
+.u233-nw{position:absolute;right:12px;bottom:10px;border:0;padding:5px 10px;border-radius:999px;background:var(--ux-ink);color:var(--ux-surface);font:inherit;font-size:10px;font-weight:800;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .25s}
+.u233.is-done .u233-nw{opacity:1;pointer-events:auto}
+@media (prefers-reduced-motion: reduce){.u233-bx,.u233-ln,.u233-ph::after{animation:none}.u233-g,.u233-gen{transition:none}}
+</style>
+<div class="ux u233">
+  <div class="u233-g">
+  <h3 class="u233-h">무엇을 만들어 볼까요?</h3>
+  <div class="u233-s">말로 설명하면 화면이 됩니다</div>
+  <div class="u233-bx"><div class="u233-in"><textarea class="u233-tx" rows="2" aria-label="만들고 싶은 화면 설명"></textarea><span class="u233-ph" aria-hidden="true"></span><button type="button" class="u233-go" aria-label="보내기" disabled><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 12V2M2.5 6.5 7 2l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="u233-sp"></span></button></div></div>
+  <div class="u233-chs" role="group" aria-label="추천 프롬프트"></div>
+  </div>
+  <div class="u233-gen" aria-live="polite"><div class="u233-gh"><i aria-hidden="true"></i><span class="u233-gt"></span></div><div class="u233-gs"></div><div class="u233-ln" style="width:92%"></div><div class="u233-ln" style="width:74%"></div><div class="u233-ln" style="width:84%"></div><button type="button" class="u233-nw">새로 만들기</button></div>
+</div>

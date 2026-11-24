@@ -1,0 +1,33 @@
+<style>
+.u379{position:relative;width:340px;height:340px;border-radius:30px;overflow:hidden;background:radial-gradient(90% 70% at 50% 35%,#3B1F0E,#170B05 75%);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);color:#FFF4E6}
+.u379-fl{position:absolute;left:50%;top:26px;width:120px;height:144px;margin-left:-60px;transform-origin:50% 96%;transition:transform .6s cubic-bezier(.3,1.5,.5,1)}
+.u379-fl svg{width:100%;height:100%;overflow:visible}
+.u379-fo{filter:drop-shadow(0 0 10px rgba(255,110,40,.55))}
+.u379-sp circle{fill:#FFD08A}
+.u379-glow{position:absolute;left:50%;top:60px;width:200px;height:200px;margin-left:-100px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,146,43,.35),transparent);transition:opacity .6s,transform .6s;pointer-events:none}
+.u379-ct{position:absolute;left:0;right:0;top:172px;display:flex;align-items:baseline;justify-content:center;gap:6px}
+.u379-nw{display:inline-block;height:44px;overflow:hidden}
+.u379-ns{display:block;transition:transform .5s cubic-bezier(.3,1.5,.5,1)}
+.u379-ns i{display:block;height:44px;font-style:normal;font-size:40px;line-height:44px;font-weight:900;font-variant-numeric:tabular-nums;color:#FFA94D;text-align:center}
+.u379-ct b{font-size:14px;font-weight:800;color:#FFD8A8}
+.u379-wk{position:absolute;left:22px;right:22px;top:232px;display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center}
+.u379-dy{font-size:10px;font-weight:800;color:#C9A68A}
+.u379-dt{width:30px;height:30px;margin:4px auto 0;border-radius:50%;border:2px dashed rgba(255,216,168,.35);display:grid;place-items:center}
+.u379-dt.is-on{border:0;background:linear-gradient(135deg,#FF922B,#F03E3E);animation:u379-pop .45s cubic-bezier(.3,1.8,.5,1)}
+.u379-dt.is-on::after{content:"";width:9px;height:5px;border-left:2.5px solid #fff;border-bottom:2.5px solid #fff;transform:rotate(-45deg) translate(1px,-1px)}
+.u379-dt.is-today{box-shadow:0 0 0 2px #FFD8A8}
+@keyframes u379-pop{from{transform:scale(.3)}}
+.u379-go{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);border:0;padding:9px 20px;border-radius:999px;background:linear-gradient(90deg,#FF922B,#F03E3E);color:#fff;font:inherit;font-size:13px;font-weight:900;cursor:pointer;box-shadow:0 8px 18px -8px rgba(240,62,62,.7)}
+.u379-go:focus-visible{outline:2px solid #FFD8A8;outline-offset:3px}
+.u379-bd{position:absolute;right:18px;top:18px;padding:5px 10px;border-radius:999px;background:#FFD43B;color:#3B1F0E;font-size:11px;font-weight:900;opacity:0;transform:scale(.5) rotate(-10deg);transition:opacity .25s,transform .45s cubic-bezier(.3,1.8,.5,1)}
+.u379.is-week .u379-bd{opacity:1;transform:rotate(6deg)}
+@media (prefers-reduced-motion: reduce){.u379-fl{transition:none}}
+</style>
+<div class="ux u379">
+  <div class="u379-glow" aria-hidden="true"></div>
+  <div class="u379-fl" aria-hidden="true"><svg viewBox="0 0 120 144"><defs></defs><g class="u379-sp"></g><path class="u379-fo"/><path class="u379-fm"/><path class="u379-fc"/></svg></div>
+  <div class="u379-ct" aria-live="polite"><span class="u379-nw"><span class="u379-ns"></span></span><b>일 연속</b></div>
+  <div class="u379-wk"></div>
+  <div class="u379-bd">일주일 연속!</div>
+  <button type="button" class="u379-go"></button>
+</div>

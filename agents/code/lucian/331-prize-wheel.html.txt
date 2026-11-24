@@ -1,0 +1,18 @@
+<style>
+.u331{position:relative;width:340px;height:340px;border-radius:30px;overflow:hidden;background:radial-gradient(90% 80% at 50% 35%,#5F3DC4,#2B1A6B 75%);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);color:#fff}
+.u331-wh{position:absolute;left:50%;top:40px;width:240px;height:240px;margin-left:-120px;border-radius:50%;cursor:grab;touch-action:none;filter:drop-shadow(0 14px 20px rgba(0,0,0,.45))}
+.u331-wh:active{cursor:grabbing}
+.u331-wh svg{width:100%;height:100%;display:block}
+.u331-pt{position:absolute;left:50%;top:26px;width:26px;height:36px;margin-left:-13px;transform-origin:50% 8px;pointer-events:none;filter:drop-shadow(0 3px 3px rgba(0,0,0,.4))}
+.u331-ft{position:absolute;left:0;right:0;bottom:16px;display:flex;align-items:center;justify-content:center;gap:12px}
+.u331-go{border:0;padding:9px 20px;border-radius:999px;background:#FCC419;color:#2B1A6B;font:inherit;font-size:13px;font-weight:900;cursor:pointer;box-shadow:0 6px 0 #E67700}
+.u331-go:active{transform:translateY(3px);box-shadow:0 3px 0 #E67700}
+.u331-go:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.u331-rs{min-width:96px;font-size:13px;font-weight:800;opacity:0;transform:translateY(6px);transition:opacity .3s,transform .4s cubic-bezier(.3,1.6,.5,1)}
+.u331-rs.is-on{opacity:1;transform:none}
+</style>
+<div class="ux u331">
+  <div class="u331-wh" role="img" aria-label="경품 돌림판, 끌어서 튕기기"><svg viewBox="-120 -120 240 240" aria-hidden="true"><g class="u331-rot"></g></svg></div>
+  <svg class="u331-pt" viewBox="0 0 26 36" aria-hidden="true"><circle cx="13" cy="8" r="7" fill="#F8F9FA"/><path d="M5 10 L13 34 L21 10 Z" fill="#F8F9FA"/><circle cx="13" cy="8" r="3" fill="#FA5252"/></svg>
+  <div class="u331-ft"><button type="button" class="u331-go">돌리기</button><div class="u331-rs" aria-live="polite"></div></div>
+</div>

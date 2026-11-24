@@ -1,0 +1,41 @@
+<style>
+.u268{position:relative;width:340px;height:340px;border-radius:30px;overflow:hidden;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);color:var(--ux-ink)}
+.u268-hd{position:absolute;left:20px;top:20px;font-size:15px;font-weight:900}
+.u268-th{position:absolute;left:16px;right:16px;top:52px;display:flex;gap:9px;padding:11px 12px;border-radius:14px;background:var(--ux-surface-2)}
+.u268-th i{flex:none;width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#A5B4FC,#6366F1)}
+.u268-th div{flex:1}
+.u268-th b{display:block;font-size:11px;font-weight:850}
+.u268-th span{display:block;margin-top:2px;font-size:11px;line-height:1.45;font-weight:600;color:var(--ux-ink-2)}
+.u268-bx{position:absolute;left:16px;right:16px;top:130px;height:120px;border-radius:15px;background:var(--ux-surface);box-shadow:inset 0 0 0 1.5px var(--ux-line);transition:box-shadow .2s}
+.u268-bx:focus-within{box-shadow:inset 0 0 0 2px var(--ux-accent)}
+.u268-mr,.u268-ta{position:absolute;inset:0;margin:0;padding:12px 13px;border:0;font:inherit;font-size:12.5px;line-height:1.6;font-weight:600;letter-spacing:0;white-space:pre-wrap;word-wrap:break-word;overflow:hidden;box-sizing:border-box}
+.u268-mr{color:transparent;pointer-events:none}
+.u268-mr mark{color:transparent;background:color-mix(in srgb,var(--ux-accent) 18%,transparent);border-radius:5px;box-shadow:0 0 0 2px color-mix(in srgb,var(--ux-accent) 18%,transparent)}
+.u268-ta{background:none;color:var(--ux-ink);resize:none;outline:none;caret-color:var(--ux-accent)}
+.u268-ta::placeholder{color:var(--ux-ink-3);font-weight:600}
+.u268-pp{position:absolute;z-index:3;width:178px;padding:5px;border-radius:13px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 16px 32px -12px var(--ux-shadow-strong);transform-origin:12px 0;transform:scale(.9) translateY(-4px);opacity:0;pointer-events:none;transition:transform .2s cubic-bezier(.3,1.6,.5,1),opacity .12s}
+.u268.is-pop .u268-pp{transform:none;opacity:1;pointer-events:auto}
+.u268-op{display:flex;align-items:center;gap:8px;width:100%;height:34px;padding:0 7px;border:0;border-radius:9px;background:none;color:var(--ux-ink);font:inherit;font-size:11.5px;font-weight:700;cursor:pointer;text-align:left}
+.u268-op[hidden]{display:none}
+.u268-op.is-on,.u268-op:hover,.u268-op.g-hov{background:var(--ux-surface-2)}
+.u268-op i{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;color:#fff;font-style:normal;font-size:9.5px;font-weight:850}
+.u268-op span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.u268-op span b{font-weight:900;color:var(--ux-accent)}
+.u268-op small{font-size:9.5px;font-weight:750;color:var(--ux-ink-3)}
+.u268-no{padding:9px;font-size:10.5px;font-weight:700;color:var(--ux-ink-3)}
+.u268-ft{position:absolute;left:16px;right:16px;bottom:18px;display:flex;align-items:center;gap:8px}
+.u268-ft small{font-size:10px;font-weight:800;color:var(--ux-ink-3);white-space:nowrap}
+.u268-av{display:flex;flex:1;padding-left:6px;min-height:26px;align-items:center}
+.u268-av i{width:26px;height:26px;margin-left:-6px;border-radius:50%;display:grid;place-items:center;color:#fff;font-style:normal;font-size:10px;font-weight:850;box-shadow:0 0 0 2.5px var(--ux-surface);animation:u268-in .4s cubic-bezier(.3,1.7,.5,1)}
+@keyframes u268-in{from{transform:scale(0)}}
+.u268-sd{height:34px;padding:0 15px;border:0;border-radius:11px;background:var(--ux-ink);color:var(--ux-surface);font:inherit;font-size:12px;font-weight:850;cursor:pointer}
+.u268 button:focus-visible{outline:2px solid var(--ux-accent);outline-offset:1px}
+@media (prefers-reduced-motion: reduce){.u268-pp{transition:none}.u268-av i{animation:none}}
+</style>
+<div class="ux u268">
+  <div class="u268-hd">댓글</div>
+  <div class="u268-th"><i aria-hidden="true"></i><div><b>Lucian</b><span>랜딩 페이지 새 시안 올렸어요. 첫 화면 위주로 봐 주세요!</span></div></div>
+  <div class="u268-bx"><div class="u268-mr" aria-hidden="true"></div><textarea class="u268-ta" placeholder="댓글을 남기세요. @로 팀원을 부를 수 있어요" aria-label="댓글" aria-autocomplete="list" spellcheck="false"></textarea></div>
+  <div class="u268-pp" role="listbox" aria-label="팀원"></div>
+  <div class="u268-ft"><small>알림 받을 사람</small><span class="u268-av"></span><button type="button" class="u268-sd">보내기</button></div>
+</div>

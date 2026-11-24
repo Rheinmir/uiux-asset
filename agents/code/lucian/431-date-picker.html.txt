@@ -1,0 +1,39 @@
+<style>
+.u431{position:relative;width:340px;height:300px;display:grid;place-items:center}
+.u431-c{width:292px;padding:12px 12px 10px;border-radius:20px;background:var(--ux-surface);background:light-dark(var(--ux-surface),var(--ux-surface-2));box-shadow:0 0 0 1px var(--ux-line-2),0 20px 44px -22px var(--ux-shadow-strong)}
+.u431-hd{display:flex;align-items:center;height:32px;padding:0 2px 0 8px}
+.u431-hd b{flex:1;font-size:15px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.u431-nav{width:30px;height:30px;padding:0;border:0;border-radius:9px;display:grid;place-items:center;background:none;color:var(--ux-ink-2);transform:scale(var(--k,1));transition:background-color .15s,color .15s,opacity .15s,transform .4s cubic-bezier(.34,1.7,.5,1)}
+.u431-nav:hover:not(:disabled){background:var(--ux-surface-2);background:light-dark(var(--ux-surface-2),var(--ux-surface-3));color:var(--ux-ink)}
+.u431-nav:active:not(:disabled){--k:.86;transition:transform .1s var(--ux-ease)}
+.u431-nav:disabled{opacity:.25;cursor:default}
+.u431-nav svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.u431-wk,.u431-g{display:grid;grid-template-columns:repeat(7,1fr)}
+.u431-wk{margin-top:4px}
+.u431-wk span{height:24px;display:grid;place-items:center;font-size:11px;font-weight:600;color:var(--ux-ink-3)}
+.u431-gw{position:relative;overflow:hidden}
+.u431-g{position:relative;grid-template-rows:repeat(6,32px)}
+.u431-g.is-l{animation:u431-l .42s cubic-bezier(.25,1,.4,1)}
+.u431-g.is-r{animation:u431-r .42s cubic-bezier(.25,1,.4,1)}
+@keyframes u431-l{from{opacity:0;transform:translateX(44px)}}
+@keyframes u431-r{from{opacity:0;transform:translateX(-44px)}}
+.u431-sel{position:absolute;left:0;top:0;width:32px;height:32px;border-radius:50%;background:var(--ux-accent);box-shadow:0 6px 14px -6px var(--ux-accent);transform:translate(var(--sx,0px),var(--sy,0px)) scale(var(--ss,0));transition:transform .5s cubic-bezier(.3,1.45,.5,1);pointer-events:none}
+.u431-sel.is-jump{transition:none}
+.u431-d{position:relative;z-index:1;justify-self:center;width:32px;height:32px;padding:0;border:0;border-radius:50%;background:none;font-size:13px;font-weight:500;font-variant-numeric:tabular-nums;color:var(--ux-ink);transition:color .2s var(--ux-ease),background-color .15s}
+.u431-d:hover:not(:disabled):not([aria-selected="true"]){background:color-mix(in srgb,var(--ux-ink) 7%,transparent)}
+.u431-d:disabled{color:var(--ux-ink-3);opacity:.5;cursor:default}
+.u431-d[aria-selected="true"]{color:var(--ux-accent-ink);font-weight:700;transition:color .2s var(--ux-ease) .12s}
+.u431-d[aria-current="date"]{font-weight:700;color:var(--ux-accent)}
+.u431-d[aria-current="date"]::after{content:"";position:absolute;left:50%;bottom:3px;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:currentColor}
+.u431-d[aria-current="date"][aria-selected="true"]{color:var(--ux-accent-ink)}
+.u431 .u431-d:focus-visible,.u431 .u431-nav:focus-visible{outline:2px solid var(--ux-accent);outline-offset:1px}
+.u431-live{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+</style>
+<div class="ux u431">
+  <div class="u431-c">
+    <div class="u431-hd"><b aria-live="polite"></b><button type="button" class="u431-nav" aria-label="이전 달"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14.5 6-6 6 6 6"/></svg></button><button type="button" class="u431-nav" aria-label="다음 달"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9.5 6 6 6-6 6"/></svg></button></div>
+    <div class="u431-wk" aria-hidden="true"></div>
+    <div class="u431-gw"><i class="u431-sel" aria-hidden="true"></i><div class="u431-g" role="grid" aria-label="날짜"></div></div>
+  </div>
+  <p class="u431-live" role="status"></p>
+</div>

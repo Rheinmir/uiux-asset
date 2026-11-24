@@ -1,0 +1,19 @@
+<style>
+.u368{position:relative;width:340px;height:340px;display:flex;flex-direction:column;padding:18px 18px 16px;border-radius:28px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);overflow:hidden}
+.u368-hd{display:flex;align-items:center;justify-content:space-between}
+.u368-hd span{font-size:12px;font-weight:750;color:var(--ux-ink-3)}
+.u368-n{display:inline-flex;height:16px;overflow:hidden;font:700 12px/16px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--ux-ink)}
+.u368-n i{display:block;font-style:normal;transition:transform .5s var(--ux-spring)}
+.u368-off{height:30px;padding:0 11px;border:0;border-radius:999px;background:var(--ux-surface-2);font-size:12px;font-weight:700;color:var(--ux-ink-2)}
+.u368-p{position:relative;margin:12px 0 0;padding-left:16px;font-size:16.5px;line-height:1.66;font-weight:620;letter-spacing:-.02em;color:var(--ux-ink);outline:none;border-radius:8px}
+.u368-p:focus-visible{box-shadow:0 0 0 2px var(--ux-accent)}
+.u368-s{transition:opacity .45s var(--ux-ease),filter .45s var(--ux-ease),color .45s}
+.u368.is-f .u368-s{opacity:.25;filter:blur(1.2px)}
+.u368.is-f .u368-s.on{opacity:1;filter:none}
+.u368-bar{position:absolute;left:0;top:0;width:4px;height:0;border-radius:4px;background:var(--ux-accent);opacity:0;transition:transform .55s var(--ux-spring),height .55s var(--ux-spring),opacity .3s}
+.u368.is-f .u368-bar{opacity:1}
+</style>
+<div class="ux u368 is-f">
+  <div class="u368-hd"><span>읽기 모드 · <span class="u368-n" aria-hidden="true"><i></i></span><span class="u368-n2"> / 5</span></span><button class="u368-off" type="button" aria-pressed="false">초점 끄기</button></div>
+  <p class="u368-p" tabindex="0" aria-label="문단, 위아래 화살표로 문장 이동"><span class="u368-bar" aria-hidden="true"></span></p>
+</div>

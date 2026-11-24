@@ -1,0 +1,6 @@
+<style>
+.u352{position:relative;width:340px;height:330px;border-radius:30px;overflow:hidden;background:#120A1F;box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);transition:background-color .6s}
+.u352-cv{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:pointer}
+.u352-nm{position:absolute;right:14px;bottom:14px;padding:5px 10px;border-radius:999px;background:rgba(255,255,255,.12);color:rgba(255,255,255,.85);font-size:11.5px;font-weight:750;pointer-events:none;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+</style>
+<div class="ux u352"><canvas class="u352-cv" role="img" aria-label="흐름장, 눌러서 색 바꾸기"></canvas><span class="u352-nm" aria-live="polite"></span></div>

@@ -1,0 +1,31 @@
+<style>
+.u060{--x:50%;position:relative;width:330px;height:460px;border-radius:30px;overflow:hidden;isolation:isolate;cursor:ew-resize;user-select:none;-webkit-user-select:none;touch-action:pan-y;box-shadow:0 30px 60px -32px rgba(10,10,40,.55)}
+.u060:focus-visible{outline:2px solid var(--ux-accent);outline-offset:4px}
+.u060-l{position:absolute;inset:0}
+.u060-l svg{width:100%;height:100%;display:block}
+.u060-night{clip-path:inset(0 0 0 var(--x))}
+.u060-line{position:absolute;top:0;bottom:0;left:var(--x);width:2px;margin-left:-1px;background:rgba(255,255,255,.95);box-shadow:0 0 16px rgba(0,0,0,.35);z-index:2}
+.u060-hd{position:absolute;top:50%;left:var(--x);width:48px;height:48px;margin:-24px 0 0 -24px;border-radius:50%;background:rgba(255,255,255,.95);color:#16151B;box-shadow:0 12px 26px -8px rgba(0,0,0,.55);display:grid;place-items:center;z-index:3;transition:transform .4s var(--ux-spring),width .3s,height .3s}
+.u060:hover .u060-hd{transform:scale(1.06)}
+.u060.drag .u060-hd{transform:scale(1.18)}
+.u060-hd svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;transition:transform .3s var(--ux-spring)}
+.u060.drag .u060-hd svg{transform:scaleX(1.25)}
+.u060-tag{position:absolute;top:18px;z-index:4;height:30px;padding:0 12px;border-radius:999px;display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:800;transition:opacity .3s}
+.u060-tag svg{width:14px;height:14px}
+.u060-tag.d{left:16px;background:rgba(255,255,255,.75);color:#7A4A0F}
+.u060-tag.n{right:16px;background:rgba(14,12,40,.6);color:#E6E2FF}
+.u060-tag.fade{opacity:0}
+.u060-cap{position:absolute;left:18px;right:18px;bottom:18px;z-index:4;display:flex;justify-content:space-between;align-items:flex-end;color:#fff;text-shadow:0 1px 10px rgba(0,0,0,.35);pointer-events:none}
+.u060-cap b{font-size:20px;font-weight:850;letter-spacing:-.04em}
+.u060-cap small{display:block;font-size:12px;font-weight:700;opacity:.85}
+.u060-cap em{font-style:normal;font-size:13px;font-weight:800;font-variant-numeric:tabular-nums}
+</style>
+<div class="ux u060" tabindex="0" role="slider" aria-label="낮과 밤 비교, 밤 쪽 비율" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+  <div class="u060-l u060-day" aria-hidden="true"></div>
+  <div class="u060-l u060-night" aria-hidden="true"></div>
+  <span class="u060-line" aria-hidden="true"></span>
+  <span class="u060-hd" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 6l-5 6 5 6M15 6l5 6-5 6"/></svg></span>
+  <span class="u060-tag d" aria-hidden="true"><svg viewBox="0 0 14 14"><circle cx="7" cy="7" r="3.2" fill="currentColor"/></svg>낮 2:00</span>
+  <span class="u060-tag n" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M10.5 9A4.5 4.5 0 0 1 5 3.5 4.5 4.5 0 1 0 10.5 9z" fill="currentColor"/></svg>밤 10:00</span>
+  <div class="u060-cap" aria-hidden="true"><span><small>서울 · 한강변</small><b>같은 자리, 다른 시간</b></span><em>낮 50 · 밤 50</em></div>
+</div>

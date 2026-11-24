@@ -1,0 +1,28 @@
+<style>
+.u207{position:relative;width:300px;height:480px;border-radius:32px;overflow:hidden;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);color:var(--ux-ink)}
+.u207-hd{position:absolute;left:0;right:0;top:0;z-index:2;padding:26px 20px 10px;text-align:center}
+.u207-hd h3{margin:0;font-size:20px;font-weight:900;letter-spacing:-.035em}
+.u207-hd p{display:inline-flex;align-items:center;gap:5px;margin:6px 0 0;font-size:11px;font-weight:800;color:var(--ux-ink-2)}
+.u207-hd p b{font-size:13px;font-weight:900;color:var(--ux-ink)}
+.u207-hd p i{font-style:normal;color:#F59E0B;letter-spacing:-1px}
+.u207-wl{position:absolute;left:12px;right:12px;top:88px;bottom:0;display:grid;grid-template-columns:1fr 1fr;gap:9px;overflow:hidden;-webkit-mask-image:linear-gradient(transparent,#000 14%,#000 82%,transparent);mask-image:linear-gradient(transparent,#000 14%,#000 82%,transparent)}
+.u207-co{position:relative;overflow:hidden}
+.u207-tr{display:flex;flex-direction:column;gap:9px;animation:u207-up var(--t) linear infinite;animation-direction:var(--dir)}
+.u207-co:hover .u207-tr,.u207-co.g-hov .u207-tr,.u207-co.is-hold .u207-tr{animation-play-state:paused}
+.u207.is-off .u207-tr{animation-play-state:paused}
+@keyframes u207-up{to{transform:translateY(calc(-50% - 4.5px))}}
+.u207-cd{padding:12px 11px;border-radius:16px;background:var(--ux-surface-2);box-shadow:inset 0 0 0 1px var(--ux-line);transition:transform .3s cubic-bezier(.3,1.4,.5,1),box-shadow .3s,background .3s}
+.u207-cd.is-hl{transform:translateY(-3px) scale(1.02);background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 14px 26px -14px var(--ux-shadow-strong)}
+.u207-cd i{display:block;font-style:normal;font-size:10px;color:#F59E0B;letter-spacing:-1px}
+.u207-cd p{margin:5px 0 0;font-size:11px;line-height:1.5;font-weight:600;color:var(--ux-ink-2)}
+.u207-cd mark{background:linear-gradient(transparent 55%,color-mix(in srgb,#FACC15 45%,transparent) 55%);color:var(--ux-ink);font-weight:750}
+.u207-pp{display:flex;align-items:center;gap:7px;margin-top:9px}
+.u207-av{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:10px;font-weight:850}
+.u207-pp b{display:block;font-size:10.5px;font-weight:850;color:var(--ux-ink)}
+.u207-pp small{display:block;font-size:9px;font-weight:650;color:var(--ux-ink-3)}
+@media (prefers-reduced-motion: reduce){.u207-tr{animation:none}.u207-wl{overflow-y:auto}.u207-co{overflow:visible}}
+</style>
+<div class="ux u207">
+  <div class="u207-hd"><h3>사용자들의 이야기</h3><p><i aria-hidden="true">★★★★★</i><b>4.9</b>리뷰 2,341개</p></div>
+  <div class="u207-wl"></div>
+</div>

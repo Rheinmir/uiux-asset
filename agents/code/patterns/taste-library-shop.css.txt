@@ -1,0 +1,18 @@
+.tx-shop{--c:#1d5b3a;color:#fff;background:radial-gradient(260px 300px at 50% 30%,color-mix(in srgb,var(--c),#fff 12%),var(--c) 60%,color-mix(in srgb,var(--c),#000 45%));transition:background .4s}
+.tx-shop .top{position:absolute;top:52px;left:16px;right:16px;display:flex;justify-content:space-between;align-items:center;font:700 14px/1 Inter;letter-spacing:.3em}
+.tx-shop .top .tx-btn{width:32px;height:32px;background:rgba(255,255,255,.12)}
+.tx-shop .big{position:absolute;left:0;right:0;top:92px;text-align:center;font:800 170px/1 Inter;letter-spacing:-.06em;color:rgba(255,255,255,.07)}
+.tx-shop svg.pot{position:absolute;left:40px;top:120px;width:220px;filter:drop-shadow(0 20px 20px rgba(0,0,0,.35))}
+.tx-shop .sw{position:absolute;left:20px;top:330px;display:flex;align-items:center;gap:8px;font:500 11px/1 Inter}
+.tx-shop .sw button{width:18px;height:18px;border-radius:50%;border:2px solid transparent;cursor:pointer;padding:0}
+.tx-shop .sw [aria-pressed=true]{box-shadow:0 0 0 2px #fff}
+.tx-shop .name{position:absolute;left:20px;right:20px;top:362px;font:400 8px/1 Inter;opacity:.75}
+.tx-shop .name b{display:flex;justify-content:space-between;margin-top:6px;font:800 30px/1 Inter;letter-spacing:-.03em;opacity:1}
+.tx-shop .name b span{font-size:20px}
+.tx-shop .name p{margin:8px 0 0;font:400 9px/1.5 Inter}
+.tx-shop .size{position:absolute;left:20px;right:20px;top:450px;font:400 9px/1 Inter;opacity:.85}
+.tx-shop .size header{display:flex;justify-content:space-between}
+.tx-shop .size div{display:flex;justify-content:space-around;margin-top:8px;padding-top:16px;border-radius:12px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.4) 0 1px,transparent 1px 12px) 0 6px/100% 10px no-repeat,rgba(0,0,0,.15)}
+.tx-shop .size button{height:36px;border:0;background:none;color:rgba(255,255,255,.5);font:500 12px/1 Inter;cursor:pointer}
+.tx-shop .size [aria-pressed=true]{color:#fff;font-size:18px;font-weight:700}
+.tx-shop .add{position:absolute;left:14px;right:14px;bottom:24px;display:flex;justify-content:space-between;align-items:center;height:44px;padding:0 18px;border:0;border-radius:999px;background:#fff;color:#111;font:600 12px/1 Inter;cursor:pointer}

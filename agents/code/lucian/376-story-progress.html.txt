@@ -1,0 +1,27 @@
+<style>
+.u376{position:relative;width:300px;height:500px;border-radius:30px;background:#000;box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);overflow:hidden;perspective:900px;color:#fff}
+.u376-cube{position:absolute;inset:0;transform-style:preserve-3d;transform:translateZ(-150px) rotateY(var(--ry,0deg));transition:transform .7s cubic-bezier(.5,0,.25,1)}
+.u376-face{position:absolute;inset:0;backface-visibility:hidden;overflow:hidden}
+.u376-face:nth-child(1){transform:rotateY(0deg) translateZ(150px)}
+.u376-face:nth-child(2){transform:rotateY(90deg) translateZ(150px)}
+.u376-sc{position:absolute;inset:0;background:var(--bg);transition:opacity .35s}
+.u376-sc b{position:absolute;left:20px;bottom:40px;font-size:28px;font-weight:900;letter-spacing:-.04em;text-shadow:0 2px 14px rgba(0,0,0,.3)}
+.u376-bars{position:absolute;left:10px;right:10px;top:10px;display:flex;gap:4px;transition:opacity .3s}
+.u376-bars i{flex:1;height:3px;border-radius:3px;background:rgba(255,255,255,.35);overflow:hidden}
+.u376-bars i b{display:block;height:100%;background:#fff;transform-origin:0 50%;transform:scaleX(var(--p,0))}
+.u376-hd{position:absolute;left:12px;top:22px;display:flex;align-items:center;gap:8px;transition:opacity .3s}
+.u376-hd i{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--a),var(--b));box-shadow:0 0 0 2px #fff}
+.u376-hd b{font-size:13.5px;font-weight:750}
+.u376-hd span{font-size:12px;opacity:.7}
+.u376.is-hold .u376-bars,.u376.is-hold .u376-hd{opacity:0}
+.u376-hit{position:absolute;top:60px;bottom:0;border:0;padding:0;background:none;z-index:5}
+.u376-hit:first-of-type{left:0;width:33%}
+.u376-hit:last-of-type{right:0;width:67%}
+.u376-hit:focus-visible{outline:2px solid #fff;outline-offset:-6px}
+</style>
+<div class="ux u376">
+  <div class="u376-cube"></div>
+  <button class="u376-hit" type="button" aria-label="이전 장면"></button>
+  <button class="u376-hit" type="button" aria-label="다음 장면, 길게 누르면 멈춤"></button>
+  <span class="u376-sr" role="status" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)"></span>
+</div>

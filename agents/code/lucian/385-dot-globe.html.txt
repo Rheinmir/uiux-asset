@@ -1,0 +1,19 @@
+<style>
+.u385{position:relative;width:340px;height:340px;border-radius:30px;overflow:hidden;background:radial-gradient(80% 80% at 50% 48%,#0F1A33,#060912 72%);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);color:#E8F0FF}
+.u385-cv{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:grab}
+.u385-cv:active{cursor:grabbing}
+.u385-hd{position:absolute;left:16px;top:14px;pointer-events:none}
+.u385-hd small{display:block;font-size:10.5px;font-weight:700;color:rgba(232,240,255,.55);letter-spacing:.02em}
+.u385-hd b{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.u385-hd b::before{content:"";display:inline-block;width:7px;height:7px;margin:0 7px 3px 0;border-radius:50%;background:#5CF2B5;box-shadow:0 0 0 0 rgba(92,242,181,.6);animation:u385-live 1.6s infinite}
+@keyframes u385-live{70%{box-shadow:0 0 0 7px rgba(92,242,181,0)}100%{box-shadow:0 0 0 0 rgba(92,242,181,0)}}
+.u385-tip{position:absolute;left:0;top:0;padding:6px 9px;border-radius:10px;background:rgba(232,240,255,.95);color:#0F1A33;font-size:11px;font-weight:750;white-space:nowrap;pointer-events:none;opacity:0;transform:translate(-50%,-140%) scale(.9);transition:opacity .18s,transform .25s var(--ux-spring)}
+.u385-tip.is-on{opacity:1;transform:translate(-50%,-140%)}
+.u385-tip span{display:block;font-size:10px;font-weight:650;color:#4A5878}
+@media (prefers-reduced-motion: reduce){.u385-hd b::before{animation:none}}
+</style>
+<div class="ux u385">
+  <canvas class="u385-cv" role="img" aria-label="점 지구본, 끌어서 돌리기"></canvas>
+  <div class="u385-hd"><small>실시간 방문</small><b class="u385-n">0</b></div>
+  <div class="u385-tip" aria-hidden="true"><b class="u385-tn"></b><span class="u385-tv"></span></div>
+</div>

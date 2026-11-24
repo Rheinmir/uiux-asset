@@ -1,0 +1,30 @@
+<style>
+.u219{position:relative;width:340px;height:340px;border-radius:30px;overflow:hidden;box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong)}
+/* 바닥 판은 둘레 테마를 따르고, 원으로 열리는 판은 그 반대 테마입니다 */
+.u219-pg{position:absolute;inset:0;padding:14px 16px;background:var(--bg);color:var(--fg);--bg:light-dark(#F7F7FA,#0D0E14);--fg:light-dark(#14151A,#ECEDF5);--card:light-dark(#fff,#171925);--mut:light-dark(#7A7D8C,#8C90A6);--ln:light-dark(#E7E8EE,#262938);--ac:light-dark(#4F46E5,#A5B4FC)}
+.u219-pg.is-dark{--bg:light-dark(#0D0E14,#F7F7FA);--fg:light-dark(#ECEDF5,#14151A);--card:light-dark(#171925,#fff);--mut:light-dark(#8C90A6,#7A7D8C);--ln:light-dark(#262938,#E7E8EE);--ac:light-dark(#A5B4FC,#4F46E5)}
+.u219-dk{clip-path:circle(0px at var(--cx,300px) var(--cy,30px));transition:clip-path .7s cubic-bezier(.65,0,.35,1);pointer-events:none}
+.u219.is-on .u219-dk{clip-path:circle(520px at var(--cx,300px) var(--cy,30px));pointer-events:auto}
+.u219-nv{display:flex;align-items:center;gap:12px;height:32px;font-size:11px;font-weight:750;color:var(--mut)}
+.u219-nv b{margin-right:auto;display:flex;align-items:center;gap:6px;font-size:13px;font-weight:900;color:var(--fg)}
+.u219-nv b i{width:14px;height:14px;border-radius:50%;background:var(--ac)}
+.u219-tg{width:32px;height:32px;border:0;border-radius:10px;background:var(--card);box-shadow:inset 0 0 0 1px var(--ln);color:var(--fg);display:grid;place-items:center;cursor:pointer}
+.u219-tg:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.u219-tg svg{grid-area:1/1;width:16px;height:16px;transition:transform .6s cubic-bezier(.3,1.4,.5,1)}
+.u219-lt .u219-sun,.u219-dk .u219-moon{color:var(--fg);color:light-dark(var(--fg),transparent)}
+.u219-lt .u219-moon,.u219-dk .u219-sun{color:transparent;color:light-dark(transparent,var(--fg))}
+.u219-dk .u219-tg svg{transform:rotate(-90deg)}
+.u219-h{margin:16px 0 10px;font-size:20px;font-weight:900;letter-spacing:-.035em}
+.u219-kp{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.u219-kp div{padding:9px 10px;border-radius:12px;background:var(--card);box-shadow:inset 0 0 0 1px var(--ln)}
+.u219-kp small{display:block;font-size:9.5px;font-weight:800;color:var(--mut)}
+.u219-kp b{font-size:15px;font-weight:900;font-variant-numeric:tabular-nums}
+.u219-ch{margin-top:8px;padding:10px 12px;border-radius:14px;background:var(--card);box-shadow:inset 0 0 0 1px var(--ln)}
+.u219-ch small{font-size:9.5px;font-weight:800;color:var(--mut)}
+.u219-ch svg{display:block;width:100%;height:112px;margin-top:4px}
+@media (prefers-reduced-motion: reduce){.u219-dk{transition:none}}
+</style>
+<div class="ux u219">
+  <div class="u219-pg u219-lt"></div>
+  <div class="u219-pg u219-dk is-dark" aria-hidden="true"></div>
+</div>

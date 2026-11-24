@@ -1,0 +1,26 @@
+<style>
+.u456{position:relative;width:340px;height:300px;display:grid;place-items:center}
+.u456-box{position:relative;width:296px;padding:15px 17px;border-radius:18px;background:var(--ux-surface);background:light-dark(var(--ux-surface),var(--ux-surface-2));box-shadow:0 0 0 1px var(--ux-line-2),0 16px 34px -20px var(--ux-shadow-strong),0 2px 6px -3px var(--ux-shadow);cursor:text;transition:box-shadow .2s var(--ux-ease)}
+.u456-box:focus-within{box-shadow:0 0 0 1.5px var(--ux-accent),0 0 0 5px var(--ux-accent-soft),0 16px 34px -20px var(--ux-shadow-strong)}
+.u456-ta,.u456-ov{display:block;width:100%;height:72px;margin:0;padding:0;border:0;font-size:15.5px;font-weight:400;line-height:24px;letter-spacing:-.01em;white-space:pre-wrap;overflow-wrap:break-word;word-break:keep-all}
+.u456-ta{position:relative;z-index:1;resize:none;background:none;outline:none;color:var(--ux-ink);caret-color:var(--ux-accent);overflow:hidden}
+.u456-ta::placeholder{color:var(--ux-ink-3);opacity:1}
+.u456 .u456-ta:focus-visible{outline:none}
+.u456-ov{position:absolute;left:17px;top:15px;width:calc(100% - 34px);overflow:hidden;pointer-events:none;color:transparent}
+.u456-gh{opacity:0;filter:blur(3px);transition:opacity .3s var(--ux-ease),filter .3s var(--ux-ease)}
+.u456.is-ghost .u456-gh{opacity:1;filter:none}
+.u456-gt{background:linear-gradient(90deg,var(--ux-ink) 0 44%,var(--ux-ink-3) 56% 100%);background-size:240% 100%;background-position:100% 0;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.u456.is-take .u456-gt{background-position:0 0;transition:background-position .42s cubic-bezier(.45,0,.25,1)}
+.u456-kb{display:inline-block;height:19px;font-family:inherit;margin-left:7px;padding:0 5px;border-radius:5px;vertical-align:1px;font-size:10.5px;font-weight:650;line-height:18px;letter-spacing:.01em;color:var(--ux-ink-3);background:var(--ux-surface-2);background:light-dark(var(--ux-surface-2),var(--ux-surface-3));box-shadow:inset 0 0 0 1px var(--ux-line-2),0 1.5px 0 var(--ux-line-2);transform:translateY(2px) scale(.6);opacity:0;transition:transform .5s cubic-bezier(.34,1.7,.5,1) .14s,opacity .2s var(--ux-ease) .14s,box-shadow .1s}
+.u456.is-ghost .u456-kb{transform:none;opacity:1}
+.u456.is-take .u456-kb{transform:translateY(1.5px) scale(.9);box-shadow:inset 0 0 0 1px var(--ux-line-2),0 0 0 var(--ux-line-2);opacity:0;transition:transform .1s var(--ux-ease),box-shadow .1s,opacity .2s var(--ux-ease) .12s}
+.u456-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+</style>
+<div class="ux u456">
+  <div class="u456-box">
+    <div class="u456-ov" aria-hidden="true"></div>
+    <textarea class="u456-ta" rows="3" aria-label="메시지" placeholder="메시지를 입력하세요" spellcheck="false" autocomplete="off">내일 회의는</textarea>
+  </div>
+  <p class="u456-sr u456-hint">Tab 키로 회색 제안을 받고, Esc로 지울 수 있어요</p>
+  <p class="u456-sr u456-live" role="status"></p>
+</div>

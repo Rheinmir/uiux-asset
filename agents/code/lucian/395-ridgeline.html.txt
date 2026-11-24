@@ -1,0 +1,25 @@
+<style>
+.u395{position:relative;width:300px;height:480px;border-radius:32px;overflow:hidden;background:var(--ux-surface);color:var(--ux-ink);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong)}
+.u395-hd{position:absolute;left:20px;right:16px;top:16px;display:flex;justify-content:space-between;align-items:center}
+.u395-hd b{display:block;font-size:13.5px;font-weight:900}
+.u395-hd small{font-size:9.5px;font-weight:700;color:var(--ux-ink-3)}
+.u395-sg{display:flex;padding:3px;border-radius:999px;background:var(--ux-surface-2);box-shadow:inset 0 0 0 1px var(--ux-line)}
+.u395-yb{border:0;padding:4px 10px;border-radius:999px;background:none;color:var(--ux-ink-2);font:inherit;font-size:11px;font-weight:800;cursor:pointer;transition:background .2s,color .2s;font-variant-numeric:tabular-nums}
+.u395-yb.is-on{background:var(--ux-ink);color:var(--ux-surface)}
+.u395-yb:focus-visible{outline:2px solid var(--ux-accent);outline-offset:2px}
+.u395-sv{position:absolute;left:0;top:0;width:300px;height:480px}
+.u395-rd{transition:opacity .25s}
+.u395-rd path:first-child{stroke:var(--ux-surface);stroke-width:1.2}
+.u395.is-f .u395-rd{opacity:.22}
+.u395.is-f .u395-rd.is-hl{opacity:1}
+.u395-ml{font-size:10px;font-weight:800;fill:var(--ux-ink-2);text-anchor:end}
+.u395-tk{font-size:9px;font-weight:700;fill:var(--ux-ink-3);text-anchor:middle;font-variant-numeric:tabular-nums}
+.u395-hz{fill:transparent;cursor:default}
+.u395-mn{stroke:var(--ux-ink);stroke-width:1.6;stroke-dasharray:3 3;opacity:0;transition:opacity .2s}
+.u395-in{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);padding:6px 12px;border-radius:999px;background:var(--ux-surface-2);box-shadow:inset 0 0 0 1px var(--ux-line);font-size:10.5px;font-weight:800;white-space:nowrap;font-variant-numeric:tabular-nums}
+</style>
+<div class="ux u395">
+  <div class="u395-hd"><div><b>하루 기온 분포</b><small>예시 도시</small></div><div class="u395-sg" role="group" aria-label="연도"><button type="button" class="u395-yb is-on" aria-pressed="true">2005</button><button type="button" class="u395-yb" aria-pressed="false">2025</button></div></div>
+  <svg class="u395-sv" viewBox="0 0 300 480"><g class="u395-ax" aria-hidden="true"></g><g class="u395-rs"></g><line class="u395-mn"/><g class="u395-hzs"></g></svg>
+  <div class="u395-in" aria-live="polite"></div>
+</div>

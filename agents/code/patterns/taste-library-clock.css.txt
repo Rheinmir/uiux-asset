@@ -1,0 +1,13 @@
+.tx-clock{width:460px;height:340px;position:relative;overflow:hidden;border-radius:22px;background:#ececec;font-family:Inter,system-ui,sans-serif;color:#111;text-align:center}
+.tx-clock .d{margin-top:34px;font:400 14px/1 Inter;color:#666}
+.tx-clock .t{margin-top:6px;font:500 80px/1 Inter;letter-spacing:-.05em}
+.tx-clock .ev{margin-top:8px;font:500 24px/1 Inter;letter-spacing:-.02em}
+.tx-clock .ev::before{content:"";display:inline-block;width:11px;height:11px;margin-right:8px;border-radius:50%;background:#ec1f7a;vertical-align:4px}
+.tx-clock .ev small{display:block;margin-top:6px;font:400 14px/1 Inter;color:#666;letter-spacing:0}
+.tx-clock .rail{position:absolute;left:0;bottom:24px;width:920px;height:84px;transition:transform 1s linear}
+.tx-clock .rail span{position:absolute;bottom:52px;font:500 10px/1 Inter;color:#888;transform:translateX(-50%)}
+.tx-clock .rail i{position:absolute;bottom:30px;width:1.5px;height:12px;background:#999}
+.tx-clock .rail i.h{height:20px;background:#555}
+.tx-clock .rail b{position:absolute;bottom:0;height:24px;border-radius:7px;font:500 10px/24px Inter;color:#fff;white-space:nowrap;overflow:hidden}
+.tx-clock .needle{position:absolute;left:50%;bottom:28px;width:2px;height:46px;margin-left:-1px;background:#111}
+.tx-clock .needle::before{content:"";position:absolute;left:-4px;top:-4px;width:10px;height:10px;border-radius:50%;background:#111}

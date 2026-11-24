@@ -1,0 +1,11 @@
+/* file: src/plugins/input-number/variants.css */
+@custom-variant hs-input-number-disabled {
+
+  &.disabled {
+    @slot;
+  }
+
+  .disabled & {
+    @slot;
+  }
+}

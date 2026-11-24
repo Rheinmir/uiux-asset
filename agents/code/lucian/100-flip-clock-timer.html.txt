@@ -1,0 +1,60 @@
+<style>
+.u100{position:relative;width:340px;height:400px;display:flex;flex-direction:column;align-items:center;padding:22px 18px 18px;border-radius:30px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);overflow:hidden}
+.u100-h{align-self:stretch;display:flex;align-items:baseline;justify-content:space-between}
+.u100-h b{font-size:19px;font-weight:850;letter-spacing:-.04em}
+.u100-st{font-size:12.5px;font-weight:750;color:var(--ux-ink-3);transition:color .3s}
+.u100.warn .u100-st{color:#F59E0B}
+.u100.done .u100-st{color:var(--ux-mint)}
+.u100-clk{display:flex;align-items:center;gap:6px;margin-top:26px}
+.u100-clk.shake{animation:u100-sh .5s var(--ux-ease)}
+@keyframes u100-sh{20%{transform:translateX(-6px) rotate(-1deg)}45%{transform:translateX(5px) rotate(1deg)}70%{transform:translateX(-3px)}}
+.u100-fl{position:relative;width:60px;height:88px;border-radius:12px;font-size:66px;font-weight:800;letter-spacing:-.03em;line-height:88px;text-align:center;color:#F3F1EC;box-shadow:0 0 0 1px var(--ux-line),0 10px 20px -12px rgba(0,0,0,.6);font-variant-numeric:tabular-nums}
+.u100.warn .u100-fl{color:#FFB547}
+.u100-fl>span{position:absolute;left:0;right:0;height:50%;overflow:hidden;background:#1F2027}
+.u100-fl>span b{position:absolute;left:0;right:0;height:88px;font:inherit;transition:color .3s}
+.u100-t,.u100-ft{top:0;border-radius:12px 12px 0 0;transform-origin:50% 100%;background:linear-gradient(#26272F,#1F2027)!important}
+.u100-b,.u100-fb{bottom:0;border-radius:0 0 12px 12px;transform-origin:50% 0}
+.u100-b b,.u100-fb b{top:-44px}
+.u100-t b,.u100-ft b{top:0}
+.u100-ft{z-index:2;transform:perspective(320px) rotateX(-90deg)}
+.u100-fb{z-index:2;transform:perspective(320px) rotateX(90deg)}
+.u100-fl::after{content:"";position:absolute;left:0;right:0;top:50%;z-index:3;height:2px;margin-top:-1px;background:rgba(0,0,0,.55)}
+.u100-co{display:flex;flex-direction:column;gap:14px;padding:0 3px}
+.u100-co i{width:8px;height:8px;border-radius:50%;background:var(--ux-ink-3)}
+.u100.run .u100-co i{animation:u100-blink 1s steps(1) infinite}
+@keyframes u100-blink{50%{opacity:.25}}
+.u100-pr{align-self:stretch;height:4px;margin:24px 8px 0;border-radius:2px;background:var(--ux-surface-3);overflow:hidden}
+.u100-pr i{display:block;height:100%;border-radius:inherit;background:var(--ux-accent);transform-origin:0 50%;transform:scaleX(var(--p,1));transition:transform .3s linear,background-color .3s}
+.u100.warn .u100-pr i{background:#F59E0B}
+.u100.done .u100-pr i{background:var(--ux-mint)}
+.u100-ps{display:flex;gap:6px;margin-top:22px}
+.u100-ps button{height:34px;padding:0 13px;border:0;border-radius:999px;background:var(--ux-surface-2);font-size:12.5px;font-weight:780;color:var(--ux-ink-2);transition:background-color .2s,color .2s,transform .3s var(--ux-spring)}
+.u100-ps button:hover{background:var(--ux-surface-3);color:var(--ux-ink)}
+.u100-ps button:active{transform:scale(.94)}
+.u100-ps button[aria-pressed="true"]{background:var(--ux-ink);color:var(--ux-page)}
+.u100-ps .more{background:transparent;box-shadow:inset 0 0 0 1.5px var(--ux-line-2)}
+.u100-ss{align-self:stretch;display:flex;align-items:center;gap:10px;margin-top:auto;padding:10px 14px;border-radius:14px;background:var(--ux-surface-2);font-size:12.5px;font-weight:700;color:var(--ux-ink-2)}
+.u100-ss span{display:flex;gap:5px}
+.u100-ss i{width:10px;height:10px;border-radius:50%;box-shadow:inset 0 0 0 2px var(--ux-line-2);transition:background-color .3s,box-shadow .3s}
+.u100-ss i.on{background:var(--ux-accent);box-shadow:none}
+.u100-ss i.pop{animation:u100-pop .6s var(--ux-spring)}
+@keyframes u100-pop{40%{transform:scale(1.8)}}
+.u100-ctl{align-self:stretch;display:flex;gap:8px;margin-top:14px}
+.u100-go{flex:1;height:52px;border:0;border-radius:17px;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--ux-accent);color:var(--ux-accent-ink);font-size:15px;font-weight:800;transition:transform .3s var(--ux-spring),background-color .3s}
+.u100-go:active{transform:scale(.97)}
+.u100.run .u100-go{background:var(--ux-ink);color:var(--ux-page)}
+.u100-go svg{width:16px;height:16px;fill:currentColor}
+.u100-rs{width:52px;height:52px;border:0;padding:0;border-radius:17px;display:grid;place-items:center;background:var(--ux-surface-2);color:var(--ux-ink-2);transition:transform .4s var(--ux-spring),background-color .2s}
+.u100-rs:hover{background:var(--ux-surface-3)}
+.u100-rs:active{transform:rotate(-60deg) scale(.92)}
+.u100-rs svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.u100-ps button:focus-visible,.u100-go:focus-visible,.u100-rs:focus-visible{outline:2px solid var(--ux-accent);outline-offset:2px}
+</style>
+<div class="ux u100">
+  <div class="u100-h"><b>집중 타이머</b><span class="u100-st" role="status">준비됐어요</span></div>
+  <div class="u100-clk" role="timer" aria-live="off"></div>
+  <div class="u100-pr" aria-hidden="true"><i></i></div>
+  <div class="u100-ps" role="group" aria-label="시간 고르기"></div>
+  <div class="u100-ss"><span aria-hidden="true"><i class="on"></i><i class="on"></i><i></i><i></i></span><b class="u100-sn">오늘 2번 집중했어요</b></div>
+  <div class="u100-ctl"><button class="u100-go" type="button"></button><button class="u100-rs" type="button" aria-label="처음으로"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M3.5 9a5.5 5.5 0 1 0 1.6-3.9M3.5 2.8v3h3"/></svg></button></div>
+</div>

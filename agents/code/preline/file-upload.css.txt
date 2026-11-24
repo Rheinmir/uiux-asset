@@ -1,0 +1,11 @@
+/* file: src/plugins/file-upload/variants.css */
+@custom-variant hs-file-upload-complete {
+
+  &.complete {
+    @slot;
+  }
+
+  .complete & {
+    @slot;
+  }
+}

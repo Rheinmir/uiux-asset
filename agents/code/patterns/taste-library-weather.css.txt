@@ -1,0 +1,23 @@
+.tx-weather{color:#111;background:radial-gradient(160px 140px at 72% 26%,rgba(255,255,255,.6),transparent),linear-gradient(175deg,#ffe86a 0%,#ffa23a 30%,#ff2f63 52%,#ff79a8 70%,#fbe5ef 88%,#fff 100%)}
+.tx-weather .city{position:absolute;top:56px;left:22px;font:600 22px/1 Inter;letter-spacing:-.02em}
+.tx-weather .city small{display:block;margin-top:4px;font:400 10px/1 Inter;opacity:.7}
+.tx-weather .now{position:absolute;top:56px;right:22px;text-align:right;font-size:26px;line-height:1;opacity:.85}
+.tx-weather .now small{display:block;font:400 9px/1.6 Inter}
+.tx-weather .dial{position:absolute;left:40px;top:120px;width:220px;height:220px;border-radius:50%;background:repeating-conic-gradient(from -130deg,rgba(0,0,0,.55) 0 .5deg,transparent .5deg 6deg);-webkit-mask:radial-gradient(closest-side,transparent 88%,#000 89% 95%,transparent 96%);mask:radial-gradient(closest-side,transparent 88%,#000 89% 95%,transparent 96%)}
+.tx-weather .sun{position:absolute;left:206px;top:146px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 0 0 6px rgba(255,255,255,.5),0 0 24px #fff}
+.tx-weather .deg{position:absolute;left:0;right:0;top:184px;text-align:center;font-size:82px;line-height:1}
+.tx-weather .feel{position:absolute;left:0;right:0;top:290px;text-align:center;font:500 12px/1.4 Inter}
+.tx-weather .feel small{display:block;font-size:9px;opacity:.7}
+.tx-weather .bars{position:absolute;left:20px;right:20px;top:372px;display:grid;grid-template-columns:1fr 1fr;gap:16px;font:600 9px/1 Inter}
+.tx-weather .bars div{display:flex;justify-content:space-between;padding-bottom:10px;background:repeating-linear-gradient(90deg,rgba(0,0,0,.4) 0 1px,transparent 1px 4px) 0 100%/100% 5px no-repeat}
+.tx-weather .bars span{font-weight:400;opacity:.7}
+.tx-weather .tiles{position:absolute;left:16px;right:16px;top:410px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tx-weather .tiles div{height:116px;padding:10px;border-radius:16px;display:flex;flex-direction:column;justify-content:space-between;font:600 10px/1 Inter}
+.tx-weather .tiles div:first-child{background:radial-gradient(circle at 50% 55%,#2f6df6,#7fb2ff 50%,#dff0ff)}
+.tx-weather .tiles div:last-child{background:radial-gradient(circle at 50% 50%,rgba(17,17,17,.55) 1.2px,transparent 1.7px) 0 0/6px 6px,radial-gradient(circle,#ff5a4f,#ffb3a6 70%,#ffe1db)}
+.tx-weather .tiles div>*{position:relative;padding:2px 4px;border-radius:6px;background:rgba(255,255,255,.55);align-self:flex-start}
+.tx-weather .tiles b{font-size:24px;line-height:1}
+.tx-weather .tiles small{font-weight:400;font-size:7px;margin-left:4px}
+.tx-weather .bar{position:absolute;left:16px;right:16px;bottom:30px;display:flex;justify-content:space-between;align-items:center}
+.tx-weather .bar .tx-btn{width:40px;height:40px;background:#fff;font:600 12px/1 Inter;box-shadow:0 4px 10px rgba(0,0,0,.08)}
+.tx-weather .bar .pill{display:flex;align-items:center;gap:6px;height:40px;padding:0 16px;border:0;border-radius:999px;background:#111;color:#fff;font:500 12px/1 Inter;cursor:pointer}

@@ -1,0 +1,26 @@
+<style>
+.u377{position:relative;width:300px;height:500px;border-radius:30px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);overflow:hidden}
+.u377-ph{position:absolute;left:16px;top:50%;width:118px;height:236px;margin-top:-118px;border-radius:24px;background:#0B0C12;padding:6px;box-shadow:0 20px 30px -16px var(--ux-shadow-strong);transition:transform .5s var(--ux-spring)}
+.u377-ph.tilt{transform:rotate(-4deg) scale(.97)}
+.u377-scr{position:relative;width:100%;height:100%;border-radius:19px;overflow:hidden;background:#F1F3F5}
+.u377-s{position:absolute;inset:0;padding:22px 9px 9px;transform:translateY(100%);transition:transform .55s cubic-bezier(.3,.9,.3,1)}
+.u377-s.on{transform:none}
+.u377-s.up{transform:translateY(-30%);opacity:.4;transition:transform .55s cubic-bezier(.3,.9,.3,1),opacity .55s}
+.u377-s i{display:block;border-radius:7px;margin-bottom:6px}
+.u377-st{position:absolute;left:142px;top:50%;width:3px;height:120px;margin-top:-60px;border-radius:3px;background:var(--ux-line)}
+.u377-st i{position:absolute;left:0;top:0;width:3px;height:25%;border-radius:3px;background:var(--ux-accent);transition:transform .45s var(--ux-spring)}
+.u377-sc{position:absolute;left:152px;right:0;top:0;bottom:0;overflow-y:auto;padding:0 16px 0 8px;scrollbar-width:none;outline:none}
+.u377-sc::-webkit-scrollbar{display:none}
+.u377-f{height:300px;display:flex;flex-direction:column;justify-content:center;opacity:.3;transition:opacity .4s}
+.u377-f:first-child{height:400px;padding-top:100px}
+.u377-f:last-child{height:420px;padding-bottom:120px}
+.u377-f.on{opacity:1}
+.u377-f small{font:800 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--ux-accent)}
+.u377-f b{display:block;margin-top:6px;font-size:18px;line-height:1.2;font-weight:850;letter-spacing:-.03em}
+.u377-f p{margin:6px 0 0;font-size:13px;line-height:1.55;color:var(--ux-ink-2)}
+</style>
+<div class="ux u377">
+  <div class="u377-ph" aria-hidden="true"><div class="u377-scr"></div></div>
+  <span class="u377-st" aria-hidden="true"><i></i></span>
+  <div class="u377-sc" tabindex="0" aria-label="기능 설명, 스크롤해서 읽기"></div>
+</div>

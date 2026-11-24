@@ -1,0 +1,34 @@
+<style>
+.u267{position:relative;width:340px;height:340px;border-radius:30px;overflow:hidden;background:radial-gradient(90% 60% at 80% 0%,color-mix(in srgb,#22C55E 14%,transparent),transparent 70%),var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);color:var(--ux-ink)}
+.u267-nv{position:absolute;left:18px;right:16px;top:16px;z-index:3;display:flex;align-items:center;gap:12px;font-size:11px;font-weight:750;color:var(--ux-ink-2)}
+.u267-nv b{margin-right:auto;font-size:13px;font-weight:900;color:var(--ux-ink)}
+.u267-gb{display:inline-flex;align-items:center;gap:5px;height:30px;padding:0 9px;border:0;border-radius:10px;background:var(--ux-surface-2);box-shadow:inset 0 0 0 1px var(--ux-line);color:var(--ux-ink);font:inherit;font-size:11px;font-weight:800;cursor:pointer}
+.u267-gb svg{width:14px;height:14px}
+.u267-gb:focus-visible,.u267-op:focus-visible{outline:2px solid var(--ux-accent);outline-offset:2px}
+.u267-dd{position:absolute;right:0;top:36px;width:150px;padding:5px;border-radius:14px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 16px 34px -14px var(--ux-shadow-strong);transform-origin:90% 0;transform:scale(.9) translateY(-4px);opacity:0;pointer-events:none;transition:transform .25s cubic-bezier(.3,1.5,.5,1),opacity .15s}
+.u267.is-open .u267-dd{transform:none;opacity:1;pointer-events:auto}
+.u267-op{display:flex;align-items:center;gap:8px;width:100%;height:34px;padding:0 9px;border:0;border-radius:9px;background:none;color:var(--ux-ink);font:inherit;font-size:12px;font-weight:750;cursor:pointer;text-align:left}
+.u267-op:hover{background:var(--ux-surface-2)}
+.u267-op em{font-style:normal;font-size:14px}
+.u267-op svg{margin-left:auto;width:13px;height:13px;color:#16A34A;opacity:0}
+.u267-op.is-on svg{opacity:1}
+.u267-sw{display:inline-block;vertical-align:top;overflow:hidden}
+.u267-sw>span{display:block}
+.u267-sw.is-go>span{animation:u267-out .26s ease-in forwards}
+.u267-sw.is-in>span{animation:u267-in .38s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes u267-out{to{transform:translateY(-100%);opacity:0}}
+@keyframes u267-in{from{transform:translateY(100%);opacity:0}}
+.u267-hr{position:absolute;left:22px;right:22px;top:92px}
+.u267-hr h3{margin:0;font-size:28px;line-height:1.16;font-weight:900;letter-spacing:-.04em}
+.u267-hr h3 .u267-sw{display:block}
+.u267-hr p{margin:12px 0 0;font-size:12px;line-height:1.55;font-weight:600;color:var(--ux-ink-2)}
+.u267-hr p .u267-sw{display:block}
+.u267-ct{margin-top:18px;display:inline-flex;align-items:center;height:36px;padding:0 16px;border-radius:999px;background:#16A34A;color:#fff;font-size:12px;font-weight:850;transition:width .35s cubic-bezier(.3,1.3,.5,1);white-space:nowrap;overflow:hidden}
+@media (prefers-reduced-motion: reduce){.u267-sw>span{animation:none!important}}
+</style>
+<div class="ux u267">
+  <div class="u267-nv"><b>Sprout</b><span data-k="nav1"></span><span data-k="nav2"></span><span data-k="nav3"></span>
+    <div style="position:relative"><button type="button" class="u267-gb" aria-haspopup="listbox" aria-expanded="false"><svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="5.5" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M1.5 7h11M7 1.5c1.8 1.6 1.8 9.4 0 11M7 1.5c-1.8 1.6-1.8 9.4 0 11" fill="none" stroke="currentColor" stroke-width="1.3"/></svg><span class="u267-cd">KO</span></button><div class="u267-dd" role="listbox" aria-label="언어 선택"></div></div>
+  </div>
+  <div class="u267-hr" lang="ko"><h3 data-k="h"></h3><p data-k="p"></p><span class="u267-ct" data-k="cta"></span></div>
+</div>

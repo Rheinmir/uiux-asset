@@ -1,0 +1,10 @@
+/* file: src/plugins/tooltip/variants.css */
+@custom-variant hs-tooltip-shown {
+  &.hs-tooltip-content.show {
+    @slot;
+  }
+
+  .hs-tooltip.show & {
+    @slot;
+  }
+}

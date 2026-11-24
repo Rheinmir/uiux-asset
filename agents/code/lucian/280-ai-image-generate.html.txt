@@ -1,0 +1,34 @@
+<style>
+.u280{position:relative;width:340px;height:340px;border-radius:30px;overflow:hidden;background:#0B0C12;box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);color:#F1F2F8}
+.u280-pb{position:absolute;left:12px;right:12px;top:12px;display:flex;gap:6px;padding:5px;border-radius:15px;background:#181A24;box-shadow:inset 0 0 0 1px #2A2D3C}
+.u280-pb input{flex:1;min-width:0;height:34px;padding:0 10px;border:0;background:none;color:#F1F2F8;font:inherit;font-size:11.5px;font-weight:650;outline:none}
+.u280-go{flex:none;display:inline-flex;align-items:center;gap:5px;height:34px;padding:0 12px;border:0;border-radius:10px;background:linear-gradient(135deg,#A78BFA,#F472B6);color:#fff;font:inherit;font-size:11.5px;font-weight:850;cursor:pointer;transition:opacity .2s}
+.u280-go:disabled{opacity:.45;cursor:default}
+.u280-go svg{width:12px;height:12px}
+.u280-gd{position:absolute;left:12px;right:12px;top:66px;bottom:58px;display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.u280-tl{position:relative;padding:0;border:0;border-radius:14px;overflow:hidden;background:#181A24;cursor:pointer;transition:box-shadow .25s,transform .25s}
+.u280-tl:disabled{cursor:default}
+.u280-tl.is-pick{box-shadow:0 0 0 2.5px #F472B6;transform:scale(.97)}
+.u280-tl svg{position:absolute;inset:0;width:100%;height:100%;filter:blur(var(--b,0px)) saturate(var(--s,1));transform:scale(var(--z,1))}
+.u280-nz{position:absolute;inset:0;opacity:var(--n,0);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .6 0 0 0 0 .6 0 0 0 0 .7 0 0 0 1.4 -.2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");background-size:120px 120px;mix-blend-mode:hard-light;pointer-events:none}
+.u280-tl.is-run .u280-nz{animation:u280-jit .12s steps(2) infinite}
+@keyframes u280-jit{50%{background-position:37px 61px}}
+.u280-pc{position:absolute;left:8px;bottom:7px;padding:2px 6px;border-radius:6px;background:rgba(0,0,0,.55);font-size:9px;font-weight:800;font-variant-numeric:tabular-nums;opacity:0;transition:opacity .25s}
+.u280-tl.is-run .u280-pc{opacity:1}
+.u280-ck{position:absolute;right:7px;top:7px;width:20px;height:20px;border-radius:50%;background:#F472B6;transform:scale(0);transition:transform .3s cubic-bezier(.3,1.7,.5,1)}
+.u280-ck::after{content:"";position:absolute;left:7px;top:4px;width:4px;height:8px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.u280-tl.is-pick .u280-ck{transform:none}
+.u280-em{position:absolute;inset:0;display:grid;place-items:center;color:#3B3F52}
+.u280-em svg{position:static;width:28px;height:28px;filter:none}
+.u280-ft{position:absolute;left:12px;right:12px;bottom:12px;display:flex;align-items:center;gap:8px}
+.u280-st{flex:1;font-size:10.5px;font-weight:750;color:#8E93AB;font-variant-numeric:tabular-nums}
+.u280-vr{height:36px;padding:0 13px;border:0;border-radius:11px;background:#F1F2F8;color:#0B0C12;font:inherit;font-size:11.5px;font-weight:850;cursor:pointer;transition:opacity .2s}
+.u280-vr:disabled{opacity:.25;cursor:default}
+.u280 button:focus-visible{outline:2px solid #F472B6;outline-offset:2px}
+@media (prefers-reduced-motion: reduce){.u280-tl.is-run .u280-nz{animation:none}.u280-tl,.u280-ck{transition:none}}
+</style>
+<div class="ux u280">
+  <div class="u280-pb"><input value="노을 지는 바닷가 도시, 따뜻한 색감" aria-label="프롬프트" autocomplete="off"><button type="button" class="u280-go"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M6 1l1.2 3.3L10.5 5.5 7.2 6.7 6 10 4.8 6.7 1.5 5.5l3.3-1.2z" fill="currentColor"/></svg>생성</button></div>
+  <div class="u280-gd"></div>
+  <div class="u280-ft"><span class="u280-st" aria-live="polite"></span><button type="button" class="u280-vr" disabled>이 그림으로 변형</button></div>
+</div>

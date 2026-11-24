@@ -1,0 +1,11 @@
+/* file: src/plugins/range-slider/variants.css */
+@custom-variant hs-range-slider-disabled {
+
+  &.disabled {
+    @slot;
+  }
+
+  .disabled & {
+    @slot;
+  }
+}

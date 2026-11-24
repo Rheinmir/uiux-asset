@@ -1,0 +1,17 @@
+<style>
+.u396{position:relative;width:340px;height:330px;display:flex;flex-direction:column;gap:10px;padding:18px 16px 14px;border-radius:28px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);overflow:hidden}
+.u396-b{position:relative;max-width:88%;margin:0;padding:11px 14px;border-radius:20px 20px 20px 6px;background:var(--ux-surface-2);font-size:14.5px;line-height:1.6;font-weight:550}
+.u396-b small{display:block;font-size:11.5px;font-weight:750;color:var(--ux-ink-3)}
+.u396-b.me{align-self:flex-end;border-radius:20px 20px 6px 20px;background:var(--ux-accent);color:var(--ux-accent-ink)}
+.u396-sp{position:relative;border-radius:4px;color:transparent;cursor:pointer;outline:none;transition:color .5s var(--ux-ease) .1s}
+.u396-sp:focus-visible{box-shadow:0 0 0 2px var(--ux-accent)}
+.u396-sp.open{color:inherit;cursor:text}
+.u396-cv{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.u396-hide{align-self:center;margin-top:auto;height:34px;padding:0 14px;border:0;border-radius:999px;background:var(--ux-surface-2);font-size:12.5px;font-weight:750;color:var(--ux-ink-2)}
+</style>
+<div class="ux u396">
+  <p class="u396-b"><small>민지</small>어제 그 영화 봤어? 마지막에 <span class="u396-sp" tabindex="0" role="button" aria-label="스포일러, 눌러서 보기">범인이 사실 형사였잖아</span>. 진짜 소름이었어.</p>
+  <p class="u396-b me">아직 안 봤는데!! 그래도 하나만 더 말해 줘. <span class="u396-sp" tabindex="0" role="button" aria-label="스포일러, 눌러서 보기">쿠키 영상은 있어?</span></p>
+  <button class="u396-hide" type="button">다시 가리기</button>
+  <canvas class="u396-cv" aria-hidden="true"></canvas>
+</div>

@@ -1,0 +1,43 @@
+<style>
+.u279{position:relative;width:340px;height:340px;border-radius:30px;overflow:hidden;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);color:var(--ux-ink)}
+.u279-hd{position:absolute;left:20px;right:20px;top:18px;display:flex;align-items:center;gap:10px}
+.u279-hd i{flex:none;width:34px;height:34px;border-radius:11px;background:var(--ux-grad)}
+.u279-hd b{display:block;font-size:14px;font-weight:900}
+.u279-hd small{display:block;margin-top:1px;font-size:10px;font-weight:700;color:var(--ux-ink-3)}
+.u279-ds{position:absolute;left:14px;right:14px;top:66px;display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.u279-dy{display:flex;flex-direction:column;align-items:center;gap:2px;height:54px;padding-top:7px;border:0;border-radius:13px;background:var(--ux-surface-2);box-shadow:inset 0 0 0 1px var(--ux-line);color:var(--ux-ink);font:inherit;cursor:pointer;transition:background .2s,color .2s,box-shadow .2s,transform .15s}
+.u279-dy small{font-size:9.5px;font-weight:800;color:var(--ux-ink-3)}
+.u279-dy b{font-size:16px;font-weight:900;font-variant-numeric:tabular-nums}
+.u279-dy i{width:4px;height:4px;border-radius:50%;background:#10B981}
+.u279-dy[aria-pressed="true"]{background:var(--ux-ink);color:var(--ux-surface);box-shadow:none}
+.u279-dy[aria-pressed="true"] small{color:inherit;opacity:.7}
+.u279-dy:disabled{opacity:.38;cursor:not-allowed;background:repeating-linear-gradient(135deg,transparent 0 5px,color-mix(in srgb,var(--ux-ink) 6%,transparent) 5px 6px),var(--ux-surface-2)}
+.u279-dy:disabled i{background:var(--ux-ink-3)}
+.u279-ls{position:absolute;left:14px;right:14px;top:132px;bottom:12px;overflow-y:auto;scrollbar-width:none;padding:2px}
+.u279-ls::-webkit-scrollbar{display:none}
+.u279-rw{display:flex;gap:6px;height:40px;margin-bottom:6px;animation:u279-in .4s cubic-bezier(.3,1.3,.5,1) backwards}
+@keyframes u279-in{from{opacity:0;transform:translateY(12px)}}
+.u279-tm{flex:1 1 100%;min-width:0;border:0;border-radius:11px;background:var(--ux-surface);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--ux-accent) 45%,transparent);color:var(--ux-accent);font:inherit;font-size:12.5px;font-weight:850;cursor:pointer;transition:flex-basis .4s cubic-bezier(.3,1.2,.5,1),background .25s,color .25s;font-variant-numeric:tabular-nums}
+.u279-tm:hover,.u279-tm.g-hov{box-shadow:inset 0 0 0 2px var(--ux-accent)}
+.u279-rw.is-on .u279-tm{flex-basis:48%;background:var(--ux-ink-2);color:var(--ux-surface);box-shadow:none}
+.u279-ok{flex:0 0 0;min-width:0;padding:0;border:0;border-radius:11px;background:var(--ux-accent);color:#fff;font:inherit;font-size:12.5px;font-weight:850;cursor:pointer;overflow:hidden;opacity:0;white-space:nowrap;transition:flex-basis .4s cubic-bezier(.3,1.2,.5,1),opacity .25s}
+.u279-rw.is-on .u279-ok{flex-basis:48%;opacity:1}
+.u279-dn{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 24px;background:var(--ux-surface);text-align:center;opacity:0;pointer-events:none;transition:opacity .35s}
+.u279.is-done .u279-dn{opacity:1;pointer-events:auto}
+.u279-dn svg{width:62px;height:62px}
+.u279-dn circle{fill:color-mix(in srgb,#10B981 14%,transparent);transform:scale(.4);transform-origin:center;transform-box:fill-box;transition:transform .5s cubic-bezier(.3,1.6,.5,1) .1s}
+.u279-dn path{fill:none;stroke:#10B981;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:30;stroke-dashoffset:30;transition:stroke-dashoffset .4s ease .4s}
+.u279.is-done .u279-dn circle{transform:none}
+.u279.is-done .u279-dn path{stroke-dashoffset:0}
+.u279-dn b{margin-top:12px;font-size:17px;font-weight:900}
+.u279-dn p{margin:6px 0 0;padding:8px 14px;border-radius:11px;background:var(--ux-surface-2);font-size:12px;font-weight:850}
+.u279-dn small{margin-top:10px;font-size:10.5px;font-weight:650;color:var(--ux-ink-3)}
+.u279 button:focus-visible{outline:2px solid var(--ux-accent);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){.u279-rw{animation:none}.u279-tm,.u279-ok,.u279-dn,.u279-dn circle,.u279-dn path{transition:none}}
+</style>
+<div class="ux u279">
+  <div class="u279-hd"><i aria-hidden="true"></i><div><b>30분 제품 데모</b><small>화상 회의 · 담당 매니저 배정</small></div></div>
+  <div class="u279-ds" role="group" aria-label="날짜"></div>
+  <div class="u279-ls" role="group" aria-label="시간"></div>
+  <div class="u279-dn" aria-live="polite"><svg viewBox="0 0 62 62" aria-hidden="true"><circle cx="31" cy="31" r="29"/><path d="M20 32l7.5 7.5L43 24"/></svg><b>예약이 확정됐어요</b><p class="u279-sm"></p><small>초대 메일과 캘린더 일정을 보냈어요</small></div>
+</div>

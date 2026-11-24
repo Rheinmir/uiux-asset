@@ -1,0 +1,1 @@
+.m-blk{display:grid;grid-template-columns:repeat(2,30px);gap:6px}.m-blk i{height:30px;border-radius:4px;background:#e6e6e6;transition:transform .4s cubic-bezier(.3,1.6,.5,1) calc(var(--i)*.07s)}.m-blk.on i{transform:scale(.6)}.m-blk.on i:nth-child(2),.m-blk.on i:nth-child(3){transform:scale(1.15)}

@@ -1,0 +1,19 @@
+/* file: src/plugins/collapse/variants.css */
+@custom-variant hs-collapse-open {
+
+  &.hs-collapse.open {
+    @slot;
+  }
+
+  &.hs-collapse-toggle.open {
+    @slot;
+  }
+
+  .hs-collapse.open & {
+    @slot;
+  }
+
+  .hs-collapse-toggle.open & {
+    @slot;
+  }
+}

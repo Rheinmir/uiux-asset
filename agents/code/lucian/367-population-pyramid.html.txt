@@ -1,0 +1,46 @@
+<style>
+.u367{position:relative;width:300px;height:480px;border-radius:32px;overflow:hidden;background:var(--ux-surface);color:var(--ux-ink);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong)}
+.u367-hd{position:absolute;left:20px;right:20px;top:18px;display:flex;justify-content:space-between;align-items:baseline}
+.u367-hd b{font-size:14px;font-weight:900}
+.u367-hd span{font-size:10px;font-weight:700;color:var(--ux-ink-3)}
+.u367-yr{position:absolute;left:18px;top:40px;font-size:38px;font-weight:900;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.u367-st{position:absolute;right:20px;top:46px;display:flex;gap:14px;text-align:right}
+.u367-st span{display:block;font-size:9.5px;font-weight:750;color:var(--ux-ink-3)}
+.u367-st b{display:block;font-size:17px;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.u367-st div:first-child b{color:#F59E0B}
+.u367-ch{position:absolute;left:0;right:0;top:110px;height:290px}
+.u367-sx{position:absolute;top:-16px;font-size:10px;font-weight:850}
+.u367-r{position:absolute;left:0;right:0;height:13.8px;cursor:default}
+.u367-r:hover{background:var(--ux-surface-2)}
+.u367-m,.u367-f{position:absolute;top:1.4px;bottom:1.4px;border-radius:3px;transition:background .3s}
+.u367-m{right:166px;background:#60A5FA;border-radius:3px 0 0 3px}
+.u367-f{left:166px;background:#F472B6;border-radius:0 3px 3px 0}
+.u367-r.is-co .u367-m,.u367-r.is-co .u367-f{background:#FBBF24}
+.u367-a{position:absolute;left:134px;width:32px;top:0;line-height:13.8px;text-align:center;font-size:8.5px;font-weight:800;color:var(--ux-ink-3);font-variant-numeric:tabular-nums}
+.u367-co{position:absolute;left:0;top:0;z-index:2;padding:1px 6px;border-radius:999px;background:#FBBF24;color:#3B2600;font-size:9px;font-weight:900;white-space:nowrap;pointer-events:none;transition:opacity .3s}
+.u367-tip{position:absolute;left:50%;top:0;padding:5px 9px;border-radius:9px;background:var(--ux-ink);color:var(--ux-surface);font-size:10.5px;font-weight:750;white-space:nowrap;pointer-events:none;opacity:0;transform:translate(-50%,-110%);transition:opacity .15s;font-variant-numeric:tabular-nums;z-index:3}
+.u367-tip.is-on{opacity:1}
+.u367-ct{position:absolute;left:18px;right:18px;bottom:16px;display:flex;align-items:center;gap:12px}
+.u367-pp{flex:none;width:34px;height:34px;border:0;border-radius:50%;background:var(--ux-ink);color:var(--ux-surface);display:grid;place-items:center;cursor:pointer}
+.u367-pp svg{width:14px;height:14px}
+.u367-pp .u367-pl{display:none}
+.u367-pp.is-paused .u367-pl{display:block}
+.u367-pp.is-paused .u367-pa{display:none}
+.u367-pp:focus-visible{outline:2px solid var(--ux-accent);outline-offset:3px}
+.u367-sl{position:relative;flex:1;height:36px;cursor:pointer;touch-action:none;border-radius:8px}
+.u367-sl::before{content:"";position:absolute;left:0;right:0;top:12px;height:4px;border-radius:2px;background:var(--ux-line)}
+.u367-fl{position:absolute;left:0;top:12px;height:4px;border-radius:2px;background:var(--ux-accent)}
+.u367-th{position:absolute;top:6px;width:16px;height:16px;margin-left:-8px;border-radius:50%;background:var(--ux-surface);box-shadow:0 0 0 3px var(--ux-accent),0 4px 10px -3px var(--ux-shadow-strong)}
+.u367-sl em{position:absolute;top:22px;font-style:normal;font-size:8.5px;font-weight:750;color:var(--ux-ink-3);transform:translateX(-50%)}
+.u367-sl:focus-visible{outline:2px solid var(--ux-accent);outline-offset:2px}
+</style>
+<div class="ux u367">
+  <div class="u367-hd"><b>인구 피라미드</b><span>예시 추정</span></div>
+  <div class="u367-yr" aria-live="polite"></div>
+  <div class="u367-st"><div><span>65세 이상</span><b class="u367-o"></b></div><div><span>중위 연령</span><b class="u367-md"></b></div></div>
+  <div class="u367-ch"><span class="u367-sx" style="right:172px;color:#3B82F6">남</span><span class="u367-sx" style="left:172px;color:#EC4899">여</span><div class="u367-co"></div><div class="u367-tip"></div></div>
+  <div class="u367-ct">
+    <button type="button" class="u367-pp"><svg class="u367-pa" viewBox="0 0 14 14" aria-hidden="true"><rect x="2" y="1" width="3.6" height="12" rx="1" fill="currentColor"/><rect x="8.4" y="1" width="3.6" height="12" rx="1" fill="currentColor"/></svg><svg class="u367-pl" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.5v11l9.5-5.5z" fill="currentColor"/></svg></button>
+    <div class="u367-sl" role="slider" tabindex="0" aria-label="연도" aria-valuemin="1970" aria-valuemax="2070"><div class="u367-fl"></div><div class="u367-th"></div></div>
+  </div>
+</div>

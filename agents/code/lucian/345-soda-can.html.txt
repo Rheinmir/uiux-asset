@@ -1,0 +1,19 @@
+<style>
+.u345{position:relative;width:340px;height:340px;border-radius:30px;overflow:hidden;background:#FFF9DB;background:light-dark(#FFF9DB,#211C0B);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);transition:background .5s}
+/* 맛마다 바탕색이 바뀝니다(어두운 테마에서는 같은 빛깔의 어두운 바탕) */
+.u345[data-fl="1"]{background:#FFF0F6;background:light-dark(#FFF0F6,#25101A)}
+.u345[data-fl="2"]{background:#E6FCF5;background:light-dark(#E6FCF5,#0A201A)}
+/* 어두운 테마에서만 캔 뒤에 은은한 조명이 비칩니다 */
+.u345::before{content:"";position:absolute;inset:0;background:radial-gradient(52% 46% at 50% 46%,light-dark(transparent,rgba(255,255,255,.07)),transparent);pointer-events:none}
+.u345-cv{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:grab;color:rgba(0,0,0,.13);color:light-dark(rgba(0,0,0,.13),rgba(0,0,0,.5))}
+.u345-cv:active{cursor:grabbing}
+.u345-ui{position:absolute;left:0;right:0;bottom:14px;display:flex;justify-content:center;gap:6px}
+.u345-ch,.u345-op{border:0;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.75);background:light-dark(rgba(255,255,255,.75),rgba(255,255,255,.09));color:#343A40;color:light-dark(#343A40,#E9ECEF);font:inherit;font-size:11.5px;font-weight:750;cursor:pointer;box-shadow:0 0 0 1px rgba(0,0,0,.06);box-shadow:0 0 0 1px light-dark(rgba(0,0,0,.06),rgba(255,255,255,.1));transition:background .2s,color .2s}
+.u345-ch[aria-pressed="true"]{background:#343A40;background:light-dark(#343A40,#F1F3F5);color:#fff;color:light-dark(#fff,#212529)}
+.u345-op{background:#fff;background:light-dark(#fff,rgba(255,255,255,.15));margin-left:8px}
+.u345-ch:focus-visible,.u345-op:focus-visible{outline:2px solid #343A40;outline-color:light-dark(#343A40,#F1F3F5);outline-offset:2px}
+</style>
+<div class="ux u345">
+  <canvas class="u345-cv" role="img" aria-label="음료 캔, 좌우로 끌어 돌리기"></canvas>
+  <div class="u345-ui"><div role="group" aria-label="맛 고르기" style="display:flex;gap:4px" class="u345-chs"></div><button type="button" class="u345-op">따기</button></div>
+</div>

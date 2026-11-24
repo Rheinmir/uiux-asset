@@ -1,0 +1,29 @@
+<style>
+.u422{position:relative;width:340px;height:300px;display:grid;place-items:center;color:var(--ux-ink)}
+.u422-st{position:relative;width:268px;height:168px;margin-top:-16px;outline:none;touch-action:pan-y}
+.u422-st:focus-visible{outline:2px solid var(--ux-accent);outline-offset:8px;border-radius:22px}
+/* 카드 더미: 깊이에 따라 아래로 내려가며 작아집니다 */
+.u422-cd{position:absolute;inset:0;display:flex;flex-direction:column;padding:18px 18px 16px;border-radius:20px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 1px 2px var(--ux-shadow),0 18px 36px -22px var(--ux-shadow-strong);transform-origin:50% 100%;transform:translate(var(--x,0px),calc(var(--dy,0px) + var(--y,0px))) rotate(var(--r,0deg)) scale(var(--s,1));opacity:var(--o,1);transition:transform .6s cubic-bezier(.3,1.35,.5,1),opacity .4s var(--ux-ease);will-change:transform;-webkit-user-select:none;user-select:none}
+.u422-cd.is-top{cursor:grab}
+.u422-cd.is-drag{cursor:grabbing;transition:none}
+.u422-cd.is-fly{transition:transform .5s cubic-bezier(.4,.1,.6,1),opacity .4s ease-in .1s}
+.u422-cd>*{transition:opacity .35s var(--ux-ease)}
+.u422-cd:not(.is-top)>*{opacity:.35}
+/* 별: 새 카드가 맨 위로 오면 하나씩 채워집니다 */
+.u422-sr{display:flex;gap:3px}
+.u422-sr i{position:relative;width:14px;height:14px}
+.u422-sr svg{position:absolute;inset:0;width:14px;height:14px}
+.u422-sr svg.bg{fill:var(--ux-surface-3)}
+.u422-sr svg.fg{fill:#F5B83D;transform:scale(0) rotate(-40deg);opacity:0}
+.u422-cd.is-on .u422-sr svg.fg{animation:u422-star .5s cubic-bezier(.3,1.7,.5,1) both;animation-delay:calc(180ms + var(--i) * 80ms)}
+@keyframes u422-star{from{transform:scale(0) rotate(-40deg);opacity:0}to{transform:none;opacity:1}}
+.u422-q{margin:12px 0 0;font-size:14.5px;line-height:1.55;font-weight:650;letter-spacing:-.02em;text-wrap:pretty}
+.u422-by{display:flex;align-items:center;gap:10px;margin-top:auto}
+.u422-av{display:grid;place-items:center;width:32px;height:32px;flex:none;border-radius:50%;color:#fff;font-size:11px;font-weight:800;box-shadow:inset 0 0 0 1px rgba(255,255,255,.2)}
+.u422-by b{font-size:12px;font-weight:750}
+.u422-by small{margin-left:6px;font-size:11px;color:var(--ux-ink-3)}
+@media (prefers-reduced-motion:reduce){.u422-cd,.u422-cd.is-fly,.u422-cd>*{transition:none!important}.u422-cd.is-on .u422-sr svg.fg{animation:none!important;transform:none;opacity:1}}
+</style>
+<div class="ux u422">
+  <div class="u422-st" tabindex="0" role="region" aria-roledescription="carousel" aria-label="고객 후기"></div>
+</div>

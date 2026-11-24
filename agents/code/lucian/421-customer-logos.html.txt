@@ -1,0 +1,24 @@
+<style>
+.u421{position:relative;width:340px;height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;color:var(--ux-ink)}
+.u421-cp{margin:0;font-size:12.5px;font-weight:600;color:var(--ux-ink-3)}
+.u421-mq{align-self:stretch;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 22%,#000 78%,transparent);mask-image:linear-gradient(90deg,transparent,#000 22%,#000 78%,transparent)}
+.u421-tr{display:flex;width:max-content;will-change:transform}
+.u421-tr ul{display:flex;gap:34px;margin:0;padding:0 17px;list-style:none}
+.u421-lg{display:flex;align-items:center;gap:7px;height:52px;color:var(--ux-ink-2);white-space:nowrap;opacity:.8;transition:opacity .35s var(--ux-ease),color .35s,transform .45s var(--ux-spring)}
+.u421-mq:hover .u421-lg{opacity:.35}
+.u421-mq .u421-lg:hover{opacity:1;color:var(--ux-ink);transform:scale(1.06)}
+.u421-lg svg{width:20px;height:20px;flex:none}
+.u421-lg span{font-size:17px;line-height:1}
+.u421 .w1 span{font-weight:800;letter-spacing:-.04em}
+.u421 .w2 span{font-size:13px;font-weight:650;letter-spacing:.16em}
+.u421 .w3 span{font-weight:700;letter-spacing:-.02em}
+.u421 .w4 span{font-weight:750;font-style:italic;letter-spacing:-.03em}
+.u421 .w5 span{font-family:ui-serif,Georgia,"Times New Roman",serif;font-weight:600;font-size:18px}
+.u421 .w6 span{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:700;font-size:14px;letter-spacing:.04em}
+.u421 .w7 span{font-weight:850;letter-spacing:-.05em;font-size:18px}
+.u421 .w8 span{font-family:ui-serif,Georgia,"Times New Roman",serif;font-style:italic;font-weight:500;font-size:18px}
+</style>
+<section class="ux u421">
+  <p class="u421-cp">3,200개 팀이 Haru와 함께해요</p>
+  <div class="u421-mq"><div class="u421-tr"></div></div>
+</section>

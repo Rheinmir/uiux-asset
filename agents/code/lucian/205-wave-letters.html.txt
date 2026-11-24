@@ -1,0 +1,22 @@
+<style>
+.u205{position:relative;width:340px;height:300px;display:flex;flex-direction:column;padding:20px;border-radius:28px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);overflow:hidden}
+.u205-sea{position:absolute;left:0;right:0;bottom:0;height:120px;background:linear-gradient(transparent,color-mix(in srgb,var(--ux-accent-2) 10%,transparent));pointer-events:none}
+.u205-wd{position:relative;flex:1;display:flex;align-items:center;justify-content:center;gap:1px;cursor:default;touch-action:none}
+.u205-l{position:relative;display:inline-block;font-size:62px;line-height:1;font-weight:900;letter-spacing:-.03em;color:color-mix(in oklab,var(--ux-accent) calc(var(--t,0) * 100%),var(--ux-ink));transform:translateY(var(--y,0px)) scaleY(var(--sy,1));transform-origin:50% 100%;will-change:transform}
+.u205-l::after{content:"";position:absolute;left:12%;right:12%;bottom:-14px;height:6px;border-radius:50%;background:var(--ux-shadow-strong);opacity:calc(.5 - var(--t,0) * .35);transform:translateY(calc(var(--y,0px) * -1)) scaleX(calc(1 - var(--t,0) * .5));filter:blur(2px)}
+.u205-ft{position:relative;display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:18px;background:var(--ux-surface-2)}
+.u205-ft label{display:flex;flex-direction:column;gap:6px;flex:1;font-size:11.5px;font-weight:700;color:var(--ux-ink-3)}
+.u205-ft label span{display:flex;justify-content:space-between}
+.u205-ft label b{color:var(--ux-ink);font-variant-numeric:tabular-nums}
+.u205-r{width:100%;height:18px;margin:0;accent-color:var(--ux-accent)}
+.u205-go{flex:none;height:40px;padding:0 15px;border:0;border-radius:13px;background:var(--ux-ink);color:var(--ux-page);font-size:13px;font-weight:750;transition:transform .35s var(--ux-spring)}
+.u205-go:active{transform:scale(.93)}
+</style>
+<div class="ux u205">
+  <div class="u205-sea" aria-hidden="true"></div>
+  <div class="u205-wd" role="img" aria-label="MOTION"></div>
+  <div class="u205-ft">
+    <label><span>파도 높이<b class="u205-v">34</b></span><input class="u205-r" type="range" min="10" max="64" value="34" aria-label="파도 높이"></label>
+    <button class="u205-go" type="button">파도 보내기</button>
+  </div>
+</div>

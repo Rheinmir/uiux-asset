@@ -1,0 +1,7 @@
+<section class="tx-agent"><nav><b>⌘ Patch</b><span>Product</span><span>Docs</span><span>Pricing</span><span>Changelog</span><span>Sign in</span></nav><h2>The coding agent<span>that ships the fix.</span></h2><div class="sub"><p>Patch reads your whole repo, writes the change, runs your tests until they pass and opens the pull request. You review one diff, not forty prompts.</p><a href="#">Start a run <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><small>GitHub, GitLab or your terminal</small></div><pre>  <span class="del">await using lock = await lockCart(cartId);</span>
+    return db.lock('cart:' + cartId, { ttl, retries: 3 });
+  <span class="add">const cart = await db.cart.find(cartId, {</span>
+    <i>// Called by the payment webhook once checkout confirms.</i>
+  export async function settle(cartId, intent) {
+    const total = await cartTotal(cartId);
+    await db.order.create({ cartId, intent, total });</pre><div class="run"><header><span><b>●</b> run 7f3a · main</span><span>176s</span></header><h4>Fix the flaky checkout test</h4><ol><li>Read 214 files</li><li>Found a race in cart/total.ts</li><li>Wrote the fix in 3 files</li><li>412 tests passed</li><li>Opened pull request #2481</li><li>Deployed to production</li></ol><footer><span>Flaky test</span><span>Payments</span><span>React 19</span></footer></div></section>

@@ -1,0 +1,13 @@
+.tx-sky{width:460px;height:340px;display:grid;place-items:center;border-radius:22px;background:#ececec}
+.tx-sky .card{position:relative;width:400px;height:270px;overflow:hidden;border-radius:30px;color:#fff;font-family:Inter,system-ui,sans-serif;background:radial-gradient(120px 50px at 70% 72%,rgba(255,255,255,.75),transparent),radial-gradient(160px 60px at 30% 70%,rgba(230,235,245,.8),transparent),radial-gradient(140px 50px at 90% 88%,rgba(255,255,255,.6),transparent),radial-gradient(200px 70px at 20% 95%,rgba(200,210,225,.85),transparent),linear-gradient(180deg,#14284f,#2d4b80 50%,#6f88ad);box-shadow:0 20px 40px -14px rgba(20,40,80,.5)}
+.tx-sky .city{position:absolute;left:22px;top:20px;font:500 18px/1.3 Inter}
+.tx-sky .city small{display:block;font:400 13px/1 Inter;opacity:.8}
+.tx-sky .info{position:absolute;right:22px;top:22px;text-align:right;font:400 12px/1.6 Inter}
+.tx-sky .info span{opacity:.75}
+.tx-sky .deg{position:absolute;left:22px;top:96px;font:300 92px/1 Inter;letter-spacing:-.05em;text-shadow:0 4px 20px rgba(0,0,0,.25)}
+.tx-sky .ruler{position:absolute;left:22px;right:22px;bottom:16px;height:60px}
+.tx-sky .ruler::before{content:"";position:absolute;left:0;right:0;bottom:18px;height:14px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.8) 0 1.5px,transparent 1.5px 16px)}
+.tx-sky .ruler .lbl{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;font:500 10px/1 Inter;opacity:.8}
+.tx-sky .tip{position:absolute;bottom:22px;width:2px;height:30px;margin-left:-1px;background:#fff}
+.tx-sky .tip b{position:absolute;left:50%;bottom:34px;transform:translateX(-50%);padding:4px 8px;border-radius:999px;background:#fff;color:#111;font:600 11px/1 ui-monospace,Menlo,monospace}
+.tx-sky input{position:absolute;inset:0;width:100%;opacity:0;cursor:ew-resize}

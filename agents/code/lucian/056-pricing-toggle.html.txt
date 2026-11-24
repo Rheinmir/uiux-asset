@@ -1,0 +1,52 @@
+<style>
+.u056{position:relative;width:340px;height:490px;display:flex;flex-direction:column;gap:14px}
+.u056-sw{position:relative;display:flex;align-self:center;padding:4px;border-radius:999px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line)}
+.u056-knob{position:absolute;top:4px;bottom:4px;left:4px;width:var(--w,90px);border-radius:999px;background:var(--ux-ink);transform:translateX(var(--x,0));transition:transform .5s var(--ux-spring),width .5s var(--ux-spring)}
+.u056-sw button{position:relative;height:40px;padding:0 18px;border:0;border-radius:999px;background:none;display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:720;color:var(--ux-ink-2);transition:color .3s}
+.u056-sw button[aria-checked="true"]{color:var(--ux-page)}
+.u056-sw button:focus-visible{outline:2px solid var(--ux-accent);outline-offset:2px}
+.u056-badge{height:22px;padding:0 7px;border-radius:999px;display:inline-flex;align-items:center;background:linear-gradient(120deg,#FFB547,#FF6B8B);color:#fff;font-size:11px;font-weight:800;transform-origin:20% 50%}
+.u056-badge.wig{animation:u056-wig .7s var(--ux-ease)}
+@keyframes u056-wig{20%{transform:rotate(-10deg) scale(1.12)}45%{transform:rotate(8deg) scale(1.12)}70%{transform:rotate(-4deg)}}
+.u056-plans{position:relative;display:flex;flex-direction:column;gap:10px;margin:0;padding:0;border:0;min-width:0}
+.u056-sr{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0 0 0 0)}
+.u056-ring{position:absolute;left:0;right:0;top:0;height:var(--h,108px);border-radius:22px;box-shadow:0 0 0 2px var(--ux-accent),0 18px 34px -22px var(--ux-accent);transform:translateY(var(--y,0));transition:transform .55s var(--ux-spring),height .4s;pointer-events:none;z-index:1}
+.u056-p{position:relative;display:flex;align-items:center;gap:12px;min-height:108px;padding:16px 18px;border-radius:22px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line);cursor:pointer;text-align:left;transition:transform .35s var(--ux-spring)}
+.u056-p:active{transform:scale(.985)}
+.u056-p input{position:absolute;opacity:0;pointer-events:none}
+.u056-p:has(input:focus-visible){outline:2px solid var(--ux-accent);outline-offset:4px}
+.u056-dot{width:22px;height:22px;flex:none;border-radius:50%;box-shadow:inset 0 0 0 2px var(--ux-line-2);display:grid;place-items:center;transition:box-shadow .3s}
+.u056-dot::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--ux-accent);transform:scale(0);transition:transform .4s var(--ux-spring)}
+.u056-p:has(input:checked) .u056-dot{box-shadow:inset 0 0 0 2px var(--ux-accent)}
+.u056-p:has(input:checked) .u056-dot::after{transform:none}
+.u056-nm{flex:1;min-width:0}
+.u056-nm b{display:flex;align-items:center;gap:6px;font-size:16px;font-weight:800;letter-spacing:-.03em}
+.u056-nm b em{height:20px;padding:0 7px;border-radius:6px;display:inline-flex;align-items:center;background:var(--ux-accent-soft);color:var(--ux-accent);font-style:normal;font-size:10.5px;font-weight:800}
+.u056-nm small{display:block;margin-top:3px;font-size:12.5px;font-weight:600;color:var(--ux-ink-3)}
+.u056-pr{text-align:right}
+.u056-od{display:flex;justify-content:flex-end;height:30px;overflow:hidden;font-size:24px;font-weight:850;line-height:30px;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.u056-col{display:flex;flex-direction:column;transform:translateY(calc(var(--d) * -30px));transition:transform .7s var(--ux-spring);transition-delay:calc(var(--k) * 40ms)}
+.u056-pr small{display:block;font-size:11.5px;font-weight:650;color:var(--ux-ink-3);transition:opacity .3s}
+.u056-feat{position:relative;flex:1;margin:0;padding:4px 4px 0;list-style:none}
+.u056-feat li{display:flex;align-items:center;gap:10px;height:30px;font-size:13.5px;font-weight:620;color:var(--ux-ink-2);animation:u056-in .45s var(--ux-spring) backwards;animation-delay:calc(var(--i) * 50ms)}
+.u056-feat svg{width:18px;height:18px;flex:none;fill:none;stroke:var(--ux-mint);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+@keyframes u056-in{from{opacity:0;transform:translateX(-10px)}}
+.u056-cta{height:54px;border:0;border-radius:17px;background:var(--ux-ink);color:var(--ux-page);font-size:15px;font-weight:760;transition:transform .35s var(--ux-spring)}
+.u056-cta:active{transform:scale(.97)}
+.u056-cta:focus-visible{outline:2px solid var(--ux-accent);outline-offset:3px}
+</style>
+<div class="ux u056">
+  <div class="u056-sw" role="radiogroup" aria-label="결제 주기">
+    <span class="u056-knob" aria-hidden="true"></span>
+    <button type="button" role="radio" aria-checked="true">월간</button>
+    <button type="button" role="radio" aria-checked="false">연간 <span class="u056-badge">2개월 무료</span></button>
+  </div>
+  <fieldset class="u056-plans">
+    <legend class="u056-sr">요금제</legend>
+    <span class="u056-ring" aria-hidden="true"></span>
+    <label class="u056-p"><input type="radio" name="p" value="0"><span class="u056-dot" aria-hidden="true"></span><span class="u056-nm"><b>베이직</b><small>혼자 쓰는 작업 공간</small></span><span class="u056-pr"><span class="u056-od" data-p="0"></span><small>/ 월</small></span></label>
+    <label class="u056-p"><input type="radio" name="p" value="1" checked><span class="u056-dot" aria-hidden="true"></span><span class="u056-nm"><b>프로 <em>추천</em></b><small>팀 협업과 무제한 기록</small></span><span class="u056-pr"><span class="u056-od" data-p="1"></span><small>/ 월</small></span></label>
+  </fieldset>
+  <ul class="u056-feat" aria-live="polite"></ul>
+  <button class="u056-cta" type="button">프로 시작하기</button>
+</div>

@@ -1,0 +1,16 @@
+<style>
+.u360{position:relative;width:340px;height:300px;padding:18px;border-radius:28px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);overflow:hidden;touch-action:none}
+.u360::before{content:"";position:absolute;inset:0;background-image:radial-gradient(var(--ux-line-2) 1px,transparent 1.2px);background-size:18px 18px;opacity:.6;pointer-events:none}
+.u360-wd{position:absolute;left:0;right:0;top:92px;display:flex;justify-content:center;gap:2px;margin:0;border:0;background:none;padding:0}
+.u360-l{position:relative;display:inline-block;font-size:52px;line-height:1;font-weight:900;letter-spacing:-.02em;cursor:grab;user-select:none;-webkit-user-select:none;color:oklch(.6 .2 var(--h));color:color-mix(in oklab,oklch(.62 .2 var(--h)) 85%,var(--ux-ink));will-change:transform}
+.u360-l.drag{cursor:grabbing;z-index:2}
+.u360-ft{position:absolute;left:18px;right:18px;bottom:16px;display:flex;gap:8px}
+.u360-go,.u360-home{flex:1;height:40px;border:0;border-radius:13px;font-size:13.5px;font-weight:750;transition:transform .35s var(--ux-spring)}
+.u360-go{background:var(--ux-ink);color:var(--ux-page)}
+.u360-home{background:var(--ux-surface-2);color:var(--ux-ink)}
+.u360-go:active,.u360-home:active{transform:scale(.94)}
+</style>
+<div class="ux u360">
+  <div class="u360-wd" role="button" tabindex="0" aria-label="글자 흩기"></div>
+  <div class="u360-ft"><button class="u360-go" type="button">흩기</button><button class="u360-home" type="button">모으기</button></div>
+</div>

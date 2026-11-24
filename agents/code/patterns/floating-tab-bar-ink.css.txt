@@ -1,0 +1,4 @@
+.tb-ink [role=tablist]{display:flex;gap:6px;padding:8px;background:#0b0b0b;border-radius:22px}
+.tb-ink [role=tab]{width:52px;height:52px;display:grid;place-items:center;border:0;border-radius:14px;background:none;color:#fff;opacity:.55;cursor:pointer}
+.tb-ink [role=tab] svg{width:28px;height:28px}
+.tb-ink [aria-selected=true]{opacity:1}

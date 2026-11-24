@@ -1,0 +1,6 @@
+/* file: src/plugins/scrollspy/variants.css */
+@custom-variant hs-scrollspy-active {
+  &.active {
+    @slot;
+  }
+}

@@ -1,0 +1,55 @@
+<style>
+.u197{position:relative;width:340px;height:352px;padding:16px;box-sizing:border-box;border-radius:28px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);color:var(--ux-ink);overflow:hidden}
+.u197-app{height:252px;border-radius:16px;background:var(--ux-surface-2);overflow:hidden}
+.u197-bar{display:flex;align-items:center;gap:6px;height:48px;padding:0 10px 0 14px;background:var(--ux-surface);border-bottom:1px solid var(--ux-line)}
+.u197-bar b{flex:1;font:italic 800 17px/1 Georgia,serif;letter-spacing:-.02em}
+.u197-ib{width:32px;height:32px;border:0;padding:0;border-radius:10px;background:var(--ux-surface-2);color:var(--ux-ink);display:grid;place-items:center}
+.u197-ib svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.u197-add{background:var(--ux-ink);color:var(--ux-surface)}
+.u197-me{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#FFC078,#E8590C);margin-left:2px}
+.u197-bd{padding:12px 14px}
+.u197-bd h5{margin:0 0 8px;font-size:11.5px;font-weight:800;color:var(--ux-ink-3)}
+.u197-gd{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.u197-dc{height:132px;border-radius:12px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line);padding:10px 9px;display:flex;flex-direction:column;gap:5px}
+.u197-dc i{height:5px;border-radius:3px;background:var(--ux-line-2)}.u197-dc i:nth-of-type(2){width:70%}.u197-dc i:nth-of-type(3){width:85%}
+.u197-dc b{margin-top:auto;font-size:11.5px;font-weight:800}
+.u197-dc small{font-size:10px;color:var(--ux-ink-3)}
+.u197-dc:first-child{background:linear-gradient(160deg,color-mix(in srgb,#c09045 16%,var(--ux-surface)),var(--ux-surface) 60%)}
+.u197-start{display:block;margin:14px auto 0;height:40px;padding:0 20px;border:0;border-radius:999px;background:#c09045;color:#fff;font-size:13px;font-weight:800;box-shadow:0 10px 18px -10px #c09045}
+.u197-start:focus-visible,.u197-tip button:focus-visible,.u197-ib:focus-visible{outline:2px solid var(--ux-accent);outline-offset:3px}
+.u197-ov{position:absolute;inset:0;width:100%;height:100%;opacity:0;pointer-events:none;transition:opacity .35s}
+.u197-ov path{fill:rgba(10,12,22,.66);pointer-events:none}
+.u197.is-tour .u197-ov{opacity:1}
+.u197.is-tour .u197-ov path{pointer-events:visiblePainted}
+.u197-ring{position:absolute;left:0;top:0;border-radius:14px;box-shadow:0 0 0 2px #FFD8A8;pointer-events:none;opacity:0;transition:opacity .3s}
+.u197.is-tour .u197-ring{opacity:1}
+.u197-ring::after{content:"";position:absolute;inset:-2px;border-radius:inherit;box-shadow:0 0 0 2px #FFD8A8;animation:u197-pulse 1.5s ease-out infinite}
+@keyframes u197-pulse{0%{opacity:.9;transform:scale(1)}100%{opacity:0;transform:scale(1.25)}}
+.u197-tip{position:absolute;left:0;top:0;width:224px;padding:12px 13px 11px;border-radius:14px;background:var(--ux-surface);box-shadow:0 14px 30px -10px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(6px) scale(.97);transition:left .45s cubic-bezier(.3,1.15,.4,1),top .45s cubic-bezier(.3,1.15,.4,1),opacity .25s,transform .35s var(--ux-spring),visibility 0s .3s}
+.u197.is-tour .u197-tip{opacity:1;visibility:visible;transform:none;transition:left .45s cubic-bezier(.3,1.15,.4,1),top .45s cubic-bezier(.3,1.15,.4,1),opacity .25s,transform .35s var(--ux-spring)}
+.u197-tip::before{content:"";position:absolute;left:var(--ax,30px);width:12px;height:12px;margin-left:-6px;background:inherit;transform:rotate(45deg);transition:left .45s cubic-bezier(.3,1.15,.4,1)}
+.u197-tip.dn::before{top:-5px}.u197-tip.up::before{bottom:-5px}
+.u197-tip.rt::before{left:-5px;top:var(--ay,30px);margin:-6px 0 0}
+.u197-tip small{font-size:10.5px;font-weight:800;color:#c09045}
+.u197-tip b{display:block;margin-top:3px;font-size:14px;font-weight:850}
+.u197-tip p{margin:3px 0 10px;font-size:12px;line-height:1.45;color:var(--ux-ink-2)}
+.u197-tip .ct{animation:u197-fade .35s ease}
+@keyframes u197-fade{from{opacity:0;transform:translateY(4px)}}
+.u197-tf{display:flex;align-items:center;gap:6px}
+.u197-dots{display:flex;gap:4px;margin-right:auto}
+.u197-dots i{width:6px;height:6px;border-radius:3px;background:var(--ux-line-2);transition:width .3s var(--ux-spring),background-color .3s}
+.u197-dots i.on{width:16px;background:#c09045}
+.u197-tf button{height:28px;padding:0 10px;border:0;border-radius:8px;background:var(--ux-surface-2);color:var(--ux-ink-2);font-size:11.5px;font-weight:800}
+.u197-tf .u197-nx{background:var(--ux-ink);color:var(--ux-surface)}
+.u197-x{position:absolute;right:8px;top:8px;height:22px;padding:0 7px;border:0;border-radius:7px;background:none;color:var(--ux-ink-3);font-size:10.5px;font-weight:800}
+</style>
+<div class="ux u197">
+  <div class="u197-app">
+    <div class="u197-bar"><b>Notes</b><button class="u197-ib u197-find" type="button" aria-label="검색"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14"/></svg></button><button class="u197-ib u197-share" type="button" aria-label="공유"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 10V2M5 5l3-3 3 3M3 9v4h10V9"/></svg></button><button class="u197-ib u197-add" type="button" aria-label="새 문서"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10"/></svg></button><span class="u197-me" aria-hidden="true"></span></div>
+    <div class="u197-bd"><h5>내 문서</h5><div class="u197-gd"><div class="u197-dc u197-doc"><i></i><i></i><i></i><b>회의록</b><small>오늘 수정</small></div><div class="u197-dc"><i></i><i></i><i></i><b>여행 계획</b><small>어제</small></div><div class="u197-dc"><i></i><i></i><i></i><b>장보기</b><small>3일 전</small></div></div></div>
+  </div>
+  <button class="u197-start" type="button"></button>
+  <svg class="u197-ov" viewBox="0 0 340 352" aria-hidden="true"><path fill-rule="evenodd"/></svg>
+  <i class="u197-ring" aria-hidden="true"></i>
+  <div class="u197-tip" role="dialog" aria-label="화면 안내"><button class="u197-x" type="button">건너뛰기</button><div class="ct"><small></small><b></b><p></p></div><div class="u197-tf"><span class="u197-dots" aria-hidden="true"></span><button class="u197-pv" type="button">이전</button><button class="u197-nx" type="button"></button></div></div>
+</div>

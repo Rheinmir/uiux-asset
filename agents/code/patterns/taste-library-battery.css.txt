@@ -1,0 +1,9 @@
+.tx-bat{width:460px;height:340px;display:flex;justify-content:center;align-items:center;gap:20px;border-radius:22px;background:#ececec;font-family:Inter,system-ui,sans-serif;color:#111}
+.tx-bat button{display:flex;flex-direction:column;align-items:center;gap:8px;border:0;background:none;cursor:pointer;padding:0;color:inherit}
+.tx-bat .cell{position:relative;width:84px;height:150px;border-radius:30px;background:#fff;overflow:hidden;box-shadow:0 10px 18px -8px rgba(0,0,0,.2)}
+.tx-bat .cell::before{content:"";position:absolute;left:30px;top:-1px;width:24px;height:6px;border-radius:0 0 4px 4px;background:#d8d8d8;z-index:1}
+.tx-bat .cell i{position:absolute;left:0;right:0;bottom:0;height:var(--p);background:#0b0b0b;transition:height .8s cubic-bezier(.2,.7,.2,1)}
+.tx-bat .low i{background:#f29a0c}
+.tx-bat b{font:500 28px/1 Inter;letter-spacing:-.03em}
+.tx-bat b small{font-size:13px;color:#888}
+.tx-bat span{font:400 14px/1 Inter;color:#666}

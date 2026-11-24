@@ -1,0 +1,38 @@
+<style>
+.u024{position:relative;width:340px;padding:4px 8px}
+.u024-head{display:flex;align-items:flex-end;justify-content:space-between;gap:8px}
+.u024-head small{display:block;font-size:13px;font-weight:600;color:var(--ux-ink-3)}
+.u024-val{display:block;margin-top:4px;font-size:22px;font-weight:780;letter-spacing:-.035em;font-variant-numeric:tabular-nums}
+.u024-count{display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:999px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line);font-size:13px;font-weight:650;color:var(--ux-ink-2)}
+.u024-roll{position:relative;width:3ch;height:18px;overflow:hidden;text-align:right;color:var(--ux-ink);font-weight:760;font-variant-numeric:tabular-nums}
+.u024-roll span{display:block;line-height:18px;transition:transform .45s var(--ux-spring),opacity .3s var(--ux-ease)}
+.u024-roll span+span{position:absolute;left:0;right:0;top:0}
+.u024-hist{position:relative;height:110px;margin:22px 4px 0;display:flex;align-items:flex-end;gap:4px}
+.u024-bar{flex:1;height:calc(var(--h) * 1%);border-radius:6px 6px 3px 3px;background:var(--ux-surface-3);transform-origin:50% 100%;transform:scaleY(.82);transition:background-color .35s var(--ux-ease),transform .55s var(--ux-spring),opacity .35s var(--ux-ease)}
+.u024-bar.in{background:linear-gradient(180deg,#2FD8A8,#14B8A6 60%,#0E9F8E);transform:none}
+.u024-track{position:relative;height:36px;margin:0 4px}
+.u024-rail{position:absolute;left:0;right:0;top:50%;height:6px;margin-top:-3px;border-radius:999px;background:var(--ux-surface-3)}
+.u024-sel{position:absolute;top:50%;height:6px;margin-top:-3px;border-radius:999px;background:#14B8A6;left:calc(var(--a) * 1%);right:calc(100% - var(--b) * 1%)}
+.u024-h{position:absolute;top:50%;left:calc(var(--pos) * 1%);width:30px;height:30px;margin:-15px 0 0 -15px;border:0;padding:0;border-radius:50%;background:#fff;cursor:grab;touch-action:none;z-index:2;
+  box-shadow:0 0 0 2.5px #14B8A6,0 6px 14px -4px rgba(0,60,50,.4);transition:transform .35s var(--ux-spring),box-shadow .3s var(--ux-ease)}
+.u024-h::after{content:"";position:absolute;inset:10px;border-radius:50%;background:#14B8A6;transform:scale(.6);transition:transform .35s var(--ux-spring)}
+.u024-h:hover{transform:scale(1.08)}
+.u024-h.drag{cursor:grabbing;transform:scale(1.18);box-shadow:0 0 0 2.5px #14B8A6,0 0 0 10px rgba(20,184,166,.18),0 6px 14px -4px rgba(0,60,50,.4)}
+.u024-h.drag::after{transform:scale(1)}
+.u024-h:focus-visible{outline:2px solid var(--ux-accent);outline-offset:4px}
+.u024-scale{display:flex;justify-content:space-between;margin:2px 4px 0;font-size:12px;font-weight:600;color:var(--ux-ink-3);font-variant-numeric:tabular-nums}
+</style>
+<div class="ux u024">
+  <div class="u024-head">
+    <div><small>가격 범위</small><span class="u024-val">₩53,000 – ₩120,000</span></div>
+    <span class="u024-count" aria-live="polite"><span class="u024-roll"><span>48</span><span></span></span>개 상품</span>
+  </div>
+  <div class="u024-hist" aria-hidden="true"></div>
+  <div class="u024-track">
+    <span class="u024-rail" aria-hidden="true"></span>
+    <span class="u024-sel" aria-hidden="true"></span>
+    <button class="u024-h" type="button" role="slider" aria-label="최저 가격" data-k="lo" aria-valuemin="0" aria-valuemax="100"></button>
+    <button class="u024-h" type="button" role="slider" aria-label="최고 가격" data-k="hi" aria-valuemin="0" aria-valuemax="100"></button>
+  </div>
+  <div class="u024-scale" aria-hidden="true"><span>₩30,000</span><span>₩105,000</span><span>₩180,000</span></div>
+</div>

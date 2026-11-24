@@ -1,0 +1,33 @@
+<style>
+.u458{position:relative;width:340px;height:300px}
+.u458-b{position:absolute;left:50%;top:132px;width:132px;height:132px;margin:-66px 0 0 -66px;padding:0;border:0;border-radius:50%;background:none;cursor:pointer}
+.u458 .u458-b:focus-visible{outline:2px solid var(--ux-accent);outline-offset:14px}
+.u458-b:active{transform:scale(.95)}
+.u458-b{transition:transform .5s cubic-bezier(.34,1.6,.5,1)}
+.u458-b>span{position:absolute;border-radius:50%;pointer-events:none}
+.u458-gw{inset:-38px;background:radial-gradient(closest-side,rgba(123,97,255,.38),rgba(54,170,255,.16) 58%,transparent);background:radial-gradient(closest-side,light-dark(rgba(110,86,255,.30),rgba(140,112,255,.62)),light-dark(rgba(40,150,255,.12),rgba(60,190,255,.26)) 58%,transparent);filter:blur(8px);will-change:transform,opacity}
+.u458-rp{inset:0;opacity:0;transition:opacity .6s var(--ux-ease)}
+.u458-rp i{position:absolute;inset:0;border-radius:50%;box-shadow:0 0 0 1.5px rgba(123,97,255,.5);box-shadow:0 0 0 1.5px light-dark(rgba(106,87,242,.45),rgba(183,164,255,.55));opacity:0;animation:u458-rip 2.4s cubic-bezier(.2,.6,.35,1) infinite}
+.u458-rp i:nth-child(2){animation-delay:.8s}
+.u458-rp i:nth-child(3){animation-delay:1.6s}
+@keyframes u458-rip{0%{transform:scale(1);opacity:.9}100%{transform:scale(1.62);opacity:0}}
+.u458[data-s="listen"] .u458-rp{opacity:1}
+.u458-o{inset:0;overflow:hidden;isolation:isolate;background:radial-gradient(circle at 50% 38%,#8C78FF,#5A43EA 56%,#33209E);box-shadow:inset 0 -12px 26px rgba(18,6,80,.5),inset 0 8px 16px rgba(255,255,255,.28),0 22px 40px -18px rgba(70,46,210,.75);will-change:transform}
+.u458-o i{position:absolute;left:50%;top:50%;width:84px;height:84px;margin:-42px;border-radius:50%;filter:blur(14px);opacity:.82;will-change:transform}
+.u458-o i:nth-child(1){background:#22B6FF}
+.u458-o i:nth-child(2){background:#FF4FAE}
+.u458-o i:nth-child(3){background:#45E3B8;width:70px;height:70px;margin:-35px}
+.u458-o i:nth-child(4){background:#3B25C9;opacity:.9}
+.u458-o b{position:absolute;left:17%;top:7%;width:54%;height:34%;border-radius:50%;background:radial-gradient(closest-side,rgba(255,255,255,.7),rgba(255,255,255,0));pointer-events:none}
+.u458-o::after{content:"";position:absolute;inset:0;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18);pointer-events:none}
+.u458-st{position:absolute;left:0;right:0;top:232px;margin:0;display:grid;justify-items:center;font-size:13.5px;font-weight:500;color:var(--ux-ink-2)}
+.u458-st span{grid-area:1/1;white-space:nowrap}
+</style>
+<div class="ux u458" data-s="idle">
+  <button type="button" class="u458-b" aria-label="음성 비서">
+    <span class="u458-gw" aria-hidden="true"></span>
+    <span class="u458-rp" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="u458-o" aria-hidden="true"><i></i><i></i><i></i><i></i><b></b></span>
+  </button>
+  <p class="u458-st" role="status"><span>탭해서 말하기</span></p>
+</div>

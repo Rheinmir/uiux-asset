@@ -1,0 +1,16 @@
+<style>
+.u292{position:relative;width:340px;height:350px;display:flex;flex-direction:column;padding:16px;border-radius:28px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);overflow:hidden}
+.u292-fs{display:flex;gap:5px;flex-wrap:wrap}
+.u292-f{height:32px;padding:0 12px;border:0;border-radius:999px;background:var(--ux-surface-2);font-size:12.5px;font-weight:750;color:var(--ux-ink-2);transition:background-color .25s,color .25s}
+.u292-f[aria-pressed="true"]{background:var(--ux-ink);color:var(--ux-page)}
+.u292-n{margin:8px 0 0;font-size:11.5px;font-weight:700;color:var(--ux-ink-3);font-variant-numeric:tabular-nums}
+.u292-g{position:relative;flex:1;margin-top:8px}
+.u292-t{position:absolute;left:0;top:0;width:68px;height:68px;border-radius:16px;display:grid;place-items:center;background:var(--bg);transition:transform .6s cubic-bezier(.3,1.25,.4,1),opacity .35s}
+.u292-t.out{opacity:0}
+.u292-t svg{width:30px;height:30px;fill:rgba(255,255,255,.9)}
+</style>
+<div class="ux u292">
+  <div class="u292-fs" role="group" aria-label="모양 필터"></div>
+  <p class="u292-n" aria-live="polite"></p>
+  <div class="u292-g"></div>
+</div>

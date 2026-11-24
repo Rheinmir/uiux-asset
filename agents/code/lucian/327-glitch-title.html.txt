@@ -1,0 +1,40 @@
+<style>
+.u327{position:relative;width:340px;height:300px;display:flex;flex-direction:column;padding:18px;border-radius:28px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);overflow:hidden}
+.u327-scr{position:relative;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:18px;background:#0B0C12;overflow:hidden}
+.u327-scr::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(255,255,255,.04) 0 1px,transparent 1px 3px),radial-gradient(120% 90% at 50% 50%,transparent 55%,rgba(0,0,0,.55))}
+.u327-cap{position:absolute;left:14px;top:12px;margin:0;font:600 10.5px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em;color:rgba(255,255,255,.5)}
+.u327-cap i{display:inline-block;width:6px;height:6px;margin-right:6px;border-radius:50%;background:#FF4D6A;vertical-align:1px;animation:u327-rec 1.2s steps(2) infinite}
+@keyframes u327-rec{50%{opacity:.2}}
+.u327-t{position:relative;padding:6px 10px;border:0;background:none;font:900 46px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:-.04em;color:#F4F0E8;cursor:pointer}
+.u327-t span{display:block;white-space:nowrap}
+.u327-ch{position:absolute;inset:6px 10px;pointer-events:none;opacity:.85;transform:translateX(var(--d,0px))}
+.u327-ch.r{color:#FF2E63;mix-blend-mode:screen}
+.u327-ch.c{color:#08F7FE;mix-blend-mode:screen;transform:translateX(calc(var(--d,0px) * -1))}
+.u327-m{position:relative;mix-blend-mode:screen}
+.u327-sl{position:absolute;inset:0 0;padding:6px 10px;pointer-events:none;background:#0B0C12;color:#F4F0E8;display:none;clip-path:inset(var(--a,0%) 0 var(--b,100%) 0);transform:translateX(var(--x,0px))}
+.u327.is-g .u327-sl{display:block}
+.u327-sub{margin:10px 0 0;font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.16em;color:rgba(255,255,255,.42)}
+.u327-ft{display:flex;align-items:center;gap:12px;margin-top:12px}
+.u327-sw{display:flex;align-items:center;gap:8px;height:36px;padding:0 12px 0 6px;border:0;border-radius:999px;background:var(--ux-surface-2);font-size:13px;font-weight:700;color:var(--ux-ink-2)}
+.u327-sw i{position:relative;width:34px;height:22px;border-radius:999px;background:var(--ux-surface-3);transition:background-color .3s}
+.u327-sw i::after{content:"";position:absolute;left:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .4s var(--ux-spring)}
+.u327-sw[aria-pressed="true"] i{background:#FF2E63}
+.u327-sw[aria-pressed="true"] i::after{transform:translateX(12px)}
+.u327-ft label{flex:1;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--ux-ink-3)}
+.u327-r{flex:1;min-width:0;margin:0;accent-color:#FF2E63}
+</style>
+<div class="ux u327">
+  <div class="u327-scr">
+    <p class="u327-cap" aria-hidden="true"><i></i>REC</p>
+    <button class="u327-t" type="button" aria-label="글리치 한 번 일으키기">
+      <span class="u327-ch r" aria-hidden="true">NO SIGNAL</span>
+      <span class="u327-ch c" aria-hidden="true">NO SIGNAL</span>
+      <span class="u327-m">NO SIGNAL</span>
+    </button>
+    <p class="u327-sub">채널 07 · 수신 대기</p>
+  </div>
+  <div class="u327-ft">
+    <button class="u327-sw" type="button" aria-pressed="false"><i aria-hidden="true"></i>불안정</button>
+    <label>강도<input class="u327-r" type="range" min="10" max="100" value="50" aria-label="글리치 강도"></label>
+  </div>
+</div>

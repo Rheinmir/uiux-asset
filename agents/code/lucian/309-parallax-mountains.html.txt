@@ -1,0 +1,33 @@
+<style>
+.u309{position:relative;width:300px;height:500px;border-radius:30px;box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);overflow:hidden}
+.u309-sc{position:absolute;inset:0;overflow-y:auto;scrollbar-width:none;outline:none}
+.u309-sc::-webkit-scrollbar{display:none}
+.u309-scene{position:sticky;top:0;height:500px;overflow:hidden;background:linear-gradient(var(--s1,#7EC4F2),var(--s2,#D7EEFF))}
+.u309-sun{position:absolute;left:50%;top:0;width:70px;height:70px;margin-left:-35px;border-radius:50%;background:radial-gradient(circle,#FFF4C2,#FFC94D 60%);box-shadow:0 0 60px 20px rgba(255,200,80,.45)}
+.u309-ly{position:absolute;left:-10%;width:120%;bottom:0;will-change:transform}
+.u309-ly svg{display:block;width:100%;height:auto}
+.u309-t{position:absolute;left:0;right:0;top:120px;text-align:center;color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.25);will-change:transform}
+.u309-t b{display:block;font-size:30px;font-weight:880;letter-spacing:-.04em}
+.u309-t span{font-size:12.5px;font-weight:700;opacity:.9}
+.u309-body{position:relative;margin-top:-90px;padding:0 14px 20px;display:grid;gap:12px}
+.u309-c{padding:16px;border-radius:20px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 18px 30px -18px var(--ux-shadow-strong);color:var(--ux-ink)}
+.u309-c b{font-size:15px;font-weight:850}
+.u309-c p{margin:6px 0 0;font-size:13.5px;line-height:1.6;color:var(--ux-ink-2)}
+</style>
+<div class="ux u309">
+  <div class="u309-sc" tabindex="0" aria-label="여행기, 스크롤해서 읽기">
+    <div class="u309-scene" aria-hidden="true">
+      <span class="u309-sun"></span>
+      <div class="u309-t"><b>높은 곳에서 보낸 사흘</b><span>설악 능선 걷기 · 2026 가을</span></div>
+      <div class="u309-ly" data-s="0.12"><svg viewBox="0 0 360 200"><path d="M0 120 L50 70 L95 110 L150 40 L210 100 L260 60 L320 105 L360 80 V200 H0z" fill="#9DB4D6"/></svg></div>
+      <div class="u309-ly" data-s="0.28"><svg viewBox="0 0 360 200"><path d="M0 150 L60 95 L120 140 L175 80 L235 135 L290 100 L360 140 V200 H0z" fill="#6E86B5"/></svg></div>
+      <div class="u309-ly" data-s="0.5"><svg viewBox="0 0 360 200"><path d="M0 170 L45 130 L90 160 L140 120 L200 165 L250 128 L310 160 L360 135 V200 H0z" fill="#3F5A8A"/></svg></div>
+      <div class="u309-ly" data-s="0.8"><svg viewBox="0 0 360 120"><path d="M0 70 q10-30 20 0 q10-36 22 0 q10-28 20 0 q12-40 24 0 q10-30 20 0 q12-34 22 0 q10-30 20 0 q12-40 24 0 q10-30 20 0 q12-34 22 0 q10-30 20 0 q12-38 24 0 q10-30 20 0 q12-34 22 0 q10-30 20 0 q8-26 20 0 V120 H0z" fill="#1F3B37"/></svg></div>
+    </div>
+    <div class="u309-body">
+      <div class="u309-c"><b>첫째 날</b><p>새벽 네 시, 헤드랜턴 불빛만으로 첫 오르막을 올랐습니다. 해가 뜰 무렵 능선이 한 겹씩 모습을 드러냈어요.</p></div>
+      <div class="u309-c"><b>둘째 날</b><p>구름이 발아래로 지나가는 동안 대피소에서 따뜻한 국수를 먹었습니다. 바람이 세서 모자를 두 번이나 잡았어요.</p></div>
+      <div class="u309-c"><b>셋째 날</b><p>내려오는 길은 생각보다 길었지만, 뒤돌아본 능선은 처음보다 훨씬 가까워 보였습니다.</p></div>
+    </div>
+  </div>
+</div>

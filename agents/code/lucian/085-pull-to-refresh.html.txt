@@ -1,0 +1,41 @@
+<style>
+.u085{--pull:0;position:relative;width:330px;height:500px;display:flex;flex-direction:column;border-radius:34px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);overflow:hidden}
+.u085-top{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;height:60px;padding:0 14px 0 20px;background:var(--ux-surface)}
+.u085-top b{font-size:20px;font-weight:850;letter-spacing:-.04em}
+.u085-rb{width:38px;height:38px;border:0;padding:0;border-radius:50%;display:grid;place-items:center;background:var(--ux-surface-2);color:var(--ux-ink-2)}
+.u085-rb svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.u085-rb:focus-visible{outline:2px solid var(--ux-accent);outline-offset:2px}
+.u085-vp{position:relative;flex:1;overflow:hidden;touch-action:pan-x;cursor:grab;outline:none;-webkit-mask-image:linear-gradient(180deg,#000 calc(100% - 36px),transparent);mask-image:linear-gradient(180deg,#000 calc(100% - 36px),transparent)}
+.u085-vp:focus-visible{box-shadow:inset 0 0 0 2px var(--ux-accent)}
+.u085-vp.drag{cursor:grabbing}
+.u085-ind{position:absolute;left:50%;top:10px;width:40px;height:40px;margin-left:-20px;border-radius:50%;display:grid;place-items:center;background:var(--ux-surface);box-shadow:0 6px 16px -6px var(--ux-shadow-strong),0 0 0 1px var(--ux-line);opacity:min(1,calc(var(--pull) / 30));transform:translateY(calc(min(var(--pull),90) * 1px - 50px)) rotate(calc(var(--pull) * 3deg))}
+.u085-ind svg{width:24px;height:24px;transform:rotate(-90deg)}
+.u085-ind circle{fill:none;stroke:var(--ux-accent);stroke-width:2.6;stroke-linecap:round;stroke-dasharray:100;stroke-dashoffset:calc(100 - min(1,var(--pull) / 70) * 82)}
+.u085-ind path{fill:var(--ux-accent);opacity:min(1,calc(var(--pull) / 70))}
+.u085.is-ready .u085-ind{background:var(--ux-accent)}
+.u085.is-ready .u085-ind circle{stroke:var(--ux-accent-ink)}
+.u085.is-ready .u085-ind path{fill:var(--ux-accent-ink)}
+.u085.is-load .u085-ind{opacity:1;transform:translateY(20px);transition:transform .4s var(--ux-spring)}
+.u085.is-load .u085-ind svg{animation:u085-spin .8s linear infinite}
+.u085.is-load .u085-ind circle{stroke-dashoffset:30;stroke:var(--ux-accent)}
+.u085.is-load .u085-ind path{opacity:0}
+.u085.is-load.is-ready .u085-ind{background:var(--ux-surface)}
+@keyframes u085-spin{to{transform:rotate(270deg)}}
+.u085-msg{position:absolute;left:0;right:0;top:54px;text-align:center;font-size:12px;font-weight:700;color:var(--ux-ink-3);opacity:min(1,calc((var(--pull) - 30) / 30));transform:translateY(calc(min(var(--pull),90) * 1px - 50px))}
+.u085-list{margin:0;padding:4px 12px;list-style:none;transform:translateY(calc(var(--pull) * 1.3px))}
+.u085.rel .u085-list,.u085.rel .u085-ind,.u085.rel .u085-msg{transition:transform .5s var(--ux-spring),opacity .3s}
+.u085-it{display:flex;gap:12px;padding:12px 8px;border-radius:16px;transition:background-color 1.2s}
+.u085-it.fresh{background:var(--ux-accent-soft);animation:u085-in .6s var(--ux-spring) backwards;animation-delay:calc(var(--i) * 80ms)}
+@keyframes u085-in{from{opacity:0;transform:translateY(-30px) scale(.96)}}
+.u085-it i{width:40px;height:40px;flex:none;border-radius:13px;background:var(--g)}
+.u085-it b{display:block;font-size:14px;font-weight:780;letter-spacing:-.02em}
+.u085-it span{display:block;margin-top:3px;font-size:12.5px;font-weight:600;color:var(--ux-ink-3)}
+</style>
+<div class="ux u085">
+  <div class="u085-top"><b>팀 소식</b><button class="u085-rb" type="button" aria-label="새로고침"><svg viewBox="0 0 17 17" aria-hidden="true"><path d="M14 8.5a5.5 5.5 0 1 1-1.6-3.9M14 2.5v3h-3"/></svg></button></div>
+  <div class="u085-vp" tabindex="0" aria-label="팀 소식 목록. R 키로 새로고침">
+    <span class="u085-ind" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" pathLength="100"/><path d="M12 1.6l3.4 2.6L12 6.8z"/></svg></span>
+    <span class="u085-msg" aria-hidden="true">아래로 당겨 새로고침</span>
+    <ul class="u085-list" aria-live="polite"></ul>
+  </div>
+</div>

@@ -1,0 +1,30 @@
+<style>
+.u398{position:relative;width:340px;height:340px;border-radius:30px;overflow:hidden;background:var(--ux-surface);color:var(--ux-ink);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong)}
+.u398-hd{position:absolute;left:20px;right:18px;top:16px;display:flex;justify-content:space-between;align-items:flex-start}
+.u398-hd b{font-size:13.5px;font-weight:900}
+.u398-eq{text-align:right;font-variant-numeric:tabular-nums}
+.u398-eq b{display:block;font-size:12.5px;font-weight:900;color:#4F46E5}
+.u398-eq span{font-size:10px;font-weight:800;color:var(--ux-ink-3)}
+.u398-sv{position:absolute;left:0;top:0;width:340px;height:340px;touch-action:none}
+.u398-bg{fill:transparent;cursor:copy}
+.u398-gl{stroke:var(--ux-line);stroke-width:1}
+.u398-tk{font-size:8.5px;font-weight:700;fill:var(--ux-ink-3);font-variant-numeric:tabular-nums}
+.u398-al{font-size:9px;font-weight:800;fill:var(--ux-ink-2)}
+.u398-bd{fill:#6366F1;fill-opacity:.14}
+.u398-ln{stroke:#4F46E5;stroke-width:2.6;stroke-linecap:round}
+.u398-rs{stroke:#F43F5E;stroke-width:1.5;stroke-dasharray:2 2;opacity:0;transition:opacity .25s}
+.u398.is-res .u398-rs{opacity:.85}
+.u398-pt{fill:var(--ux-surface);stroke:#4F46E5;stroke-width:2.4;cursor:grab;transition:r .15s}
+.u398-pt.is-drag{r:8.5;fill:#4F46E5;cursor:grabbing}
+.u398-pt:focus{outline:none}
+.u398-pt:focus-visible{stroke:#F59E0B;stroke-width:3}
+.u398-bs{position:absolute;left:20px;right:20px;bottom:14px;display:flex;gap:6px;justify-content:center}
+.u398-bt{border:0;padding:7px 14px;border-radius:999px;background:var(--ux-surface-2);color:var(--ux-ink);font:inherit;font-size:11.5px;font-weight:800;cursor:pointer;box-shadow:inset 0 0 0 1px var(--ux-line);transition:background .2s,color .2s}
+.u398-bt[aria-pressed="true"]{background:#F43F5E;color:#fff;box-shadow:none}
+.u398-bt:focus-visible{outline:2px solid #4F46E5;outline-offset:2px}
+</style>
+<div class="ux u398">
+  <svg class="u398-sv" viewBox="0 0 340 340"><rect class="u398-bg" x="44" y="62" width="274" height="200" aria-label="산점도, 빈 곳을 눌러 점 추가"/><g class="u398-ax" aria-hidden="true"></g><path class="u398-bd" aria-hidden="true"/><g class="u398-rss" aria-hidden="true"></g><line class="u398-ln" aria-hidden="true"/><g class="u398-pts"></g></svg>
+  <div class="u398-hd"><b>공부 시간과 점수</b><div class="u398-eq" aria-live="polite"><b></b><span></span></div></div>
+  <div class="u398-bs"><button type="button" class="u398-bt" aria-pressed="false">잔차 보기</button><button type="button" class="u398-bt">처음으로</button></div>
+</div>

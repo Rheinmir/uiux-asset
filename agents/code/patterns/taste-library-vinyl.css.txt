@@ -1,0 +1,14 @@
+.tx-vinyl{width:460px;height:340px;position:relative;border-radius:22px;background:#ececec;font-family:Inter,system-ui,sans-serif;color:#111}
+.tx-vinyl .rec{position:absolute;left:150px;top:22px;width:190px;height:190px;border-radius:50%;background:radial-gradient(circle,#111 0 4px,#0f2a1a 5px 30px,#111 31px),repeating-radial-gradient(circle,#161616 0 2px,#0c0c0c 2px 4px);transition:left .5s cubic-bezier(.2,.7,.2,1)}
+.tx-vinyl.on .rec{left:200px;animation:tx-spin 2.4s linear infinite}
+.tx-vinyl .cover{position:absolute;left:100px;top:22px;width:190px;height:190px;padding:12px;background:radial-gradient(circle at 70% 70%,#2e5a2a,transparent 50%),radial-gradient(circle at 40% 40%,rgba(255,255,255,.18) 1px,transparent 2px) 0 0/9px 11px,linear-gradient(160deg,#16301c,#0b1a10);color:#fff;font:500 10px/1.4 Inter;box-shadow:0 10px 20px rgba(0,0,0,.25)}
+.tx-vinyl .cover small{display:block;opacity:.6}
+.tx-vinyl .meta{position:absolute;left:40px;top:236px;font:500 20px/1 Inter;letter-spacing:-.02em}
+.tx-vinyl .meta small{display:block;margin-top:6px;font:400 13px/1 Inter;color:#666;letter-spacing:0}
+.tx-vinyl .ctl{position:absolute;right:40px;top:232px;display:flex;align-items:center;gap:10px}
+.tx-vinyl .ctl .tx-btn{width:32px;height:32px}
+.tx-vinyl .ctl .pp{width:46px;height:46px;background:#111;color:#fff;box-shadow:0 6px 12px rgba(0,0,0,.25)}
+.tx-vinyl .bar{position:absolute;left:40px;right:40px;top:292px;height:3px;border-radius:3px;background:#d6d6d6}
+.tx-vinyl .bar i{display:block;height:100%;border-radius:3px;background:#111;position:relative}
+.tx-vinyl .bar i::after{content:"";position:absolute;right:-7px;top:-6px;width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.tx-vinyl .tm{position:absolute;left:40px;right:40px;top:306px;display:flex;justify-content:space-between;font:500 11px/1 ui-monospace,Menlo,monospace;color:#555}

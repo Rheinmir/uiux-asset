@@ -1,0 +1,34 @@
+<style>
+.u266{position:relative;width:340px;height:340px;border-radius:30px;overflow:hidden;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);color:var(--ux-ink)}
+.u266-cs{position:absolute;left:12px;right:12px;top:12px;height:186px;display:flex;border-radius:18px;overflow:hidden}
+.u266-cl{position:relative;flex:1;background:var(--c);color:var(--t);transition:background .55s ease,color .4s,flex .3s cubic-bezier(.3,1.3,.5,1)}
+.u266-cp{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:0 0 12px;border:0;background:none;color:inherit;font:inherit;cursor:pointer}
+.u266-cl:hover,.u266-cl.g-hov{flex:1.25}
+.u266-cp:focus-visible,.u266-lk:focus-visible{outline:2px solid var(--t);outline-offset:-4px}
+.u266-cl code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px;font-weight:800;letter-spacing:.02em}
+.u266-lk{position:absolute;top:10px;left:50%;width:26px;height:26px;margin-left:-13px;border:0;border-radius:50%;background:color-mix(in srgb,var(--t) 16%,transparent);color:var(--t);display:grid;place-items:center;cursor:pointer;opacity:.55;transition:opacity .2s,transform .3s cubic-bezier(.3,1.7,.5,1)}
+.u266-lk[aria-pressed="true"]{opacity:1;transform:scale(1.1)}
+.u266-lk svg{width:12px;height:12px}
+.u266-cl:hover .u266-lk,.u266-cl.g-hov .u266-lk{opacity:1}
+.u266-tb{position:absolute;left:12px;right:12px;top:206px;display:flex;align-items:center;gap:8px}
+.u266-sh{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 14px;border:0;border-radius:11px;background:var(--ux-ink);color:var(--ux-surface);font:inherit;font-size:12px;font-weight:850;cursor:pointer}
+.u266-sh svg{width:13px;height:13px;transition:transform .5s cubic-bezier(.3,1.3,.5,1)}
+.u266-sh.is-spin svg{transform:rotate(360deg)}
+.u266-sh:focus-visible{outline:2px solid var(--ux-accent);outline-offset:2px}
+.u266-tb kbd{margin-left:auto;padding:2px 6px;border-radius:5px;box-shadow:inset 0 0 0 1px var(--ux-line),0 1px 0 var(--ux-line);font-family:inherit;font-size:9.5px;font-weight:800;color:var(--ux-ink-3)}
+.u266-pv{position:absolute;left:12px;right:12px;bottom:12px;height:72px;display:flex;align-items:center;gap:10px;padding:0 12px;border-radius:16px;background:var(--p0);background:light-dark(var(--p0),var(--p4));transition:background .55s}
+.u266-pv div{flex:1;min-width:0}
+.u266-pv small{display:block;font-size:9px;font-weight:850;color:var(--p2);transition:color .55s}
+.u266-pv b{display:block;margin-top:2px;font-size:13px;font-weight:900;color:var(--p4);color:light-dark(var(--p4),var(--p0));transition:color .55s}
+.u266-pv span{padding:8px 12px;border-radius:10px;background:var(--p3);color:var(--p0);font-size:10.5px;font-weight:850;white-space:nowrap;transition:background .55s,color .55s}
+.u266-pv i{flex:none;width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--p1),var(--p2));transition:background .55s}
+.u266-tt{position:absolute;left:50%;top:96px;padding:6px 11px;border-radius:10px;background:var(--ux-ink);color:var(--ux-surface);font-size:10.5px;font-weight:800;white-space:nowrap;transform:translate(-50%,8px);opacity:0;pointer-events:none;transition:opacity .2s,transform .3s cubic-bezier(.3,1.5,.5,1)}
+.u266-tt.is-on{opacity:1;transform:translate(-50%,0)}
+@media (prefers-reduced-motion: reduce){.u266-cl,.u266-pv,.u266-pv *,.u266-sh svg,.u266-tt{transition:none}}
+</style>
+<div class="ux u266">
+  <div class="u266-cs"></div>
+  <div class="u266-tb"><button type="button" class="u266-sh"><svg viewBox="0 0 13 13" aria-hidden="true"><path d="M1.5 4h2.2c1.6 0 2.5.9 3.3 2.5S8.7 9 10.3 9h1.2M1.5 9h2.2c.9 0 1.5-.3 2-.8M8.6 4.8c.5-.5 1-.8 1.7-.8h1.2M10 2.3L11.7 4 10 5.7M10 7.3L11.7 9 10 10.7" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>새로 섞기</button><kbd>Space</kbd></div>
+  <div class="u266-pv" aria-hidden="true"><i></i><div><small>새 컬렉션</small><b>가을 신상 30% 할인</b></div><span>구경하기</span></div>
+  <div class="u266-tt" role="status"></div>
+</div>

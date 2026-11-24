@@ -1,0 +1,6 @@
+.tb-split{display:flex;align-items:center;gap:10px}
+.tb-split [role=tablist]{display:flex;gap:4px;padding:6px 10px;background:#fff;border-radius:999px;box-shadow:0 10px 28px rgba(0,0,0,.12),inset 0 -2px 4px rgba(0,0,0,.05)}
+.tb-split [role=tab],.tb-split .fab{display:grid;place-items:center;border:0;cursor:pointer;border-radius:50%}
+.tb-split [role=tab]{width:44px;height:44px;background:none;color:#a3a3a3}
+.tb-split [aria-selected=true]{color:#111}
+.tb-split .fab{width:58px;height:58px;background:#fff;color:#8a8a8a;box-shadow:0 10px 28px rgba(0,0,0,.12)}

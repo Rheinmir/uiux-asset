@@ -1,0 +1,19 @@
+<style>
+.u374{position:relative;width:340px;height:340px;border-radius:30px;overflow:hidden;background:var(--ux-surface);color:var(--ux-ink);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong)}
+.u374-cv{position:absolute;inset:0;width:100%;height:100%;cursor:ew-resize;touch-action:none}
+.u374-cv.is-on{cursor:pointer}
+.u374-cv:focus-visible{outline:2px solid var(--ux-accent);outline-offset:-4px;border-radius:30px}
+.u374-pp{position:absolute;right:16px;top:14px;width:30px;height:30px;border:0;border-radius:50%;background:var(--ux-ink);color:var(--ux-surface);display:grid;place-items:center;cursor:pointer;z-index:2}
+.u374-pp svg{width:12px;height:12px}
+.u374-pp .u374-pl{display:none}
+.u374-pp.is-paused .u374-pl{display:block}
+.u374-pp.is-paused .u374-pa{display:none}
+.u374-pp:focus-visible{outline:2px solid var(--ux-accent);outline-offset:3px}
+.u374-lg{position:absolute;left:0;right:0;bottom:12px;display:flex;justify-content:center;gap:11px;font-size:10px;font-weight:750;color:var(--ux-ink-2);pointer-events:none}
+.u374-lg i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
+</style>
+<div class="ux u374">
+  <canvas class="u374-cv" tabindex="0" role="img" aria-label="앱 성장 버블 차트, 좌우로 끌어 시간 이동"></canvas>
+  <button type="button" class="u374-pp"><svg class="u374-pa" viewBox="0 0 14 14" aria-hidden="true"><rect x="2" y="1" width="3.6" height="12" rx="1" fill="currentColor"/><rect x="8.4" y="1" width="3.6" height="12" rx="1" fill="currentColor"/></svg><svg class="u374-pl" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.5v11l9.5-5.5z" fill="currentColor"/></svg></button>
+  <div class="u374-lg" aria-hidden="true"></div>
+</div>

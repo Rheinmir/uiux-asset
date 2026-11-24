@@ -1,0 +1,45 @@
+<style>
+.u478{position:relative;width:340px;height:300px;display:grid;place-items:center}
+.u478-c{position:relative;width:228px;padding:16px;border-radius:22px;background:var(--ux-surface);background:light-dark(var(--ux-surface),var(--ux-surface-2));box-shadow:0 0 0 1px var(--ux-line),0 1px 2px var(--ux-shadow),0 22px 44px -26px var(--ux-shadow-strong)}
+/* QR 판: 테마와 상관없이 흰 바탕에 짙은 점(카메라가 가장 잘 읽는 조합) */
+.u478-q{position:relative;width:140px;height:140px;margin:6px auto 0;border-radius:16px;background:#FFFFFF;box-shadow:0 0 0 1px rgba(22,21,27,.08),0 8px 18px -12px rgba(22,21,27,.35)}
+.u478-q svg{position:absolute;inset:0;width:100%;height:100%;border-radius:16px}
+.u478-q .m{fill:#16151B}
+.u478-q .f{fill:none;stroke:#16151B}
+.u478-q .e{fill:#6A57F2}
+.u478-br{position:absolute;inset:-7px;pointer-events:none;opacity:0;transform:scale(1.14);transition:opacity .3s var(--ux-ease),transform .6s cubic-bezier(.34,1.6,.5,1)}
+.u478-br i{position:absolute;width:18px;height:18px;border:2.5px solid var(--ux-accent);border-radius:7px}
+.u478-br i:nth-child(1){left:0;top:0;border-right:0;border-bottom:0;border-radius:9px 0 0 0}
+.u478-br i:nth-child(2){right:0;top:0;border-left:0;border-bottom:0;border-radius:0 9px 0 0}
+.u478-br i:nth-child(3){left:0;bottom:0;border-right:0;border-top:0;border-radius:0 0 0 9px}
+.u478-br i:nth-child(4){right:0;bottom:0;border-left:0;border-top:0;border-radius:0 0 9px 0}
+.u478.is-in .u478-br{opacity:1;transform:none}
+.u478-sc{position:absolute;inset:0;border-radius:16px;overflow:hidden;pointer-events:none}
+.u478-sc i{position:absolute;left:-10%;right:-10%;top:0;height:46px;margin-top:-46px;background:linear-gradient(180deg,transparent,rgba(106,87,242,.16) 70%,rgba(106,87,242,.5) 96%,transparent);opacity:0}
+.u478-sc i::after{content:"";position:absolute;left:8%;right:8%;bottom:1px;height:2px;border-radius:2px;background:#6A57F2;box-shadow:0 0 10px 2px rgba(106,87,242,.6)}
+.u478.is-in .u478-sc i{animation:u478-scan 4.2s cubic-bezier(.45,.05,.35,1) .45s infinite}
+@keyframes u478-scan{0%{opacity:0;transform:translateY(0)}6%{opacity:1}38%{opacity:1;transform:translateY(186px)}44%,100%{opacity:0;transform:translateY(186px)}}
+.u478-u{margin:14px 0 10px;font-size:12px;font-weight:600;color:var(--ux-ink-2);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:0}
+.u478-cp{position:relative;display:grid;width:100%;height:40px;padding:0;border:0;border-radius:12px;background:var(--ux-ink);color:var(--ux-surface);font-size:13.5px;font-weight:700;overflow:hidden;transition:transform .45s cubic-bezier(.34,1.7,.5,1),background-color .35s var(--ux-ease)}
+.u478-cp:hover{transform:translateY(-1px)}
+.u478-cp:active{transform:scale(.96);transition-duration:.1s}
+.u478 .u478-cp:focus-visible{outline:2px solid var(--ux-accent);outline-offset:3px}
+.u478-cp>span{grid-area:1/1;display:flex;align-items:center;justify-content:center;gap:7px;transition:opacity .2s,transform .45s cubic-bezier(.34,1.6,.5,1),filter .2s}
+.u478-cp>span+span{opacity:0;transform:translateY(12px);filter:blur(3px)}
+.u478-cp svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.u478-cp .ck path{stroke-dasharray:20;stroke-dashoffset:20;transition:stroke-dashoffset .35s var(--ux-ease) .18s}
+.u478-cp.is-ok{background:var(--ux-mint);animation:u478-ok .5s cubic-bezier(.34,1.7,.5,1)}
+@keyframes u478-ok{35%{transform:scale(1.05)}}
+.u478-cp.is-ok>span:first-child{opacity:0;transform:translateY(-12px);filter:blur(3px)}
+.u478-cp.is-ok>span+span{opacity:1;transform:none;filter:none}
+.u478-cp.is-ok .ck path{stroke-dashoffset:0}
+.u478-live{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+</style>
+<div class="ux u478" data-url="https://lucianlabs.dev/uxui-prompt">
+  <section class="u478-c">
+    <div class="u478-q"><span class="u478-br" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="u478-sc" aria-hidden="true"><i></i></span></div>
+    <p class="u478-u"></p>
+    <button type="button" class="u478-cp"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4.2 4.2 0 0 0 6 0l3-3a4.2 4.2 0 0 0-6-6l-1 1"/><path d="M14 10a4.2 4.2 0 0 0-6 0l-3 3a4.2 4.2 0 0 0 6 6l1-1"/></svg>링크 복사</span><span aria-hidden="true"><svg class="ck" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>복사됨</span></button>
+  </section>
+  <p class="u478-live" role="status"></p>
+</div>

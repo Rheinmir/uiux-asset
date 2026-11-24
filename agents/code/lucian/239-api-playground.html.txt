@@ -1,0 +1,36 @@
+<style>
+.u239{position:relative;width:340px;height:340px;border-radius:30px;overflow:hidden;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);color:var(--ux-ink)}
+.u239-cd{position:absolute;left:12px;right:12px;top:12px;height:152px;border-radius:16px;background:#0F1117;box-shadow:0 0 0 1px #262A36;color:#E5E7EB;overflow:hidden}
+.u239-tl{display:flex;align-items:center;gap:2px;height:34px;padding:0 6px 0 8px;border-bottom:1px solid #262A36}
+.u239-tb{height:24px;padding:0 9px;border:0;border-radius:7px;background:none;color:#8B90A3;font:inherit;font-size:10.5px;font-weight:800;cursor:pointer;transition:background .2s,color .2s}
+.u239-tb[aria-selected="true"]{background:#1E2230;color:#F3F4F6}
+.u239-tl em{margin-left:auto;padding:2px 6px;border-radius:5px;background:#1F3B2D;color:#6EE7B7;font-style:normal;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:9.5px;font-weight:800}
+.u239-cp{width:26px;height:26px;margin-left:6px;border:0;border-radius:7px;background:#1E2230;color:#C7CAD6;display:grid;place-items:center;cursor:pointer}
+.u239-cp svg{width:12px;height:12px}
+.u239-cp.is-ok{background:#064E3B;color:#6EE7B7}
+.u239-pre{margin:0;padding:9px 12px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px;line-height:1.65;white-space:pre;transition:opacity .2s,filter .2s}
+.u239-pre.is-sw{opacity:0;filter:blur(3px)}
+.u239-pre .k{color:#C4B5FD}.u239-pre .s{color:#86EFAC}.u239-pre .c{color:#6B7280}.u239-pre .f{color:#93C5FD}
+.u239-ln{position:absolute;left:24px;top:164px;width:2px;height:22px;background:linear-gradient(#262A36,var(--ux-line))}
+.u239-dot{position:absolute;left:20px;top:150px;width:10px;height:10px;border-radius:50%;background:#A78BFA;box-shadow:0 0 12px #A78BFA;opacity:0}
+.u239-go{position:absolute;right:12px;top:172px;display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px;border:0;border-radius:10px;background:var(--ux-ink);color:var(--ux-surface);font:inherit;font-size:11px;font-weight:850;cursor:pointer;transition:opacity .2s}
+.u239-go:disabled{opacity:.5;cursor:default}
+.u239-go svg{width:11px;height:11px}
+.u239-rs{position:absolute;left:12px;right:12px;top:210px;bottom:12px;border-radius:16px;background:var(--ux-surface-2);box-shadow:inset 0 0 0 1px var(--ux-line);overflow:hidden}
+.u239-rh{display:flex;align-items:center;gap:6px;height:28px;padding:0 12px;border-bottom:1px solid var(--ux-line);font-size:10px;font-weight:850;color:var(--ux-ink-3)}
+.u239-st{margin-left:auto;display:inline-flex;gap:5px;opacity:0;transform:translateY(-4px);transition:opacity .25s,transform .3s cubic-bezier(.3,1.5,.5,1)}
+.u239.is-res .u239-st{opacity:1;transform:none}
+.u239-st b{padding:1px 6px;border-radius:5px;background:color-mix(in srgb,#10B981 16%,transparent);color:#047857;font-weight:900}
+.u239-st span{font-variant-numeric:tabular-nums}
+.u239-js{margin:0;padding:7px 12px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px;line-height:1.6;white-space:pre;color:var(--ux-ink-2)}
+.u239-js .k{color:#7C3AED}.u239-js .s{color:#059669}.u239-js .n{color:#D97706}
+.u239-ph{display:grid;place-items:center;height:calc(100% - 28px);font-size:10.5px;font-weight:700;color:var(--ux-ink-3)}
+.u239 button:focus-visible{outline:2px solid var(--ux-accent);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){.u239-pre,.u239-st{transition:none}}
+</style>
+<div class="ux u239">
+  <div class="u239-cd"><div class="u239-tl" role="tablist" aria-label="언어"><em>POST</em><button type="button" class="u239-cp" aria-label="코드 복사"></button></div><pre class="u239-pre" role="tabpanel"></pre></div>
+  <span class="u239-ln" aria-hidden="true"></span><span class="u239-dot" aria-hidden="true"></span>
+  <button type="button" class="u239-go"><svg viewBox="0 0 11 11" aria-hidden="true"><path d="M2 1.5l7.5 4L2 9.5l1.4-4z" fill="currentColor"/></svg>요청 보내기</button>
+  <div class="u239-rs" aria-live="polite"><div class="u239-rh">응답<span class="u239-st"><b>200 OK</b><span class="u239-ms"></span></span></div><div class="u239-ph">보내면 여기에 응답이 보여요</div><pre class="u239-js" hidden></pre></div>
+</div>

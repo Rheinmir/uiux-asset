@@ -1,0 +1,48 @@
+<style>
+.u209{position:relative;width:340px;height:340px;border-radius:30px;overflow:hidden;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);color:var(--ux-ink)}
+.u209-wr{position:absolute;left:22px;right:22px;top:30px}
+.u209 h3{margin:0;font-size:20px;font-weight:900;letter-spacing:-.035em}
+.u209 label{display:block;margin-top:22px;font-size:11px;font-weight:800;color:var(--ux-ink-2)}
+.u209-fd{position:relative;display:flex;margin-top:6px;height:48px;border-radius:14px;background:var(--ux-surface-2);box-shadow:inset 0 0 0 1.5px var(--ux-line);transition:box-shadow .2s}
+.u209-fd:focus-within{box-shadow:inset 0 0 0 2px var(--ux-accent)}
+.u209.is-ok .u209-fd{box-shadow:inset 0 0 0 2px #10B981}
+.u209.is-bad .u209-fd{box-shadow:inset 0 0 0 2px #F59E0B}
+.u209-cc{flex:none;display:flex;align-items:center;gap:5px;padding:0 9px 0 12px;border:0;border-right:1px solid var(--ux-line);background:none;color:var(--ux-ink);font:inherit;font-size:13px;font-weight:800;cursor:pointer}
+.u209-cc em{display:inline-block;font-style:normal;font-size:18px;line-height:1;transition:transform .45s cubic-bezier(.3,1.5,.5,1)}
+.u209-cc em.is-spin{transform:rotateY(360deg) scale(1.15)}
+.u209-cc b{font-weight:850;font-variant-numeric:tabular-nums}
+.u209-cc svg{width:9px;height:9px;color:var(--ux-ink-3);transition:transform .25s}
+.u209.is-open .u209-cc svg{transform:rotate(180deg)}
+.u209-in{flex:1;min-width:0;padding:0 38px 0 12px;border:0;background:none;color:var(--ux-ink);font:inherit;font-size:14px;font-weight:750;letter-spacing:.02em;outline:none;font-variant-numeric:tabular-nums}
+.u209-in::placeholder{color:var(--ux-ink-3);font-weight:600}
+.u209-ck{position:absolute;right:13px;top:14px;width:20px;height:20px;pointer-events:none}
+.u209-ck circle{fill:#10B981;transform:scale(0);transform-origin:center;transform-box:fill-box;transition:transform .35s cubic-bezier(.3,1.7,.5,1)}
+.u209-ck path{fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:14;stroke-dashoffset:14;transition:stroke-dashoffset .3s ease .2s}
+.u209.is-ok .u209-ck circle{transform:none}
+.u209.is-ok .u209-ck path{stroke-dashoffset:0}
+.u209-ht{height:0;overflow:hidden;font-size:10.5px;font-weight:750;color:#B45309;transition:height .25s,margin .25s}
+.u209.is-bad .u209-ht{height:16px;margin-top:6px}
+.u209-dd{position:absolute;left:0;top:122px;z-index:3;width:220px;padding:6px;border-radius:15px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 18px 36px -14px var(--ux-shadow-strong);transform-origin:20% 0;transform:scale(.94) translateY(-4px);opacity:0;pointer-events:none;transition:transform .22s cubic-bezier(.3,1.5,.5,1),opacity .15s}
+.u209.is-open .u209-dd{transform:none;opacity:1;pointer-events:auto}
+.u209-sr{width:100%;height:30px;margin-bottom:4px;padding:0 10px;border:0;border-radius:9px;background:var(--ux-surface-2);color:var(--ux-ink);font:inherit;font-size:11.5px;font-weight:700;outline:none;box-sizing:border-box}
+.u209-op{display:flex;align-items:center;gap:8px;width:100%;height:30px;padding:0 9px;border:0;border-radius:8px;background:none;color:var(--ux-ink);font:inherit;font-size:12px;font-weight:750;cursor:pointer;text-align:left}
+.u209-op:hover,.u209-op.g-hov,.u209-op[aria-selected="true"]{background:var(--ux-surface-2)}
+.u209-op[hidden]{display:none}
+.u209-op em{font-style:normal;font-size:16px}
+.u209-op span{flex:1}
+.u209-op small{font-size:11px;font-weight:800;color:var(--ux-ink-3);font-variant-numeric:tabular-nums}
+.u209-go{position:absolute;left:22px;right:22px;bottom:24px;height:46px;border:0;border-radius:13px;background:var(--ux-ink);color:var(--ux-surface);font:inherit;font-size:13px;font-weight:850;transition:opacity .25s}
+.u209-go:disabled{opacity:.3}
+.u209 button:focus-visible{outline:2px solid var(--ux-accent);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){.u209-cc em,.u209-dd,.u209-ht,.u209-ck circle,.u209-ck path{transition:none}}
+</style>
+<div class="ux u209">
+  <div class="u209-wr">
+    <h3>본인 확인</h3>
+    <label>휴대폰 번호</label>
+    <div class="u209-fd"><button type="button" class="u209-cc" aria-haspopup="listbox" aria-expanded="false" aria-label="국가 선택"><em></em><b></b><svg viewBox="0 0 9 9" aria-hidden="true"><path d="M1.5 3l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><input class="u209-in" type="tel" inputmode="numeric" aria-label="휴대폰 번호" autocomplete="off"><svg class="u209-ck" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="10"/><path d="M6 10.3l2.6 2.6L14 7.5"/></svg></div>
+    <div class="u209-ht" aria-live="polite"></div>
+    <div class="u209-dd"><input class="u209-sr" type="search" placeholder="국가 검색" aria-label="국가 검색"><div class="u209-ls" role="listbox"></div></div>
+  </div>
+  <button type="button" class="u209-go" disabled>인증번호 받기</button>
+</div>

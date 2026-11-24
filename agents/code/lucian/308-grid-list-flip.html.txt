@@ -1,0 +1,26 @@
+<style>
+.u308{position:relative;width:340px;height:350px;display:flex;flex-direction:column;padding:16px;border-radius:28px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);overflow:hidden}
+.u308-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.u308-hd b{font-size:18px;font-weight:850}
+.u308-vs{display:flex;gap:2px;padding:3px;border-radius:11px;background:var(--ux-surface-2)}
+.u308-v{width:34px;height:28px;border:0;border-radius:8px;display:grid;place-items:center;background:none;color:var(--ux-ink-3)}
+.u308-v[aria-pressed="true"]{background:var(--ux-surface);color:var(--ux-ink);box-shadow:0 0 0 1px var(--ux-line)}
+.u308-v svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.u308-g{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.u308-it{display:flex;flex-direction:column;min-width:0}
+.u308-ph{aspect-ratio:1;border-radius:14px;background:var(--bg);transform-origin:0 0}
+.u308-tx{display:none;min-width:0}
+.u308-tx b{display:block;font-size:14px;font-weight:780;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.u308-tx span{font-size:12px;font-weight:650;color:var(--ux-ink-3)}
+.u308.is-list .u308-g{grid-template-columns:1fr;gap:6px}
+.u308.is-list .u308-it{flex-direction:row;align-items:center;gap:12px}
+.u308.is-list .u308-ph{width:38px;height:38px;aspect-ratio:auto;border-radius:10px;flex:none}
+.u308.is-list .u308-tx{display:block}
+</style>
+<div class="ux u308">
+  <div class="u308-hd"><b>앨범</b><div class="u308-vs" role="group" aria-label="보기 방식">
+    <button class="u308-v" type="button" aria-pressed="true" aria-label="그리드로 보기"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg></button>
+    <button class="u308-v" type="button" aria-pressed="false" aria-label="목록으로 보기"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h12"/></svg></button>
+  </div></div>
+  <div class="u308-g"></div>
+</div>

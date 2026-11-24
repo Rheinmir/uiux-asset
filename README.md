@@ -18,6 +18,13 @@ Xem chạy trực tiếp: **https://rheinmir.github.io/uiux-asset/**
 | [`patterns/`](patterns/) | Sổ pattern dựng lại từ ảnh chụp owner gửi ở phòng Hang `uiux-giatbh`: mỗi pattern một trang chạy thật (bấm được, code HTML/CSS chép thẳng), icon tự vẽ, không dùng logo app gốc. Dữ liệu cho agent: `patterns/patterns.json` (tên, khi dùng, biến thể → `trang#id`) | 1 (7 biến thể) |
 | [`skills/`](skills/) | 40 Claude skill từ một bài Facebook (poster 5 nhóm × 8; bài chỉ có tên + mô tả nên repo gốc do ta truy ra). 25 skill chép NGUYÊN VĂN từ repo gốc (MIT/Apache-2.0/CC0, mỗi thư mục có `LICENSE` + `SOURCE.md` ghi repo, commit, ngày chép; 3 trong số đó README ghi MIT nhưng repo thiếu tệp LICENSE, chủ dự án chấp nhận); 15 skill chỉ liên kết (giấy phép không cho chép, không có LICENSE, hoặc nguồn chỉ «gợi ý»). Dữ liệu: `skills/data/*.json` → `python3 tools/build-skills.py` → `skills/index.json` | 40 |
 
+## Cho AI agent: lấy code một component, không tràn context
+Agent **không mở trang gallery** (trang rất nặng). Đọc [`/llms.txt`](https://uiux.giatbh.io.vn/llms.txt) (~1,5 KB) rồi gọi 2 endpoint, mọi phản hồi đều có trần:
+- `GET /api/find?q=<từ>[&k=8][&source=<nguồn>]` → JSON ≤ 12 kết quả, < 3 KB, chỉ `{id,name,source,kind,kb,parts,license}`, không có code.
+- `GET /api/get?id=<id>[&part=html|css|js|ts|tsx|all][&offset=n]` → text/plain, code của đúng component đó, ≤ 12 KB mỗi lần (dài hơn thì có dòng `/* truncated … &offset= */`). Dòng đầu ghi nguồn, giấy phép, link gốc.
+
+Nguồn: mọi thứ trên site (patterns, galaxy, chip, motion, scroll-effects, ui-moments, namethatui, ui-libraries chỉ tên + link) + 480 component Lucian UX/UI Prompt + 9 thư viện (shadcn, coss, magicui, kibo, bencho, tactile, radix, preline, react-bits — giấy phép từng mục trong header). Dựng lại: `node tools/build-agent-index.mjs` (cần `../crawls/`) → `agents/index.json` + `agents/code/` + `llms.txt`. Test: `node tools/test-agents.js`.
+
 ## Tìm kiếm và thống kê
 - **Tìm theo nghĩa** ở trang chủ (phím `/`): gõ tiếng Việt hay tiếng Anh, có dấu hay không dấu đều được — kết quả chia 2 nhóm (hiệu ứng cuộn · mẫu chip). Chạy trên Upstash Search gói free (20K truy vấn/tháng); cache 1 ngày, trần 18K/tháng, lỗi hoặc quá 2,5 giây thì tự rơi về tìm từ khoá. Đo 12 truy vấn mẫu: tìm theo nhóm đạt 12/12, tìm gộp chỉ 8–9/12 — `node tools/upload-search.mjs --eval`.
 - **Thống kê truy cập** ở [`/stats.html`](stats.html): lượt xem, khách duy nhất/mới/quay lại, đang xem, trang, quốc gia, nguồn, thiết bị, từ khoá hay tìm, bot đã lọc. Không lưu IP thô (chỉ hash).

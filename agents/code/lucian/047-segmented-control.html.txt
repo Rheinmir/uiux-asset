@@ -1,0 +1,47 @@
+<style>
+.u047{position:relative;width:350px;height:330px;display:flex;flex-direction:column;padding:16px 16px 0;border-radius:28px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -38px var(--ux-shadow-strong);overflow:hidden}
+.u047-seg{position:relative;display:grid;grid-template-columns:repeat(4,1fr);padding:4px;border-radius:16px;background:var(--ux-surface-2)}
+.u047-knob{position:absolute;top:4px;bottom:4px;left:var(--l,4px);right:var(--r,4px);border-radius:12px;background:var(--ux-surface);box-shadow:0 4px 12px -6px var(--ux-shadow-strong),0 0 0 1px var(--ux-line)}
+.u047-seg.go-r .u047-knob{transition:right .3s var(--ux-ease),left .5s var(--ux-spring) .07s}
+.u047-seg.go-l .u047-knob{transition:left .3s var(--ux-ease),right .5s var(--ux-spring) .07s}
+.u047-opt{position:relative;height:38px;border:0;padding:0;border-radius:12px;background:none;font-size:14px;font-weight:680;color:var(--ux-ink-3);transition:color .3s,transform .3s var(--ux-spring)}
+.u047-opt:hover{color:var(--ux-ink-2)}
+.u047-opt:active{transform:scale(.94)}
+.u047-opt[aria-checked="true"]{color:var(--ux-ink)}
+.u047-opt:focus-visible{outline:2px solid var(--ux-accent);outline-offset:1px}
+.u047-lab{margin:18px 4px 0;font-size:13px;font-weight:650;color:var(--ux-ink-3)}
+.u047-row{display:flex;align-items:center;gap:10px;margin:2px 4px 0}
+.u047-num{font-size:40px;font-weight:800;letter-spacing:-.055em;line-height:1.1;font-variant-numeric:tabular-nums}
+.u047-chg{display:inline-flex;align-items:center;gap:4px;height:26px;padding:0 9px;border-radius:999px;font-size:12.5px;font-weight:750;background:color-mix(in srgb,var(--ux-mint) 15%,transparent);color:var(--ux-mint);font-variant-numeric:tabular-nums;transition:background-color .4s,color .4s}
+.u047-chg.down{background:color-mix(in srgb,var(--ux-danger) 13%,transparent);color:var(--ux-danger)}
+.u047-chg svg{width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;transition:transform .45s var(--ux-spring)}
+.u047-chg.down svg{transform:rotate(180deg)}
+.u047-chart{position:relative;flex:1;margin:8px -16px 0}
+.u047-chart svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.u047-line{fill:none;stroke:var(--ux-accent);stroke-width:2.6;stroke-linejoin:round;stroke-linecap:round}
+.u047-grid line{stroke:var(--ux-line);stroke-dasharray:3 5}
+.u047-dot{fill:var(--ux-surface);stroke:var(--ux-accent);stroke-width:3}
+.u047-halo{fill:var(--ux-accent);opacity:.18;transform-box:fill-box;transform-origin:center;animation:u047-p 2s ease-out infinite}
+@keyframes u047-p{0%{transform:scale(.6);opacity:.35}100%{transform:scale(2.2);opacity:0}}
+</style>
+<div class="ux u047">
+  <div class="u047-seg" role="radiogroup" aria-label="기간">
+    <span class="u047-knob" aria-hidden="true"></span>
+    <button class="u047-opt" type="button" role="radio" aria-checked="false">일</button>
+    <button class="u047-opt" type="button" role="radio" aria-checked="false">주</button>
+    <button class="u047-opt" type="button" role="radio" aria-checked="true">월</button>
+    <button class="u047-opt" type="button" role="radio" aria-checked="false">년</button>
+  </div>
+  <div class="u047-lab">지난 30일 매출</div>
+  <div class="u047-row" aria-live="polite"><span class="u047-num">₩0</span><span class="u047-chg"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 7.5L6 4l3.5 3.5"/></svg><span>0%</span></span></div>
+  <div class="u047-chart" aria-hidden="true">
+    <svg viewBox="0 0 350 150" preserveAspectRatio="xMidYMax meet">
+      <defs><linearGradient id="u047-fill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--ux-accent);stop-opacity:.28"/><stop offset="1" style="stop-color:var(--ux-accent);stop-opacity:0"/></linearGradient></defs>
+      <g class="u047-grid"><line x1="0" x2="350" y1="40" y2="40"/><line x1="0" x2="350" y1="85" y2="85"/></g>
+      <path class="u047-area"/>
+      <path class="u047-line"/>
+      <circle class="u047-halo" r="9"/>
+      <circle class="u047-dot" r="5.5"/>
+    </svg>
+  </div>
+</div>

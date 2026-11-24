@@ -1,0 +1,27 @@
+<style>
+.u318{position:relative;width:300px;height:500px;border-radius:30px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);overflow:hidden}
+.u318-sc{position:absolute;inset:0;overflow-y:auto;scrollbar-width:none;outline:none}
+.u318-sc::-webkit-scrollbar{display:none}
+.u318-hd{position:sticky;top:0;z-index:3;padding:18px 20px 14px;background:linear-gradient(var(--ux-surface) 70%,transparent)}
+.u318-hd b{display:block;font-size:20px;font-weight:880;letter-spacing:-.03em}
+.u318-hd span{font-size:12.5px;font-weight:700;color:var(--ux-ink-3)}
+.u318-map{position:relative;height:1180px;margin-top:-30px}
+.u318-map svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.u318-guide{fill:none;stroke:var(--ux-line-2);stroke-width:3;stroke-dasharray:2 8;stroke-linecap:round}
+.u318-route{fill:none;stroke:var(--ux-accent);stroke-width:4;stroke-linecap:round}
+.u318-dot{fill:var(--ux-surface);stroke:var(--ux-line-2);stroke-width:3;transition:stroke .3s}
+.u318-dot.on{stroke:var(--ux-accent)}
+.u318-dotc{fill:var(--ux-accent);transform-box:fill-box;transform-origin:50% 50%;transform:scale(0);transition:transform .45s var(--ux-spring)}
+.u318-dotc.on{transform:scale(1)}
+.u318-pl{fill:var(--ux-ink)}
+.u318-card{position:absolute;width:132px;padding:10px 12px;border-radius:14px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 12px 24px -14px var(--ux-shadow-strong);opacity:0;transform:translateY(10px) scale(.9);transition:opacity .35s,transform .5s var(--ux-spring)}
+.u318-card.on{opacity:1;transform:none}
+.u318-card b{display:block;font-size:15px;font-weight:850}
+.u318-card span{font-size:11.5px;font-weight:700;color:var(--ux-ink-3)}
+</style>
+<div class="ux u318">
+  <div class="u318-sc" tabindex="0" aria-label="여행 경로, 스크롤해서 따라가기">
+    <div class="u318-hd"><b>가을 아시아 일주</b><span>5개 도시 · 14일</span></div>
+    <div class="u318-map"><svg viewBox="0 0 300 1180" aria-hidden="true"><path class="u318-guide"/><path class="u318-route"/><g class="u318-dots"></g><path class="u318-pl" d="M12 0L-8 -8L-4 0L-8 8z"/></svg></div>
+  </div>
+</div>

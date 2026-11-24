@@ -1,0 +1,56 @@
+<style>
+.u027{position:relative;width:350px;height:360px}
+.u027-bar{position:absolute;left:0;right:0;top:0;height:62px;border-radius:20px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 18px 36px -26px var(--ux-shadow-strong)}
+.u027-logo{position:absolute;left:18px;top:50%;display:flex;align-items:center;gap:8px;transform:translateY(-50%);font-size:16px;font-weight:780;letter-spacing:-.03em;transition:opacity .3s var(--ux-ease),transform .5s var(--ux-ease)}
+.u027-logo i{width:22px;height:22px;border-radius:7px;background:var(--ux-grad)}
+.u027-nav{position:absolute;left:112px;top:50%;display:flex;gap:4px;transform:translateY(-50%);transition:opacity .25s var(--ux-ease),transform .5s var(--ux-ease)}
+.u027-nav a{padding:7px 10px;border-radius:10px;font-size:14px;font-weight:620;color:var(--ux-ink-2);text-decoration:none}
+.u027-nav a:hover{background:var(--ux-surface-2);color:var(--ux-ink)}
+.u027.is-open .u027-logo{opacity:0;transform:translate(-20px,-50%)}
+.u027.is-open .u027-nav{opacity:0;transform:translate(-30px,-50%);pointer-events:none}
+.u027-field{position:absolute;right:9px;top:9px;height:44px;width:44px;border-radius:14px;background:var(--ux-surface-2);overflow:hidden;transition:width .6s var(--ux-spring),background-color .3s,box-shadow .3s}
+.u027.is-open .u027-field{width:332px;background:var(--ux-surface);box-shadow:inset 0 0 0 2px var(--ux-accent)}
+.u027-go{position:absolute;left:0;top:0;width:44px;height:44px;border:0;padding:0;border-radius:14px;background:none;color:var(--ux-ink);display:grid;place-items:center;z-index:1}
+.u027-go:focus-visible{outline:2px solid var(--ux-accent);outline-offset:2px}
+.u027-go svg,.u027-x svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.u027-in{position:absolute;left:44px;right:44px;top:0;height:44px;border:0;outline:0;background:none;padding:0 4px;font-size:15.5px;color:var(--ux-ink);opacity:0;transition:opacity .3s var(--ux-ease) .15s}
+.u027-in::placeholder{color:var(--ux-ink-3)}
+.u027.is-open .u027-in{opacity:1}
+.u027-x{position:absolute;right:4px;top:4px;width:36px;height:36px;border:0;padding:0;border-radius:10px;background:var(--ux-surface-2);color:var(--ux-ink-2);display:grid;place-items:center;opacity:0;transform:scale(.6) rotate(-90deg);transition:opacity .25s,transform .5s var(--ux-spring)}
+.u027.is-open .u027-x{opacity:1;transform:none}
+.u027-x:focus-visible{outline:2px solid var(--ux-accent);outline-offset:1px}
+.u027-pop{position:absolute;left:0;right:0;top:72px;padding:14px 10px 10px;border-radius:20px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -30px var(--ux-shadow-strong);
+  transform-origin:90% 0;opacity:0;transform:translateY(-10px) scale(.96);pointer-events:none;visibility:hidden;transition:opacity .25s var(--ux-ease),transform .45s var(--ux-spring),visibility 0s .45s}
+.u027.is-open .u027-pop{opacity:1;transform:none;pointer-events:auto;visibility:visible;transition:opacity .3s var(--ux-ease) .1s,transform .55s var(--ux-spring) .1s}
+.u027-sec{margin:0 8px 8px;font-size:12px;font-weight:700;letter-spacing:.04em;color:var(--ux-ink-3)}
+.u027-recent{display:flex;gap:6px;flex-wrap:wrap;margin:0 6px 12px}
+.u027-recent button{height:32px;padding:0 12px;border:0;border-radius:999px;background:var(--ux-surface-2);font-size:13px;font-weight:620;color:var(--ux-ink-2)}
+.u027-recent button:hover{color:var(--ux-ink)}
+.u027-list{margin:0;padding:0;list-style:none;height:150px;overflow:hidden}
+.u027-opt{display:flex;align-items:center;gap:12px;padding:8px;border-radius:12px;cursor:pointer;opacity:0;transform:translateY(6px);transition:background-color .2s var(--ux-ease),opacity .3s var(--ux-ease),transform .45s var(--ux-spring)}
+.u027.is-open .u027-opt{opacity:1;transform:none}
+.u027-opt[aria-selected="true"]{background:var(--ux-surface-2)}
+.u027-opt i{width:34px;height:34px;flex:none;border-radius:10px;background:var(--c)}
+.u027-opt b{display:block;font-size:14.5px;font-weight:650}
+.u027-opt b mark{background:none;color:var(--ux-accent);font-weight:800}
+.u027-opt small{display:block;font-size:12px;color:var(--ux-ink-3)}
+.u027-empty{padding:30px 8px;text-align:center;font-size:14px;color:var(--ux-ink-3)}
+.u027-in:focus-visible{outline:none}
+</style>
+<div class="ux u027">
+  <div class="u027-bar">
+    <span class="u027-logo"><i aria-hidden="true"></i>Lumen</span>
+    <nav class="u027-nav" aria-label="주요 메뉴"><a href="#">홈</a><a href="#">탐색</a><a href="#">저장</a></nav>
+    <div class="u027-field">
+      <button class="u027-go" type="button" aria-label="검색 열기" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.2 4.2"/></svg></button>
+      <input class="u027-in" type="text" role="combobox" aria-expanded="false" aria-autocomplete="list" placeholder="템플릿, 색상, 사람 검색" tabindex="-1" autocomplete="off">
+      <button class="u027-x" type="button" aria-label="검색 닫기" tabindex="-1"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17"/></svg></button>
+    </div>
+  </div>
+  <div class="u027-pop">
+    <p class="u027-sec">최근 검색</p>
+    <div class="u027-recent"><button type="button">대시보드</button><button type="button">모션</button><button type="button">다크 테마</button></div>
+    <p class="u027-sec">추천</p>
+    <ul class="u027-list" role="listbox" aria-label="검색 결과"></ul>
+  </div>
+</div>

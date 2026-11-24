@@ -1,0 +1,22 @@
+<style>
+.u426{position:relative;width:340px;height:300px;display:grid;place-items:center;color:var(--ux-ink)}
+.u426-cd{display:grid;grid-template-columns:repeat(3,1fr);width:324px;margin:0;padding:22px 6px;border-radius:22px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 1px 2px var(--ux-shadow),0 20px 40px -26px var(--ux-shadow-strong);list-style:none}
+.u426-c{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;padding:4px 0;cursor:default}
+.u426-c+.u426-c::before{content:"";position:absolute;left:0;top:4px;bottom:4px;width:1px;background:var(--ux-line-2)}
+.u426-n{display:flex;align-items:center;height:30px;font-size:24px;line-height:30px;font-weight:850;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.u426-n i{font-style:normal}
+.u426-n i.st{margin-left:2px;font-size:18px;color:#F5B83D}
+/* 자리마다 0~9가 두 번 쌓인 띠. 10칸을 더 굴린 자리에서 멈춥니다 */
+.u426-col{display:block;height:30px;overflow:hidden}
+.u426-col span{display:flex;flex-direction:column;transform:translateY(calc(var(--d,0) * -30px));transition:transform 1.3s cubic-bezier(.25,1.12,.4,1);transition-delay:calc(var(--k,0) * 70ms)}
+.u426-col span b{display:block;height:30px;padding:0 .5px;font-weight:inherit;text-align:center}
+.u426-c small{font-size:11.5px;color:var(--ux-ink-3)}
+@media (prefers-reduced-motion:reduce){.u426-col span{transition:none!important}}
+</style>
+<div class="ux u426">
+  <ul class="u426-cd">
+    <li class="u426-c" data-v="3,200+"><span class="u426-n"></span><small>팀이 사용 중</small></li>
+    <li class="u426-c" data-v="99.99%"><span class="u426-n"></span><small>가동률</small></li>
+    <li class="u426-c" data-v="4.9★"><span class="u426-n"></span><small>평균 평점</small></li>
+  </ul>
+</div>

@@ -1,0 +1,49 @@
+<style>
+.u464{position:relative;width:340px;height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.u464-ph{position:relative;width:236px;height:142px;border-radius:18px;overflow:hidden;box-shadow:0 0 0 1px var(--ux-line),0 18px 34px -20px var(--ux-shadow-strong),0 2px 6px -2px var(--ux-shadow)}
+.u464-ph svg{display:block;width:100%;height:100%}
+.u464-sc{transition:filter .12s linear}
+.u464-bb{position:relative;margin-top:16px;height:26px;padding:0 11px;border-radius:13px;display:grid;place-items:center;background:var(--ux-accent);color:var(--ux-accent-ink);font-size:13px;font-weight:720;font-variant-numeric:tabular-nums;letter-spacing:-.01em;box-shadow:0 8px 16px -10px var(--ux-accent)}
+.u464-bb::after{content:"";position:absolute;left:50%;bottom:-4px;width:8px;height:8px;margin-left:-4px;border-radius:1.5px;background:inherit;transform:rotate(45deg)}
+.u464-bb.is-tick{animation:u464-tick .32s cubic-bezier(.34,1.8,.5,1)}
+@keyframes u464-tick{40%{transform:scale(1.09)}}
+.u464-vp{position:relative;width:272px;height:50px;margin-top:6px;overflow:hidden;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;border-radius:10px;-webkit-mask:linear-gradient(90deg,transparent,#000 24%,#000 76%,transparent);mask:linear-gradient(90deg,transparent,#000 24%,#000 76%,transparent)}
+.u464-vp:active{cursor:grabbing}
+.u464 .u464-vp:focus-visible{outline:none}
+.u464 .u464-vp:focus-visible .u464-nd{box-shadow:0 0 0 3px color-mix(in srgb,var(--ux-accent) 35%,transparent)}
+.u464-st{position:absolute;left:0;top:0;height:100%;transform:translateX(var(--u464-off,0px))}
+.u464-t{position:absolute;top:8px;font-style:normal;width:2px;height:10px;margin-left:-1px;border-radius:1px;background:var(--ux-line-2)}
+.u464-t.is-maj{top:6px;height:16px;background:var(--ux-ink-3)}
+.u464-t b{position:absolute;top:22px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:650;color:var(--ux-ink-3);font-variant-numeric:tabular-nums;white-space:nowrap}
+.u464-nd{position:absolute;left:50%;top:2px;width:3px;height:24px;margin-left:-1.5px;border-radius:2px;background:var(--ux-accent);box-shadow:0 0 0 0 transparent;transition:box-shadow .2s}
+.u464-live{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+</style>
+<div class="ux u464">
+  <div class="u464-ph" role="img" aria-label="미리 보기 사진">
+    <svg viewBox="0 0 236 142" aria-hidden="true">
+      <defs>
+        <linearGradient id="u464-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7DB6F2"/><stop offset=".62" stop-color="#C9D6F0"/><stop offset="1" stop-color="#FFD3A8"/></linearGradient>
+        <radialGradient id="u464-sun" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFF6DD"/><stop offset=".35" stop-color="#FFE7B0" stop-opacity=".9"/><stop offset="1" stop-color="#FFD39A" stop-opacity="0"/></radialGradient>
+        <linearGradient id="u464-lk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E9B993"/><stop offset=".25" stop-color="#8FA6D8"/><stop offset="1" stop-color="#4F68A8"/></linearGradient>
+      </defs>
+      <g class="u464-sc">
+        <rect width="236" height="98" fill="url(#u464-sky)"/>
+        <circle cx="152" cy="74" r="34" fill="url(#u464-sun)"/>
+        <circle cx="152" cy="74" r="10" fill="#FFF8E6"/>
+        <g fill="#FFFFFF" opacity=".75"><ellipse cx="52" cy="30" rx="22" ry="5"/><ellipse cx="66" cy="26" rx="14" ry="5"/><ellipse cx="190" cy="40" rx="18" ry="4"/></g>
+        <path d="M0 80 32 60l20 12 26-24 30 26 18-10 28 18 22-14 30 18 30-16v28H0z" fill="#A9B1DA"/>
+        <path d="M0 90 22 78l24 9 30-17 26 16 22-8 30 12 28-12 26 10 28-6v16H0z" fill="#7783BD"/>
+        <rect y="97" width="236" height="45" fill="url(#u464-lk)"/>
+        <g stroke="#FFF1D6" stroke-linecap="round" opacity=".85"><path d="M140 103h24" stroke-width="2"/><path d="M144 109h16" stroke-width="1.6"/><path d="M147 115h10" stroke-width="1.4"/><path d="M149 121h6" stroke-width="1.2"/></g>
+        <path d="M0 112c22-6 40-8 62-4 14 3 24 10 34 30H0z" fill="#33426E"/>
+        <g fill="#26335A"><path d="M14 112 21 88l7 24z"/><path d="M26 110 35 80l9 30z"/><path d="M42 111 48 92l6 19z"/></g>
+        <path d="M236 120c-20-4-38-3-54 4-8 4-14 10-18 18h72z" fill="#3A4A78"/>
+      </g>
+    </svg>
+  </div>
+  <div class="u464-bb" aria-hidden="true">0.0</div>
+  <div class="u464-vp" role="slider" tabindex="0" aria-label="노출 보정" aria-valuemin="-2" aria-valuemax="2" aria-valuenow="0" aria-valuetext="0.0 EV">
+    <div class="u464-st"></div>
+    <i class="u464-nd"></i>
+  </div>
+</div>

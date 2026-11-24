@@ -1,0 +1,36 @@
+<style>
+.u224{position:relative;width:340px;height:340px;border-radius:30px;overflow:hidden;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);color:var(--ux-ink)}
+.u224-q{position:absolute;right:16px;top:16px;max-width:240px;padding:8px 12px;border-radius:14px 14px 4px 14px;background:var(--ux-ink);color:var(--ux-surface);font-size:11.5px;font-weight:750}
+.u224-an{position:absolute;left:16px;right:16px;top:58px;font-size:12px;line-height:1.75;font-weight:600;color:var(--ux-ink-2)}
+.u224-an>span{transition:color .2s,background-size .3s;background:linear-gradient(transparent 88%,color-mix(in srgb,var(--ux-accent) 70%,transparent) 88%) no-repeat 0 0/0 100%}
+.u224-an>span.is-hl{color:var(--ux-ink);background-size:100% 100%}
+.u224-ct{display:inline-grid;place-items:center;min-width:15px;height:15px;margin:0 1px;padding:0 3px;border:0;border-radius:5px;background:var(--ux-surface-2);box-shadow:inset 0 0 0 1px var(--ux-line);color:var(--ux-ink-2);font:inherit;font-size:9px;font-weight:900;line-height:1;vertical-align:1px;cursor:pointer;transition:background .15s,color .15s}
+.u224-ct.is-on{background:var(--ux-accent);color:#fff;box-shadow:none}
+.u224-ct:focus-visible{outline:2px solid var(--ux-accent);outline-offset:1px}
+.u224-pv{position:absolute;z-index:3;width:218px;padding:10px 11px;border-radius:13px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 18px 34px -12px var(--ux-shadow-strong);transform:translate(-50%,calc(-100% - 6px)) scale(.94);transform-origin:50% 100%;opacity:0;pointer-events:none;transition:opacity .15s,transform .22s cubic-bezier(.3,1.5,.5,1)}
+.u224-pv.is-on{opacity:1;transform:translate(-50%,calc(-100% - 6px))}
+.u224-pv.is-below{transform:translate(-50%,24px) scale(.94);transform-origin:50% 0}
+.u224-pv.is-below.is-on{transform:translate(-50%,24px)}
+.u224-pv header{display:flex;align-items:center;gap:6px;font-size:9.5px;font-weight:800;color:var(--ux-ink-3)}
+.u224-pv header i{width:16px;height:16px;border-radius:5px;display:grid;place-items:center;color:#fff;font-style:normal;font-size:9px;font-weight:900}
+.u224-pv b{display:block;margin-top:5px;font-size:11px;font-weight:850}
+.u224-pv p{margin:4px 0 0;font-size:10px;line-height:1.5;font-weight:600;color:var(--ux-ink-2)}
+.u224-pv mark{background:color-mix(in srgb,#FACC15 50%,transparent);color:var(--ux-ink);border-radius:3px;padding:0 1px}
+.u224-sr{position:absolute;left:16px;right:16px;bottom:16px}
+.u224-sr>small{font-size:10px;font-weight:850;color:var(--ux-ink-3)}
+.u224-sl{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px}
+.u224-sc{padding:8px;border-radius:12px;background:var(--ux-surface-2);box-shadow:inset 0 0 0 1px var(--ux-line);cursor:pointer;transition:transform .25s cubic-bezier(.3,1.5,.5,1),box-shadow .2s,background .2s}
+.u224-sc.is-on{transform:translateY(-4px);background:var(--ux-surface);box-shadow:0 0 0 1.5px var(--ux-accent),0 10px 20px -12px var(--ux-shadow-strong)}
+.u224-sc header{display:flex;align-items:center;gap:5px}
+.u224-sc header i{flex:none;width:16px;height:16px;border-radius:5px;display:grid;place-items:center;color:#fff;font-style:normal;font-size:9px;font-weight:900}
+.u224-sc header em{font-style:normal;font-size:9px;font-weight:900;color:var(--ux-ink-3)}
+.u224-sc b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-top:5px;font-size:10px;line-height:1.35;font-weight:800}
+.u224-sc small{display:block;margin-top:3px;font-size:8.5px;font-weight:700;color:var(--ux-ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.u224-sc:focus-visible{outline:2px solid var(--ux-accent);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){.u224-an>span,.u224-pv,.u224-sc{transition:none}}
+</style>
+<div class="ux u224">
+  <div class="u224-q">랜딩 페이지 전환율을 올리려면?</div>
+  <p class="u224-an" aria-live="off"></p>
+  <div class="u224-sr"><small>출처</small><div class="u224-sl"></div></div>
+</div>

@@ -1,0 +1,54 @@
+<style>
+.u191{position:relative;width:340px;height:372px;padding:16px;box-sizing:border-box;border-radius:28px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);color:var(--ux-ink);font-variant-numeric:tabular-nums}
+.u191-ap{position:relative;height:184px;border-radius:14px;background:#fff;background:light-dark(#fff,#1B1D27);box-shadow:0 0 0 1px var(--ux-line-2),0 10px 20px -14px rgba(0,0,0,.35);overflow:hidden;color:#212529;color:light-dark(#212529,#ECEEF3)}
+.u191-cr{display:flex;align-items:center;gap:5px;height:24px;padding:0 10px;background:#F1F3F5;background:light-dark(#F1F3F5,#242631);border-bottom:1px solid #E9ECEF;border-bottom:1px solid light-dark(#E9ECEF,#2E313C)}
+.u191-cr i{width:7px;height:7px;border-radius:50%;background:#FA5252}.u191-cr i:nth-child(2){background:#FCC419}.u191-cr i:nth-child(3){background:#51CF66}
+.u191-cr span{margin-left:8px;flex:1;height:14px;border-radius:7px;background:#fff;background:light-dark(#fff,#16171F);font:600 9px/14px ui-monospace,SFMono-Regular,Menlo,monospace;color:#868E96;color:light-dark(#868E96,#8A909E);padding-left:8px}
+.u191-ap h4{position:absolute;left:16px;top:32px;margin:0;font-size:13px;font-weight:850}
+.u191-f{position:absolute;left:16px;width:276px;height:26px;border-radius:7px;box-shadow:inset 0 0 0 1.5px #DEE2E6;box-shadow:inset 0 0 0 1.5px light-dark(#DEE2E6,#363946);display:flex;align-items:center;padding:0 9px;font-size:11.5px;transition:box-shadow .2s}
+.u191-f small{width:40px;flex:none;color:#868E96;color:light-dark(#868E96,#8A909E);font-weight:700}
+.u191-f b{font-weight:600}
+.u191-f.on{box-shadow:inset 0 0 0 2px #E8590C}
+.u191-f.on b::after{content:"";display:inline-block;width:1.5px;height:12px;margin-left:1px;vertical-align:-2px;background:#E8590C;animation:u191-blink 1s steps(1) infinite}
+@keyframes u191-blink{50%{opacity:0}}
+.u191-ck{position:absolute;left:16px;top:130px;display:flex;align-items:center;gap:7px;font-size:11.5px;font-weight:650}
+.u191-ck i{width:15px;height:15px;border-radius:4px;box-shadow:inset 0 0 0 1.5px #ADB5BD;box-shadow:inset 0 0 0 1.5px light-dark(#ADB5BD,#5F6472);display:grid;place-items:center;transition:background-color .2s,box-shadow .2s}
+.u191-ck.on i{background:#E8590C;box-shadow:none}
+.u191-ck i::after{content:"";width:7px;height:4px;border:solid #fff;border-width:0 0 2px 2px;transform:rotate(-45deg) translate(1px,-1px) scale(0);transition:transform .25s var(--ux-spring)}
+.u191-ck.on i::after{transform:rotate(-45deg) translate(1px,-1px) scale(1)}
+.u191-go{position:absolute;right:16px;top:124px;width:92px;height:28px;border-radius:8px;background:#212529;background:light-dark(#212529,#ECEEF3);color:#fff;color:light-dark(#fff,#16151B);font-size:11.5px;font-weight:800;display:grid;place-items:center;transition:transform .15s}
+.u191-go.press{transform:scale(.93)}
+.u191-ok{position:absolute;left:50%;bottom:10px;transform:translate(-50%,20px);padding:6px 12px;border-radius:999px;background:#2B8A3E;color:#fff;font-size:11px;font-weight:800;opacity:0;transition:opacity .3s,transform .4s var(--ux-spring)}
+.u191-ok.on{opacity:1;transform:translate(-50%,0)}
+.u191-rp{position:absolute;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;background:rgba(232,89,12,.35);pointer-events:none;opacity:0}
+.u191-cu{position:absolute;left:0;top:0;width:16px;height:20px;pointer-events:none;filter:drop-shadow(0 2px 2px rgba(0,0,0,.3))}
+.u191-tp{position:relative;height:46px;margin-top:12px;border-radius:12px;background:var(--ux-surface-2);touch-action:none;cursor:ew-resize}
+.u191-tp:focus-visible{outline:2px solid var(--ux-accent);outline-offset:2px}
+.u191-tp svg{position:absolute;left:12px;right:12px;top:0;width:calc(100% - 24px);height:30px;overflow:visible}
+.u191-ph{position:absolute;top:4px;bottom:4px;width:2px;margin-left:-1px;background:var(--ux-ink);border-radius:1px;pointer-events:none}
+.u191-ph::before{content:"";position:absolute;left:50%;top:-3px;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:var(--ux-ink)}
+.u191-lg{position:absolute;left:12px;bottom:5px;display:flex;gap:10px;font-size:9.5px;font-weight:750;color:var(--ux-ink-3)}
+.u191-lg span::before{content:"";display:inline-block;width:8px;height:4px;margin-right:4px;border-radius:2px;vertical-align:1px;background:var(--c)}
+.u191-ct{display:flex;align-items:center;gap:6px;margin-top:10px}
+.u191-ct button{height:34px;min-width:34px;padding:0 8px;border:0;border-radius:10px;background:var(--ux-surface-2);color:var(--ux-ink);font-size:13px;font-weight:800;display:grid;place-items:center;transition:transform .25s var(--ux-spring)}
+.u191-ct button:active{transform:scale(.92)}
+.u191-ct .u191-pl{min-width:46px;background:var(--ux-ink);color:var(--ux-surface)}
+.u191-ct button svg{width:14px;height:14px;fill:currentColor}
+.u191-ct output{margin-left:auto;font:700 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--ux-ink-2)}
+.u191-ct button:focus-visible{outline:2px solid var(--ux-accent);outline-offset:2px}
+</style>
+<div class="ux u191">
+  <div class="u191-ap" role="img" aria-label="기록된 화면">
+    <div class="u191-cr" aria-hidden="true"><i></i><i></i><i></i><span>lucian.app/signup</span></div>
+    <h4>계정 만들기</h4>
+    <div class="u191-f" style="top:56px"><small>이름</small><b></b></div>
+    <div class="u191-f" style="top:90px"><small>이메일</small><b></b></div>
+    <div class="u191-ck"><i></i>약관에 동의해요</div>
+    <div class="u191-go">가입하기</div>
+    <div class="u191-ok">가입 완료!</div>
+    <i class="u191-rp"></i>
+    <svg class="u191-cu" viewBox="0 0 16 20" aria-hidden="true"><path d="M1 1v15.5l4.2-4 2.7 6.3 2.6-1.1-2.7-6.2H14Z" fill="#212529" stroke="#fff" stroke-width="1.3" stroke-linejoin="round"/></svg>
+  </div>
+  <div class="u191-tp" role="slider" tabindex="0" aria-label="재생 위치" aria-valuemin="0" aria-valuemax="7"><svg aria-hidden="true"></svg><i class="u191-ph"></i><div class="u191-lg" aria-hidden="true"><span style="--c:var(--ux-ink-3)">이동</span><span style="--c:#E8590C">클릭</span><span style="--c:#3D8BFF">입력</span></div></div>
+  <div class="u191-ct"><button class="u191-rs" type="button" aria-label="처음부터"><svg viewBox="0 0 14 14"><path d="M2 2h2v10H2zM12 2v10L5 7z"/></svg></button><button class="u191-pl" type="button"></button><button class="u191-nx" type="button" aria-label="다음 사건"><svg viewBox="0 0 14 14"><path d="M2 2v10l7-5zM10 2h2v10h-2z"/></svg></button><button class="u191-sp" type="button" aria-label="재생 속도">1×</button><output></output></div>
+</div>

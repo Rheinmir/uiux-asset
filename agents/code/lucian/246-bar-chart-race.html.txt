@@ -1,0 +1,34 @@
+<style>
+.u246{position:relative;width:340px;height:340px;border-radius:30px;overflow:hidden;background:var(--ux-surface);color:var(--ux-ink);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong)}
+.u246-hd{position:absolute;left:20px;right:20px;top:18px;display:flex;justify-content:space-between;align-items:baseline}
+.u246-hd b{font-size:14px;font-weight:900}
+.u246-hd span{font-size:10.5px;font-weight:700;color:var(--ux-ink-3)}
+.u246-yr{position:absolute;right:18px;bottom:56px;font-size:58px;font-weight:900;letter-spacing:-.05em;line-height:1;color:var(--ux-ink);opacity:.1;font-variant-numeric:tabular-nums;pointer-events:none}
+.u246-ch{position:absolute;left:16px;right:20px;top:48px;height:228px;overflow:hidden}
+.u246-r{position:absolute;left:0;right:0;top:0;height:30px;display:flex;align-items:center;will-change:transform}
+.u246-r b{flex:none;width:78px;padding-right:8px;text-align:right;font-size:11.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.u246-bar{flex:none;height:24px;border-radius:7px;background:var(--c);box-shadow:inset 0 -3px 0 rgba(0,0,0,.12)}
+.u246-v{margin-left:6px;font-size:11px;font-weight:800;color:var(--ux-ink-2);font-variant-numeric:tabular-nums}
+.u246-ct{position:absolute;left:20px;right:20px;bottom:18px;display:flex;align-items:center;gap:12px}
+.u246-pp{flex:none;width:34px;height:34px;border:0;border-radius:50%;background:var(--ux-ink);color:var(--ux-surface);display:grid;place-items:center;cursor:pointer}
+.u246-pp svg{width:14px;height:14px}
+.u246-pp .u246-pl{display:none}
+.u246-pp.is-paused .u246-pl{display:block}
+.u246-pp.is-paused .u246-pa{display:none}
+.u246-pp:focus-visible{outline:2px solid var(--ux-accent);outline-offset:3px}
+.u246-sl{position:relative;flex:1;height:34px;cursor:pointer;touch-action:none;border-radius:8px}
+.u246-sl::before{content:"";position:absolute;left:0;right:0;top:15px;height:4px;border-radius:2px;background:var(--ux-line)}
+.u246-fl{position:absolute;left:0;top:15px;height:4px;border-radius:2px;background:var(--ux-accent)}
+.u246-tk{position:absolute;top:24px;width:1px;height:4px;background:var(--ux-ink-3);opacity:.5}
+.u246-th{position:absolute;top:9px;width:16px;height:16px;margin-left:-8px;border-radius:50%;background:var(--ux-surface);box-shadow:0 0 0 3px var(--ux-accent),0 4px 10px -3px var(--ux-shadow-strong)}
+.u246-sl:focus-visible{outline:2px solid var(--ux-accent);outline-offset:2px}
+</style>
+<div class="ux u246">
+  <div class="u246-hd"><b>음료 판매 순위</b><span>단위: 만 잔</span></div>
+  <div class="u246-yr" aria-live="polite"></div>
+  <div class="u246-ch"></div>
+  <div class="u246-ct">
+    <button type="button" class="u246-pp"><svg class="u246-pa" viewBox="0 0 14 14" aria-hidden="true"><rect x="2" y="1" width="3.6" height="12" rx="1" fill="currentColor"/><rect x="8.4" y="1" width="3.6" height="12" rx="1" fill="currentColor"/></svg><svg class="u246-pl" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.5v11l9.5-5.5z" fill="currentColor"/></svg></button>
+    <div class="u246-sl" role="slider" tabindex="0" aria-label="연도" aria-valuemin="2019" aria-valuemax="2026"><div class="u246-fl"></div><div class="u246-th"></div></div>
+  </div>
+</div>

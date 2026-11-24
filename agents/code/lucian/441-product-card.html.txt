@@ -1,0 +1,64 @@
+<style>
+.u441{position:relative;width:340px;height:300px;display:grid;place-items:center}
+.u441-c{width:260px;padding:8px 8px 12px;border-radius:22px;background:var(--ux-surface);background:light-dark(var(--ux-surface),var(--ux-surface-2));box-shadow:0 0 0 1px var(--ux-line-2),0 22px 44px -24px var(--ux-shadow-strong)}
+.u441-img{position:relative;height:150px;border-radius:16px;overflow:hidden;display:grid;place-items:center;background:radial-gradient(120% 90% at 50% 25%,var(--ux-surface),var(--ux-surface-2) 55%,var(--ux-surface-3));background:radial-gradient(120% 90% at 50% 25%,light-dark(#FFFFFF,#2A2C38),light-dark(#F3F1EC,#20212B) 55%,light-dark(#E7E3DB,#191A22))}
+.u441-pr{position:relative;width:76px;height:124px;margin-top:10px}
+.u441-pr.is-bump{animation:u441-bump .55s cubic-bezier(.3,1.5,.5,1)}
+@keyframes u441-bump{30%{transform:scale(.94,1.04) translateY(-3px)}60%{transform:scale(1.03,.97)}}
+.u441-pr svg{position:relative;z-index:1;width:76px;height:112px}
+.u441-pr .bd,.u441-pr .bn{fill:var(--pc,#9DB4A0);transition:fill .45s var(--ux-ease)}
+.u441-pr::after{content:"";position:absolute;left:50%;bottom:6px;width:70px;height:12px;margin-left:-35px;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.25),transparent);background:radial-gradient(closest-side,light-dark(rgba(0,0,0,.2),rgba(0,0,0,.6)),transparent)}
+.u441-wl{position:absolute;right:8px;top:8px;width:34px;height:34px;padding:0;border:0;border-radius:50%;display:grid;place-items:center;background:var(--ux-surface);background:light-dark(var(--ux-surface),var(--ux-surface-3));box-shadow:0 2px 8px -2px var(--ux-shadow);color:var(--ux-ink-2);transform:scale(var(--k,1));transition:transform .45s cubic-bezier(.34,1.7,.5,1),color .2s}
+.u441-wl:active{--k:.86;transition:transform .1s var(--ux-ease)}
+.u441-wl svg{width:17px;height:17px;fill:transparent;stroke:currentColor;stroke-width:2;stroke-linejoin:round;transition:fill .2s}
+.u441-wl[aria-pressed="true"]{color:var(--ux-danger)}
+.u441-wl[aria-pressed="true"] svg{fill:currentColor;animation:u441-heart .55s cubic-bezier(.3,1.8,.5,1)}
+@keyframes u441-heart{0%{transform:scale(.4)}60%{transform:scale(1.3)}100%{transform:none}}
+.u441-wl b{position:absolute;left:50%;top:50%;width:5px;height:5px;margin:-2.5px;border-radius:50%;background:var(--c,var(--ux-danger));opacity:0;pointer-events:none}
+.u441-wl.is-burst b{animation:u441-burst .6s cubic-bezier(.2,.8,.3,1) forwards}
+@keyframes u441-burst{0%{opacity:1;transform:rotate(var(--a)) translateY(0) scale(1)}100%{opacity:0;transform:rotate(var(--a)) translateY(-24px) scale(.3)}}
+.u441-wl i{position:absolute;inset:0;border-radius:50%;box-shadow:0 0 0 2px var(--ux-danger);opacity:0;pointer-events:none}
+.u441-wl.is-burst i{animation:u441-ring .5s var(--ux-ease)}
+@keyframes u441-ring{0%{opacity:.8;transform:scale(.6)}100%{opacity:0;transform:scale(1.5)}}
+.u441-bd{padding:12px 6px 0}
+.u441-nm{margin:0;font-size:15px;font-weight:650;letter-spacing:-.02em}
+.u441-nm span{font-weight:500;color:var(--ux-ink-3)}
+.u441-pc{display:flex;align-items:baseline;gap:6px;margin-top:3px;font-variant-numeric:tabular-nums}
+.u441-pc b{font-size:16px;font-weight:750;letter-spacing:-.02em}
+.u441-pc .dc{color:var(--ux-danger)}
+.u441-pc s{font-size:12px;color:var(--ux-ink-3)}
+.u441-row{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
+.u441-sws{display:flex;gap:7px}
+.u441-sw{position:relative;width:20px;height:20px;padding:0;border:0;border-radius:50%;background:var(--c);box-shadow:inset 0 0 0 1px rgba(0,0,0,.14);transform:scale(var(--k,1));transition:transform .45s cubic-bezier(.34,1.7,.5,1)}
+.u441-sw::after{content:"";position:absolute;inset:-4px;border-radius:50%;box-shadow:0 0 0 1.75px var(--ux-ink);opacity:0;transform:scale(.7);transition:opacity .15s,transform .45s cubic-bezier(.3,1.7,.5,1)}
+.u441-sw:hover{--k:1.12}
+.u441-sw[aria-checked="true"]::after{opacity:1;transform:none}
+.u441 .u441-sw:focus-visible{outline:2px solid var(--ux-accent);outline-offset:5px}
+.u441-add{position:relative;display:grid;height:36px;min-width:84px;padding:0 16px;border:0;border-radius:999px;background:var(--ux-ink);color:var(--ux-surface);font-size:13.5px;font-weight:650;transform:scale(var(--k,1));transition:transform .45s cubic-bezier(.34,1.7,.5,1),background-color .3s var(--ux-ease)}
+.u441-add:active{--k:.92;transition:transform .1s var(--ux-ease)}
+.u441-add>span{grid-area:1/1;display:inline-flex;align-items:center;justify-content:center;gap:5px;transition:opacity .2s var(--ux-ease),transform .45s cubic-bezier(.3,1.6,.5,1)}
+.u441-add>span+span{opacity:0;transform:translateY(10px)}
+.u441-add svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.u441-add.is-ok{background:var(--ux-mint)}
+.u441-add.is-ok>span:first-child{opacity:0;transform:translateY(-10px)}
+.u441-add.is-ok>span+span{opacity:1;transform:none}
+.u441 .u441-add:focus-visible,.u441 .u441-wl:focus-visible{outline:2px solid var(--ux-accent);outline-offset:3px}
+.u441-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+</style>
+<div class="ux u441">
+  <article class="u441-c">
+    <div class="u441-img">
+      <div class="u441-pr" aria-hidden="true"></div>
+      <button type="button" class="u441-wl" aria-pressed="false" aria-label="위시리스트에 담기"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7.5-4.4-7.5-10A4.3 4.3 0 0 1 12 7.4 4.3 4.3 0 0 1 19.5 10c0 5.6-7.5 10-7.5 10z"/></svg><i></i><b style="--a:0deg"></b><b style="--a:60deg;--c:var(--ux-warn)"></b><b style="--a:120deg"></b><b style="--a:180deg;--c:var(--ux-warn)"></b><b style="--a:240deg"></b><b style="--a:300deg;--c:var(--ux-warn)"></b></button>
+    </div>
+    <div class="u441-bd">
+      <p class="u441-nm">스테인리스 텀블러 <span></span></p>
+      <div class="u441-pc"><span class="u441-sr">할인가 26,900원, 정가 37,900원</span><b class="dc" aria-hidden="true">29%</b><b aria-hidden="true">₩26,900</b><s aria-hidden="true">₩37,900</s></div>
+      <div class="u441-row">
+        <div class="u441-sws" role="radiogroup" aria-label="색상"></div>
+        <button type="button" class="u441-add"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6v12M6 12h12"/></svg>담기</span><span aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>담았어요</span></button>
+      </div>
+    </div>
+  </article>
+  <p class="u441-sr u441-live" role="status"></p>
+</div>

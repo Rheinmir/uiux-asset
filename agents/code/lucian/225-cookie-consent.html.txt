@@ -1,0 +1,55 @@
+<style>
+.u225{position:relative;width:340px;height:340px;border-radius:30px;overflow:hidden;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);color:var(--ux-ink)}
+.u225-pg{position:absolute;inset:0;padding:22px 20px}
+.u225-pg i{display:block;border-radius:8px;background:var(--ux-surface-2);margin-bottom:9px}
+.u225-bn{position:absolute;left:12px;right:12px;bottom:12px;padding:14px;border-radius:20px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 20px 40px -14px var(--ux-shadow-strong);transform:translateY(130%);transition:transform .5s cubic-bezier(.3,1.25,.5,1)}
+.u225.is-on .u225-bn{transform:none}
+.u225.is-done .u225-bn{transform:translateY(130%);transition:transform .45s cubic-bezier(.5,0,.75,0) .55s}
+.u225-tp{display:flex;gap:11px;align-items:center}
+.u225-ck{position:relative;flex:none;width:44px;height:44px}
+.u225-ck svg{width:44px;height:44px;overflow:visible}
+.u225-bt circle.b{transform-box:fill-box;transform-origin:center;transform:scale(0);transition:transform .25s cubic-bezier(.3,1.6,.5,1)}
+.u225.is-bite .u225-bt circle.b{transform:none}
+.u225-cr{position:absolute;right:2px;top:4px;width:4px;height:4px;border-radius:1px;background:#B45309;opacity:0}
+.u225.is-bite .u225-cr{animation:u225-cr .7s ease-in forwards}
+.u225-cr:nth-of-type(2){right:8px;width:3px;height:3px;animation-delay:.05s!important}
+.u225-cr:nth-of-type(3){right:-2px;top:9px;width:3px;height:3px;animation-delay:.1s!important}
+@keyframes u225-cr{0%{opacity:1;transform:translate(0,0) rotate(0)}100%{opacity:0;transform:translate(6px,34px) rotate(160deg)}}
+.u225-tx b{display:block;font-size:13px;font-weight:900}
+.u225-tx span{display:block;margin-top:2px;font-size:10.5px;line-height:1.4;font-weight:650;color:var(--ux-ink-3)}
+.u225-ex{display:grid;grid-template-rows:0fr;transition:grid-template-rows .45s cubic-bezier(.3,1,.4,1)}
+.u225-ex>div{min-height:0;overflow:hidden}
+.u225.is-x .u225-ex{grid-template-rows:1fr}
+.u225-rw{display:flex;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px solid var(--ux-line)}
+.u225-rw:first-child{margin-top:10px}
+.u225-rw div{flex:1;min-width:0}
+.u225-rw b{display:block;font-size:11.5px;font-weight:850}
+.u225-rw small{display:block;font-size:9.5px;font-weight:650;color:var(--ux-ink-3)}
+.u225-rw em{font-style:normal;font-size:9.5px;font-weight:800;color:var(--ux-ink-3)}
+.u225-sw{position:relative;flex:none;width:36px;height:22px;border:0;border-radius:11px;background:var(--ux-surface-3);cursor:pointer;transition:background .2s}
+.u225-sw::after{content:"";position:absolute;left:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .25s cubic-bezier(.3,1.5,.5,1)}
+.u225-sw[aria-checked="true"]{background:#10B981}
+.u225-sw[aria-checked="true"]::after{transform:translateX(14px)}
+.u225-sw:disabled{opacity:.55;cursor:not-allowed}
+.u225-bs{display:flex;gap:6px;margin-top:12px}
+.u225-bs button{flex:1;height:38px;border:0;border-radius:11px;font:inherit;font-size:12px;font-weight:850;cursor:pointer}
+.u225-set,.u225-sv{background:var(--ux-surface-2);color:var(--ux-ink);box-shadow:inset 0 0 0 1px var(--ux-line)}
+.u225-all{background:var(--ux-ink);color:var(--ux-surface)}
+.u225-sv{display:none}
+.u225.is-x .u225-set{display:none}
+.u225.is-x .u225-sv{display:block}
+.u225-fab{position:absolute;left:14px;bottom:14px;width:44px;height:44px;border:0;border-radius:50%;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 10px 20px -10px var(--ux-shadow-strong);display:grid;place-items:center;cursor:pointer;transform:scale(0);transition:transform .4s cubic-bezier(.3,1.7,.5,1)}
+.u225.is-fab .u225-fab{transform:none}
+.u225-fab svg{width:26px;height:26px}
+.u225 button:focus-visible{outline:2px solid var(--ux-accent);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){.u225-bn,.u225.is-done .u225-bn,.u225-ex,.u225-fab,.u225-bt circle.b{transition:none}.u225.is-bite .u225-cr{animation:none}}
+</style>
+<div class="ux u225">
+  <div class="u225-pg" aria-hidden="true"><i style="height:22px;width:40%"></i><i style="height:120px"></i><i style="height:12px;width:90%"></i><i style="height:12px;width:76%"></i><i style="height:12px;width:84%"></i></div>
+  <div class="u225-bn" role="dialog" aria-label="쿠키 동의">
+    <div class="u225-tp"><span class="u225-ck" aria-hidden="true"></span><div class="u225-tx"><b>쿠키를 써도 될까요?</b><span>사이트를 더 편하게 쓰도록 돕는 데만 써요.</span></div></div>
+    <div class="u225-ex"><div class="u225-ls"></div></div>
+    <div class="u225-bs"><button type="button" class="u225-set">설정</button><button type="button" class="u225-sv">선택 저장</button><button type="button" class="u225-all">모두 허용</button></div>
+  </div>
+  <button type="button" class="u225-fab" aria-label="쿠키 설정 다시 열기" tabindex="-1"></button>
+</div>

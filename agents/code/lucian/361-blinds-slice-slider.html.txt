@@ -1,0 +1,24 @@
+<style>
+@property --u361-e{syntax:"<number>";inherits:true;initial-value:0}
+.u361{position:relative;width:340px;height:330px;display:flex;flex-direction:column;padding:14px;border-radius:28px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);overflow:hidden}
+.u361-fr{position:relative;flex:1;display:flex;border-radius:18px;overflow:hidden;perspective:800px}
+.u361-s{position:relative;flex:1;margin-right:-.6px;transform-style:preserve-3d}
+.u361-s i{position:absolute;inset:0;backface-visibility:hidden;background-size:800% 100%}
+.u361-s i.b{transform:rotateY(180deg)}
+.u361-s i::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,var(--u361-e)),transparent 30%,transparent 70%,rgba(0,0,0,var(--u361-e)))}
+.u361-tx{position:absolute;left:16px;bottom:14px;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.35);pointer-events:none;transition:opacity .3s,transform .5s var(--ux-spring)}
+.u361-tx.swap{opacity:0;transform:translateY(10px)}
+.u361-tx b{display:block;font-size:28px;font-weight:900;letter-spacing:-.04em}
+.u361-tx span{font-size:13px;font-weight:700}
+.u361-ft{display:flex;align-items:center;gap:8px;margin-top:12px}
+.u361-pv,.u361-nx{width:38px;height:38px;border:0;border-radius:50%;display:grid;place-items:center;background:var(--ux-surface-2);color:var(--ux-ink)}
+.u361-ft svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.u361-dots{flex:1;display:flex;justify-content:center;gap:4px}
+.u361-dot{width:26px;height:26px;border:0;background:none;display:grid;place-items:center}
+.u361-dot::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--ux-line-2);transition:width .4s var(--ux-spring),background-color .3s,border-radius .3s}
+.u361-dot[aria-pressed="true"]::before{width:20px;border-radius:4px;background:var(--ux-ink)}
+</style>
+<div class="ux u361">
+  <div class="u361-fr" role="img"><div class="u361-tx"><b></b><span></span></div></div>
+  <div class="u361-ft"><button class="u361-pv" type="button" aria-label="이전 장면"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button><div class="u361-dots" role="group" aria-label="장면 고르기"></div><button class="u361-nx" type="button" aria-label="다음 장면"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button></div>
+</div>

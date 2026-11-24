@@ -1,0 +1,19 @@
+<style>
+.u319{position:relative;width:340px;height:340px;border-radius:30px;overflow:hidden;background:#050B1F;box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);color:#fff}
+.u319 canvas{position:absolute;inset:-8%;width:116%;height:116%;filter:blur(18px) saturate(1.15)}
+.u319-gr{position:absolute;inset:0;opacity:.16;mix-blend-mode:overlay;pointer-events:none}
+.u319-pl{position:absolute;right:14px;top:14px;display:flex;gap:6px;padding:5px;border-radius:999px;background:rgba(255,255,255,.12);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.u319-p{width:24px;height:24px;border:0;padding:0;border-radius:50%;background:var(--g);box-shadow:0 0 0 2px transparent;transition:box-shadow .25s,transform .3s var(--ux-spring)}
+.u319-p[aria-pressed="true"]{box-shadow:0 0 0 2px #fff;transform:scale(1.08)}
+.u319-p:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.u319-tx{position:absolute;left:22px;bottom:22px;right:22px;pointer-events:none}
+.u319-tx small{font-size:11.5px;font-weight:750;letter-spacing:.02em;opacity:.8}
+.u319-tx b{display:block;margin-top:8px;font-size:30px;font-weight:880;letter-spacing:-.04em;line-height:1.05;text-shadow:0 2px 24px rgba(0,0,0,.25)}
+.u319-tx span{display:block;margin-top:6px;font-size:13px;opacity:.85}
+</style>
+<div class="ux u319">
+  <canvas width="72" height="72" aria-hidden="true"></canvas>
+  <div class="u319-gr" aria-hidden="true"></div>
+  <div class="u319-pl" role="group" aria-label="팔레트"></div>
+  <div class="u319-tx"><small>살아 있는 배경</small><b>새벽의 빛</b><span>빛이 커서를 따라 천천히 흘러요</span></div>
+</div>

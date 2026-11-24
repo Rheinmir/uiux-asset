@@ -1,0 +1,24 @@
+<style>
+.u255{position:relative;width:340px;height:340px;border-radius:30px;overflow:hidden;background:var(--ux-surface-2);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);color:var(--ux-ink);touch-action:none;user-select:none}
+.u255-bd{position:absolute;inset:14px;display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.u255-col{position:relative;padding:8px 6px;border-radius:16px;background:color-mix(in srgb,var(--ux-surface) 55%,transparent);box-shadow:inset 0 0 0 1px var(--ux-line);transition:background .2s,box-shadow .2s}
+.u255-col.is-over{background:color-mix(in srgb,var(--ux-accent) 9%,var(--ux-surface));box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--ux-accent) 45%,transparent)}
+.u255-ch{display:flex;align-items:center;gap:5px;padding:2px 4px 8px;font-size:10.5px;font-weight:850;color:var(--ux-ink-2)}
+.u255-ch i{width:7px;height:7px;border-radius:50%}
+.u255-ch b{margin-left:auto;min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:var(--ux-surface);font-size:9.5px;font-weight:850;line-height:16px;text-align:center;font-variant-numeric:tabular-nums;box-sizing:border-box}
+.u255-ch b.is-pop{animation:u255-pop .4s cubic-bezier(.3,1.7,.5,1)}
+@keyframes u255-pop{40%{transform:scale(1.35)}}
+.u255-cd{position:relative;margin-bottom:6px;padding:8px;border-radius:11px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 2px 4px -2px var(--ux-shadow-strong);cursor:grab;transition:box-shadow .2s,transform .2s}
+.u255-cd:focus-visible{outline:2px solid var(--ux-accent);outline-offset:2px}
+.u255-cd b{display:block;font-size:10.5px;line-height:1.35;font-weight:800;text-decoration-thickness:1.5px;text-decoration-color:var(--ux-ink-3)}
+.u255-cd span{display:inline-block;margin-top:6px;padding:1px 6px;border-radius:999px;font-size:8.5px;font-weight:850;color:#fff}
+.u255-cd em{position:absolute;right:7px;bottom:7px;width:16px;height:16px;border-radius:50%;background:#10B981;transform:scale(0);transition:transform .35s cubic-bezier(.3,1.7,.5,1)}
+.u255-cd em::after{content:"";position:absolute;left:5.5px;top:3px;width:3.5px;height:7px;border:solid #fff;border-width:0 1.6px 1.6px 0;transform:rotate(45deg)}
+.u255-col[data-c="2"] .u255-cd b{text-decoration-line:line-through;color:var(--ux-ink-3)}
+.u255-col[data-c="2"] .u255-cd em{transform:none}
+.u255-cd.is-lift{position:absolute;z-index:10;margin:0;cursor:grabbing;transform:rotate(3deg) scale(1.04);box-shadow:0 0 0 1px var(--ux-line),0 18px 30px -12px var(--ux-shadow-strong);transition:transform .2s,box-shadow .2s}
+.u255-cd.is-land{position:absolute;z-index:10;margin:0;transition:left .28s cubic-bezier(.3,1.2,.5,1),top .28s cubic-bezier(.3,1.2,.5,1),transform .28s}
+.u255-ph{margin-bottom:6px;border-radius:11px;border:1.5px dashed color-mix(in srgb,var(--ux-accent) 50%,transparent);background:color-mix(in srgb,var(--ux-accent) 6%,transparent);transition:height .2s cubic-bezier(.3,1.2,.5,1)}
+@media (prefers-reduced-motion: reduce){.u255-cd,.u255-cd.is-land,.u255-ph,.u255-cd em{transition:none}.u255-ch b.is-pop{animation:none}}
+</style>
+<div class="ux u255"><div class="u255-bd"></div></div>

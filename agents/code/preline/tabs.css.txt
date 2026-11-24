@@ -1,0 +1,11 @@
+/* file: src/plugins/tabs/variants.css */
+@custom-variant hs-tab-active {
+
+  &[data-hs-tab].active {
+    @slot;
+  }
+
+  [data-hs-tab].active & {
+    @slot;
+  }
+}

@@ -1,0 +1,55 @@
+<style>
+.u051{--c1:#FF8A65;--c2:#E5484D;position:relative;width:330px;height:480px;display:flex;flex-direction:column;border-radius:30px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);overflow:hidden}
+.u051-stage{position:relative;height:270px;flex:none;margin:8px 8px 0;border-radius:24px;background:radial-gradient(70% 60% at 50% 70%,color-mix(in srgb,var(--c1) 30%,var(--ux-surface-2)),var(--ux-surface-2));transition:background .6s}
+.u051-top{position:absolute;left:14px;right:14px;top:14px;display:flex;justify-content:space-between;align-items:center;z-index:2}
+.u051-new{height:26px;padding:0 10px;border-radius:999px;display:inline-flex;align-items:center;background:var(--ux-surface);font-size:11.5px;font-weight:800;letter-spacing:.04em;color:var(--ux-ink-2)}
+.u051-cart{position:relative;width:44px;height:44px;border:0;padding:0;border-radius:50%;display:grid;place-items:center;background:var(--ux-surface);color:var(--ux-ink);box-shadow:0 6px 14px -8px var(--ux-shadow-strong)}
+.u051-cart svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.u051-cart:focus-visible{outline:2px solid var(--ux-accent);outline-offset:2px}
+.u051-cart b{position:absolute;right:-3px;top:-3px;min-width:20px;height:20px;padding:0 5px;border-radius:10px;background:var(--ux-ink);color:var(--ux-page);font-size:11px;font-weight:800;line-height:20px;text-align:center;font-variant-numeric:tabular-nums;transform:scale(0);transition:transform .45s var(--ux-spring)}
+.u051-cart.has b{transform:scale(1)}
+.u051-bottle{position:absolute;left:50%;top:44px;width:110px;height:206px;margin-left:-55px;filter:drop-shadow(0 24px 18px rgba(0,0,0,.18))}
+.u051-bottle svg{width:100%;height:100%;overflow:visible}
+.u051-shadow{position:absolute;left:50%;bottom:16px;width:120px;height:16px;margin-left:-60px;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.2),transparent)}
+.u051-fly{position:absolute;left:0;top:0;width:34px;height:64px;z-index:5;pointer-events:none}
+.u051-info{display:flex;flex-direction:column;flex:1;padding:16px 20px 18px}
+.u051-row{display:flex;align-items:baseline;justify-content:space-between}
+.u051-name{font-size:18px;font-weight:800;letter-spacing:-.035em}
+.u051-price{font-size:18px;font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.u051-sub{margin-top:3px;font-size:12.5px;font-weight:600;color:var(--ux-ink-3)}
+.u051-sw{display:flex;gap:10px;margin:14px 0 0;padding:0;border:0}
+.u051-sw legend{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.u051-sw label{position:relative;width:30px;height:30px;border-radius:50%;cursor:pointer;background:linear-gradient(140deg,var(--a),var(--b));box-shadow:0 0 0 2px var(--ux-surface),0 0 0 3px transparent;transition:box-shadow .3s,transform .35s var(--ux-spring)}
+.u051-sw label:hover{transform:scale(1.1)}
+.u051-sw input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer}
+.u051-sw label:has(input:checked){box-shadow:0 0 0 2px var(--ux-surface),0 0 0 4px var(--ux-ink)}
+.u051-sw label:has(input:focus-visible){outline:2px solid var(--ux-accent);outline-offset:5px}
+.u051-cname{margin-left:auto;align-self:center;font-size:12.5px;font-weight:700;color:var(--ux-ink-2)}
+.u051-add{position:relative;margin-top:auto;height:52px;border:0;border-radius:16px;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--ux-ink);color:var(--ux-page);font-size:15px;font-weight:750;overflow:hidden;transition:transform .35s var(--ux-spring)}
+.u051-add:active{transform:scale(.97)}
+.u051-add:focus-visible{outline:2px solid var(--ux-accent);outline-offset:2px}
+.u051-add svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.u051-add span{transition:transform .4s var(--ux-spring),opacity .25s}
+.u051-add .ok{position:absolute;transform:translateY(120%);opacity:0;display:flex;align-items:center;gap:6px}
+.u051-add.done span:not(.ok){transform:translateY(-120%);opacity:0}
+.u051-add.done .ok{transform:none;opacity:1}
+</style>
+<div class="ux u051">
+  <div class="u051-stage">
+    <div class="u051-top"><span class="u051-new">NEW</span><button class="u051-cart" type="button" aria-label="장바구니, 0개"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h2l1.8 9.2a1 1 0 0 0 1 .8h8.4a1 1 0 0 0 1-.8L19.5 8H7"/><circle cx="9.5" cy="19" r="1.3"/><circle cx="16.5" cy="19" r="1.3"/></svg><b aria-hidden="true">0</b></button></div>
+    <span class="u051-shadow" aria-hidden="true"></span>
+    <div class="u051-bottle" aria-hidden="true"></div>
+  </div>
+  <div class="u051-info">
+    <div class="u051-row"><span class="u051-name">Daily 보틀 500</span><span class="u051-price">₩32,000</span></div>
+    <div class="u051-sub">스테인리스 · 12시간 보온</div>
+    <fieldset class="u051-sw"><legend>색상</legend>
+      <label style="--a:#FF8A65;--b:#E5484D"><input type="radio" name="c" value="0" checked aria-label="코랄"></label>
+      <label style="--a:#7DB4FF;--b:#3D5BFF"><input type="radio" name="c" value="1" aria-label="블루"></label>
+      <label style="--a:#A5F2D3;--b:#119C72"><input type="radio" name="c" value="2" aria-label="민트"></label>
+      <label style="--a:#4A4A55;--b:#16151B"><input type="radio" name="c" value="3" aria-label="차콜"></label>
+      <span class="u051-cname" aria-live="polite">코랄</span>
+    </fieldset>
+    <button class="u051-add" type="button"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span><span>장바구니 담기</span><span class="ok"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>담았어요</span></button>
+  </div>
+</div>

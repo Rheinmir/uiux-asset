@@ -1,0 +1,19 @@
+<style>
+.u282{position:relative;width:300px;height:500px;border-radius:30px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);overflow:hidden}
+.u282-sc{position:absolute;inset:0;overflow-y:auto;padding:22px 16px 80px;scrollbar-width:none;outline:none}
+.u282-sc::-webkit-scrollbar{display:none}
+.u282-k{margin:0;font-size:24px;font-weight:880;letter-spacing:-.04em}
+.u282-s{margin:2px 0 220px;font-size:12.5px;font-weight:700;color:var(--ux-ink-3)}
+.u282-ph{margin:0 0 44px}
+.u282-fr{position:relative;height:300px;border-radius:20px;overflow:hidden;clip-path:inset(0 calc(var(--c,1) * 46%) 0 calc(var(--c,1) * 46%) round 20px)}
+.u282-img{position:absolute;inset:-6%;transform:scale(calc(1 + var(--c,1) * .3))}
+.u282-cap{margin-top:10px;opacity:calc(1 - var(--c,1) * 3);transform:translateY(calc(var(--c,1) * 30px))}
+.u282-cap b{display:block;font-size:16px;font-weight:850}
+.u282-cap span{font-size:12px;font-weight:700;color:var(--ux-ink-3)}
+</style>
+<div class="ux u282">
+  <div class="u282-sc" tabindex="0" aria-label="사진 모음, 스크롤해서 보기">
+    <p class="u282-k">한 해의 풍경</p><p class="u282-s">사진 네 장</p>
+    <div class="u282-list"></div>
+  </div>
+</div>

@@ -1,0 +1,11 @@
+/* file: src/plugins/pin-input/variants.css */
+@custom-variant hs-pin-input-active {
+
+  &.active {
+    @slot;
+  }
+
+  .active & {
+    @slot;
+  }
+}

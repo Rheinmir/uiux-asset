@@ -1,0 +1,38 @@
+<style>
+.u356{position:relative;width:340px;height:340px;border-radius:30px;overflow:hidden;background:radial-gradient(90% 80% at 50% 40%,#F8F5EF,#E6DFD2);background:radial-gradient(90% 80% at 50% 40%,light-dark(#F8F5EF,#2B2721),light-dark(#E6DFD2,#110F0C));box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong)}
+.u356-st{position:absolute;inset:0;cursor:none;touch-action:none}
+.u356-st>svg{position:absolute;inset:0;width:100%;height:100%}
+.u356-lp{position:absolute;left:0;top:0;width:128px;height:128px;margin:-64px 0 0 -64px;border-radius:50%;overflow:hidden;pointer-events:none;opacity:0;transform:scale(.6);transition:opacity .2s,transform .3s cubic-bezier(.3,1.5,.5,1);box-shadow:0 0 0 5px #2C2C30,0 0 0 7px #8E8E96,0 18px 30px -8px rgba(0,0,0,.55);background:#F3EEE5;background:light-dark(#F3EEE5,#221F1A)}
+.u356-lp.is-on{opacity:1;transform:scale(1)}
+.u356-lp svg{position:absolute;left:0;top:0;width:340px;height:340px;transform-origin:0 0}
+.u356-lp::after{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.35),transparent 40%);box-shadow:inset 0 0 18px rgba(0,0,0,.35)}
+.u356-zm{position:absolute;left:0;top:0;padding:2px 6px;border-radius:999px;background:#2C2C30;color:#F3EEE5;font:800 10px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;pointer-events:none;opacity:0;transform:translate(-50%,0);transition:opacity .2s}
+.u356-zm.is-on{opacity:1}
+</style>
+<div class="ux u356">
+  <div class="u356-st" role="img" aria-label="손목시계, 돋보기로 확대해 보기">
+    <svg viewBox="0 0 340 340" class="u356-w" aria-hidden="true">
+      <defs>
+        <radialGradient id="u356-dial" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#1E3A5F"/><stop offset="1" stop-color="#0B1626"/></radialGradient>
+        <linearGradient id="u356-case" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F1F3F5"/><stop offset=".5" stop-color="#ADB5BD"/><stop offset="1" stop-color="#E9ECEF"/></linearGradient>
+      </defs>
+      <path d="M128 20 h84 l-6 70 h-72z M134 250 h72 l6 70 h-84z" fill="#6B4226"/>
+      <path d="M140 30 v52 M200 30 v52 M140 258 v52 M200 258 v52" stroke="#4A2C17" stroke-width="1.2" stroke-dasharray="3 3"/>
+      <circle cx="170" cy="170" r="92" fill="url(#u356-case)"/>
+      <rect x="258" y="160" width="14" height="20" rx="3" fill="#ADB5BD"/>
+      <circle cx="170" cy="170" r="80" fill="url(#u356-dial)"/>
+      <g class="u356-ticks"></g>
+      <text x="170" y="128" text-anchor="middle" font-family="Georgia,serif" font-size="9" font-weight="700" fill="#F1F3F5" letter-spacing="1.5">LUCIAN</text>
+      <text x="170" y="136" text-anchor="middle" font-family="system-ui,sans-serif" font-size="3.2" fill="#ADB5BD" letter-spacing=".6">AUTOMATIC · GENÈVE</text>
+      <text x="170" y="214" text-anchor="middle" font-family="system-ui,sans-serif" font-size="2.6" fill="#ADB5BD" letter-spacing=".5">25 JEWELS · 100M · SWISS MADE</text>
+      <text x="170" y="219" text-anchor="middle" font-family="system-ui,sans-serif" font-size="1.8" fill="#868E96" letter-spacing=".3">N° 0400 / 2026 — made with care in Seoul</text>
+      <rect x="214" y="164" width="16" height="12" rx="1.5" fill="#F8F9FA"/><text class="u356-dt" x="222" y="173" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8" font-weight="700" fill="#212529">15</text>
+      <g class="u356-hh"><path d="M168 172 L170 126 L172 172 Z" fill="#E9ECEF"/></g>
+      <g class="u356-mh"><path d="M169 174 L170 104 L171 174 Z" fill="#F8F9FA"/></g>
+      <g class="u356-sh"><path d="M169.6 186 L170 98 L170.4 186 Z" fill="#FF6B6B"/><circle cx="170" cy="98.5" r="1.2" fill="#FF6B6B"/></g>
+      <circle cx="170" cy="170" r="3.4" fill="#ADB5BD"/><circle cx="170" cy="170" r="1.4" fill="#FF6B6B"/>
+    </svg>
+  </div>
+  <div class="u356-lp" aria-hidden="true"></div>
+  <div class="u356-zm" aria-hidden="true"></div>
+</div>

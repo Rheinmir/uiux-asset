@@ -1,0 +1,48 @@
+<style>
+.u053{position:relative;width:330px;height:490px;display:flex;flex-direction:column;align-items:center}
+.u053-deck{position:relative;width:310px;height:390px;outline:none}
+.u053-deck:focus-visible{outline:2px solid var(--ux-accent);outline-offset:6px;border-radius:30px}
+.u053-c{position:absolute;inset:0;border-radius:28px;overflow:hidden;background:var(--g);color:#fff;box-shadow:0 24px 40px -26px rgba(20,10,50,.6);transform:translateY(calc(var(--d) * 14px)) scale(calc(1 - var(--d) * .05));transition:transform .5s var(--ux-spring),opacity .4s;touch-action:none;user-select:none;-webkit-user-select:none}
+.u053-c.top{cursor:grab}
+.u053-c.drag{transition:none;cursor:grabbing}
+.u053-c.hide{opacity:0}
+.u053-c::before{content:"";position:absolute;width:240px;height:240px;right:-70px;top:-60px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.5),transparent 65%)}
+.u053-c::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(10,6,30,.65))}
+.u053-shape{position:absolute;left:50%;top:38%;width:150px;height:150px;margin:-75px 0 0 -75px;border-radius:42% 58% 52% 48%;background:var(--s);box-shadow:inset -14px -18px 30px rgba(0,0,0,.18),inset 14px 14px 30px rgba(255,255,255,.35)}
+.u053-info{position:absolute;left:20px;right:20px;bottom:20px;z-index:1}
+.u053-info small{font-size:12px;font-weight:700;letter-spacing:.06em;opacity:.8}
+.u053-info b{display:block;margin-top:4px;font-size:24px;font-weight:800;letter-spacing:-.04em}
+.u053-info span{display:flex;gap:6px;margin-top:10px}
+.u053-info em{height:26px;padding:0 10px;border-radius:999px;display:inline-flex;align-items:center;background:rgba(255,255,255,.2);font-style:normal;font-size:12px;font-weight:700}
+.u053-st{position:absolute;top:26px;z-index:2;padding:6px 12px;border:3px solid;border-radius:12px;font-size:20px;font-weight:900;letter-spacing:.06em;opacity:0}
+.u053-yes{left:22px;color:#7EE8C0;transform:rotate(-14deg)}
+.u053-no{right:22px;color:#FF9BA8;transform:rotate(14deg)}
+.u053-end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;border-radius:28px;background:var(--ux-surface-2);text-align:center;opacity:0;transform:scale(.94);transition:opacity .4s,transform .5s var(--ux-spring)}
+.u053-end.on{opacity:1;transform:none}
+.u053-end b{font-size:18px;font-weight:800;letter-spacing:-.03em}
+.u053-end small{font-size:13px;color:var(--ux-ink-3)}
+.u053-end strong{margin-top:6px;font-size:13px;font-weight:700;color:var(--ux-mint)}
+.u053-sr{position:absolute;width:1px;height:1px;margin:0;overflow:hidden;clip:rect(0 0 0 0)}
+.u053-bar{display:flex;align-items:center;gap:18px;margin-top:auto}
+.u053-b{width:60px;height:60px;border:0;padding:0;border-radius:50%;display:grid;place-items:center;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 12px 22px -14px var(--ux-shadow-strong);transition:transform .35s var(--ux-spring),opacity .3s}
+.u053-b:hover{transform:translateY(-2px)}
+.u053-b:active{transform:scale(.88)}
+.u053-b:focus-visible{outline:2px solid var(--ux-accent);outline-offset:3px}
+.u053-b[aria-disabled="true"]{opacity:.35}
+.u053-b svg{width:24px;height:24px;fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.u053-b.no svg{stroke:var(--ux-danger)}
+.u053-b.yes svg{stroke:var(--ux-mint);fill:color-mix(in srgb,var(--ux-mint) 20%,transparent)}
+.u053-b.undo{width:46px;height:46px}
+.u053-b.undo svg{width:19px;height:19px;stroke:var(--ux-ink-2)}
+</style>
+<div class="ux u053">
+  <div class="u053-deck" tabindex="0" role="group" aria-roledescription="카드 더미" aria-label="장소 추천">
+    <div class="u053-end" aria-hidden="true"><b>오늘 추천을 다 봤어요</b><small>되돌리기로 다시 볼 수 있어요</small><strong></strong></div>
+  </div>
+  <div class="u053-bar">
+    <button class="u053-b no" type="button" aria-label="패스"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <button class="u053-b undo" type="button" aria-label="되돌리기" aria-disabled="true"><svg viewBox="0 0 24 24"><path d="M9 7H15a5 5 0 0 1 0 10H8M9 7l3-3M9 7l3 3"/></svg></button>
+    <button class="u053-b yes" type="button" aria-label="저장"><svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></button>
+  </div>
+  <p class="u053-sr" aria-live="polite"></p>
+</div>

@@ -1,0 +1,38 @@
+<style>
+.u297{position:relative;width:340px;height:340px;border-radius:30px;overflow:hidden;background:var(--ux-surface-2);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);color:var(--ux-ink)}
+.u297-sd{position:absolute;left:10px;top:10px;bottom:10px;width:86px;padding:10px 7px;border-radius:18px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line)}
+.u297-sd small{display:block;padding:0 4px 6px;font-size:9.5px;font-weight:850;color:var(--ux-ink-3)}
+.u297-pk{display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;margin-bottom:5px;padding:6px 0 5px;border:0;border-radius:11px;background:var(--ux-surface-2);color:var(--ux-ink-2);font:inherit;font-size:9.5px;font-weight:800;cursor:pointer;transition:transform .15s,background .2s}
+.u297-pk:hover,.u297-pk.g-hov{background:var(--ux-accent-soft);color:var(--ux-accent)}
+.u297-pk:active{transform:scale(.95)}
+.u297-pk i{display:block;width:44px;height:22px;border-radius:5px;background:var(--ux-surface);box-shadow:inset 0 0 0 1px var(--ux-line);position:relative;overflow:hidden}
+.u297-tp{position:absolute;left:106px;right:12px;top:14px;display:flex;align-items:center;gap:6px;font-size:10px;font-weight:800;color:var(--ux-ink-3)}
+.u297-tp b{margin-right:auto;color:var(--ux-ink);font-weight:900}
+.u297-tp span{display:inline-flex;align-items:center;gap:4px}
+.u297-tp span::before{content:"";width:6px;height:6px;border-radius:50%;background:#10B981}
+.u297-tp span.is-blink{animation:u297-bl .6s ease}
+@keyframes u297-bl{40%{opacity:.2}}
+.u297-cv{position:absolute;left:106px;right:12px;top:36px;bottom:10px;padding:8px;border-radius:16px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line);overflow:hidden}
+.u297-em{position:absolute;inset:8px;display:grid;place-items:center;padding:0 20px;border:1.5px dashed var(--ux-line);border-radius:12px;text-align:center;font-size:10.5px;font-weight:700;color:var(--ux-ink-3)}
+.u297-ls{position:relative;margin:0;padding:0;list-style:none}
+.u297-bl{position:relative;display:grid;grid-template-rows:1fr;margin-bottom:5px;transition:grid-template-rows .4s cubic-bezier(.3,1,.4,1),opacity .3s,margin .4s}
+.u297-bl>div{min-height:0;overflow:hidden}
+.u297-bl.is-new,.u297-bl.is-gone{grid-template-rows:0fr;opacity:0;margin-bottom:0}
+.u297-wf{position:relative;padding:7px;border-radius:10px;background:var(--ux-surface-2);box-shadow:inset 0 0 0 1px var(--ux-line);transition:box-shadow .2s}
+.u297-bl:hover .u297-wf,.u297-bl.g-hov .u297-wf,.u297-bl:focus-within .u297-wf{box-shadow:inset 0 0 0 1.5px var(--ux-accent)}
+.u297-wf small{position:absolute;left:7px;top:-1px;padding:1px 5px;border-radius:0 0 5px 5px;background:var(--ux-accent);color:#fff;font-size:7.5px;font-weight:850;opacity:0;transition:opacity .2s}
+.u297-bl:hover .u297-wf small,.u297-bl.g-hov .u297-wf small,.u297-bl:focus-within .u297-wf small{opacity:1}
+.u297-wf i{display:block;border-radius:3px;background:var(--ux-surface-3)}
+.u297-ac{position:absolute;right:5px;top:5px;display:flex;gap:2px;opacity:0;transition:opacity .2s}
+.u297-bl:hover .u297-ac,.u297-bl.g-hov .u297-ac,.u297-bl:focus-within .u297-ac{opacity:1}
+.u297-ac button{width:20px;height:20px;border:0;border-radius:6px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line);color:var(--ux-ink-2);display:grid;place-items:center;cursor:pointer}
+.u297-ac button svg{width:9px;height:9px}
+.u297-rm:hover,.u297-rm.g-hov{color:#E11D48}
+.u297 button:focus-visible{outline:2px solid var(--ux-accent);outline-offset:1px}
+@media (prefers-reduced-motion: reduce){.u297-bl{transition:none}.u297-tp span.is-blink{animation:none}}
+</style>
+<div class="ux u297">
+  <div class="u297-sd"><small>블록</small></div>
+  <div class="u297-tp"><b class="u297-ct"></b><span class="u297-sv"></span></div>
+  <div class="u297-cv"><div class="u297-em">왼쪽 블록을 눌러 페이지를 쌓아 보세요</div><ul class="u297-ls"></ul></div>
+</div>

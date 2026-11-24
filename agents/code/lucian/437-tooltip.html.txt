@@ -1,0 +1,25 @@
+<style>
+.u437{position:relative;width:340px;height:300px;display:grid;place-items:center}
+.u437-bar{display:flex;gap:4px;margin-top:40px;padding:5px;border-radius:16px;background:var(--ux-surface);background:light-dark(var(--ux-surface),var(--ux-surface-2));box-shadow:0 0 0 1px var(--ux-line-2),0 12px 28px -14px var(--ux-shadow-strong)}
+.u437-b{width:44px;height:44px;padding:0;border:0;border-radius:11px;display:grid;place-items:center;background:none;color:var(--ux-ink-2);transform:scale(var(--k,1));transition:background-color .15s,color .15s,transform .45s cubic-bezier(.34,1.7,.5,1)}
+.u437-b:hover,.u437-b.is-on{background:var(--ux-surface-2);background:light-dark(var(--ux-surface-2),var(--ux-surface-3));color:var(--ux-ink)}
+.u437-b:active{--k:.9;transition:transform .1s var(--ux-ease)}
+.u437-b[aria-pressed="true"]{color:var(--ux-accent)}
+.u437-b svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.u437 .u437-b:focus-visible{outline:2px solid var(--ux-accent);outline-offset:1px}
+.u437-tip{position:absolute;left:0;top:0;z-index:2;transform:translate(var(--x,0px),var(--y,0px));pointer-events:none}
+.u437-tip.is-glide{transition:transform .42s cubic-bezier(.3,1.35,.5,1)}
+.u437-in{position:relative;display:flex;align-items:center;gap:8px;height:32px;padding:0 7px 0 11px;border-radius:9px;white-space:nowrap;font-size:13px;font-weight:600;background:#16151B;background:light-dark(var(--ux-ink),var(--ux-surface-3));color:#fff;color:light-dark(var(--ux-surface),var(--ux-ink));box-shadow:0 8px 20px -8px var(--ux-shadow-strong),0 0 0 1px light-dark(transparent,var(--ux-line-2));transform-origin:var(--ax,50%) 100%;opacity:0;transform:translateY(6px) scale(.6);transition:opacity .14s var(--ux-ease),transform .16s var(--ux-ease)}
+.u437-tip.is-on .u437-in{opacity:1;transform:none;transition:opacity .16s var(--ux-ease),transform .5s cubic-bezier(.3,1.6,.5,1)}
+.u437-in kbd{display:inline-flex;gap:2px}
+.u437-in kbd span{min-width:18px;height:18px;padding:0 4px;border-radius:5px;display:grid;place-items:center;background:color-mix(in srgb,currentColor 16%,transparent);font:inherit;font-size:11px;font-weight:600;opacity:.85}
+.u437-ar{position:absolute;left:var(--ax,50%);bottom:-4px;width:9px;height:9px;margin-left:-4.5px;transform:rotate(45deg);border-radius:2px;background:inherit;transition:left .42s cubic-bezier(.3,1.35,.5,1)}
+</style>
+<div class="ux u437">
+  <div class="u437-bar" role="toolbar" aria-label="서식">
+    <button type="button" class="u437-b" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h6a3.5 3.5 0 0 1 0 7H7zM7 12h7a3.5 3.5 0 0 1 0 7H7z"/></svg></button>
+    <button type="button" class="u437-b" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 5h8M6 19h8M14 5l-4 14"/></svg></button>
+    <button type="button" class="u437-b"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7.3l3-3a4 4 0 0 0-5.7-5.6l-1 1"/><path d="M14 10a4 4 0 0 0-5.7-.3l-3 3a4 4 0 0 0 5.7 5.6l1-1"/></svg></button>
+  </div>
+  <div class="u437-tip" role="tooltip"><div class="u437-in"><span class="u437-tl"></span><kbd></kbd><i class="u437-ar"></i></div></div>
+</div>

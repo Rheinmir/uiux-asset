@@ -1,0 +1,20 @@
+<style>
+.u351{position:relative;width:340px;height:340px;display:flex;flex-direction:column;border-radius:28px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong);overflow:hidden}
+.u351-hd{display:flex;align-items:center;justify-content:space-between;padding:16px 18px 10px}
+.u351-hd b{font-size:17px;font-weight:850}
+.u351-g{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:750;color:var(--ux-ink-3)}
+.u351-g svg{width:44px;height:26px;overflow:visible}
+.u351-g path{fill:none;stroke:var(--ux-line-2);stroke-width:4;stroke-linecap:round}
+.u351-g line{stroke:var(--ux-danger);stroke-width:2.5;stroke-linecap:round;transform-box:view-box;transform-origin:22px 24px}
+.u351-sc{flex:1;overflow-y:auto;padding:4px 16px 16px;scrollbar-width:none;outline:none}
+.u351-sc::-webkit-scrollbar{display:none}
+.u351-ls{margin:0;padding:0;list-style:none;display:grid;gap:10px;transform-origin:50% 50%;will-change:transform}
+.u351-it{display:flex;align-items:center;gap:12px;height:68px;padding:0 14px;border-radius:18px;background:var(--ux-surface-2);box-shadow:inset 0 0 0 1px var(--ux-line)}
+.u351-it i{flex:none;width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,var(--a),var(--b))}
+.u351-it b{display:block;font-size:14.5px;font-weight:780}
+.u351-it span{font-size:12px;font-weight:650;color:var(--ux-ink-3)}
+</style>
+<div class="ux u351">
+  <div class="u351-hd"><b>주말 코스</b><span class="u351-g" aria-hidden="true">스크롤 속도<svg viewBox="0 0 44 26"><path d="M4 24a18 18 0 0 1 36 0"/><line x1="22" y1="24" x2="22" y2="9"/></svg></span></div>
+  <div class="u351-sc" tabindex="0" aria-label="주말 코스 목록"><ul class="u351-ls"></ul></div>
+</div>

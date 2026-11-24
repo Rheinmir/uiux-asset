@@ -1,0 +1,23 @@
+<style>
+.u391{position:relative;width:340px;height:340px;border-radius:30px;overflow:hidden;background:var(--ux-surface);color:var(--ux-ink);box-shadow:0 0 0 1px var(--ux-line),0 30px 60px -36px var(--ux-shadow-strong)}
+.u391-hd{position:absolute;left:20px;right:16px;top:16px;display:flex;justify-content:space-between;align-items:center;z-index:1}
+.u391-hd b{font-size:13.5px;font-weight:900;white-space:nowrap}
+.u391-sg{display:flex;padding:3px;border-radius:999px;background:var(--ux-surface-2);box-shadow:inset 0 0 0 1px var(--ux-line)}
+.u391-mo{border:0;padding:4px 10px;white-space:nowrap;border-radius:999px;background:none;color:var(--ux-ink-2);font:inherit;font-size:11px;font-weight:800;cursor:pointer;transition:background .2s,color .2s}
+.u391-mo.is-on{background:var(--ux-ink);color:var(--ux-surface)}
+.u391-mo:focus-visible{outline:2px solid var(--ux-accent);outline-offset:2px}
+.u391-sv{position:absolute;left:0;top:0;width:340px;height:340px}
+.u391-rb{fill-opacity:.55;stroke:var(--ux-surface);stroke-width:.6;cursor:pointer;transition:fill-opacity .25s}
+.u391-ar{cursor:pointer;transition:opacity .25s}
+.u391-tx{font-size:10.5px;font-weight:850;fill:var(--ux-ink);pointer-events:none}
+.u391.is-f .u391-rb{fill-opacity:.07}
+.u391.is-f .u391-rb.is-hl{fill-opacity:.8}
+.u391.is-f .u391-ar{opacity:.35}
+.u391.is-f .u391-ar.is-hl{opacity:1}
+.u391-in{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);padding:6px 12px;border-radius:999px;background:var(--ux-surface-2);box-shadow:inset 0 0 0 1px var(--ux-line);font-size:10.5px;font-weight:800;white-space:nowrap;font-variant-numeric:tabular-nums}
+</style>
+<div class="ux u391">
+  <div class="u391-hd"><b>부서 간 메시지</b><div class="u391-sg" role="group" aria-label="기간"><button type="button" class="u391-mo" aria-pressed="false">지난달</button><button type="button" class="u391-mo is-on" aria-pressed="true">이번 달</button></div></div>
+  <svg class="u391-sv" viewBox="0 0 340 340"><g class="u391-rbs"></g><g class="u391-ars"></g><g class="u391-txs" aria-hidden="true"></g></svg>
+  <div class="u391-in" aria-live="polite"></div>
+</div>
