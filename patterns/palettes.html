@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bảng màu 4 màu — 6 bộ — uiux-asset</title>
+<meta name="description" content="6 bảng màu 4 màu từ reel #hungdezign: mã hex in trên video, bấm để chép hex hoặc biến CSS.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=819e38b8bc">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap">
+<style>
+.pl-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+.pl-grid { display: grid; gap: 20px; grid-template-columns: 1fr; }
+@media (min-width: 700px) { .pl-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1100px) { .pl-grid { grid-template-columns: repeat(3, 1fr); } }
+.pl-card { display: flex; flex-direction: column; gap: 12px; padding: 14px; border-radius: 16px; background: var(--aw-bg-white); border: 1px solid var(--aw-border-gray); }
+.pl-stack { display: flex; flex-direction: column; gap: 8px; padding: 10px; border-radius: 10px; background: var(--edge); }
+.pl-sw { position: relative; display: block; width: 100%; height: 92px; padding: 10px 12px; border: 3px solid var(--edge); background: var(--c); color: var(--t); text-align: left; cursor: pointer; font-family: 'Space Grotesk', system-ui, sans-serif; transition: transform .15s; }
+.pl-sw:hover { transform: translateY(-2px); }
+.pl-sw b { position: absolute; left: 12px; top: 8px; font-weight: 700; font-size: 16px; }
+.pl-sw strong { position: absolute; left: 12px; bottom: 8px; font-size: 22px; font-weight: 700; }
+.pl-sw small { position: absolute; right: 12px; bottom: 11px; font-size: 11px; font-weight: 500; }
+.pl-sw.ok strong::after { content: " ✓"; }
+.pl-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.pl-foot h3 { margin: 0; font: 600 18px/1.25 var(--aw-font); }
+.pl-foot h3 small { display: block; font-size: 13px; font-weight: 400; color: var(--aw-ink2); }
+.pl-foot .aw-btn { min-height: 44px; }
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=819e38b8bc"></script>
+<div class="pl-page">
+  <div class="aw-sotd" style="padding-top:16px">
+    <p class="aw-sotd__sub"><span>Bảng màu</span><span class="aw-tag aw-tag--medium">6 bộ · 24 màu</span></p>
+    <h1 class="aw-h1" style="--aw-h1:clamp(40px,7vw,96px)">Bảng màu 4 màu</h1>
+    <p class="aw-lead">Mã hex chép đúng từ reel #hungdezign. Bấm một màu để chép hex. Bấm «Chép CSS» để lấy cả bộ.</p>
+  </div>
+  <div class="pl-grid" id="pl-grid"></div>
+</div>
+</main>
+<script>
+// Tên bộ do mình đặt theo ảnh nền (video không ghi tên). Tên màu + hex in trên video.
+const V = [
+{ id: 'oranges', vi: 'Cam chín', en: 'Oranges', use: 'Đồ ăn, thức uống, thương hiệu ấm.', c: [['Ember Orange', '#F26529'], ['Marigold Gold', '#FAA61A'], ['Peach Cream', '#FEDCC6'], ['Burnt Cocoa', '#662713']] },
+{ id: 'orange-wall', vi: 'Tường cam', en: 'Orange Wall', use: 'Thể thao, sự kiện, poster tươi.', c: [['Orange Zest', '#F86718'], ['Citrus Olive', '#AEBD02'], ['Oat Ivory', '#F1EAD7'], ['Roasted Umber', '#6F3C06']] },
+{ id: 'lemon-grove', vi: 'Vườn chanh', en: 'Lemon Grove', use: 'Thiên nhiên, sức khoẻ, sản phẩm xanh.', c: [['Jungle Green', '#04550F'], ['Lime Zest', '#B7C83E'], ['Lemon Gold', '#E3BD28'], ['Citrus Cream', '#FFEEE9']] },
+{ id: 'korean-diner', vi: 'Quán Hàn', en: 'Korean Diner', use: 'Nhà hàng, menu, thương hiệu mạnh.', c: [['Korean Red', '#B8171F'], ['Mustard Yellow', '#F9BD04'], ['Diner Navy', '#032D65'], ['Glacier White', '#FDFDFF']] },
+{ id: 'brick-bicycle', vi: 'Tường gạch', en: 'Brick & Bicycle', use: 'Cổ điển, cà phê, đồ thủ công.', c: [['Pumpkin Spice', '#E3792F'], ['Vintage Beige', '#E9E9C7'], ['Hunter Green', '#30673A'], ['Graphite Shadow', '#15161B']] },
+{ id: 'blue-net', vi: 'Lưới xanh', en: 'Lemons in Blue Net', use: 'Biển, mùa hè, du lịch.', c: [['Coastal Stone', '#EDE6D9'], ['Azure Breeze', '#5C88CD'], ['Sunlit Honey', '#F1C436'], ['Dark Toffee', '#6B3500']] }
+];
+const lum = (h) => { const n = parseInt(h.slice(1), 16); const f = (v) => (v /= 255) <= .03928 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; return .2126 * f(n >> 16) + .7152 * f(n >> 8 & 255) + .0722 * f(n & 255); };
+const ratio = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + .05) / (Math.min(x, y) + .05); };
+// Chữ trên mỗi ô = màu khác trong cùng bộ có tương phản cao nhất (như video). Viền = màu tối nhất.
+document.getElementById('pl-grid').innerHTML = V.map((p, k) => {
+  const dark = p.c.map((c) => c[1]).sort((a, b) => lum(a) - lum(b))[0];
+  const vars = p.c.map(([n, h]) => `--${n.toLowerCase().replace(/ /g, '-')}: ${h};`).join('\n');
+  return `<article class="pl-card" id="${p.id}"><div class="pl-stack" style="--edge:${dark}">${p.c.map(([n, h]) => {
+    const t = p.c.map((c) => c[1]).filter((x) => x !== h).sort((a, b) => ratio(h, b) - ratio(h, a))[0], n2 = parseInt(h.slice(1), 16);
+    return `<button type="button" class="pl-sw" data-hex="${h}" style="--c:${h};--t:${t};--edge:${dark}" aria-label="Chép ${n} ${h}"><b>${n}</b><strong>${h}</strong><small>R: ${n2 >> 16} G: ${n2 >> 8 & 255} B: ${n2 & 255}</small></button>`; }).join('')}</div>
+  <div class="pl-foot"><h3>${p.vi}<small>${p.en}</small></h3><button type="button" class="aw-btn aw-btn--small" data-css="${vars.replace(/"/g, '&quot;')}">Chép CSS</button></div></article>`;
+}).join('');
+document.addEventListener('click', (e) => {
+  const s = e.target.closest('.pl-sw'), b = e.target.closest('[data-css]');
+  if (s) navigator.clipboard.writeText(s.dataset.hex).then(() => { s.classList.add('ok'); setTimeout(() => s.classList.remove('ok'), 1200); });
+  if (b) navigator.clipboard.writeText(`:root {\n${b.dataset.css}\n}`).then(() => { b.textContent = 'Đã chép'; setTimeout(() => b.textContent = 'Chép CSS', 1500); });
+});
+</script>
+<script src="/search.js?v=819e38b8bc" defer></script><script src="/stats.js?v=819e38b8bc" defer></script>
+</body>
+</html>

@@ -34,6 +34,7 @@
       ['ui-kits/', 'UI kits', 'Hệ thiết kế rút từ site thật', 36, 'ui-kits/awwwards-com/latest/'],
       ['ui-libraries/', 'Thư viện UI', 'Thư viện trên GitHub, số liệu sống', 153],
       ['fonts/', 'Font', 'Font family và bảng màu', 9],
+      ['patterns/palettes.html', 'Bảng màu', 'Bảng màu 4 màu, chép hex', 6],
       ['skills/', 'Skills', 'Claude skill từ một bài viết', 40]]]];
   window.AW_CAT = CAT;
   const url = location.href.split('#')[0], base = url.split('?')[0], flat = CAT.flatMap(([id, , , it]) => it.map(([p]) => [id, R + p]));
