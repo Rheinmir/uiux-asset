@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Viền cầu vồng — 4 điều khiển phát sáng — uiux-asset</title>
+<meta name="description" content="4 điều khiển tối có viền cầu vồng chảy khi tương tác: công tắc, ô nhập, thanh trượt, thẻ. Dựng lại từ video Halo của @guanmo_ai, kèm code chép thẳng.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=6c84f03f0a">
+<style>
+.mo-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+.mo-grid { display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 700px) { .mo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.mo-card { display: flex; flex-direction: column; border-radius: 16px; overflow: hidden; background: #070707; border: 1px solid #1f1f1f; color: #f2f2f2; }
+.mo-stage { position: relative; aspect-ratio: 320 / 220; overflow: hidden; cursor: pointer; touch-action: manipulation; }
+.mo-stage > .mo-fit { position: absolute; left: 50%; top: 50%; width: 320px; height: 220px; margin: -110px 0 0 -160px; display: grid; place-items: center; scale: var(--k, 1); }
+.mo-n { position: absolute; top: 10px; left: 12px; font: 500 11px/1 ui-monospace, Menlo, monospace; color: #6b6b6b; z-index: 1; }
+.mo-foot { padding: 4px 12px 12px; display: flex; flex-direction: column; gap: 2px; text-align: center; }
+.mo-foot h3 { margin: 0; font: 500 15px/1.3 var(--aw-font); color: #f2f2f2; }
+.mo-foot h3 small { display: block; font-size: 12px; font-weight: 400; color: #9a9a9a; }
+.mo-foot p { margin: 2px 0 0; font: 400 12px/1.4 var(--aw-font); color: #8a8a8a; }
+.mo-foot details { text-align: left; }
+.mo-foot summary { cursor: pointer; font: 500 13px/44px var(--aw-font); min-height: 44px; color: #bdbdbd; text-align: center; list-style: none; }
+.mo-foot summary::-webkit-details-marker { display: none; }
+.mo-code { position: relative; }
+.mo-code pre { margin: 0; max-height: 300px; overflow: auto; padding: 12px; border-radius: 10px; background: #151515; color: #d8d8d8; font: 11px/1.5 ui-monospace, Menlo, monospace; white-space: pre; }
+.mo-code .aw-btn { position: absolute; top: 6px; right: 6px; min-height: 44px; }
+@media (prefers-reduced-motion: reduce) { .mo-stage * { transition-duration: 0s !important; } }
+</style>
+<style id="mo-css"></style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=6c84f03f0a"></script>
+<div class="mo-page">
+  <div class="aw-sotd" style="padding-top:16px">
+    <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">4 điều khiển</span></p>
+    <h1 class="aw-h1" style="--aw-h1:clamp(40px,7vw,96px)">Viền cầu vồng</h1>
+    <p class="aw-lead">Ánh sáng ngũ sắc chảy quanh viền đúng lúc chạm: bật công tắc, gõ ô nhập, kéo thanh trượt, chọn thẻ. Mỗi ô tự chạy; rê chuột để tự tay điều khiển.</p>
+  </div>
+  <div class="mo-grid" id="mo-grid"></div>
+</div>
+</main>
+<script>
+// Viền phát sáng dùng chung: ::before = viền 2px (conic + mask), ::after = quầng mờ phía sau.
+// Góc --halo-a quay bằng @property. Độ sáng = --g (0 tắt, 1 sáng hẳn). Phần tử phải có nền đặc.
+const RING = (s, w = 2, blur = 16) => `@property --halo-a{syntax:'<angle>';inherits:false;initial-value:0deg}@keyframes halo-spin{to{--halo-a:360deg}}${s}{position:relative}${s}::before,${s}::after{content:"";position:absolute;inset:-${w}px;border-radius:inherit;background:conic-gradient(from var(--halo-a),#ff6b8b,#ffb35c,#fff4c2,#7ef0d0,#5cc8ff,#7d7bff,#e07bff,#ff6b8b);animation:halo-spin 3.2s linear infinite;pointer-events:none;transition:opacity .6s ease}${s}::before{padding:${w}px;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:var(--g,0)}${s}::after{z-index:-1;filter:blur(${blur}px);opacity:calc(var(--g,0)*.75)}@media (prefers-reduced-motion:reduce){${s}::before,${s}::after{animation:none!important;transition:none;--halo-a:200deg}}`;
+
+// Mỗi biến thể: css + html (đã kèm xử lý inline, chép là chạy) + step(el, n) cho tự chạy.
+const V = [
+{ id: 'halo-switch', vi: 'Công tắc hào quang', en: 'Halo Switch', use: 'Bật/tắt cài đặt; viền loé sáng lúc gạt rồi dịu lại.',
+  css: `${RING('.g-sw')}.g-sw{width:96px;height:48px;padding:0;border:0;border-radius:999px;cursor:pointer;background:linear-gradient(180deg,#1c1c1f,#0c0c0e);box-shadow:inset 0 1px 0 rgba(255,255,255,.06),inset 0 -2px 6px rgba(0,0,0,.6);--g:0}.g-sw b{position:absolute;top:4px;left:4px;width:40px;height:40px;border-radius:50%;background:radial-gradient(circle at 35% 28%,#fff 0 18%,#e9e8f1 45%,#b9b6cc 85%,#9d9bb4);box-shadow:0 4px 10px rgba(0,0,0,.6),inset -3px -4px 8px rgba(160,140,255,.25);transition:left .45s cubic-bezier(.5,1.5,.5,1)}.g-sw.on{--g:.45}.g-sw.on b{left:52px}.g-sw.fx::before,.g-sw.fx::after{animation:halo-spin 1.4s linear infinite,g-sw-fx 1.6s ease-out}@keyframes g-sw-fx{0%,40%{opacity:1}}.g-sw:focus-visible{outline:2px solid #fff;outline-offset:4px}`,
+  html: `<button type="button" class="g-sw" role="switch" aria-checked="false" aria-label="Halo" onclick="const on=this.classList.toggle('on');this.setAttribute('aria-checked',on);this.classList.remove('fx');void this.offsetWidth;this.classList.add('fx')"><b></b></button>`,
+  step: (el) => el.click() },
+{ id: 'prism-prompt', vi: 'Ô nhập lăng kính', en: 'Prism Prompt', use: 'Ô hỏi AI, ô tìm kiếm; viền sáng khi đang gõ.',
+  css: `${RING('.g-pr')}.g-pr{display:flex;align-items:center;width:280px;height:54px;padding:0 5px 0 20px;border-radius:999px;background:linear-gradient(180deg,#151517,#09090a);box-shadow:inset 0 1px 0 rgba(255,255,255,.06);--g:.15}.g-pr:focus-within,.g-pr.on{--g:1}.g-pr input{flex:1;min-width:0;height:44px;border:0;outline:0;background:none;color:#f2f2f2;font:400 16px/1 system-ui,sans-serif}.g-pr input::placeholder{color:#6b6b70}.g-pr button{flex:none;width:44px;height:44px;border:0;border-radius:50%;display:grid;place-items:center;background:#3a3a3d;color:#111;cursor:pointer;transition:background .3s}.g-pr input:not(:placeholder-shown)+button{background:#f2f2f2}.g-pr button:focus-visible{outline:2px solid #fff;outline-offset:2px}`,
+  html: `<form class="g-pr" onsubmit="event.preventDefault();this.querySelector('input').value=''"><input type="text" placeholder="Describe a scene" aria-label="Mô tả cảnh"><button type="submit" aria-label="Gửi"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5m-6 6 6-6 6 6"/></svg></button></form>`,
+  step: (el, n) => { const w = ['Neon', 'Night drive', 'Soft glow', ''][n % 4]; el.querySelector('input').value = w; el.classList.toggle('on', w !== ''); } },
+{ id: 'spectrum-slider', vi: 'Thanh trượt quang phổ', en: 'Spectrum Slider', use: 'Chỉnh cường độ, âm lượng; núm toả sáng khi kéo.',
+  css: `${RING('.g-sl-k', 2, 12)}.g-sl{width:280px;color:#f2f2f2;font-family:system-ui,sans-serif;--p:75}.g-sl-h{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:2px}.g-sl-h span{font:500 10px/1 ui-monospace,Menlo,monospace;letter-spacing:.2em;color:#7a7a7f;padding-bottom:12px}.g-sl-h output{font:300 52px/1 system-ui,sans-serif;letter-spacing:-.04em}.g-sl-h small{font-size:16px;color:#9a9a9f;margin-left:2px}.g-sl-t{position:relative;height:44px}.g-sl-t i{position:absolute;left:0;right:0;top:20px;height:5px;border-radius:9px;background:#18181b}.g-sl-t i::before{content:"";position:absolute;inset:0;border-radius:inherit;width:calc(var(--p)*1%);background:linear-gradient(90deg,#5b7cff,#b56cff 55%,#ff6fae)}.g-sl-k{position:absolute;top:6px;left:calc(var(--p)*(100% - 32px)/100);width:32px;height:32px;border-radius:50%;background:radial-gradient(circle at 35% 28%,#fff 0 18%,#e9e8f1 45%,#b9b6cc 85%,#9d9bb4);box-shadow:0 4px 10px rgba(0,0,0,.6);--g:.3}.g-sl.on .g-sl-k,.g-sl.on .g-sl-t i::before{transition:left .5s cubic-bezier(.4,1.3,.5,1),width .5s cubic-bezier(.4,1.3,.5,1)}.g-sl.on .g-sl-k,.g-sl:has(input:active) .g-sl-k,.g-sl:has(input:focus-visible) .g-sl-k{--g:1}.g-sl input{position:absolute;inset:0;width:100%;height:44px;margin:0;opacity:0;cursor:pointer}`,
+  html: `<div class="g-sl"><div class="g-sl-h"><span>INTENSITY</span><output>75<small>%</small></output></div><div class="g-sl-t"><i></i><b class="g-sl-k"></b><input type="range" min="0" max="100" value="75" aria-label="Intensity" oninput="const s=this.closest('.g-sl');s.style.setProperty('--p',this.value);s.querySelector('output').firstChild.nodeValue=this.value"></div></div>`,
+  step: (el, n) => { const r = el.querySelector('input'); r.value = [36, 82, 14, 90, 60][n % 5]; r.dispatchEvent(new Event('input')); el.classList.add('on'); clearTimeout(el._t); el._t = setTimeout(() => el.classList.remove('on'), 1100); } },
+{ id: 'rim-card', vi: 'Thẻ viền sáng', en: 'Rim Card', use: 'Chọn gói, vé, thẻ thành viên; rê là sáng, chọn là sáng hẳn.',
+  css: `${RING('.g-rc', 2, 18)}.g-rc{display:block;width:240px;height:150px;padding:18px 18px 16px;border:0;border-radius:22px;text-align:left;color:#f2f2f2;cursor:pointer;background:linear-gradient(160deg,#18181b,#0a0a0b 70%);box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 20px 40px -20px #000;font-family:system-ui,sans-serif;--g:.12}.g-rc:hover,.g-rc:focus-visible{--g:.6;outline:0}.g-rc.on{--g:1}.g-rc-top{display:flex;align-items:center;gap:12px}.g-rc-ic{display:block;flex:none;width:38px;height:28px;border-radius:7px;background:linear-gradient(90deg,transparent 48%,rgba(0,0,0,.15) 50%,transparent 52%),linear-gradient(transparent 48%,rgba(0,0,0,.15) 50%,transparent 52%),linear-gradient(135deg,#ff8a5c,#ff5fa2 35%,#a46bff 65%,#5cc8ff)}.g-rc-top small{font:500 9px/1 ui-monospace,Menlo,monospace;letter-spacing:.25em;color:#8a8a8f}.g-rc-ck{margin-left:auto;width:26px;height:26px;border-radius:50%;background:#f2f2f2;color:#111;display:grid;place-items:center;transform:scale(0);transition:transform .35s cubic-bezier(.3,1.7,.5,1)}.g-rc.on .g-rc-ck{transform:scale(1)}.g-rc strong{display:block;margin-top:34px;font:600 22px/1.1 system-ui,sans-serif;letter-spacing:-.02em}.g-rc em{display:block;margin-top:8px;font:500 9px/1 ui-monospace,Menlo,monospace;font-style:normal;letter-spacing:.22em;color:#7a7a7f}`,
+  html: `<button type="button" class="g-rc" aria-pressed="false" onclick="this.setAttribute('aria-pressed',this.classList.toggle('on'))"><span class="g-rc-top"><span class="g-rc-ic"></span><small>HALO PASS</small><span class="g-rc-ck"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg></span></span><strong>Night Shift</strong><em>ACCESS · 2048</em></button>`,
+  step: (el) => el.click() }
+];
+
+const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+document.getElementById('mo-css').textContent = V.map((v) => v.css).join('\n');
+const grid = document.getElementById('mo-grid');
+grid.innerHTML = V.map((v, i) => `<article class="mo-card" id="${v.id}">
+  <div class="mo-stage"><span class="mo-n">${String(i + 1).padStart(2, '0')}</span><div class="mo-fit">${v.html}</div></div>
+  <div class="mo-foot"><h3>${v.vi}<small>${v.en}</small></h3><p>${v.use}</p>
+  <details><summary>Code</summary><div class="mo-code"><button type="button" class="aw-btn aw-btn--small" data-copy>Chép</button>
+  <pre><code>${esc(`<style>\n${v.css.replace(/}(?=[.@])/g, '}\n')}\n</style>\n${v.html}`)}</code></pre></div></details></div></article>`).join('');
+
+// Nhịp: tự chạy 1.8 s/lần (dừng khi rê chuột hoặc đang gõ), bấm vùng trống của ô = sang nhịp kế.
+const cards = [...grid.children].map((c, i) => {
+  const v = V[i], st = c.querySelector('.mo-stage'), el = c.querySelector('.mo-fit > :last-child'), s = { n: 0, hold: false };
+  const tick = () => { s.n++; v.step(el, s.n); };
+  st.onclick = (e) => { if (!el.contains(e.target)) tick(); };
+  st.onpointerenter = () => s.hold = true; st.onpointerleave = () => s.hold = false;
+  return () => { const r = st.getBoundingClientRect(); if (!s.hold && !el.contains(document.activeElement) && r.bottom > 0 && r.top < innerHeight) tick(); };
+});
+if (!matchMedia('(prefers-reduced-motion: reduce)').matches) setInterval(() => cards.forEach((f) => f()), 1800);
+const fit = () => grid.querySelectorAll('.mo-stage').forEach((s) => s.style.setProperty('--k', Math.min(1.5, s.clientWidth / 320).toFixed(3)));
+fit(); addEventListener('resize', fit);
+grid.addEventListener('click', (e) => {
+  const b = e.target.closest('[data-copy]'); if (!b) return;
+  navigator.clipboard.writeText(b.nextElementSibling.textContent).then(() => { b.textContent = 'Đã chép'; setTimeout(() => b.textContent = 'Chép', 1500); });
+});
+</script>
+<script src="/search.js?v=6c84f03f0a" defer></script><script src="/stats.js?v=6c84f03f0a" defer></script>
+</body>
+</html>
