@@ -36,6 +36,7 @@
       ['angles/', 'Góc máy', 'Camera angle, cảnh 3D bằng CSS', 8, 'angles/#a1'],
       ['teardown/', 'Teardown 3D', 'Máy 3D tháo rời được', 3, 'teardown/thumbs/v8.jpg'],
       ['patterns/toolkit.html', 'Bộ đồ nghề chuyển động', '16 repo motion, demo chạy thật', 16],
+      ['patterns/motionstudio.html', 'Xưởng chuyển động Muse', '14 repo, xoắn ốc / chồng / lưới', 14],
       ['patterns/principles.html', '20 nguyên tắc UX', 'Trước/Sau cho từng nguyên tắc chuyển động', 20],
       ['patterns/mascot.html', 'Linh vật bot', '20 trạng thái avatar agent, CSS thuần', 20],
       ['patterns/sound.html', 'Chuyển động và âm thanh', 'Luồng app có âm thanh UI', 11]]],
