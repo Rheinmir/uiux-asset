@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>20 nguyên tắc UX và chuyển động — uiux-asset</title>
+<meta name="description" content="20 nguyên tắc UX và chuyển động dựng lại từ reel của Charles Liu: mỗi nguyên tắc một cặp Trước/Sau tự chạy, bấm được, kèm code CSS/JS chép thẳng.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=8d72da80d7">
+<style>
+.pr-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+.pr-credit { margin: 0; max-width: 72ch; font: 400 13px/1.6 var(--aw-font); opacity: .75; text-align: center; }
+.pr-grid { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 1100px) { .pr-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.pr-card { min-width: 0; display: flex; flex-direction: column; gap: 12px; padding: 16px; border-radius: 16px; background: #fff; color: #111; border: 1px solid #e4e2dc; }
+.pr-head { display: flex; gap: 12px; align-items: flex-start; }
+.pr-n { flex: none; min-width: 30px; padding: 6px 0; border-radius: 7px; background: #111; color: #fff; font: 600 12px/1 ui-monospace, Menlo, monospace; text-align: center; }
+.pr-head h3 { margin: 0; font: 600 17px/1.3 var(--aw-font); }
+.pr-head h3 small { font-size: 13px; font-weight: 400; color: #777; margin-left: 6px; }
+.pr-head p { margin: 2px 0 0; font: 400 14px/1.45 var(--aw-font); color: #444; }
+.pr-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 520px) { .pr-pair { grid-template-columns: minmax(0, 1fr); } }
+.pr-lab { display: flex; flex-direction: column; margin-bottom: 6px; font: 600 13px/1.3 var(--aw-font); }
+.pr-lab small { font-weight: 400; font-size: 11px; color: #888; }
+.pr-st { position: relative; aspect-ratio: 240 / 150; border-radius: 10px; overflow: hidden; background: #f4f3ef radial-gradient(#e2e0da 1px, transparent 1.2px) 0 0 / 12px 12px; touch-action: manipulation; }
+.pr-fit { position: absolute; left: 50%; top: 50%; width: 240px; height: 150px; margin: -75px 0 0 -120px; display: grid; place-items: center; scale: var(--k, 1); font-family: system-ui, -apple-system, sans-serif; }
+.pr-cur { position: absolute; z-index: 5; pointer-events: none; }
+.pr-foot { display: flex; gap: 8px; align-items: flex-start; flex-wrap: wrap; }
+.pr-re, .pr-cp { min-height: 44px; padding: 0 16px; border: 0; border-radius: 999px; background: #111; color: #fff; font: 500 14px/1 var(--aw-font); cursor: pointer; }
+.pr-foot details { flex: 1; min-width: 0; }
+.pr-foot summary { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid #ddd; font: 500 14px/1 var(--aw-font); cursor: pointer; list-style: none; }
+.pr-foot summary::-webkit-details-marker { display: none; }
+.pr-code { position: relative; margin-top: 8px; }
+.pr-code pre { margin: 0; max-height: 320px; overflow: auto; padding: 12px; border-radius: 10px; background: #161616; color: #ddd; font: 11px/1.5 ui-monospace, Menlo, monospace; white-space: pre; }
+.pr-code .pr-cp { position: absolute; top: 6px; right: 6px; background: #333; }
+@media (prefers-reduced-motion: reduce) { .pr-st *, .pr-st *::before, .pr-st *::after { animation-duration: 0s !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition-duration: 0s !important; transition-delay: 0s !important; } }
+</style>
+<style id="pr-css"></style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=8d72da80d7"></script>
+<div class="pr-page">
+  <div class="aw-sotd" style="padding-top:16px">
+    <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">20 nguyên tắc</span></p>
+    <h1 class="aw-h1" style="--aw-h1:clamp(36px,6vw,84px)">20 nguyên tắc UX và chuyển động</h1>
+    <p class="aw-lead">Mỗi nguyên tắc là một cặp Trước/Sau chạy cùng một chuyển động nhỏ. Ô tự chạy lại, rê chuột để dừng, bấm vào ô để xem lại. Code là bản Sau.</p>
+    <p class="pr-credit">Dựng lại từ reel “20 Principles of UX &amp; Animation” của Charles Liu. Nguồn: userinterface.wiki (Raphael Salaja), The Illusion of Life (Disney), Laws of UX (Jon Yablonski), Emil Kowalski (tần suất sử dụng).</p>
+  </div>
+  <div class="pr-grid" id="pr-grid"></div>
+</div>
+</main>
+<script>
+const rep = (k, f) => Array.from({ length: k }, (_, i) => f(i)).join('');
+const CUR = (s = '') => `<svg class="pr-cur" style="${s}" width="14" height="16" viewBox="0 0 14 16" aria-hidden="true"><path d="M1 1v12l3.2-3 2.3 5 2-1-2.3-4.8H10z" fill="#111" stroke="#fff" stroke-width="1"/></svg>`;
+const SVG = (d, w = 18, x = '') => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ${x}><path d="${d}"/></svg>`;
+const HEART = 'M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z';
+const CART = 'M3 4h2l2.5 11h11L21 7H6.5M9 20h.01M18 20h.01';
+const CHECK = 'M5 12l5 5 9-10';
+const DOWN = 'M12 4v11m-5-5 5 5 5-5M5 20h14';
+const BELL = 'M6 16V11a6 6 0 0 1 12 0v5l2 2H4zm4 4h4';
+const LOCK = 'M6 11h12v9H6zM9 11V8a3 3 0 0 1 6 0v3';
+const COL = ['#f2bf9e', '#a9c1e0', '#c9d08f', '#a8c8a5', '#f0b3c4'];
+const FOOD = 'Pasta Ramen Tacos Sushi Pho Curry Burger Salad Pizza Gyoza Poke Bibimbap Falafel Paella Laksa Kebab'.split(' ');
+const ease = (t) => t < .5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
+// Đặt hẹn giờ cho một ô; khi giảm chuyển động: chạy ngay bước tới, bỏ bước hoàn tác (undo).
+// Keyframes dùng chung nhiều demo; code chép tự kèm những cái được dùng.
+const K = { 'p-svp': '@keyframes p-svp{50%{transform:scale(.94)}}', 'p-in': '@keyframes p-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}', 'p-spin': '@keyframes p-spin{to{transform:rotate(1turn)}}', 'p-arb': '@keyframes p-arb{to{transform:scale(1)}}' };
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const T = (st, ms, fn, undo) => { if (RM) { if (!undo) fn(); return; } st._t.push(setTimeout(fn, ms)); };
+
+// Mỗi nguyên tắc: css (dùng chung, là code bản Sau) + cb (chỉ bản Trước) + a/b html + run(st, after) mỗi lượt + init/click.
+const V = [
+{ id: 'squash-stretch', vi: 'Co giãn', en: 'Squash & stretch', use: 'Vật bẹp lại khi chạm và giãn ra khi di chuyển, nhờ vậy có trọng lượng.',
+  lb: ['Rigid', 'Squash & stretch'], t: 1800,
+  css: `.p-sq{position:relative;width:150px;height:110px}.p-sq span{position:absolute;bottom:14px;width:34px;height:34px;border-radius:9px}.p-sq .l{left:10px;background:#a9c1e0}.p-sq .r{right:10px;background:#a8c8a5}.p-sq i{position:absolute;left:58px;bottom:14px;width:34px;height:34px;border-radius:9px;background:#e8793a;display:grid;place-items:center;transform-origin:50% 100%}.p-sq i::after{content:"";width:10px;height:10px;border:2.5px solid #fff;border-radius:50%}.go .p-sq i{animation:p-sq 1.2s both}@keyframes p-sq{0%{transform:translateY(-62px) scale(.88,1.14);animation-timing-function:cubic-bezier(.5,0,1,.6)}35%{transform:translateY(0) scale(1.45,.55);animation-timing-function:cubic-bezier(.3,1.6,.5,1)}60%,100%{transform:none}}`,
+  cb: `.pr-b .go .p-sq i{animation-name:p-sq0}@keyframes p-sq0{0%{transform:translateY(-62px);animation-timing-function:cubic-bezier(.5,0,1,.6)}35%,100%{transform:none}}`,
+  a: `<div class="p-sq"><span class="l"></span><i></i><span class="r"></span></div>` },
+{ id: 'anticipation', vi: 'Lấy đà', en: 'Anticipation wind-up', use: 'Lùi nhẹ một chút trước cú chuyển động lớn để người xem đoán trước.',
+  lb: ['No wind-up', 'Wind-up first'], t: 2200,
+  css: `.p-an{position:relative;width:220px;height:130px}.p-an svg{position:absolute;left:70px;top:52px}.go .p-an svg{animation:p-an 1.8s both}@keyframes p-an{0%,12%{transform:none;opacity:1}40%{transform:translate(-16px,9px) rotate(-14deg);animation-timing-function:cubic-bezier(.6,0,.9,.4)}62%{transform:translate(130px,-80px) rotate(6deg);opacity:1}63%{opacity:0;transform:translate(130px,-80px)}64%{opacity:0;transform:none}100%{opacity:1;transform:none}}`,
+  cb: `.pr-b .go .p-an svg{animation-name:p-an0}@keyframes p-an0{0%,12%{transform:none;opacity:1;animation-timing-function:cubic-bezier(.6,0,.9,.4)}46%{transform:translate(130px,-80px);opacity:1}47%{opacity:0;transform:translate(130px,-80px)}48%{opacity:0;transform:none}100%{opacity:1;transform:none}}`,
+  a: `<div class="p-an"><svg width="34" height="34" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12 22 3l-7 19-3-8z" fill="#111"/><path d="M12 14 22 3" stroke="#f4f3ef" stroke-width="1.2"/></svg></div>` },
+{ id: 'staging', vi: 'Dàn cảnh tập trung', en: 'Staging the focus', use: 'Dẫn mắt người xem tới đúng một thứ mỗi lúc.',
+  lb: ['Everything at once', 'One thing at a time'], t: 2600,
+  css: `.p-stg{display:grid;grid-template-columns:repeat(2,82px);gap:10px}.p-stg i{position:relative;height:40px;border-radius:7px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.08);display:flex;align-items:center;gap:7px;padding:0 7px;transition:transform .45s cubic-bezier(.3,1.3,.5,1),opacity .35s,filter .35s,box-shadow .35s}.p-stg b{width:24px;height:24px;border-radius:5px;background:var(--c)}.p-stg i::after{content:"";width:30px;height:4px;margin-top:-12px;border-radius:2px;background:#222;box-shadow:0 7px 0 -.5px #c8c8c8,0 13px 0 -.5px #c8c8c8}.on .p-stg i{opacity:.25;filter:blur(2px)}.on .p-stg i:first-child{z-index:1;opacity:1;filter:none;transform:translate(46px,25px) scale(1.4);box-shadow:0 12px 26px rgba(0,0,0,.18)}`,
+  cb: `.pr-b .on .p-stg i{opacity:1;filter:none;transform:none;box-shadow:0 1px 3px rgba(0,0,0,.08)}.pr-b .on .p-stg i:first-child{outline:2px solid #ddd}`,
+  a: `<div class="p-stg">${rep(4, (i) => `<i style="--c:${COL[i]}"><b></b></i>`)}</div>`,
+  run: (st) => { T(st, 300, () => st.classList.add('on')); T(st, 2000, () => st.classList.remove('on'), 1); } },
+{ id: 'pose-to-pose', vi: 'Tư thế chính', en: 'Pose to pose', use: 'Đặt các tư thế chính, để trình duyệt tự vẽ các khung ở giữa.',
+  lb: ['Key poses only', 'Browser fills the frames'], t: 2400,
+  css: `.p-pp{position:relative;width:220px;height:140px}.p-pp span{position:absolute;width:60px;margin-left:-19px;display:flex;flex-direction:column;align-items:center;gap:4px;font:500 9px/1 system-ui,sans-serif;color:#999}.p-pp span::before{content:"";width:22px;height:22px;border:1.5px dashed #c9c9c9;border-radius:5px;box-sizing:border-box}.p-pp .s{left:18px;top:60px}.p-pp .k{left:98px;top:8px}.p-pp .e{left:178px;top:60px}.p-pp .m{position:absolute;left:18px;top:60px}.p-pp .m b{display:block;width:22px;height:22px;border-radius:5px;background:#e8793a}.go .p-pp .m{animation:p-ppx 1.4s ease-in-out both}.go .p-pp .m b{animation:p-ppy 1.4s both}@keyframes p-ppx{to{transform:translateX(160px)}}@keyframes p-ppy{0%{transform:none;animation-timing-function:cubic-bezier(.3,.6,.5,1)}50%{transform:translateY(-52px) rotate(45deg);animation-timing-function:cubic-bezier(.5,0,.7,.4)}100%{transform:none}}.p-pp .tl{position:absolute;left:29px;top:114px;width:160px;height:2px;background:#d5d5d5}.p-pp em{position:absolute;top:-3px;width:7px;height:7px;margin-left:-3.5px;background:#111;transform:rotate(45deg)}.p-pp em::after{content:attr(data-t);position:absolute;top:9px;left:-8px;transform:rotate(-45deg);font:400 8px/1 ui-monospace,monospace;color:#999;white-space:nowrap}.p-pp u{position:absolute;top:-6px;left:0;width:2px;height:14px;background:#e8793a}.go .p-pp u{animation:p-ppu 1.4s linear both}@keyframes p-ppu{to{left:160px}}`,
+  cb: `.pr-b .go .p-pp .m{animation-name:p-pp0}.pr-b .go .p-pp .m b{animation-name:p-ppr0}@keyframes p-pp0{0%,39.9%{transform:none}40%,79.9%{transform:translate(80px,-52px)}80%,100%{transform:translateX(160px)}}@keyframes p-ppr0{0%,39.9%{transform:none}40%,79.9%{transform:rotate(45deg)}80%,100%{transform:none}}`,
+  a: `<div class="p-pp"><span class="s">Start</span><span class="k">Key pose</span><span class="e">End</span><div class="m"><b></b></div><div class="tl"><em style="left:0" data-t="0ms"></em><em style="left:80px" data-t="250ms"></em><em style="left:160px" data-t="500ms"></em><u></u></div></div>` },
+{ id: 'follow-through', vi: 'Chuyển động theo đà', en: 'Follow through', use: 'Phần bên trong vẫn chạy tiếp khi khối chính đã dừng, rồi mới lắng lại.',
+  lb: ['Stops as one block', 'Contents settle after'], t: 2400,
+  css: `.p-fo{display:flex;align-items:center;width:150px;height:44px;padding:0 10px;border-radius:10px;background:#fff;box-shadow:0 4px 14px rgba(0,0,0,.1);overflow:hidden}.p-fo .in{display:flex;align-items:center;gap:8px}.p-fo b{flex:none;width:22px;height:22px;border-radius:50%;background:#e8793a;color:#fff;font:700 11px/22px system-ui,sans-serif;text-align:center}.p-fo span{display:flex;flex-direction:column;gap:3px;font:600 10px/1 system-ui,sans-serif;color:#111}.p-fo small{font-weight:400;font-size:8.5px;color:#888}.go .p-fo{animation:p-fo .5s cubic-bezier(.2,.8,.3,1) both}.go .p-fo .in{animation:p-fo2 .9s .15s both}@keyframes p-fo{from{transform:translateX(190px)}}@keyframes p-fo2{0%{transform:translateX(34px)}45%{transform:translateX(-7px)}72%{transform:translateX(2px)}100%{transform:none}}`,
+  cb: `.pr-b .go .p-fo .in{animation:none}`,
+  a: `<div class="p-fo"><div class="in"><b>$</b><span>Payment received<small>$240.00 from Sam</small></span></div></div>` },
+{ id: 'slow-in-slow-out', vi: 'Nhanh dần, chậm dần', en: 'Slow in & slow out', use: 'Tăng tốc rồi giảm tốc, đừng bao giờ chạy đều một tốc độ.',
+  lb: ['linear', 'ease-in-out'], t: 2200,
+  css: `.p-sl{position:relative;width:184px;height:70px}.p-sl::before{content:"";position:absolute;left:8px;right:8px;top:25px;height:1px;background:#c9c9c9}.p-sl::after{content:"";position:absolute;right:8px;top:20px;width:1px;height:11px;background:#c9c9c9}.p-sl i,.p-sl b{position:absolute;left:0;top:17px;width:18px;height:18px;border-radius:50%;background:#e8793a}.p-sl i{opacity:0;left:calc(var(--x)*166px)}.p-sl b{z-index:1}.go .p-sl b{animation:p-sl 1.3s ease-in-out both}.go .p-sl i{animation:p-slg .2s calc(var(--d)*1.3s) both}@keyframes p-sl{to{transform:translateX(166px)}}@keyframes p-slg{to{opacity:.22}}.p-sl small{position:absolute;left:0;right:0;bottom:6px;font:400 9px/1 system-ui,sans-serif;color:#999;display:flex;justify-content:space-between}`,
+  cb: `.pr-b .go .p-sl b{animation-timing-function:linear}.pr-b .p-sl small{justify-content:center}`,
+  b: `<div class="p-sl">${rep(9, (i) => `<i style="--x:${(i / 8).toFixed(3)};--d:${(i / 8).toFixed(3)}"></i>`)}<b></b><small><span>same speed the whole way</span></small></div>`,
+  a: `<div class="p-sl">${rep(9, (i) => `<i style="--x:${ease(i / 8).toFixed(3)};--d:${(i / 8).toFixed(3)}"></i>`)}<b></b><small><span>slow</span><span>fast</span><span>slow</span></small></div>` },
+{ id: 'arcs', vi: 'Đi theo đường cong', en: 'Moving in arcs', use: 'Di chuyển theo đường cong, không theo đường thẳng.',
+  lb: ['Straight line', 'Arc'], t: 2400,
+  css: `.p-ar{position:relative;width:210px;height:130px}.p-ar>svg{position:absolute;inset:0}.p-ar .c{position:absolute;left:158px;top:8px;color:#111}.p-ar .c em{position:absolute;top:-4px;right:-6px;width:12px;height:12px;border-radius:50%;background:#e8793a;color:#fff;font:700 8px/12px system-ui,sans-serif;font-style:normal;text-align:center;transform:scale(0)}.p-ar i{position:absolute;left:19px;top:93px}.p-ar i b{display:block;width:22px;height:22px;border-radius:6px;background:#f2a36f;box-shadow:inset 0 0 0 5px #f6c4a0}.go .p-ar i{animation:p-arx 1.1s cubic-bezier(.6,0,.9,.6) both}.go .p-ar i b{animation:p-ary 1.1s cubic-bezier(.1,.5,.4,1) both}.go .p-ar em{animation:p-arb .35s 1.05s cubic-bezier(.3,1.8,.5,1) both}@keyframes p-arx{to{transform:translateX(128px)}}@keyframes p-ary{0%{transform:none}88%{opacity:1;scale:.7}100%{transform:translateY(-82px);opacity:0;scale:.4}}`,
+  cb: `.pr-b .go .p-ar i,.pr-b .go .p-ar i b{animation-timing-function:cubic-bezier(.5,0,.3,1)}`,
+  b: `<div class="p-ar"><svg viewBox="0 0 210 130" aria-hidden="true"><path d="M30 104 L158 22" fill="none" stroke="#bbb" stroke-width="1.5" stroke-dasharray="2 4"/></svg><span class="c">${SVG(CART, 26)}<em>1</em></span><i><b></b></i></div>`,
+  a: `<div class="p-ar"><svg viewBox="0 0 210 130" aria-hidden="true"><path d="M30 104 Q42 26 158 22" fill="none" stroke="#bbb" stroke-width="1.5" stroke-dasharray="2 4"/></svg><span class="c">${SVG(CART, 26)}<em>1</em></span><i><b></b></i></div>` },
+{ id: 'secondary-action', vi: 'Hành động phụ', en: 'Secondary action', use: 'Một nét điểm xuyết nhỏ để tôn hành động chính.',
+  lb: ['Check only', 'Check + sparkle'], t: 2400,
+  css: `.p-sv{position:relative}.p-sv button{position:relative;width:100px;height:30px;border:0;border-radius:999px;background:#111;color:#fff;font:600 12px/1 system-ui,sans-serif;cursor:pointer}.p-sv button span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:5px}.p-sv .s1{opacity:0}.go .p-sv button{animation:p-svp .3s .3s both}.go .p-sv .s0{animation:p-out .15s .35s both}.go .p-sv .s1{animation:p-in .2s .4s both}.p-sv i{position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px;border-radius:50%;background:var(--c);opacity:0}.go .p-sv i{animation:p-spk .75s .42s ease-out both}@keyframes p-out{to{opacity:0;transform:translateY(-6px)}}@keyframes p-spk{0%{opacity:1;transform:translate(calc(var(--x)*.8px),calc(var(--y)*.8px)) scale(1)}100%{opacity:0;transform:translate(calc(var(--x)*1.35px),calc(var(--y)*1.35px)) scale(.2)}}`,
+  cb: `.pr-b .p-sv i{display:none}`,
+  a: `<div class="p-sv"><button type="button"><span class="s0">Save</span><span class="s1">${SVG(CHECK, 12)}Saved</span></button>${rep(10, (i) => { const r = i / 10 * 2 * Math.PI; return `<i style="--x:${(Math.cos(r) * 62).toFixed(1)};--y:${(Math.sin(r) * 26).toFixed(1)};--c:${['#e8793a', '#f2bf9e', '#a9c1e0'][i % 3]}"></i>`; })}</div>` },
+{ id: 'snappy-timing', vi: 'Nhịp nhanh gọn', en: 'Snappy timing', use: 'Thời lượng quyết định cảm giác, giữ chuyển động UI dưới 300ms.',
+  lb: ['500ms', '150ms'], t: 2400,
+  css: `.p-tp{position:relative;width:200px;height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}.p-tp span{position:relative;padding:7px 11px;border-radius:7px;background:#111;color:#fff;font:500 11px/1 system-ui,sans-serif;opacity:0;transform:translateY(4px) scale(.96);transition:opacity .15s ease-out,transform .15s ease-out}.p-tp span::after{content:"";position:absolute;left:50%;bottom:-4px;width:8px;height:8px;margin-left:-4px;background:#111;transform:rotate(45deg)}.p-tp button{width:32px;height:32px;border:0;border-radius:8px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.12);color:#111;display:grid;place-items:center;cursor:pointer}.on .p-tp span,.p-tp:hover span{opacity:1;transform:none}.p-tp small{position:absolute;left:4px;bottom:2px;font:500 10px/1 ui-monospace,monospace;color:#111}`,
+  cb: `.pr-b .p-tp span{transition-duration:.5s}`,
+  b: `<div class="p-tp"><span>Notifications</span><button type="button" aria-label="Thông báo">${SVG(BELL, 16)}</button><small>500ms</small></div>`,
+  a: `<div class="p-tp"><span>Notifications</span><button type="button" aria-label="Thông báo">${SVG(BELL, 16)}</button><small>150ms</small></div>`,
+  run: (st) => { T(st, 300, () => st.classList.add('on')); T(st, 1700, () => st.classList.remove('on'), 1); } },
+{ id: 'exaggerated-feedback', vi: 'Phản hồi cường điệu', en: 'Exaggerated feedback', use: 'Đẩy quá mức thực tế một chút để khoảnh khắc đọng lại.',
+  lb: ['Subtle', 'Exaggerated'], t: 2400,
+  css: `.p-lg{display:flex;flex-direction:column;gap:8px;width:150px}.p-lg .f{display:flex;align-items:center;gap:6px;height:28px;padding:0 8px;border:1.5px solid #ddd;border-radius:6px;background:#fff;color:#999;font:700 11px/1 system-ui,sans-serif;letter-spacing:2px}.p-lg button{height:28px;border:0;border-radius:6px;background:#111;color:#fff;font:600 11px/1 system-ui,sans-serif;cursor:pointer}.p-lg small{font:500 10px/1 system-ui,sans-serif;color:#c43d4b;opacity:0}.go .p-lg button{animation:p-svp .25s both}.go .p-lg .f{animation:p-shk .5s .3s both}.go .p-lg small{animation:p-in .2s .3s both}@keyframes p-shk{0%{border-color:#ddd}12%{transform:translateX(-9px);border-color:#d33}30%{transform:translateX(8px)}48%{transform:translateX(-6px)}66%{transform:translateX(4px)}84%{transform:translateX(-2px)}100%{transform:none;border-color:#d33;box-shadow:0 0 0 3px rgba(221,51,51,.18)}}`,
+  cb: `.pr-b .go .p-lg .f{animation-name:p-shk0}@keyframes p-shk0{0%{border-color:#ddd}100%{border-color:#f0c4c4}}`,
+  a: `<div class="p-lg"><div class="f">${SVG(LOCK, 11)}••••••••</div><button type="button">Log in</button><small>Wrong password</small></div>` },
+{ id: 'solid-drawing', vi: 'Khối ba chiều', en: 'Solid drawing in 3D', use: 'Cho vật phẳng có chiều sâu và thể tích.',
+  lb: ['Flat', 'Perspective'], t: 3000,
+  css: `.p-cc{display:flex;flex-direction:column;align-items:center;gap:14px;perspective:700px}.p-cc .c{position:relative;width:124px;height:78px;transform-style:preserve-3d}.p-cc .c>div{position:absolute;inset:0;border-radius:9px;background:linear-gradient(135deg,#2b3a63,#141c33);backface-visibility:hidden;box-shadow:0 10px 18px -8px rgba(0,0,0,.5)}.p-cc .fr b{position:absolute;left:12px;top:14px;width:20px;height:14px;border-radius:3px;background:#d9b65f}.p-cc .fr span{position:absolute;left:12px;bottom:14px;color:#dfe4f2;font:500 9px/1 ui-monospace,monospace;letter-spacing:1px}.p-cc .fr i{position:absolute;right:12px;bottom:10px;width:13px;height:13px;border-radius:50%;background:#e9762b;box-shadow:8px 0 0 #f2b13c}.p-cc .bk{transform:rotateY(180deg)}.p-cc .bk::before{content:"";position:absolute;left:0;right:0;top:12px;height:14px;background:#0b0f1c}.p-cc .bk span{position:absolute;left:12px;top:36px;width:70px;height:14px;background:repeating-linear-gradient(90deg,#fff 0 4px,#e6e6e6 4px 6px)}.p-cc .bk em{position:absolute;left:88px;top:38px;color:#fff;font:600 9px/1 system-ui,sans-serif;font-style:normal}.go .p-cc .c{animation:p-flip 2.4s cubic-bezier(.5,0,.3,1) both}@keyframes p-flip{0%{transform:none}15%{transform:rotateY(-16deg) rotateX(8deg)}45%,62%{transform:rotateY(180deg)}100%{transform:rotateY(360deg)}}.p-cc small{font:400 9px/1 ui-monospace,monospace;color:#888}`,
+  cb: `.pr-b .p-cc{perspective:none}`,
+  b: `<div class="p-cc"><div class="c"><div class="fr"><b></b><span>•••• 4021</span><i></i></div><div class="bk"><span></span><em>123</em></div></div><small>perspective: none</small></div>`,
+  a: `<div class="p-cc"><div class="c"><div class="fr"><b></b><span>•••• 4021</span><i></i></div><div class="bk"><span></span><em>123</em></div></div><small>perspective: 700px</small></div>` },
+{ id: 'appeal', vi: 'Sức hút tổng thể', en: 'Overall appeal', use: 'Tổng của mọi chi tiết, làm chỉn chu.',
+  lb: ['Works', 'Feels good'], t: 3000,
+  css: `.p-dw{position:relative;height:32px;width:112px;border:0;border-radius:999px;background:#111;color:#fff;font:600 12px/1 system-ui,sans-serif;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;transition:width .4s cubic-bezier(.4,1.4,.5,1)}.p-dw .r{position:absolute;inset:-4px;border-radius:50%;border:2.5px solid transparent;border-top-color:#e8793a;border-right-color:#e8793a;opacity:0;transition:opacity .2s}.p-dw .i1,.p-dw[data-s="2"] .i0{display:none}.p-dw[data-s="2"] .i1{display:block}.p-dw[data-s="1"]{width:32px}.p-dw[data-s="1"] span{display:none}.p-dw[data-s="1"] .r{opacity:1;animation:p-spin .7s linear infinite}.p-dw[data-s="2"]{animation:p-svp .3s}`,
+  cb: `.p-dw0{height:26px;padding:0 10px;border:1px solid #bbb;border-radius:3px;background:#f7f7f7;color:#111;font:400 12px/1 system-ui,sans-serif}`,
+  b: `<button type="button" class="p-dw0">Download</button>`,
+  a: `<button type="button" class="p-dw" data-s="0"><i class="r"></i>${SVG(DOWN, 13, 'class="i0"')}${SVG(CHECK, 13, 'class="i1"')}<span>Download</span></button>`,
+  run: (st, after) => {
+    const b = st.querySelector('button'), set = (s, txt) => { if (after) { b.dataset.s = s; b.querySelector('span').textContent = txt; } else b.textContent = [ 'Download', 'Downloading…', 'Done' ][s]; };
+    set(0, 'Download'); T(st, 500, () => set(1, '')); T(st, 1800, () => set(2, 'Done'));
+  } },
+{ id: 'fitts-law', vi: 'Định luật Fitts', en: 'Fitts’s law', use: 'Mục tiêu càng to, càng gần thì bấm càng nhanh.',
+  lb: ['Small and far', 'Big and close'], t: 2400,
+  css: `.p-fi{position:relative;width:230px;height:140px}.p-fi .x{position:absolute;left:196px;top:12px;width:16px;height:16px;padding:0;border:1px solid #ccc;border-radius:50%;background:#fff;color:#666;font:600 9px/1 system-ui,sans-serif}.p-fi .cl{position:absolute;left:73px;top:52px;width:84px;height:32px;border:0;border-radius:999px;background:#111;color:#fff;font:600 12px/1 system-ui,sans-serif}.p-fi .pr-cur{left:30px;top:112px}.go .p-fi .pr-cur{animation:p-fic .25s .3s cubic-bezier(.3,0,.2,1) both}.go .p-fi button{animation:p-svp .2s .55s both}@keyframes p-fic{to{transform:translate(80px,-46px)}}.p-fi small{position:absolute;right:4px;bottom:2px;font:500 10px/1 ui-monospace,monospace;color:#999}`,
+  cb: `.pr-b .go .p-fi .pr-cur{animation:p-fic0 .9s .3s cubic-bezier(.3,0,.2,1) both}.pr-b .go .p-fi button{animation-delay:1.2s}@keyframes p-fic0{75%{transform:translate(178px,-94px)}100%{transform:translate(172px,-94px)}}`,
+  b: `<div class="p-fi"><button type="button" class="x" aria-label="Đóng">✕</button>${CUR()}<small>900ms</small></div>`,
+  a: `<div class="p-fi"><button type="button" class="cl">Close</button>${CUR()}<small>250ms</small></div>` },
+{ id: 'hit-area', vi: 'Vùng bấm lớn hơn', en: 'Bigger hit areas', use: 'Vùng bấm được có thể lớn hơn phần nhìn thấy.',
+  lb: ['24 × 24', '44 × 44'], t: 2600,
+  css: `.p-ht{position:relative;width:180px;height:120px}.p-ht button{position:absolute;left:68px;top:28px;width:44px;height:44px;padding:0;border:0;background:none;color:#111;display:grid;place-items:center;cursor:pointer}.p-ht button::before{content:"";position:absolute;inset:0;border:1.5px dashed #e05a6e;border-radius:6px;opacity:.7}.p-ht .tap{position:absolute;left:93px;top:53px;width:22px;height:22px;border-radius:50%;background:rgba(120,120,120,.35);border:1px solid rgba(90,90,90,.4);opacity:0;pointer-events:none}.p-ht em{position:absolute;left:118px;top:68px;font:600 10px/1 system-ui,sans-serif;font-style:normal;color:#c43d4b;opacity:0}.p-ht small{position:absolute;left:0;right:0;bottom:6px;text-align:center;font:400 10px/1 ui-monospace,monospace;color:#999}.go .p-ht .tap{animation:p-tap .9s .3s both}.go .p-ht button svg{animation:p-like .4s .5s both}.p-ht button.liked svg{animation:p-like .4s both}@keyframes p-tap{0%{opacity:0;transform:scale(1.6)}25%,70%{opacity:1;transform:none}100%{opacity:0}}@keyframes p-like{0%{fill:none}50%{transform:scale(1.35)}100%{fill:#e0335a;color:#e0335a;transform:none}}`,
+  cb: `.pr-b .p-ht button{left:78px;top:38px;width:24px;height:24px}.pr-b .p-ht button::before{display:none}.pr-b .go .p-ht button:not(.liked) svg{animation:none}.pr-b .go .p-ht em{animation:p-in .2s .5s both}`,
+  b: `<div class="p-ht"><button type="button" aria-label="Thích">${SVG(HEART, 18)}</button><i class="tap"></i><em>missed</em><small>hit area 24 × 24</small></div>`,
+  a: `<div class="p-ht"><button type="button" aria-label="Thích">${SVG(HEART, 18)}</button><i class="tap"></i><em></em><small>hit area 44 × 44</small></div>`,
+  click: (st, e) => { const b = e.target.closest('button'); if (!b) return false; b.classList.toggle('liked'); st.classList.remove('go'); return true; } },
+{ id: 'hicks-law', vi: 'Định luật Hick', en: 'Hick’s law', use: 'Càng nhiều lựa chọn, quyết định càng chậm.',
+  lb: ['16 options', '4 options'], t: 2600,
+  css: `.p-hk{position:relative;width:224px;height:140px;display:grid;place-items:center}.p-hk div{display:grid;grid-template-columns:repeat(2,80px);gap:8px}.p-hk button{height:34px;border:0;border-radius:7px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.1);color:#111;font:500 12px/1 system-ui,sans-serif;cursor:pointer;transition:background .15s,color .15s}.p-hk button.hv{background:#ececec}.p-hk button.sel{background:#111;color:#fff}.p-hk small{position:absolute;right:4px;bottom:2px;font:500 10px/1 ui-monospace,monospace;color:#999}`,
+  cb: `.pr-b .p-hk div{grid-template-columns:repeat(4,48px);gap:5px}.pr-b .p-hk button{height:20px;border-radius:4px;font-size:7.5px}`,
+  b: `<div class="p-hk"><div>${FOOD.map((f) => `<button type="button">${f}</button>`).join('')}</div><small></small></div>`,
+  a: `<div class="p-hk"><div>${['Pasta', 'Ramen', 'Tacos', 'Sushi'].map((f) => `<button type="button">${f}</button>`).join('')}</div><small></small></div>`,
+  run: (st, after) => {
+    const bs = [...st.querySelectorAll('button')], out = st.querySelector('small'), hop = after ? [1] : [6, 2, 9, 11, 4, 13];
+    bs.forEach((b) => b.className = ''); out.textContent = '';
+    hop.forEach((k, i) => T(st, 300 + i * 100, () => { bs.forEach((b) => b.classList.remove('hv')); bs[k].classList.add('hv'); }, 1));
+    T(st, 300 + hop.length * 100, () => { bs.forEach((b) => b.classList.remove('hv')); bs[hop.at(-1)].classList.add('sel'); out.textContent = after ? '280ms' : '580ms'; });
+  },
+  click: (st, e) => { const b = e.target.closest('button'); if (!b) return false; st.querySelectorAll('button').forEach((x) => x.className = x === b ? 'sel' : ''); return true; } },
+{ id: 'millers-law', vi: 'Định luật Miller', en: 'Miller’s law', use: 'Ta chỉ nhớ khoảng 7 thứ một lúc, nên hãy chia nhóm thông tin.',
+  lb: ['Raw', 'Chunked'], t: 2600,
+  css: `.p-ml{display:flex;flex-direction:column;gap:5px;width:206px}.p-ml small{font:400 9px/1 system-ui,sans-serif;color:#999}.p-ml small+div{margin-bottom:9px}.p-ml div{display:flex;gap:5px;font:600 15px/1 ui-monospace,Menlo,monospace;color:#111}.p-ml span{padding:3px 4px;border-radius:4px;background:#fbe1cf}.go .p-ml span{animation:p-pop .35s calc(var(--i)*.09s) cubic-bezier(.3,1.6,.5,1) both}@keyframes p-pop{from{opacity:0;transform:scale(.6)}}`,
+  b: `<div class="p-ml"><small>Card number</small><div>4532015112830366</div><small>Phone</small><div>4155550132</div></div>`,
+  a: `<div class="p-ml"><small>Card number</small><div>${['4532', '0151', '1283', '0366'].map((s, i) => `<span style="--i:${i}">${s}</span>`).join('')}</div><small>Phone</small><div>${['415', '555', '0132'].map((s, i) => `<span style="--i:${i + 4}">${s}</span>`).join('')}</div></div>` },
+{ id: 'doherty-threshold', vi: 'Ngưỡng Doherty', en: 'Doherty threshold', use: 'Phản hồi trong 400ms, chậm hơn là thấy ì.',
+  lb: ['2,000ms', '100ms'], t: 3600,
+  css: `.p-dh{display:flex;flex-direction:column;align-items:center;gap:12px;width:170px}.p-dh button{position:relative;width:110px;height:32px;border:0;border-radius:999px;background:#111;color:#fff;font:600 12px/1 system-ui,sans-serif;display:flex;align-items:center;justify-content:center;gap:5px;cursor:pointer}.p-dh .sp{width:14px;height:14px;border:2px solid #555;border-top-color:#fff;border-radius:50%;animation:p-spin .7s linear infinite}.p-dh .bar{position:relative;width:100%;height:4px;border-radius:2px;background:#e2e2e2}.p-dh .bar u{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:2px;background:#111}.p-dh .bar.late u{background:#d0404f}.p-dh .bar em{position:absolute;left:20%;top:-5px;width:1.5px;height:14px;background:#e8793a}.p-dh .bar em::after{content:"400ms";position:absolute;top:16px;left:-12px;font:500 7px/1 ui-monospace,monospace;color:#e8793a;font-style:normal}.p-dh b{margin-top:4px;font:700 16px/1 ui-monospace,Menlo,monospace;color:#111}.p-dh .bar.late+b{color:#d0404f}`,
+  a: `<div class="p-dh" data-ms="100"><button type="button">Save</button><div class="bar"><u></u><em></em></div><b>0ms</b></div>`,
+  b: `<div class="p-dh" data-ms="2000"><button type="button">Save</button><div class="bar"><u></u><em></em></div><b>0ms</b></div>`,
+  run: (st) => {
+    const r = st.querySelector('.p-dh'), D = +r.dataset.ms, btn = r.querySelector('button'), bar = r.querySelector('.bar'), u = bar.querySelector('u'), out = r.querySelector('b'), n = st._n;
+    const show = (ms) => { u.style.width = `${Math.min(ms, 2000) / 20}%`; out.textContent = `${Math.round(ms).toLocaleString('en-US')}ms`; bar.classList.toggle('late', ms > 400); };
+    btn.textContent = 'Save'; show(0);
+    T(st, 300, () => {
+      btn.innerHTML = '<i class="sp"></i>';
+      if (RM) return show(D);
+      const t0 = performance.now(), f = (now) => { if (st._n !== n) return; const ms = Math.min(D, now - t0); show(ms); if (ms < D) requestAnimationFrame(f); }; requestAnimationFrame(f);
+    });
+    T(st, 300 + D, () => { show(D); btn.innerHTML = `${SVG(CHECK, 12)}Saved`; });
+  },
+  click: (st, e, play) => { if (!e.target.closest('button')) return false; play(st); return true; } },
+{ id: 'postels-law', vi: 'Định luật Postel', en: 'Postel’s law', use: 'Nhận đầu vào lộn xộn, trả lại kết quả gọn gàng.',
+  lb: ['Strict', 'Forgiving'], t: 3600,
+  css: `.p-po{display:flex;flex-direction:column;gap:5px;width:200px}.p-po label{display:flex;flex-direction:column;gap:4px;font:400 9px/1 system-ui,sans-serif;color:#999}.p-po .f{position:relative}.p-po input{box-sizing:border-box;width:100%;height:30px;padding:0 26px 0 8px;border:1.5px solid #ddd;border-radius:6px;background:#fff;color:#111;font:500 16px/1 system-ui,sans-serif;transform-origin:0 50%;outline:none}.p-po input:focus{border-color:#888}.p-po .f i{position:absolute;right:8px;top:8px;width:14px;height:14px;border-radius:50%;color:#fff;font:700 9px/14px system-ui,sans-serif;font-style:normal;text-align:center;display:none}.p-po.ok input{border-color:#2f9e5b}.p-po.ok .f i{display:block;background:#2f9e5b}.p-po.bad input{border-color:#d0404f}.p-po.bad .f i{display:block;background:#d0404f}.p-po small{min-height:12px;font:500 10px/1.2 system-ui,sans-serif;color:#d0404f}.p-po kbd{align-self:flex-start;padding:4px 7px;border:1px solid #ddd;border-radius:5px;background:#fff;font:500 9px/1 system-ui,sans-serif;color:#555;cursor:pointer}`,
+  a: `<div class="p-po"><label>Date<span class="f"><input type="text" aria-label="Ngày" placeholder="vd 15 jan 2026" autocomplete="off"><i></i></span></label><small></small><kbd role="button" tabindex="0">return ↵</kbd></div>`,
+  init: (st, after) => {
+    const r = st.querySelector('.p-po'), inp = r.querySelector('input'), ic = r.querySelector('i'), msg = r.querySelector('small');
+    const M = 'jan feb mar apr may jun jul aug sep oct nov dec'.split(' ');
+    const parse = (s) => {
+      s = s.trim().toLowerCase(); let d, m, y; const iso = s.match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})$/);
+      if (iso) [y, m, d] = iso.slice(1).map(Number);
+      else { const mi = M.findIndex((k) => s.includes(k)), n = (s.match(/\d+/g) || []).map(Number);
+        if (mi >= 0 && n.length >= 2) { m = mi + 1; y = n.find((x) => x > 31) ?? n[1]; d = n.find((x) => x <= 31); }
+        else if (n.length === 3) [d, m, y] = n; else return null; }
+      if (y < 100) y += 2000; const dt = new Date(y, m - 1, d);
+      return dt.getFullYear() === y && dt.getMonth() === m - 1 && dt.getDate() === d ? dt : null;
+    };
+    st._submit = () => {
+      const v = inp.value; r.classList.remove('ok', 'bad'); msg.textContent = ''; if (!v.trim()) return;
+      if (!after) { const okIso = /^\d{4}-\d{2}-\d{2}$/.test(v.trim()) && parse(v); r.classList.add(okIso ? 'ok' : 'bad'); ic.textContent = okIso ? '✓' : '!'; if (!okIso) msg.textContent = 'Use the format YYYY-MM-DD'; return; }
+      const dt = parse(v); r.classList.add(dt ? 'ok' : 'bad'); ic.textContent = dt ? '✓' : '!';
+      if (dt) inp.value = `${dt.toLocaleDateString('en-US', { weekday: 'long' })}, ${dt.getDate()} ${dt.toLocaleDateString('en-US', { month: 'long' })} ${dt.getFullYear()}`; else msg.textContent = 'Could not read that date';
+    };
+    inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') st._submit(); });
+    inp.addEventListener('input', () => r.classList.remove('ok', 'bad'));
+    r.querySelector('kbd').addEventListener('click', () => st._submit());
+    r.querySelector('kbd').addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); st._submit(); } });
+  },
+  run: (st) => {
+    const inp = st.querySelector('input'), txt = '15 jan 2026'; inp.value = ''; st._submit();
+    [...txt].forEach((c, i) => T(st, 300 + i * 80, () => { inp.value += c; }));
+    T(st, 300 + txt.length * 80 + 350, () => st._submit());
+  },
+  click: (st, e) => !!e.target.closest('label,kbd') },
+{ id: 'jakobs-law', vi: 'Định luật Jakob', en: 'Jakob’s law', use: 'Người dùng mong app của bạn chạy giống những app họ đã quen.',
+  lb: ['Novel layout', 'Familiar layout'], t: 3000,
+  css: `.p-jk{position:relative;width:200px;height:124px;padding:10px 12px;box-sizing:border-box;border-radius:8px;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.1)}.p-jk nav{display:flex;align-items:center;gap:6px;height:16px}.p-jk nav i{width:16px;height:3px;border-radius:2px;background:#cfcfcf}.p-jk nav b{font:700 9px/1 system-ui,sans-serif;color:#111}.p-jk nav .sp{flex:1}.p-jk .g{display:flex;gap:7px;margin-top:9px}.p-jk .g span{flex:1;height:44px;border-radius:5px;background:var(--c)}.p-jk .c{position:relative;color:#111;display:grid}.p-jk .c em{position:absolute;top:-4px;right:-5px;width:9px;height:9px;border-radius:50%;background:#e8793a;transform:scale(0)}.p-jk .bot{position:absolute;left:12px;bottom:8px}.p-jk .pr-cur{left:96px;top:104px}.go .p-jk .pr-cur{animation:p-jkc .45s .3s cubic-bezier(.3,0,.2,1) both}.go .p-jk .c em{animation:p-arb .3s .8s cubic-bezier(.3,1.8,.5,1) both}@keyframes p-jkc{to{transform:translate(82px,-92px)}}`,
+  cb: `.pr-b .go .p-jk .pr-cur{animation:p-jkc0 2s .3s cubic-bezier(.4,0,.3,1) both}.pr-b .go .p-jk .c em{animation-delay:2.2s}@keyframes p-jkc0{30%,50%{transform:translate(78px,-92px)}60%{transform:translate(60px,-60px)}100%{transform:translate(-80px,-4px)}}`,
+  b: `<div class="p-jk"><nav><i></i><i></i><i></i><span class="sp"></span><b>shop</b></nav><div class="g">${rep(3, (i) => `<span style="--c:${COL[[0, 1, 3][i]]}"></span>`)}</div><span class="c bot">${SVG(CART, 12)}<em></em></span>${CUR()}</div>`,
+  a: `<div class="p-jk"><nav><b>shop</b><span class="sp"></span><i></i><i></i><i></i><span class="c">${SVG(CART, 13)}<em></em></span></nav><div class="g">${rep(3, (i) => `<span style="--c:${COL[[0, 1, 3][i]]}"></span>`)}</div>${CUR()}</div>` },
+{ id: 'frequency-of-use', vi: 'Tần suất sử dụng', en: 'Frequency of use', use: 'Thứ càng dùng nhiều thì càng nên ít chuyển động.',
+  lb: ['Animated every time', 'Instant'], t: 3600,
+  css: `.p-cm{display:flex;gap:8px;align-items:center}.p-cm .m{position:relative;width:136px;padding:6px;border-radius:8px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.1)}.p-cm .q{display:flex;gap:5px;align-items:center;height:16px;padding:0 4px;margin-bottom:4px;border-bottom:1px solid #eee;font:400 8px/1 system-ui,sans-serif;color:#aaa}.p-cm ul{position:relative;margin:0;padding:0;list-style:none}.p-cm li{position:relative;z-index:1;display:flex;align-items:center;gap:6px;height:17px;padding:0 6px;font:500 9px/1 system-ui,sans-serif;color:#111}.p-cm li::before{content:"";width:7px;height:7px;border-radius:2px;background:var(--c)}.p-cm .hl{position:absolute;left:0;right:0;top:calc(var(--i,0)*17px);height:17px;border-radius:4px;background:#ececec}.p-cm .ar{display:flex;flex-direction:column;gap:6px}.p-cm .ar button{width:30px;height:28px;border:0;border-radius:6px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.12);color:#111;font:600 13px/1 system-ui,sans-serif;cursor:pointer}`,
+  cb: `.pr-b .p-cm .hl{transition:top .3s cubic-bezier(.3,1.4,.5,1)}.pr-b .p-cm .m.pulse{animation:p-cmp .3s}@keyframes p-cmp{50%{transform:scale(.97)}}`,
+  a: `<div class="p-cm"><div class="m"><div class="q">${SVG('M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zm9 16-4-4', 9)}Search…</div><ul><span class="hl"></span>${['New file', 'Open recent', 'Search docs', 'Settings', 'Toggle theme'].map((s, i) => `<li style="--c:${COL[i]}">${s}</li>`).join('')}</ul></div><div class="ar"><button type="button" aria-label="Lên">↑</button><button type="button" aria-label="Xuống">↓</button></div></div>`,
+  init: (st) => { st._mv = (d) => { const ul = st.querySelector('ul'), m = st.querySelector('.m'); st._i = Math.max(0, Math.min(4, (st._i || 0) + d)); ul.style.setProperty('--i', st._i); m.classList.remove('pulse'); void m.offsetWidth; m.classList.add('pulse'); }; },
+  run: (st) => { st._i = 0; st.querySelector('ul').style.setProperty('--i', 0); [1, 1, 1, 1, -1, -1].forEach((d, k) => T(st, 400 + k * 420, () => st._mv(d))); },
+  click: (st, e) => { const b = e.target.closest('.ar button'); if (!b) return !!e.target.closest('.m'); st._mv(b.getAttribute('aria-label') === 'Lên' ? -1 : 1); return true; } }
+];
+
+const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+document.getElementById('pr-css').textContent = Object.values(K).join('\n') + '\n' + V.map((v) => v.css + (v.cb || '')).join('\n');
+const grid = document.getElementById('pr-grid');
+const box = (v, after) => `<div class="${after ? 'pr-a' : 'pr-b'}"><div class="pr-lab">${after ? 'After' : 'Before'}<small>${v.lb[after ? 1 : 0]}</small></div><div class="pr-st"><div class="pr-fit">${after ? v.a : (v.b || v.a)}</div></div></div>`;
+const codeOf = (v) => `<style>\n${(v.css + Object.keys(K).filter((k) => new RegExp(`${k}[ ;}]`).test(v.css)).map((k) => K[k]).join('')).replace(/}(?=[.@])/g, '}\n')}\n</style>\n${v.a.replace(/></g, '>\n<')}${v.init || v.run ? `\n<script>\n// st = khung chứa demo, after = true; T(st, ms, fn) = setTimeout\n${v.init ? `const init = ${v.init};\n` : ''}${v.run ? `const run = ${v.run};\n` : ''}<\/script>` : ''}`;
+grid.innerHTML = V.map((v, i) => `<article class="pr-card" id="${v.id}">
+  <div class="pr-head"><span class="pr-n">${String(i + 1).padStart(2, '0')}</span><div><h3>${v.vi}<small>${v.en}</small></h3><p>${v.use}</p></div></div>
+  <div class="pr-pair">${box(v, false)}${box(v, true)}</div>
+  <div class="pr-foot"><button type="button" class="pr-re">↻ Phát lại</button>
+  <details><summary>Code</summary><div class="pr-code"><button type="button" class="pr-cp" data-copy>Chép</button><pre><code>${esc(codeOf(v))}</code></pre></div></details></div></article>`).join('');
+
+// Mỗi lượt: xoá hẹn giờ cũ, bật lại .go (chạy keyframes), gọi run.
+const play = (st) => { st._t.forEach(clearTimeout); st._t = []; st._n = (st._n || 0) + 1; st.classList.remove('go', 'on'); void st.offsetWidth; st.classList.add('go'); st._v.run?.(st, st._a); };
+const cards = [...grid.children].map((c, i) => {
+  const v = V[i], sts = [...c.querySelectorAll('.pr-st')], s = { last: 0, hold: false };
+  sts.forEach((st, k) => { st._v = v; st._a = k === 1; st._t = []; v.init?.(st, st._a); st.onclick = (e) => { if (!v.click?.(st, e, play)) play(st); }; });
+  const go = () => { s.last = performance.now(); sts.forEach(play); };
+  c.querySelector('.pr-re').onclick = go;
+  c.onpointerenter = () => s.hold = true; c.onpointerleave = () => s.hold = false;
+  go();
+  return () => { const r = c.getBoundingClientRect(); if (!s.hold && !c.contains(document.activeElement) && r.bottom > 0 && r.top < innerHeight && performance.now() - s.last > v.t) go(); };
+});
+if (!RM) setInterval(() => cards.forEach((f) => f()), 250);
+const fit = () => grid.querySelectorAll('.pr-st').forEach((s) => s.style.setProperty('--k', Math.min(1.6, s.clientWidth / 240).toFixed(3)));
+fit(); addEventListener('resize', fit);
+grid.addEventListener('click', (e) => {
+  const b = e.target.closest('[data-copy]'); if (!b) return;
+  navigator.clipboard?.writeText(b.nextElementSibling.textContent).then(() => { b.textContent = 'Đã chép'; setTimeout(() => b.textContent = 'Chép', 1500); });
+});
+</script>
+<script src="/search.js?v=8d72da80d7" defer></script><script src="/stats.js?v=8d72da80d7" defer></script>
+</body>
+</html>
