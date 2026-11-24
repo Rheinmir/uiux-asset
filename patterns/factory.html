@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bảng dây chuyền agent — uiux-asset</title>
+<meta name="description" content="Bảng dây chuyền agent kiểu content-factory: thẻ đầu vào, bus chung, dây nối SVG, thẻ agent có trạng thái, nhật ký chạy. Dựng từ một cấu hình JS, chép code chạy ngay.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=f45ac83198">
+<style>
+.fp-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+.fp-bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.fp-bar p { margin: 0; color: var(--aw-color-primary); opacity: .7; font: 400 14px/1.4 var(--aw-font); }
+.fp-code { border: 1px solid var(--aw-border-gray); border-radius: 14px; min-width: 0; }
+.fp-code summary { cursor: pointer; min-height: 44px; padding: 0 16px; display: flex; align-items: center; font: 500 14px/1 var(--aw-font); color: var(--aw-color-primary); }
+.fp-code pre { margin: 0; max-height: 520px; overflow: auto; padding: 14px; border-top: 1px solid var(--aw-border-gray); background: #15161c; color: #d8dbe4; font: 11.5px/1.55 ui-monospace, Menlo, monospace; white-space: pre; border-radius: 0 0 14px 14px; }
+</style>
+<style id="fx-css">
+/* ===== Agent pipeline board (.fx-) — tự chứa, chép được ===== */
+.fx{--ink:#2b2f3a;--mut:#8b91a3;--card:#fff;container-type:inline-size;color-scheme:light;position:relative;width:100%;max-width:1280px;margin:0 auto;padding:14px 18px 16px;box-sizing:border-box;overflow:hidden;font:11px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--ink);background:radial-gradient(90% 50% at 72% 8%,#ecebff 0,transparent 60%),radial-gradient(60% 40% at 10% 90%,#e8f3ff 0,transparent 60%),linear-gradient(180deg,#f7f8fc,#eef1f8);border:1px solid #e1e4ee;border-radius:22px}
+.fx *,.fx *::before,.fx *::after{box-sizing:border-box}
+.fx-top{display:flex;flex-wrap:wrap;align-items:center;gap:6px 18px;margin-bottom:12px;color:var(--mut);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase}
+.fx-top b{margin-left:6px;color:var(--ink);font-size:11px;font-weight:600;letter-spacing:0;text-transform:none}
+.fx-logo{width:22px;height:22px;border-radius:6px;background:#1c1f2e;display:grid;place-items:center}
+.fx-handle{margin-left:auto;display:flex;align-items:center;gap:6px;padding:4px 12px 4px 5px;border-radius:999px;background:#141726;color:#fff;font-size:11px;font-weight:600;letter-spacing:0;text-transform:none}
+.fx-handle .fx-bot{width:20px;height:20px}
+.fx-main{position:relative;display:grid;grid-template-columns:minmax(150px,200px) minmax(80px,1fr) minmax(0,2.6fr);gap:0 18px}
+.fx-wires{position:absolute;inset:0;width:100%;height:100%;z-index:0;overflow:visible;pointer-events:none}
+.fx-wires path{fill:none;stroke-width:.8;opacity:.42}
+.fx-wires path.fx-on{stroke-width:1.2;opacity:.9;stroke-dasharray:3 5;animation:fx-dash 1s linear infinite}
+.fx-wires path.fx-link{stroke-width:2.2;opacity:.85;stroke-dasharray:none;animation:none}
+.fx-wires path.fx-link.fx-on{stroke-dasharray:6 6;animation:fx-dash .8s linear infinite}
+.fx-wires circle{fill:#fff;stroke:#9aa1b6;stroke-width:1}
+@keyframes fx-dash{to{stroke-dashoffset:-16}}
+.fx-in{position:relative;z-index:1;display:flex;flex-direction:column;gap:14px;padding-top:26px}
+.fx-busw{position:relative;z-index:1;min-height:200px}
+.fx-bus{position:absolute;left:14%;top:22px;bottom:60px;width:16px;border-radius:10px;background:linear-gradient(#2c2f52,#1d2034);display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:12px 0 170px;box-shadow:0 6px 18px -6px rgba(30,34,70,.5)}
+.fx-bus i{width:4px;height:4px;border-radius:50%;background:#c6cbeb}
+.fx-bus i.hot{background:#ff6fae;box-shadow:0 0 6px #ff6fae}
+.fx-bus em{position:absolute;bottom:12px;left:50%;writing-mode:vertical-rl;transform:translateX(-50%) rotate(180deg);font-style:normal;font-size:9px;color:#c6cbeb;white-space:nowrap}
+.fx-bus b{position:absolute;top:-16px;left:50%;transform:translateX(-50%);width:26px;height:9px;border-radius:4px;background:#f5b62a;color:#fff;font-size:8.5px;font-weight:500;white-space:nowrap}
+.fx-bus b::before{content:attr(data-t);position:absolute;bottom:100%;left:50%;transform:translateX(-50%);color:#e0a21a;padding-bottom:2px}
+.fx-ags{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(var(--rows),auto) auto;grid-auto-flow:column;gap:12px 40px;align-content:start}
+.fx-card{position:relative;background:var(--card);border:1px solid #edf0f6;border-radius:10px;box-shadow:0 1px 0 #e4e7f0,0 8px 18px -12px rgba(40,50,90,.35)}
+.fx-h{display:flex;justify-content:space-between;align-items:center;gap:8px;min-width:0;padding:3px 10px;border-radius:9px 9px 0 0;background:linear-gradient(90deg,var(--a),var(--b));color:#fff;font-size:10.5px;white-space:nowrap}
+.fx-h small{overflow:hidden;text-overflow:ellipsis;font-size:9px;text-shadow:0 1px 2px rgba(0,0,0,.25)}
+.fx-rows{padding:7px 0 4px}
+.fx-row{position:relative;display:flex;justify-content:space-between;gap:8px;padding:1px 12px}
+.fx-row span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fx-row b{font-weight:600;white-space:nowrap}
+.fx-p{position:absolute;top:50%;width:7px;height:7px;margin-top:-3.5px;border-radius:50%;background:#fff;border:1.5px solid var(--a)}
+.fx-p.l{left:-4px}.fx-p.r{right:-4px}
+.fx-sl{position:relative;height:3px;margin:8px 14px 11px;border-radius:2px;background:#eef0f5}
+.fx-sl::before{content:'';position:absolute;inset:0 auto 0 0;width:calc(var(--v)*100%);border-radius:2px;background:linear-gradient(90deg,var(--a),var(--b))}
+.fx-sl::after{content:'';position:absolute;top:-3px;left:calc(var(--v)*100%);width:9px;height:9px;margin-left:-4.5px;border-radius:50%;background:#fff;border:1.5px solid var(--b)}
+.fx-ag .fx-rows{min-height:58px}
+.fx-ft{display:flex;align-items:center;gap:10px;padding:2px 10px 9px 12px}
+.fx-chip{padding:1px 8px;border-radius:999px;background:#eef0f4;color:var(--mut);font-size:9px}
+.fx-chip.done{background:#e1f5eb;color:#2c9668}
+.fx-chip.running{background:linear-gradient(90deg,var(--a),var(--b));color:#fff}
+.fx-pg{flex:1;height:3px;border-radius:2px;background:#eef0f5;overflow:hidden}
+.fx-pg i{display:block;width:calc(var(--p)*1%);height:100%;background:linear-gradient(90deg,var(--a),var(--b));transition:width .2s linear}
+.fx-ag.running{border-color:var(--a);box-shadow:0 0 0 1px var(--a),0 10px 24px -12px var(--a)}
+.fx-bot{position:relative;flex:none;width:30px;height:30px;border-radius:50%;background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.6),transparent 38%),linear-gradient(160deg,var(--c2),var(--c1));box-shadow:0 4px 8px -3px var(--c1)}
+.fx-bot::before,.fx-bot::after{content:'';position:absolute;top:36%;width:15%;height:26%;border-radius:2px;background:#fff}
+.fx-bot::before{left:30%}.fx-bot::after{right:30%}
+.fx-bot.cube{border-radius:9px}
+.fx-bot.blob{border-radius:50% 50% 42% 42%/58% 58% 42% 42%}
+.fx-bot.cloud{border-radius:46% 54% 40% 40%/62% 62% 38% 38%;box-shadow:-5px 6px 0 -3px var(--c1),5px 6px 0 -3px var(--c1),0 4px 8px -3px var(--c1)}
+.fx-bot.hex{border-radius:0;clip-path:polygon(50% 0,93% 24%,93% 76%,50% 100%,7% 76%,7% 24%)}
+.fx-gate{grid-column:1/-1;grid-row:-2/-1}
+.fx-gate .fx-body{display:flex;align-items:center;gap:14px;padding:16px 18px 18px;min-height:96px}
+.fx-gate .fx-bot{width:42px;height:42px}
+.fx-gate small{display:block;color:var(--mut);font-size:9.5px}
+.fx-gate strong{display:block;font-size:24px;line-height:1.15;font-weight:700;color:#159a8c;letter-spacing:.02em}
+.fx-panels{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:16px}
+.fx-pn{padding:14px 16px;min-height:150px}
+.fx-pn h4{margin:0 0 10px;font-size:9.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--k)}
+.fx-log{display:grid;grid-template-columns:minmax(64px,90px) 1fr;gap:3px 12px}
+.fx-log span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fx-dp{display:grid;grid-template-columns:24px 1fr 36px 18px;align-items:center;gap:0 10px;color:var(--mut);font-size:9.5px}
+.fx-dp i{height:5px;border-radius:3px;background:#eef0f5;overflow:hidden}
+.fx-dp i::before{content:'';display:block;height:100%;width:calc(var(--p)*1%);background:linear-gradient(90deg,var(--a),var(--b));border-radius:3px}
+.fx-dp b{color:var(--ink);font-weight:500}
+.fx-dp em{color:#2c9668;font-style:normal}
+.fx-as{display:flex;justify-content:space-between;padding:1px 0}
+.fx-big{display:flex;align-items:flex-end;gap:16px;margin-top:14px;color:#159a8c;font-size:26px;font-weight:700;line-height:1}
+.fx-big small{font-size:9.5px;font-weight:400;color:var(--mut);padding-bottom:3px}
+.fx-big small svg{display:block;margin-top:3px}
+.fx-rh{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 16px;margin:16px 0 8px;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut)}
+.fx-rh b{color:#6a63d8;font-weight:600}
+.fx-repos{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.fx-repo{display:flex;align-items:center;gap:8px;min-width:0;padding:6px 8px;border-radius:8px;background:#fff;border:1px solid #edf0f6}
+.fx-repo>i{flex:none;display:grid;place-items:center;width:22px;height:22px;border-radius:6px;background:linear-gradient(140deg,var(--b),var(--a));color:#fff;font-style:normal;font-size:9px}
+.fx-repo div{min-width:0;line-height:1.3}
+.fx-repo b,.fx-repo small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fx-repo b{font-size:10px;font-weight:600}
+.fx-repo small{font-size:9px;color:var(--a)}
+.fx-repo.off{opacity:.55}.fx-repo.off>i{background:#cdd1dd}.fx-repo.off small{color:var(--mut)}
+.fx-repo.cur{border-color:var(--a);box-shadow:0 0 0 1px var(--a)}
+@container (max-width:760px){
+  .fx-main{grid-template-columns:1fr}
+  .fx-busw,.fx-wires{display:none}
+  .fx-in{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;padding-top:0}
+  .fx-ags{grid-template-columns:1fr;grid-template-rows:none;grid-auto-flow:row;gap:10px;margin-top:14px}
+  .fx-gate{grid-row:auto}
+  .fx-ag .fx-rows{min-height:0}
+  .fx-panels{grid-template-columns:1fr}
+  .fx-handle{margin-left:0}
+}
+@media (prefers-reduced-motion:reduce){.fx *{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=f45ac83198"></script>
+<div class="fp-page">
+  <div class="aw-sotd" style="padding-top:16px">
+    <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">16 nút · 10 agent</span></p>
+    <h1 class="aw-h1" style="--aw-h1:clamp(40px,7vw,96px)">Bảng dây chuyền agent</h1>
+    <p class="aw-lead">Một ý tưởng đi qua bus chung tới mười agent, mỗi thẻ báo trạng thái và tiến độ. Cả bảng dựng từ một object <code>FX</code>: đổi dữ liệu là ra bảng của bạn.</p>
+  </div>
+  <div class="fx" id="fx"></div>
+  <div class="fp-bar">
+    <button type="button" class="aw-btn aw-btn--small" id="fp-copy">Chép code</button>
+    <p>Một file HTML tự chứa (style + markup + script). Dán vào trang bất kỳ, sửa <code>FX</code>.</p>
+  </div>
+  <details class="fp-code"><summary>Xem code</summary><pre><code id="fp-src"></code></pre></details>
+</div>
+</main>
+<script>
+const V = [ { id: 'agent-board', vi: 'Bảng dây chuyền agent', en: 'Agent pipeline board', use: 'Theo dõi một dây chuyền nhiều agent: đầu vào, bus, trạng thái, nhật ký.' } ];
+</script>
+<script id="fx-js">
+(() => {
+// ===== Dữ liệu: sửa ở đây để có bảng của bạn =====
+const FX = {
+  graph: 'content-factory', bots: 6, edges: 230, step: 4, steps: 10, t: 7.83, handle: '@s4yonnara',
+  bus: { name: 'Activepieces', label: 'activepieces · shared bus', dots: 26 },
+  inputs: [
+    { name: 'one idea', c: ['#35b386', '#8fdcbc'], v: .62, rows: [['topic', 'AI agents'], ['format', 'all']] },
+    { name: 'sources', c: ['#2794b6', '#6fcadb'], v: .78, rows: [['X · Reddit', 'on'], ['YouTube · TT', 'on']] },
+    { name: 'brand voice', c: ['#8576f4', '#b9adff'], v: .82, rows: [['posts read', '400'], ['match', '97%']] },
+    { name: 'long video', c: ['#ff8748', '#ffb781'], v: .6, rows: [['podcast.mp4', '48 min'], ['speakers', '2']] },
+    { name: 'approval', c: ['#efad17', '#ffd864'], v: .4, rows: [['approver', 'you'], ['auto-post', 'off']] },
+    { name: 'calendar', c: ['#ee6198', '#ffa0c4'], v: .35, rows: [['platforms', '30+'], ['per day', '8']] },
+  ],
+  // col 0 / col 1; status: done | running | idle; p = % tiến độ; bot: blob | cloud | cube | hex
+  agents: [
+    { id: 'manager', col: 0, name: 'grok manager', tool: '6 bots', c: ['#8a78f5', '#c4b8ff'], rows: [['idea in', '1'], ['assets planned', '38']], status: 'done', p: 100, bot: 'blob' },
+    { id: 'trend', col: 0, name: 'trend hunter', tool: 'Last30Days', c: ['#ff8a3d', '#ffbe7a'], rows: [['talking now', '+312%'], ['window', '30 days']], status: 'done', p: 100, bot: 'cloud' },
+    { id: 'research', col: 0, name: 'research', tool: 'SM Research · Social Agent', c: ['#ff7f4a', '#ffb07e'], rows: [['viral posts', '48'], ['comments mined', '2.1K']], status: 'done', p: 100, bot: 'cloud' },
+    { id: 'strategy', col: 0, name: 'strategist', tool: 'Marketing Skills', c: ['#1f97ad', '#6fd0dc'], rows: [['angle', 'open-src'], ['campaign', '7 days']], status: 'running', p: 30, bot: 'cube' },
+    { id: 'writer', col: 0, name: 'writer', tool: 'SM Skills · LinkedIn', c: ['#7473d4', '#b0b2f0'], rows: [['posts + threads', '14'], ['voice', '97%']], status: 'idle', p: 0, bot: 'blob', botc: ['#22242f', '#4a4d60'] },
+    { id: 'transcriber', col: 1, name: 'transcriber', tool: 'Whisper', c: ['#4a66f2', '#95a9ff'], rows: [['transcript', '48 min'], ['quotes', '22']], status: 'idle', p: 0, bot: 'hex' },
+    { id: 'clipper', col: 1, name: 'clipper', tool: 'Repurposing · NovaClip', c: ['#ee5f9b', '#ffa2c6'], rows: [['clips ranked', '12'], ['best hook', '9.1']], status: 'idle', p: 0, bot: 'cloud' },
+    { id: 'editor', col: 1, name: 'video editor', tool: 'AI Video Editor', c: ['#e8609f', '#ff9fd0'], rows: [['shorts', '8'], ['captions', 'auto']], status: 'idle', p: 0, bot: 'cloud' },
+    { id: 'designer', col: 1, name: 'designer', tool: 'InvokeAI', c: ['#eeaa12', '#ffd75e'], rows: [['graphics', '10'], ['thumbnails', '6']], status: 'idle', p: 0, bot: 'cube' },
+    { id: 'distributor', col: 1, name: 'distributor', tool: 'Postmill · PostSider', c: ['#22a874', '#7fdab0'], rows: [['platforms', '30+'], ['scheduled', '38']], status: 'idle', p: 0, bot: 'hex' },
+  ],
+  flow: ['manager', 'trend', 'research', 'strategy', 'distributor'], // dây đậm nối agent
+  gate: { name: 'approval gate · you', tag: '0 assets in', done: 0, total: 38, note: '1 tap each · 2 sent back', c: ['#ff8a3c', '#ffb54a'] },
+  log: [['manager', '1 idea → 38 assets planned'], ['trend', 'AI agents +312% (Last30Days)'], ['research', '48 viral · 2.1K comments'], ['strategy', '7-day campaign'], ['writer', '17 posts & threads · 97%']],
+  dispatch: [100, 100, 100, 33, 0, 0, 0, 0, 0, 0],
+  assets: [['posts & threads', 5], ['short videos', 2], ['graphics', 3], ['thumbnails', 2], ['waiting for you', 0]], from: 1, to: 13,
+  path: 'trend > strategy > writing > video & design > automation > distribution',
+  repos: [['Last30Days', 'trend', 1], ['SM Research Skills', 'research', 1], ['Open AI Social Agent', 'research', 1], ['Marketing Skills', 'strategy', 1], ['Social Media Skills', 'writer'], ['LinkedIn Skills', 'writer'], ['Content Repurposing', 'clipper'], ['AI Video Editor', 'editor'], ['NovaClip', 'clipper'], ['InvokeAI', 'designer'], ['Whisper', 'transcriber'], ['Activepieces', 'manager', 1], ['Postmill', 'distributor'], ['PostSider', 'distributor']],
+};
+
+// ===== Dựng =====
+const root = document.getElementById('fx');
+const e = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+const ag = Object.fromEntries(FX.agents.map((a) => [a.id, a]));
+const col = (c) => `--a:${c[0]};--b:${c[1]}`;
+const bot = (kind, c) => `<i class="fx-bot ${kind}" style="--c1:${c[0]};--c2:${c[1]}"></i>`;
+const rows = (r) => `<div class="fx-rows">${r.map(([k, v]) => `<div class="fx-row"><i class="fx-p l"></i><span>${e(k)}</span><b>${e(v)}</b><i class="fx-p r"></i></div>`).join('')}</div>`;
+const pad = (n) => String(n).padStart(2, '0');
+const running = FX.agents.find((a) => a.status === 'running');
+const order = [...FX.agents.filter((a) => a.col === 0), ...FX.agents.filter((a) => a.col === 1)];
+
+root.innerHTML = `
+<div class="fx-top"><span class="fx-logo"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M5 18V8l7 10V6M19 6v12"/></svg></span>
+  <span>graph<b>${e(FX.graph)}</b></span><span>nodes<b>${FX.inputs.length + FX.agents.length}</b></span><span>bots<b>${FX.bots}</b></span><span>edges<b>${FX.edges}</b></span><span>step<b data-fx="step">${FX.step}/${FX.steps}</b></span><span>t<b data-fx="t">${FX.t.toFixed(2).padStart(5, '0')}</b></span>
+  <span class="fx-handle">${bot('blob', ['#2340d8', '#6f8dff'])}${e(FX.handle)}</span></div>
+<div class="fx-main">
+  <svg class="fx-wires" aria-hidden="true"></svg>
+  <div class="fx-in">${FX.inputs.map((n) => `<div class="fx-card" style="${col(n.c)}"><div class="fx-h">${e(n.name)}</div>${rows(n.rows)}<div class="fx-sl" style="--v:${n.v}"></div></div>`).join('')}</div>
+  <div class="fx-busw"><div class="fx-bus"><b data-t="${e(FX.bus.name)}"></b>${'<i></i>'.repeat(FX.bus.dots)}<em>${e(FX.bus.label)}</em></div></div>
+  <div class="fx-ags" style="--rows:${Math.max(...[0, 1].map((c) => FX.agents.filter((a) => a.col === c).length))}">
+    ${order.map((a) => `<div class="fx-card fx-ag ${a.status}" data-id="${a.id}" data-col="${a.col}" style="${col(a.c)}"><div class="fx-h">${e(a.name)}<small>${e(a.tool)}</small></div>${rows(a.rows)}<div class="fx-ft"><span class="fx-chip ${a.status}">${a.status}</span><span class="fx-pg"><i style="--p:${a.p}"></i></span>${bot(a.bot, a.botc || a.c)}</div></div>`).join('')}
+    <div class="fx-card fx-gate" style="${col(FX.gate.c)}"><div class="fx-h">${e(FX.gate.name)}<small>${e(FX.gate.tag)}</small></div><div class="fx-body">${bot('blob', ['#1f33b8', '#6a86ff'])}<div><small>approved</small><strong>${FX.gate.done} / ${FX.gate.total}</strong><small>${e(FX.gate.note)}</small></div></div></div>
+  </div>
+</div>
+<div class="fx-panels">
+  <div class="fx-card fx-pn" style="--k:#6a63d8"><h4>run log</h4><div class="fx-log">${FX.log.map(([id, t]) => `<span style="color:${ag[id]?.c[0] || 'inherit'}">${e(id)}</span><span>${e(t)}</span>`).join('')}</div></div>
+  <div class="fx-card fx-pn" style="--k:#e0558f"><h4>dispatch</h4>${FX.dispatch.map((p, i) => { const c = (FX.agents[i % FX.agents.length]).c; return `<div class="fx-dp" style="${col(c)}"><span>w${i + 1}</span><i style="--p:${p}"></i><b>${p}%</b><em>${p >= 100 ? 'ok' : ''}</em></div>`; }).join('')}</div>
+  <div class="fx-card fx-pn" style="--k:#159a8c"><h4>content assets</h4>${FX.assets.map(([k, v]) => `<div class="fx-as"><span>${e(k)}</span><b>${v}</b></div>`).join('')}<div class="fx-big">${FX.from} -&gt; ${FX.to}<small>assets<svg width="44" height="8" viewBox="0 0 44 8"><path d="M1 6c6-6 9 2 15-1s9-4 14 0 9-2 13-3" fill="none" stroke="#7a6ee0" stroke-width="1.5"/></svg></small></div></div>
+</div>
+<div class="fx-rh"><b>● ${FX.repos.length} github repos</b><span>${e(FX.path)}</span></div>
+<div class="fx-repos">${FX.repos.map(([n, id, on], i) => `<div class="fx-repo${on ? '' : ' off'}${id === running?.id ? ' cur' : ''}" style="${col(ag[id].c)}"><i>${pad(i + 1)}</i><div><b>${e(n)}</b><small>${e(ag[id].name)}</small></div></div>`).join('')}</div>`;
+
+// ===== Dây: SVG theo vị trí cổng thật =====
+const main = root.querySelector('.fx-main'), svg = root.querySelector('.fx-wires');
+const PAL = ['#b6a4ff', '#ffb98a', '#86d1c4', '#ff9fc4', '#98bfff', '#ffd27a', '#c7a8f0'];
+function draw() {
+  if (getComputedStyle(svg).display === 'none') return;
+  const m = main.getBoundingClientRect();
+  const at = (el) => { const r = el.getBoundingClientRect(); return [r.left + r.width / 2 - m.left, r.top + r.height / 2 - m.top]; };
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647; // cùng dữ liệu → cùng dây
+  const pick = (a) => a[(rnd() * a.length) | 0];
+  const ins = [...root.querySelectorAll('.fx-in .fx-p.r')].map(at);
+  const bus = root.querySelector('.fx-bus'), br = bus.getBoundingClientRect();
+  const dots = [...bus.querySelectorAll('i')].map((d) => { d.classList.remove('hot'); return { d, y: at(d)[1] }; });
+  const bl = br.left - m.left, bR = br.right - m.left;
+  const cards = [...root.querySelectorAll('.fx-ag[data-col="0"]')].map((c) => ({ id: c.dataset.id, ps: [...c.querySelectorAll('.fx-p.l')].map(at) }));
+  const ports = cards.flatMap((c) => c.ps.map((p) => ({ id: c.id, p })));
+  const curve = ([x1, y1], [x2, y2], d1 = 1, d2 = -1) => { const k = Math.max(30, Math.abs(x2 - x1) * .5); return { d: `M${x1.toFixed(1)} ${y1.toFixed(1)}C${(x1 + k * d1).toFixed(1)} ${y1.toFixed(1)} ${(x2 + k * d2).toFixed(1)} ${y2.toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)}`, mid: [(x1 + 3 * (x1 + k * d1) + 3 * (x2 + k * d2) + x2) / 8, (y1 * 4 + y2 * 4) / 8] }; };
+  let out = '';
+  const links = Math.max(0, FX.flow.length - 1);
+  for (let k = 0; k < FX.edges - links; k++) {
+    const r = rnd(); let w, on = false;
+    if (r < .38) { const dt = pick(dots); w = curve(pick(ins), [bl, dt.y]); }                 // đầu vào → bus
+    else if (r < .85) { const dt = pick(dots), t = pick(ports); w = curve([bR, dt.y], t.p); on = t.id === running?.id && rnd() < .5; if (on) dt.d.classList.add('hot'); } // bus → agent
+    else { const t = pick(ports); w = curve(pick(ins), t.p); }                                 // đầu vào → agent, cắt ngang bus
+    out += `<path class="${on ? 'fx-on' : ''}" stroke="${PAL[k % PAL.length]}" d="${w.d}"/>`;
+    if (k % 7 === 0) out += `<circle r="2.6" cx="${w.mid[0].toFixed(1)}" cy="${w.mid[1].toFixed(1)}"/>`;
+  }
+  // dây đậm giữa các agent (cổng phải → cổng phải nếu cùng cột, → cổng trái nếu khác cột)
+  FX.flow.slice(1).forEach((id, i) => {
+    const a = root.querySelector(`.fx-ag[data-id="${FX.flow[i]}"]`), b = root.querySelector(`.fx-ag[data-id="${id}"]`);
+    if (!a || !b) return;
+    const same = a.dataset.col === b.dataset.col;
+    const w = curve(at(a.querySelectorAll('.fx-p.r')[1]), at(b.querySelector(same ? '.fx-p.r' : '.fx-p.l')), 1, same ? 1 : -1);
+    const on = ag[FX.flow[i]].status === 'running' || ag[id].status === 'running';
+    out += `<path class="fx-link${on ? ' fx-on' : ''}" stroke="${ag[FX.flow[i]].c[0]}" d="${w.d}"/>`;
+  });
+  svg.setAttribute('viewBox', `0 0 ${m.width} ${m.height}`);
+  svg.innerHTML = out;
+}
+let raf = 0;
+new ResizeObserver(() => { cancelAnimationFrame(raf); raf = requestAnimationFrame(draw); }).observe(main);
+
+// ===== Chuyển động nhẹ: tiến độ thẻ running, STEP, T =====
+if (running && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  const bar = root.querySelector(`.fx-ag[data-id="${running.id}"] .fx-pg i`), st = root.querySelector('[data-fx="step"]'), tt = root.querySelector('[data-fx="t"]');
+  let p = running.p, step = FX.step, t = FX.t;
+  setInterval(() => {
+    p += 2; t += .2;
+    if (p > 100) { p = 8; step = step % FX.steps + 1; st.textContent = `${step}/${FX.steps}`; }
+    bar.style.setProperty('--p', p);
+    tt.textContent = (t % 100).toFixed(2).padStart(5, '0');
+  }, 200);
+}
+})();
+</script>
+<script>
+// Code chép được = file HTML tự chứa từ chính style + script đang chạy trang này.
+const fxSrc = `<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Agent pipeline board</title>
+<style>
+body{margin:0;padding:24px 16px;background:#e9ecf4}
+${document.getElementById('fx-css').textContent.trim()}
+</style>
+</head>
+<body>
+<div class="fx" id="fx"></div>
+<script>
+${document.getElementById('fx-js').textContent.trim()}
+<\/script>
+</body>
+</html>
+`;
+document.getElementById('fp-src').textContent = fxSrc;
+const cp = document.getElementById('fp-copy');
+cp.onclick = () => navigator.clipboard.writeText(fxSrc).then(() => { cp.textContent = 'Đã chép'; setTimeout(() => cp.textContent = 'Chép code', 1500); });
+</script>
+<script src="/search.js?v=f45ac83198" defer></script><script src="/stats.js?v=f45ac83198" defer></script>
+</body>
+</html>

@@ -18,7 +18,8 @@
       ['components/', 'Chip', 'Hình chip và nhãn trạng thái', 29, 'components/chip.html'],
       ['patterns/tab-bar.html', 'Thanh tab nổi', 'Điều hướng app di động', 7],
       ['patterns/taste.html?k=ui', 'Widget có gu', 'Đồng hồ, bản đồ, bảng, máy nghe nhạc', 9],
-      ['patterns/moments.html', 'Khoảnh khắc UI', 'Công tắc, nút, spinner tự chạy', 36]]],
+      ['patterns/moments.html', 'Khoảnh khắc UI', 'Công tắc, nút, spinner tự chạy', 36],
+      ['patterns/factory.html', 'Bảng agent', 'Kanban dây chuyền agent, chép code', 1]]],
     ['man-hinh', 'Màn hình', 'Trang web và màn app dựng lại', [
       ['patterns/taste.html', 'Hero và màn app', 'Hero website và màn app có gu', 11],
       ['halvo/', 'Nesta', 'Dashboard nhà thông minh', 0],
