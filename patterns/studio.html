@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Xưởng UI — 15 repo — uiux-asset</title>
+<meta name="description" content="UI / Design System dựng lại từ video: bức tường 15 thẻ repo GitHub cho giao diện, cột tự cuộn vô tận, mỗi thẻ có demo nhỏ chạy thật, viền cam đi qua từng thẻ.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=d754f65c05">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&display=swap">
+<style>
+.st-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+/* Bức tường giữ màu ấm của video ở cả sáng lẫn tối. */
+.st { --bg: #e5e6e1; --card: #fff; --ink: #151e25; --mute: #8b8d93; --line: #e2e2dd; --coral: #e98b6f; --blue: #3b6fd8; --amber: #c9a227; --navy: #11162c; --mono: var(--aw-mono, ui-monospace, monospace);
+  background: var(--bg); color: var(--ink); border-radius: 20px; overflow: hidden; font-family: var(--aw-font, system-ui, sans-serif); scroll-margin-top: 80px; }
+.st-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; padding: 12px clamp(16px, 3vw, 36px); font: 500 13px/1.2 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--mute); }
+.st-bar-r { display: flex; align-items: center; gap: clamp(12px, 3vw, 40px); }
+.st-bar b { color: var(--coral); font-weight: 500; }
+.st-ct { font-variant-numeric: tabular-nums; }
+.st-pause { min-height: 44px; min-width: 44px; padding: 0 14px; border: 1px solid #cfd0cb; border-radius: 999px; background: #f3f3ef; color: var(--ink); font: 500 12px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; cursor: pointer; }
+.st-pause:focus-visible, .st-cta:focus-visible { outline: 2px solid var(--coral); outline-offset: 2px; }
+.st-stage { position: relative; display: flex; gap: 16px; padding: 0 clamp(12px, 2vw, 24px); height: min(880px, max(440px, calc(100vh - 300px))); overflow: hidden; perspective: 1400px;
+  -webkit-mask-image: linear-gradient(transparent, #000 40px, #000 calc(100% - 40px), transparent); mask-image: linear-gradient(transparent, #000 40px, #000 calc(100% - 40px), transparent); }
+.st-col { flex: 1; min-width: 0; }
+.st-track { position: relative; display: flex; flex-direction: column; gap: 16px; padding-bottom: 16px; will-change: transform; }
+.st.is-static .st-stage { height: auto; -webkit-mask-image: none; mask-image: none; padding-top: 8px; }
+.st.is-static .st-pause { display: none; }
+.st-card { position: relative; display: flex; flex-direction: column; gap: 10px; padding: 18px 18px 14px; background: var(--card); border: 1px solid var(--line); border-radius: 20px; box-shadow: 0 1px 2px rgba(20,20,10,.04), 0 10px 28px rgba(20,20,10,.06); transition: box-shadow .4s, border-color .4s; }
+.st-js .st-card { opacity: 0; }
+.st-js.is-in .st-card { opacity: 1; animation: st-fly .9s cubic-bezier(.2,.75,.2,1) calc(var(--d) * 55ms) backwards; }
+@keyframes st-fly { from { opacity: 0; transform: translateY(90px) rotateX(28deg) rotate(var(--r)) scale(.9); } }
+.st-card:hover { border-color: #c5c6c1; }
+.st-card.is-on { border-color: var(--coral); box-shadow: 0 0 0 2px var(--coral), 0 18px 40px rgba(233,139,111,.22); }
+.st-card.is-on .st-star { color: var(--coral); }
+.st-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+.st-card h3 { margin: 0; font: 600 21px/1.2 var(--aw-font, system-ui, sans-serif); letter-spacing: -.01em; color: var(--ink); }
+.st-card h3 a { color: inherit; text-decoration: none; outline: none; }
+.st-card h3 a::after { content: ""; position: absolute; inset: 0; border-radius: 20px; z-index: 2; }
+.st-card h3 a:focus-visible::after { outline: 2px solid var(--coral); outline-offset: 2px; }
+.st-tag { margin-top: 6px; font: 600 10.5px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--t, var(--ink)); }
+.st-n { font: 500 12px/1 var(--mono); color: var(--mute); }
+.st-demo { position: relative; height: var(--h, 150px); overflow: hidden; font-size: 13px; }
+.st-use { margin: 0; font: 400 12.5px/1.4 var(--aw-font, system-ui, sans-serif); color: #4b4e55; }
+.st-foot { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font: 500 10.5px/1.4 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--mute); }
+.st-foot span::before { content: "• "; }
+.st-star { white-space: nowrap; letter-spacing: 0; transition: color .4s; }
+.st-end { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 6px 24px; padding: 18px clamp(16px, 3vw, 36px) 24px; }
+.st-eye { grid-column: 1 / -1; margin: 0; min-height: 1.3em; font: 500 13px/1.3 var(--mono); letter-spacing: .06em; color: var(--mute); }
+.st-eye.is-hot { color: var(--coral); }
+.st-h { margin: 0; font: italic 400 clamp(40px, 6.6vw, 92px)/1.02 "Instrument Serif", Georgia, serif; letter-spacing: -.02em; color: var(--ink); }
+.st-cta { min-height: 48px; padding: 0 28px; border-radius: 999px; border: 1px solid #cfd0cb; background: #f6f6f2; color: var(--ink); font: 600 13px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; cursor: pointer; white-space: nowrap; transition: background .3s, color .3s; }
+.st-cta.is-fill { background: var(--navy); border-color: var(--navy); color: #fff; }
+@media (max-width: 699px) { .st-end { grid-template-columns: minmax(0, 1fr); } .st-cta { width: 100%; } }
+.st-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 0 32px; grid-template-columns: minmax(0, 1fr); counter-reset: n; }
+@media (min-width: 800px) { .st-list { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.st-list li { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; gap: 4px 8px; padding: 12px 0; border-bottom: 1px solid var(--aw-border-gray); font-size: 14px; }
+.st-list li::before { counter-increment: n; content: counter(n, decimal-leading-zero); font: 500 12px/1.6 var(--aw-mono); opacity: .6; }
+.st-list a { color: inherit; font-weight: 600; overflow-wrap: anywhere; }
+.st-list small { grid-column: 2 / -1; opacity: .7; }
+.st-list b { font: 500 12px/1.6 var(--aw-mono); white-space: nowrap; }
+.st.is-paused *, .st.is-paused *::before, .st.is-paused *::after { animation-play-state: paused !important; }
+
+/* demo con */
+.mono { font-family: var(--mono); }
+.ty { display: inline-block; overflow: hidden; white-space: nowrap; vertical-align: bottom; width: calc(var(--n) * 1ch); font-family: var(--mono); animation: ty 6s steps(var(--n)) infinite; }
+@keyframes ty { 0% { width: 0; } 45%, 100% { width: calc(var(--n) * 1ch); } }
+.cr { display: inline-block; width: 1.5px; height: 1.1em; margin-left: 1px; vertical-align: -3px; background: var(--ink); animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.sk { position: absolute; inset: 0; padding: 14px 16px; border-radius: 12px; background: #f7f5f0; display: flex; flex-direction: column; gap: 9px; }
+.sk b { font: 500 11.5px/1 var(--mono); margin-bottom: 4px; }
+.sk i { display: block; height: 5px; border-radius: 3px; background: #dddad3; width: var(--w); }
+.sk .sk-bar { height: 6px; background: var(--coral); transform-origin: 0 50%; animation: grow 4s ease-in-out infinite; }
+@keyframes grow { 0% { transform: scaleX(.08); } 40%, 100% { transform: none; } }
+.sk-pill { position: absolute; right: 10px; bottom: 10px; padding: 6px 11px; border-radius: 999px; background: var(--navy); color: #fff; font: 600 10.5px/1 var(--mono); animation: pop 4s infinite; }
+@keyframes pop { 0%, 42% { opacity: 0; transform: translateY(6px) scale(.9); } 52%, 100% { opacity: 1; transform: none; } }
+.sh-row { display: flex; gap: 8px; }
+.sh-b { padding: 9px 16px; border-radius: 8px; background: #111; color: #fff; font-weight: 600; }
+.sh-b.o { background: #fff; color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); font-weight: 500; }
+.sh-sw { display: flex; align-items: center; gap: 9px; margin: 14px 0 12px; }
+.sw { position: relative; width: 34px; height: 19px; border-radius: 10px; background: #18181b; animation: sw-bg 4s infinite; }
+.sw::after { content: ""; position: absolute; top: 2px; left: 2px; width: 15px; height: 15px; border-radius: 50%; background: #fff; transform: translateX(15px); animation: sw 4s infinite; }
+@keyframes sw-bg { 0%, 45% { background: #e4e4e7; } 55%, 100% { background: #18181b; } }
+@keyframes sw { 0%, 45% { transform: none; } 55%, 100% { transform: translateX(15px); } }
+.sh-in { padding: 8px 10px; border: 1px solid #d4d4d8; border-radius: 8px; font-size: 12px; }
+.rx-t { display: inline-block; padding: 7px 14px; border: 1px solid var(--line); border-radius: 8px; }
+.rx-m, .ck-l { position: relative; margin-top: 8px; width: 74%; padding: 4px; border-radius: 10px; box-shadow: 0 6px 20px rgba(0,0,0,.08); background: #fff; }
+.rx-m span, .ck-l span { position: relative; display: block; height: 25px; line-height: 25px; padding: 0 10px; }
+.rx-hl, .ck-hl { position: absolute; left: 4px; right: 4px; top: 4px; height: 25px; border-radius: 6px; background: #edf1fd; transform: translateY(25px); animation: hl4 6s infinite; }
+.ck-hl { background: #f1f1f0; transform: none; animation-name: hl3; }
+@keyframes hl4 { 0%, 22% { transform: none; } 25%, 47% { transform: translateY(25px); } 50%, 72% { transform: translateY(50px); } 75%, 97% { transform: translateY(75px); } }
+@keyframes hl3 { 0%, 30% { transform: none; } 34%, 63% { transform: translateY(25px); } 67%, 96% { transform: translateY(50px); } }
+.rx-d { color: #e5484d; }
+.ck { position: absolute; inset: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.ck-in { padding: 10px 12px; border-bottom: 1px solid var(--line); color: var(--ink); }
+.ck-in .mu { color: var(--mute); margin-right: 10px; font-family: var(--mono); }
+.ck-l { width: auto; margin: 4px; box-shadow: none; }
+.im { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
+.im-box { width: 58%; padding: 14px; display: flex; flex-direction: column; gap: 7px; border: 2px dashed #e5484d; border-radius: 6px; background: #f3f0fb; transform: rotate(-4deg); animation: im 6s infinite; }
+.im-box i { display: block; height: 8px; border-radius: 4px; background: #7c5cf0; width: 62%; }
+.im-box i + i { height: 5px; background: #cfcbd8; width: 88%; }
+.im-box i + i + i { height: 14px; width: 26%; background: #22d3ee; border-radius: 7px; }
+@keyframes im { 0%, 45% { border: 2px dashed #e5484d; transform: rotate(-4deg); background: #f3f0fb; } 55%, 95% { border: 2px solid var(--line); transform: none; background: #fff; border-radius: 12px; } }
+.im-c { position: relative; height: 14px; width: 100%; font: 500 11px/14px var(--mono); text-align: center; }
+.im-c span { position: absolute; inset: 0; }
+.im-c span:first-child { color: #e5484d; animation: fadeA 6s infinite; }
+.im-c span + span { color: #16a34a; opacity: 0; animation: fadeB 6s infinite; }
+@keyframes fadeA { 0%, 45% { opacity: 1; } 52%, 95% { opacity: 0; } }
+@keyframes fadeB { 0%, 47% { opacity: 0; } 55%, 95% { opacity: 1; } }
+.mg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.mg .dash { stroke-dasharray: 22 100; animation: beam 3s linear infinite; }
+.mg .dash + .dash { animation-delay: -1.5s; }
+@keyframes beam { from { stroke-dashoffset: 22; } to { stroke-dashoffset: -100; } }
+.shim { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-weight: 700; font-size: 17px; color: transparent; background: linear-gradient(90deg, #c8c9cc 40%, #151e25 50%, #c8c9cc 60%) 0 0 / 300% 100%; -webkit-background-clip: text; background-clip: text; animation: shim 3s linear infinite; }
+@keyframes shim { from { background-position: 100% 0; } to { background-position: 0 0; } }
+.so { position: absolute; left: 2px; right: 2px; bottom: 8px; height: 44px; }
+.so-t { position: absolute; inset: 0; display: flex; align-items: center; gap: 8px; padding: 0 12px; background: #fff; border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 6px 18px rgba(0,0,0,.08); animation: toast 6s calc(var(--k) * -2s) infinite; }
+.so-t::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--c); }
+.so-t:nth-child(1) { transform: translateY(-20px) scale(.88); opacity: .4; }
+.so-t:nth-child(2) { transform: translateY(-10px) scale(.94); opacity: .75; }
+@keyframes toast { 0% { transform: translateY(34px); opacity: 0; z-index: 3; } 8%, 33% { transform: none; opacity: 1; z-index: 3; } 41%, 66% { transform: translateY(-10px) scale(.94); opacity: .75; z-index: 2; } 74%, 92% { transform: translateY(-20px) scale(.88); opacity: .4; z-index: 1; } 100% { transform: translateY(-26px) scale(.84); opacity: 0; z-index: 1; } }
+.tw-c { font: 400 11.5px/1.4 var(--mono); color: #0ea5e9; }
+.tw-box { width: 62%; margin: 14px auto 0; padding: 22px 20px; display: flex; flex-direction: column; gap: 8px; border-radius: 18px; background: #c6f0fc; box-shadow: 0 10px 24px rgba(14,165,233,.25); animation: tw 6s infinite; }
+.tw-box i { display: block; height: 7px; width: 70%; border-radius: 4px; background: #0369a1; }
+.tw-box i + i { height: 4px; width: 100%; background: #7dd3fc; }
+@keyframes tw { 0%, 20% { padding: 8px; border-radius: 2px; box-shadow: none; background: #e0f2fe; } 45%, 100% { padding: 22px 20px; border-radius: 18px; box-shadow: 0 10px 24px rgba(14,165,233,.25); background: #c6f0fc; } }
+.sb { position: absolute; inset: 0; display: grid; grid-template-columns: 42% 1fr; gap: 10px; }
+.sb-side { position: relative; padding: 4px; border-radius: 6px; background: #f6f9fc; font-size: 12px; }
+.sb-side span { position: relative; display: block; height: 25px; line-height: 25px; padding: 0 10px; }
+.sb-hl { position: absolute; left: 4px; right: 4px; top: 4px; height: 25px; border-radius: 4px; background: #ff4785; animation: hl4 8s infinite; }
+.sb-side span:nth-of-type(1) { animation: sbw1 8s infinite; } .sb-side span:nth-of-type(2) { animation: sbw2 8s infinite; }
+.sb-side span:nth-of-type(3) { animation: sbw3 8s infinite; } .sb-side span:nth-of-type(4) { animation: sbw4 8s infinite; }
+@keyframes sbw1 { 0%, 22% { color: #fff; font-weight: 600; } 25%, 100% { color: var(--ink); } }
+@keyframes sbw2 { 0%, 22% { color: var(--ink); } 25%, 47% { color: #fff; font-weight: 600; } 50%, 100% { color: var(--ink); } }
+@keyframes sbw3 { 0%, 47% { color: var(--ink); } 50%, 72% { color: #fff; font-weight: 600; } 75%, 100% { color: var(--ink); } }
+@keyframes sbw4 { 0%, 72% { color: var(--ink); } 75%, 97% { color: #fff; font-weight: 600; } 100% { color: var(--ink); } }
+.sb-pv { display: grid; place-items: center; }
+.sb-btn { padding: 9px 22px; border-radius: 999px; background: #111; color: #fff; font-weight: 600; font-size: 13px; animation: sbb 8s infinite; }
+@keyframes sbb { 0%, 22% { background: #111; color: #fff; box-shadow: none; transform: none; } 25%, 47% { background: #1ea7fd; color: #fff; box-shadow: none; transform: none; } 50%, 72% { background: #fff; color: var(--ink); box-shadow: inset 0 0 0 1px #c9ccd1; transform: none; } 75%, 97% { background: #111; color: #fff; box-shadow: none; transform: scale(1.22); } }
+.va { position: absolute; left: 50%; top: 4px; width: 84px; height: 124px; margin-left: -42px; border: 4px solid var(--ink); border-radius: 16px; overflow: hidden; background: #e9eaee; animation: va-bg 5s infinite; }
+.va-s { position: absolute; left: 0; right: 0; bottom: 0; height: 62%; padding: 8px 8px 0; display: flex; flex-direction: column; gap: 5px; border-radius: 10px 10px 0 0; background: #fff; animation: va 5s cubic-bezier(.32,.72,0,1) infinite; }
+.va-s i { display: block; height: 3px; border-radius: 2px; background: #d4d4d8; }
+.va-s i:first-child { width: 20%; margin: 0 auto 4px; background: #a1a1aa; }
+@keyframes va { 0%, 8% { transform: translateY(105%); } 24%, 84% { transform: none; } 96%, 100% { transform: translateY(105%); } }
+@keyframes va-bg { 0%, 12%, 96%, 100% { background: #e9eaee; } 32%, 78% { background: #b6b8bf; } }
+.tb { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(3, 1fr); place-items: center; }
+.tb svg { width: 30px; height: 30px; fill: none; stroke: var(--ink); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.tb path { stroke-dasharray: 1 1; animation: draw 6s calc(var(--i) * .25s) infinite; }
+@keyframes draw { 0% { stroke-dashoffset: 1; } 25%, 85% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: -1; } }
+.tr-top { display: flex; justify-content: space-between; align-items: center; color: #6b7280; font-size: 12.5px; }
+.tr-chip { padding: 3px 8px; border-radius: 6px; background: #d5ffec; color: #16a34a; font: 600 11px/1.2 var(--mono); }
+.tr-v { position: relative; height: 34px; margin: 4px 0 6px; font-size: 27px; font-weight: 700; letter-spacing: -.01em; }
+.tr-v span { position: absolute; left: 0; top: 0; }
+.tr-v span:first-child { animation: fadeA 8s infinite; }
+.tr-v span + span { opacity: 0; animation: fadeB 8s infinite; }
+.tr svg { display: block; width: 100%; height: 62px; overflow: hidden; }
+.tr .wv { animation: wv 9s linear infinite; }
+@keyframes wv { to { transform: translateX(-280px); } }
+.rc { position: absolute; inset: 0; width: 100%; height: 100%; }
+.rc rect { fill: #c9dbf6; transform-box: fill-box; transform-origin: 50% 100%; animation: bar 6s calc(var(--i) * 80ms) infinite; }
+@keyframes bar { 0% { transform: scaleY(0); } 20%, 88% { transform: none; } 100% { transform: scaleY(0); } }
+.rc polyline { fill: none; stroke: #8b7fd6; stroke-width: 2; stroke-dasharray: 1 1; animation: draw2 6s infinite; }
+@keyframes draw2 { 0%, 12% { stroke-dashoffset: 1; } 45%, 90% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: 1; } }
+.rc circle { fill: #8b7fd6; }
+.mt b { display: block; margin-bottom: 8px; font-weight: 600; }
+.mt-g { display: grid; grid-template-columns: repeat(7, 1fr); row-gap: 4px; text-align: center; font-size: 12px; }
+.mt-g span { height: 24px; line-height: 24px; transition: background .35s, color .35s, border-radius .35s; }
+.mt-g .in { background: #dbe7fb; }
+.mt-g .end { background: #228be6; color: #fff; border-radius: 50%; }
+.dz { --p: #a855f7; --s: #ec4899; --a: #5eead4; --w: 72%; }
+.st[data-k="1"] .dz { --p: #fcd34d; --s: #f97316; --a: #111827; --w: 34%; }
+.st[data-k="2"] .dz { --p: #f472b6; --s: #475569; --a: #4ade80; --w: 55%; }
+.dz-p { display: flex; flex-wrap: wrap; gap: 6px; }
+.dz-p span { padding: 7px 13px; border-radius: 999px; color: #fff; font: 600 11px/1 var(--mono); background: var(--c); transition: background .5s; }
+.dz-d { display: flex; align-items: center; gap: 7px; margin-top: 16px; }
+.dz-d i { width: 15px; height: 15px; border-radius: 50%; background: var(--c); transition: background .5s; }
+.dz-bar { flex: 1; height: 12px; margin-left: 8px; border-radius: 6px; background: #ececec; overflow: hidden; }
+.dz-bar i { display: block; width: var(--w); height: 100%; border-radius: inherit; background: var(--p); transition: width .6s, background .5s; }
+@media (prefers-reduced-motion: reduce) { .st *, .st *::before, .st *::after { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=d754f65c05"></script>
+<div class="st-page">
+  <div class="aw-sotd" style="padding-top:16px">
+    <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">15 repo</span></p>
+    <h1 class="aw-h1" style="--aw-h1:clamp(40px,7vw,96px)">Xưởng UI</h1>
+    <p class="aw-lead">15 repo GitHub đủ dựng cả giao diện: component, icon, biểu đồ, thông báo, theme. Các cột tự cuộn, mỗi thẻ chạy demo nhỏ, bấm thẻ để mở repo. Rê chuột vào tường để dừng cuộn.</p>
+  </div>
+  <section class="st" id="st" aria-label="UI / Design System">
+    <div class="st-bar"><span>UI / Design System</span><span class="st-bar-r"><b>Fable 5.2</b><span class="st-ct" id="st-ct">001–015</span><button type="button" class="st-pause" id="st-pause" aria-pressed="false">❚❚ Dừng</button></span></div>
+    <div class="st-stage" id="st-stage"></div>
+    <div class="st-end">
+      <p class="st-eye" id="st-eye" aria-live="polite">15 REPOS. ONE UI KIT.</p>
+      <h2 class="st-h" id="st-h">Your whole UI studio.</h2>
+      <button type="button" class="st-cta" id="st-cta">Keep scrolling ↓</button>
+    </div>
+  </section>
+  <section aria-labelledby="st-lh">
+    <h2 class="aw-h2" id="st-lh" style="margin:24px 0 8px">Cả 15 link</h2>
+    <ol class="st-list" id="st-list"></ol>
+  </section>
+</div>
+</main>
+<script>
+const rep = (k, f) => Array.from({ length: k }, (_, i) => f(i)).join('');
+const T = { coral: 'var(--coral)', blue: 'var(--blue)', amber: 'var(--amber)', ink: 'var(--ink)' };
+const ICON = ['M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0', 'M5 12H3l9-9 9 9h-2M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7M9 21v-6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v6',
+  'M12 17.75l-6.17 3.25 1.18-6.88-5-4.87 6.9-1 3.09-6.25 3.09 6.25 6.9 1-5 4.87 1.18 6.88z', 'M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0M21 21l-6-6',
+  'M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 7l9 6 9-6', 'M19.5 12.57L12 20l-7.5-7.43A5 5 0 1 1 12 6a5 5 0 1 1 7.5 6.57'];
+// Sóng tuần hoàn chu kỳ 280 (2 chu kỳ để trượt liền mạch).
+const wave = (() => { let d = ''; for (let x = 0; x <= 560; x += 10) d += (x ? 'L' : 'M') + x + ',' + (34 - 9 * Math.sin(x / 140 * Math.PI) - 6 * Math.sin(x / 280 * 6 * Math.PI + 1)).toFixed(1); return d; })();
+const BAR = [30, 46, 36, 60, 50, 74, 66, 86], LN = [52, 66, 58, 84, 74, 100, 92, 108];
+
+// Mỗi thẻ: dữ liệu repo + html demo (CSS chạy; mantine/daisyUI đổi theo nhịp JS).
+const V = [
+{ id: 'anthropic-skills', vi: 'Kỹ năng thiết kế cho agent', en: 'Anthropic Skills', use: 'Skill frontend-design cho giao diện có chất riêng.', tag: 'Agent skills', tone: 'coral', repo: 'anthropics/skills', href: 'https://github.com/anthropics/skills/tree/main/skills/frontend-design', star: '198k', foot: ['frontend-design'], desc: 'frontend-design for crafted interfaces', h: 150,
+  html: `<div class="sk"><b>SKILL.md</b><i class="sk-bar" style="--w:78%"></i><i style="--w:62%"></i><i style="--w:72%"></i><i style="--w:46%"></i><i style="--w:58%"></i><span class="sk-pill">design ✦</span></div>` },
+{ id: 'shadcn-ui', vi: 'Component chép về là của mình', en: 'shadcn/ui', use: 'Component đẹp, chép vào dự án và sửa thoải mái.', tag: 'Components', tone: 'blue', repo: 'shadcn-ui/ui', star: '129k', foot: ['copy', 'paste', 'own'], desc: 'beautiful components that are 100% yours', h: 150,
+  html: `<div class="sh-row"><span class="sh-b">Continue</span><span class="sh-b o">Cancel</span></div><div class="sh-sw"><i class="sw"></i>Airplane mode</div><div class="sh-in"><span class="ty" style="--n:14">you@studio.dev</span><i class="cr"></i></div>` },
+{ id: 'radix-primitives', vi: 'Nền tảng truy cập được', en: 'Radix Primitives', use: 'Dialog, menu, popover chuẩn a11y, chưa có style.', tag: 'Accessible UI', tone: 'ink', repo: 'radix-ui/primitives', star: '20k', foot: ['headless'], desc: 'accessible dialogs, menus and popovers', h: 160,
+  html: `<span class="rx-t">Options ▾</span><div class="rx-m"><i class="rx-hl"></i><span>New tab</span><span>Duplicate</span><span>Share ▸</span><span class="rx-d">Delete</span></div>` },
+{ id: 'cmdk', vi: 'Bảng lệnh ⌘K', en: 'cmdk', use: 'Tự làm menu ⌘K tìm lệnh trong vài phút.', tag: 'Command menu', tone: 'amber', repo: 'dip/cmdk', star: '13k', foot: ['⌘K anything'], desc: 'your own ⌘K menu in minutes', h: 142,
+  html: `<div class="ck"><div class="ck-in"><span class="mu">⌘K</span><span class="ty" style="--n:3">the</span><i class="cr"></i></div><div class="ck-l"><i class="ck-hl"></i><span>Change theme</span><span>Theme: dark</span><span>Toggle sidebar</span></div></div>` },
+{ id: 'impeccable', vi: 'Soi và đánh bóng thiết kế', en: 'Impeccable', use: 'Chấm lỗi thiết kế rồi sửa cho gọn gàng.', tag: 'Design critique', tone: 'coral', repo: 'pbakaus/impeccable', star: '115k', foot: ['polish pass'], desc: 'review and polish any design', h: 150,
+  html: `<div class="im"><div class="im-box"><i></i><i></i><i></i></div><div class="im-c"><span>critique: 3 fixes</span><span>✓ polished</span></div></div>` },
+{ id: 'magic-ui', vi: 'Hiệu ứng động có sẵn', en: 'Magic UI', use: 'Ánh lấp lánh, tia sáng, marquee chạy sẵn.', tag: 'Animated UI', tone: 'blue', repo: 'magicuidesign/magicui', star: '23k', foot: ['beams', 'shimmer'], desc: 'shimmer, beams and animated marquees', h: 130,
+  html: `<svg class="mg" viewBox="0 0 280 130" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><g fill="none" stroke-width="2" stroke-linecap="round"><path d="M28 65C110 40 170 24 252 22" stroke="#ececea"/><path d="M28 65C110 90 170 106 252 108" stroke="#ececea"/><path class="dash" pathLength="100" d="M28 65C110 40 170 24 252 22" stroke="#f2a65a"/><path class="dash" pathLength="100" d="M28 65C110 90 170 106 252 108" stroke="#e98b6f"/></g>${[[28, 65, '#151e25'], [252, 22, '#e5735a'], [252, 108, '#6f9be8']].map(([x, y, c]) => `<circle cx="${x}" cy="${y}" r="13" fill="#fff" stroke="#e5e5e2"/><circle cx="${x}" cy="${y}" r="5" fill="${c}"/>`).join('')}</svg><span class="shim">shimmer</span>` },
+{ id: 'sonner', vi: 'Toast xếp chồng', en: 'Sonner', use: 'Thông báo toast xếp chồng mượt mà.', tag: 'Toasts', tone: 'ink', repo: 'emilkowalski/sonner', star: '13k', foot: ['stacked'], desc: 'toasts that stack with style', h: 104,
+  html: `<div class="so">${[['Event created', '#e5735a'], ['Copied', '#3b82f6'], ['Uploaded', '#c9a227']].map(([t, c], k) => `<div class="so-t" style="--k:${k};--c:${c}">${t}</div>`).join('')}</div>` },
+{ id: 'tailwind-css', vi: 'Style ngay trong HTML', en: 'Tailwind CSS', use: 'Viết class tiện ích, không rời HTML.', tag: 'Styling', tone: 'amber', repo: 'tailwindlabs/tailwindcss', star: '99k', foot: ['utility-first'], desc: 'style everything without leaving HTML', h: 132,
+  html: `<div class="tw-c"><span class="ty" style="--n:29">p-2 p-6 rounded-2xl shadow-lg</span></div><div class="tw-box"><i></i><i></i></div>` },
+{ id: 'storybook', vi: 'Phòng thử component', en: 'Storybook', use: 'Mọi component và trạng thái ở một chỗ.', tag: 'Component lab', tone: 'coral', repo: 'storybookjs/storybook', star: '92k', foot: ['every state'], desc: 'all your components and states together', h: 116,
+  html: `<div class="sb"><div class="sb-side"><i class="sb-hl"></i><span>Button</span><span>Primary</span><span>Secondary</span><span>Large</span></div><div class="sb-pv"><span class="sb-btn">Button</span></div></div>` },
+{ id: 'vaul', vi: 'Ngăn kéo trên điện thoại', en: 'Vaul', use: 'Drawer kéo từ đáy như app gốc.', tag: 'Drawers', tone: 'blue', repo: 'emilkowalski/vaul', star: '8.8k', foot: ['bottom sheet'], desc: 'mobile drawers that feel native', h: 136,
+  html: `<div class="va"><div class="va-s"><i></i><i></i><i></i><i style="width:70%"></i></div></div>` },
+{ id: 'tabler-icons', vi: 'Kho icon nét mảnh', en: 'Tabler Icons', use: 'Hơn 5.900 icon nét mảnh, sạch sẽ.', tag: 'Icons', tone: 'ink', repo: 'tabler/tabler-icons', star: '23k', foot: ['5,900+ icons'], desc: '5,900+ clean line icons', h: 110,
+  html: `<div class="tb">${ICON.map((d, i) => `<svg viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="${d}" style="--i:${i}"/></svg>`).join('')}</div>` },
+{ id: 'tremor', vi: 'Thẻ KPI cho dashboard', en: 'Tremor', use: 'Thẻ KPI và mảnh ghép dashboard.', tag: 'Dashboards', tone: 'amber', repo: 'tremorlabs/tremor', star: '3.7k', foot: ['KPI blocks'], desc: 'KPI cards and dashboard pieces', h: 124,
+  html: `<div class="tr"><div class="tr-top"><span>Revenue</span><span class="tr-chip">+12.3%</span></div><div class="tr-v"><span>$48,210</span><span>$37,547</span></div><svg viewBox="0 0 280 62" preserveAspectRatio="none" aria-hidden="true"><g class="wv"><path d="${wave}L560,62L0,62Z" fill="#eaf2fe"/><path d="${wave}" fill="none" stroke="#3b82f6" stroke-width="2"/></g></svg></div>` },
+{ id: 'recharts', vi: 'Biểu đồ cho React', en: 'Recharts', use: 'Biểu đồ cột, đường dựng sẵn cho React.', tag: 'Charts', tone: 'coral', repo: 'recharts/recharts', star: '28k', foot: ['react charts'], desc: 'charts ready for React', h: 140,
+  html: `<svg class="rc" viewBox="0 0 280 124" preserveAspectRatio="xMidYMid meet" aria-hidden="true">${rep(4, (i) => `<line x1="6" x2="274" y1="${10 + i * 34}" y2="${10 + i * 34}" stroke="#efefed"/>`)}${BAR.map((b, i) => `<rect x="${12 + i * 34}" y="${112 - b}" width="20" height="${b}" rx="2" style="--i:${i}"/>`).join('')}<polyline pathLength="1" points="${LN.map((v, i) => `${22 + i * 34},${118 - v}`).join(' ')}"/>${LN.map((v, i) => `<circle cx="${22 + i * 34}" cy="${118 - v}" r="3.5"/>`).join('')}</svg>` },
+{ id: 'mantine', vi: 'Bộ kit đầy đủ', en: 'Mantine', use: 'Hơn 120 component và hook trong một kit.', tag: 'Full kit', tone: 'blue', repo: 'mantinedev/mantine', star: '32k', foot: ['120+ components'], desc: '120+ components and hooks in one kit', h: 120,
+  html: `<div class="mt"><b>November</b><div class="mt-g">${rep(21, (d) => `<span>${d + 1}</span>`)}</div></div>` },
+{ id: 'daisyui', vi: 'Theme bằng một class', en: 'daisyUI', use: 'Đổi theme Tailwind chỉ bằng một class.', tag: 'Themes', tone: 'ink', repo: 'saadeghi/daisyui', star: '43k', foot: ['35 themes'], desc: 'Tailwind themes with one class', h: 84,
+  html: `<div class="dz"><div class="dz-p"><span style="--c:var(--p)">primary</span><span style="--c:var(--s)">secondary</span><span style="--c:var(--a)">accent</span></div><div class="dz-d"><i style="--c:var(--p)"></i><i style="--c:var(--s)"></i><i style="--c:var(--a)"></i><i style="--c:var(--p)"></i><span class="dz-bar"><i></i></span></div></div>` },
+];
+
+const panel = document.getElementById('st'), stage = document.getElementById('st-stage'), ct = document.getElementById('st-ct'), eye = document.getElementById('st-eye');
+const hd = document.getElementById('st-h'), cta = document.getElementById('st-cta'), pz = document.getElementById('st-pause'), list = document.getElementById('st-list');
+const rm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const pad = (n, k) => String(n).padStart(k, '0');
+const url = (v) => v.href || `https://github.com/${v.repo}`;
+list.innerHTML = V.map((v) => `<li><a href="${url(v)}" target="_blank" rel="noopener">${v.en}</a><b>★ ${v.star}</b><small>${v.repo} · ${v.desc}</small></li>`).join('');
+
+const card = (i, d, clone) => { const v = V[i];
+  return `<article class="st-card" data-i="${i}" style="--d:${d};--r:${(i % 3 - 1) * 4}deg"${clone ? ' inert' : ''}>
+  <div class="st-head"><div><h3><a href="${url(v)}" target="_blank" rel="noopener">${v.en}</a></h3><div class="st-tag" style="--t:${T[v.tone]}">${v.tag}</div></div><span class="st-n">${pad(i + 1, 2)}</span></div>
+  <div class="st-demo" style="--h:${v.h}px" aria-hidden="true">${v.html}</div>
+  <p class="st-use">${v.vi}. ${v.use}</p>
+  <div class="st-foot"><span>${v.foot.join(' · ')}</span><b class="st-star">★ ${v.star} ↗</b></div></article>`; };
+
+// Cột: 4 / 3 / 2 / 1 theo bề rộng; mỗi cột lặp bộ thẻ 3 lần để cuộn vòng liền mạch.
+const COLS = [[1100, 4], [860, 3], [560, 2], [0, 1]], SPD = [26, 40, 31, 46];
+let tracks = [], off = [], nc = 0, on = -1;
+const build = () => {
+  const n = COLS.find(([w]) => innerWidth >= w)[1]; if (n === nc) return; nc = n;
+  const copies = rm ? 1 : 3;
+  stage.innerHTML = rep(n, (c) => { const ids = V.map((_, i) => i).filter((i) => i % n === c);
+    return `<div class="st-col"><div class="st-track" data-m="${ids.length}">${rep(copies, (k) => ids.map((i, r) => card(i, r * n + c, k > 0)).join(''))}</div></div>`; });
+  tracks = [...stage.querySelectorAll('.st-track')]; off = tracks.map((_, c) => c * 137); mark();
+};
+const mark = () => stage.querySelectorAll('.st-card').forEach((c) => c.classList.toggle('is-on', +c.dataset.i === on));
+
+// Nhịp: đổi theme daisyUI, dời khoảng ngày Mantine, viền cam đi qua 15 thẻ rồi tới tiêu đề cuối.
+let k = 0, tour = -2, paused = false, hover = false;
+const days = () => { const s = 5 + k % 3; stage.querySelectorAll('.mt-g').forEach((g) => [...g.children].forEach((e, d) => { e.classList.toggle('in', d + 1 >= s && d + 1 <= s + 5); e.classList.toggle('end', d + 1 === s || d + 1 === s + 5); })); };
+const step = () => {
+  k++; panel.dataset.k = k % 3; days();
+  if (tour >= 0 && tour < 15) { on = tour; ct.textContent = `${pad(tour + 1, 3)} / 015`; eye.textContent = `${pad(tour + 1, 2)} · ${V[tour].repo}`; mark(); }
+  else if (tour === 15) { on = -1; mark(); ct.textContent = '001–015'; eye.textContent = '830K+ STARS · $0 · ALL OPEN SOURCE'; eye.classList.add('is-hot');
+    hd.textContent = 'Figma, meet your replacement.'; cta.textContent = 'All 15 links below ↓'; cta.classList.add('is-fill'); }
+  tour++;
+};
+build(); days();
+cta.onclick = () => list.scrollIntoView({ behavior: rm ? 'auto' : 'smooth', block: 'start' });
+
+if (rm) panel.classList.add('is-static');
+else {
+  addEventListener('resize', () => { build(); days(); });
+  panel.classList.add('st-js');
+  new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { panel.classList.add('is-in'); o.disconnect(); } }, { threshold: .05 }).observe(stage);
+  setInterval(() => { if (!paused && !document.hidden) step(); }, 1400);
+  let last = 0;
+  const loop = (ms) => { const dt = Math.min(.05, (ms - last) / 1000 || 0); last = ms;
+    if (!paused && !hover) tracks.forEach((t, c) => { const h = t.children[+t.dataset.m].offsetTop; if (!h) return;
+      off[c] = (off[c] + SPD[c % 4] * dt) % h; t.style.transform = `translate3d(0,${-off[c].toFixed(1)}px,0)`; });
+    requestAnimationFrame(loop); };
+  requestAnimationFrame(loop);
+  stage.addEventListener('pointerenter', () => { hover = true; });
+  stage.addEventListener('pointerleave', () => { hover = false; });
+  stage.addEventListener('focusin', () => { hover = true; });
+  stage.addEventListener('focusout', () => { hover = false; });
+  pz.onclick = () => { paused = !paused; panel.classList.toggle('is-paused', paused); pz.setAttribute('aria-pressed', paused); pz.textContent = paused ? '▶ Chạy' : '❚❚ Dừng'; };
+}
+</script>
+<script src="/search.js?v=d754f65c05" defer></script><script src="/stats.js?v=d754f65c05" defer></script>
+</body>
+</html>

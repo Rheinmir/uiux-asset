@@ -37,6 +37,7 @@
     ['tai-nguyen', 'Tài nguyên', 'UI kit, font, thư viện, skill', [
       ['ui-kits/', 'UI kits', 'Hệ thiết kế rút từ site thật', 36, 'ui-kits/awwwards-com/latest/'],
       ['ui-libraries/', 'Thư viện UI', 'Thư viện trên GitHub, số liệu sống', 153],
+      ['patterns/studio.html', 'Xưởng UI', '15 thư viện UI, tường tự cuộn', 15],
       ['fonts/', 'Font', 'Font family và bảng màu', 9],
       ['patterns/palettes.html', 'Bảng màu', 'Bảng màu 4 màu, chép hex', 6],
       ['skills/', 'Skills', 'Claude skill từ một bài viết', 40]]]];
