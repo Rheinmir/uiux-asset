@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bộ đồ nghề chuyển động — 16 repo — uiux-asset</title>
+<meta name="description" content="Motion / Toolkit dựng lại từ video: 16 thẻ repo GitHub cho video và chuyển động bằng code, mỗi thẻ có demo chạy thật, kèm tour đi qua từng thẻ.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=ad44216a2c">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&display=swap">
+<style>
+.tk-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+.tk { --ink: var(--aw-color-primary); --mute: #8a8a8a; --soft: var(--aw-border-gray); --codebg: var(--aw-bg-primary); --card: var(--aw-bg-white); color: var(--ink); font-family: var(--aw-font); scroll-margin-top: 80px; }
+.tk .mu { color: var(--mute); }
+.tk-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0 16px; border-bottom: 1px solid var(--soft); font: 500 13px/1.2 var(--aw-mono); letter-spacing: .06em; text-transform: uppercase; }
+.tk-bar b { font-weight: 700; margin-right: clamp(12px, 4vw, 64px); }
+.tk-ct { color: var(--mute); font-variant-numeric: tabular-nums; }
+.tk-stage { position: relative; overflow: hidden; padding: 32px 4px; transition: height .8s cubic-bezier(.6,0,.2,1); }
+.tk-grid { position: relative; display: grid; gap: 20px; grid-template-columns: minmax(0, 1fr); transform-origin: 0 0; transition: transform .9s cubic-bezier(.6,0,.2,1); }
+@media (min-width: 700px) { .tk-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1100px) {
+  .tk-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; }
+  .tk-stage { padding-top: 64px; }
+  .tk-card { grid-column: var(--c); grid-row: var(--r); translate: 0 var(--y, 0px); }
+}
+.tk-card { position: relative; display: flex; flex-direction: column; gap: 10px; padding: 18px 18px 14px; background: var(--card); border: 1px solid var(--soft); border-radius: 16px; box-shadow: 0 1px 2px rgba(0,0,0,.03), 0 8px 24px rgba(0,0,0,.04); transition: opacity .5s, box-shadow .4s, border-color .4s; }
+.tk-js .tk-card { opacity: 0; }
+.tk-js.is-in .tk-card { opacity: 1; animation: tk-in .8s cubic-bezier(.2,.7,.2,1) calc(var(--i) * 70ms) backwards; }
+@keyframes tk-in { from { opacity: 0; transform: translateY(18px) scale(.98); } to { opacity: 1; transform: none; } }
+.tk-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+.tk-card h3 { margin: 0; font: 600 20px/1.2 var(--aw-font); letter-spacing: -.01em; }
+.tk-card h3 a { color: inherit; text-decoration: none; outline: none; }
+.tk-card h3 a::after { content: ""; position: absolute; inset: 0; border-radius: 16px; z-index: 2; }
+.tk-card h3 a:focus-visible::after { outline: 2px solid var(--aw-color-blue); outline-offset: 2px; }
+.tk-card:hover { border-color: var(--mute); }
+.tk-cat { margin-top: 6px; font: 500 10.5px/1 var(--aw-mono); letter-spacing: .08em; color: var(--mute); text-transform: uppercase; }
+.tk-n { font: 500 12px/1 var(--aw-mono); color: var(--mute); }
+.tk-demo { position: relative; height: 168px; overflow: hidden; }
+.tk-use { margin: 0; font: 400 13px/1.4 var(--aw-font); color: var(--ink); opacity: .8; }
+.tk-foot { display: flex; justify-content: space-between; gap: 8px; font: 400 11px/1.4 var(--aw-mono); color: var(--mute); }
+.tk-foot span::before { content: "• "; }
+.tk-foot b { color: var(--ink); font-weight: 500; white-space: nowrap; }
+.tk.is-tour .tk-card { opacity: .36; }
+.tk.is-tour .tk-card.is-focus { opacity: 1; border-color: var(--ink); box-shadow: 0 0 0 1px var(--ink), 0 18px 44px rgba(0,0,0,.14); }
+.tk-end { border-top: 1px solid var(--soft); padding: 20px 0 8px; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 10px 24px; }
+.tk-eye { grid-column: 1 / -1; margin: 0; font: 500 13px/1.3 var(--aw-mono); letter-spacing: .06em; min-height: 1.3em; }
+.tk-h { margin: 0; font: italic 400 clamp(40px, 6.4vw, 92px)/1.02 "Instrument Serif", Georgia, serif; letter-spacing: -.02em; }
+.tk-cta { min-height: 48px; padding: 0 28px; border-radius: 999px; border: 1px solid var(--ink); background: transparent; color: var(--ink); font: 600 13px/1 var(--aw-mono); letter-spacing: .08em; text-transform: uppercase; cursor: pointer; white-space: nowrap; transition: background .3s, color .3s; }
+.tk-cta.is-fill { background: var(--ink); color: var(--card); }
+@media (max-width: 699px) { .tk-end { grid-template-columns: minmax(0, 1fr); } .tk-cta { width: 100%; } }
+
+/* demo con */
+.tk-demo canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.d-pre { margin: 0; font: 400 10.5px/1.6 var(--aw-mono); white-space: pre; }
+.d-caret { display: inline-block; width: 6px; height: 12px; margin-left: 1px; vertical-align: -2px; background: var(--ink); animation: d-blink 1s steps(1) infinite; }
+@keyframes d-blink { 50% { opacity: 0; } }
+.d-lab { position: absolute; left: 0; bottom: 2px; font: 400 10px/1 var(--aw-mono); color: var(--mute); }
+.d-code { position: absolute; inset: 0; background: var(--codebg); border-radius: 8px; padding: 12px; font: 400 11px/1.7 var(--aw-mono); }
+.d-ok { color: var(--mute); opacity: 0; }
+.d-on { opacity: 1 !important; transform: none !important; }
+.d-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.d-chips span { border: 1px solid var(--ink); border-radius: 999px; padding: 1px 9px; font-size: 10.5px; opacity: 0; transform: scale(.6); transition: opacity .3s, transform .35s cubic-bezier(.3,1.6,.5,1); }
+.d-dots { position: absolute; inset: 4px 0 8px; display: grid; grid-template-columns: repeat(11, 1fr); grid-template-rows: repeat(6, 1fr); place-items: center; }
+.d-dots i { width: 11px; height: 11px; border-radius: 50%; background: var(--ink); transform: scale(.3); opacity: .25; }
+.mc { position: absolute; left: 0; right: 0; bottom: 18px; height: 44px; }
+.mc-c { position: absolute; left: 12%; top: 4px; width: 36px; height: 36px; border-radius: 50%; background: var(--ink); animation: mc-c 2.4s ease-in-out infinite alternate; }
+.mc-r { position: absolute; left: 34%; top: 5px; width: 34px; height: 34px; border: 2px solid var(--ink); border-radius: 8px; animation: mc-r 2.4s ease-in-out infinite alternate; }
+@keyframes mc-c { from { transform: scale(.7); } to { transform: scale(1.2); } }
+@keyframes mc-r { to { left: calc(100% - 46px); } }
+.mc-t { position: absolute; left: 0; right: 0; bottom: 4px; height: 3px; border-radius: 2px; background: var(--soft); }
+.mc-t i { display: block; height: 100%; border-radius: inherit; background: var(--ink); transform-origin: 0 50%; animation: mc-p 2.4s ease-in-out infinite alternate; }
+@keyframes mc-p { from { transform: scaleX(.05); } to { transform: scaleX(1); } }
+.d-ramp { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; margin-top: 6px; }
+.d-ramp i { height: 26px; border-radius: 4px; box-shadow: inset 0 0 0 1px var(--soft); }
+.d-mark { position: absolute; top: 38px; left: 50%; font: 10px/1 var(--aw-mono); transform: translateX(-50%); }
+.d-num { position: absolute; left: 0; right: 0; top: 80px; text-align: center; font: 600 26px/1 var(--aw-mono); font-variant-numeric: tabular-nums; }
+.d-sub { position: absolute; left: 0; right: 0; top: 112px; text-align: center; font: 400 10px/1 var(--aw-mono); color: var(--mute); }
+.d-box { position: absolute; bottom: 31px; width: 34px; height: 34px; border-radius: 5px; border: 2px solid var(--ink); background: var(--card); opacity: 0; }
+.d-box.f { background: var(--ink); }
+.d-ground { position: absolute; left: 0; right: 0; bottom: 30px; height: 1.5px; background: var(--ink); }
+.tk-demo svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.pp-l { position: absolute; inset: 0 0 20px; clip-path: inset(0 50% 0 0); }
+.pp-r { clip-path: inset(0 0 0 50%); filter: blur(1.6px) drop-shadow(0 0 7px var(--ink)); }
+.pp-l b { position: absolute; left: 8%; top: var(--y); width: var(--s); height: var(--s); border-radius: 50%; background: var(--ink); animation: pp var(--d) ease-in-out var(--o) infinite alternate; }
+@keyframes pp { to { left: calc(92% - var(--s)); } }
+.pp-line { position: absolute; left: 50%; top: 4px; bottom: 20px; width: 1.5px; background: var(--ink); }
+.pp-a, .pp-b { position: absolute; bottom: 2px; font: 400 10px/1 var(--aw-mono); color: var(--mute); }
+.pp-a { left: 0; } .pp-b { right: 0; }
+.vp { position: absolute; inset: 0; overflow: hidden; }
+.vp-w { position: absolute; left: -50%; top: -50%; width: 200%; height: 200%; background: radial-gradient(circle, var(--mute) 1px, transparent 1.6px) 0 0 / 18px 18px; }
+.vp-w i { position: absolute; left: 46%; top: 47.5%; width: 8%; height: 5%; border-radius: 3px; background: var(--ink); }
+.vp-m { position: absolute; right: 2px; top: 2px; width: 56px; height: 36px; border: 1px solid var(--soft); background: var(--card); }
+.vp-m i { position: absolute; border: 1.5px solid var(--ink); }
+.seq { position: absolute; left: 0; right: 0; top: 4px; display: grid; grid-template-columns: repeat(16, 1fr); gap: 3px; }
+.seq i { height: 26px; border-radius: 2px; background: var(--soft); }
+.seq i.on { background: var(--mute); }
+.seq i.ph { box-shadow: inset 0 0 0 40px rgba(128,128,128,.22); }
+.seq i.on.ph { background: var(--ink); box-shadow: none; }
+.wf { position: absolute; left: 0; right: 0; top: 6px; height: 128px; display: flex; align-items: center; gap: 1.5px; }
+.wf i { flex: 1; height: var(--h); border-radius: 1px; background: var(--ink); animation: wf 4.5s calc(var(--i) * 22ms) infinite both; }
+@keyframes wf { 0% { transform: scaleY(0); } 14%, 82% { transform: scaleY(1); } 100% { transform: scaleY(0); } }
+.fw-bar { display: flex; gap: 5px; align-items: center; padding: 6px 8px; margin-bottom: 10px; border-radius: 6px; background: var(--codebg); }
+.fw-bar i { width: 7px; height: 7px; border-radius: 50%; background: var(--soft); }
+.fw-bar span { margin-left: auto; font: 400 10px/1 var(--aw-mono); color: var(--mute); }
+.fw-p { position: absolute; left: 0; right: 0; bottom: 30px; height: 7px; border-radius: 4px; background: var(--soft); }
+.fw-p i { display: block; width: 0; height: 100%; border-radius: inherit; background: var(--ink); }
+.fw-t { position: absolute; left: 0; bottom: 8px; font: 500 10.5px/1 var(--aw-mono); }
+.term { position: absolute; inset: 0; padding: 12px; border-radius: 8px; background: #0e0e0e; color: #f2f2f2; font: 500 11px/1.7 var(--aw-mono); white-space: pre-wrap; word-break: break-all; }
+:root[data-theme="dark"] .term { box-shadow: inset 0 0 0 1px #2e2e2e; }
+.term .d-caret { background: #f2f2f2; }
+.term .mu { color: #777; }
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=ad44216a2c"></script>
+<div class="tk-page">
+  <div class="aw-sotd" style="padding-top:16px">
+    <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">16 repo</span></p>
+    <h1 class="aw-h1" style="--aw-h1:clamp(40px,7vw,96px)">Bộ đồ nghề chuyển động</h1>
+    <p class="aw-lead">16 repo GitHub để làm video và chuyển động bằng code. Mỗi thẻ chạy demo nhỏ, bấm thẻ để mở repo. Nút Xem tour đi qua từng thẻ.</p>
+  </div>
+  <section class="tk" id="tk" aria-label="Motion / Toolkit">
+    <div class="tk-bar"><span>Motion / Toolkit</span><span><b>Fable 5.2</b><span class="tk-ct" id="tk-ct">001–016</span></span></div>
+    <div class="tk-stage" id="tk-stage"><div class="tk-grid" id="tk-grid"></div></div>
+    <div class="tk-end">
+      <p class="tk-eye" id="tk-eye" aria-live="polite">16 REPO. TẤT CẢ ĐỀU CHUYỂN ĐỘNG.</p>
+      <h2 class="tk-h" id="tk-h">One motion studio.</h2>
+      <button type="button" class="tk-cta" id="tk-cta">Xem tour ↓</button>
+    </div>
+  </section>
+</div>
+</main>
+<script>
+const rep = (k, f) => Array.from({ length: k }, (_, i) => f(i)).join('');
+const rng = (s) => () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296);
+// Màu canvas đọc lại mỗi khung từ token của trang (sáng/tối).
+const C = { ink: '#222', soft: '#ededed', dark: false };
+const g = (v) => { const c = Math.round(C.dark ? 238 - v * 198 : 17 + v * 218); return `rgb(${c},${c},${c})`; };
+const fit = (cv) => { const d = devicePixelRatio || 1, w = cv.clientWidth, h = cv.clientHeight; if (cv.width !== Math.round(w * d)) { cv.width = Math.round(w * d); cv.height = Math.round(h * d); } const x = cv.getContext('2d'); x.setTransform(d, 0, 0, d, 0, 0); x.clearRect(0, 0, w, h); return [x, w, h]; };
+const rot = ([x, y, z], ax, ay) => { const y1 = y * Math.cos(ax) - z * Math.sin(ax), z1 = y * Math.sin(ax) + z * Math.cos(ax); return [x * Math.cos(ay) + z1 * Math.sin(ay), y1, -x * Math.sin(ay) + z1 * Math.cos(ay)]; };
+const typed = (el, s) => { if (el.textContent !== s) el.textContent = s; };
+
+// Mỗi thẻ: dữ liệu repo + html demo (+ run(el) trả về hàm khung (t) cho demo chạy bằng JS).
+const V = [
+{ id: 'remotion-skills', vi: 'Kỹ năng video cho agent', en: 'Remotion Skills', use: 'Dạy agent dựng video bằng Remotion.', cat: 'Brief', repo: 'remotion-dev/skills', star: '7.8k', desc: 'agent guidance for video',
+  html: `<div class="d-code"><div><span class="mu">$ </span><span data-t></span><i class="d-caret"></i></div><div class="d-ok">✓ video skills loaded</div><div class="d-chips">${['composition', 'timing', 'audio', 'render'].map((c) => `<span>${c}</span>`).join('')}</div></div>`,
+  run: (el) => { const t0 = el.querySelector('[data-t]'), ok = el.querySelector('.d-ok'), ch = el.querySelectorAll('.d-chips span'), s = 'npx skills add remotion-dev/skills';
+    return (t) => { const c = t % 7; typed(t0, s.slice(0, Math.floor(c / .05))); ok.classList.toggle('d-on', c > 2); ch.forEach((e, i) => e.classList.toggle('d-on', c > 2.4 + i * .3)); }; } },
+{ id: 'anime-js', vi: 'Dòng thời gian và so le', en: 'anime.js', use: 'Timeline và chuyển động so le cho web.', cat: 'Animate', repo: 'juliangarnier/anime', star: '75k', desc: 'timelines and staggered motion',
+  html: `<div class="d-dots">${rep(66, () => '<i></i>')}</div>`,
+  run: (el) => { const d = [...el.querySelectorAll('i')];
+    const P = [(x, y) => Math.hypot((x - 5) / 5, (y - 2.5) / 2.5) / 1.42, (x) => Math.abs(x - 5) / 5, (x, y) => 1 - Math.min(x, 10 - x, y * 2, (5 - y) * 2) / 5];
+    return (t) => { const f = P[Math.floor(t / 2.6) % 3], w = (t % 2.6) / 2.6 * 1.6 - .3;
+      d.forEach((e, k) => { const v = Math.max(0, 1 - Math.abs(w - f(k % 11, (k / 11) | 0)) * 3.2); e.style.transform = `scale(${.3 + .7 * v})`; e.style.opacity = .2 + .8 * v; }); }; } },
+{ id: 'motion-canvas', vi: 'Đồ hoạ chuyển động bằng code', en: 'Motion Canvas', use: 'Viết animation như viết code, có timeline.', cat: 'Animate', repo: 'motion-canvas/motion-canvas', star: '20k', desc: 'code-driven motion graphics',
+  html: `<pre class="d-pre"><span class="mu">yield* all(</span>\n  circle().scale(2,1),\n  rect().x(140,1));</pre><div class="mc"><i class="mc-c"></i><i class="mc-r"></i></div><div class="mc-t"><i></i></div>` },
+{ id: 'd3-interpolate', vi: 'Nội suy màu và số', en: 'd3-interpolate', use: 'Chuyển mượt giữa hai giá trị, hai màu.', cat: 'Timing', repo: 'd3/d3-interpolate', star: '504', desc: 'interpolate colors and values',
+  html: `<div class="d-ramp">${rep(10, (i) => `<i style="background:#${(0xf0 - i * 0x1b).toString(16).repeat(3)}"></i>`)}</div><i class="d-mark">▲</i><div class="d-num">50.0</div><div class="d-sub">interpolate(0, 100)</div>`,
+  run: (el) => { const m = el.querySelector('.d-mark'), n = el.querySelector('.d-num');
+    return (t) => { const p = .5 - .5 * Math.cos(t * 1.1); m.style.left = (5 + p * 90) + '%'; typed(n, (p * 100).toFixed(1)); }; } },
+{ id: 'maath', vi: 'Toán cho đồ hoạ', en: 'maath', use: 'Hàm toán: điểm ngẫu nhiên, easing, vector.', cat: 'Math', repo: 'pmndrs/maath', star: '1.3k', desc: 'math helpers for interactive graphics',
+  html: `<canvas></canvas><span class="d-lab">random.inSphere()</span>`,
+  run: (el) => { const cv = el.querySelector('canvas'), r = rng(7), pts = [];
+    while (pts.length < 120) { const p = [r() * 2 - 1, r() * 2 - 1, r() * 2 - 1]; if (Math.hypot(...p) <= 1) pts.push(p); }
+    return (t) => { const [x, w, h] = fit(cv), R = Math.min(w, h) * .38, cx = w / 2, cy = h / 2 - 6;
+      x.strokeStyle = C.soft; x.lineWidth = 1; x.beginPath(); x.arc(cx, cy, R * 1.15, 0, 7); x.stroke(); x.fillStyle = C.ink;
+      pts.map((p) => rot(p, .35, t * .5)).sort((a, b) => a[2] - b[2]).forEach(([px, py, pz]) => { x.globalAlpha = .3 + .35 * (pz + 1); x.beginPath(); x.arc(cx + px * R, cy + py * R, 1 + (pz + 1) * .7, 0, 7); x.fill(); });
+      x.globalAlpha = 1; }; } },
+{ id: 'three-js', vi: 'Cảnh 3D tương tác', en: 'three.js', use: 'Dựng cảnh 3D chạy trong trình duyệt.', cat: '3D', repo: 'mrdoob/three.js', star: '119k', desc: 'interactive 3D scenes',
+  html: `<canvas></canvas>`,
+  run: (el) => { const cv = el.querySelector('canvas'), f = 1.618, V0 = [], E = [];
+    for (const s1 of [1, -1]) for (const s2 of [1, -1]) V0.push([0, s1, s2 * f], [s1, s2 * f, 0], [s2 * f, 0, s1]);
+    V0.forEach((a, i) => V0.forEach((b, j) => { if (j > i && Math.abs(Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]) - 2) < .01) E.push([i, j]); }));
+    return (t) => { const [x, w, h] = fit(cv), R = Math.min(w, h) * .26, P = V0.map((v) => rot(v, t * .35, t * .6));
+      [false, true].forEach((front) => { x.strokeStyle = front ? C.ink : C.soft; x.lineWidth = front ? 1.3 : 1; x.beginPath();
+        E.forEach(([a, b]) => { if ((P[a][2] + P[b][2] > 0) === front) { x.moveTo(w / 2 + P[a][0] * R, h / 2 + P[a][1] * R); x.lineTo(w / 2 + P[b][0] * R, h / 2 + P[b][1] * R); } }); x.stroke(); });
+      x.fillStyle = C.ink; P.forEach((p) => { if (p[2] > 0) { x.beginPath(); x.arc(w / 2 + p[0] * R, h / 2 + p[1] * R, 2.2, 0, 7); x.fill(); } }); }; } },
+{ id: 'blender', vi: 'Dựng hình và hoạt hình 3D', en: 'Blender', use: 'Phần mềm 3D trọn bộ: model, animate, render.', cat: '3D', repo: 'blender/blender', star: '22k', desc: '3D animation and rendering',
+  html: `<canvas></canvas>`,
+  run: (el) => { const cv = el.querySelector('canvas'), S = [];
+    for (let u = 0; u < 30; u++) for (let v = 0; v < 9; v++) { const a = u / 30 * 6.283, b = v / 9 * 6.283; S.push([[(1 + .38 * Math.cos(b)) * Math.cos(a), .38 * Math.sin(b), (1 + .38 * Math.cos(b)) * Math.sin(a)], [Math.cos(b) * Math.cos(a), Math.sin(b), Math.cos(b) * Math.sin(a)]]); }
+    return (t) => { const [x, w, h] = fit(cv), R = Math.min(w, h) * .3, ax = -1.1 + .25 * Math.sin(t * .7), ay = t * .6;
+      S.map(([p, n]) => [rot(p, ax, ay), rot(n, ax, ay)]).sort((a, b) => a[0][2] - b[0][2]).forEach(([p, n]) => {
+        const l = Math.max(0, -.4 * n[0] - .6 * n[1] + .7 * n[2]); x.fillStyle = g(.15 + .6 * l); x.strokeStyle = g(.1);
+        x.lineWidth = .5; x.beginPath(); x.arc(w / 2 + p[0] * R, h / 2 + p[1] * R, R * .16 * (1 + p[2] * .12), 0, 7); x.fill(); x.stroke(); }); }; } },
+{ id: 'bullet-physics', vi: 'Vật lý vật rắn', en: 'Bullet Physics', use: 'Va chạm, rơi, xếp chồng như thật.', cat: 'Physics', repo: 'bulletphysics/bullet3', star: '15k', desc: 'rigid bodies and collisions',
+  html: `<i class="d-ground"></i>${[[-38, 0, 1], [38, 0, 1], [0, 0, 0], [-19, 1, 0], [19, 1, 0]].map(([dx, row, f]) => `<i class="d-box${f ? ' f' : ''}" style="left:calc(50% + ${dx - 17}px);bottom:${31 + row * 35}px"></i>`).join('')}`,
+  run: (el) => { const B = [...el.querySelectorAll('.d-box')];
+    return (t) => { const c = t % 6, fade = c > 5.3 ? (6 - c) / .7 : 1;
+      B.forEach((e, k) => { const dt = c - (.2 + k * .6); let y = -160, o = 0, r = 0;
+        if (dt >= 0) { o = fade; if (dt < .5) { const q = dt / .5; y = -160 * (1 - q * q); r = (1 - q) * (k % 2 ? 18 : -18); } else y = dt < .7 ? -7 * Math.sin(Math.PI * (dt - .5) / .2) : 0; }
+        e.style.transform = `translateY(${y}px) rotate(${r}deg)`; e.style.opacity = o; }); }; } },
+{ id: 'three-mesh-bvh', vi: 'Raycast tăng tốc', en: 'three-mesh-bvh', use: 'Tăng tốc raycast và truy vấn mesh lớn.', cat: 'Speed', repo: 'gkjohnson/three-mesh-bvh', star: '3.6k', desc: 'accelerated raycasts and queries',
+  html: `<svg viewBox="0 0 280 168" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><rect x="70" y="12" width="164" height="128" fill="none" stroke="var(--mute)" stroke-dasharray="3 3"/><line x1="152" y1="12" x2="152" y2="140" stroke="var(--mute)" stroke-dasharray="3 3"/><polygon points="82,104 116,82 106,56 128,66 164,18 196,52 172,76 210,98 152,96 126,140 108,104" fill="var(--soft)" stroke="var(--ink)" stroke-width="1.4" stroke-linejoin="round"/><line class="ray" x1="0" x2="0" stroke="var(--ink)" stroke-width="1.4"/><circle class="hit" r="4" fill="var(--ink)"/></svg>`,
+  run: (el) => { const ray = el.querySelector('.ray'), hit = el.querySelector('.hit'), P = el.querySelector('polygon').getAttribute('points').split(' ').map((s) => s.split(',').map(Number));
+    return (t) => { const y = 20 + 116 * (.5 - .5 * Math.cos(t * 1.2)); let hx = 280;
+      P.forEach((a, i) => { const b = P[(i + 1) % P.length]; if ((a[1] - y) * (b[1] - y) < 0) hx = Math.min(hx, a[0] + (y - a[1]) / (b[1] - a[1]) * (b[0] - a[0])); });
+      ray.setAttribute('y1', y); ray.setAttribute('y2', y); ray.setAttribute('x2', hx); hit.setAttribute('cx', hx); hit.setAttribute('cy', y); hit.style.opacity = hx < 280 ? 1 : 0; }; } },
+{ id: 'gl-react', vi: 'Shader WebGL trong React', en: 'gl-react', use: 'Ghép shader WebGL như component React.', cat: 'Shaders', repo: 'gre/gl-react', star: '3k', desc: 'compose WebGL shaders in React',
+  html: `<canvas></canvas>`,
+  run: (el) => { const cv = el.querySelector('canvas');
+    return (t) => { const [x, w, h] = fit(cv), s = 7, nc = Math.floor(w / s), nr = Math.floor(h / s), ox = (w - nc * s) / 2;
+      for (let i = 0; i < nc; i++) for (let j = 0; j < nr; j++) { const v = .5 + .5 * Math.sin(Math.hypot(i - nc / 2, j - nr / 2) * .7 - t * 3.2), q = Math.round(v * 4) / 4;
+        x.fillStyle = q < .3 ? C.soft : g(1 - q); x.fillRect(ox + i * s, j * s, s - 1, s - 1); } }; } },
+{ id: 'react-postprocessing', vi: 'Hậu kỳ: bloom, DOF', en: 'React Postprocessing', use: 'Thêm bloom, độ sâu trường ảnh, chất phim.', cat: 'Effects', repo: 'pmndrs/react-postprocessing', star: '1.7k', desc: 'bloom, depth of field and film looks',
+  html: (() => { const b = [['3.4s', '-1s', '34%', '40px'], ['4.6s', '-3s', '10%', '28px'], ['2.8s', '-.4s', '56%', '34px']].map(([d, o, y, s]) => `<b style="--d:${d};--o:${o};--y:${y};--s:${s}"></b>`).join('');
+    return `<div class="pp-l">${b}</div><div class="pp-l pp-r">${b}</div><i class="pp-line"></i><span class="pp-a">raw</span><span class="pp-b">bloom + DOF</span>`; })() },
+{ id: 'pixi-viewport', vi: 'Kéo và zoom khung nhìn', en: 'pixi-viewport', use: 'Pan, zoom, minimap cho cảnh PixiJS.', cat: 'Camera', repo: 'pixijs-userland/pixi-viewport', star: '1.2k', desc: 'pan and zoom for PixiJS scenes',
+  html: `<div class="vp"><div class="vp-w"><i></i></div></div><div class="vp-m"><i></i></div>`,
+  run: (el) => { const wd = el.querySelector('.vp-w'), m = el.querySelector('.vp-m i');
+    return (t) => { const z = 1.15 + .55 * (.5 - .5 * Math.cos(t * .7)), px = Math.sin(t * .5) * 50, py = Math.sin(t * .37) * 20, fw = 50 / z;
+      wd.style.transform = `translate(${-px}px,${-py}px) scale(${z})`;
+      Object.assign(m.style, { width: fw + '%', height: fw + '%', left: (50 - fw / 2 + px / 6) + '%', top: (50 - fw / 2 + py / 4) + '%' }); }; } },
+{ id: 'tone-js', vi: 'Âm thanh và nhịp', en: 'Tone.js', use: 'Synth, sequencer, phát nhạc trên web.', cat: 'Audio', repo: 'Tonejs/Tone.js', star: '15k', desc: 'synths, sequencing and sound',
+  html: (() => { const r = rng(3); return `<div class="seq">${rep(64, () => `<i${r() < .3 ? ' class="on"' : ''}></i>`)}</div><span class="d-lab">new Tone.Sequence()</span>`; })(),
+  run: (el) => { const c = [...el.querySelectorAll('.seq i')]; let last = -1;
+    return (t) => { const s = Math.floor(t * 6) % 16; if (s === last) return; last = s; c.forEach((e, k) => e.classList.toggle('ph', k % 16 === s)); }; } },
+{ id: 'audiowaveform', vi: 'Dữ liệu sóng âm', en: 'audiowaveform', use: 'Sinh dữ liệu và ảnh waveform từ audio.', cat: 'Audio', repo: 'bbc/audiowaveform', star: '2.2k', desc: 'waveform data and images',
+  html: `<div class="wf">${rep(72, (i) => `<i style="--i:${i};--h:${(6 + 94 * Math.abs(Math.sin(i * .19)) * (.55 + .45 * Math.abs(Math.cos(i * .83)))).toFixed(1)}%"></i>`)}</div><span class="d-lab">audio.dat → waveform.png</span>` },
+{ id: 'ffmpeg-wasm', vi: 'Video trong trình duyệt', en: 'FFmpeg.wasm', use: 'Chuyển mã video ngay trên trình duyệt.', cat: 'Export', repo: 'ffmpegwasm/ffmpeg.wasm', star: '18k', desc: 'video processing in the browser',
+  html: `<div class="fw-bar"><i></i><i></i><i></i><span>in-browser</span></div><pre class="d-pre">ffmpeg.exec(["-i","in.webm",\n  "out.mp4"])</pre><div class="fw-p"><i></i></div><div class="fw-t">transcoding 0%</div>`,
+  run: (el) => { const b = el.querySelector('.fw-p i'), tx = el.querySelector('.fw-t');
+    return (t) => { const p = Math.round(Math.min((t % 5.5) / 4, 1) * 89); b.style.width = p + '%'; typed(tx, `transcoding ${p}%`); }; } },
+{ id: 'ffmpeg', vi: 'Mã hoá và xuất bản', en: 'FFmpeg', use: 'Encode, filter, xuất file để phát.', cat: 'Deliver', repo: 'FFmpeg/FFmpeg', star: '68k', desc: 'encoding, filters and delivery',
+  html: `<div class="term"><div><span class="mu">$ </span><span data-t></span><i class="d-caret"></i></div><div class="mu" data-o></div></div>`,
+  run: (el) => { const t0 = el.querySelector('[data-t]'), o = el.querySelector('[data-o]'), s = 'ffmpeg -i film.mov -c:v libx264 -crf 18 out.mp4', T = s.length * .05 + .4;
+    return (t) => { const c = t % 8, f = Math.min(240, Math.max(0, Math.floor((c - T) * 90))); typed(t0, s.slice(0, Math.floor(c / .05)));
+      typed(o, c < T ? '' : `frame=${String(f).padStart(4)} fps=96 q=23.0\ntime=00:00:${String((f / 24).toFixed(2)).padStart(5, '0')} speed=3.9x${f === 240 ? '\n✓ out.mp4 ready' : ''}`); }; } },
+];
+
+const panel = document.getElementById('tk'), stage = document.getElementById('tk-stage'), grid = document.getElementById('tk-grid');
+const ct = document.getElementById('tk-ct'), eye = document.getElementById('tk-eye'), hd = document.getElementById('tk-h'), cta = document.getElementById('tk-cta');
+const rm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const pad = (n, k) => String(n).padStart(k, '0');
+// 4 cột: xếp rắn như video (cột 1 xuống, cột 2 lên, ...), cột 2 nhô lên 28px.
+grid.innerHTML = V.map((v, i) => { const c = i >> 2, k = i & 3, r = c % 2 ? 3 - k : k;
+  return `<article class="tk-card" id="${v.id}" style="--i:${i};--c:${c + 1};--r:${r + 1};--y:${[0, -28, -10, 0][c]}px">
+  <div class="tk-head"><div><h3><a href="https://github.com/${v.repo}" target="_blank" rel="noopener">${v.en}</a></h3><div class="tk-cat">${v.cat}</div></div><span class="tk-n">${pad(i + 1, 2)}</span></div>
+  <div class="tk-demo" aria-hidden="true">${v.html}</div>
+  <p class="tk-use">${v.vi}. ${v.use}</p>
+  <div class="tk-foot"><span>${v.desc}</span><b>★ ${v.star}</b></div></article>`; }).join('');
+const cards = [...grid.children];
+
+// Vòng khung: chỉ chạy demo của thẻ đang thấy.
+const frames = cards.map((c, i) => V[i].run ? V[i].run(c.querySelector('.tk-demo')) : null), vis = new Set();
+const theme = () => { const s = getComputedStyle(panel); C.ink = s.getPropertyValue('--ink').trim(); C.soft = s.getPropertyValue('--soft').trim(); C.dark = document.documentElement.dataset.theme === 'dark'; };
+if (rm) { theme(); frames.forEach((f) => f && f(2.2)); }
+else {
+  const io = new IntersectionObserver((es) => es.forEach((e) => e.isIntersecting ? vis.add(e.target._i) : vis.delete(e.target._i)));
+  cards.forEach((c, i) => { c._i = i; io.observe(c); });
+  const loop = (ms) => { theme(); vis.forEach((i) => frames[i] && frames[i](ms / 1000)); requestAnimationFrame(loop); };
+  requestAnimationFrame(loop);
+  // Intro: thẻ hiện so le theo số thứ tự khi khung vào tầm nhìn.
+  panel.classList.add('tk-js');
+  new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { panel.classList.add('is-in'); o.disconnect(); } }, { threshold: .05 }).observe(stage);
+}
+
+// Tour: thu khung về một màn, zoom tới từng thẻ 01→16, rồi về toàn lưới + tiêu đề cuối.
+let timer = null, cur = 0, natural = 0;
+const zoom = (i) => {
+  const card = cards[i], cols = getComputedStyle(grid).gridTemplateColumns.split(' ').length, W = stage.clientWidth, H = stage.clientHeight;
+  const s = Math.min([1, 1.3, 1.3, 1.75][cols - 1], (H - 24) / card.offsetHeight, (W - 24) / card.offsetWidth);
+  const sy = parseFloat((getComputedStyle(card).translate.split(' ')[1]) || 0) || 0;
+  const cx = card.offsetLeft + card.offsetWidth / 2, cy = card.offsetTop + sy + card.offsetHeight / 2;
+  grid.style.transform = `translate(${W / 2 - grid.offsetLeft - s * cx}px,${H / 2 - grid.offsetTop - s * cy}px) scale(${s})`;
+};
+const go = (i) => {
+  cur = i; cards.forEach((c, k) => c.classList.toggle('is-focus', k === i));
+  ct.textContent = `${pad(i + 1, 3)} / 016`; eye.textContent = `${pad(i + 1, 2)} · ${V[i].repo}`; zoom(i);
+};
+const end = () => {
+  clearInterval(timer); timer = null;
+  panel.classList.remove('is-tour'); cards.forEach((c) => c.classList.remove('is-focus'));
+  grid.style.transform = ''; stage.style.height = natural + 'px'; setTimeout(() => { if (!timer) stage.style.height = ''; }, rm ? 0 : 900);
+  ct.textContent = '001–016'; eye.textContent = '370K+ STARS · $0 · 100% OPEN SOURCE'; hd.textContent = 'Build something worth watching.';
+  cta.classList.add('is-fill'); cta.textContent = 'Xem lại tour ↻';
+};
+const start = () => {
+  natural = stage.offsetHeight; stage.style.height = natural + 'px'; stage.offsetHeight;
+  const room = innerHeight - 96 - (panel.offsetHeight - natural);
+  stage.style.height = Math.min(natural, Math.max(340, room)) + 'px';
+  panel.classList.add('is-tour'); hd.textContent = 'One motion studio.';
+  cta.classList.remove('is-fill'); cta.textContent = 'Dừng tour ■';
+  panel.scrollIntoView({ behavior: rm ? 'auto' : 'smooth', block: 'start' });
+  go(0); timer = setInterval(() => cur < 15 ? go(cur + 1) : end(), 1300);
+};
+cta.onclick = () => timer ? end() : start();
+addEventListener('keydown', (e) => { if (e.key === 'Escape' && timer) end(); });
+addEventListener('resize', () => { if (timer) zoom(cur); });
+</script>
+<script src="/search.js?v=ad44216a2c" defer></script><script src="/stats.js?v=ad44216a2c" defer></script>
+</body>
+</html>
