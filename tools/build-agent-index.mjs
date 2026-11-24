@@ -69,7 +69,7 @@ for (const p of JSON.parse(r('patterns/patterns.json'))) {
   }
 }
 for (const [cat, file, author, name, tags, tw] of JSON.parse(r('galaxy/index.json')))
-  add('galaxy', `${cat}-${author}-${name}`, `${human(name)} (${cat})`, cat.toLowerCase().replace(/s$/, ''), 'MIT (Uiverse.io)',
+  add('galaxy', `${cat}-${author}-${name}`, `${human(name)} (${cat})`, cat.toLowerCase(), 'MIT (Uiverse.io)',
     `https://uiverse.io/${author}/${name}`, [cat, ...(tags || []), tw ? 'tailwind' : ''], { html: { src: `gh:galaxy/${cat}/${file}` } });
 {
   const h = r('components/chip.html');
