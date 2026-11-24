@@ -1275,5 +1275,105 @@
         "use": "Sequencer, synth, hẹn giờ âm thanh trong trình duyệt."
       }
     ]
+  },
+  {
+    "id": "sidebar-nav",
+    "vi": "9 kiểu điều hướng thanh bên",
+    "en": "Sidebar navigation (9 types)",
+    "use": "Thanh bên với 9 cách đánh dấu mục đang chọn, đủ bàn phím và ARIA.",
+    "page": "navigation.html",
+    "added": "2026-11-25",
+    "from": "Video @diegohaz (x.com/diegohaz/status/2124999623639212305, Ariakit Recipes), phòng Hang uiux-giatbh, tin m1a20ef936cb1bdd",
+    "variants": [
+      {
+        "id": "edge-bar",
+        "vi": "Vạch mép",
+        "en": "Edge bar",
+        "use": "Menu chính của app (Home, Inbox, Settings); vạch sáng trượt dọc mép trái tới mục đang mở."
+      },
+      {
+        "id": "rail-guide",
+        "vi": "Đường ray",
+        "en": "Rail guide",
+        "use": "Mục lục tài liệu nhiều cấp; một đường ray thẳng, đoạn sáng trượt theo mục đang đọc."
+      },
+      {
+        "id": "smooth-guide",
+        "vi": "Ray cong theo cấp",
+        "en": "Smooth guide",
+        "use": "Tài liệu lồng nhiều cấp; ray uốn chữ S theo độ thụt, đoạn sáng chạy dọc đường cong."
+      },
+      {
+        "id": "dotted",
+        "vi": "Chấm tròn",
+        "en": "Dotted",
+        "use": "Danh sách giai đoạn ngắn, phẳng; chấm sáng lăn tới giai đoạn đang chọn."
+      },
+      {
+        "id": "numbered",
+        "vi": "Bước đánh số",
+        "en": "Numbered",
+        "use": "Hướng dẫn cài đặt theo bước có bước con; vòng tròn số biến thành vạch khi vào bước con."
+      },
+      {
+        "id": "ring-markers",
+        "vi": "Vòng đánh dấu",
+        "en": "Ring markers",
+        "use": "Trình hướng dẫn nhiều bước (onboarding); vòng tròn trượt bao quanh số của bước hiện tại."
+      },
+      {
+        "id": "disclosure",
+        "vi": "Nhóm thu gọn",
+        "en": "Disclosure",
+        "use": "Thanh bên nhiều nhóm (Guides, Reference); mũi tên mở/đóng nhóm, vạch chỉ báo trên ray của nhóm."
+      },
+      {
+        "id": "checked",
+        "vi": "Tiến độ đánh dấu",
+        "en": "Checked",
+        "use": "Khoá học, checklist nhiều chương; bài đã qua tự tích xanh, số chương có vòng tiến độ."
+      },
+      {
+        "id": "table-of-contents",
+        "vi": "Mục lục bám cuộn",
+        "en": "Table of contents",
+        "use": "Mục lục trong trang bài viết dài; đoạn ray sáng phủ đúng các mục đang hiện trên màn hình."
+      }
+    ]
+  },
+  {
+    "id": "sign-dialog",
+    "vi": "Hộp thoại ký hợp đồng",
+    "en": "Sign Dialog",
+    "use": "Hộp thoại ký: bảng chữ ký, hoàn tác, xoá, công tắc đồng ý có cảnh báo, lật vào.",
+    "page": "sign-dialog.html",
+    "added": "2026-11-25",
+    "from": "Video @vanta_ui (x.com/vanta_ui/status/2125292629051203922), phòng Hang uiux-giatbh, tin m1a20ef9d82d5fa9",
+    "variants": [
+      {
+        "id": "dialog",
+        "vi": "Hộp thoại",
+        "en": "Dialog",
+        "use": "Xác nhận việc quan trọng (ký, thanh toán); dialog gốc giữ focus bên trong, Esc đóng, trả focus về nút mở."
+      },
+      {
+        "id": "signature-pad",
+        "vi": "Bảng ký",
+        "en": "Signature pad",
+        "use": "Lấy chữ ký tay; nét cong bậc hai, dày mỏng theo tốc độ, tự vẽ chữ ký mẫu, Undo từng nét, Clear hết."
+      },
+      {
+        "id": "agreement-switch",
+        "vi": "Công tắc đồng ý",
+        "en": "Agreement switch",
+        "use": "Bắt đồng ý điều khoản trước khi gửi; bấm Ký khi chưa bật thì hiện cảnh báo đỏ và rung nhẹ."
+      },
+      {
+        "id": "flip-in",
+        "vi": "Lật vào",
+        "en": "Flip-in",
+        "use": "Mở hộp thoại có trọng lượng; xoay rotateX từ dưới lên kèm mờ dần, giảm chuyển động thì tắt."
+      }
+    ]
   }
 ]

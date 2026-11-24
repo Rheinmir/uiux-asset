@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Điều hướng dọc — 9 kiểu chỉ báo — uiux-asset</title>
+<meta name="description" content="9 kiểu thanh điều hướng dọc (edge bar, rail, smooth guide, dotted, numbered, ring, disclosure, checked, mục lục) có chỉ báo trượt, phím mũi tên và roving tabindex. Dựng lại từ video Ariakit Recipes của @diegohaz, kèm code chép thẳng.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=1db3cbef7f">
+<style>
+.mo-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+.mo-grid { display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 700px) { .mo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1040px) { .mo-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.mo-card { display: flex; flex-direction: column; border-radius: 16px; overflow: hidden; background: #1b1d20; border: 1px solid #2a2d31; color: #f2f2f2; min-width: 0; }
+.mo-stage { position: relative; display: grid; place-items: start center; padding: 44px 12px 20px; min-height: 340px; }
+.mo-n { position: absolute; top: 14px; left: 16px; font: 600 12px/1 var(--aw-font); color: #e8e9eb; }
+.mo-n span { color: #6b6f75; font: 500 11px/1 ui-monospace, Menlo, monospace; margin-right: 8px; }
+.mo-foot { padding: 4px 12px 12px; display: flex; flex-direction: column; gap: 2px; text-align: center; border-top: 1px solid #26292d; }
+.mo-foot h3 { margin: 10px 0 0; font: 500 15px/1.3 var(--aw-font); color: #f2f2f2; }
+.mo-foot h3 small { display: block; font-size: 12px; font-weight: 400; color: #9a9a9a; }
+.mo-foot p { margin: 2px 0 0; font: 400 12px/1.4 var(--aw-font); color: #8a8a8a; }
+.mo-foot details { text-align: left; }
+.mo-foot summary { cursor: pointer; font: 500 13px/44px var(--aw-font); min-height: 44px; color: #bdbdbd; text-align: center; list-style: none; }
+.mo-foot summary::-webkit-details-marker { display: none; }
+.mo-code { position: relative; }
+.mo-code pre { margin: 0; max-height: 300px; overflow: auto; padding: 12px; border-radius: 10px; background: #111214; color: #d8d8d8; font: 11px/1.5 ui-monospace, Menlo, monospace; white-space: pre; }
+.mo-code .aw-btn { position: absolute; top: 6px; right: 6px; min-height: 44px; }
+.mo-keys { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 8px 16px; font: 400 13px/1.5 var(--aw-font); }
+.mo-keys kbd { font: 500 11px/1 ui-monospace, Menlo, monospace; padding: 3px 6px; border-radius: 5px; border: 1px solid currentColor; opacity: .8; }
+</style>
+<style id="mo-css"></style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=1db3cbef7f"></script>
+<div class="mo-page">
+  <div class="aw-sotd" style="padding-top:16px">
+    <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">9 kiểu điều hướng</span></p>
+    <h1 class="aw-h1" style="--aw-h1:clamp(40px,7vw,96px)">Điều hướng dọc</h1>
+    <p class="aw-lead">Chín cách đánh dấu "bạn đang ở đâu" trong thanh bên: vạch mép, đường ray, ray cong theo cấp, chấm, số bước, vòng, nhóm thu gọn, tiến độ đánh dấu và mục lục bám theo cuộn. Chỉ báo trượt mượt giữa các mục; bấm hoặc dùng bàn phím để thử.</p>
+    <ul class="mo-keys" aria-label="Phím tắt">
+      <li><kbd>Tab</kbd> vào mục đang chọn</li><li><kbd>↑</kbd> <kbd>↓</kbd> <kbd>Home</kbd> <kbd>End</kbd> di chuyển</li>
+      <li><kbd>Enter</kbd> <kbd>Space</kbd> chọn</li><li><kbd>→</kbd> <kbd>←</kbd> mở / đóng nhóm</li><li><kbd>Esc</kbd> về nhóm cha</li>
+    </ul>
+    <p class="aw-lead" style="font-size:14px">Dựng lại từ <a href="https://x.com/diegohaz/status/2124999623639212305" target="_blank" rel="noopener">bài đăng của @diegohaz</a> ("9 types of navigation UI I'm working on for Ariakit Recipes"). Hành vi bàn phím theo mẫu Composite của <a href="https://ariakit.org" target="_blank" rel="noopener">ariakit.org</a>; ở đây viết lại bằng JS/CSS thuần, không thư viện.</p>
+  </div>
+  <div class="mo-grid" id="mo-grid"></div>
+</div>
+</main>
+<script>
+// Bộ máy dùng chung (được chép kèm trong mọi đoạn code): roving tabindex, phím mũi tên,
+// nhóm thu gọn, vị trí chỉ báo (--y/--h), ray SVG cong theo cấp, và scroll-spy cho mục lục.
+function navKit(nav) {
+  const map = nav.parentElement.querySelector('.nk-map'), val = nav.dataset.cur || 'page';
+  const rm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const links = [...nav.querySelectorAll('a')];
+  const items = () => [...nav.querySelectorAll('a, .nk-tog')].filter((el) => !el.closest('[inert]'));
+  const cur = () => nav.querySelector('[aria-current]');
+  const shown = (el) => { const h = el && el.closest('[inert]'); return h ? h.previousElementSibling : el; };
+  const setCur = (a) => { links.forEach((l) => l === a ? l.setAttribute('aria-current', val) : l.removeAttribute('aria-current')); render(); };
+  const toggle = (b, open = b.getAttribute('aria-expanded') !== 'true') => { b.setAttribute('aria-expanded', open); b.nextElementSibling.toggleAttribute('inert', !open); render(); };
+  function render() {
+    const c = cur(), t = shown(c) || items()[0], n = nav.getBoundingClientRect();
+    if (!nav.contains(document.activeElement)) items().forEach((el) => el.tabIndex = el === t ? 0 : -1);
+    let done = !!c; links.forEach((l) => { if (l === c) done = false; l.toggleAttribute('data-done', done); });
+    nav.querySelectorAll('.nk-grp').forEach((g) => { const s = [...g.querySelectorAll('a')], d = s.filter((l) => l.hasAttribute('data-done')).length; g.style.setProperty('--p', d / s.length); g.dataset.s = d === s.length ? 'done' : g.contains(c) ? 'cur' : 'todo'; });
+    if (t) { const r = t.getBoundingClientRect(); nav.style.setProperty('--y', r.top - n.top + 'px'); nav.style.setProperty('--h', r.height + 'px'); nav.dataset.d = t.dataset.d || 0; nav.toggleAttribute('data-hid', t !== c); }
+    const svg = nav.querySelector('.nk-svg'); if (!svg) return;
+    // Ray: đoạn thẳng theo cấp của từng mục, uốn cong chữ S ở chỗ đổi cấp. Đoạn sáng = dasharray trên cùng đường.
+    const P = links.map((a) => { const r = a.getBoundingClientRect(); return { x: 6 + (+a.dataset.d || 0) * 14, t: r.top - n.top, b: r.bottom - n.top }; });
+    let d = `M${P[0].x} ${P[0].t}`;
+    P.forEach((p, i) => { const q = P[i + 1]; if (!q) d += ` L${p.x} ${p.b}`; else if (q.x !== p.x) d += ` L${p.x} ${p.b - 7} C${p.x} ${p.b} ${q.x} ${p.b} ${q.x} ${p.b + 7}`; });
+    const [rail, hi] = svg.querySelectorAll('path'); rail.setAttribute('d', d); hi.setAttribute('d', d);
+    const L = rail.getTotalLength(), at = (y) => { let lo = 0, h = L; for (let k = 0; k < 18; k++) { const m = (lo + h) / 2; rail.getPointAtLength(m).y < y ? lo = m : h = m; } return lo; };
+    const sel = map ? links.filter((l) => l.hasAttribute('data-vis')) : [c];
+    if (!sel[0]) { hi.style.strokeDasharray = `0 ${L + 1}`; return; }
+    const s = at(sel[0].getBoundingClientRect().top - n.top + 8), e = at(sel[sel.length - 1].getBoundingClientRect().bottom - n.top - 8);
+    hi.style.strokeDasharray = `${e - s} ${L + 1}`; hi.style.strokeDashoffset = -s;
+  }
+  nav.addEventListener('click', (e) => {
+    const a = e.target.closest('a'), b = e.target.closest('.nk-tog');
+    if (a) { e.preventDefault(); if (!map) return setCur(a); const s = map.querySelector(`[data-for="${a.hash.slice(1)}"]`); map.scrollTo({ top: s.offsetTop - 8, behavior: rm ? 'auto' : 'smooth' }); }
+    if (b) toggle(b);
+  });
+  nav.addEventListener('keydown', (e) => {
+    const list = items(), i = list.indexOf(document.activeElement); if (i < 0) return;
+    const el = list[i], tog = el.classList.contains('nk-tog'), open = tog && el.getAttribute('aria-expanded') === 'true', sub = el.closest('.nk-sub');
+    const go = (j) => { e.preventDefault(); const t = list[Math.max(0, Math.min(list.length - 1, j))]; list.forEach((x) => x.tabIndex = -1); t.tabIndex = 0; t.focus(); };
+    if (e.key === 'ArrowDown') go(i + 1);
+    else if (e.key === 'ArrowUp') go(i - 1);
+    else if (e.key === 'Home') go(0);
+    else if (e.key === 'End') go(list.length - 1);
+    else if (e.key === 'ArrowRight' && tog) { e.preventDefault(); open ? go(i + 1) : toggle(el); }
+    else if (e.key === 'ArrowLeft' && tog && open) { e.preventDefault(); toggle(el); }
+    else if ((e.key === 'ArrowLeft' || e.key === 'Escape') && sub) { go(list.indexOf(sub.previousElementSibling)); if (e.key === 'Escape') toggle(sub.previousElementSibling, false); }
+    else if (e.key === ' ' && !tog) { e.preventDefault(); el.click(); }
+  });
+  nav.addEventListener('focusout', (e) => { if (!nav.contains(e.relatedTarget)) render(); });
+  if (map) {
+    const spy = () => {
+      const m = map.getBoundingClientRect();
+      links.forEach((l) => { const s = map.querySelector(`[data-for="${l.hash.slice(1)}"]`), r = s.getBoundingClientRect(), v = r.bottom > m.top + 6 && r.top < m.bottom - 6; l.toggleAttribute('data-vis', v); s.classList.toggle('vis', v); });
+      setCur(links.find((l) => l.hasAttribute('data-vis')));
+    };
+    map.addEventListener('scroll', spy, { passive: true }); spy();
+  }
+  new ResizeObserver(render).observe(nav); render();
+}
+
+const BASE = `@property --p{syntax:'<number>';inherits:true;initial-value:0}
+.nk{--fg:#eceef0;--mut:#9599a0;--hov:rgba(255,255,255,.05);--act:rgba(255,255,255,.08);--line:#383b40;--blue:#1f7ae0;position:relative;box-sizing:border-box;width:250px;max-width:100%;font:400 14px/1.2 system-ui,-apple-system,sans-serif;color:var(--mut)}
+.nk *{box-sizing:border-box}.nk ul{list-style:none;margin:0;padding:0}
+.nk a,.nk button{position:relative;z-index:1;display:flex;align-items:center;gap:10px;width:auto;min-height:36px;margin:0;padding:0 12px;border:0;border-radius:8px;background:none;color:inherit;font:inherit;text-decoration:none;text-align:left;cursor:pointer;transition:background .15s,color .15s}
+.nk button{width:100%}
+.nk a:hover,.nk button:hover{background:var(--hov);color:var(--fg)}
+.nk [aria-current]{background:var(--act);color:var(--fg);font-weight:500}
+.nk a:focus-visible,.nk button:focus-visible{outline:2px solid #6aa8ff;outline-offset:-2px}
+.nk svg{flex:none}
+.nk-ind{position:absolute;z-index:0;left:0;top:calc(var(--y,0px) + 8px);width:2px;height:calc(var(--h,36px) - 16px);border-radius:2px;background:var(--fg);pointer-events:none;transition:top .35s cubic-bezier(.3,.8,.2,1),left .35s cubic-bezier(.3,.8,.2,1),width .35s,height .35s cubic-bezier(.3,.8,.2,1),border-radius .35s,opacity .2s}
+.nk[data-hid] .nk-ind{opacity:0}
+.nk-sub{display:grid;grid-template-rows:1fr;transition:grid-template-rows .3s cubic-bezier(.3,.8,.2,1)}
+.nk-sub[inert]{grid-template-rows:0fr}.nk-sub>ul{min-height:0;overflow:hidden}
+.nk-chev{margin-left:auto;transition:transform .25s}.nk-tog[aria-expanded="false"] .nk-chev{transform:rotate(-90deg)}
+@media (prefers-reduced-motion:reduce){.nk *,.nk .nk-ind{transition:none!important}}
+`;
+
+// Trình dựng chuỗi HTML (chỉ chạy trên trang; code chép ra là HTML tĩnh).
+const slug = (t) => t.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const ic = (d) => `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
+const CHEV = `<svg class="nk-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>`;
+const CHK = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>`;
+const A = (t, o = {}) => `<a href="#${slug(t)}"${o.d ? ` data-d="${o.d}"` : ''}${o.cur ? ` aria-current="${o.cur}"` : ''}>${o.pre || ''}<span>${t}</span></a>`;
+const UL = (xs) => `<ul>${xs.map((x) => `<li>${x}</li>`).join('')}</ul>`;
+const NAV = (cls, label, inner, cur = '') => `<nav class="nk nk--${cls}" aria-label="${label}"${cur ? ` data-cur="${cur}"` : ''}><span class="nk-ind" aria-hidden="true"></span>${inner}</nav>`;
+const SVG = `<svg class="nk-svg" aria-hidden="true"><path class="nk-rail"/><path class="nk-hi"/></svg>`;
+const GRP = (id, label, pre, open, subs) => `<li class="nk-grp"><button type="button" class="nk-tog" aria-expanded="${open}" aria-controls="${id}">${pre}<span>${label}</span>${CHEV}</button><div class="nk-sub" id="${id}"${open ? '' : ' inert'}>${UL(subs)}</div></li>`;
+const num = (n) => `<span class="nk-num" aria-hidden="true">${n}</span>`;
+const SVGCSS = (s) => `${s}{padding-left:16px}${s} .nk-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;fill:none;stroke-linecap:round}${s} .nk-rail{stroke:var(--line);stroke-width:1.5}${s} .nk-hi{stroke:var(--fg);stroke-width:2;transition:stroke-dasharray .4s cubic-bezier(.3,.8,.2,1),stroke-dashoffset .4s cubic-bezier(.3,.8,.2,1)}${s} [data-d="1"]{margin-left:14px}${s} [data-d="2"]{margin-left:28px}${s} .nk-ind{display:none}@media (prefers-reduced-motion:reduce){${s} .nk-hi{transition:none}}`;
+
+const V = [
+{ id: 'edge-bar', vi: 'Vạch mép', en: 'Edge bar', use: 'Menu chính của app (Home, Inbox, Settings); vạch sáng trượt dọc mép trái tới mục đang mở.',
+  css: `.nk--edge{padding-left:12px}.nk--edge .nk-ind{width:3px;top:calc(var(--y,0px) + 7px);height:calc(var(--h,36px) - 14px)}.nk--edge a{min-height:36px;margin:1px 0}`,
+  html: NAV('edge', 'Ứng dụng', UL([A('Home', { pre: ic('M3 10.5 12 3l9 7.5V21h-6v-6H9v6H3z'), cur: 'page' }), A('Inbox', { pre: ic('M3 13h5l1.5 3h5l1.5-3h5M5.5 5h13L21 13v6H3v-6z') }), A('Reports', { pre: ic('M3 20h18M6 16v-5M11 16V6M16 16v-8') }), A('Team', { pre: ic('M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M16 4.5a3.5 3.5 0 0 1 0 6.5M18.5 14.5c1.8.7 3 2.6 3 5') }), A('Billing', { pre: ic('M3 6.5A1.5 1.5 0 0 1 4.5 5h15A1.5 1.5 0 0 1 21 6.5v11a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 17.5zM3 10h18') }), A('Settings', { pre: ic('M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1') })])) },
+{ id: 'rail-guide', vi: 'Đường ray', en: 'Rail guide', use: 'Mục lục tài liệu nhiều cấp; một đường ray thẳng, đoạn sáng trượt theo mục đang đọc.',
+  css: `.nk--rail{padding-left:16px}.nk--rail::before{content:"";position:absolute;left:5.5px;top:0;bottom:0;width:1px;background:var(--line)}.nk--rail .nk-ind{left:5px}.nk--rail [data-d="1"]{margin-left:14px}.nk--rail [data-d="2"]{margin-left:28px}`,
+  html: NAV('rail', 'Tài liệu', UL([A('Overview', { cur: 'page' }), A('Components'), A('Button', { d: 1 }), A('Dialog', { d: 1 }), A('Modal', { d: 2 }), A('Theming')])) },
+{ id: 'smooth-guide', vi: 'Ray cong theo cấp', en: 'Smooth guide', use: 'Tài liệu lồng nhiều cấp; ray uốn chữ S theo độ thụt, đoạn sáng chạy dọc đường cong.',
+  css: SVGCSS('.nk--smooth'),
+  html: NAV('smooth', 'Hướng dẫn', SVG + UL([A('Introduction', { cur: 'page' }), A('Installation'), A('Vite', { d: 1 }), A('Next.js', { d: 1 }), A('App Router', { d: 2 }), A('Styling')])) },
+{ id: 'dotted', vi: 'Chấm tròn', en: 'Dotted', use: 'Danh sách giai đoạn ngắn, phẳng; chấm sáng lăn tới giai đoạn đang chọn.',
+  css: `.nk--dot{padding-left:16px}.nk--dot a::before{content:"";position:absolute;left:-12px;top:50%;width:4px;height:4px;margin-top:-2px;border-radius:50%;background:var(--line)}.nk--dot .nk-ind{left:3px;width:6px;height:6px;border-radius:50%;top:calc(var(--y,0px) + var(--h,36px)/2 - 3px)}`,
+  html: NAV('dot', 'Quy trình', UL([A('Research', { cur: 'page' }), A('Design'), A('Prototype'), A('Build'), A('Test'), A('Launch')])) },
+{ id: 'numbered', vi: 'Bước đánh số', en: 'Numbered', use: 'Hướng dẫn cài đặt theo bước có bước con; vòng tròn số biến thành vạch khi vào bước con.',
+  css: `.nk--num a{padding-left:8px}.nk-num{display:grid;place-items:center;flex:none;width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.08);font:600 11px/1 system-ui,sans-serif;color:var(--mut);transition:color .3s,background .3s}.nk--num [aria-current] .nk-num{background:transparent;color:#111}.nk--num [data-d="1"]{margin-left:26px;padding-left:12px}.nk--num [data-d="1"]::before{content:"";position:absolute;left:-8.5px;top:0;bottom:0;width:1px;background:var(--line)}.nk--num .nk-ind{left:8px;width:20px;height:20px;border-radius:10px;top:calc(var(--y,0px) + var(--h,36px)/2 - 10px)}.nk--num[data-d="1"] .nk-ind{left:17px;width:2px;height:calc(var(--h,36px) - 14px);top:calc(var(--y,0px) + 7px)}`,
+  html: NAV('num', 'Các bước', UL([A('Create the project', { pre: num(1), cur: 'step' }), A('Add the database', { pre: num(2) }), A('Choose a provider', { d: 1 }), A('Run the setup', { d: 1 }), A('Connect the API', { pre: num(3) }), A('Deploy the app', { pre: num(4) })]), 'step') },
+{ id: 'ring-markers', vi: 'Vòng đánh dấu', en: 'Ring markers', use: 'Trình hướng dẫn nhiều bước (onboarding); vòng tròn trượt bao quanh số của bước hiện tại.',
+  css: `.nk--ring .nk-num{display:grid;place-items:center;flex:none;width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.06);font:600 11px/1 system-ui,sans-serif;transition:color .3s}.nk--ring [aria-current] .nk-num{background:none;color:var(--fg)}.nk--ring .nk-ind{left:9px;width:26px;height:26px;border-radius:50%;background:none;border:1.5px solid var(--fg);top:calc(var(--y,0px) + var(--h,36px)/2 - 13px);z-index:2}`,
+  html: NAV('ring', 'Thiết lập', UL(['Account', 'Profile', 'Workspace', 'Integrations', 'Invite the team', 'Finish'].map((t, i) => A(t, { pre: num(i + 1), cur: i ? '' : 'step' }))), 'step') },
+{ id: 'disclosure', vi: 'Nhóm thu gọn', en: 'Disclosure', use: 'Thanh bên nhiều nhóm (Guides, Reference); mũi tên mở/đóng nhóm, vạch chỉ báo trên ray của nhóm.',
+  css: `.nk--disc .nk-tog{padding-left:10px;color:var(--fg)}.nk--disc .nk-tog .nk-chev{order:-1;margin:0}.nk--disc a{margin-left:26px}.nk--disc a::before{content:"";position:absolute;left:-8.5px;top:0;bottom:0;width:1px;background:var(--line)}.nk--disc .nk-ind{left:17px}`,
+  html: NAV('disc', 'Tài liệu tham khảo', `<ul>${GRP('nk-disc-g', 'Guides', '', true, [A('Install', { d: 1, cur: 'page' }), A('Deploy', { d: 1 })])}${GRP('nk-disc-r', 'Reference', '', false, [A('Hooks', { d: 1 }), A('Utilities', { d: 1 })])}</ul>`) },
+{ id: 'checked', vi: 'Tiến độ đánh dấu', en: 'Checked', use: 'Khoá học, checklist nhiều chương; bài đã qua tự tích xanh, số chương có vòng tiến độ.',
+  css: `.nk--chk .nk-tog{padding-left:8px;color:var(--fg);font-size:15px}.nk-mk{position:relative;display:grid;place-items:center;flex:none;width:24px;height:24px;border-radius:50%;font:600 12px/1 system-ui,sans-serif;background:radial-gradient(closest-side,#25282c 84%,transparent 86%),conic-gradient(#4aa3ff calc(var(--p)*1turn),#383b40 0);transition:--p .5s cubic-bezier(.3,.8,.2,1)}.nk-mk svg,.nk-dot svg{position:absolute;opacity:0;transition:opacity .2s}.nk-grp[data-s="done"] .nk-mk{background:var(--blue);color:transparent}.nk-grp[data-s="done"] .nk-mk svg{opacity:1;color:#fff}.nk--chk a{margin-left:28px;padding-left:10px}.nk--chk a::before{content:"";position:absolute;left:-8.5px;top:0;bottom:0;width:1px;background:var(--line)}.nk-dot{position:relative;display:grid;place-items:center;flex:none;width:16px;height:16px;border-radius:50%;border:1.5px solid #5a5e64;transition:background .2s,border-color .2s}.nk--chk [aria-current] .nk-dot{border-color:var(--fg)}.nk--chk [data-done] .nk-dot{background:var(--blue);border-color:var(--blue)}.nk--chk [data-done] .nk-dot svg{opacity:1;color:#fff}.nk--chk .nk-ind{left:19px}`,
+  html: NAV('chk', 'Khoá học', `<ul>${GRP('nk-chk-b', 'Basics', `<span class="nk-mk" aria-hidden="true">${CHK}1</span>`, false, [A('Overview', { d: 1, pre: `<span class="nk-dot" aria-hidden="true">${CHK}</span>` }), A('Installation', { d: 1, pre: `<span class="nk-dot" aria-hidden="true">${CHK}</span>` })])}${GRP('nk-chk-s', 'State', `<span class="nk-mk" aria-hidden="true">${CHK}2</span>`, true, ['Adding state', 'Derived state', 'Effects', 'Refs'].map((t) => A(t, { d: 1, cur: t === 'Effects' ? 'step' : '', pre: `<span class="nk-dot" aria-hidden="true">${CHK}</span>` })))}</ul>`, 'step') },
+{ id: 'table-of-contents', vi: 'Mục lục bám cuộn', en: 'Table of contents', use: 'Mục lục trong trang bài viết dài; đoạn ray sáng phủ đúng các mục đang hiện trên màn hình.',
+  css: `.nk-toc{display:flex;gap:14px;align-items:flex-start;max-width:100%}${SVGCSS('.nk--toc')}.nk--toc{width:170px;font-size:13px}.nk--toc a{min-height:32px;padding:0 10px}.nk--toc [data-d="1"]::before{content:"";position:absolute;left:-13px;top:50%;width:6px;height:6px;margin-top:-3px;border-radius:50%;background:var(--line);transition:background .2s}.nk--toc [data-vis]::before{background:var(--fg)}.nk--toc [data-vis]{color:var(--fg)}.nk-map{position:relative;flex:none;width:84px;height:256px;padding:10px;border-radius:14px;background:#222529;border:1px solid #2e3135;overflow:auto;scrollbar-width:none;outline-offset:2px}.nk-map::-webkit-scrollbar{display:none}.nk-map:focus-visible{outline:2px solid #6aa8ff}.nk-map section{margin-bottom:16px}.nk-map b,.nk-map i{display:block;height:4px;margin-top:6px;border-radius:4px;background:#34373c;transition:background .3s}.nk-map b{height:8px;width:70%;background:#45484d}.nk-map i:nth-child(3n){width:62%}.nk-map i:nth-child(3n+1){width:88%}.nk-map .vis b{background:#a9adb3}.nk-map .vis i{background:#4a4e54}`,
+  html: `<div class="nk-toc">${NAV('toc', 'Mục lục', SVG + UL([A('Overview'), A('Examples'), A('Basic tabs', { d: 1 }), A('Vertical tabs', { d: 1 }), A('Styling'), A('Active tab', { d: 1 }), A('Tab panels', { d: 1 }), A('Accessibility')]), 'location')}<div class="nk-map" tabindex="0" role="region" aria-label="Nội dung bài (cuộn để thử)">${['overview', 'examples', 'basic-tabs', 'vertical-tabs', 'styling', 'active-tab', 'tab-panels', 'accessibility'].map((s, i) => `<section data-for="${s}"><b></b>${'<i></i>'.repeat(3 + (i * 5) % 4)}</section>`).join('')}</div></div>` }
+];
+
+const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+document.getElementById('mo-css').textContent = BASE + V.map((v) => v.css).join('\n');
+const grid = document.getElementById('mo-grid');
+const code = (v) => `<style>\n${BASE}${v.css.replace(/}(?=[.@])/g, '}\n')}\n</style>\n${v.html}\n<script>\n${navKit}\ndocument.querySelectorAll('.nk').forEach(navKit);\n<\/script>`;
+grid.innerHTML = V.map((v, i) => `<article class="mo-card" id="${v.id}">
+  <div class="mo-stage"><span class="mo-n"><span>${String(i + 1).padStart(2, '0')}</span>${v.en}</span>${v.html}</div>
+  <div class="mo-foot"><h3>${v.vi}<small>${v.en}</small></h3><p>${v.use}</p>
+  <details><summary>Code</summary><div class="mo-code"><button type="button" class="aw-btn aw-btn--small" data-copy>Chép</button>
+  <pre><code>${esc(code(v))}</code></pre></div></details></div></article>`).join('');
+grid.querySelectorAll('.nk').forEach(navKit);
+grid.addEventListener('click', (e) => {
+  const b = e.target.closest('[data-copy]'); if (!b) return;
+  navigator.clipboard.writeText(b.nextElementSibling.textContent).then(() => { b.textContent = 'Đã chép'; setTimeout(() => b.textContent = 'Chép', 1500); });
+});
+</script>
+<script src="/search.js?v=1db3cbef7f" defer></script><script src="/stats.js?v=1db3cbef7f" defer></script>
+</body>
+</html>

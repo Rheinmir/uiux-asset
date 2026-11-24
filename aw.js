@@ -21,6 +21,8 @@
       ['patterns/moments.html', 'Khoảnh khắc UI', 'Công tắc, nút, spinner tự chạy', 36],
       ['ui-moments/', 'UI Moments gốc', 'Bộ gốc MIT: 164 UI, chép HTML/React', 164],
       ['patterns/glow.html', 'Viền cầu vồng', 'Công tắc, ô nhập, thẻ sáng ngũ sắc', 4],
+      ['patterns/navigation.html', 'Điều hướng thanh bên', '9 kiểu đánh dấu mục đang chọn', 9],
+      ['patterns/sign-dialog.html', 'Hộp thoại ký', 'Ký tay, hoàn tác, công tắc đồng ý', 4],
       ['patterns/factory.html', 'Bảng agent', 'Kanban dây chuyền agent, chép code', 1]]],
     ['man-hinh', 'Màn hình', 'Trang web và màn app dựng lại', [
       ['patterns/taste.html', 'Hero và màn app', 'Hero website và màn app có gu', 11],

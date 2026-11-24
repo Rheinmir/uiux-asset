@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hộp thoại ký hợp đồng — uiux-asset</title>
+<meta name="description" content="Hộp thoại ký hợp đồng: lật vào 3D, bảng ký tự vẽ chữ ký mẫu, hoàn tác và xoá, công tắc đồng ý có cảnh báo. Dựng lại từ video Sign Dialog của @vanta_ui, kèm code chép thẳng.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=1db3cbef7f">
+<style>
+.mo-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+.mo-demo { position: relative; display: grid; place-items: center; gap: 12px; min-height: 360px; padding: 24px 16px; border-radius: 16px; background: #fafafa; border: 1px solid #e6e6e8; color: #18181b; text-align: center; }
+.mo-demo > p { margin: 0; font: 400 13px/1.4 var(--aw-font); color: #71717a; }
+.mo-tools { display: flex; justify-content: center; }
+.mo-tools .aw-btn { min-height: 44px; }
+.mo-grid { display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 700px) { .mo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1040px) { .mo-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.mo-part { padding: 16px; border-radius: 14px; border: 1px solid var(--aw-border-color, rgba(128,128,128,.25)); }
+.mo-part h3 { margin: 0; font: 500 15px/1.3 var(--aw-font); }
+.mo-part h3 small { display: block; font-size: 12px; font-weight: 400; opacity: .65; }
+.mo-part p { margin: 6px 0 0; font: 400 13px/1.5 var(--aw-font); opacity: .8; }
+.mo-code { position: relative; }
+.mo-code summary { cursor: pointer; font: 500 13px/44px var(--aw-font); min-height: 44px; list-style: none; text-align: center; }
+.mo-code summary::-webkit-details-marker { display: none; }
+.mo-code pre { margin: 0; max-height: 420px; overflow: auto; padding: 12px; border-radius: 10px; background: #111214; color: #d8d8d8; font: 11px/1.5 ui-monospace, Menlo, monospace; white-space: pre; }
+.mo-code .aw-btn { position: absolute; top: 50px; right: 6px; min-height: 44px; }
+</style>
+<style id="sd-css">
+.sd-trigger{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 18px;border:1px solid #e4e4e7;border-radius:12px;background:#fff;color:#18181b;font:500 14px/1 system-ui,-apple-system,sans-serif;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.05)}
+.sd-trigger:hover{background:#f6f6f7}.sd-trigger:focus-visible,.sd button:focus-visible,.sd-pad canvas:focus-visible{outline:2px solid #3b82f6;outline-offset:2px}
+.sd{width:min(452px,calc(100vw - 24px));max-width:none;max-height:calc(100dvh - 24px);margin:auto;padding:6px;border:0;border-radius:22px;background:#f4f4f5;color:#18181b;text-align:left;font:400 14px/1.4 system-ui,-apple-system,"Inter",sans-serif;box-shadow:0 0 0 1px rgba(0,0,0,.06),0 24px 60px -12px rgba(0,0,0,.35);overflow:auto;transform-origin:50% 0}
+.sd::backdrop{background:rgba(120,120,125,.38)}
+.sd[open]{animation:sd-in .55s cubic-bezier(.2,.9,.25,1.12) both}
+.sd[open]::backdrop{animation:sd-fade .3s ease both}
+.sd.out{animation:sd-out .22s ease-in both}.sd.out::backdrop{animation:sd-fade .22s ease reverse both}
+@keyframes sd-in{from{opacity:0;filter:blur(6px);transform:perspective(900px) rotateX(-38deg) translateY(28px) scale(.94)}60%{opacity:1;filter:blur(0)}to{transform:none}}
+@keyframes sd-out{to{opacity:0;filter:blur(4px);transform:perspective(900px) rotateX(24deg) translateY(16px) scale(.96)}}
+@keyframes sd-fade{from{opacity:0}}
+.sd-card{padding:20px;border-radius:17px;background:#fff;box-shadow:0 0 0 1px #ececee,0 1px 2px rgba(0,0,0,.04)}
+.sd h2{margin:0 0 14px;font-size:17px;font-weight:600;line-height:1.3;letter-spacing:-.01em}
+.sd-pad{position:relative;height:184px;border-radius:14px;background:#f7f7f8;box-shadow:inset 0 0 0 1px #ededef;transition:box-shadow .2s}
+.sd-pad.bad{box-shadow:inset 0 0 0 1.5px #f2a7b2}
+.sd-pad canvas{position:absolute;inset:0;width:100%;height:100%;border-radius:inherit;touch-action:none;cursor:crosshair}
+.sd-tools{position:absolute;left:8px;bottom:2px;display:flex;align-items:center}
+.sd-tools button{display:inline-flex;align-items:center;gap:5px;min-height:44px;padding:0 8px;border:0;border-radius:8px;background:none;color:#71717a;font:inherit;font-size:13px;cursor:pointer}
+.sd-tools button:hover:not(:disabled){color:#18181b}.sd-tools button:disabled{color:#c4c4c8;cursor:default}
+.sd-tools hr{width:1px;height:14px;margin:0 2px;border:0;background:#e0e0e3}
+.sd-note{margin:12px 0;font-size:12.5px;color:#71717a}
+.sd-agree{border-radius:13px;box-shadow:inset 0 0 0 1px #ececee;overflow:hidden;transition:box-shadow .2s}
+.sd-agree.warn{box-shadow:inset 0 0 0 1px #f6c5cc}
+.sd-switch{display:flex;align-items:center;gap:12px;width:100%;min-height:52px;padding:0 14px;border:0;background:none;color:#27272a;font:inherit;font-size:13.5px;text-align:left;cursor:pointer;border-radius:13px}
+.sd-track{position:relative;flex:none;width:34px;height:20px;border-radius:20px;background:#e4e4e7;transition:background .25s}
+.sd-track::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .3s cubic-bezier(.3,1.5,.5,1)}
+.sd-switch[aria-checked="true"] .sd-track{background:#2f7cf6}.sd-switch[aria-checked="true"] .sd-track::after{transform:translateX(14px)}
+.sd-warn{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s cubic-bezier(.3,.8,.2,1)}
+.sd-agree.warn .sd-warn{grid-template-rows:1fr}
+.sd-warn>p{min-height:0;overflow:hidden;margin:0;display:flex;align-items:center;gap:8px;padding:0 14px;background:#fdeff1;color:#d61f3c;font-size:13px;font-weight:500}
+.sd-agree.warn .sd-warn>p{padding:10px 14px}
+.sd-warn svg{flex:none}
+.sd-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 6px 4px 10px}
+.sd-close{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 6px;border:0;border-radius:10px;background:none;color:#71717a;font:inherit;font-size:13.5px;cursor:pointer}
+.sd-close:hover{color:#18181b}
+.sd kbd{display:inline-grid;place-items:center;min-width:28px;height:22px;padding:0 6px;border-radius:7px;background:#fff;box-shadow:0 0 0 1px #e4e4e7,0 1px 0 #e4e4e7;color:#18181b;font:600 11px/1 system-ui,sans-serif}
+.sd-sign{display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:0 8px 0 16px;border:0;border-radius:12px;background:linear-gradient(180deg,#4d93ff,#2f7cf6);color:#fff;font:inherit;font-size:14px;font-weight:500;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 2px 6px rgba(47,124,246,.35)}
+.sd-sign:hover{filter:brightness(1.05)}.sd-sign kbd{background:rgba(255,255,255,.18);box-shadow:none;color:#fff}
+.sd .shake{animation:sd-shake .4s}
+@keyframes sd-shake{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+@media (prefers-reduced-motion:reduce){.sd[open],.sd.out,.sd::backdrop,.sd .shake{animation-duration:.01s!important}.sd *{transition:none!important}}
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=1db3cbef7f"></script>
+<div class="mo-page">
+  <div class="aw-sotd" style="padding-top:16px">
+    <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">4 phần</span></p>
+    <h1 class="aw-h1" style="--aw-h1:clamp(40px,7vw,96px)">Hộp thoại ký</h1>
+    <p class="aw-lead">Hộp thoại ký hợp đồng lật vào từ phía dưới, tự vẽ một chữ ký mẫu để gợi ý chỗ ký, cho hoàn tác từng nét hoặc xoá hết, và chặn nút Ký bằng cảnh báo đỏ nếu chưa gạt công tắc đồng ý.</p>
+    <p class="aw-lead" style="font-size:14px">Dựng lại từ <a href="https://x.com/vanta_ui/status/2125292629051203922" target="_blank" rel="noopener">bài đăng của @vanta_ui</a> ("Sign Dialog"). Viết lại bằng JS/CSS thuần: <code>&lt;dialog&gt;</code> gốc, canvas và pointer events.</p>
+  </div>
+
+  <section class="mo-demo" aria-label="Bản chạy thử">
+    <div id="sd-root">
+<button type="button" class="sd-trigger" data-sd-open="sd-dialog">Sign Contract</button>
+<dialog class="sd" id="sd-dialog" aria-labelledby="sd-title">
+  <div class="sd-card">
+    <h2 id="sd-title">Sign the contract</h2>
+    <div class="sd-pad">
+      <canvas tabindex="0" role="img" aria-label="Signature pad. Draw with mouse, touch or pen. Press Enter to use the example signature."></canvas>
+      <div class="sd-tools">
+        <button type="button" data-undo disabled><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>Undo</button><hr>
+        <button type="button" data-clear disabled><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 21-4.3-4.3a1 1 0 0 1 0-1.4l10-10a1 1 0 0 1 1.4 0l5.6 5.6a1 1 0 0 1 0 1.4L11 21z"/><path d="M22 21H7M5 11l9 9"/></svg>Clear</button>
+      </div>
+    </div>
+    <p class="sd-note">This contract will be signed by and sent to the subsequent signee.</p>
+    <div class="sd-agree">
+      <button type="button" class="sd-switch" role="switch" aria-checked="false" aria-describedby="sd-warn"><span class="sd-track" aria-hidden="true"></span>I confirm that I have read and agree to all terms.</button>
+      <div class="sd-warn"><p><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8.3 2h7.4L22 8.3v7.4L15.7 22H8.3L2 15.7V8.3z"/><path d="M12 7v6M12 16.5v.5" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg><span id="sd-warn" role="alert"></span></p></div>
+    </div>
+  </div>
+  <div class="sd-foot">
+    <button type="button" class="sd-close" data-close>Close <kbd>Esc</kbd></button>
+    <button type="button" class="sd-sign" data-sign>Sign Contract <kbd aria-hidden="true">↵</kbd></button>
+  </div>
+</dialog>
+    </div>
+    <p id="sd-status" aria-live="polite">Bấm nút để mở hộp thoại.</p>
+  </section>
+
+  <div class="mo-grid" id="mo-grid"></div>
+
+  <details class="mo-code"><summary>Code đầy đủ (HTML + CSS + JS, chép là chạy)</summary>
+    <button type="button" class="aw-btn aw-btn--small" data-copy>Chép</button><pre><code id="sd-code"></code></pre>
+  </details>
+</div>
+</main>
+<script id="sd-js">
+(() => {
+  const dlg = document.getElementById('sd-dialog'), trigger = document.querySelector('[data-sd-open="sd-dialog"]');
+  const cv = dlg.querySelector('canvas'), ctx = cv.getContext('2d'), pad = cv.parentElement;
+  const undoB = dlg.querySelector('[data-undo]'), clearB = dlg.querySelector('[data-clear]');
+  const sw = dlg.querySelector('.sd-switch'), agree = dlg.querySelector('.sd-agree'), warn = dlg.querySelector('#sd-warn');
+  const rm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let strokes = [], example = null, raf = 0, W = 0, H = 0;
+
+  // Chữ ký mẫu: điểm neo theo tỉ lệ 0..1 của bảng ký, nội suy Catmull-Rom thành nét mượt.
+  const EX = [
+    [[.19,.66],[.25,.34],[.33,.12],[.34,.3],[.28,.56],[.22,.72],[.27,.7],[.41,.56]],
+    [[.43,.68],[.435,.69]],
+    [[.48,.66],[.5,.36],[.525,.28],[.51,.58],[.5,.68],[.55,.44],[.59,.4],[.605,.6],[.635,.45],[.67,.42],[.69,.58],[.73,.5],[.77,.46]],
+    [[.27,.8],[.52,.74],[.83,.66]]
+  ];
+  const spline = (P) => { if (P.length < 3) return P; const o = []; for (let i = 0; i < P.length - 1; i++) { const a = P[i - 1] || P[i], b = P[i], c = P[i + 1], d = P[i + 2] || c; for (let t = 0; t < 1; t += 1 / 10) { const t2 = t * t, t3 = t2 * t; o.push([0, 1].map((k) => .5 * (2 * b[k] + (c[k] - a[k]) * t + (2 * a[k] - 5 * b[k] + 4 * c[k] - d[k]) * t2 + (3 * b[k] - a[k] - 3 * c[k] + d[k]) * t3))); } } o.push(P[P.length - 1]); return o; };
+  const exStrokes = () => EX.map((s) => spline(s).map(([x, y], i, a) => ({ x: x * W, y: y * H, w: 1.4 + Math.sin(i / a.length * Math.PI) * 1.1 })));
+
+  function size() { const k = devicePixelRatio || 1; W = cv.offsetWidth; H = cv.offsetHeight; /* offset*: không bị transform lúc lật làm méo */ cv.width = W * k; cv.height = H * k; ctx.setTransform(k, 0, 0, k, 0, 0); draw(); }
+  // Nét: mỗi đoạn là một đường cong bậc hai qua trung điểm, độ dày lấy trung bình hai điểm.
+  function stroke(pts, color) {
+    ctx.strokeStyle = ctx.fillStyle = color; ctx.lineCap = ctx.lineJoin = 'round';
+    if (pts.length < 3) { const p = pts[0]; ctx.beginPath(); ctx.arc(p.x, p.y, p.w / 2, 0, 7); ctx.fill(); return; }
+    for (let i = 1; i < pts.length - 1; i++) {
+      const a = pts[i - 1], b = pts[i], c = pts[i + 1];
+      ctx.beginPath(); ctx.lineWidth = (a.w + b.w + c.w) / 3;
+      ctx.moveTo(i === 1 ? a.x : (a.x + b.x) / 2, i === 1 ? a.y : (a.y + b.y) / 2);
+      ctx.quadraticCurveTo(b.x, b.y, (b.x + c.x) / 2, (b.y + c.y) / 2); ctx.stroke();
+    }
+  }
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    if (example) example.shown.forEach((s) => stroke(s, '#8e8e94'));
+    strokes.forEach((s) => stroke(s, '#141416'));
+    undoB.disabled = clearB.disabled = !strokes.length;
+  }
+  function playExample() {
+    const all = exStrokes(); example = { shown: [] }; let si = 0, pi = 0;
+    if (rm) { example.shown = all; return draw(); }
+    const step = () => { if (!example) return; for (let n = 0; n < 3 && si < all.length; n++) { if (!pi) example.shown.push([]); example.shown[si].push(all[si][pi++]); if (pi >= all[si].length) { si++; pi = 0; } } draw(); if (si < all.length) raf = requestAnimationFrame(step); };
+    raf = requestAnimationFrame(step);
+  }
+  const dropExample = () => { cancelAnimationFrame(raf); example = null; };
+
+  // Bút: độ dày giảm theo tốc độ (giống lực nhấn), dùng pressure thật nếu là bút cảm ứng.
+  let cur = null, last = 0;
+  cv.addEventListener('pointerdown', (e) => {
+    if (e.button > 0) return; e.preventDefault(); cv.setPointerCapture(e.pointerId); dropExample(); pad.classList.remove('bad');
+    cur = [{ x: e.offsetX, y: e.offsetY, w: 2.6 }]; strokes.push(cur); last = e.timeStamp; draw();
+  });
+  cv.addEventListener('pointermove', (e) => {
+    if (!cur) return;
+    for (const ev of e.getCoalescedEvents ? e.getCoalescedEvents() : [e]) {
+      const p = cur[cur.length - 1], dx = ev.offsetX - p.x, dy = ev.offsetY - p.y, dist = Math.hypot(dx, dy);
+      if (dist < 1.5) continue;
+      const v = dist / Math.max(1, ev.timeStamp - last), target = ev.pointerType === 'pen' && ev.pressure ? 1 + ev.pressure * 3 : Math.max(1.2, Math.min(3.4, 3.6 - v * 1.1));
+      cur.push({ x: ev.offsetX, y: ev.offsetY, w: p.w + (target - p.w) * .35 }); last = ev.timeStamp;
+    }
+    draw();
+  });
+  const end = () => { cur = null; };
+  cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', end);
+  cv.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !strokes.length) { e.preventDefault(); e.stopPropagation(); dropExample(); strokes = exStrokes(); pad.classList.remove('bad'); draw(); } });
+  undoB.onclick = () => { strokes.pop(); draw(); if (!strokes.length) cv.focus(); };
+  clearB.onclick = () => { strokes = []; draw(); cv.focus(); };
+
+  const setWarn = (msg) => { warn.textContent = msg || ''; agree.classList.toggle('warn', !!msg); };
+  sw.onclick = () => { const on = sw.getAttribute('aria-checked') !== 'true'; sw.setAttribute('aria-checked', on); if (on) setWarn(''); };
+  const shake = (el) => { el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); };
+  function sign() {
+    if (sw.getAttribute('aria-checked') !== 'true') { setWarn('Please confirm that you agree to all terms before signing'); shake(agree); return sw.focus(); }
+    if (!strokes.length) { pad.classList.add('bad'); shake(pad); return cv.focus(); }
+    close('signed');
+  }
+  dlg.querySelector('[data-sign]').onclick = sign;
+  dlg.querySelector('[data-close]').onclick = () => close('cancel');
+  dlg.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.target.closest('button')) { e.preventDefault(); sign(); }
+    if (e.key === 'Tab') { // bẫy focus: Tab/Shift+Tab vòng trong hộp thoại
+      const f = [...dlg.querySelectorAll('button:not(:disabled), [tabindex="0"]')], i = f.indexOf(document.activeElement);
+      if (e.shiftKey ? i <= 0 : i === f.length - 1) { e.preventDefault(); f[e.shiftKey ? f.length - 1 : 0].focus(); }
+    }
+  });
+  dlg.addEventListener('cancel', (e) => { e.preventDefault(); close('cancel'); }); // Esc: đóng có hiệu ứng
+  dlg.addEventListener('click', (e) => { if (e.target === dlg) { const r = dlg.getBoundingClientRect(); if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) close('cancel'); } });
+
+  function open() {
+    strokes = []; setWarn(''); pad.classList.remove('bad'); sw.setAttribute('aria-checked', 'false');
+    dlg.classList.remove('out'); dlg.showModal(); size(); playExample(); cv.focus();
+  }
+  function close(result) {
+    if (!dlg.open || dlg.classList.contains('out')) return;
+    dropExample(); dlg.returnValue = result; dlg.classList.add('out');
+    setTimeout(() => { dlg.close(result); dlg.classList.remove('out'); trigger.focus(); }, rm ? 0 : 220);
+  }
+  trigger.onclick = open;
+  new ResizeObserver(() => dlg.open && size()).observe(cv);
+  dlg.addEventListener('close', () => dlg.dispatchEvent(new CustomEvent('sd-result', { detail: dlg.returnValue })));
+})();
+</script>
+<script>
+// Phần mô tả + chép code (chỉ của trang này).
+const V = [
+{ id: 'dialog', vi: 'Hộp thoại', en: 'Dialog', use: 'Xác nhận việc quan trọng (ký, thanh toán); dialog gốc giữ focus bên trong, Esc đóng, trả focus về nút mở.' },
+{ id: 'signature-pad', vi: 'Bảng ký', en: 'Signature pad', use: 'Lấy chữ ký tay; nét cong bậc hai, dày mỏng theo tốc độ, tự vẽ chữ ký mẫu, Undo từng nét, Clear hết.' },
+{ id: 'agreement-switch', vi: 'Công tắc đồng ý', en: 'Agreement switch', use: 'Bắt đồng ý điều khoản trước khi gửi; bấm Ký khi chưa bật thì hiện cảnh báo đỏ và rung nhẹ.' },
+{ id: 'flip-in', vi: 'Lật vào', en: 'Flip-in', use: 'Mở hộp thoại có trọng lượng; xoay rotateX từ dưới lên kèm mờ dần, giảm chuyển động thì tắt.' }
+];
+document.getElementById('mo-grid').innerHTML = V.map((v) => `<article class="mo-part" id="${v.id}"><h3>${v.vi}<small>${v.en}</small></h3><p>${v.use}</p></article>`).join('');
+const root = document.getElementById('sd-root');
+const SRC = `<style>${document.getElementById('sd-css').textContent}</style>\n${root.innerHTML.trim()}\n<script>${document.getElementById('sd-js').textContent}<\/script>`;
+document.getElementById('sd-code').textContent = SRC;
+document.getElementById('sd-dialog').addEventListener('sd-result', (e) => { document.getElementById('sd-status').textContent = e.detail === 'signed' ? 'Đã ký hợp đồng.' : 'Đã đóng, chưa ký.'; });
+document.querySelector('[data-copy]').onclick = (e) => navigator.clipboard.writeText(SRC).then(() => { e.target.textContent = 'Đã chép'; setTimeout(() => e.target.textContent = 'Chép', 1500); });
+</script>
+<script src="/search.js?v=1db3cbef7f" defer></script><script src="/stats.js?v=1db3cbef7f" defer></script>
+</body>
+</html>
