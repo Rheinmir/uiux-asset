@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chuẩn UI của Hang — uiux-asset</title>
+<meta name="description" content="244 luật UI đo được, chi tiết tới từng vai (nút, chip, ô nhập, bảng…), rút từ 41k phần tử đo thật. Lọc theo vai, mức, tìm nhanh; tải bộ luật và chạy audit tự động.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=98b4655ab1">
+<style>
+.rl-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+.rl { --line: var(--aw-border-gray); --card: var(--aw-bg-white); --mut: var(--aw-ink2);
+  --s-block: #a8231b; --s-block-bg: #fdeceb; --s-warn: #7a4f00; --s-warn-bg: #fff2d1; --s-info: #1f56a8; --s-info-bg: #e7efff; --s-manual: #4b4b4b; --s-manual-bg: #ececec; }
+:root[data-theme="dark"] .rl { --s-block: #ffb4ad; --s-block-bg: #3a1714; --s-warn: #ffd27a; --s-warn-bg: #352708; --s-info: #a9c7ff; --s-info-bg: #142540; --s-manual: #d6d6d6; --s-manual-bg: #2c2c2c; }
+.rl-bento { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.rl-box { min-width: 0; padding: 16px 18px; border: 1px solid var(--line); border-radius: 16px; background: var(--card); }
+.rl-kpi b { display: block; font: 600 clamp(28px, 3.4vw, 44px)/1 var(--aw-font); letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.rl-kpi span { display: block; margin-top: 6px; font: 400 13px/18px var(--aw-font); color: var(--mut); }
+.rl-run { grid-column: 1 / -1; display: flex; flex-direction: column; gap: 10px; }
+.rl-run h2 { margin: 0; font: 600 15px/1.3 var(--aw-font); }
+.rl-run p { margin: 0; font: 400 14px/1.5 var(--aw-font); color: var(--mut); }
+.rl-run pre { margin: 0; overflow-x: auto; padding: 12px 14px; border-radius: 10px; background: #15161c; color: #e4e6ee; font: 13px/1.6 var(--aw-mono); }
+.rl-dl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; font: 400 13px/1.4 var(--aw-font); color: var(--mut); }
+.rl-dl code { font-size: 12px; }
+@media (min-width: 900px) { .rl-bento { grid-template-columns: repeat(4, minmax(0, 1fr)); } .rl-run { grid-column: span 2; grid-row: span 2; } }
+.rl-main { display: grid; gap: 20px; grid-template-columns: minmax(0, 1fr); align-items: start; }
+@media (min-width: 1000px) { .rl-main { grid-template-columns: 240px minmax(0, 1fr); } .rl-side { position: sticky; top: 76px; max-height: calc(100vh - 96px); overflow-y: auto; } }
+.rl-side { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.rl-side > * { flex: none; }
+.rl-side h2 { margin: 0; font: 600 13px/1.3 var(--aw-font); text-transform: uppercase; letter-spacing: .06em; color: var(--mut); }
+.rl-q { width: 100%; height: 44px; padding: 0 14px; border-radius: 10px; border: 1px solid var(--line); background: var(--card); color: inherit; font: 16px var(--aw-font); box-sizing: border-box; }
+.rl-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.rl-chips button { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 12px; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: inherit; font: 500 13px/1 var(--aw-font); cursor: pointer; }
+.rl-chips button[aria-pressed="true"] { background: var(--aw-inverse-bg); color: var(--aw-inverse-ink); border-color: var(--aw-inverse-bg); }
+.rl-chips button small { font-size: 12px; opacity: .8; font-variant-numeric: tabular-nums; }
+@media (max-width: 999px) { .rl-roles { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; } .rl-roles button { flex: none; } }
+.rl-count { margin: 0; font: 400 13px/1.4 var(--aw-font); color: var(--mut); }
+.rl-list { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.rl-grp { min-width: 0; border: 1px solid var(--line); border-radius: 16px; background: var(--card); overflow: hidden; scroll-margin-top: 90px; }
+.rl-grp > h3 { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 0; padding: 14px 16px 10px; font: 600 17px/1.3 var(--aw-font); }
+.rl-grp > h3 small { font: 400 13px/1.3 var(--aw-font); color: var(--mut); }
+.rl-scroll { overflow-x: auto; }
+.rl-t { width: 100%; min-width: 640px; border-collapse: collapse; font: 400 13.5px/1.45 var(--aw-font); }
+.rl-t th { padding: 8px 12px; text-align: left; font: 600 12px/1.3 var(--aw-font); color: var(--mut); border-top: 1px solid var(--line); white-space: nowrap; }
+.rl-t td { padding: 9px 12px; border-top: 1px solid var(--line); vertical-align: top; }
+.rl-t td:first-child { width: 1%; white-space: nowrap; font: 500 12px/1.45 var(--aw-mono); }
+.rl-t td.lim { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.rl-t td .en { display: block; margin-top: 2px; font-size: 12px; color: var(--mut); }
+.rl-t td.ev { width: 1%; white-space: nowrap; font: 400 12px/1.45 var(--aw-mono); color: var(--mut); cursor: help; }
+.rl-sev { display: inline-block; padding: 2px 8px; border-radius: 999px; font: 600 12px/18px var(--aw-font); white-space: nowrap; color: var(--c); background: var(--b); }
+.rl-sev.block { --c: var(--s-block); --b: var(--s-block-bg); } .rl-sev.warn { --c: var(--s-warn); --b: var(--s-warn-bg); }
+.rl-sev.info { --c: var(--s-info); --b: var(--s-info-bg); } .rl-sev.manual { --c: var(--s-manual); --b: var(--s-manual-bg); }
+.rl-dw::before { content: attr(data-w); }   /* từ bị cấm, chỉ trích dẫn trong luật — hiện bằng CSS để không đếm là chữ giao diện */
+.rl-empty { margin: 0; padding: 24px; text-align: center; color: var(--mut); }
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=98b4655ab1"></script>
+<div class="rl-page rl">
+  <div class="aw-sotd" style="padding-top:16px">
+    <p class="aw-sotd__sub"><span>Tài nguyên</span><span class="aw-tag aw-tag--medium" id="rl-n">244 luật</span></p>
+    <h1 class="aw-h1" style="--aw-h1:clamp(40px,7vw,96px)">Chuẩn UI của Hang</h1>
+    <p class="aw-lead">244 luật đo được, chi tiết tới từng vai: nhãn nút dài bao nhiêu, chip cao bao nhiêu, nhãn cách ô nhập bao xa. Rút từ <span id="rl-s">41.438</span> phần tử đo thật trên <span id="rl-p">531</span> lượt trang. Chạy audit để chấm một trang ở 1440 và 390px.</p>
+  </div>
+  <div class="rl-bento">
+    <div class="rl-box rl-run">
+      <h2>Chạy audit · Run the audit</h2>
+      <p>Đo trang ở hai độ rộng, chấm từng luật, ra điểm trên 100 và danh sách phần tử vi phạm. Thoát mã 1 khi có luật chặn bị vi phạm.</p>
+      <pre><code>cd ~/.claude/skills/hang-ui-audit
+node audit.mjs https://trang-cua-ban.vn --widths 1440,390 --md bao-cao.md</code></pre>
+      <div class="rl-dl"><a class="aw-btn aw-btn--small" href="rules.json" download>Tải bộ luật</a><code>rules.json</code><span>nguồn chuẩn, máy đọc</span></div>
+    </div>
+    <div class="rl-box rl-kpi"><b id="k-block">22</b><span>luật chặn: vi phạm là trượt</span></div>
+    <div class="rl-box rl-kpi"><b id="k-warn">160</b><span>luật cảnh báo: quá 10% phần tử</span></div>
+    <div class="rl-box rl-kpi"><b id="k-info">43</b><span>luật tham khảo</span></div>
+    <div class="rl-box rl-kpi"><b id="k-manual">19</b><span>luật kiểm bằng mắt</span></div>
+  </div>
+  <div class="rl-main">
+    <aside class="rl-side" aria-label="Bộ lọc">
+      <input type="search" class="rl-q" id="rl-q" placeholder="Tìm luật, vai, ID…" aria-label="Tìm luật">
+      <h2>Mức</h2>
+      <div class="rl-chips" id="rl-sev" role="group" aria-label="Lọc theo mức"></div>
+      <h2>Vai</h2>
+      <div class="rl-chips rl-roles" id="rl-roles" role="group" aria-label="Lọc theo vai"></div>
+    </aside>
+    <section class="rl-list" aria-live="polite">
+      <p class="rl-count" id="rl-count">Đang tải bộ luật…</p>
+      <div class="rl-list" id="rl-list"></div>
+    </section>
+  </div>
+</div>
+</main>
+<script>
+// Trang đọc rules.json (chép từ skill hang-ui-audit, nguồn chuẩn) rồi dựng bảng theo vai. Không có số gõ tay.
+const ROLE = { 'button-primary': 'Nút chính', 'button-secondary': 'Nút phụ', 'button-ghost': 'Nút mờ', 'icon-button': 'Nút biểu tượng', 'page-title': 'Tiêu đề trang',
+  'section-heading': 'Tiêu đề mục', subheading: 'Tiêu đề phụ', eyebrow: 'Nhãn trên tiêu đề', 'body-paragraph': 'Đoạn văn', caption: 'Chú thích', input: 'Ô nhập',
+  'input-label': 'Nhãn ô nhập', 'helper-text': 'Chữ gợi ý', 'error-text': 'Chữ báo lỗi', textarea: 'Ô nhập nhiều dòng', 'search-input': 'Ô tìm kiếm', select: 'Ô chọn',
+  checkbox: 'Ô tích', 'checkbox-label': 'Nhãn ô tích', radio: 'Nút chọn một', switch: 'Công tắc', slider: 'Thanh trượt', chip: 'Chip', tab: 'Tab', 'segmented-option': 'Lựa chọn phân đoạn',
+  status: 'Trạng thái', 'table-cell': 'Ô bảng', 'table-header': 'Đầu cột bảng', card: 'Thẻ', 'card-title': 'Tiêu đề thẻ', 'card-text': 'Chữ trong thẻ', 'nav-item': 'Mục điều hướng',
+  'menu-item': 'Mục menu', breadcrumb: 'Đường dẫn trang', link: 'Liên kết', 'kpi-number': 'Số KPI', 'kpi-label': 'Nhãn KPI', 'list-item-title': 'Tiêu đề dòng danh sách',
+  'list-item-meta': 'Phụ đề dòng danh sách', timestamp: 'Thời gian', tooltip: 'Chú giải nổi', toast: 'Thông báo nổi', 'dialog-title': 'Tiêu đề hộp thoại', 'dialog-body': 'Nội dung hộp thoại',
+  modal: 'Hộp thoại', 'empty-title': 'Tiêu đề trạng thái rỗng', 'empty-body': 'Chữ trạng thái rỗng', 'command-item': 'Mục bảng lệnh', 'code-block': 'Khối code', 'code-inline': 'Code trong dòng',
+  kbd: 'Phím tắt', avatar: 'Ảnh đại diện', divider: 'Đường kẻ', progress: 'Thanh tiến độ', panel: 'Bảng điều khiển', grid: 'Lưới', 'form-stack': 'Khối biểu mẫu' };
+const SEV = [['block', 'Chặn', 'Vi phạm một phần tử là trượt'], ['warn', 'Cảnh báo', 'Hơn 10% phần tử vượt giới hạn'], ['info', 'Tham khảo', 'Gợi ý, trọng số thấp'], ['manual', 'Mắt', 'Không đo tự động: kiểm bằng mắt']];
+const SEVL = Object.fromEntries(SEV.map(([k, n]) => [k, n]));
+// Từ dev bị cấm + chữ lộ mẫu (cùng regex với skill) — khi luật TRÍCH DẪN chúng, hiện bằng CSS để audit không đếm là chữ giao diện.
+const DEV = /\b(OCR|schema|extract|payload|JSON|regex|uuid|null|stack ?trace|TODO|FIXME|lorem ipsum|undefined|NaN)\b|(^|[\s(«"'])(Bóc|bóc tách|trường)(?=[\s,.:;)»"']|$)|(\[object Object\]|\{\{[^}]*\}\})/gi;
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+const txt = (s) => esc(s).replace(DEV, (m, a, pre, b, c) => b ? `${pre}<span class="rl-dw" data-w="${b}"></span>` : `<span class="rl-dw" data-w="${a || c}"></span>`);
+const nf = (n) => Number(n).toLocaleString('vi-VN');
+const kind = (r) => (r.auto ? r.sev : 'manual');
+const group = (r) => (r.scope === 'manual' ? 'manual' : !r.roles || !r.roles.length ? 'page' : r.roles.length === 1 ? r.roles[0] : 'many');
+const GNAME = { many: 'Chung · nhiều vai', page: 'Toàn trang', manual: 'Kiểm bằng mắt' };
+const gname = (g) => GNAME[g] || ROLE[g] || g;
+const lim = (r) => { const l = r.limit || {}, u = r.unit && r.unit !== '×' ? ' ' + r.unit : r.unit || ''; if (l.min != null && l.max != null) return `${l.min}–${l.max}${u}`; if (l.min != null) return `≥ ${l.min}${u}`; if (l.max != null) return `≤ ${l.max}${u}`; return '—'; };
+const ev = (r) => { const e = r.evidence; if (!e || e.n == null) return ['—', 'Không có mẫu đo; luật trích dẫn: ' + (r.cite || 'Hang UX card')];
+  const tip = [r.why, r.fix && 'Sửa: ' + r.fix, r.cite && 'Nguồn: ' + r.cite, r.basis && 'Cách ra giới hạn: ' + r.basis].filter(Boolean).join('\n');
+  return [`n ${nf(e.n)} · ${e.p10 ?? '–'}/${e.p50 ?? '–'}/${e.p90 ?? '–'}`, tip]; };
+const st = { q: '', sev: new Set(), role: 'all' };
+let RULES = [], GROUPS = [];
+const $ = (id) => document.getElementById(id);
+
+fetch('rules.json').then((r) => r.json()).then(({ meta, rules }) => {
+  RULES = rules; $('rl-n').textContent = `${rules.length} luật`; $('rl-s').textContent = nf(meta.samples); $('rl-p').textContent = nf(meta.pages);
+  for (const [k] of SEV) $('k-' + k).textContent = rules.filter((r) => kind(r) === k).length;
+  const order = ['many', 'page']; for (const r of rules) { const g = group(r); if (!order.includes(g) && g !== 'manual') order.push(g); } order.push('manual');
+  GROUPS = order.map((g) => ({ g, rules: rules.filter((r) => group(r) === g) })).filter((x) => x.rules.length);
+  $('rl-sev').innerHTML = SEV.map(([k, n, t]) => `<button type="button" data-sev="${k}" aria-pressed="false" title="${t}"><span class="rl-sev ${k}">${n}</span><small>${rules.filter((r) => kind(r) === k).length}</small></button>`).join('');
+  $('rl-roles').innerHTML = `<button type="button" data-role="all" aria-pressed="true">Tất cả<small>${rules.length}</small></button>` + GROUPS.map(({ g, rules: rs }) => `<button type="button" data-role="${g}" aria-pressed="false">${esc(gname(g))}<small>${rs.length}</small></button>`).join('');
+  $('rl-list').innerHTML = GROUPS.map(({ g, rules: rs }) => `<section class="rl-grp" id="g-${g}" data-g="${g}"><h3>${esc(gname(g))}<small>${g === 'many' || g === 'page' || g === 'manual' ? '' : g + ' · '}<span data-c>${rs.length}</span> luật</small></h3>
+    <div class="rl-scroll"><table class="rl-t"><thead><tr><th scope="col">ID</th><th scope="col">Luật · Rule</th><th scope="col">Giới hạn</th><th scope="col">Mức</th><th scope="col">Bằng chứng n · p10/p50/p90</th></tr></thead><tbody>
+    ${rs.map((r) => { const [e, tip] = ev(r), k = kind(r); return `<tr data-k="${k}" data-s="${esc((r.id + ' ' + r.text_vi + ' ' + r.text_en + ' ' + (r.roles || []).join(' ') + ' ' + gname(g)).toLowerCase())}">
+      <td>${esc(r.id)}</td><td>${txt(r.text_vi || r.q)}<span class="en">${txt(r.text_en)}</span></td><td class="lim">${r.scope === 'manual' ? '—' : esc(lim(r))}</td>
+      <td><span class="rl-sev ${k}" title="${esc(SEV.find((s) => s[0] === k)[2])}">${SEVL[k]}</span></td><td class="ev" title="${esc(tip)}">${e}</td></tr>`; }).join('')}
+    </tbody></table></div></section>`).join('');
+  apply();
+}).catch(() => { $('rl-count').textContent = 'Không tải được bộ luật. Tải lại trang thử lại.'; });
+
+function apply() {
+  const q = st.q.trim().toLowerCase(); let shown = 0;
+  for (const sec of document.querySelectorAll('.rl-grp')) {
+    let n = 0;
+    for (const tr of sec.querySelectorAll('tbody tr')) { const ok = (!q || tr.dataset.s.includes(q)) && (!st.sev.size || st.sev.has(tr.dataset.k)); tr.hidden = !ok; n += ok; }
+    sec.hidden = !n || (st.role !== 'all' && sec.dataset.g !== st.role); sec.querySelector('[data-c]').textContent = n; if (!sec.hidden) shown += n;
+  }
+  $('rl-count').textContent = shown ? `Đang hiện ${shown} / ${RULES.length} luật` : 'Không có luật nào khớp. Bỏ bớt bộ lọc.';
+}
+$('rl-q').addEventListener('input', (e) => { st.q = e.target.value; apply(); });
+$('rl-sev').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; const k = b.dataset.sev, on = !st.sev.has(k);
+  on ? st.sev.add(k) : st.sev.delete(k); b.setAttribute('aria-pressed', on); apply(); });
+$('rl-roles').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; st.role = b.dataset.role;
+  for (const x of $('rl-roles').children) x.setAttribute('aria-pressed', x === b); apply();
+  if (st.role !== 'all' && matchMedia('(max-width: 999px)').matches) $('rl-list').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+</script>
+<script src="/search.js?v=98b4655ab1" defer></script><script src="/stats.js?v=98b4655ab1" defer></script>
+</body>
+</html>

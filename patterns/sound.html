@@ -6,7 +6,7 @@
 <title>Chuyển động có tiếng — 11 khoảnh khắc — uiux-asset</title>
 <meta name="description" content="Dựng lại luồng app mở chuyến (Iniciar operação) kèm âm thanh UI tổng hợp bằng Web Audio: chạm, lướt màn, gõ phím, tick checklist lên cao độ, nút nạp năng lượng, khoảng lặng rồi cú chạm. Có bảng thời gian âm thanh đo từ video gốc.">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
-<link rel="stylesheet" href="../aw.css?v=1db3cbef7f">
+<link rel="stylesheet" href="../aw.css?v=98b4655ab1">
 <style>
 :root { --so-card: #fff; --so-line: #e4e2dc; --so-ink: #17160f; --so-ink2: #67645a; --so-y: #f2c21b; }
 :root[data-theme="dark"] { --so-card: #121212; --so-line: #2b2a26; --so-ink: #f1efe8; --so-ink2: #a3a092; }
@@ -31,7 +31,7 @@
 .so-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); }
 .so-card { display: flex; flex-direction: column; min-width: 0; border-radius: 16px; overflow: hidden; background: var(--so-card); border: 1px solid var(--so-line); color: var(--so-ink); }
 .so-mini { position: relative; height: 200px; display: grid; place-items: center; overflow: hidden; background: #f4f3ef; color: #222; }
-.so-n { position: absolute; top: 10px; left: 12px; z-index: 2; font: 500 11px/1 ui-monospace, Menlo, monospace; color: #8b877b; }
+.so-n { position: absolute; top: 10px; left: 12px; z-index: 2; font: 500 11px/1 ui-monospace, Menlo, monospace; color: #6e6a61; }
 .so-foot { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 6px; }
 .so-foot h3 { margin: 0; font: 600 16px/1.3 var(--aw-font); }
 .so-foot h3 small { display: block; font-size: 12px; font-weight: 400; color: var(--so-ink2); }
@@ -47,20 +47,20 @@
 .ph-hd .av { width: 26px; height: 26px; border-radius: 50%; background: var(--so-y); }
 .ph-hd .bk { color: var(--so-y); font-size: 18px; }
 .ph-lb { display: flex; justify-content: space-between; margin: 4px 0 0; font-weight: 500; }
-.ph-lb em { font-style: normal; color: var(--so-y); font-size: 10px; }
+.ph-lb em { font-style: normal; color: #8c7110; font-size: 10px; }
 .ph-trip { display: flex; gap: 8px; justify-content: space-between; padding: 10px; border-left: 3px solid var(--so-y); border-radius: 6px; background: #faf9f6; }
-.ph-trip b, .ph-trip small { display: block; } .ph-trip small { color: #999; font-size: 9px; }
+.ph-trip b, .ph-trip small { display: block; } .ph-trip small { color: #6e6e6e; font-size: 10px; }
 .ph-row { display: flex; gap: 8px; }
 .ph-btn { flex: 1; height: 38px; border-radius: 8px; display: grid; place-items: center; font-weight: 600; font-size: 11px; transition: transform .12s; }
-.ph-btn.y { background: var(--so-y); color: #fff; } .ph-btn.g { background: #f0efeb; }
+.ph-btn.y { background: var(--so-y); color: #2a2200; } .ph-btn.g { background: #f0efeb; }
 .ph-btn.dn { transform: scale(.93); }
 .ph-st { flex: 1; padding: 10px; border-radius: 8px; background: #faf9f6; } .ph-st b { display: block; font: 500 20px/1.2 system-ui, sans-serif; }
 .ph-pg { height: 3px; border-radius: 2px; background: #eee; } .ph-pg i { display: block; height: 100%; width: var(--p); background: var(--so-y); border-radius: 2px; }
 .ph-h { margin: 6px 0 0; font: 500 14px/1.3 system-ui, sans-serif; }
-.ph-in { padding: 8px 10px; border: 1px solid #e8e6e0; border-radius: 8px; } .ph-in small { display: block; color: #aaa; font-size: 9px; } .ph-in span { font: 600 13px/1.4 system-ui, sans-serif; }
+.ph-in { padding: 8px 10px; border: 1px solid #e8e6e0; border-radius: 8px; } .ph-in small { display: block; color: #6e6e6e; font-size: 10px; } .ph-in span { font: 600 13px/1.4 system-ui, sans-serif; }
 .ph-in span::after { content: ""; display: inline-block; width: 1.5px; height: 13px; margin-left: 1px; vertical-align: -2px; background: var(--so-y); }
 .ph-tr { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; } .ph-tr i { height: 74px; border-radius: 8px; background: linear-gradient(140deg, var(--a), var(--b)); }
-.ph-cta { height: 34px; border-radius: 17px; background: var(--so-y); color: #fff; font-weight: 600; display: grid; place-items: center; transition: transform .18s cubic-bezier(.5, 0, .8, .5), color .15s; }
+.ph-cta { height: 34px; border-radius: 17px; background: var(--so-y); color: #2a2200; font-weight: 600; display: grid; place-items: center; transition: transform .18s cubic-bezier(.5, 0, .8, .5), color .15s; }
 .ph-cta.ch { transform: scale(1.45, 1.3); color: transparent; }
 .ph-an { text-align: center; color: #555; }
 .ph-ck { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid #f0eee8; font-size: 10px; color: #555; }
@@ -83,7 +83,7 @@
 .ph2 .kp { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; } .ph2 .kp div { padding: 8px; border-radius: 8px; background: #faf9f6; } .ph2 .kp b { display: block; font-size: 14px; }
 
 /* Ô nhỏ */
-.s-btn { display: inline-flex; align-items: center; gap: 8px; padding: 0 18px; height: 46px; border-radius: 10px; background: var(--so-y); color: #fff; font: 600 14px/1 system-ui, sans-serif; transition: transform .12s, filter .12s; }
+.s-btn { display: inline-flex; align-items: center; gap: 8px; padding: 0 18px; height: 46px; border-radius: 10px; background: var(--so-y); color: #2a2200; font: 600 14px/1 system-ui, sans-serif; transition: transform .12s, filter .12s; }
 .s-btn.dn { transform: scale(.92); filter: brightness(.94); }
 .s-fr { position: relative; width: 150px; height: 170px; border-radius: 18px; background: #fff; overflow: hidden; box-shadow: 0 8px 24px rgba(60, 50, 10, .12); }
 .s-fr > div { position: absolute; inset: 0; padding: 16px 12px; display: flex; flex-direction: column; gap: 8px; background: #fff; transition: transform .45s cubic-bezier(.7, 0, .2, 1), opacity .45s; }
@@ -91,7 +91,7 @@
 .s-fr .s-pb { transform: translateX(100%); box-shadow: -8px 0 16px rgba(0, 0, 0, .06); }
 .s-fr.go .s-pa { transform: translateX(-30%); opacity: .4; } .s-fr.go .s-pb { transform: none; }
 .s-in { width: 190px; padding: 10px 12px; border: 1.5px solid #e4e2dc; border-radius: 10px; background: #fff; font: 600 20px/1.2 ui-monospace, Menlo, monospace; color: #222; }
-.s-in small { display: block; font: 500 10px/1.6 system-ui, sans-serif; color: #999; }
+.s-in small { display: block; font: 500 10px/1.6 system-ui, sans-serif; color: #6e6e6e; }
 .s-in .s-tx::after { content: ""; display: inline-block; width: 2px; height: 20px; vertical-align: -3px; background: var(--so-y); animation: s-car 1s steps(1) infinite; }
 .s-tx span { display: inline-block; animation: s-key .14s ease-out; }
 @keyframes s-key { from { transform: translateY(-6px); opacity: 0; } } @keyframes s-car { 50% { opacity: 0; } }
@@ -101,10 +101,10 @@
 .s-ck { width: 210px; display: flex; flex-direction: column; }
 .s-ck span { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid #ebe8e1; font: 500 11px/1.2 system-ui, sans-serif; color: #555; }
 .s-cam { width: 170px; height: 170px; overflow: hidden; border-radius: 16px; background: #fff; box-shadow: 0 8px 24px rgba(60, 50, 10, .12); }
-.s-cam > div { padding: 14px 12px; display: flex; flex-direction: column; gap: 7px; transform-origin: 50% 92%; transition: transform .8s cubic-bezier(.6, 0, .2, 1); font: 500 9px/1.2 system-ui, sans-serif; color: #555; }
+.s-cam > div { padding: 14px 12px; display: flex; flex-direction: column; gap: 7px; transform-origin: 50% 92%; transition: transform .8s cubic-bezier(.6, 0, .2, 1); font: 500 10px/1.2 system-ui, sans-serif; color: #555; }
 .s-cam.z > div { transform: scale(1.5); } .s-cam.nt > div { transition: none; }
 .s-cam i { height: 10px; border-radius: 3px; background: #f0eee8; } .s-cam u { text-decoration: none; height: 22px; border-radius: 11px; background: var(--so-y); }
-.s-cta { width: 170px; height: 40px; border-radius: 20px; background: var(--so-y); color: #fff; font: 600 13px/40px system-ui, sans-serif; text-align: center; transition: transform .18s cubic-bezier(.5, 0, .8, .5), color .15s; }
+.s-cta { width: 170px; height: 40px; border-radius: 20px; background: var(--so-y); color: #2a2200; font: 600 13px/40px system-ui, sans-serif; text-align: center; transition: transform .18s cubic-bezier(.5, 0, .8, .5), color .15s; }
 .s-cta.ch { transform: scale(1.45, 1.3); color: transparent; } .s-cta.nt { transition: none; }
 .s-fl .s-cta { transform: scale(1.45, 1.3); color: transparent; transition: transform .45s cubic-bezier(.7, 0, .2, 1); }
 .s-fl.go .s-cta { transform: scale(2.4, 6); } .s-fl.nt .s-cta { transition: none; }
@@ -113,7 +113,7 @@
 .s-ph i { height: 9px; border-radius: 3px; background: #f0eee8; } .s-ph b { height: 30px; border-radius: 15px 15px 0 0; border: 6px solid var(--so-y); border-bottom: 0; width: 60px; }
 .s-yl.dn .s-ph { transform: translateY(200px); transition: none; }
 .s-g { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 14px; background: #fff; }
-.s-g b { display: block; font: 600 22px/1 system-ui, sans-serif; } .s-g small { color: #888; font: 500 12px/1.6 system-ui, sans-serif; }
+.s-g b { display: block; font: 600 22px/1 system-ui, sans-serif; } .s-g small { color: #6e6e6e; font: 500 12px/1.6 system-ui, sans-serif; }
 .s-bt { display: flex; align-items: flex-end; gap: 6px; height: 50px; }
 .s-bt i { width: 9px; height: 16px; border-radius: 3px; background: #d8d4c8; transition: background .1s, transform .1s; }
 .s-bt i:nth-child(4n+1) { height: 34px; } .s-bt i.on { background: var(--so-y); transform: scaleY(1.25); }
@@ -122,7 +122,7 @@
 </style>
 </head>
 <body>
-<main class="aw-wrap"><script src="../aw.js?v=1db3cbef7f"></script>
+<main class="aw-wrap"><script src="../aw.js?v=98b4655ab1"></script>
 <div class="so-page">
   <div class="aw-sotd" style="padding-top:16px">
     <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">11 khoảnh khắc</span></p>
@@ -301,6 +301,6 @@ document.getElementById('play').onclick = run;
 document.getElementById('mute').onclick = (e) => { muted = !muted; e.target.setAttribute('aria-pressed', muted); e.target.textContent = muted ? 'Bật tiếng' : 'Tắt tiếng'; };
 document.getElementById('beat').onclick = (e) => { beatOn = !beatOn; e.target.setAttribute('aria-pressed', beatOn); e.target.textContent = 'Nhạc nền: ' + (beatOn ? 'bật' : 'tắt'); };
 </script>
-<script src="/search.js?v=1db3cbef7f" defer></script><script src="/stats.js?v=1db3cbef7f" defer></script>
+<script src="/search.js?v=98b4655ab1" defer></script><script src="/stats.js?v=98b4655ab1" defer></script>
 </body>
 </html>

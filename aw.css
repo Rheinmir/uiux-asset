@@ -395,12 +395,13 @@ code, .code { font-family: var(--aw-mono); font-size: 12px; }
 .gx-mosaic iframe { position: static; width: 100%; height: 100%; border: 0; transform: none; pointer-events: none; }   /* gỡ thu-1/4 của .aw-shot iframe */
 a.aw-tag { text-decoration: none; }
 a.aw-tag:hover { border-color: var(--aw-color-primary); }
-.aw-count { width: auto; min-width: 20px; padding: 0 5px; }   /* kit: ô 20px chỉ vừa 2 chữ số */
+.aw-count { width: auto; min-width: 20px; padding: 0 5px; color: #121212; }   /* kit: ô 20px chỉ vừa 2 chữ số; chữ tối: trắng trên cam chỉ 2.1:1 */
 .aw-filters .aw-search { background: var(--aw-nf-bg-3); max-width: 420px; }
 .aw-filter[aria-pressed="true"] { background: var(--aw-nf-bg-3); font-weight: 600; }
 .aw-lead { margin: 0; max-width: 62ch; font: 400 var(--aw-text-medium)/28px var(--aw-font); text-align: center; text-wrap: balance; }
 .aw-wrap .aw-home-search { width: 100%; max-width: 720px; margin: 0 auto; font-size: 14px; line-height: 20px; }
 [hidden] { display: none !important; }
+.aw-btn:focus-visible { outline: 2px solid var(--aw-color-blue); outline-offset: 2px; }   /* kit tắt outline của .aw-btn → bàn phím không thấy focus */
 /* giỏ mẫu (cart.js): nút trên thẻ + ngăn kéo phải — ghép từ aw-btn / aw-tag / aw-search của kit */
 button.aw-tag { cursor: pointer; font-family: inherit; }
 .aw-cart-add { background: transparent; }   /* chỉ nút giỏ; nút solid của kit (Copy) giữ nền */
@@ -505,7 +506,8 @@ body:has(.aw-cart-fab:not([hidden])) .aw-footer { padding-bottom: 104px; }   /* 
   .aw-site-head { position: static; }
   .aw-site-head .aw-marquee { display: none; }
   .aw-gh { display: none; }
-  .aw-header .aw-btn { flex: none; }
+  .aw-header .aw-btn { flex: none; height: 44px; }   /* vùng chạm mobile ≥ 44px (kit: 42) */
+  .aw-brand { display: inline-flex; align-items: center; min-height: 44px; }
   .aw-header { height: auto; min-height: var(--aw-nf-height); flex-wrap: wrap; gap: 4px 16px; padding: 6px; }
   .aw-brand { margin: 0 8px; }
   .aw-hnav { order: 3; flex-basis: 100%; padding: 0 8px 2px; }

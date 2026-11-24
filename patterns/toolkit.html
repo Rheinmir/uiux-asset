@@ -6,11 +6,11 @@
 <title>Bộ đồ nghề chuyển động — 16 repo — uiux-asset</title>
 <meta name="description" content="Motion / Toolkit dựng lại từ video: 16 thẻ repo GitHub cho video và chuyển động bằng code, mỗi thẻ có demo chạy thật, kèm tour đi qua từng thẻ.">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
-<link rel="stylesheet" href="../aw.css?v=1db3cbef7f">
+<link rel="stylesheet" href="../aw.css?v=98b4655ab1">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&display=swap">
 <style>
 .tk-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
-.tk { --ink: var(--aw-color-primary); --mute: #8a8a8a; --soft: var(--aw-border-gray); --codebg: var(--aw-bg-primary); --card: var(--aw-bg-white); color: var(--ink); font-family: var(--aw-font); scroll-margin-top: 80px; }
+.tk { --ink: var(--aw-color-primary); --mute: #6e6e6e; --soft: var(--aw-border-gray); --codebg: var(--aw-bg-primary); --card: var(--aw-bg-white); color: var(--ink); font-family: var(--aw-font); scroll-margin-top: 80px; }
 .tk .mu { color: var(--mute); }
 .tk-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0 16px; border-bottom: 1px solid var(--soft); font: 500 13px/1.2 var(--aw-mono); letter-spacing: .06em; text-transform: uppercase; }
 .tk-bar b { font-weight: 700; margin-right: clamp(12px, 4vw, 64px); }
@@ -112,7 +112,7 @@
 </style>
 </head>
 <body>
-<main class="aw-wrap"><script src="../aw.js?v=1db3cbef7f"></script>
+<main class="aw-wrap"><script src="../aw.js?v=98b4655ab1"></script>
 <div class="tk-page">
   <div class="aw-sotd" style="padding-top:16px">
     <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">16 repo</span></p>
@@ -202,7 +202,7 @@ const V = [
     return (t) => { const [x, w, h] = fit(cv), s = 7, nc = Math.floor(w / s), nr = Math.floor(h / s), ox = (w - nc * s) / 2;
       for (let i = 0; i < nc; i++) for (let j = 0; j < nr; j++) { const v = .5 + .5 * Math.sin(Math.hypot(i - nc / 2, j - nr / 2) * .7 - t * 3.2), q = Math.round(v * 4) / 4;
         x.fillStyle = q < .3 ? C.soft : g(1 - q); x.fillRect(ox + i * s, j * s, s - 1, s - 1); } }; } },
-{ id: 'react-postprocessing', vi: 'Hậu kỳ: bloom, DOF', en: 'React Postprocessing', use: 'Thêm bloom, độ sâu trường ảnh, chất phim.', cat: 'Effects', repo: 'pmndrs/react-postprocessing', star: '1.7k', desc: 'bloom, depth of field and film looks',
+{ id: 'react-postprocessing', vi: 'Hậu kỳ: bloom, DOF', en: 'React Postprocessing', use: 'Thêm bloom, xoá phông, chất phim.', cat: 'Effects', repo: 'pmndrs/react-postprocessing', star: '1.7k', desc: 'bloom, depth of field and film looks',
   html: (() => { const b = [['3.4s', '-1s', '34%', '40px'], ['4.6s', '-3s', '10%', '28px'], ['2.8s', '-.4s', '56%', '34px']].map(([d, o, y, s]) => `<b style="--d:${d};--o:${o};--y:${y};--s:${s}"></b>`).join('');
     return `<div class="pp-l">${b}</div><div class="pp-l pp-r">${b}</div><i class="pp-line"></i><span class="pp-a">raw</span><span class="pp-b">bloom + DOF</span>`; })() },
 { id: 'pixi-viewport', vi: 'Kéo và zoom khung nhìn', en: 'pixi-viewport', use: 'Pan, zoom, minimap cho cảnh PixiJS.', cat: 'Camera', repo: 'pixijs-userland/pixi-viewport', star: '1.2k', desc: 'pan and zoom for PixiJS scenes',
@@ -288,6 +288,6 @@ cta.onclick = () => timer ? end() : start();
 addEventListener('keydown', (e) => { if (e.key === 'Escape' && timer) end(); });
 addEventListener('resize', () => { if (timer) zoom(cur); });
 </script>
-<script src="/search.js?v=1db3cbef7f" defer></script><script src="/stats.js?v=1db3cbef7f" defer></script>
+<script src="/search.js?v=98b4655ab1" defer></script><script src="/stats.js?v=98b4655ab1" defer></script>
 </body>
 </html>

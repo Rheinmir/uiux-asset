@@ -6,7 +6,7 @@
 <title>Thanh tab nổi — 7 kiểu — uiux-asset</title>
 <meta name="description" content="Pattern thanh tab nổi trên di động: 7 kiểu dựng lại từ ảnh chụp, bấm được, xoay dọc/ngang, kèm code HTML/CSS chép thẳng.">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
-<link rel="stylesheet" href="../aw.css?v=1db3cbef7f">
+<link rel="stylesheet" href="../aw.css?v=98b4655ab1">
 <style>
 .tb-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
 .tb-tools { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
@@ -46,7 +46,7 @@
 <style id="tb-variants"></style>
 </head>
 <body>
-<main class="aw-wrap"><script src="../aw.js?v=1db3cbef7f"></script>
+<main class="aw-wrap"><script src="../aw.js?v=98b4655ab1"></script>
 <div class="tb-page" id="tb" data-dir="v">
   <div class="aw-sotd" style="padding-top:16px">
     <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">7 kiểu</span></p>
@@ -108,10 +108,10 @@ const V = [
   html: `<nav class="tb-ink"><div role="tablist">${T(true, 'Thẻ', I('tag'))}${T(false, 'Trò chuyện', I('chat'))}${T(false, 'Tạo mới', I('add'))}${T(false, 'Thông báo', I('panel'))}${T(false, 'Hồ sơ', I('face'))}</div></nav>` },
 { id: 'sticker', vi: 'Nhãn dán màu', en: 'Sticker tabs', bg: 'bg-sky', seen: 'Finch',
   use: 'App vui, trẻ em, game hoá. Icon là hình dán nhiều màu, chữ trắng đậm.',
-  css: `.tb-sticker [role=tablist]{display:flex;gap:2px;padding:6px;background:#2a789f;border-radius:14px}
+  css: `.tb-sticker [role=tablist]{display:flex;gap:2px;padding:6px;background:#1d5a7a;border-radius:14px}
 .tb-sticker [role=tab]{width:54px;height:66px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:0;border-radius:12px;background:none;color:#fff;font:700 10px/1 system-ui,sans-serif;cursor:pointer}
 .tb-sticker [role=tab] b{font-size:26px;line-height:1;filter:drop-shadow(0 0 1.5px #fff) drop-shadow(0 1px 1px rgba(0,0,0,.25))}
-.tb-sticker [aria-selected=true]{background:rgba(255,255,255,.28)}`,
+.tb-sticker [aria-selected=true]{background:rgba(255,255,255,.2)}`,
   html: `<nav class="tb-sticker"><div role="tablist">${[['🏠', 'Nhà'], ['📜', 'Việc'], ['🏪', 'Chợ'], ['🌵', 'Bạn'], ['🎒', 'Túi'], ['☀️', 'Nắng']].map(([e, t], i) => T(i === 0, t, `<b aria-hidden="true">${e}</b>${t}`)).join('')}</div></nav>` },
 { id: 'nested', vi: 'Viên lồng viên', en: 'Nested pill', bg: 'bg-ring', seen: 'Pool',
   use: 'Chỉ 2 tab chính, cộng một nút tìm nổi riêng. Tab đang chọn là viên kính sáng hơn.',
@@ -132,7 +132,7 @@ const V = [
 { id: 'edge', vi: 'Vạch chỉ báo cạnh', en: 'Edge indicator', bg: 'bg-iris', seen: 'Lungy',
   use: 'App sức khoẻ, thiền. Icon nét mảnh. Tab chọn đổi màu đậm và có vạch ở mép.',
   css: `.tb-edge [role=tablist]{display:flex;gap:4px;padding:8px;background:#fff;border-radius:20px;box-shadow:0 16px 40px rgba(30,20,120,.35)}
-.tb-edge [role=tab]{position:relative;width:62px;white-space:nowrap;height:72px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border:0;background:none;color:#c4bcf4;font:600 11px/1 system-ui,sans-serif;cursor:pointer}
+.tb-edge [role=tab]{position:relative;width:62px;white-space:nowrap;height:72px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border:0;background:none;color:#7369c1;font:600 11px/1 system-ui,sans-serif;cursor:pointer}
 .tb-edge [role=tab] svg{width:28px;height:28px}
 .tb-edge [aria-selected=true]{color:#4a3fd8}
 .tb-edge [aria-selected=true]::before{content:"";position:absolute;top:-8px;left:16px;right:16px;height:4px;border-radius:0 0 3px 3px;background:#4a3fd8}`,
@@ -181,6 +181,6 @@ document.addEventListener('click', (e) => {
   navigator.clipboard.writeText(b.nextElementSibling.textContent).then(() => { b.textContent = 'Đã chép'; setTimeout(() => b.textContent = 'Chép', 1500); });
 });
 </script>
-<script src="/search.js?v=1db3cbef7f" defer></script><script src="/stats.js?v=1db3cbef7f" defer></script>
+<script src="/search.js?v=98b4655ab1" defer></script><script src="/stats.js?v=98b4655ab1" defer></script>
 </body>
 </html>

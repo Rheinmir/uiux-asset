@@ -6,11 +6,11 @@
 <title>Xưởng chuyển động Muse — 14 repo — uiux-asset</title>
 <meta name="description" content="Muse · Motion Studio dựng lại từ video: 14 repo miễn phí cho chuyển động, vật lý, biểu đồ, 2D, 3D, video AI và âm thanh. Ba chế độ Helix, Stack, Grid; mỗi thẻ có demo chạy thật và thanh trượt chỉnh được.">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
-<link rel="stylesheet" href="../aw.css?v=1db3cbef7f">
+<link rel="stylesheet" href="../aw.css?v=98b4655ab1">
 <script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
 <style>
 .sx-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
-.sx { --ink: #14161c; --mute: #737d8e; --line: #e3e9f2; --card: #fff; --code: #111622; --blue: #1570ef; --cc: var(--blue);
+.sx { --ink: #14161c; --mute: #5f6878; --line: #e3e9f2; --card: #fff; --code: #111622; --blue: #1570ef; --cc: var(--blue);
   position: relative; overflow: clip; display: flex; flex-direction: column; gap: 14px; padding: 20px clamp(14px, 2.4vw, 28px) 16px; border-radius: 24px;
   background: radial-gradient(120% 80% at 85% 0%, #dbe8fb 0%, transparent 60%), radial-gradient(90% 70% at 0% 100%, #e4eefc 0%, transparent 60%), linear-gradient(180deg, #f4f8fe, #e9f1fc);
   color: var(--ink); font-family: var(--aw-font); }
@@ -26,7 +26,7 @@
 .sx-brand .sx-prod { font: 500 20px/1 var(--aw-font); color: var(--blue); }
 .sx-brand small { grid-column: 1 / -1; font: 500 10.5px/1.4 var(--aw-mono); letter-spacing: .16em; color: var(--mute); }
 .sx-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; margin-left: auto; }
-.sx-seg { display: flex; gap: 2px; padding: 4px; border-radius: 999px; background: color-mix(in srgb, var(--card) 85%, transparent); box-shadow: 0 2px 10px rgba(30,50,90,.08); }
+.sx-seg { display: flex; gap: 6px; padding: 4px; border-radius: 999px; background: color-mix(in srgb, var(--card) 85%, transparent); box-shadow: 0 2px 10px rgba(30,50,90,.08); }
 .sx-seg button, .sx-pills button { min-height: 44px; padding: 0 16px; border: 0; border-radius: 999px; background: none; color: var(--ink); font: 500 14px/1 var(--aw-font); cursor: pointer; transition: background .3s, color .3s; }
 .sx-seg button[aria-pressed="true"] { background: var(--blue); color: #fff; }
 .sx-seg svg { width: 14px; height: 14px; margin-right: 6px; vertical-align: -2px; }
@@ -54,7 +54,7 @@
 .sx[data-mode="stack"] .sx-card:not(.is-cur) { cursor: pointer; }
 .sx[data-mode="stack"] .sx-card:not(.is-cur) > :not(.sx-head):not(.sx-ghost) { opacity: 0; visibility: hidden; }
 .sx-head { display: flex; justify-content: space-between; gap: 8px; font: 500 12px/1 var(--aw-mono); letter-spacing: .08em; color: var(--mute); }
-.sx-head em { font-style: normal; color: var(--cc); margin-left: 10px; text-transform: uppercase; }
+.sx-head em { font-style: normal; color: color-mix(in srgb, var(--cc) 72%, #000); margin-left: 10px; text-transform: uppercase; }
 .sx-head em::before { content: "● "; }
 .sx-star { color: var(--ink); opacity: .7; }
 .sx-card h3 { margin: 2px 0 0; font: 700 40px/1.1 var(--aw-font); letter-spacing: -.035em; }
@@ -64,12 +64,13 @@
 .sx-vi { margin: 0; font: 400 13px/1.4 var(--aw-font); color: var(--mute); }
 .sx-panel { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 210px; gap: 10px 12px; padding: 10px 12px 12px; border-radius: 16px; background: var(--tint); }
 .sx-ph { grid-column: 1 / -1; display: flex; justify-content: space-between; font: 500 10px/1 var(--aw-mono); letter-spacing: .14em; color: var(--mute); text-transform: uppercase; }
-.sx-ph b { color: var(--cc); font-weight: 500; }
+.sx-ph b { color: color-mix(in srgb, var(--cc) 72%, #000); font-weight: 500; }
+:root[data-theme="dark"] :is(.sx-head em, .sx-ph b) { color: var(--cc); }
 .sx-viz { position: relative; min-height: 170px; overflow: hidden; color: var(--cc); }
 .sx-viz canvas, .sx-viz > svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .sx-ctl { display: flex; flex-direction: column; justify-content: center; gap: 2px; padding: 10px 12px; border-radius: 12px; background: var(--card); box-shadow: 0 1px 6px rgba(30,50,90,.06); }
 .sx-sl { display: block; }
-.sx-sl span, .sx-in { display: flex; justify-content: space-between; margin: 0; font: 500 9.5px/1.2 var(--aw-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--mute); }
+.sx-sl span, .sx-in { display: flex; justify-content: space-between; margin: 0; font: 500 10px/1.2 var(--aw-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--mute); }
 .sx-in { padding: 6px 0 2px; }
 .sx-sl b, .sx-in b { color: var(--ink); font-weight: 600; text-transform: none; letter-spacing: 0; }
 .sx-sl input { --p: 50%; display: block; width: 100%; height: 44px; margin: -13px 0 -10px; background: none; -webkit-appearance: none; appearance: none; cursor: pointer; }
@@ -79,7 +80,7 @@
 .sx-sl input::-moz-range-thumb { width: 10px; height: 10px; border-radius: 50%; background: var(--card); border: 2px solid var(--ink); }
 .sx-code { display: flex; align-items: center; gap: 8px; min-width: 0; padding: 10px 14px; border-radius: 10px; background: var(--code); color: #e8edf6; font: 500 12px/1.3 var(--aw-mono); white-space: nowrap; overflow: hidden; }
 .sx-pr { color: #6aa4ff; }
-.sx-ty { overflow: hidden; text-overflow: clip; }
+.sx-ty { overflow: hidden; text-overflow: clip; font: inherit; }
 .sx-caret { flex: none; width: 7px; height: 14px; background: #e8edf6; animation: sx-blink 1s steps(1) infinite; }
 @keyframes sx-blink { 50% { opacity: 0; } }
 .sx-fl { display: flex; justify-content: space-between; align-items: center; gap: 10px; font: 400 10.5px/1 var(--aw-mono); letter-spacing: .06em; color: var(--mute); }
@@ -87,11 +88,11 @@
 .sx-fl a:hover { text-decoration: underline; }
 .sx-fl a { min-width: 0; overflow-wrap: anywhere; } .sx-fl span { white-space: nowrap; }
 .sx-ws .sx-ctl { justify-content: flex-start; }
-.sx-hud { position: absolute; left: 4px; bottom: 4px; font: 500 9.5px/1.3 var(--aw-mono); letter-spacing: .06em; color: var(--mute); white-space: pre; pointer-events: none; }
+.sx-hud { position: absolute; left: 4px; bottom: 4px; font: 500 10px/1.3 var(--aw-mono); letter-spacing: .06em; color: var(--mute); white-space: pre; pointer-events: none; }
 .sx-rule { position: absolute; right: 6px; top: 50%; width: 14px; height: 280px; transform: translateY(-50%); background: repeating-linear-gradient(180deg, var(--mute) 0 1px, transparent 1px 11px); opacity: .45; pointer-events: none; }
 .sx-rule i { position: absolute; left: -6px; right: -6px; height: 2px; background: var(--blue); transition: top .6s; }
 .sx[data-mode="grid"] .sx-rule { display: none; }
-.sx-pills { display: flex; gap: 2px; align-self: center; max-width: 100%; padding: 4px; border-radius: 999px; background: color-mix(in srgb, var(--card) 88%, transparent); box-shadow: 0 2px 12px rgba(30,50,90,.08); overflow-x: auto; scrollbar-width: none; position: relative; z-index: 5; }
+.sx-pills { display: flex; gap: 6px; align-self: center; max-width: 100%; padding: 4px; border-radius: 999px; background: color-mix(in srgb, var(--card) 88%, transparent); box-shadow: 0 2px 12px rgba(30,50,90,.08); overflow-x: auto; scrollbar-width: none; position: relative; z-index: 5; }
 .sx-pills::-webkit-scrollbar { display: none; }
 .sx-pills button { flex: none; min-width: 44px; padding: 0 14px; }
 .sx-pills button.is-cur { box-shadow: inset 0 0 0 1.5px var(--line); }
@@ -158,9 +159,9 @@
 .mct-h::before { content: ""; position: absolute; left: -4px; top: -4px; width: 10px; height: 10px; border-radius: 50%; background: var(--cc); }
 .bl-p { position: absolute; left: 10px; right: 10px; bottom: 8px; height: 4px; border-radius: 2px; background: rgba(255,255,255,.15); }
 .bl-p i { display: block; height: 100%; width: 0; border-radius: inherit; background: var(--cc); }
-.sx-hud-d { left: auto; right: 10px; top: 8px; bottom: auto; color: #cfd3ff; text-align: right; }
+.sx-hud-d { left: auto; right: 10px; top: 8px; bottom: auto; color: #cfd3ff; text-align: right; padding: 2px 5px; border-radius: 4px; background: rgba(10,13,20,.85); }
 .th-pop { position: absolute; right: 4px; top: 4px; z-index: 2; min-height: 44px; padding: 0 14px; border: 0; border-radius: 999px; background: var(--code); color: #fff; font: 600 12px/1 var(--aw-font); cursor: pointer; }
-.th-m { position: absolute; left: 50%; bottom: 2px; z-index: 2; display: flex; gap: 2px; padding: 0 3px; transform: translateX(-50%); border-radius: 999px; background: var(--card); box-shadow: 0 1px 6px rgba(30,50,90,.1); }
+.th-m { position: absolute; left: 50%; bottom: 2px; z-index: 2; display: flex; gap: 6px; padding: 0 3px; transform: translateX(-50%); border-radius: 999px; background: var(--card); box-shadow: 0 1px 6px rgba(30,50,90,.1); }
 .th-m button { min-height: 44px; padding: 0 12px; border: 0; border-radius: 999px; background: none; color: var(--ink); font: 500 12px/1 var(--aw-font); cursor: pointer; }
 .th-m button[aria-pressed="true"] { background: var(--ink); color: var(--card); }
 .th-hud { top: 4px; bottom: auto; }
@@ -175,12 +176,12 @@
 .rm-pr { position: absolute; left: 0; right: 0; top: 2px; padding: 7px 10px; border-radius: 8px; background: var(--card); font: 500 10.5px/1.2 var(--aw-mono); color: var(--ink); white-space: nowrap; overflow: hidden; }
 .rm-tl { position: absolute; left: 0; right: 0; top: 40px; bottom: 22px; display: flex; flex-direction: column; justify-content: space-around; padding: 4px 8px; border-radius: 8px; background: var(--card); }
 .rm-r { display: flex; align-items: center; gap: 6px; }
-.rm-r em { width: 58px; font: 500 9px/1 var(--aw-mono); font-style: normal; letter-spacing: .08em; color: var(--mute); }
+.rm-r em { width: 58px; font: 500 10px/1 var(--aw-mono); font-style: normal; letter-spacing: .08em; color: var(--mute); }
 .rm-r span { position: relative; flex: 1; height: 10px; }
 .rm-r b { position: absolute; top: 0; height: 100%; border-radius: 3px; background: var(--cc); opacity: var(--o); }
 .rm-h { position: absolute; top: 2px; bottom: 2px; width: 2px; background: var(--ink); }
 .lo-s { left: 0 !important; width: 55% !important; }
-.lo-i { position: absolute; right: 0; top: 50%; width: 42%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 4px; padding: 10px; border-radius: 10px; background: var(--card); font: 500 9.5px/1.2 var(--aw-mono); letter-spacing: .08em; color: var(--mute); }
+.lo-i { position: absolute; right: 0; top: 50%; width: 42%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 4px; padding: 10px; border-radius: 10px; background: var(--card); font: 500 10px/1.2 var(--aw-mono); letter-spacing: .08em; color: var(--mute); }
 .lo-i b { font: 600 20px/1.1 var(--aw-font); color: var(--ink); letter-spacing: -.01em; }
 .lo-b { height: 3px; border-radius: 2px; background: var(--line); }
 .lo-b i { display: block; height: 100%; width: 0; border-radius: inherit; background: var(--cc); }
@@ -191,7 +192,7 @@
 .mg-w { position: absolute; left: 0; right: 0; top: 44px; bottom: 24px; display: flex; align-items: center; gap: 1.5px; }
 .mg-w i { flex: 1; height: 100%; border-radius: 1px; background: var(--cc); transform: scaleY(.04); transition: transform .12s; }
 .tn-g { position: absolute; left: 0; right: 0; top: 2px; display: grid; grid-template-columns: 44px repeat(16, minmax(0, 1fr)); gap: 4px 3px; align-items: center; }
-.tn-g em { font: 500 8.5px/1 var(--aw-mono); font-style: normal; letter-spacing: .06em; color: var(--mute); }
+.tn-g em { font: 500 10px/1 var(--aw-mono); font-style: normal; letter-spacing: .06em; color: var(--mute); }
 .tn-g span { height: 15px; border-radius: 3px; background: color-mix(in srgb, var(--cc) 14%, var(--card)); transition: opacity .2s; }
 .tn-g span.on { background: var(--cc); }
 .tn-g span.ph { box-shadow: 0 0 0 1.5px var(--ink); }
@@ -201,7 +202,7 @@
 .tn-snd[aria-pressed="true"] { background: var(--cc); color: #fff; }
 
 /* Workspace Three.js */
-.sx-ws { --cc: #7c5cf2; width: min(1100px, 94vw); max-height: 94vh; padding: 18px 20px; border: 0; border-radius: 22px; background: #fff; color: #14161c; box-shadow: 0 30px 90px rgba(20,40,90,.3); font-family: var(--aw-font); --ink: #14161c; --mute: #737d8e; --line: #e3e9f2; --card: #fff; --code: #111622; --blue: #1570ef; }
+.sx-ws { --cc: #7c5cf2; width: min(1100px, 94vw); max-height: 94vh; padding: 18px 20px; border: 0; border-radius: 22px; background: #fff; color: #14161c; box-shadow: 0 30px 90px rgba(20,40,90,.3); font-family: var(--aw-font); --ink: #14161c; --mute: #5f6878; --line: #e3e9f2; --card: #fff; --code: #111622; --blue: #1570ef; }
 .sx-ws::backdrop { background: rgba(214,228,248,.6); backdrop-filter: blur(6px); }
 .ws-h { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; font: 500 10.5px/1 var(--aw-mono); letter-spacing: .14em; color: var(--mute); }
 .ws-h i { width: 10px; height: 10px; border-radius: 50%; background: var(--cc); }
@@ -218,7 +219,7 @@
 </style>
 </head>
 <body>
-<main class="aw-wrap"><script src="../aw.js?v=1db3cbef7f"></script>
+<main class="aw-wrap"><script src="../aw.js?v=98b4655ab1"></script>
 <div class="sx-page">
   <div class="aw-sotd" style="padding-top:16px">
     <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">14 repo</span></p>
@@ -302,7 +303,7 @@ const V = [
           const px = w / 2 + Math.cos(q[0]) * rr * 1.5, py = h / 2 + Math.sin(q[0]) * rr + age * age * 26, s = q[2] * (1 - age * .6);
           x.moveTo(px + s, py); x.arc(px, py, s, 0, 6.283); } x.fill(); }
       typed(hud, Math.round(Math.min(fps, 120)) + ' FPS'); }; } },
-{ id: 'p5-js', vi: 'Nghệ thuật sinh bằng code', en: 'p5.js', use: 'Vài dòng code ra trường dòng chảy, hạt, hoa văn.', cat: 'Motion', repo: 'processing/p5.js', star: '24.4k', sub: 'Generative art in a few lines of code', label: 'Flow field',
+{ id: 'p5-js', vi: 'Nghệ thuật sinh bằng code', en: 'p5.js', use: 'Vài dòng code ra dòng chảy, hạt, hoa văn.', cat: 'Motion', repo: 'processing/p5.js', star: '24.4k', sub: 'Generative art in a few lines of code', label: 'Flow field',
   ctl: [['ns', 'Noise', 1, 20, 1, 5, (v) => (v / 1000).toFixed(3)], ['n', 'Agents', 100, 1000, 50, 600], ['al', 'Alpha', 2, 30, 1, 8, (v) => (v / 100).toFixed(2)]],
   code: (p) => `const a = noise(x * ${(p.ns / 1000).toFixed(3)}, y * ${(p.ns / 1000).toFixed(3)}) * TAU * 2; line(x, y, x + cos(a), y + sin(a))`,
   html: `<canvas></canvas>`,
@@ -385,7 +386,7 @@ const V = [
   run: (el, p) => { const pr = el.querySelector('[data-pr]'), hd = el.querySelector('.rm-h'), hud = el.querySelector('[data-f]');
     return (t) => { const u = (t % 5) / 5, tot = p.dur * p.fps; typed(pr, `make a ${p.dur}s product video with captions`);
       hd.style.left = `calc(72px + ${u} * (100% - 80px))`; typed(hud, `frame ${Math.floor(u * tot)} / ${tot} · rendering ${Math.round(u * 100)}%`); }; } },
-{ id: 'lottie-web', vi: 'Phát hoạt hình After Effects', en: 'Lottie Web', use: 'Xuất JSON từ AE, phát bằng SVG trên web.', cat: '2D', repo: 'airbnb/lottie-web', star: '32.6k', sub: 'After Effects animations on the web', label: 'Vector playback',
+{ id: 'lottie-web', vi: 'Phát hoạt hình After Effects', en: 'Lottie Web', use: 'Xuất từ After Effects, phát bằng SVG trên web.', cat: '2D', repo: 'airbnb/lottie-web', star: '32.6k', sub: 'After Effects animations on the web', label: 'Vector playback',
   ctl: [['spd', 'Speed', .25, 3, .25, 1, (v) => v + '×'], ['fr', 'Frames', 24, 120, 6, 60]], info: [['Renderer', 'svg'], ['Loop', 'on']],
   code: (p) => `lottie.loadAnimation({ container, path: 'data.json', renderer: 'svg', loop: true }).setSpeed(${p.spd})`,
   html: `<svg class="lo-s" viewBox="-50 -50 100 100" aria-hidden="true"><ellipse cx="0" cy="42" rx="18" ry="3" fill="currentColor" opacity=".2"/><polygon fill="currentColor" points="${rep(10, (i) => { const a = i / 10 * 6.283 - Math.PI / 2, rr = i % 2 ? 9 : 22; return `${(Math.cos(a) * rr).toFixed(1)},${(Math.sin(a) * rr).toFixed(1)} `; })}"/></svg><div class="lo-i"><span>data.json</span><span>FRAME</span><b data-f>0 / 60</b><span class="lo-b"><i></i></span></div>`,
@@ -475,7 +476,7 @@ track.innerHTML = V.map((v, i) => `<article class="sx-card" id="${v.id}" style="
     <div class="sx-viz">${v.html}</div>
     <div class="sx-ctl">${v.ctl.map((c) => `<label class="sx-sl"><span><em>${c[1]}</em><b>${fmt(c, c[5])}</b></span><input type="range" min="${c[2]}" max="${c[3]}" step="${c[4]}" value="${c[5]}" data-k="${c[0]}" style="--p:${((c[5] - c[2]) / (c[3] - c[2]) * 100).toFixed(1)}%"></label>`).join('')}${(v.info || []).map(([a, b]) => `<p class="sx-in"><em>${a}</em><b data-i="${a}">${b}</b></p>`).join('')}${v.ctlx || ''}</div>
   </div>
-  <div class="sx-code"><span class="sx-pr">›</span><span class="sx-ty">${V[i].code(P[i])}</span><i class="sx-caret"></i></div>
+  <div class="sx-code"><span class="sx-pr">›</span><code class="sx-ty">${V[i].code(P[i])}</code><i class="sx-caret"></i></div>
   <div class="sx-fl"><a href="https://github.com/${v.repo}" target="_blank" rel="noopener">github.com/${v.repo}</a><span>FREE · OPEN SOURCE</span></div>
 </article>`).join('');
 const cards = [...track.children], frames = cards.map((c, i) => V[i].run(c.querySelector('.sx-viz'), P[i]));
@@ -553,6 +554,6 @@ else {
   setInterval(() => { if (mode !== 'grid' && inView && !hover && !ws.open && !document.hidden && Date.now() > hold && !sx.querySelector(':focus-visible')) step(1); }, 3600);
 }
 </script>
-<script src="/search.js?v=1db3cbef7f" defer></script><script src="/stats.js?v=1db3cbef7f" defer></script>
+<script src="/search.js?v=98b4655ab1" defer></script><script src="/stats.js?v=98b4655ab1" defer></script>
 </body>
 </html>

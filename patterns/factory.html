@@ -6,7 +6,7 @@
 <title>Bảng dây chuyền agent — uiux-asset</title>
 <meta name="description" content="Bảng dây chuyền agent kiểu content-factory: thẻ đầu vào, bus chung, dây nối SVG, thẻ agent có trạng thái, nhật ký chạy. Dựng từ một cấu hình JS, chép code chạy ngay.">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
-<link rel="stylesheet" href="../aw.css?v=1db3cbef7f">
+<link rel="stylesheet" href="../aw.css?v=98b4655ab1">
 <style>
 .fp-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
 .fp-bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
@@ -17,9 +17,9 @@
 </style>
 <style id="fx-css">
 /* ===== Agent pipeline board (.fx-) — tự chứa, chép được ===== */
-.fx{--ink:#2b2f3a;--mut:#8b91a3;--card:#fff;container-type:inline-size;color-scheme:light;position:relative;width:100%;max-width:1280px;margin:0 auto;padding:14px 18px 16px;box-sizing:border-box;overflow:hidden;font:11px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--ink);background:radial-gradient(90% 50% at 72% 8%,#ecebff 0,transparent 60%),radial-gradient(60% 40% at 10% 90%,#e8f3ff 0,transparent 60%),linear-gradient(180deg,#f7f8fc,#eef1f8);border:1px solid #e1e4ee;border-radius:22px}
+.fx{--ink:#2b2f3a;--mut:#656a77;--card:#fff;container-type:inline-size;color-scheme:light;position:relative;width:100%;max-width:1280px;margin:0 auto;padding:14px 18px 16px;box-sizing:border-box;overflow:hidden;font:11px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--ink);background:radial-gradient(90% 50% at 72% 8%,#ecebff 0,transparent 60%),radial-gradient(60% 40% at 10% 90%,#e8f3ff 0,transparent 60%),linear-gradient(180deg,#f7f8fc,#eef1f8);border:1px solid #e1e4ee;border-radius:22px}
 .fx *,.fx *::before,.fx *::after{box-sizing:border-box}
-.fx-top{display:flex;flex-wrap:wrap;align-items:center;gap:6px 18px;margin-bottom:12px;color:var(--mut);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase}
+.fx-top{display:flex;flex-wrap:wrap;align-items:center;gap:6px 18px;margin-bottom:12px;color:var(--mut);font-size:10px;letter-spacing:.06em;text-transform:uppercase}
 .fx-top b{margin-left:6px;color:var(--ink);font-size:11px;font-weight:600;letter-spacing:0;text-transform:none}
 .fx-logo{width:22px;height:22px;border-radius:6px;background:#1c1f2e;display:grid;place-items:center}
 .fx-handle{margin-left:auto;display:flex;align-items:center;gap:6px;padding:4px 12px 4px 5px;border-radius:999px;background:#141726;color:#fff;font-size:11px;font-weight:600;letter-spacing:0;text-transform:none}
@@ -37,13 +37,13 @@
 .fx-bus{position:absolute;left:14%;top:22px;bottom:60px;width:16px;border-radius:10px;background:linear-gradient(#2c2f52,#1d2034);display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:12px 0 170px;box-shadow:0 6px 18px -6px rgba(30,34,70,.5)}
 .fx-bus i{width:4px;height:4px;border-radius:50%;background:#c6cbeb}
 .fx-bus i.hot{background:#ff6fae;box-shadow:0 0 6px #ff6fae}
-.fx-bus em{position:absolute;bottom:12px;left:50%;writing-mode:vertical-rl;transform:translateX(-50%) rotate(180deg);font-style:normal;font-size:9px;color:#c6cbeb;white-space:nowrap}
+.fx-bus em{position:absolute;bottom:12px;left:50%;writing-mode:vertical-rl;transform:translateX(-50%) rotate(180deg);font-style:normal;font-size:10px;color:#c6cbeb;white-space:nowrap}
 .fx-bus b{position:absolute;top:-16px;left:50%;transform:translateX(-50%);width:26px;height:9px;border-radius:4px;background:#f5b62a;color:#fff;font-size:8.5px;font-weight:500;white-space:nowrap}
 .fx-bus b::before{content:attr(data-t);position:absolute;bottom:100%;left:50%;transform:translateX(-50%);color:#e0a21a;padding-bottom:2px}
 .fx-ags{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(var(--rows),auto) auto;grid-auto-flow:column;gap:12px 40px;align-content:start}
 .fx-card{position:relative;background:var(--card);border:1px solid #edf0f6;border-radius:10px;box-shadow:0 1px 0 #e4e7f0,0 8px 18px -12px rgba(40,50,90,.35)}
 .fx-h{display:flex;justify-content:space-between;align-items:center;gap:8px;min-width:0;padding:3px 10px;border-radius:9px 9px 0 0;background:linear-gradient(90deg,var(--a),var(--b));color:#fff;font-size:10.5px;white-space:nowrap}
-.fx-h small{overflow:hidden;text-overflow:ellipsis;font-size:9px;text-shadow:0 1px 2px rgba(0,0,0,.25)}
+.fx-h small{overflow:hidden;text-overflow:ellipsis;font-size:10px;text-shadow:0 1px 2px rgba(0,0,0,.25)}
 .fx-rows{padding:7px 0 4px}
 .fx-row{position:relative;display:flex;justify-content:space-between;gap:8px;padding:1px 12px}
 .fx-row span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -55,8 +55,8 @@
 .fx-sl::after{content:'';position:absolute;top:-3px;left:calc(var(--v)*100%);width:9px;height:9px;margin-left:-4.5px;border-radius:50%;background:#fff;border:1.5px solid var(--b)}
 .fx-ag .fx-rows{min-height:58px}
 .fx-ft{display:flex;align-items:center;gap:10px;padding:2px 10px 9px 12px}
-.fx-chip{padding:1px 8px;border-radius:999px;background:#eef0f4;color:var(--mut);font-size:9px}
-.fx-chip.done{background:#e1f5eb;color:#2c9668}
+.fx-chip{padding:1px 8px;border-radius:999px;background:#eef0f4;color:var(--mut);font-size:10px}
+.fx-chip.done{background:#e1f5eb;color:#247a54}
 .fx-chip.running{background:linear-gradient(90deg,var(--a),var(--b));color:#fff}
 .fx-pg{flex:1;height:3px;border-radius:2px;background:#eef0f5;overflow:hidden}
 .fx-pg i{display:block;width:calc(var(--p)*1%);height:100%;background:linear-gradient(90deg,var(--a),var(--b));transition:width .2s linear}
@@ -71,32 +71,32 @@
 .fx-gate{grid-column:1/-1;grid-row:-2/-1}
 .fx-gate .fx-body{display:flex;align-items:center;gap:14px;padding:16px 18px 18px;min-height:96px}
 .fx-gate .fx-bot{width:42px;height:42px}
-.fx-gate small{display:block;color:var(--mut);font-size:9.5px}
+.fx-gate small{display:block;color:var(--mut);font-size:10px}
 .fx-gate strong{display:block;font-size:24px;line-height:1.15;font-weight:700;color:#159a8c;letter-spacing:.02em}
 .fx-panels{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:16px}
 .fx-pn{padding:14px 16px;min-height:150px}
-.fx-pn h4{margin:0 0 10px;font-size:9.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--k)}
+.fx-pn h4{margin:0 0 10px;font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:color-mix(in srgb,var(--k) 80%,#000)}
 .fx-log{display:grid;grid-template-columns:minmax(64px,90px) 1fr;gap:3px 12px}
 .fx-log span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.fx-dp{display:grid;grid-template-columns:24px 1fr 36px 18px;align-items:center;gap:0 10px;color:var(--mut);font-size:9.5px}
+.fx-dp{display:grid;grid-template-columns:24px 1fr 36px 18px;align-items:center;gap:0 10px;color:var(--mut);font-size:10px}
 .fx-dp i{height:5px;border-radius:3px;background:#eef0f5;overflow:hidden}
 .fx-dp i::before{content:'';display:block;height:100%;width:calc(var(--p)*1%);background:linear-gradient(90deg,var(--a),var(--b));border-radius:3px}
 .fx-dp b{color:var(--ink);font-weight:500}
-.fx-dp em{color:#2c9668;font-style:normal}
+.fx-dp em{color:#247a54;font-style:normal}
 .fx-as{display:flex;justify-content:space-between;padding:1px 0}
 .fx-big{display:flex;align-items:flex-end;gap:16px;margin-top:14px;color:#159a8c;font-size:26px;font-weight:700;line-height:1}
-.fx-big small{font-size:9.5px;font-weight:400;color:var(--mut);padding-bottom:3px}
+.fx-big small{font-size:10px;font-weight:400;color:var(--mut);padding-bottom:3px}
 .fx-big small svg{display:block;margin-top:3px}
-.fx-rh{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 16px;margin:16px 0 8px;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut)}
+.fx-rh{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 16px;margin:16px 0 8px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut)}
 .fx-rh b{color:#6a63d8;font-weight:600}
 .fx-repos{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
 .fx-repo{display:flex;align-items:center;gap:8px;min-width:0;padding:6px 8px;border-radius:8px;background:#fff;border:1px solid #edf0f6}
-.fx-repo>i{flex:none;display:grid;place-items:center;width:22px;height:22px;border-radius:6px;background:linear-gradient(140deg,var(--b),var(--a));color:#fff;font-style:normal;font-size:9px}
+.fx-repo>i{flex:none;display:grid;place-items:center;width:22px;height:22px;border-radius:6px;background:linear-gradient(140deg,var(--b),var(--a));color:#fff;font-style:normal;font-size:10px}
 .fx-repo div{min-width:0;line-height:1.3}
 .fx-repo b,.fx-repo small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .fx-repo b{font-size:10px;font-weight:600}
-.fx-repo small{font-size:9px;color:var(--a)}
-.fx-repo.off{opacity:.55}.fx-repo.off>i{background:#cdd1dd}.fx-repo.off small{color:var(--mut)}
+.fx-repo small{font-size:10px;color:color-mix(in srgb,var(--a) 64%,#000)}
+.fx-repo.off{opacity:.55}.fx-repo.off>i{background:var(--mut)}.fx-repo.off small{color:var(--mut)}
 .fx-repo.cur{border-color:var(--a);box-shadow:0 0 0 1px var(--a)}
 @container (max-width:760px){
   .fx-main{grid-template-columns:1fr}
@@ -112,7 +112,7 @@
 </style>
 </head>
 <body>
-<main class="aw-wrap"><script src="../aw.js?v=1db3cbef7f"></script>
+<main class="aw-wrap"><script src="../aw.js?v=98b4655ab1"></script>
 <div class="fp-page">
   <div class="aw-sotd" style="padding-top:16px">
     <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">16 nút · 10 agent</span></p>
@@ -191,7 +191,7 @@ root.innerHTML = `
   </div>
 </div>
 <div class="fx-panels">
-  <div class="fx-card fx-pn" style="--k:#6a63d8"><h4>run log</h4><div class="fx-log">${FX.log.map(([id, t]) => `<span style="color:${ag[id]?.c[0] || 'inherit'}">${e(id)}</span><span>${e(t)}</span>`).join('')}</div></div>
+  <div class="fx-card fx-pn" style="--k:#6a63d8"><h4>run log</h4><div class="fx-log">${FX.log.map(([id, t]) => `<span style="color:${ag[id] ? `color-mix(in srgb,${ag[id].c[0]} 64%,#000)` : 'inherit'}">${e(id)}</span><span>${e(t)}</span>`).join('')}</div></div>
   <div class="fx-card fx-pn" style="--k:#e0558f"><h4>dispatch</h4>${FX.dispatch.map((p, i) => { const c = (FX.agents[i % FX.agents.length]).c; return `<div class="fx-dp" style="${col(c)}"><span>w${i + 1}</span><i style="--p:${p}"></i><b>${p}%</b><em>${p >= 100 ? 'ok' : ''}</em></div>`; }).join('')}</div>
   <div class="fx-card fx-pn" style="--k:#159a8c"><h4>content assets</h4>${FX.assets.map(([k, v]) => `<div class="fx-as"><span>${e(k)}</span><b>${v}</b></div>`).join('')}<div class="fx-big">${FX.from} -&gt; ${FX.to}<small>assets<svg width="44" height="8" viewBox="0 0 44 8"><path d="M1 6c6-6 9 2 15-1s9-4 14 0 9-2 13-3" fill="none" stroke="#7a6ee0" stroke-width="1.5"/></svg></small></div></div>
 </div>
@@ -277,6 +277,6 @@ document.getElementById('fp-src').textContent = fxSrc;
 const cp = document.getElementById('fp-copy');
 cp.onclick = () => navigator.clipboard.writeText(fxSrc).then(() => { cp.textContent = 'Đã chép'; setTimeout(() => cp.textContent = 'Chép code', 1500); });
 </script>
-<script src="/search.js?v=1db3cbef7f" defer></script><script src="/stats.js?v=1db3cbef7f" defer></script>
+<script src="/search.js?v=98b4655ab1" defer></script><script src="/stats.js?v=98b4655ab1" defer></script>
 </body>
 </html>

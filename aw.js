@@ -49,7 +49,8 @@
       ['patterns/toolbox.html', 'Hộp đồ nghề web', '50 trang miễn phí hay dùng', 50],
       ['fonts/', 'Font', 'Font family và bảng màu', 9],
       ['patterns/palettes.html', 'Bảng màu', 'Bảng màu 4 màu, chép hex', 6],
-      ['skills/', 'Skills', 'Claude skill từ một bài viết', 40]]]];
+      ['skills/', 'Skills', 'Claude skill từ một bài viết', 40],
+      ['rules/', 'Chuẩn UI Hang', '244 luật đo được, audit tự động', 244]]]];
   window.AW_CAT = CAT;
   const url = location.href.split('#')[0], base = url.split('?')[0], flat = CAT.flatMap(([id, , , it]) => it.map(([p]) => [id, R + p]));
   const on = (flat.find(([, u]) => u === url) || flat.find(([, u]) => base.startsWith(u.split('?')[0])) || [])[0];   // nhóm của trang đang xem

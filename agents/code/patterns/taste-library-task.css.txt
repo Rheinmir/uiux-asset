@@ -9,7 +9,7 @@
 .tx-task ol{position:absolute;left:22px;right:22px;top:378px;margin:0;padding:0;list-style:none;display:grid;gap:8px}
 .tx-task li{display:flex;align-items:center;gap:8px;padding-bottom:8px;border-bottom:1px solid #eee;font:500 11px/1 Inter;opacity:0;transform:translateY(6px);transition:.35s}
 .tx-task li.on{opacity:1;transform:none}
-.tx-task li::before{content:"✓";width:14px;height:14px;border-radius:50%;background:#111;color:#fff;font-size:8px;line-height:14px;text-align:center}
-.tx-task li small{margin-left:auto;white-space:nowrap;font:400 9px/1 ui-monospace,Menlo,monospace;color:#aaa}
+.tx-task li::before{content:"✓";width:14px;height:14px;border-radius:50%;background:#111;color:#fff;font-size:10px;line-height:14px;text-align:center}
+.tx-task li small{margin-left:auto;white-space:nowrap;font:400 10px/1 ui-monospace,Menlo,monospace;color:#707070}
 .tx-task .bar{position:absolute;left:14px;right:14px;bottom:26px;display:flex;align-items:center;gap:10px;color:#555}
 .tx-task .bar .stop{flex:1;height:40px;border:0;border-radius:999px;background:#f3f3f3;font:600 12px/1 Inter;cursor:pointer}

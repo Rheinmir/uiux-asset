@@ -6,7 +6,7 @@
 <title>Bảng điều khiển bot nội dung — uiux-asset</title>
 <meta name="description" content="Bảng điều khiển sáu bot chạy một trang Instagram: bộ đếm, dòng thời gian trong ngày, kênh chat nơi từng bot báo kết quả, rồi biểu đồ lượt xem 21 ngày. Dựng từ một object JS, chép code chạy ngay.">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
-<link rel="stylesheet" href="../aw.css?v=1db3cbef7f">
+<link rel="stylesheet" href="../aw.css?v=98b4655ab1">
 <style>
 .fp-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
 .fp-bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
@@ -17,21 +17,21 @@
 </style>
 <style id="gb-css">
 /* ===== Bot content dashboard (.gb-) — tự chứa, chép được ===== */
-.gb{--ink:#111;--mut:#8a8a8a;--line:#ececec;--soft:#f5f5f5;--ok:#16a34a;--okbg:#e7f6ec;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;container-type:inline-size;color-scheme:light;width:100%;max-width:1280px;margin:0 auto;padding:22px 22px 16px;box-sizing:border-box;font:14px/1.4 -apple-system,BlinkMacSystemFont,"Inter","Segoe UI",system-ui,sans-serif;color:var(--ink);background:#fafafa;border-radius:24px;border:1px solid #e8e8e8}
+.gb{--ink:#111;--mut:#6e6e6e;--line:#ececec;--soft:#f5f5f5;--ok:#0f7434;--okbg:#e7f6ec;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;container-type:inline-size;color-scheme:light;width:100%;max-width:1280px;margin:0 auto;padding:22px 22px 16px;box-sizing:border-box;font:14px/1.4 -apple-system,BlinkMacSystemFont,"Inter","Segoe UI",system-ui,sans-serif;color:var(--ink);background:#fafafa;border-radius:24px;border:1px solid #e8e8e8}
 .gb *,.gb *::before,.gb *::after{box-sizing:border-box}
 .gb button{font:inherit;color:inherit}
 .gb-top{display:flex;align-items:center;gap:10px;white-space:nowrap;min-width:0;font:500 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase}
 .gb-top i{width:8px;height:8px;background:var(--ink)}
-.gb-top span{color:var(--mut)}
+.gb-top span:not(.gb-me){color:var(--mut)}
 .gb-me{margin-left:auto;display:flex;align-items:center;gap:8px;padding:4px 14px 4px 4px;border-radius:999px;background:#111;color:#fff;font:600 12px/1 var(--mono);letter-spacing:0;text-transform:none}
 .gb-me b{width:24px;height:24px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#e6edf5,#8b9bb0 60%,#4b5565)}
 .gb-head{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:16px 40px;align-items:center;margin:18px 0 22px}
 .gb-nums{display:flex;flex-wrap:wrap;gap:8px 34px;align-items:center}
 .gb-num{display:flex;align-items:center;gap:10px}
 .gb-num strong{font-size:clamp(36px,5.2cqi,72px);font-weight:400;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums;transition:color .3s}
-.gb-num strong.z{color:#d4d4d4}
+.gb-num strong.z{color:#909090}
 .gb-num:first-child strong:not(.z){color:var(--ok)}
-.gb-num small{font:500 9.5px/1.45 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--mut);white-space:pre}
+.gb-num small{font:500 10px/1.45 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--mut);white-space:pre}
 .gb-tl{font:500 10px/1 var(--mono);color:var(--mut);min-width:0}
 .gb-tl-h{display:flex;justify-content:space-between;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px}
 .gb-tl-h b{color:var(--ink);font-weight:600;letter-spacing:.04em;text-transform:none}
@@ -52,7 +52,7 @@
 .gb-side{display:flex;flex-direction:column;background:var(--soft);padding:14px 12px;border-right:1px solid var(--line);min-width:0}
 .gb-tools{display:flex;gap:6px;margin-bottom:14px}
 .gb-tools i{width:28px;height:28px;border-radius:50%;border:1px solid #e3e3e3;background:#fff;display:grid;place-items:center;font:600 11px/1 var(--mono);font-style:normal}
-.gb-lbl{margin:6px 8px 8px;font:500 9.5px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}
+.gb-lbl{margin:6px 8px 8px;font:500 10px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}
 .gb-bots,.gb-old{display:flex;flex-direction:column;gap:2px}
 .gb-b{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:12px;min-width:0;transition:background .3s}
 .gb-b div{min-width:0;flex:1}
@@ -92,7 +92,7 @@
 .gb-row.work{background:#f7f7f7}
 .gb-row.work p{color:var(--mut)}
 .gb-row.wait{opacity:.32}
-.gb-row.wait h5{color:#888}
+.gb-row.wait h5{color:#6e6e6e}
 .gb-body{grid-column:3/5;min-width:0}
 .gb-x{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px;min-width:0}
 .gb-reel{position:relative;flex:0 1 46px;min-width:0;height:80px;border-radius:9px;background:linear-gradient(180deg,var(--a),var(--b));overflow:hidden;animation:gb-in .35s ease both}
@@ -127,7 +127,7 @@
 .gb-stats{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
 .gb-msg{display:flex;gap:8px;align-items:center;margin-top:14px}
 .gb-msg i{flex:none;width:36px;height:36px;border-radius:50%;border:1px solid #e3e3e3;display:grid;place-items:center;font-style:normal;color:var(--mut)}
-.gb-msg span{flex:1;min-width:0;height:36px;display:flex;align-items:center;padding:0 16px;border:1px solid #e3e3e3;border-radius:999px;color:#a3a3a3;font-size:13px;white-space:nowrap;overflow:hidden}
+.gb-msg span{flex:1;min-width:0;height:36px;display:flex;align-items:center;padding:0 16px;border:1px solid #e3e3e3;border-radius:999px;color:#737373;font-size:13px;white-space:nowrap;overflow:hidden}
 /* growth chart */
 .gb-sum{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:12px 16px;border:1px solid #e9e9e9;border-radius:16px;font-size:15px}
 .gb-sum span{margin:0 auto 0 8px}
@@ -154,7 +154,7 @@
 @container (max-width:820px){
   .gb{padding:16px 12px 12px}
   .gb-head{grid-template-columns:1fr}
-  .gb-top{gap:6px;font-size:9.5px;letter-spacing:.06em}
+  .gb-top{gap:6px;font-size:10px;letter-spacing:.06em}
   .gb-me{padding:3px 10px 3px 3px;font-size:10.5px}
   .gb-num strong{font-size:34px}
   .gb-nums{gap:8px 18px}
@@ -177,7 +177,7 @@
 </style>
 </head>
 <body>
-<main class="aw-wrap"><script src="../aw.js?v=1db3cbef7f"></script>
+<main class="aw-wrap"><script src="../aw.js?v=98b4655ab1"></script>
 <div class="fp-page">
   <div class="aw-sotd" style="padding-top:16px">
     <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">6 bot · 21 ngày</span></p>
@@ -379,6 +379,6 @@ document.getElementById('fp-src').textContent = gbSrc;
 const cp = document.getElementById('fp-copy');
 cp.onclick = () => navigator.clipboard.writeText(gbSrc).then(() => { cp.textContent = 'Đã chép'; setTimeout(() => cp.textContent = 'Chép code', 1500); });
 </script>
-<script src="/search.js?v=1db3cbef7f" defer></script><script src="/stats.js?v=1db3cbef7f" defer></script>
+<script src="/search.js?v=98b4655ab1" defer></script><script src="/stats.js?v=98b4655ab1" defer></script>
 </body>
 </html>

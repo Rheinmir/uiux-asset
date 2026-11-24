@@ -6,7 +6,7 @@
 <title>Bảng màu 4 màu — 6 bộ — uiux-asset</title>
 <meta name="description" content="6 bảng màu 4 màu từ reel #hungdezign: mã hex in trên video, bấm để chép hex hoặc biến CSS.">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
-<link rel="stylesheet" href="../aw.css?v=1db3cbef7f">
+<link rel="stylesheet" href="../aw.css?v=98b4655ab1">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap">
 <style>
 .pl-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
@@ -28,7 +28,7 @@
 </style>
 </head>
 <body>
-<main class="aw-wrap"><script src="../aw.js?v=1db3cbef7f"></script>
+<main class="aw-wrap"><script src="../aw.js?v=98b4655ab1"></script>
 <div class="pl-page">
   <div class="aw-sotd" style="padding-top:16px">
     <p class="aw-sotd__sub"><span>Bảng màu</span><span class="aw-tag aw-tag--medium">6 bộ · 24 màu</span></p>
@@ -50,12 +50,13 @@ const V = [
 ];
 const lum = (h) => { const n = parseInt(h.slice(1), 16); const f = (v) => (v /= 255) <= .03928 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; return .2126 * f(n >> 16) + .7152 * f(n >> 8 & 255) + .0722 * f(n & 255); };
 const ratio = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + .05) / (Math.min(x, y) + .05); };
-// Chữ trên mỗi ô = màu khác trong cùng bộ có tương phản cao nhất (như video). Viền = màu tối nhất.
+// Chữ trên mỗi ô = màu khác trong cùng bộ có tương phản cao nhất (như video); dưới 4.5:1 thì dùng đen/trắng. Viền = màu tối nhất.
 document.getElementById('pl-grid').innerHTML = V.map((p, k) => {
   const dark = p.c.map((c) => c[1]).sort((a, b) => lum(a) - lum(b))[0];
   const vars = p.c.map(([n, h]) => `--${n.toLowerCase().replace(/ /g, '-')}: ${h};`).join('\n');
   return `<article class="pl-card" id="${p.id}"><div class="pl-stack" style="--edge:${dark}">${p.c.map(([n, h]) => {
-    const t = p.c.map((c) => c[1]).filter((x) => x !== h).sort((a, b) => ratio(h, b) - ratio(h, a))[0], n2 = parseInt(h.slice(1), 16);
+    let t = p.c.map((c) => c[1]).filter((x) => x !== h).sort((a, b) => ratio(h, b) - ratio(h, a))[0]; if (ratio(h, t) < 4.5) t = ratio(h, '#000000') > ratio(h, '#ffffff') ? '#000000' : '#ffffff';
+    const n2 = parseInt(h.slice(1), 16);
     return `<button type="button" class="pl-sw" data-hex="${h}" style="--c:${h};--t:${t};--edge:${dark}" aria-label="Chép ${n} ${h}"><b>${n}</b><strong>${h}</strong><small>R: ${n2 >> 16} G: ${n2 >> 8 & 255} B: ${n2 & 255}</small></button>`; }).join('')}</div>
   <div class="pl-foot"><h3>${p.vi}<small>${p.en}</small></h3><button type="button" class="aw-btn aw-btn--small" data-css="${vars.replace(/"/g, '&quot;')}">Chép CSS</button></div></article>`;
 }).join('');
@@ -65,6 +66,6 @@ document.addEventListener('click', (e) => {
   if (b) navigator.clipboard.writeText(`:root {\n${b.dataset.css}\n}`).then(() => { b.textContent = 'Đã chép'; setTimeout(() => b.textContent = 'Chép CSS', 1500); });
 });
 </script>
-<script src="/search.js?v=1db3cbef7f" defer></script><script src="/stats.js?v=1db3cbef7f" defer></script>
+<script src="/search.js?v=98b4655ab1" defer></script><script src="/stats.js?v=98b4655ab1" defer></script>
 </body>
 </html>

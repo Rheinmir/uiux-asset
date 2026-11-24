@@ -6,7 +6,7 @@
 <title>Bộ mẫu có gu — 20 mẫu — uiux-asset</title>
 <meta name="description" content="20 giao diện dựng lại từ một video: 3 hero website, 8 màn app, 9 widget. Chạy thật, bấm được, kèm code HTML/CSS/JS chép thẳng.">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
-<link rel="stylesheet" href="../aw.css?v=1db3cbef7f">
+<link rel="stylesheet" href="../aw.css?v=98b4655ab1">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Doto:wght@900&family=Inter:wght@300..800&display=swap">
 <style>
@@ -44,7 +44,7 @@
 <style id="tx-variants"></style>
 </head>
 <body>
-<main class="aw-wrap"><script src="../aw.js?v=1db3cbef7f"></script>
+<main class="aw-wrap"><script src="../aw.js?v=98b4655ab1"></script>
 <div class="tx-page">
   <div class="aw-sotd" style="padding-top:16px">
     <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">20 mẫu</span></p>
@@ -181,7 +181,7 @@ const V = [
   css: `.tx-pay{background:#080808;color:#fff}
 .tx-pay .top{position:absolute;top:58px;left:22px;right:22px;display:flex;justify-content:space-between;font:500 12px/1 Inter}
 .tx-pay .top b::before{content:"";display:inline-block;width:11px;height:9px;margin-right:5px;border-radius:50% 50% 40% 60%;background:#ff3fa4}
-.tx-pay .top span{font-weight:400;color:#777}
+.tx-pay .top span{font-weight:400;color:#7d7d7d}
 .tx-pay .top span em{font-style:normal;color:#fff}
 .tx-pay h3{position:absolute;top:92px;left:22px;margin:0;font:400 38px/1.05 Inter;letter-spacing:-.04em}
 .tx-pay h3 span{display:block;color:#4d4d4d}
@@ -190,13 +190,13 @@ const V = [
 .tx-pay .blob svg{position:absolute;inset:0;animation:tx-spin 24s linear infinite}
 .tx-pay .blob b{position:relative}
 .tx-pay .who{position:absolute;left:22px;top:384px;font:500 17px/1.2 Inter;letter-spacing:-.02em}
-.tx-pay .who small{display:block;font:400 10px/1.6 Inter;color:#666}
+.tx-pay .who small{display:block;font:400 10px/1.6 Inter;color:#7d7d7d}
 .tx-pay .ppl{position:absolute;left:20px;top:432px;display:flex;gap:6px}
-.tx-pay .ppl button{width:28px;height:24px;border:0;border-radius:40%;background:#1c1c1c;color:#666;font:600 8px/1 Inter;cursor:pointer}
+.tx-pay .ppl button{width:28px;height:24px;border:0;border-radius:40%;background:#1c1c1c;color:#878787;font:600 10px/1 Inter;cursor:pointer}
 .tx-pay .ppl [aria-pressed=true]{background:#ff3fa4;color:#111}
 .tx-pay .go{position:absolute;left:30px;top:484px;width:62px;height:62px;background:#fff;color:#111;box-shadow:0 0 0 14px rgba(255,63,164,.08)}
 .tx-pay .lands{position:absolute;left:104px;top:494px;font:500 13px/1.05 Inter}
-.tx-pay .lands small{display:block;font:400 9px/1.6 Inter;color:#666}
+.tx-pay .lands small{display:block;font:400 10px/1.6 Inter;color:#7d7d7d}
 .tx-pay .amt{position:absolute;left:200px;top:552px;transform:rotate(-90deg);transform-origin:0 0;font:500 118px/1 Inter;letter-spacing:-.05em;color:#ff3fa4;white-space:nowrap}`,
   html: PH('tx-pay', `<div class="top"><b>bloop</b><span><em>€12,406.20</em> ready</span></div><h3>send<span>get paid</span></h3><div class="frame"></div><div class="blob"><svg viewBox="0 0 100 100" aria-hidden="true"><path fill="#ff3fa4" d="M50 6c12 0 18 10 20 18 8-2 22 2 24 16s-8 18-12 20c4 6 6 22-8 28s-20-2-24-6c-4 4-12 12-26 6S8 66 12 60C6 56-2 44 8 32s18-8 24-8c2-8 8-18 18-18z"/></svg><b>ln</b></div><div class="who"><span>linh nguyen</span><small>photographer · hanoi</small></div><div class="ppl" role="group" aria-label="Người nhận">${['ln', 'sb', 'tv', 'po', 'kp'].map((x, i) => `<button type="button" aria-pressed="${i === 0}">${x}</button>`).join('')}</div><button type="button" class="tx-btn go" aria-label="Gửi">${I('ne', 26)}</button><div class="lands">lands in<br>seconds<small>no fee</small></div><div class="amt">€1,840</div>`),
   js: (el) => { const P = { ln: ['linh nguyen', 'photographer · hanoi', '€1,840'], sb: ['sami berg', 'chef · oslo', '€420'], tv: ['tomas vale', 'cellist · porto', '€96'], po: ['pia ortiz', 'architect · lima', '€2,310'], kp: ['kim park', 'student · seoul', '€55'] };
@@ -209,13 +209,13 @@ const V = [
 .tx-weather .city{position:absolute;top:56px;left:22px;font:600 22px/1 Inter;letter-spacing:-.02em}
 .tx-weather .city small{display:block;margin-top:4px;font:400 10px/1 Inter;opacity:.7}
 .tx-weather .now{position:absolute;top:56px;right:22px;text-align:right;font-size:26px;line-height:1;opacity:.85}
-.tx-weather .now small{display:block;font:400 9px/1.6 Inter}
+.tx-weather .now small{display:block;font:400 10px/1.6 Inter}
 .tx-weather .dial{position:absolute;left:40px;top:120px;width:220px;height:220px;border-radius:50%;background:repeating-conic-gradient(from -130deg,rgba(0,0,0,.55) 0 .5deg,transparent .5deg 6deg);-webkit-mask:radial-gradient(closest-side,transparent 88%,#000 89% 95%,transparent 96%);mask:radial-gradient(closest-side,transparent 88%,#000 89% 95%,transparent 96%)}
 .tx-weather .sun{position:absolute;left:206px;top:146px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 0 0 6px rgba(255,255,255,.5),0 0 24px #fff}
 .tx-weather .deg{position:absolute;left:0;right:0;top:184px;text-align:center;font-size:82px;line-height:1}
 .tx-weather .feel{position:absolute;left:0;right:0;top:290px;text-align:center;font:500 12px/1.4 Inter}
-.tx-weather .feel small{display:block;font-size:9px;opacity:.7}
-.tx-weather .bars{position:absolute;left:20px;right:20px;top:372px;display:grid;grid-template-columns:1fr 1fr;gap:16px;font:600 9px/1 Inter}
+.tx-weather .feel small{display:block;font-size:10px;opacity:.7}
+.tx-weather .bars{position:absolute;left:20px;right:20px;top:372px;display:grid;grid-template-columns:1fr 1fr;gap:16px;font:600 10px/1 Inter}
 .tx-weather .bars div{display:flex;justify-content:space-between;padding-bottom:10px;background:repeating-linear-gradient(90deg,rgba(0,0,0,.4) 0 1px,transparent 1px 4px) 0 100%/100% 5px no-repeat}
 .tx-weather .bars span{font-weight:400;opacity:.7}
 .tx-weather .tiles{position:absolute;left:16px;right:16px;top:410px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -224,7 +224,7 @@ const V = [
 .tx-weather .tiles div:last-child{background:radial-gradient(circle at 50% 50%,rgba(17,17,17,.55) 1.2px,transparent 1.7px) 0 0/6px 6px,radial-gradient(circle,#ff5a4f,#ffb3a6 70%,#ffe1db)}
 .tx-weather .tiles div>*{position:relative;padding:2px 4px;border-radius:6px;background:rgba(255,255,255,.55);align-self:flex-start}
 .tx-weather .tiles b{font-size:24px;line-height:1}
-.tx-weather .tiles small{font-weight:400;font-size:7px;margin-left:4px}
+.tx-weather .tiles small{font-weight:400;font-size:10px;margin-left:4px}
 .tx-weather .bar{position:absolute;left:16px;right:16px;bottom:30px;display:flex;justify-content:space-between;align-items:center}
 .tx-weather .bar .tx-btn{width:40px;height:40px;background:#fff;font:600 12px/1 Inter;box-shadow:0 4px 10px rgba(0,0,0,.08)}
 .tx-weather .bar .pill{display:flex;align-items:center;gap:6px;height:40px;padding:0 16px;border:0;border-radius:999px;background:#111;color:#fff;font:500 12px/1 Inter;cursor:pointer}`,
@@ -236,17 +236,17 @@ const V = [
   use: 'Trợ lý lịch. Thẻ "sắp tới" đếm ngược, các việc là bi bóng xếp vòng quanh quả cầu chính.',
   css: `.tx-orbit{background:#f6f5f8;color:#111}
 .tx-orbit .top{position:absolute;top:56px;left:20px;right:20px;display:flex;justify-content:space-between;font:600 14px/1 Inter}
-.tx-orbit .top small{font:400 10px/1.4 Inter;color:#777}
+.tx-orbit .top small{font:400 10px/1.4 Inter;color:#6b6b6b}
 .tx-orbit .next{position:absolute;left:14px;right:14px;top:80px;height:182px;padding:14px;border-radius:20px;color:#fff;background:radial-gradient(160px 120px at 85% 10%,#ff6a2b,transparent),radial-gradient(200px 160px at 10% 90%,#ff2e88,transparent),linear-gradient(135deg,#5b0b4a,#2a0726)}
 .tx-orbit .next b{font:600 14px/1 Inter}
-.tx-orbit .next small{display:block;font:400 9px/1.6 Inter;opacity:.75}
+.tx-orbit .next small{display:block;font:400 10px/1.6 Inter;opacity:.75}
 .tx-orbit .next .t{margin-top:8px;font-size:52px;line-height:1}
 .tx-orbit .next i{display:block;height:8px;margin:6px 0 10px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.5) 0 1px,transparent 1px 5px)}
 .tx-orbit .next em{font:600 14px/1.3 Inter;font-style:normal}
 .tx-orbit .next .ne{position:absolute;right:12px;top:12px;width:28px;height:28px;border:1.5px solid rgba(255,255,255,.7)}
 .tx-orbit .core{position:absolute;left:90px;top:340px;width:104px;height:104px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#ff9db6 30%,#ff3b6b 70%,#d81b50);box-shadow:0 0 0 30px rgba(255,90,130,.05),0 0 0 60px rgba(255,90,130,.04),0 14px 30px rgba(255,59,107,.4);animation:tx-breathe 4s ease-in-out infinite}
 .tx-orbit .ball{position:absolute;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#fff;box-shadow:inset -4px -6px 10px rgba(0,0,0,.18),inset 4px 5px 8px rgba(255,255,255,.55),0 8px 14px rgba(0,0,0,.12)}
-.tx-orbit .ball sup{position:absolute;right:-2px;top:-2px;width:15px;height:15px;border-radius:50%;background:#111;font:600 8px/15px Inter;text-align:center}
+.tx-orbit .ball sup{position:absolute;right:-2px;top:-2px;width:15px;height:15px;border-radius:50%;background:#111;font:600 10px/15px Inter;text-align:center}
 .tx-orbit .bar{position:absolute;left:18px;right:18px;bottom:30px;display:flex;align-items:center;justify-content:space-between;color:#555}
 .tx-orbit .bar .mic{display:flex;align-items:center;gap:8px;height:42px;padding:0 18px;border:0;border-radius:999px;background:#2433f0;color:#fff;cursor:pointer}
 .tx-orbit .bar .mic span{width:72px;height:6px;background:radial-gradient(circle,#fff 1px,transparent 1.5px) 0 0/4px 6px}`,
@@ -263,13 +263,13 @@ const V = [
 .tx-budget .top em{font-style:normal;color:#fff}
 .tx-budget .amt{position:absolute;top:82px;left:18px;font:500 72px/1 Inter;letter-spacing:-.06em}
 .tx-budget .amt sup{font-size:26px;vertical-align:42px;margin-right:4px;color:#aaa}
-.tx-budget .split{position:absolute;top:172px;left:18px;right:18px;display:flex;gap:4px;font:600 9px/22px Inter;color:#111}
+.tx-budget .split{position:absolute;top:172px;left:18px;right:18px;display:flex;gap:4px;font:600 10px/22px Inter;color:#111}
 .tx-budget .split span{border-radius:999px;padding:0 8px}
 .tx-budget .blobs{position:absolute;left:10px;top:206px;width:270px;height:250px}
 .tx-budget .blobs div{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#111;font:600 10px/1.15 Inter;animation:tx-wobble 7s ease-in-out infinite}
-.tx-budget .blobs small{display:block;font-weight:400;font-size:8px}
-.tx-budget .pots{position:absolute;left:20px;right:20px;bottom:44px;font:400 8px/1 Inter;color:#777}
-.tx-budget .pots div{display:flex;gap:18px;margin-top:8px;color:#fff;font-size:9px;text-align:center}
+.tx-budget .blobs small{display:block;font-weight:400;font-size:10px}
+.tx-budget .pots{position:absolute;left:20px;right:20px;bottom:44px;font:400 10px/1 Inter;color:#707070}
+.tx-budget .pots div{display:flex;gap:18px;margin-top:8px;color:#fff;font-size:10px;text-align:center}
 .tx-budget .pots i{display:block;width:26px;height:22px;margin:0 auto 4px;border-radius:50% 40% 55% 45%}
 .tx-budget .ok{position:absolute;right:18px;bottom:42px;width:58px;height:58px;background:#fff;color:#111}`,
   html: PH('tx-budget', `<div class="top"><b>december</b><span><em>€1,310</em> still loose</span></div><div class="amt"><sup>€</sup>2,890</div><div class="split"><span style="flex:75;background:#d7ff3a">75%<b style="float:right;font-weight:400">needs</b></span><span style="background:#4b5bff;color:#fff">8%</span><span style="background:#fff">17%</span></div><div class="blobs"><div style="left:20px;top:0;width:190px;height:150px;background:#d7ff3a;border-radius:46% 54% 40% 60%/55% 45% 55% 45%">rent<small>€1,150</small></div><div style="left:160px;top:6px;width:96px;height:100px;background:#d7ff3a;border-radius:50% 46% 54% 50%">tax pot<small>€640</small></div><div style="left:130px;top:106px;width:110px;height:84px;background:#d7ff3a;border-radius:50% 50% 42% 58%;animation-delay:-2s">groceries<small>€380</small></div><div style="left:50px;top:146px;width:92px;height:92px;background:#f2f2ee;border-radius:58% 42% 50% 50%;animation-delay:-4s">savings<small>€500</small></div><div style="left:160px;top:170px;width:90px;height:56px;background:#4b5bff;color:#fff;border-radius:50%;animation-delay:-1s">eating out<small>€220</small></div></div><div class="pots">pots you can add<div><span><i style="background:#4b5bff"></i>travel<br>€300</span><span><i style="background:#4b5bff"></i>gifts<br>€180</span><span><i style="background:#eee"></i>cushion<br>€250</span></div></div><button type="button" class="tx-btn ok" aria-label="Xong">${I('check', 22)}</button>`) },
@@ -308,8 +308,8 @@ const V = [
 .tx-task ol{position:absolute;left:22px;right:22px;top:378px;margin:0;padding:0;list-style:none;display:grid;gap:8px}
 .tx-task li{display:flex;align-items:center;gap:8px;padding-bottom:8px;border-bottom:1px solid #eee;font:500 11px/1 Inter;opacity:0;transform:translateY(6px);transition:.35s}
 .tx-task li.on{opacity:1;transform:none}
-.tx-task li::before{content:"✓";width:14px;height:14px;border-radius:50%;background:#111;color:#fff;font-size:8px;line-height:14px;text-align:center}
-.tx-task li small{margin-left:auto;white-space:nowrap;font:400 9px/1 ui-monospace,Menlo,monospace;color:#aaa}
+.tx-task li::before{content:"✓";width:14px;height:14px;border-radius:50%;background:#111;color:#fff;font-size:10px;line-height:14px;text-align:center}
+.tx-task li small{margin-left:auto;white-space:nowrap;font:400 10px/1 ui-monospace,Menlo,monospace;color:#707070}
 .tx-task .bar{position:absolute;left:14px;right:14px;bottom:26px;display:flex;align-items:center;gap:10px;color:#555}
 .tx-task .bar .stop{flex:1;height:40px;border:0;border-radius:999px;background:#f3f3f3;font:600 12px/1 Inter;cursor:pointer}`,
   html: PH('tx-task', `<div class="top">${I('menu', 18)}<span>Working · 4 of 4</span>${I('sound', 18)}</div><div class="orb"><svg viewBox="0 0 140 140" aria-hidden="true"><defs><radialGradient id="txg" cx=".38" cy=".3" r=".8"><stop offset="0" stop-color="#fff"/><stop offset=".08" stop-color="#555"/><stop offset=".45" stop-color="#0a0a0a"/><stop offset=".85" stop-color="#0b1a5a"/><stop offset="1" stop-color="#2a4dff"/></radialGradient></defs><path fill="url(#txg)" d="M40 30c20-14 56-20 76-6 14 10 4 40 6 60s-12 40-40 34-42-18-58-26S20 44 40 30z"/></svg><i style="left:158px;top:10px"></i><i style="left:10px;top:120px;width:16px;height:16px"></i><i style="left:170px;top:150px"></i></div><p class="q">Move Thursday's supplier call to Friday morning and tell Dario why.</p><ol><li>Found it: Thu 19 Nov, 15:00 with Dario<small>0.7 s</small></li><li>Friday is free for both until 11:00<small>1.1 s</small></li><li>Moved the call to Fri 20 Nov, 09:30<small>0.9 s</small></li><li>Wrote Dario a two-line note<small>1.2 s</small></li></ol><div class="bar">${I('key', 18)}<button type="button" class="stop">■ Stop</button>${I('chat', 18)}</div>`),
@@ -326,11 +326,11 @@ const V = [
 .tx-shop .sw{position:absolute;left:20px;top:330px;display:flex;align-items:center;gap:8px;font:500 11px/1 Inter}
 .tx-shop .sw button{width:18px;height:18px;border-radius:50%;border:2px solid transparent;cursor:pointer;padding:0}
 .tx-shop .sw [aria-pressed=true]{box-shadow:0 0 0 2px #fff}
-.tx-shop .name{position:absolute;left:20px;right:20px;top:362px;font:400 8px/1 Inter;opacity:.75}
+.tx-shop .name{position:absolute;left:20px;right:20px;top:362px;font:400 10px/1 Inter;opacity:.75}
 .tx-shop .name b{display:flex;justify-content:space-between;margin-top:6px;font:800 30px/1 Inter;letter-spacing:-.03em;opacity:1}
 .tx-shop .name b span{font-size:20px}
-.tx-shop .name p{margin:8px 0 0;font:400 9px/1.5 Inter}
-.tx-shop .size{position:absolute;left:20px;right:20px;top:450px;font:400 9px/1 Inter;opacity:.85}
+.tx-shop .name p{margin:8px 0 0;font:400 10px/1.5 Inter}
+.tx-shop .size{position:absolute;left:20px;right:20px;top:450px;font:400 10px/1 Inter;opacity:.85}
 .tx-shop .size header{display:flex;justify-content:space-between}
 .tx-shop .size div{display:flex;justify-content:space-around;margin-top:8px;padding-top:16px;border-radius:12px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.4) 0 1px,transparent 1px 12px) 0 6px/100% 10px no-repeat,rgba(0,0,0,.15)}
 .tx-shop .size button{height:36px;border:0;background:none;color:rgba(255,255,255,.5);font:500 12px/1 Inter;cursor:pointer}
@@ -345,7 +345,7 @@ const V = [
 
 { id: 'onboard', kind: 'app', w: 300, h: 620, vi: 'Giới thiệu xếp đá', en: 'Stacked onboarding',
   use: 'Màn chào app mới. Nền một màu mạnh, hình 3D lớn, câu ngắn, thanh tiến trình 3 bước, một nút.',
-  css: `.tx-onboard{background:#ec2a1c;color:#fff}
+  css: `.tx-onboard{background:#dc2617;color:#fff}
 .tx-onboard .top{position:absolute;top:56px;left:20px;right:20px;display:flex;justify-content:space-between;font:600 13px/1 Inter}
 .tx-onboard .top span{font-weight:500;opacity:.85}
 .tx-onboard .stones{position:absolute;left:50%;top:86px;width:200px;height:250px;margin-left:-100px;display:flex;flex-direction:column-reverse;align-items:center}
@@ -402,7 +402,7 @@ const V = [
 .tx-vinyl .rec{position:absolute;left:150px;top:22px;width:190px;height:190px;border-radius:50%;background:radial-gradient(circle,#111 0 4px,#0f2a1a 5px 30px,#111 31px),repeating-radial-gradient(circle,#161616 0 2px,#0c0c0c 2px 4px);transition:left .5s cubic-bezier(.2,.7,.2,1)}
 .tx-vinyl.on .rec{left:200px;animation:tx-spin 2.4s linear infinite}
 .tx-vinyl .cover{position:absolute;left:100px;top:22px;width:190px;height:190px;padding:12px;background:radial-gradient(circle at 70% 70%,#2e5a2a,transparent 50%),radial-gradient(circle at 40% 40%,rgba(255,255,255,.18) 1px,transparent 2px) 0 0/9px 11px,linear-gradient(160deg,#16301c,#0b1a10);color:#fff;font:500 10px/1.4 Inter;box-shadow:0 10px 20px rgba(0,0,0,.25)}
-.tx-vinyl .cover small{display:block;opacity:.6}
+.tx-vinyl .cover small{display:block;opacity:.6;font-size:10px}
 .tx-vinyl .meta{position:absolute;left:40px;top:236px;font:500 20px/1 Inter;letter-spacing:-.02em}
 .tx-vinyl .meta small{display:block;margin-top:6px;font:400 13px/1 Inter;color:#666;letter-spacing:0}
 .tx-vinyl .ctl{position:absolute;right:40px;top:232px;display:flex;align-items:center;gap:10px}
@@ -450,7 +450,7 @@ const V = [
 .tx-bat .cell i{position:absolute;left:0;right:0;bottom:0;height:var(--p);background:#0b0b0b;transition:height .8s cubic-bezier(.2,.7,.2,1)}
 .tx-bat .low i{background:#f29a0c}
 .tx-bat b{font:500 28px/1 Inter;letter-spacing:-.03em}
-.tx-bat b small{font-size:13px;color:#888}
+.tx-bat b small{font-size:13px;color:#696969}
 .tx-bat span{font:400 14px/1 Inter;color:#666}`,
   html: `<div class="tx-bat">${[[64, 'Phone'], [17, 'Watch'], [88, 'Buds']].map(([p, n]) => `<button type="button" aria-label="${n} ${p}%"><span class="cell${p < 20 ? ' low' : ''}"><i style="--p:${p}%"></i></span><b>${p}<small>%</small></b><span>${n}</span></button>`).join('')}</div>`,
   js: (el) => el.querySelectorAll('.tx-bat button').forEach((b) => b.onclick = () => { const c = b.querySelector('.cell'), v = b.querySelector('b'), p = Math.min(100, parseInt(v.textContent) + 10);
@@ -465,7 +465,7 @@ const V = [
 .tx-clock .ev::before{content:"";display:inline-block;width:11px;height:11px;margin-right:8px;border-radius:50%;background:#ec1f7a;vertical-align:4px}
 .tx-clock .ev small{display:block;margin-top:6px;font:400 14px/1 Inter;color:#666;letter-spacing:0}
 .tx-clock .rail{position:absolute;left:0;bottom:24px;width:920px;height:84px;transition:transform 1s linear}
-.tx-clock .rail span{position:absolute;bottom:52px;font:500 10px/1 Inter;color:#888;transform:translateX(-50%)}
+.tx-clock .rail span{position:absolute;bottom:52px;font:500 10px/1 Inter;color:#696969;transform:translateX(-50%)}
 .tx-clock .rail i{position:absolute;bottom:30px;width:1.5px;height:12px;background:#999}
 .tx-clock .rail i.h{height:20px;background:#555}
 .tx-clock .rail b{position:absolute;bottom:0;height:24px;border-radius:7px;font:500 10px/24px Inter;color:#fff;white-space:nowrap;overflow:hidden}
@@ -478,7 +478,7 @@ const V = [
       el.querySelector('.t').textContent = String(h0).padStart(2, '0') + ':' + String(m).padStart(2, '0');
       el.querySelector('.ev small').textContent = `${String(h0).padStart(2, '0')}:00 — ${String(h0 + 1).padStart(2, '0')}:00 · ${60 - m} min left`;
       let s = ''; for (let q = 0; q <= 16; q++) { const x = q * W / 4; s += `<i class="${q % 4 ? '' : 'h'}" style="left:${x}px"></i>` + (q % 4 ? '' : `<span style="left:${x}px">${String((base + q / 4 + 24) % 24).padStart(2, '0')}</span>`); }
-      rail.innerHTML = s + `<b style="left:${W * 1.25}px;width:${W * .4}px;background:#7b8cff"></b><b style="left:${W * 2 + 4}px;width:${W - 8}px;background:#ec1f7a">Design review</b>`;
+      rail.innerHTML = s + `<b style="left:${W * 1.25}px;width:${W * .4}px;background:#7b8cff"></b><b style="left:${W * 2 + 4}px;width:${W - 8}px;background:#d91b6f">Design review</b>`;
       rail.style.transform = `translateX(${230 - W * 2 - m / 60 * W}px)`; };
     tick(); setInterval(tick, 30000); } },
 
@@ -492,10 +492,10 @@ const V = [
 .tx-map .sheet::before{content:"";display:block;width:36px;height:4px;margin:0 auto 10px;border-radius:4px;background:#d4d4d4}
 .tx-map h4{margin:0;font:600 20px/1.2 Inter;letter-spacing:-.02em}
 .tx-map .sheet p{margin:4px 0 14px;font:400 12px/1 Inter;color:#666}
-.tx-map .sheet p b{font-weight:500;color:#16a34a}
+.tx-map .sheet p b{font-weight:500;color:#12873d}
 .tx-map .x{position:absolute;right:14px;top:22px;width:28px;height:28px;background:#f0f0f0;color:#555}
 .tx-map .acts{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-.tx-map .acts button{height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;border:0;border-radius:12px;background:#f2f3f5;color:#2f6df6;font:500 11px/1 Inter;cursor:pointer}
+.tx-map .acts button{height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;border:0;border-radius:12px;background:#f2f3f5;color:#2a62dd;font:500 11px/1 Inter;cursor:pointer}
 .tx-map .acts button span{color:#111}
 .tx-map .acts .go{background:#2f6df6;color:#fff}.tx-map .acts .go span{color:#fff}
 .tx-map .acts [aria-pressed=true] svg{fill:currentColor}`,
@@ -517,9 +517,9 @@ const V = [
 .tx-table li i{position:absolute;left:32px;top:0;bottom:0;width:calc((100% - 32px) * var(--w));border-radius:12px;background:#dcdcdc;transition:width .5s cubic-bezier(.2,.7,.2,1)}
 .tx-table li:first-child i{background:#c9d0f5}
 .tx-table li span{position:relative;display:flex;align-items:center;gap:8px;padding-left:6px}
-.tx-table li span em{width:28px;height:28px;border-radius:50%;background:#fff;font:600 9px/28px Inter;font-style:normal;text-align:center;color:#555}
+.tx-table li span em{width:28px;height:28px;border-radius:50%;background:#fff;font:600 10px/28px Inter;font-style:normal;text-align:center;color:#555}
 .tx-table li b,.tx-table li s{position:relative;text-align:right;font-weight:500;text-decoration:none}
-.tx-table li b{color:#888;font-weight:400}`,
+.tx-table li b{color:#696969;font-weight:400}`,
   html: `<div class="tx-table"><header><span></span><button type="button" data-k="n" aria-pressed="false">Customer</button><button type="button" data-k="s" aria-pressed="false">Seats</button><button type="button" data-k="m" aria-pressed="true">MRR</button></header><ol></ol></div>`,
   js: (el) => { const D = [['Pellucid Health', 48, 1920], ['Halden Studio', 12, 1480], ['Brightline Freight', 64, 880], ['Northwind Labs', 7, 640], ['Ortega & Vale', 31, 360]];
     const ol = el.querySelector('ol'), draw = (k) => { const i = { n: 0, s: 1, m: 2 }[k], rows = [...D].sort((a, b) => k === 'n' ? a[0].localeCompare(b[0]) : b[i] - a[i]), mx = k === 'n' ? 1 : rows[0][i];
@@ -570,6 +570,6 @@ const k0 = new URLSearchParams(location.search).get('k'); if (K[k0]) bar.querySe
 document.addEventListener('click', (e) => { const b = e.target.closest('[data-copy]'); if (!b) return;
   navigator.clipboard.writeText(b.nextElementSibling.textContent).then(() => { b.textContent = 'Đã chép'; setTimeout(() => b.textContent = 'Chép', 1500); }); });
 </script>
-<script src="/search.js?v=1db3cbef7f" defer></script><script src="/stats.js?v=1db3cbef7f" defer></script>
+<script src="/search.js?v=98b4655ab1" defer></script><script src="/stats.js?v=98b4655ab1" defer></script>
 </body>
 </html>
