@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="dark light">
+  <meta name="description" content="UI Moments 加载动效图鉴：44款可实时预览和调整的动效，支持复制独立HTML与React代码。">
+  <title>加载动效 · UI Moments</title>
+  <link rel="icon" href="../../assets/icon.svg">
+  <meta name="theme-color" content="#050506">
+  <link rel="stylesheet" href="../../assets/site.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top" id="top"><div class="wrap nav-inner"><a class="site-brand" href="../../index.html" aria-label="UI Moments 首页"><span class="site-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg></span><span>UI Moments</span></a><nav class="nav-links" aria-label="站点"><a href="../../index.html#works">全部作品</a><a href="#collection" aria-current="page">加载动效</a></nav><div class="nav-end"><a class="nav-follow" href="https://x.com/guanmo_ai" target="_blank" rel="noopener">关注观默 ↗</a><button class="theme-btn" id="theme" type="button" aria-label="切换浅色模式"></button></div></div></header>
+  <main>
+    <section class="intro"><h1>加载动效。</h1><p class="lead">44种等待的方式。选一个，调整颜色与节奏，复制代码就能用。</p></section>
+    <section class="browse" id="collection" aria-label="筛选动效"><div class="filter-row"><span id="count" aria-live="polite">44 / 44</span><div id="groups" class="groups" role="group" aria-label="动效分类"></div></div><div class="browse-tools"><label class="search"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="m13 13 4 4"/></svg><span class="sr-only">搜索动效</span><input id="search" type="search" placeholder="搜索名称或动效" autocomplete="off"><kbd aria-hidden="true">/</kbd></label><button id="motion" type="button" aria-pressed="false">暂停动效</button></div></section>
+    <div id="grid" class="grid" aria-label="44款加载动效"></div>
+    <p id="empty" class="empty" hidden>没有找到匹配的动效，换个关键词试试。</p>
+    <p id="load-error" class="empty" hidden>动效载入失败，请刷新页面重试。</p>
+  </main>
+<footer class="site-footer"><div class="wrap"><div class="footer-top"><h2>更多界面瞬间，<br>持续更新。</h2><div class="footer-links"><div><strong>图鉴</strong><a href="../../index.html#works">全部作品</a><a href="../../gallery/loaders/">加载动效</a></div><div><strong>项目</strong><a href="https://github.com/guanmo-ai/ui-moments" target="_blank" rel="noopener">GitHub ↗</a><a href="https://x.com/guanmo_ai" target="_blank" rel="noopener">观默 @guanmo_ai ↗</a></div></div></div><div class="footer-legal"><span>© 2026 观默 Guanmo · UI Moments</span><details class="sources"><summary>来源与许可</summary><p>加载动效使用 <a href="https://github.com/GriffinJohnston/ldrs" target="_blank" rel="noopener">LDRS 1.1.9</a>，原作者 Griffin Johnston / UI Ball，MIT许可。原始实现和版权声明保留。<a href="vendor/ldrs/LICENSE">原始许可证</a> · <a href="README.md">集成说明</a>。</p></details></div><div class="footer-wordmark" aria-hidden="true">UI Moments</div></div></footer>
+
+  <dialog id="detail" aria-labelledby="detail-title">
+    <div class="dialog-head"><div><p id="detail-group" class="eyebrow"></p><h2 id="detail-title"></h2></div><button id="close" class="close" type="button" aria-label="关闭动效详情">×</button></div>
+    <div class="editor">
+      <section class="large-preview" aria-label="动效预览"><div id="selected-preview"></div><p id="detail-description"></p></section>
+      <section class="settings" aria-label="动效参数"><div class="settings-head"><h3>调成你的样子</h3><button id="reset" type="button">恢复默认</button></div><div id="controls"></div></section>
+    </div>
+    <section class="code-section" aria-label="使用代码">
+      <div class="code-toolbar"><div class="code-tabs" role="tablist" aria-label="代码格式"><button id="tab-html" role="tab" aria-selected="true" aria-controls="code-panel" type="button" data-format="html">HTML + CSS</button><button id="tab-react" role="tab" aria-selected="false" aria-controls="code-panel" tabindex="-1" type="button" data-format="react">React</button></div><div class="code-actions"><button id="download" type="button">下载 HTML</button><button id="copy" class="primary" type="button">复制代码</button></div></div>
+      <p id="code-help">独立 HTML 页面，无需安装依赖。保存为 .html 文件后即可打开。</p>
+      <div id="code-panel" role="tabpanel" aria-labelledby="tab-html"><textarea id="code" aria-label="示例代码" readonly spellcheck="false" wrap="off"></textarea></div>
+      <p class="code-credit">每份代码都附有原作者署名与完整 MIT 许可证。<a href="vendor/ldrs/LICENSE">查看原文</a></p>
+    </section>
+  </dialog>
+  <p id="toast" class="toast" role="status" aria-live="polite" hidden></p>
+  <script type="module" src="app.mjs"></script>
+</body>
+</html>

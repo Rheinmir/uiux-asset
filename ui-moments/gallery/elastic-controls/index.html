@@ -1,0 +1,567 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fff">
+  <title>弹性控件 · UI Moments</title>
+  <script src="../../assets/embed.js"></script>
+  <style>
+    :root {
+      color-scheme: light;
+      --page: #fff;
+      --ink: #202020;
+      --muted: #646461;
+      --surface: #f2f2f0;
+      --rail: #cececb;
+      --well: #fdfdfc;
+      --key: #242424;
+      --on-key: #fff;
+      --spring: cubic-bezier(.22, 1.6, .36, 1);
+    }
+
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --page: #1b1b1c;
+      --ink: #eee;
+      --muted: #b0b0ad;
+      --surface: #282829;
+      --rail: #6e6e6e;
+      --well: #3a3a3b;
+      --key: #f1f1ee;
+      --on-key: #212121;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+
+    body {
+      margin: 0;
+      background: var(--page);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button, input { font: inherit; }
+    button { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+    button:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
+    a { color: inherit; text-underline-offset: .25em; }
+
+    .page { max-width: 820px; padding: 0 28px; margin-inline: auto; }
+    .masthead, .intro, .credit { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .masthead {
+      padding-top: 25px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .brand {
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 750;
+      text-decoration: none;
+    }
+
+    .site-link { text-decoration: none; }
+    .site-link:hover { text-decoration: underline; }
+    .intro { align-items: end; margin: clamp(54px, 12vh, 104px) 0 18px; }
+    h1 { margin: 0; font-size: clamp(30px, 7vw, 42px); letter-spacing: -.07em; line-height: 1.05; }
+    .replay {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 36px;
+      padding: 0 12px;
+      border: 1px solid var(--rail);
+      border-radius: 20px;
+      background: var(--page);
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .replay:hover { background: var(--surface); }
+    .replay::before {
+      content: "";
+      width: 7px;
+      aspect-ratio: 1;
+      background: currentColor;
+      clip-path: polygon(0 0, 100% 50%, 0 100%);
+    }
+
+    .samples { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .sample { min-width: 0; }
+    .stage {
+      display: grid;
+      place-items: center;
+      height: 176px;
+      border-radius: 23px;
+      background: var(--surface);
+    }
+
+    .caption { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; padding: 11px 3px 0; }
+    .caption h2 { margin: 0; font-size: 14px; line-height: 1.4; font-weight: 680; }
+    .caption p, .credit { margin: 0; font-size: 11px; color: var(--muted); }
+    .credit { margin: 35px 0 24px; justify-content: start; }
+
+    .ruler {
+      width: min(calc(100% - 68px), 144px);
+      position: relative;
+      min-width: 70px;
+      height: 56px;
+      --value: 48;
+      touch-action: pan-y;
+    }
+
+    .ruler::before {
+      position: absolute;
+      content: "";
+      inset: 26px 0 auto;
+      height: 4px;
+      border-radius: 3px;
+      background: var(--rail);
+    }
+
+    .ruler-ticks { position: absolute; inset: 48px -1px auto; display: flex; justify-content: space-between; }
+    .ruler-ticks i { width: 2px; height: 4px; border-radius: 1px; background: var(--rail); }
+    .ruler-ticks i:nth-child(odd) { height: 6px; }
+    .ruler-ticks i:nth-child(5) { background: var(--muted); }
+
+    .ruler-position {
+      position: absolute;
+      left: calc(var(--value) * 1%);
+      top: 28px;
+      pointer-events: none;
+    }
+
+    .ruler-knob {
+      display: grid;
+      place-items: center;
+      width: 41px;
+      height: 35px;
+      border-radius: 14px;
+      background: var(--key);
+      color: var(--on-key);
+      box-shadow: inset 0 -2px #0002;
+      font-size: 13px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      transform: translate(-50%, -50%);
+      transition: transform 360ms var(--spring), border-radius 360ms var(--spring);
+    }
+
+    .ruler[data-pulling] .ruler-knob {
+      border-radius: var(--corners, 17px);
+      transform: translate(calc(-50% + var(--edge, 0px)), -50%) rotate(var(--tilt, 0deg))
+        scale(var(--wide, 1.12), var(--low, .87));
+      transition: transform 85ms ease-out, border-radius 85ms ease-out;
+    }
+
+    .ruler::after, .ruler-input {
+      position: absolute;
+      inset: 0 -21px;
+    }
+    .ruler::after {
+      content: "";
+      cursor: ew-resize;
+    }
+    .ruler-input {
+      width: calc(100% + 42px);
+      height: 100%;
+      margin: 0;
+      opacity: 0;
+      /* 保留原生键盘操作，由外层处理触摸方向。 */
+      pointer-events: none;
+    }
+
+    .ruler:has(:focus-visible) .ruler-knob { outline: 2px solid var(--ink); outline-offset: 3px; }
+
+    .align {
+      width: min(calc(100% - 28px), 156px);
+      display: grid;
+      justify-items: center;
+      gap: 12px;
+    }
+
+    .align-preview {
+      position: relative;
+      width: 64px;
+      height: 23px;
+      --alignment: 1;
+    }
+
+    .align-preview i {
+      position: absolute;
+      top: var(--top);
+      left: 0;
+      width: var(--line);
+      height: 3px;
+      background: var(--ink);
+      border-radius: 3px;
+      transform: translateX(calc((64px - var(--line)) * var(--alignment) / 2));
+      transition: transform 370ms var(--spring);
+    }
+
+    .align-choices {
+      position: relative;
+      display: grid;
+      isolation: isolate;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      width: 100%;
+      padding: 3px;
+      border-radius: 17px;
+      background: var(--well);
+      box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 6%, transparent);
+      --index: 1;
+    }
+
+    .align-thumb {
+      position: absolute;
+      z-index: -1;
+      inset: 3px auto 3px 3px;
+      width: calc((100% - 6px) / 3);
+      border-radius: 14px;
+      background: var(--key);
+      transform: translateX(calc(var(--index) * 100%));
+    }
+
+    .align-choice {
+      min-width: 0;
+      min-height: 44px;
+      position: relative;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+    }
+
+    .align-choice input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+    .align-choice:has(:focus-visible) { outline: 2px solid var(--ink); outline-offset: 2px; }
+    .align-lines { display: grid; gap: 2.5px; width: 14px; color: #fff; mix-blend-mode: difference; pointer-events: none; }
+    .align-lines i { width: 14px; height: 2px; border-radius: 2px; background: currentColor; }
+    .align-lines i:nth-child(2) { width: 8px; }
+    .align-choice:nth-of-type(2) .align-lines { justify-items: center; }
+    .align-choice:nth-of-type(3) .align-lines { justify-items: end; }
+
+    .bookmark {
+      position: relative;
+      width: 57px;
+      height: 57px;
+      display: grid;
+      place-items: center;
+      padding: 0;
+      border: 0;
+      border-radius: 18px;
+      background: none;
+      touch-action: manipulation;
+    }
+
+    .bookmark-face {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: var(--well);
+      color: var(--ink);
+      box-shadow: inset 0 0 0 1px #80808012, 0 2px 0 #8080802b;
+      transition: transform 390ms var(--spring), border-radius 390ms var(--spring);
+    }
+
+    .bookmark[aria-pressed="true"] .bookmark-face { background: var(--key); color: var(--on-key); }
+    .bookmark:active .bookmark-face {
+      transform: translateY(2px) scale(1.14, .83);
+      border-radius: 22px 22px 17px 17px;
+      transition-duration: 100ms;
+    }
+
+    .bookmark-mark {
+      position: absolute;
+      inset: 17px 20px 16px;
+      background: currentColor;
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 72%, 0 100%);
+    }
+
+    .bookmark-mark::after {
+      content: "";
+      position: absolute;
+      inset: 2px 2px 3px;
+      background: var(--well);
+      clip-path: polygon(0 0, 100% 0, 100% 97%, 50% 63%, 0 97%);
+    }
+
+    .bookmark[aria-pressed="true"] .bookmark-mark::after { opacity: 0; }
+
+    [data-single] .samples { grid-template-columns: 1fr; }
+    [data-single] .sample { width: min(100%, 340px); }
+    [data-embedded] .page, [data-embedded] .sample { width: 100%; max-width: none; padding: 0; }
+    [data-embedded] .intro, [data-embedded] .masthead, [data-embedded] .credit, [data-embedded] .caption { display: none; }
+    [data-embedded] .stage { height: 100dvh; border-radius: 0; }
+    [data-embedded] .align { width: min(calc(100% - 8px), 156px); }
+
+    @media (max-width: 600px) {
+      .page { padding: 0 18px; }
+      .intro { margin-top: 44px; }
+      .stage { height: 132px; border-radius: 20px; }
+      .caption { padding-top: 7px; padding-bottom: 6px; }
+      .credit { margin-top: 22px; }
+    }
+
+    @media (max-width: 450px) {
+      .samples { grid-template-columns: 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition-duration: 0s !important; }
+    }
+    [data-gallery-active="false"] * { transition-duration: 0s !important; }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="masthead">
+      <a class="brand" href="../../">UI Moments</a>
+      <a class="site-link" id="gallery-link" href="../../">图鉴 ↗</a>
+      <a class="site-link" id="all-controls" href="./index.html" hidden>全部控件 ↗</a>
+    </header>
+    <main>
+      <header class="intro">
+        <h1>弹性控件</h1>
+        <button class="replay" type="button">播放演示</button>
+      </header>
+      <div class="samples">
+        <section class="sample" id="elastic-ruler" aria-labelledby="ruler-title">
+          <div class="stage">
+            <div class="ruler">
+              <div class="ruler-ticks" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="ruler-position"><span class="ruler-knob" aria-hidden="true">48</span></div>
+              <input class="ruler-input" type="range" min="0" max="100" value="48" aria-label="滑尺位置">
+            </div>
+          </div>
+          <div class="caption"><h2 id="ruler-title">弹性滑尺</h2><p>左右拖动</p></div>
+        </section>
+
+        <section class="sample" id="alignment-switch" aria-labelledby="align-title">
+          <div class="stage">
+            <div class="align">
+              <div class="align-preview" aria-hidden="true">
+                <i style="--line:54px;--top:2px"></i><i style="--line:39px;--top:10px"></i><i style="--line:22px;--top:18px"></i>
+              </div>
+              <div class="align-choices" role="radiogroup" aria-label="文字对齐">
+                <span class="align-thumb" aria-hidden="true"></span>
+                <label class="align-choice"><input type="radio" name="alignment" aria-label="居左"><span class="align-lines" aria-hidden="true"><i></i><i></i><i></i></span></label>
+                <label class="align-choice"><input type="radio" name="alignment" aria-label="居中" checked><span class="align-lines" aria-hidden="true"><i></i><i></i><i></i></span></label>
+                <label class="align-choice"><input type="radio" name="alignment" aria-label="居右"><span class="align-lines" aria-hidden="true"><i></i><i></i><i></i></span></label>
+              </div>
+            </div>
+          </div>
+          <div class="caption"><h2 id="align-title">对齐拨片</h2><p>切换方向</p></div>
+        </section>
+
+        <section class="sample" id="bookmark-press" aria-labelledby="bookmark-title">
+          <div class="stage">
+            <button class="bookmark" type="button" aria-label="收藏" aria-pressed="false">
+              <span class="bookmark-face" aria-hidden="true"><span class="bookmark-mark"></span></span>
+            </button>
+          </div>
+          <div class="caption"><h2 id="bookmark-title">夹页键</h2><p>点按收藏</p></div>
+        </section>
+      </div>
+    </main>
+    <footer class="credit">动效参考 <a href="https://x.com/yui540/status/2120825584947487170" target="_blank" rel="noopener noreferrer">@yui540</a></footer>
+  </div>
+  <script>
+    const root = document.documentElement;
+    const params = new URLSearchParams(location.search);
+    if (root.dataset.embedded && params.has('style')) {
+      const variants = document.createElement('link');
+      variants.rel = 'stylesheet';
+      variants.href = './variants.css';
+      document.head.append(variants);
+    }
+    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+    const motionEnabled = () => !reducedMotion.matches && root.dataset.galleryActive !== 'false';
+    const $ = (selector) => document.querySelector(selector);
+    const sections = Array.from(document.querySelectorAll('.sample'));
+    const aliases = {
+      'soft-dial': 'elastic-ruler',
+      'magnetic-selector': 'alignment-switch',
+      'hold-to-send': 'bookmark-press',
+    };
+    const replay = $('.replay');
+
+    function showSelectedSample() {
+      const sample = location.hash.slice(1) || (root.dataset.embedded && params.get('sample'));
+      const id = Object.hasOwn(aliases, sample) ? aliases[sample] : sample;
+      const selected = sections.find(section => section.id === id) || (root.dataset.embedded && sections[0]);
+      root.toggleAttribute('data-single', Boolean(selected));
+      for (const section of sections) section.hidden = Boolean(selected && section !== selected);
+      $('#gallery-link').hidden = Boolean(selected);
+      $('#all-controls').hidden = !selected;
+      replay.hidden = Boolean(selected);
+    }
+    showSelectedSample();
+    addEventListener('hashchange', showSelectedSample);
+
+    const ruler = $('.ruler');
+    const range = $('.ruler-input');
+    const knob = $('.ruler-knob');
+
+    function setRuler(value) {
+      range.value = Math.round(value);
+      ruler.style.setProperty('--value', range.value);
+      knob.textContent = range.value;
+    }
+
+    function pullRuler(tug, edge = 0) {
+      const pull = Math.min(Math.abs(tug) / 20, 1);
+      ruler.dataset.pulling = '';
+      knob.style.setProperty('--wide', 1.12 + pull * .35);
+      knob.style.setProperty('--low', .87 - pull * .12);
+      knob.style.setProperty('--edge', Math.max(-10, Math.min(10, edge * .3)) + 'px');
+      knob.style.setProperty('--tilt', Math.sign(tug) * pull * 8 + 'deg');
+      knob.style.setProperty('--corners', tug < 0 ? '21px 13px 13px 21px' : '13px 21px 21px 13px');
+    }
+
+    let drag;
+    function dragTo(clientX) {
+      const x = clientX - drag.origin;
+      const clipped = Math.min(drag.width, Math.max(0, x));
+      setRuler(clipped / drag.width * 100);
+      pullRuler(clientX - drag.previous + (x - clipped), x - clipped);
+      drag.previous = clientX;
+    }
+
+    range.addEventListener('input', () => setRuler(range.valueAsNumber));
+    ruler.addEventListener('pointerdown', (event) => {
+      if (event.button !== 0 || drag) return;
+      event.preventDefault();
+      range.focus({ preventScroll: true });
+      ruler.setPointerCapture(event.pointerId);
+      const box = ruler.getBoundingClientRect();
+      const knobCenter = box.left + box.width * range.valueAsNumber / 100;
+      const offset = Math.abs(event.clientX - knobCenter) <= 21 ? event.clientX - knobCenter : 0;
+      const touchStart = event.pointerType === 'touch' ? { x: event.clientX, y: event.clientY } : null;
+      drag = { id: event.pointerId, origin: box.left + offset, width: box.width, previous: event.clientX, touchStart };
+      if (!touchStart) dragTo(event.clientX);
+    });
+    ruler.addEventListener('pointermove', (event) => {
+      if (drag?.id !== event.pointerId) return;
+      if (drag.touchStart) {
+        const horizontal = Math.abs(event.clientX - drag.touchStart.x);
+        const vertical = Math.abs(event.clientY - drag.touchStart.y);
+        if (horizontal < 5 || horizontal <= vertical) return;
+        drag.touchStart = null;
+      }
+      dragTo(event.clientX);
+    });
+    for (const event of ['pointerup', 'pointercancel', 'lostpointercapture']) {
+      ruler.addEventListener(event, (event) => {
+        if (drag?.id !== event.pointerId) return;
+        if (event.type === 'pointerup' && drag.touchStart &&
+            Math.hypot(event.clientX - drag.touchStart.x, event.clientY - drag.touchStart.y) < 8) dragTo(event.clientX);
+        drag = null;
+        delete ruler.dataset.pulling;
+      });
+    }
+
+    const choices = $('.align-choices');
+    const thumb = $('.align-thumb');
+    const alignPreview = $('.align-preview');
+    const radios = Array.from(choices.querySelectorAll('input'));
+    let slide;
+
+    function setAlignment(index) {
+      const from = getComputedStyle(thumb).transform;
+      const oldIndex = Number(choices.style.getPropertyValue('--index') || 1);
+      radios[index].checked = true;
+      slide?.cancel();
+      choices.style.setProperty('--index', index);
+      alignPreview.style.setProperty('--alignment', index);
+      if (!motionEnabled() || oldIndex === index) return;
+      const end = 'translateX(' + index * 100 + '%)';
+      const origin = index > oldIndex ? 'right center' : 'left center';
+      slide = thumb.animate([
+        { transform: from, transformOrigin: origin },
+        { transform: end + ' scale(1.44, .83)', transformOrigin: origin, borderRadius: '21px 16px', offset: .61 },
+        { transform: end + ' scale(.92, 1.075)', transformOrigin: origin, offset: .83 },
+        { transform: end, transformOrigin: origin },
+      ], { duration: 360, easing: 'cubic-bezier(.21,.65,.31,1)' });
+    }
+    choices.addEventListener('change', () => setAlignment(radios.findIndex(radio => radio.checked)));
+
+    const bookmark = $('.bookmark');
+    const face = $('.bookmark-face');
+    const mark = $('.bookmark-mark');
+    let faceMotion;
+    let markMotion;
+
+    function toggleBookmark() {
+      const pressed = bookmark.getAttribute('aria-pressed') !== 'true';
+      bookmark.setAttribute('aria-pressed', pressed);
+      faceMotion?.cancel();
+      markMotion?.cancel();
+      if (!motionEnabled()) return;
+
+      faceMotion = face.animate([
+        { transform: 'translateY(2px) scale(1.13, .84)', borderRadius: '22px 22px 16px 16px' },
+        { transform: 'translateY(-3px) scale(.89, 1.13)', borderRadius: '16px 16px 22px 22px', offset: .43 },
+        { transform: 'scale(1.04, .96)', borderRadius: '20px', offset: .73 },
+        { transform: 'none', borderRadius: '18px' },
+      ], { duration: 370, easing: 'cubic-bezier(.22,.74,.37,1)' });
+
+      markMotion = mark.animate([
+        { transform: 'translateY(3px) scaleY(.57)', clipPath: 'polygon(0 0, 100% 0, 100% 100%, 50% 93%, 0 100%)' },
+        { transform: 'translateY(-2px) scaleY(1.18)', clipPath: 'polygon(0 0, 100% 0, 100% 100%, 50% 62%, 0 100%)', offset: .52 },
+        { transform: 'none' },
+      ], { duration: 340, easing: 'cubic-bezier(.21,.73,.37,1)' });
+    }
+    bookmark.addEventListener('click', toggleBookmark);
+
+    let demoTimers = [];
+    let demoFrame;
+    function stopDemo() {
+      if (demoTimers.length === 0) return;
+      demoTimers.forEach(clearTimeout);
+      demoTimers = [];
+      cancelAnimationFrame(demoFrame);
+      delete ruler.dataset.pulling;
+    }
+
+    function demoRuler() {
+      const start = performance.now();
+      const initial = range.valueAsNumber;
+      const rightward = initial < 75;
+      const target = rightward ? 100 : 0;
+      const direction = rightward ? 1 : -1;
+      if (!motionEnabled()) {
+        setRuler(target);
+        return;
+      }
+
+      function tick(now) {
+        const progress = Math.min((now - start) / 330, 1);
+        const travel = Math.min(1, 1.18 * (1 - (1 - progress) ** 2));
+        setRuler(initial + (target - initial) * travel);
+        pullRuler(direction * (6 + 15 * progress), direction * Math.max(0, progress - .55) * 70);
+        if (progress < 1) demoFrame = requestAnimationFrame(tick);
+      }
+      demoFrame = requestAnimationFrame(tick);
+    }
+
+    $('.samples').addEventListener('pointerdown', stopDemo, { capture: true });
+    $('.samples').addEventListener('keydown', stopDemo, { capture: true });
+    replay.addEventListener('click', () => {
+      stopDemo();
+      if (drag) return;
+      const steps = [
+        [0, demoRuler],
+        [410, () => { cancelAnimationFrame(demoFrame); delete ruler.dataset.pulling; }],
+        [630, () => setAlignment(radios[2].checked ? 0 : 2)],
+        [1080, toggleBookmark],
+        [1500, () => { demoTimers = []; }],
+      ];
+      demoTimers = steps.map(([delay, action]) => setTimeout(action, delay));
+    });
+  </script>
+</body>
+</html>

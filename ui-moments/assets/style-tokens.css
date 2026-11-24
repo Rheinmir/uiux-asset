@@ -1,0 +1,44 @@
+/* 孟菲斯和包豪斯配色来自 guanmo-ai/design-style 的 004 与 001。 */
+[data-ui-style="memphis"] {
+  --memphis-ink: #111111;
+  --memphis-paper: #fdf6ec;
+  --memphis-blue: #2d4bff;
+  --memphis-pink: #ff7eb6;
+  --memphis-yellow: #ffd23f;
+  --memphis-lilac: #b79cff;
+  --memphis-dots: radial-gradient(var(--memphis-ink) 1.25px, transparent 1.5px) 0 0 / 8px 8px;
+}
+
+[data-ui-style="bauhaus"] {
+  --bh-paper: #f0e9da;
+  --bh-ink: #161514;
+  --bh-red: #db3a26;
+  --bh-yellow: #f2b419;
+  --bh-blue: #1f4fa3;
+  --bh-gray: #6e675e;
+  --bh-stage:
+    linear-gradient(var(--bh-yellow), var(--bh-yellow)) top right / 13% 21% no-repeat,
+    linear-gradient(var(--bh-ink), var(--bh-ink)) right 13% top / 4px 77% no-repeat,
+    radial-gradient(circle at center, var(--bh-blue) 69%, transparent 70%) left 5% bottom 9% / min(22%, 112px) min(20vw, 112px) no-repeat,
+    var(--bh-paper);
+}
+
+[data-ui-style="pixel"] {
+  --px-deep: #14142b;
+  --px-panel: #272548;
+  --px-floor: #1c1c39;
+  --px-grid: #32335c;
+  --px-text: #fff1dc;
+  --px-muted: #c4bddd;
+  --px-cyan: #8ae2ff;
+  --px-yellow: #ffd16a;
+  --px-pink: #ff799c;
+  --px-lilac: #9988f7;
+  --px-stage:
+    linear-gradient(var(--px-grid) 1px, transparent 1px) center / 16px 16px,
+    linear-gradient(90deg, var(--px-grid) 1px, transparent 1px) center / 16px 16px,
+    var(--px-floor);
+  --px-corners: polygon(4px 0, calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px,
+    100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%, 4px 100%,
+    4px calc(100% - 4px), 0 calc(100% - 4px), 0 4px, 4px 4px);
+}

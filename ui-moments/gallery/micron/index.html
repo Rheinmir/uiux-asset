@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>点击反馈 · UI Moments</title>
+  <script src="../../assets/embed.js"></script>
+  <link rel="stylesheet" href="vendor/micron/dist/css/micron.css">
+  <style>
+    :root {
+      color-scheme: dark;
+      --surface: #121214;
+      --ink: #f5f5f7;
+      --face: #28282d;
+      --edge: #1b1b1e;
+      --line: rgb(255 255 255 / .16);
+      --shine: rgb(255 255 255 / .1);
+      --shadow: rgb(0 0 0 / .42);
+    }
+
+    :root[data-theme="light"] {
+      color-scheme: light;
+      --surface: #f0f0f2;
+      --ink: #17171a;
+      --face: #fff;
+      --edge: #e5e5e9;
+      --line: rgb(23 23 26 / .16);
+      --shine: rgb(255 255 255 / .9);
+      --shadow: rgb(23 23 26 / .16);
+    }
+
+    body {
+      display: grid;
+      place-items: center;
+      min-height: 100svh;
+      margin: 0;
+      background: var(--surface);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+    }
+
+    [data-embedded] body { background: transparent; }
+
+    .press {
+      display: inline-grid;
+      place-items: center;
+      min-width: min(72vw, 122px);
+      min-height: 44px;
+      padding: 8px 16px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: linear-gradient(var(--face), var(--edge));
+      box-shadow: inset 0 1px var(--shine), 0 3px 0 var(--edge), 0 6px 14px var(--shadow);
+      color: inherit;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: clamp(12px, 7vw, 14px);
+      font-weight: 600;
+      line-height: 1.2;
+      touch-action: manipulation;
+      user-select: none;
+      animation-duration: .45s;
+    }
+
+    @media (hover: hover) {
+      .press:hover { border-color: color-mix(in srgb, var(--ink) 32%, transparent); }
+    }
+
+    .press:active {
+      box-shadow: inset 0 2px 5px var(--shadow), 0 1px 0 var(--edge);
+      background: var(--edge);
+    }
+
+    .press:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
+    [data-gallery-active="false"] .press { animation: none; }
+    @media (prefers-reduced-motion: reduce) { .press { animation: none; } }
+  </style>
+</head>
+<body>
+  <button class="press mjs-ease-in-out" type="button">点按体验</button>
+  <script>
+    const root = document.documentElement;
+    if (!root.dataset.theme) {
+      root.dataset.theme = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    }
+    const sample = root.dataset.embedded && new URLSearchParams(location.search).get('sample');
+    const effect = root.dataset.effect || sample || location.hash.slice(1) || 'jelly';
+    const button = document.querySelector('.press');
+    const animation = 'mjs-' + (/^[a-z]+$/.test(effect) ? effect : 'jelly');
+    button.addEventListener('click', () => {
+      if (getComputedStyle(button).animationDuration === '0s') return;
+      button.classList.remove(animation);
+      // Flush the previous animation so consecutive clicks restart the motion.
+      void button.offsetWidth;
+      button.classList.add(animation);
+    });
+    button.addEventListener('animationend', () => button.classList.remove(animation));
+  </script>
+</body>
+</html>

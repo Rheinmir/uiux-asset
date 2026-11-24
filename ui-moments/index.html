@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>UI Moments · 界面图鉴</title>
+<meta name="description" content="开源 UI 交互与动效图鉴。直接体验 160+ 个示例，对比组件风格，调整加载动效并导出 HTML 或 React。">
+<meta property="og:title" content="UI Moments · 界面图鉴">
+<meta property="og:description" content="160+ 个实时 UI 示例，涵盖交互控件、加载动效与点击反馈。">
+<meta property="og:image" content="https://guanmo-ai.github.io/ui-moments/assets/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#111217" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f8f8fb" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/icon.svg">
+<link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="gallery/loaders/style.css">
+<link rel="stylesheet" href="assets/gallery.css">
+</head>
+<body class="gallery-page">
+<a class="skip" href="#works">跳到 UI 组件</a>
+<header class="top" id="top"><div class="wrap nav-inner"><a class="site-brand" href="index.html" aria-label="UI Moments 首页"><span class="site-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg></span><span>UI Moments</span></a><nav class="nav-links" aria-label="站点"><a href="#works" aria-current="page">图鉴</a><a href="styles.html">风格库</a><a href="#sources">来源</a></nav><div class="nav-end"><a class="nav-follow" href="https://x.com/guanmo_ai" target="_blank" rel="noopener">关注观默 ↗</a><button class="theme-btn" id="theme" type="button" aria-label="切换浅色模式"></button></div></div></header>
+
+<main class="wrap">
+  <section class="hero">
+    <div>
+      <h1>界面交互图鉴</h1>
+      <p>卡片上方点按、拖动或暂停，下方查看详情与代码。</p>
+    </div>
+    <nav class="hero-actions" aria-label="体验入口">
+      <a class="hero-demo" href="#day-night-toggle">试试昼夜开关 <span aria-hidden="true">→</span></a>
+    </nav>
+  </section>
+  <section id="works" aria-label="UI 组件">
+    <div class="gallery-toolbar">
+      <div id="categories" role="group" aria-label="按组件用途筛选"></div>
+      <div class="tool-actions">
+        <label class="work-search">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="m13 13 4 4"/></svg>
+          <span class="sr-only">搜索 UI</span>
+          <input id="work-search" type="search" placeholder="搜索组件" autocomplete="off">
+          <kbd aria-hidden="true">/</kbd>
+        </label>
+        <button id="motion" type="button" aria-pressed="false">暂停动效</button>
+        <button id="gallery-favorites" type="button" aria-pressed="false">
+          <svg data-bookmark-mark viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h12v16l-6-4-6 4z"/></svg>
+          收藏
+        </button>
+        <div id="gallery-density" class="gallery-density" role="group" aria-label="每行列数">
+          <span aria-hidden="true">每行</span>
+          <div class="density-options">
+            <label title="每行 4 个"><input class="sr-only" type="radio" name="gallery-columns" value="4" aria-label="4 列"><span aria-hidden="true">4</span></label>
+            <label title="每行 5 个"><input class="sr-only" type="radio" name="gallery-columns" value="5" aria-label="5 列" checked><span aria-hidden="true">5</span></label>
+            <label title="每行 6 个"><input class="sr-only" type="radio" name="gallery-columns" value="6" aria-label="6 列"><span aria-hidden="true">6</span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p id="ui-count" class="sr-only" aria-live="polite"></p>
+    <div id="shape-row" class="shape-row" hidden><span id="shape-label" data-shape-label>形态</span><div id="shapes" role="group" aria-labelledby="shape-label"></div></div>
+    <div id="ui-grid" class="ui-grid" aria-label="实时 UI 组件"></div>
+    <p id="empty" class="empty" hidden>没有匹配的 UI，换个关键词试试。</p>
+  </section>
+</main>
+<footer class="catalog-footer wrap" id="sources"><span>UI Moments · 界面图鉴</span><details class="sources"><summary>来源与许可</summary><p>「折页」「回信」及 <a href="index.html?q=加载微动效">9 款加载微动效</a>由 UI Moments 原创，采用 <a href="LICENSE">MIT 许可证</a>。44 款加载指示器来自 Griffin Johnston / UI Ball 的 <a href="https://github.com/GriffinJohnston/ldrs">LDRS 1.1.9</a>，保留<a href="gallery/loaders/vendor/ldrs/LICENSE">原始许可</a>。47 款来自 Bartosz Zagrodzki 的 <a href="https://github.com/turbostarter/loading-ui">Loading UI</a>，保留<a href="gallery/loading-ui/vendor/loading-ui/LICENSE.md">完整 MIT 许可</a>。</p><p>点击反馈来自 Webkul 的 <a href="https://github.com/webkul/micron">Micron.js</a>（<a href="gallery/micron/vendor/micron/LICENSE">MIT</a>）。46 款 SVG 加载动效来自 Utkarsh Verma 的 <a href="https://github.com/n3r4zzurr0/svg-spinners">SVG Spinners</a>（<a href="gallery/svg-spinners/vendor/svg-spinners/LICENSE">MIT</a>）。交互作品的来源随作品标注。<a href="https://github.com/guanmo-ai/ui-moments">项目源码 ↗</a></p></details></footer>
+  <dialog id="detail" aria-labelledby="detail-title">
+    <div class="dialog-head">
+      <div><p id="detail-group" class="eyebrow"></p><h2 id="detail-title"></h2></div>
+      <button type="button" class="save-work" data-save-work aria-pressed="false" aria-label="收藏组件"><svg data-bookmark-mark viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h12v16l-6-4-6 4z"/></svg></button>
+      <button id="close" class="close" type="button" aria-label="关闭动效详情">×</button>
+    </div>
+    <div class="editor">
+      <section class="large-preview" aria-label="动效预览"><div id="selected-preview"></div><p id="detail-description"></p></section>
+      <section class="settings" aria-label="动效参数"><div class="settings-head"><h3>动效参数</h3><button id="reset" type="button">恢复默认</button></div><div id="controls"></div></section>
+    </div>
+    <section class="code-section" aria-label="使用代码">
+      <div class="code-toolbar"><div class="code-tabs" role="tablist" aria-label="代码格式"><button id="tab-html" role="tab" aria-selected="true" aria-controls="code-panel" type="button" data-format="html">HTML + CSS</button><button id="tab-react" role="tab" aria-selected="false" aria-controls="code-panel" tabindex="-1" type="button" data-format="react">React</button></div><div class="code-actions"><button id="download" type="button">下载 HTML</button><button id="copy" class="primary" type="button">复制代码</button></div></div>
+      <p id="code-help">独立 HTML 页面，无需安装依赖。保存为 .html 文件后即可打开。</p>
+      <div id="code-panel" role="tabpanel" aria-labelledby="tab-html"><textarea id="code" aria-label="示例代码" readonly spellcheck="false" wrap="off"></textarea></div>
+      <p class="code-credit"><span></span><a href="gallery/loaders/vendor/ldrs/LICENSE">查看许可</a></p>
+    </section>
+  </dialog>
+  <p id="toast" class="toast" role="status" aria-live="polite" hidden></p>
+<dialog id="component-detail" aria-labelledby="component-title">
+  <div class="dialog-head">
+    <div><p id="component-kind" class="eyebrow"></p><h2 id="component-title"></h2></div>
+    <button type="button" class="save-work" data-save-work aria-pressed="false" aria-label="收藏组件"><svg data-bookmark-mark viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h12v16l-6-4-6 4z"/></svg></button>
+    <button id="component-close" class="close" type="button" aria-label="关闭组件详情">×</button>
+  </div>
+  <iframe id="component-frame" title="交互组件" allow="fullscreen; clipboard-write"></iframe>
+  <div class="component-meta"><p id="component-description"></p><p id="component-credit"></p><a id="component-source" target="_blank" rel="noopener">查看源码 ↗</a><a id="component-open" target="_blank" rel="noopener">独立体验 ↗</a><button id="component-copy" type="button">复制 HTML</button></div>
+</dialog>
+<script src="gallery/works.js"></script>
+<script type="module" src="assets/gallery.mjs"></script>
+</body>
+</html>

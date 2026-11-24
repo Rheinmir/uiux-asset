@@ -1,0 +1,1390 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>只有光</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Martian+Mono:wght@300..500&family=Noto+Sans+SC:wght@200..700&family=Noto+Serif+SC:wght@600;700&family=Roboto+Flex:opsz,wdth,wght,GRAD@8..144,25..151,100..1000,-200..150&display=swap">
+<script src="../../assets/embed.js"></script>
+<style>
+/* Layout: full-screen stage, one scene at a time; floating pill HUD on top, caption at the bottom. All colours below are fallbacks; the light engine rewrites them per region every frame. */
+:root {
+  --ground: #efede9; --paper: #fbfaf8; --raised: #efedea;
+  --ink: #23211e; --ink-2: #54514c; --ink-3: #85817a; --line: #dedbd5;
+  --accent: #a8461f; --accent-soft: rgba(168, 70, 31, .16); --led: #a8461f;
+  --emit: #ffb03d; --glow: 0; --glass-hi: rgba(255, 255, 255, .85);
+  --shadow: 0 8px 22px rgba(40, 32, 24, .10), 0 1px 1.5px rgba(40, 32, 24, .09);
+  --glow-shadow: 0 0 0 transparent; --halo: rgba(255, 248, 236, .6);
+  --hlx: 50%; --hly: 14%; --grad: 0; --w-body: 400;
+  --f-body: "Roboto Flex", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --f-display: "Noto Serif SC", "Songti SC", serif;
+  --f-mono: "Martian Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #1a1917; --paper: #252320; --raised: #2f2d2a;
+    --ink: #ebe8e3; --ink-2: #b5b1aa; --ink-3: #85817a; --line: #3a3834;
+    --accent: #f2b45a; --accent-soft: rgba(242, 180, 90, .16); --led: #ffb03d;
+    --glow: 1; --glass-hi: rgba(255, 255, 255, .14);
+    --shadow: inset 0 1px 0 rgba(255, 255, 255, .08); --glow-shadow: 0 0 26px 3px rgba(255, 176, 61, .38);
+    --halo: rgba(255, 176, 61, .07); --grad: -50; --w-body: 370; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #1a1917; --paper: #252320; --raised: #2f2d2a;
+  --ink: #ebe8e3; --ink-2: #b5b1aa; --ink-3: #85817a; --line: #3a3834;
+  --accent: #f2b45a; --accent-soft: rgba(242, 180, 90, .16); --led: #ffb03d;
+  --glow: 1; --glass-hi: rgba(255, 255, 255, .14);
+  --shadow: inset 0 1px 0 rgba(255, 255, 255, .08); --glow-shadow: 0 0 26px 3px rgba(255, 176, 61, .38);
+  --halo: rgba(255, 176, 61, .07); --grad: -50; --w-body: 370; color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; }
+html { background: var(--ground); }
+body {
+  margin: 0; overflow: hidden;
+  background: radial-gradient(120% 70% at var(--hlx) -15%, var(--halo), transparent 60%) var(--ground);
+  color: var(--ink); font-family: var(--f-body); font-weight: var(--w-body);
+  font-variation-settings: "GRAD" var(--grad); font-size: 15px; line-height: 1.6;
+  -webkit-font-smoothing: antialiased; -webkit-user-select: none; user-select: none;
+}
+.rec, .rec * { cursor: none !important; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+button { font: inherit; color: inherit; }
+.num {
+  font-family: "Roboto Flex", var(--f-mono);
+  font-variation-settings: "wdth" 58, "opsz" 144, "GRAD" var(--grad);
+  font-weight: 320; line-height: .95; letter-spacing: -.015em; font-variant-numeric: tabular-nums;
+}
+.mono { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+
+#stage { position: fixed; inset: 0; }
+.scene {
+  position: absolute; inset: 0; display: none; overflow: hidden;
+  padding-block: 96px 88px;
+  padding-left: max(32px, env(safe-area-inset-left, 0px));
+  padding-right: max(32px, env(safe-area-inset-right, 0px));
+}
+.scene.on { display: flex; }
+.scene > .inner { margin: auto; width: 100%; }
+
+/* ---------- HUD ---------- */
+#hud {
+  position: fixed; z-index: 20; left: 50%; top: calc(20px + env(safe-area-inset-top, 0px)); transform: translateX(-50%);
+  display: flex; align-items: center; gap: 4px; padding: 5px; border-radius: 999px; white-space: nowrap;
+  background: var(--paper); border: 1px solid var(--line); box-shadow: var(--shadow); color: var(--ink);
+  max-width: calc(100vw - 32px);
+}
+#hud .arrow { width: 30px; height: 30px; border: 0; background: transparent; border-radius: 50%; cursor: pointer; color: var(--ink-2); font-size: 16px; line-height: 1; }
+#hud .arrow:hover { background: var(--raised); }
+.hud-title { font-size: 13px; font-weight: 500; padding: 0 6px; min-width: 104px; text-align: center; }
+.hud-title b { font: 400 11px var(--f-mono); color: var(--ink-3); margin-right: 6px; }
+.hud-toggle { border: 0; border-radius: 999px; padding: 7px 15px; background: var(--ink); color: var(--paper); font-size: 13px; font-weight: 500; cursor: pointer; }
+.keys { display: flex; align-items: center; gap: 5px; padding: 0 10px 0 8px; font-size: 12px; color: var(--ink-3); }
+kbd { font: 400 10px/1 var(--f-mono); padding: 4px 6px; border-radius: 6px; border: 1px solid var(--line); background: var(--raised); color: var(--ink-2); }
+.keys .sep { width: 6px; }
+#caption {
+  position: fixed; z-index: 20; left: 0; right: 0; bottom: calc(26px + env(safe-area-inset-bottom, 0px));
+  display: flex; justify-content: center; align-items: baseline; flex-wrap: wrap; gap: 4px 18px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  text-align: center; pointer-events: none;
+}
+#cap-text { margin: 0; font-size: 14px; color: var(--ink-2); }
+#cap-read { margin: 0; font-size: 11.5px; color: var(--ink-3); }
+.hide-ui #hud, .hide-ui #caption { visibility: hidden; }
+.on-neon #caption { left: 50%; right: auto; transform: translateX(-50%); width: max-content; max-width: calc(100vw - 32px); padding: 8px 16px; border-radius: 999px; background: var(--paper); border: 1px solid var(--line); }
+
+/* ---------- recording overlays ---------- */
+#cursor { position: fixed; left: 0; top: 0; z-index: 60; pointer-events: none; display: none; }
+.rec #cursor { display: block; }
+#cursor svg { position: absolute; left: -3px; top: -2px; width: 26px; height: 30px; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .35)); transform-origin: 3px 2px; }
+#cursor .ring { position: absolute; left: -22px; top: -22px; width: 44px; height: 44px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, .9); box-shadow: 0 0 0 1px rgba(0, 0, 0, .25); opacity: 0; }
+#keycap {
+  position: fixed; z-index: 55; left: 50%; bottom: 84px; transform: translateX(-50%);
+  padding: 9px 16px; border-radius: 12px; background: rgba(20, 19, 17, .82); color: #f4f1ea;
+  font: 500 15px/1 var(--f-body); display: none; pointer-events: none; box-shadow: 0 8px 24px rgba(0, 0, 0, .25);
+}
+.rec #keycap { display: block; opacity: 0; }
+#titlecard {
+  position: fixed; inset: 0; z-index: 50; display: none; place-items: center; text-align: center;
+  background: var(--ground); color: var(--ink); pointer-events: none; padding: 32px;
+}
+.rec #titlecard { display: grid; }
+#titlecard h1 { margin: 0; font-family: var(--f-display); font-weight: 700; font-size: clamp(36px, 6vw, 78px); line-height: 1.25; letter-spacing: -.01em; }
+#titlecard p { margin: 22px 0 0; font: 400 15px var(--f-mono); color: var(--ink-3); }
+
+/* ---------- shared cards ---------- */
+.card {
+  background: var(--paper); color: var(--ink); border: 1px solid var(--line); border-radius: 22px;
+  box-shadow: var(--shadow); padding: 18px 20px; min-width: 0; display: flex; flex-direction: column; gap: 10px;
+}
+.lab { font-size: 13px; color: var(--ink-2); display: flex; justify-content: space-between; gap: 8px; }
+.lab em { font-style: normal; color: var(--ink-3); font-size: 12px; }
+
+/* ---------- 01 dimmer ---------- */
+.dim { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.6fr); gap: 64px; align-items: center; max-width: 1260px; }
+.dim-left { display: flex; flex-direction: column; align-items: center; gap: 22px; }
+.dial { --s: min(340px, 34vw, 44vh); position: relative; width: var(--s); height: var(--s); border-radius: 50%; touch-action: none; cursor: grab; }
+.dial svg { position: absolute; left: -8%; top: -8%; width: 116%; height: 116%; overflow: visible; pointer-events: none; }
+.tk { stroke: var(--line); stroke-width: 2.4; stroke-linecap: round; }
+.tk.major { stroke-width: 3.2; }
+.tk.on { stroke: var(--led); }
+.arc-track { fill: none; stroke: var(--line); stroke-width: 2; }
+.arc { fill: none; stroke: var(--led); stroke-width: 3; stroke-linecap: round; filter: drop-shadow(0 0 calc(var(--glow) * 6px) var(--led)); }
+.dl { fill: var(--ink-3); font: 400 11px var(--f-mono); }
+.dial-body {
+  position: absolute; inset: 9%; border-radius: 50%;
+  background: repeating-conic-gradient(from var(--a, 135deg), var(--raised) 0deg 2deg, var(--paper) 2deg 4deg);
+  box-shadow: var(--shadow), var(--glow-shadow); border: 1px solid var(--line);
+}
+.dial-face {
+  position: absolute; inset: 7%; border-radius: 50%; border: 1px solid var(--line);
+  background: radial-gradient(circle at var(--hlx) var(--hly), var(--glass-hi), transparent 58%), radial-gradient(circle at 50% 110%, var(--raised), var(--paper) 70%);
+}
+.dial-rot { position: absolute; inset: 0; transform: rotate(var(--a, 135deg)); }
+.dial-mark { position: absolute; top: 8%; left: 50%; width: 12px; height: 12px; margin-left: -6px; border-radius: 50%; background: var(--led); box-shadow: 0 0 calc(var(--glow) * 18px) var(--led); }
+.dial-read { display: flex; align-items: baseline; gap: 6px; }
+.dial-read .num { font-size: 84px; }
+.dial-read small { font: 400 14px var(--f-mono); color: var(--ink-3); }
+.dial-sub { margin: -10px 0 0; font-size: 13px; color: var(--ink-2); }
+.dash { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.dash .val { font-size: 46px; }
+.dash .val small { font: 400 13px var(--f-mono); color: var(--ink-3); margin-left: 6px; letter-spacing: 0; }
+.spark { width: 100%; height: 44px; display: block; overflow: visible; }
+.spark .ln { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linejoin: round; }
+.spark .ar { fill: var(--accent-soft); }
+.spark .pt { fill: var(--led); filter: drop-shadow(0 0 calc(var(--glow) * 5px) var(--led)); }
+.bars { display: grid; grid-template-columns: repeat(24, 1fr); gap: 3px; align-items: end; height: 44px; }
+.bars i { display: block; border-radius: 2px; background: var(--line); }
+.bars i.now { background: var(--led); box-shadow: 0 0 calc(var(--glow) * 8px) var(--led); }
+.modes { display: flex; flex-wrap: wrap; gap: 6px; }
+.modes span { font-size: 12.5px; padding: 6px 11px; border-radius: 999px; border: 1px solid var(--line); color: var(--ink-2); }
+.modes span.on { background: var(--ink); color: var(--paper); border-color: transparent; }
+.rooms { grid-column: span 2; }
+.room { display: grid; grid-template-columns: 12px minmax(0, 1fr) minmax(60px, 1.2fr) 44px; gap: 12px; align-items: center; padding: 7px 0; border-top: 1px solid var(--line); }
+.room:first-of-type { border-top: 0; }
+.room .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--line); }
+.room .dot.on { background: var(--led); box-shadow: 0 0 calc(var(--glow) * 10px) var(--led); }
+.room b { display: block; font-size: 14px; font-weight: 500; }
+.room small { display: block; font-size: 12px; color: var(--ink-3); }
+.room .bar { height: 6px; border-radius: 3px; background: var(--raised); overflow: hidden; }
+.room .bar i { display: block; height: 100%; background: var(--accent); border-radius: 3px; }
+.room .pct { font: 400 11.5px var(--f-mono); color: var(--ink-2); text-align: right; }
+.grade { font: 500 12px var(--f-mono); color: var(--ink-2); }
+
+/* ---------- 02 horizon ---------- */
+.hz { display: flex; flex-direction: column; align-items: center; gap: 26px; max-width: 1200px; }
+.hz-pill { position: relative; width: 100%; aspect-ratio: 3.3 / 1; border-radius: 999px; overflow: hidden; border: 1px solid var(--line); box-shadow: var(--shadow); touch-action: none; cursor: ew-resize; background: #222; }
+.hz-pill canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.hz-time { display: flex; align-items: baseline; gap: 16px; }
+.hz-time .num { font-size: 76px; }
+.hz-phase { font-size: 16px; color: var(--ink-2); }
+.chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+.chip { min-width: 148px; padding: 12px 16px; border-radius: 16px; background: var(--paper); border: 1px solid var(--line); box-shadow: var(--shadow); }
+.chip span { display: block; font-size: 12px; color: var(--ink-3); }
+.chip b { font: 500 17px var(--f-mono); font-variant-numeric: tabular-nums; }
+
+/* ---------- 03 garden ---------- */
+.gd { display: grid; grid-template-columns: minmax(0, 1fr) 132px; grid-template-rows: auto auto; gap: 18px; max-width: 1240px; }
+.gd-panel { position: relative; aspect-ratio: 16 / 8.2; border-radius: 30px; overflow: hidden; border: 1px solid var(--line); box-shadow: var(--shadow); background: #2a2a2a; }
+.gd-panel canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.fader { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 18px 0 16px; border-radius: 30px; background: var(--paper); border: 1px solid var(--line); box-shadow: var(--shadow); }
+.fader > span { font-size: 12.5px; color: var(--ink-2); }
+.fader-track { position: relative; flex: 1; width: 46px; border-radius: 23px; background: var(--raised); border: 1px solid var(--line); touch-action: none; cursor: ns-resize; }
+.fader-fill { position: absolute; left: 0; right: 0; bottom: 0; border-radius: 23px; background: linear-gradient(to top, var(--accent-soft), transparent); }
+.fader-cap { position: absolute; left: -12px; right: -12px; height: 30px; transform: translateY(-50%); border-radius: 11px; background: radial-gradient(circle at var(--hlx) 0%, var(--glass-hi), transparent 70%), var(--paper); border: 1px solid var(--line); box-shadow: var(--shadow), var(--glow-shadow); display: grid; place-items: center; }
+.fader-cap i { width: 28px; height: 2px; border-radius: 1px; background: var(--led); box-shadow: 0 0 calc(var(--glow) * 8px) var(--led); }
+.fader .num { font-size: 34px; }
+.legend { grid-column: 1 / -1; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 28px; padding: 12px 22px; border-radius: 18px; background: var(--paper); border: 1px solid var(--line); box-shadow: var(--shadow); }
+.legend div { display: flex; align-items: center; gap: 9px; font-size: 13px; }
+.legend i { width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--line); }
+.legend code { font: 400 11px var(--f-mono); color: var(--ink-3); }
+.legend .emit i { background: #d9f26b; box-shadow: 0 0 calc(var(--glow) * 12px) #d9f26b; }
+
+/* ---------- 04 neon ---------- */
+#s-neon canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.nn-ui { position: absolute; left: 50%; bottom: 100px; transform: translateX(-50%); display: flex; align-items: center; gap: 18px; }
+.photocell { display: flex; align-items: center; gap: 12px; padding: 12px 18px 12px 14px; border-radius: 18px; background: var(--paper); border: 1px solid var(--line); box-shadow: var(--shadow); white-space: nowrap; }
+.photocell i { width: 12px; height: 12px; border-radius: 50%; background: var(--line); }
+.photocell i.on { background: #ff5fa2; box-shadow: 0 0 12px #ff5fa2; }
+.photocell b { display: block; font-size: 13.5px; font-weight: 600; }
+.photocell span { display: block; font: 400 11.5px var(--f-mono); color: var(--ink-2); }
+.plate { width: 70px; height: 108px; padding: 0; border-radius: 14px; background: var(--paper); border: 1px solid var(--line); box-shadow: var(--shadow); display: grid; place-items: center; cursor: pointer; perspective: 220px; }
+.rocker { display: block; width: 34px; height: 66px; border-radius: 8px; border: 1px solid var(--line); background: linear-gradient(180deg, var(--paper), var(--raised)); box-shadow: var(--shadow); transform: rotateX(var(--rx, 16deg)); }
+
+/* ---------- 05 lamp ---------- */
+#cone { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen; }
+.lp { display: grid; grid-template-columns: 230px minmax(0, 1fr); grid-template-rows: auto auto; gap: 26px 40px; max-width: 1040px; }
+.lamp { position: relative; height: 100%; min-height: 300px; display: flex; flex-direction: column; align-items: center; }
+.cord { position: absolute; left: 50%; bottom: calc(100% - 40px); width: 2px; height: 100vh; margin-left: -1px; background: var(--ink-3); }
+.shade {
+  position: relative; margin-top: 40px; width: 168px; height: 86px; border-radius: 84px 84px 12px 12px / 80px 80px 12px 12px;
+  background: radial-gradient(circle at var(--hlx) 10%, var(--glass-hi), transparent 60%), linear-gradient(180deg, var(--paper), var(--raised));
+  border: 1px solid var(--line); box-shadow: var(--shadow); z-index: 1;
+}
+.bulb { width: 46px; height: 46px; margin-top: -22px; border-radius: 50%; }
+.article { padding: 30px 34px; gap: 14px; }
+.article .kicker { margin: 0; font: 400 11.5px var(--f-mono); color: var(--ink-3); }
+.article h2 { margin: 0; font-family: var(--f-display); font-weight: 700; font-size: 28px; line-height: 1.35; text-wrap: balance; }
+.article p.body { margin: 0; font-size: 16px; line-height: 1.9; max-width: 36em; }
+.article .foot { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; margin-top: 4px; }
+.badge { font: 400 11.5px/1 var(--f-mono); padding: 7px 11px; border-radius: 999px; border: 1px solid var(--line); background: var(--raised); color: var(--ink); }
+.foot small { font-size: 12.5px; color: var(--ink-2); }
+.kel { grid-column: 1 / -1; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 28px; align-items: center; padding: 20px 26px; }
+.kel-read { display: flex; flex-direction: column; gap: 6px; min-width: 150px; }
+.kel-read .num { font-size: 52px; }
+.kel-read span { font-size: 13px; color: var(--ink-2); display: flex; align-items: center; gap: 8px; }
+.kel-read span i { width: 12px; height: 12px; border-radius: 50%; border: 1px solid var(--line); }
+.ktrack { position: relative; height: 14px; border-radius: 7px; box-shadow: inset 0 0 0 1px var(--line); touch-action: none; cursor: ew-resize; margin: 0 13px; }
+.ktrack::before { content: ""; position: absolute; inset: -14px -13px; }
+.kthumb { position: absolute; top: 50%; width: 28px; height: 28px; margin: -14px 0 0 -14px; border-radius: 50%; background: var(--paper); border: 2px solid var(--ink); box-shadow: var(--shadow); }
+.kmarks { position: relative; height: 32px; margin: 10px 13px 0; }
+.kmarks span { position: absolute; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; font-size: 11.5px; line-height: 1.35; color: var(--ink-2); white-space: nowrap; }
+.kmarks em { font: normal 400 10px var(--f-mono); color: var(--ink-3); }
+
+@media (max-width: 900px) {
+  body { overflow: auto; }
+  .scene { overflow: auto; padding-block: 84px 96px; }
+  .dim, .lp { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .dial { --s: min(280px, 70vw); }
+  .dash { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .rooms { grid-column: 1 / -1; }
+  .hz-pill { aspect-ratio: 2.2 / 1; }
+  .hz-time .num { font-size: 56px; }
+  .gd { grid-template-columns: minmax(0, 1fr); }
+  .gd-panel { aspect-ratio: 4 / 3; }
+  .fader { flex-direction: row; padding: 14px 18px; }
+  .fader-track { height: 46px; width: auto; margin: 0 14px; }
+  .lamp { min-height: 200px; }
+  .kel { grid-template-columns: minmax(0, 1fr); }
+  .keys { display: none; }
+  #caption { display: none; }
+  .nn-ui { flex-direction: column; bottom: 110px; }
+}
+@media (max-width: 560px) {
+  .dash { grid-template-columns: minmax(0, 1fr); }
+  .chip { min-width: 0; flex: 1 1 40%; }
+  .article { padding: 22px; }
+  .article h2 { font-size: 23px; }
+}
+
+/* 主画廊只呈现当前组件，保留实际交互。独立页面继续展示完整场景。 */
+html[data-embedded] body{overflow:hidden}
+html[data-embedded] #hud,html[data-embedded] #caption{display:none}
+html[data-embedded] .scene{padding:16px!important;overflow:hidden}
+html[data-embedded] .scene>.inner{max-width:430px}
+html[data-embedded] .dim{display:flex;justify-content:center}
+html[data-embedded] .dash{display:none}
+html[data-embedded] .dim-left{gap:5px}
+html[data-embedded] .dial{--s:min(160px,55vh,60vw)}
+html[data-embedded] .dial-read .num{font-size:30px}
+html[data-embedded] .dim-left>p{display:none}
+html[data-embedded] .hz{gap:12px}
+html[data-embedded] .hz-pill{aspect-ratio:3.3}
+html[data-embedded] .hz-time .num{font-size:30px}
+html[data-embedded] .hz-phase{font-size:11px}
+html[data-embedded] .hz>.chips,html[data-embedded] .legend{display:none}
+html[data-embedded] .gd{grid-template-columns:minmax(0,1fr) 38px;gap:10px;align-items:stretch}
+html[data-embedded] .gd-panel{aspect-ratio:1.6;border-radius:15px}
+html[data-embedded] .fader{flex-direction:column;gap:4px;padding:8px 0;border-radius:18px}
+html[data-embedded] .fader-track{width:18px;height:auto;min-height:55px;flex:1;margin:0}
+html[data-embedded] .fader-cap{left:-6px;right:-6px;height:18px;border-radius:6px}
+html[data-embedded] .fader-cap i{width:15px}
+html[data-embedded] .fader .num{font-size:15px}
+html[data-embedded] .fader>span:first-child{font-size:8px}
+html[data-embedded] .lp{display:flex;flex-direction:column;gap:10px}
+html[data-embedded] .lp>.lamp,html[data-embedded] .lp>.article{display:none}
+html[data-embedded] .kel{width:100%;display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:18px}
+html[data-embedded] .kel-read{min-width:0;align-items:center;gap:3px}
+html[data-embedded] .kel-read .num{font-size:28px}
+html[data-embedded] .kel-read>span:last-child{font-size:10px}
+html[data-embedded] .kel>div:last-child{width:100%}
+html[data-embedded] .kmarks{display:none}
+html[data-embedded] .nn-ui{bottom:12px;gap:10px}
+html[data-embedded] .photocell{display:none}
+html[data-embedded] .plate{width:40px;height:52px;border-radius:9px}
+html[data-embedded] .rocker{width:20px;height:34px;border-radius:5px}
+</style>
+</head>
+<body>
+
+<div id="stage">
+  <!-- 01 -->
+  <section class="scene" id="s-dimmer" aria-label="调光旋钮">
+    <div class="inner dim">
+      <div class="dim-left" data-region="ground">
+        <div class="dial" id="dial" role="slider" tabindex="0" aria-label="光强" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100">
+          <div class="dial-body"></div>
+          <div class="dial-face" style="inset: 16%"><div class="dial-rot"><i class="dial-mark"></i></div></div>
+          <svg viewBox="0 0 400 400" aria-hidden="true"><g id="dial-svg"></g></svg>
+        </div>
+        <div class="dial-read"><span class="num" id="dial-num">100</span><small>%</small></div>
+        <p class="dial-sub">客厅 · 主灯</p>
+      </div>
+      <div class="dash">
+        <article class="card" data-region="paper">
+          <div class="lab">照度<em>桌面</em></div>
+          <div class="val num" id="c-lux">800<small>lux</small></div>
+          <svg class="spark" viewBox="0 0 200 44" preserveAspectRatio="none" id="c-spark"></svg>
+        </article>
+        <article class="card" data-region="paper">
+          <div class="lab">功率<em>今日 0.84 kWh</em></div>
+          <div class="val num" id="c-pow">60<small>W</small></div>
+          <div class="bars" id="c-bars"></div>
+        </article>
+        <article class="card" data-region="paper">
+          <div class="lab">场景<em>按光强自动选择</em></div>
+          <div class="modes" id="c-modes"><span>阅读</span><span>傍晚</span><span>观影</span><span>晚安</span></div>
+          <div class="lab" style="margin-top:auto">下一次<em>19:30 自动调暗</em></div>
+        </article>
+        <article class="card rooms" data-region="paper">
+          <div class="lab">房间<em>4 盏灯</em></div>
+          <div class="room"><i class="dot on" id="rm-dot"></i><div><b>客厅 · 主灯</b><small>跟随旋钮</small></div><div class="bar"><i id="rm-bar" style="width:100%"></i></div><span class="pct" id="rm-pct">100%</span></div>
+          <div class="room"><i class="dot on"></i><div><b>书房 · 台灯</b><small>2,700 K</small></div><div class="bar"><i style="width:70%"></i></div><span class="pct">70%</span></div>
+          <div class="room"><i class="dot on"></i><div><b>卧室 · 夜灯</b><small>2,200 K</small></div><div class="bar"><i style="width:12%"></i></div><span class="pct">12%</span></div>
+          <div class="room"><i class="dot"></i><div><b>走廊 · 感应灯</b><small>无人</small></div><div class="bar"><i style="width:0"></i></div><span class="pct">关</span></div>
+        </article>
+        <article class="card" data-region="paper">
+          <div class="lab">正文对比度<em>每帧求解</em></div>
+          <div class="val num" id="c-con">14.0<small>: 1</small></div>
+          <span class="grade" id="c-grade">AAA · 字重 400</span>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 -->
+  <section class="scene" id="s-horizon" aria-label="海平线">
+    <div class="inner hz">
+      <div class="hz-pill" id="hz-pill" data-region="paper"><canvas id="hz-cv"></canvas></div>
+      <div class="hz-time" data-region="ground"><span class="num" id="hz-clock">12:00</span><span class="hz-phase" id="hz-phase">白天</span></div>
+      <div class="chips">
+        <div class="chip" data-region="paper"><span>日出</span><b>06:12</b></div>
+        <div class="chip" data-region="paper"><span>日落</span><b>18:18</b></div>
+        <div class="chip" data-region="paper"><span>太阳高度</span><b id="hz-el">62°</b></div>
+        <div class="chip" data-region="paper"><span>色温</span><b id="hz-k">6,000 K</b></div>
+        <div class="chip" data-region="paper"><span>照度</span><b id="hz-lux">100,000</b></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 -->
+  <section class="scene" id="s-garden" aria-label="浦肯野花园">
+    <div class="inner gd">
+      <div class="gd-panel" data-region="paper"><canvas id="gd-cv"></canvas></div>
+      <div class="fader" data-region="paper">
+        <span>光强</span>
+        <div class="fader-track" id="fader"><div class="fader-fill" id="fader-fill"></div><div class="fader-cap" id="fader-cap" role="slider" tabindex="0" aria-label="光强" aria-valuemin="0" aria-valuemax="100"><i></i></div></div>
+        <span class="num" id="fader-num">100</span>
+      </div>
+      <div class="legend" data-region="paper">
+        <div><i id="lg0"></i>虞美人<code id="lgv0">L .60</code></div>
+        <div><i id="lg1"></i>万寿菊<code id="lgv1">L .75</code></div>
+        <div><i id="lg2"></i>矢车菊<code id="lgv2">L .58</code></div>
+        <div><i id="lg3"></i>雏菊<code id="lgv3">L .96</code></div>
+        <div class="emit"><i></i>萤火虫<code>发光体</code></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 -->
+  <section class="scene" id="s-neon" aria-label="霓虹">
+    <canvas id="nn-cv"></canvas>
+    <div class="nn-ui">
+      <div class="photocell" data-region="paper"><i id="pc-dot"></i><div><b>光敏开关</b><span id="pc-read">环境光 ≈ 100,000 lux · 阈值 50 lux</span></div></div>
+      <button class="plate" id="plate" type="button" data-region="paper" aria-label="天黑 / 天亮"><span class="rocker" id="rocker"></span></button>
+    </div>
+  </section>
+
+  <!-- 05 -->
+  <section class="scene" id="s-lamp" aria-label="色温">
+    <div id="cone"></div>
+    <div class="inner lp">
+      <div class="lamp" data-region="ground"><i class="cord"></i><div class="shade"></div><div class="bulb" id="bulb"></div></div>
+      <article class="card article" data-region="paper" id="lp-article">
+        <p class="kicker">夜读 · 光学 · 4 分钟</p>
+        <h2>为什么黄昏时，红花先暗下去</h2>
+        <p class="body">光线变弱时，眼睛从视锥细胞逐渐转向视杆细胞。暗视觉的敏感峰值在 507 nm 附近的蓝绿光，对红光几乎没有反应。所以在同一片暮色里，红色的花先变成深灰，蓝色的花还能看清。</p>
+        <p class="body">拖动下面的色温，纸张会跟着变暖，但正文的颜色每一帧都会重新求解，保证对比度不掉下去。</p>
+        <div class="foot"><span class="badge" id="lp-badge">正文对比度 14.0 : 1 · AAA</span><small id="lp-w">字重 400 · GRAD 0</small></div>
+      </article>
+      <div class="card kel" data-region="paper">
+        <div class="kel-read"><span class="num" id="k-num">6,500<small style="font-size:.36em;margin-left:4px">K</small></span><span><i id="k-sw"></i><em style="font-style:normal" id="k-name">阴天</em></span></div>
+        <div>
+          <div class="ktrack" id="ktrack" role="slider" tabindex="0" aria-label="色温" aria-valuemin="1900" aria-valuemax="10000"><div class="kthumb" id="kthumb"></div></div>
+          <div class="kmarks" id="kmarks"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<nav id="hud" data-region="paper" aria-label="场景">
+  <button class="arrow" id="prev" type="button" aria-label="上一个场景">‹</button>
+  <span class="hud-title" id="hud-title"><b>01</b>调光旋钮</span>
+  <button class="arrow" id="next" type="button" aria-label="下一个场景">›</button>
+  <button class="hud-toggle" id="hud-toggle" type="button">切换</button>
+  <span class="keys"><kbd>空格</kbd>切换<i class="sep"></i><kbd>←</kbd><kbd>→</kbd>场景<i class="sep"></i><kbd>H</kbd>隐藏<i class="sep"></i><kbd>F</kbd>全屏</span>
+</nav>
+<footer id="caption"><p id="cap-text"></p><p id="cap-read" class="mono"></p></footer>
+
+<div id="titlecard" aria-hidden="true"><div><h1 id="tc-h"></h1><p id="tc-p"></p></div></div>
+<div id="keycap" aria-hidden="true"></div>
+<div id="cursor" aria-hidden="true"><i class="ring" id="cur-ring"></i><svg viewBox="0 0 26 30" id="cur-svg"><path d="M3 2 L3 24 L8.6 18.8 L12.4 27.4 L16.2 25.8 L12.6 17.4 L20.2 17.4 Z" fill="#fff" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
+
+<script>
+(() => {
+  const REC = !!window.__RECORD;
+  if (REC) document.documentElement.classList.add('rec');
+  const $ = (s) => document.querySelector(s);
+  const root = document.documentElement;
+  const reduced = !REC && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ================= math ================= */
+  const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+  const smooth = (e0, e1, x) => { const t = clamp((x - e0) / (e1 - e0)); return t * t * (3 - 2 * t); };
+  const ease = (k) => (k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2);
+  const interp = (x, pts) => {
+    if (x <= pts[0][0]) return pts[0][1];
+    for (let i = 1; i < pts.length; i++) if (x <= pts[i][0]) { const [x0, y0] = pts[i - 1], [x1, y1] = pts[i]; return y0 + (y1 - y0) * (x - x0) / (x1 - x0); }
+    return pts[pts.length - 1][1];
+  };
+  function rng(seed) { let s = seed % 2147483647; if (s <= 0) s += 2147483646; return () => ((s = (s * 16807) % 2147483647) - 1) / 2147483646; }
+
+  /* ================= colour ================= */
+  const toLin = (c) => { c /= 255; return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
+  const fromLin = (c) => { c = clamp(c); return c <= 0.0031308 ? 12.92 * c : 1.055 * Math.pow(c, 1 / 2.4) - 0.055; };
+  function linToLab(r, g, b) {
+    const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
+    const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
+    const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
+    return { L: 0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * s, a: 1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s, b: 0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s };
+  }
+  function labToLin(c) {
+    const l = (c.L + 0.3963377774 * c.a + 0.2158037573 * c.b) ** 3;
+    const m = (c.L - 0.1055613458 * c.a - 0.0638541728 * c.b) ** 3;
+    const s = (c.L - 0.0894841775 * c.a - 1.2914855480 * c.b) ** 3;
+    return [4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s, -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s, -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s];
+  }
+  const rgb = (c) => labToLin(c).map((v) => Math.round(fromLin(v) * 255));
+  const css = (c, a = 1) => { const [r, g, b] = rgb(c); return a >= 1 ? `rgb(${r}, ${g}, ${b})` : `rgba(${r}, ${g}, ${b}, ${Math.max(0, a).toFixed(3)})`; };
+  const lum = (c) => { const [r, g, b] = labToLin(c).map((v) => clamp(v)); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
+  const ratio = (x, y) => { const a = lum(x), b = lum(y); return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05); };
+  const lch = (L, C, h) => ({ L, a: C * Math.cos(h * Math.PI / 180), b: C * Math.sin(h * Math.PI / 180) });
+  const mix = (x, y, t) => ({ L: x.L + (y.L - x.L) * t, a: x.a + (y.a - x.a) * t, b: x.b + (y.b - x.b) * t });
+  const scaleY = (c, f) => { const o = { ...c }; const want = lum(c) * f; for (let i = 0; i < 4; i++) { const Y = lum(o); if (Y > 0) o.L = clamp(o.L * Math.cbrt(want / Y)); } return o; };
+
+  function kelvinRGB(K) {
+    const t = K / 100;
+    const r = t <= 66 ? 255 : 329.698727446 * Math.pow(t - 60, -0.1332047592);
+    const g = t <= 66 ? 99.4708025861 * Math.log(t) - 161.1195681661 : 288.1221695283 * Math.pow(t - 60, -0.0755148492);
+    const b = t >= 66 ? 255 : (t <= 19 ? 0 : 138.5177312231 * Math.log(t - 10) - 305.0447927307);
+    return [r, g, b].map((v) => clamp(v, 0, 255));
+  }
+  const kelvinLab = (K) => { const [r, g, b] = kelvinRGB(K); return linToLab(toLin(r), toLin(g), toLin(b)); };
+  const REF = kelvinLab(6500), tintCache = new Map();
+  function kelvinTint(K) {
+    const key = Math.round(K / 10);
+    if (!tintCache.has(key)) { const k = kelvinLab(key * 10); tintCache.set(key, [k.a - REF.a, k.b - REF.b]); }
+    return tintCache.get(key);
+  }
+  const kcss = (K, a = 1) => { const [r, g, b] = kelvinRGB(K).map(Math.round); return a >= 1 ? `rgb(${r}, ${g}, ${b})` : `rgba(${r}, ${g}, ${b}, ${a.toFixed(3)})`; };
+
+  /* ================= the engine: colour = f(material, light) ================= */
+  const sCurve = (L) => (L < 0.5 ? 0.5 * Math.pow(2 * L, 1.7) : 1 - 0.5 * Math.pow(2 - 2 * L, 1.7));
+  function surfaces(L, K) {
+    const t = kelvinTint(K), gL = 0.165 + 0.79 * sCurve(L);
+    return { t, ground: { L: gL, a: t[0] * 0.42, b: t[1] * 0.42 }, paper: { L: Math.min(0.993, gL + 0.028 + 0.024 * (1 - L)), a: t[0] * 0.26, b: t[1] * 0.26 } };
+  }
+  function solve(base, target, C, h, ta = 0, tb = 0) {
+    const Y = lum(base), darkInk = Y >= 0.2;
+    const Yi = darkInk ? Math.max(0, (Y + 0.05) / target - 0.05) : Math.min(1, target * (Y + 0.05) - 0.05);
+    const ch = lch(0, C, h), c = { L: Math.cbrt(Yi), a: ch.a + ta, b: ch.b + tb };
+    for (let i = 0; i < 3; i++) { const Ya = lum(c); if (Ya <= 0 || Yi <= 0) break; c.L = clamp(c.L * Math.cbrt(Yi / Ya)); }
+    return c;
+  }
+  const EMIT = lch(0.83, 0.15, 70);
+  function shade(st, material) {
+    const { L, K, lx, el } = st;
+    const { t, ground, paper } = surfaces(L, K);
+    const base = material === 'ground' ? ground : paper;
+    const darkInk = lum(base) >= 0.2;
+    const ink = solve(base, 14, 0, 0, t[0] * 0.1, t[1] * 0.1);
+    const ink2 = solve(base, 6, 0, 0, t[0] * 0.14, t[1] * 0.14);
+    const ink3 = solve(base, 3.2, 0, 0, t[0] * 0.16, t[1] * 0.16);
+    const line = solve(base, 1.32, 0, 0, t[0] * 0.2, t[1] * 0.2);
+    const raised = { L: clamp(paper.L + (lum(paper) >= 0.2 ? -0.035 : 0.045)), a: paper.a, b: paper.b };
+    const glow = 1 - smooth(0.12, 0.62, L);
+    const accH = darkInk ? 40 : 64;
+    const accent = solve(base, darkInk ? 4.8 : 7, darkInk ? 0.15 : 0.13, accH);
+    const led = mix(accent, EMIT, glow);
+    const sc = { L: 0.22, a: t[0] * 0.5, b: t[1] * 0.5 }, sa = 0.14 * smooth(0.4, 0.95, L);
+    const len = 4 + 12 * (1 - clamp(el));
+    const sx = (-lx * len * 0.8).toFixed(1), sy = (len * 0.7 + 1).toFixed(1), blur = (len * 2.3).toFixed(1);
+    const rim = 0.03 + 0.06 * (1 - L);
+    const vars = {
+      '--ground': css(ground), '--paper': css(paper), '--raised': css(raised),
+      '--ink': css(ink), '--ink-2': css(ink2), '--ink-3': css(ink3), '--line': css(line),
+      '--accent': css(accent), '--accent-soft': css(accent, darkInk ? 0.16 : 0.2), '--led': css(led),
+      '--glow': glow.toFixed(3), '--glass-hi': `rgba(255, 255, 255, ${(darkInk ? 0.85 : 0.08 + 0.1 * L).toFixed(3)})`,
+      '--shadow': `${sx}px ${sy}px ${blur}px ${css(sc, sa)}, 0 1px 1.5px ${css(sc, sa * 0.9)}, inset 0 1px 0 rgba(255, 255, 255, ${rim.toFixed(3)})`,
+      '--glow-shadow': `0 0 ${(glow * 30).toFixed(1)}px ${(glow * 4).toFixed(1)}px ${css(EMIT, 0.4 * glow)}`,
+      '--halo': darkInk ? css({ L: 0.99, a: t[0] * 1.1, b: t[1] * 1.1 }, 0.55) : css(EMIT, 0.02 + 0.08 * glow),
+      '--hlx': (50 + 38 * lx).toFixed(1) + '%', '--hly': (8 + 24 * (1 - clamp(el))).toFixed(1) + '%',
+      '--grad': darkInk ? '0' : '-50', '--w-body': darkInk ? '400' : '370',
+    };
+    return { vars, darkInk, glow, contrast: ratio(ink, base) };
+  }
+
+  // Purkinje: reflective colours dim with the light, red first, blue-green last
+  function purkGain(h) { return interp(((h % 360) + 360) % 360, [[0, 0.25], [30, 0.12], [60, 0.4], [95, 0.75], [140, 1.3], [190, 1.55], [260, 1.6], [300, 1.1], [360, 0.25]]); }
+  function purk(l, c, h, L) {
+    const illum = 0.015 + 0.985 * Math.pow(L, 1.35), scot = Math.pow(1 - L, 1.4);
+    const g = 1 - scot * (1 - purkGain(h)) * Math.min(1, c / 0.08);
+    const want = lum(lch(l, c, h)) * illum * g;
+    const col = lch(l, c * (0.1 + 0.9 * L), h);
+    for (let i = 0; i < 4; i++) { const Y = lum(col); if (Y > 0) col.L = clamp(col.L * Math.cbrt(want / Y)); }
+    return col;
+  }
+
+  /* ================= the sun ================= */
+  const RISE = 6.2, SET = 18.3;
+  function sunAt(h) {
+    h = ((h % 24) + 24) % 24;
+    let e;
+    if (h >= RISE && h <= SET) e = Math.sin(Math.PI * (h - RISE) / (SET - RISE));
+    else { const nl = 24 - (SET - RISE), x = h > SET ? h - SET : h + 24 - SET; e = -0.75 * Math.sin(Math.PI * x / nl); }
+    const L = e >= 0 ? 0.34 + 0.66 * smooth(0, 0.5, e) : 0.04 + 0.30 * Math.pow(clamp((e + 0.22) / 0.22), 1.6);
+    const K = interp(e, [[-1, 8200], [-0.22, 8800], [-0.1, 10000], [-0.02, 4200], [0.03, 2600], [0.15, 4000], [0.4, 5400], [1, 6000]]);
+    const p = clamp((h - RISE) / (SET - RISE));
+    return { e, L, K, lx: e > 0 ? -Math.cos(Math.PI * p) : 0, el: Math.max(0, e) };
+  }
+  const phase = (e) => (e < -0.12 ? '夜晚' : e < -0.01 ? '蓝调时刻' : e < 0.14 ? '金色时刻' : '白天');
+  const fmtH = (h) => { const m = Math.round((((h % 24) + 24) % 24) * 60) % 1440; return String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0'); };
+  const nf = new Intl.NumberFormat('en-US');
+  const fmtK = (K) => nf.format(Math.round(K / 50) * 50) + ' K';
+  const kName = (K) => (K < 2300 ? '烛光' : K < 3300 ? '白炽灯' : K < 4600 ? '暖白' : K < 6000 ? '日光' : K < 7500 ? '阴天' : '蓝调天光');
+
+  /* ================= clock, light state, regions ================= */
+  let now = 0;
+  const light = { L: 1, K: 6000, lx: -0.2, el: 0.75 };
+  let hist = [{ t: 0, s: { ...light } }];
+  const regionMap = new Map();
+  let regions = [];
+  const hud = $('#hud');
+
+  function center(el) { const b = el.getBoundingClientRect(); return [b.left + b.width / 2, b.top + b.height / 2]; }
+  function apply(r) {
+    const T = shade(r.cur, r.mat);
+    r.T = T;
+    for (const k in T.vars) r.el.style.setProperty(k, T.vars[k]);
+    if (r.isRoot) root.style.colorScheme = T.darkInk ? 'light' : 'dark';
+  }
+  function regionOf(el, mat, isRoot) {
+    let r = regionMap.get(el);
+    if (!r) { r = { el, mat, isRoot, cur: { ...light }, delay: 0, tau: 160 }; regionMap.set(el, r); apply(r); }
+    return r;
+  }
+  function buildRegions(sceneEl) {
+    regions = [regionOf(root, 'ground', true), regionOf(hud, 'paper')];
+    sceneEl.querySelectorAll('[data-region]').forEach((el) => regions.push(regionOf(el, el.dataset.region)));
+  }
+  function setLight(p, origin) {
+    Object.assign(light, p);
+    hist.push({ t: now, s: { ...light } });
+    while (hist.length > 2 && hist[1].t < now - 2500) hist.shift();
+    if (origin !== undefined) {
+      const o = origin instanceof Element ? center(origin) : Array.isArray(origin) ? origin : null;
+      for (const r of regions) {
+        r.tau = reduced ? 140 : (r.isRoot ? 320 : 160);
+        if (!o || reduced) { r.delay = 0; continue; }
+        const c = r.isRoot ? [innerWidth / 2, innerHeight / 2] : center(r.el);
+        r.delay = Math.min(900, Math.hypot(c[0] - o[0], c[1] - o[1]) * 0.55);
+      }
+    }
+  }
+  function desired(r) {
+    const tt = now - r.delay;
+    for (let i = hist.length - 1; i >= 0; i--) if (hist[i].t <= tt) return hist[i].s;
+    return hist[0].s;
+  }
+  const KEYS = ['L', 'K', 'lx', 'el'], EPS = { L: 4e-4, K: 3, lx: 2e-3, el: 2e-3 };
+  function engineFrame(dt) {
+    for (const r of regions) {
+      const want = desired(r), k = 1 - Math.exp(-dt / r.tau);
+      let ch = false;
+      for (const key of KEYS) {
+        const d = want[key] - r.cur[key];
+        if (d === 0) continue;
+        r.cur[key] = Math.abs(d) < EPS[key] ? want[key] : r.cur[key] + d * k;
+        ch = true;
+      }
+      if (ch) apply(r);
+    }
+  }
+  let lt = null;
+  function tweenLight(to, dur, origin) { lt = { from: { ...light }, to, start: now, dur }; setLight({}, origin); }
+  function tweenFrame() {
+    if (!lt) return;
+    const k = clamp((now - lt.start) / lt.dur), e = ease(k), p = {};
+    for (const key in lt.to) p[key] = lt.from[key] + (lt.to[key] - lt.from[key]) * e;
+    setLight(p);
+    if (k >= 1) lt = null;
+  }
+  const rootCur = () => regionMap.get(root).cur;
+
+  /* ================= canvas helper ================= */
+  function fit(cv) {
+    const w = cv.clientWidth, h = cv.clientHeight, dpr = Math.min(2, window.devicePixelRatio || 1);
+    const W = Math.max(1, Math.round(w * dpr)), H = Math.max(1, Math.round(h * dpr));
+    if (cv.width !== W || cv.height !== H) { cv.width = W; cv.height = H; cv._fresh = true; }
+    const ctx = cv.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { ctx, w, h, dpr };
+  }
+
+  /* ================= pointer plumbing ================= */
+  let drag = null;
+  function startDrag(e, handlers) {
+    e.preventDefault(); lt = null;
+    try { e.target.setPointerCapture(e.pointerId); } catch (_) {}
+    drag = handlers; drag.move(e);
+  }
+  addEventListener('pointermove', (e) => { if (drag) drag.move(e); });
+  const endDrag = () => { if (drag && drag.up) drag.up(); drag = null; };
+  addEventListener('pointerup', endDrag);
+  addEventListener('pointercancel', endDrag);
+  function sliderKeys(el, get, set) {
+    el.addEventListener('keydown', (e) => {
+      const st = { ArrowUp: 0.02, ArrowRight: 0.02, ArrowDown: -0.02, ArrowLeft: -0.02, PageUp: 0.1, PageDown: -0.1 }[e.key];
+      let v = null;
+      if (st != null) v = clamp(get() + st); else if (e.key === 'Home') v = 0; else if (e.key === 'End') v = 1;
+      if (v == null) return;
+      e.preventDefault(); e.stopPropagation(); lt = null; set(v);
+    });
+  }
+
+  /* =================================================================
+     01 · 调光旋钮
+     ================================================================= */
+  const S1 = (() => {
+    const el = $('#s-dimmer'), dial = $('#dial'), g = $('#dial-svg');
+    const NS = 'http://www.w3.org/2000/svg';
+    const mk = (tag, a, txt) => { const n = document.createElementNS(NS, tag); for (const k in a) n.setAttribute(k, a[k]); if (txt != null) n.textContent = txt; g.appendChild(n); return n; };
+    const P = (a, r) => [200 + r * Math.sin(a * Math.PI / 180), 200 - r * Math.cos(a * Math.PI / 180)];
+    mk('path', { d: arcD(-135, 135, 184), class: 'arc-track' });
+    const arc = mk('path', { d: '', class: 'arc' });
+    const ticks = [];
+    for (let i = 0; i <= 40; i++) {
+      const a = -135 + i * 6.75, major = i % 10 === 0, [x1, y1] = P(a, major ? 158 : 162), [x2, y2] = P(a, 172);
+      ticks.push(mk('line', { x1, y1, x2, y2, class: 'tk' + (major ? ' major' : '') }));
+    }
+    [[-135, '0'], [0, '50'], [135, '100']].forEach(([a, s]) => { const [x, y] = P(a, 198); mk('text', { x, y: y + 4, 'text-anchor': 'middle', class: 'dl' }, s); });
+    function arcD(a0, a1, r) { const [x0, y0] = P(a0, r), [x1, y1] = P(a1, r); return `M${x0.toFixed(1)} ${y0.toFixed(1)}A${r} ${r} 0 ${a1 - a0 > 180 ? 1 : 0} 1 ${x1.toFixed(1)} ${y1.toFixed(1)}`; }
+
+    const spark = [32, 30, 28, 26, 25, 27, 40, 58, 72, 66, 60, 58, 61, 63, 60, 57, 62, 70, 78, 84, 80, 62, 45, 36];
+    const sx = (i) => i / 23 * 200, sy = (v) => 42 - v / 90 * 40;
+    const sp = spark.map((v, i) => `${i ? 'L' : 'M'}${sx(i).toFixed(1)} ${sy(v).toFixed(1)}`).join('');
+    $('#c-spark').innerHTML = `<path class="ar" d="${sp}L200 44L0 44Z"/><path class="ln" d="${sp}"/><circle class="pt" r="3.5" cx="${sx(20)}" cy="${sy(80)}"/>`;
+    $('#c-bars').innerHTML = [8, 6, 5, 5, 4, 5, 9, 16, 22, 18, 14, 12, 13, 14, 12, 11, 15, 22, 30, 36, 40, 33, 22, 12].map((v, i) => `<i style="height:${v / 40 * 100}%"${i === 20 ? ' class="now"' : ''}></i>`).join('');
+    const modes = [...$('#c-modes').children];
+
+    let startA = 0, startL = 1;
+    const angleAt = (e) => { const [cx, cy] = center(dial); return Math.atan2(e.clientX - cx, -(e.clientY - cy)) * 180 / Math.PI; };
+    dial.addEventListener('pointerdown', (e) => {
+      startA = angleAt(e); startL = light.L; let prev = startA, acc = 0;
+      startDrag(e, { move(ev) { const a = angleAt(ev); let d = a - prev; if (d > 180) d -= 360; if (d < -180) d += 360; acc += d; prev = a; setLight({ L: clamp(startL + acc / 270) }, dial); } });
+    });
+    dial.addEventListener('wheel', (e) => { e.preventDefault(); lt = null; setLight({ L: clamp(light.L - e.deltaY * 0.0012) }, dial); }, { passive: false });
+    sliderKeys(dial, () => light.L, (v) => setLight({ L: v }, dial));
+    let cardCon = null;
+
+    return {
+      id: 'dimmer', name: '调光旋钮', el,
+      desc: '旋钮只写入光强。光从旋钮出发，按距离依次照到每张卡片。',
+      enter(first) { setLight({ L: first && !REC && systemDark() ? 0.05 : 1, K: 6000, lx: -0.2, el: 0.75 }, null); cardCon = regionMap.get(el.querySelectorAll('.card')[4]); },
+      toggle(origin) { tweenLight({ L: light.L > 0.5 ? 0.05 : 1 }, 1700, origin || dial); },
+      frame() {
+        const L = light.L, a = -135 + 270 * L;
+        dial.style.setProperty('--a', a.toFixed(2) + 'deg');
+        dial.setAttribute('aria-valuenow', Math.round(L * 100));
+        arc.setAttribute('d', L > 0.004 ? arcD(-135, a, 184) : '');
+        ticks.forEach((t, i) => t.classList.toggle('on', L >= i / 40 - 1e-6));
+        $('#dial-num').textContent = Math.round(L * 100);
+        $('#c-lux').firstChild.nodeValue = nf.format(Math.round(3 + 797 * Math.pow(L, 1.6)));
+        $('#c-pow').firstChild.nodeValue = Math.round(2 + 58 * L);
+        const m = L > 0.7 ? 0 : L > 0.3 ? 1 : L > 0.08 ? 2 : 3;
+        modes.forEach((n, i) => n.classList.toggle('on', i === m));
+        $('#rm-bar').style.width = (L * 100).toFixed(1) + '%';
+        $('#rm-pct').textContent = L < 0.005 ? '关' : Math.round(L * 100) + '%';
+        $('#rm-dot').classList.toggle('on', L >= 0.005);
+        cardCon = cardCon || regionMap.get(el.querySelectorAll('.card')[4]);
+        if (cardCon && cardCon.T) {
+          const c = cardCon.T.contrast;
+          $('#c-con').firstChild.nodeValue = c.toFixed(1);
+          $('#c-grade').textContent = `${c >= 7 ? 'AAA' : c >= 4.5 ? 'AA' : '不足'} · ${cardCon.T.darkInk ? '字重 400' : '字重 370 · GRAD −50'}`;
+        }
+      },
+      readout() { return `L ${light.L.toFixed(2)} · ${fmtK(light.K)} · ≈ ${nf.format(Math.round(3 + 797 * Math.pow(light.L, 1.6)))} lux`; },
+      point(name) {
+        const [cx, cy] = center(dial), r = dial.clientWidth * 0.36;
+        const a = name * Math.PI / 180;
+        return [cx + r * Math.sin(a), cy - r * Math.cos(a)];
+      },
+      dialRadius: () => dial.clientWidth * 0.36,
+    };
+  })();
+
+  /* =================================================================
+     02 · 海平线
+     ================================================================= */
+  const S2 = (() => {
+    const el = $('#s-horizon'), pill = $('#hz-pill'), cv = $('#hz-cv');
+    let hzT = 12, tw = null;
+    const keysSky = [[-0.4, [0.13, 0.03, 265], [0.19, 0.04, 262]], [-0.18, [0.17, 0.05, 268], [0.27, 0.06, 272]], [-0.08, [0.28, 0.08, 268], [0.46, 0.10, 305]], [-0.01, [0.40, 0.09, 262], [0.70, 0.14, 42]], [0.06, [0.55, 0.10, 250], [0.82, 0.12, 68]], [0.2, [0.63, 0.11, 245], [0.87, 0.06, 220]], [1, [0.58, 0.13, 248], [0.89, 0.05, 225]]]
+      .map(([e, t, b]) => [e, lch(...t), lch(...b)]);
+    function sky(e) {
+      if (e <= keysSky[0][0]) return { top: keysSky[0][1], bot: keysSky[0][2] };
+      for (let i = 1; i < keysSky.length; i++) if (e <= keysSky[i][0]) { const k = (e - keysSky[i - 1][0]) / (keysSky[i][0] - keysSky[i - 1][0]); return { top: mix(keysSky[i - 1][1], keysSky[i][1], k), bot: mix(keysSky[i - 1][2], keysSky[i][2], k) }; }
+      const l = keysSky[keysSky.length - 1]; return { top: l[1], bot: l[2] };
+    }
+    const r1 = rng(11);
+    const stars = Array.from({ length: 170 }, () => ({ x: r1(), y: r1() * 0.92, s: 0.4 + r1() * 1.1, ph: r1() * 6.28, sp: 0.5 + r1() * 2 }));
+    const clouds = Array.from({ length: 5 }, (_, i) => ({ x: r1() * 1.2 - 0.1, y: 0.16 + r1() * 0.26, s: 0.7 + r1() * 0.7, v: 0.6 + r1() * 0.8, blobs: Array.from({ length: 6 }, () => [r1() * 1.6 - 0.8, r1() * 0.35 - 0.17, 0.35 + r1() * 0.4]) }));
+    const wins = Array.from({ length: 13 }, (_, i) => ({ x: 0.66 + i * 0.021 + r1() * 0.008, dy: r1() * 0.02, th: 0.15 + r1() * 0.6 }));
+
+    function setTime(h, origin) { hzT = h; const s = sunAt(h); setLight({ L: s.L, K: s.K, lx: s.lx, el: s.el }, origin); }
+    pill.addEventListener('pointerdown', (e) => {
+      tw = null;
+      startDrag(e, { move(ev) { const b = pill.getBoundingClientRect(); setTime(clamp((ev.clientX - b.left) / b.width) * 23.99, [ev.clientX, ev.clientY]); } });
+    });
+    pill.tabIndex = 0; pill.setAttribute('role', 'slider'); pill.setAttribute('aria-label', '一天中的时刻');
+    pill.addEventListener('keydown', (e) => {
+      const st = { ArrowRight: 0.25, ArrowUp: 0.25, ArrowLeft: -0.25, ArrowDown: -0.25, PageUp: 1, PageDown: -1 }[e.key];
+      if (st == null) return; e.preventDefault(); e.stopPropagation(); tw = null; setTime((hzT + st + 24) % 24, pill);
+    });
+
+    function draw(t) {
+      const { ctx, w, h } = fit(cv);
+      const H = ((hzT % 24) + 24) % 24, s = sunAt(H), e = s.e, hy = h * 0.6;
+      const sk = sky(e);
+      // sky
+      let g = ctx.createLinearGradient(0, 0, 0, hy);
+      g.addColorStop(0, css(sk.top)); g.addColorStop(1, css(sk.bot));
+      ctx.fillStyle = g; ctx.fillRect(0, 0, w, hy + 1);
+      const sunX = H / 24 * w, sunY = hy - e * h * 0.52;
+      const warm = 1 - smooth(0.04, 0.3, Math.abs(e));
+      const sunCol = mix(lch(0.99, 0.04, 95), lch(0.80, 0.17, 48), warm);
+      // sun glow
+      const vis = smooth(-0.16, 0.0, e);
+      if (vis > 0) {
+        g = ctx.createRadialGradient(sunX, Math.min(sunY, hy), 0, sunX, Math.min(sunY, hy), h * (0.7 + warm * 0.9));
+        g.addColorStop(0, css(sunCol, (0.35 + 0.35 * warm) * vis)); g.addColorStop(1, css(sunCol, 0));
+        ctx.fillStyle = g; ctx.fillRect(0, 0, w, hy + 1);
+      }
+      // stars
+      const night = smooth(-0.04, -0.16, e);
+      if (night > 0) {
+        for (const st of stars) {
+          const a = night * (0.45 + 0.55 * Math.sin(t * 0.0015 * st.sp + st.ph) ** 2);
+          ctx.fillStyle = `rgba(255, 255, 255, ${a.toFixed(3)})`;
+          ctx.beginPath(); ctx.arc(st.x * w, st.y * hy, st.s, 0, 6.283); ctx.fill();
+        }
+      }
+      // moon
+      const mH = (H + 12.4) % 24, me = sunAt(mH).e;
+      if (me > -0.05 && night > 0) {
+        const mx = mH / 24 * w, my = hy - me * h * 0.48, mr = h * 0.05;
+        g = ctx.createRadialGradient(mx, my, 0, mx, my, mr * 7);
+        g.addColorStop(0, `rgba(230, 235, 255, ${0.22 * night})`); g.addColorStop(1, 'rgba(230, 235, 255, 0)');
+        ctx.fillStyle = g; ctx.fillRect(0, 0, w, hy);
+        ctx.fillStyle = `rgba(246, 242, 228, ${night})`;
+        ctx.beginPath(); ctx.arc(mx, my, mr, 0, 6.283); ctx.fill();
+        ctx.fillStyle = css(mix(sk.top, sk.bot, 0.3), night * 0.92);
+        ctx.beginPath(); ctx.arc(mx + mr * 0.42, my - mr * 0.18, mr * 0.92, 0, 6.283); ctx.fill();
+      }
+      // clouds
+      const cloudLit = mix(lch(0.98, 0.01, 90), lch(0.78, 0.13, 40), warm * vis);
+      const cloudCol = mix(mix(sk.top, lch(0.98, 0, 0), 0.12), cloudLit, smooth(-0.14, 0.02, e));
+      for (const c of clouds) {
+        const cx = (((c.x + t * 0.0000045 * c.v) % 1.3) + 1.3) % 1.3 * w - 0.15 * w, cy = c.y * hy, sc = c.s * h * 0.22;
+        for (const [bx, by, br] of c.blobs) {
+          const x = cx + bx * sc, y = cy + by * sc, r = br * sc;
+          g = ctx.createRadialGradient(x, y, 0, x, y, r);
+          g.addColorStop(0, css(cloudCol, 0.42 + 0.2 * (1 - night))); g.addColorStop(1, css(cloudCol, 0));
+          ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, 6.283); ctx.fill();
+        }
+      }
+      // sun disc
+      if (e > -0.06) {
+        ctx.save(); ctx.beginPath(); ctx.rect(0, 0, w, hy); ctx.clip();
+        ctx.fillStyle = css(sunCol);
+        ctx.beginPath(); ctx.arc(sunX, sunY, h * 0.06, 0, 6.283); ctx.fill();
+        ctx.restore();
+      }
+      // land
+      const glow = 1 - smooth(0.12, 0.62, s.L);
+      const landCol = mix(mix(sk.bot, sk.top, 0.6), lch(0.12, 0.02, 260), 0.55 + 0.3 * night);
+      const farCol = mix(sk.bot, landCol, 0.55);
+      ctx.fillStyle = css(farCol);
+      ctx.beginPath(); ctx.moveTo(w * 0.6, hy);
+      for (let x = 0.6; x <= 0.97; x += 0.01) ctx.lineTo(x * w, hy - h * (0.035 + 0.05 * Math.sin((x - 0.6) / 0.37 * Math.PI) * (0.8 + 0.2 * Math.sin(x * 60))));
+      ctx.lineTo(w * 0.97, hy); ctx.fill();
+      ctx.fillStyle = css(landCol);
+      ctx.beginPath(); ctx.moveTo(0, hy);
+      ctx.lineTo(0, hy - h * 0.14); ctx.quadraticCurveTo(w * 0.07, hy - h * 0.15, w * 0.13, hy - h * 0.09);
+      ctx.quadraticCurveTo(w * 0.19, hy - h * 0.03, w * 0.24, hy); ctx.fill();
+      // lighthouse
+      const lx = w * 0.095, lb = hy - h * 0.135, lt_ = lb - h * 0.19, tw2 = h * 0.03;
+      const towerCol = mix(landCol, lch(0.95, 0.01, 90), 0.75 * (1 - night * 0.8));
+      ctx.fillStyle = css(towerCol);
+      ctx.beginPath(); ctx.moveTo(lx - tw2, lb); ctx.lineTo(lx - tw2 * 0.65, lt_); ctx.lineTo(lx + tw2 * 0.65, lt_); ctx.lineTo(lx + tw2, lb); ctx.fill();
+      ctx.fillStyle = css(mix(lch(0.5, 0.17, 28), landCol, 0.2 + 0.6 * night));
+      for (let k = 0; k < 2; k++) { const y0 = lb - (k * 2 + 1) * (lb - lt_) / 5, y1 = y0 - (lb - lt_) / 5; ctx.fillRect(lx - tw2 * 0.92 + (k + 1) * 0.05 * tw2, y1, tw2 * 1.84 - (k + 1) * 0.1 * tw2, y0 - y1); }
+      ctx.fillStyle = css(landCol); ctx.fillRect(lx - tw2 * 0.9, lt_ - h * 0.008, tw2 * 1.8, h * 0.008);
+      const lampY = lt_ - h * 0.025;
+      ctx.fillStyle = css(mix(towerCol, lch(0.9, 0.12, 85), glow));
+      ctx.fillRect(lx - tw2 * 0.5, lampY - h * 0.012, tw2, h * 0.03);
+      ctx.fillStyle = css(landCol); ctx.beginPath(); ctx.moveTo(lx - tw2 * 0.7, lampY - h * 0.012); ctx.lineTo(lx, lampY - h * 0.045); ctx.lineTo(lx + tw2 * 0.7, lampY - h * 0.012); ctx.fill();
+      // lighthouse beam
+      if (glow > 0.05) {
+        const ph = t * 0.0011, dir = Math.cos(ph), face = Math.max(0, Math.sin(ph));
+        const len = w * 0.9 * Math.abs(dir) + h * 0.2, spread = h * (0.05 + 0.05 * (1 - Math.abs(dir)));
+        ctx.save(); ctx.globalCompositeOperation = 'lighter';
+        g = ctx.createLinearGradient(lx, lampY, lx + Math.sign(dir) * len, lampY);
+        g.addColorStop(0, `rgba(255, 236, 190, ${0.42 * glow})`); g.addColorStop(1, 'rgba(255, 236, 190, 0)');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(lx, lampY - h * 0.004); ctx.lineTo(lx + Math.sign(dir) * len, lampY - spread); ctx.lineTo(lx + Math.sign(dir) * len, lampY + spread); ctx.lineTo(lx, lampY + h * 0.004); ctx.fill();
+        g = ctx.createRadialGradient(lx, lampY, 0, lx, lampY, h * (0.05 + 0.12 * face));
+        g.addColorStop(0, `rgba(255, 240, 200, ${glow * (0.6 + 0.4 * face)})`); g.addColorStop(1, 'rgba(255, 240, 200, 0)');
+        ctx.fillStyle = g; ctx.fillRect(lx - h * 0.2, lampY - h * 0.2, h * 0.4, h * 0.4);
+        ctx.restore();
+      }
+      // sea
+      g = ctx.createLinearGradient(0, hy, 0, h);
+      g.addColorStop(0, css(mix(sk.bot, sk.top, 0.35))); g.addColorStop(1, css(mix(sk.top, lch(0.1, 0.02, 260), 0.45)));
+      ctx.fillStyle = g; ctx.fillRect(0, hy, w, h - hy);
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+      for (let k = 0; k < 16; k++) { const y = hy + Math.pow(k / 16, 1.5) * (h - hy) + 2; const off = Math.sin(t * 0.0008 + k) * 30; for (let x = -40 + off; x < w; x += 70 + k * 6) ctx.fillRect(x, y, 22 + k * 3, 1); }
+      // glitter under sun / moon
+      const glit = (gx, col, amp) => {
+        for (let k = 0; k < 46; k++) {
+          const f = k / 46, y = hy + 2 + Math.pow(f, 1.5) * (h - hy - 4);
+          const wid = (6 + f * 60) * (0.5 + 0.5 * Math.sin(t * 0.004 + k * 2.3)) * amp;
+          const x = gx + Math.sin(t * 0.002 + k * 1.7) * f * 18;
+          const a = amp * (0.35 + 0.65 * Math.abs(Math.sin(t * 0.006 + k * 0.9)));
+          ctx.fillStyle = css(col, a * 0.85); ctx.fillRect(x - wid / 2, y, wid, 1.2 + f * 1.4);
+        }
+      };
+      if (e > -0.03) glit(sunX, sunCol, smooth(-0.03, 0.05, e) * (0.5 + 0.5 * warm));
+      if (me > 0 && night > 0) glit((mH / 24) * w, lch(0.95, 0.02, 260), night * 0.5);
+      // windows on the far shore (emissive)
+      for (const wd of wins) {
+        const on = smooth(wd.th, wd.th + 0.08, glow);
+        if (on <= 0) continue;
+        const x = wd.x * w, y = hy - h * (0.012 + wd.dy);
+        ctx.save(); ctx.shadowColor = 'rgba(255, 190, 90, 0.9)'; ctx.shadowBlur = 8;
+        ctx.fillStyle = `rgba(255, 205, 120, ${on})`; ctx.fillRect(x, y, 2.4, 2.4); ctx.restore();
+        ctx.fillStyle = `rgba(255, 190, 100, ${0.25 * on})`;
+        for (let k = 0; k < 6; k++) ctx.fillRect(x - 0.5 + Math.sin(t * 0.003 + k) * 1.5, hy + 3 + k * 5, 3.4, 2);
+      }
+      // glass edge
+      g = ctx.createLinearGradient(0, 0, 0, h * 0.35);
+      g.addColorStop(0, 'rgba(255, 255, 255, 0.16)'); g.addColorStop(1, 'rgba(255, 255, 255, 0)');
+      ctx.fillStyle = g; ctx.fillRect(0, 0, w, h * 0.35);
+      if (e < -0.02) {
+        ctx.strokeStyle = `rgba(255, 255, 255, ${0.35 * night})`; ctx.setLineDash([2, 4]);
+        ctx.beginPath(); ctx.moveTo(sunX, h * 0.12); ctx.lineTo(sunX, hy); ctx.stroke(); ctx.setLineDash([]);
+      }
+    }
+
+    return {
+      id: 'horizon', name: '海平线', el,
+      desc: '拖动时间。光强、色温和光的方向都由太阳高度算出来。',
+      enter() { tw = null; setTime(12, null); },
+      toggle(origin) {
+        const s = sunAt(hzT), to = s.e > 0 ? (hzT <= 21.5 ? 21.5 : hzT + 0.1) : (hzT < 7 ? 7 : 31);
+        tw = { from: hzT, to, start: now, dur: 3400 }; setLight({}, origin || pill);
+      },
+      frame(t) {
+        if (tw) { const k = clamp((now - tw.start) / tw.dur); setTime(tw.from + (tw.to - tw.from) * ease(k)); if (k >= 1) { tw = null; hzT %= 24; } }
+        draw(t);
+        const s = sunAt(hzT);
+        $('#hz-clock').textContent = fmtH(hzT);
+        $('#hz-phase').textContent = phase(s.e);
+        $('#hz-el').textContent = Math.round(s.e * 62) + '°';
+        $('#hz-k').textContent = fmtK(s.K);
+        $('#hz-lux').textContent = nf.format(Math.round(Math.pow(10, 5 * s.L)));
+        pill.setAttribute('aria-valuetext', fmtH(hzT) + '，' + phase(s.e));
+      },
+      readout() { const s = sunAt(hzT); return `${fmtH(hzT)} · 太阳高度 ${Math.round(s.e * 62)}° · ${fmtK(s.K)} · L ${s.L.toFixed(2)}`; },
+      xAt(h) { const b = pill.getBoundingClientRect(); return [b.left + h / 24 * b.width, b.top + b.height * 0.5]; },
+    };
+  })();
+
+  /* =================================================================
+     03 · 浦肯野花园
+     ================================================================= */
+  const S3 = (() => {
+    const el = $('#s-garden'), cv = $('#gd-cv'), track = $('#fader'), cap = $('#fader-cap'), panel = el.querySelector('.gd-panel');
+    const TYPES = [
+      { key: 'red', petal: [0.60, 0.21, 28], center: [0.22, 0.03, 100], n: 5, rx: 0.78, ry: 0.6, off: 0.5 },
+      { key: 'org', petal: [0.75, 0.17, 62], center: [0.5, 0.12, 50], n: 12, rx: 0.5, ry: 0.24, off: 0.48 },
+      { key: 'blu', petal: [0.58, 0.17, 262], center: [0.38, 0.12, 280], n: 11, rx: 0.56, ry: 0.17, off: 0.56 },
+      { key: 'wht', petal: [0.96, 0.01, 90], center: [0.85, 0.16, 90], n: 13, rx: 0.56, ry: 0.15, off: 0.55 },
+    ];
+    const r = rng(42);
+    const flowers = Array.from({ length: 92 }, () => {
+      const d = Math.pow(r(), 0.8);
+      return { x: r(), y: 0.5 + d * 0.47, d, type: [0, 0, 0, 1, 2, 2, 2, 3][Math.floor(r() * 8)], rot: r() * 6.28, ph: r() * 6.28, sc: 0.8 + r() * 0.4 };
+    }).sort((a, b) => a.y - b.y);
+    const blades = Array.from({ length: 340 }, () => ({ x: r(), y: 0.5 + Math.pow(r(), 0.7) * 0.5, h: 0.03 + r() * 0.05, ph: r() * 6.28, tone: r() }))
+      .sort((a, b) => a.y - b.y);
+    const flies = Array.from({ length: 30 }, () => ({ x: r(), y: 0.35 + r() * 0.5, ph: r() * 6.28, sp: 0.4 + r() * 0.8, r: 0.6 + r() * 0.8 }));
+
+    const setL = (v, origin) => setLight({ L: v }, origin);
+    const fromY = (e) => { const b = track.getBoundingClientRect(); return innerWidth <= 900 && !root.dataset.embedded ? clamp((e.clientX - b.left) / b.width) : clamp(1 - (e.clientY - b.top) / b.height); };
+    track.addEventListener('pointerdown', (e) => startDrag(e, { move(ev) { setL(fromY(ev), cap); } }));
+    sliderKeys(cap, () => light.L, (v) => setL(v, cap));
+
+    function draw(t, L) {
+      const { ctx, w, h } = fit(cv);
+      const P = {};
+      for (const k of TYPES) { P[k.key] = css(purk(...k.petal, L)); P[k.key + 'c'] = css(purk(...k.center, L)); }
+      const stem = css(purk(0.55, 0.13, 140, L)), grassA = css(purk(0.62, 0.14, 132, L)), grassB = css(purk(0.48, 0.12, 145, L));
+      const hy = h * 0.5;
+      // sky (light source, not reflective)
+      let g = ctx.createLinearGradient(0, 0, 0, hy);
+      const dayT = lch(0.82, 0.07, 235), dayB = lch(0.95, 0.03, 85), nT = lch(0.14, 0.04, 268), nB = lch(0.30, 0.08, 285);
+      const k = smooth(0.02, 0.9, L);
+      g.addColorStop(0, css(mix(nT, dayT, k))); g.addColorStop(1, css(mix(nB, dayB, k)));
+      ctx.fillStyle = g; ctx.fillRect(0, 0, w, hy + 2);
+      // hills
+      ctx.fillStyle = css(purk(0.68, 0.06, 150, L));
+      ctx.beginPath(); ctx.moveTo(0, hy);
+      for (let x = 0; x <= 1.001; x += 0.01) ctx.lineTo(x * w, hy - h * (0.07 + 0.05 * Math.sin(x * 5.2 + 1) + 0.02 * Math.sin(x * 17)));
+      ctx.lineTo(w, hy + 2); ctx.lineTo(0, hy + 2); ctx.fill();
+      // meadow
+      g = ctx.createLinearGradient(0, hy, 0, h);
+      g.addColorStop(0, css(purk(0.66, 0.12, 128, L))); g.addColorStop(1, css(purk(0.46, 0.11, 142, L)));
+      ctx.fillStyle = g; ctx.fillRect(0, hy, w, h - hy);
+      // grass
+      ctx.lineCap = 'round';
+      for (const b of blades) {
+        const x = b.x * w, y = b.y * h, hh = b.h * h * (0.5 + (b.y - 0.5)), sw = Math.sin(t * 0.0012 + b.ph) * hh * 0.25;
+        ctx.strokeStyle = b.tone > 0.5 ? grassA : grassB; ctx.lineWidth = 1 + (b.y - 0.5) * 2.4;
+        ctx.beginPath(); ctx.moveTo(x, y); ctx.quadraticCurveTo(x + sw * 0.3, y - hh * 0.6, x + sw, y - hh); ctx.stroke();
+      }
+      // flowers
+      for (const f of flowers) {
+        const T = TYPES[f.type], R = h * (0.012 + 0.03 * f.d) * f.sc;
+        const x = f.x * w, base = f.y * h, sway = Math.sin(t * 0.0011 + f.ph) * R * 0.45;
+        const fx = x + sway, fy = base - R * 2.6;
+        ctx.strokeStyle = stem; ctx.lineWidth = Math.max(1, R * 0.16);
+        ctx.beginPath(); ctx.moveTo(x, base); ctx.quadraticCurveTo(x, base - R * 1.4, fx, fy); ctx.stroke();
+        ctx.fillStyle = P[T.key];
+        for (let i = 0; i < T.n; i++) {
+          const a = f.rot + i / T.n * 6.283;
+          ctx.beginPath(); ctx.ellipse(fx + Math.cos(a) * R * T.off, fy + Math.sin(a) * R * T.off * 0.8, R * T.rx, R * T.ry, a, 0, 6.283); ctx.fill();
+        }
+        ctx.fillStyle = P[T.key + 'c'];
+        ctx.beginPath(); ctx.arc(fx, fy, R * (f.type === 0 ? 0.3 : 0.26), 0, 6.283); ctx.fill();
+      }
+      // vignette
+      const dark = 1 - L;
+      g = ctx.createRadialGradient(w / 2, h * 0.55, h * 0.2, w / 2, h * 0.55, w * 0.7);
+      g.addColorStop(0, 'rgba(5, 8, 20, 0)'); g.addColorStop(1, `rgba(5, 8, 20, ${0.45 * dark})`);
+      ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+      // fireflies: emissive, ignore the Purkinje shift
+      const fl = 1 - smooth(0.1, 0.45, L);
+      if (fl > 0) {
+        ctx.save(); ctx.globalCompositeOperation = 'lighter';
+        for (const q of flies) {
+          const x = (q.x + Math.sin(t * 0.0003 * q.sp + q.ph) * 0.05) * w, y = (q.y + Math.cos(t * 0.00041 * q.sp + q.ph * 2) * 0.05) * h;
+          const pulse = Math.max(0, Math.sin(t * 0.0021 * q.sp + q.ph)) ** 2;
+          const a = fl * (0.25 + 0.75 * pulse), rr = h * 0.03 * q.r;
+          g = ctx.createRadialGradient(x, y, 0, x, y, rr);
+          g.addColorStop(0, `rgba(225, 250, 120, ${a})`); g.addColorStop(0.15, `rgba(200, 240, 90, ${a * 0.6})`); g.addColorStop(1, 'rgba(200, 240, 90, 0)');
+          ctx.fillStyle = g; ctx.fillRect(x - rr, y - rr, rr * 2, rr * 2);
+        }
+        ctx.restore();
+      }
+    }
+    return {
+      id: 'garden', name: '浦肯野花园', el,
+      desc: '光变暗时，红色的花最先消失，蓝色的还看得见。萤火虫是发光体，不受影响。',
+      enter() { setLight({ L: 1, K: 6000, lx: -0.2, el: 0.75 }, null); },
+      toggle(origin) { tweenLight({ L: light.L > 0.5 ? 0.06 : 1 }, 2600, origin || cap); },
+      frame(t) {
+        const pr = regionMap.get(panel), L = pr ? pr.cur.L : light.L;
+        draw(t, L);
+        const v = light.L, narrow = innerWidth <= 900 && !root.dataset.embedded;
+        if (narrow) { cap.style.top = '50%'; cap.style.left = `calc(${v * 100}% - 15px)`; cap.style.right = 'auto'; cap.style.width = '30px'; cap.style.height = '58px'; $('#fader-fill').style.cssText = `top:0;bottom:0;left:0;width:${v * 100}%;background:linear-gradient(to right, transparent, var(--accent-soft))`; }
+        else { cap.style.cssText = `top:${(1 - v) * 100}%`; $('#fader-fill').style.cssText = `height:${v * 100}%`; }
+        cap.setAttribute('aria-valuenow', Math.round(v * 100));
+        $('#fader-num').textContent = Math.round(v * 100);
+        TYPES.forEach((T, i) => { const c = purk(...T.petal, L); $('#lg' + i).style.background = css(c); $('#lgv' + i).textContent = 'L ' + c.L.toFixed(2).replace(/^0/, ''); });
+      },
+      readout() { const r0 = purk(...TYPES[0].petal, light.L), b0 = purk(...TYPES[2].petal, light.L); return `L ${light.L.toFixed(2)} · 虞美人 ${r0.L.toFixed(2)} · 矢车菊 ${b0.L.toFixed(2)}`; },
+      capPoint() { return center(cap); },
+      trackPoint(v) { const b = track.getBoundingClientRect(); return [b.left + b.width / 2, b.top + (1 - v) * b.height]; },
+    };
+  })();
+
+  /* =================================================================
+     04 · 霓虹
+     ================================================================= */
+  const S4 = (() => {
+    const el = $('#s-neon'), cv = $('#nn-cv'), plate = $('#plate'), rocker = $('#rocker');
+    let tex = null, texKey = '';
+    const signs = [
+      { kind: 'moon', col: lch(0.84, 0.15, 78), core: lch(0.97, 0.05, 90), delay: 0 },
+      { kind: 'cn', text: '夜读', col: lch(0.68, 0.26, 355), core: lch(0.93, 0.08, 350), delay: 260 },
+      { kind: 'en', text: 'READING ROOM', col: lch(0.84, 0.14, 205), core: lch(0.97, 0.04, 200), delay: 720 },
+    ].map((s, i) => ({ ...s, on: false, ign: 0, off: -1e9, lv: 0, seed: i * 97 + 13 }));
+    function texture(w, h, dpr) {
+      const key = w + 'x' + h;
+      if (tex && texKey === key) return tex;
+      const c = document.createElement('canvas'); c.width = Math.round(w * dpr / 2); c.height = Math.round(h * dpr / 2);
+      const x = c.getContext('2d'), img = x.createImageData(c.width, c.height), r = rng(5);
+      for (let i = 0; i < img.data.length; i += 4) { const v = 215 + r() * 40; img.data[i] = img.data[i + 1] = img.data[i + 2] = v; img.data[i + 3] = 255; }
+      x.putImageData(img, 0, 0);
+      for (let i = 0; i < 70; i++) {
+        const px = r() * c.width, py = r() * c.height, pr = 60 + r() * 220, gr = x.createRadialGradient(px, py, 0, px, py, pr);
+        gr.addColorStop(0, `rgba(0, 0, 0, ${0.035 + r() * 0.03})`); gr.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        x.fillStyle = gr; x.fillRect(px - pr, py - pr, pr * 2, pr * 2);
+      }
+      x.fillStyle = '#000';
+      x.globalAlpha = 0.22;
+      const plank = c.height / 6.5;
+      for (let y = plank; y < c.height; y += plank) x.fillRect(0, y, c.width, 1.5);
+      x.globalAlpha = 0.35;
+      for (let y = plank / 2; y < c.height; y += plank * 2) for (let xx = c.width / 12; xx < c.width; xx += c.width / 6) { x.beginPath(); x.arc(xx, y, 3, 0, 6.283); x.fill(); }
+      tex = c; texKey = key; return c;
+    }
+    function lvOf(s, t) {
+      if (s.on) {
+        const d = t - s.ign;
+        if (d < 0) return 0;
+        if (d < 700) { const r = rng(Math.floor(t / 45) + s.seed)(); return r > 0.5 ? 0.55 + 0.45 * r : 0.04; }
+        const buzz = s.kind === 'en' && (t % 7300) < 140 ? 0.45 : 1;
+        return buzz * (0.97 + 0.03 * Math.sin(t * 0.05));
+      }
+      return Math.max(0, 1 - (t - s.off) / 260) * s.lv;
+    }
+    function shape(ctx, s, w, h, S) {
+      const cx = w / 2;
+      if (s.kind === 'cn') { ctx.font = `200 ${S}px "Noto Sans SC", "WenQuanYi Zen Hei", sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; return () => ctx.fillText(s.text, cx + S * 0.18, h * 0.40); }
+      if (s.kind === 'en') {
+        ctx.font = `250 ${S * 0.155}px "Roboto Flex", sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        if ('letterSpacing' in ctx) ctx.letterSpacing = (S * 0.06).toFixed(1) + 'px';
+        return () => ctx.fillText(s.text, cx, h * 0.40 + S * 0.78);
+      }
+      const mx = cx - S * 1.05, my = h * 0.40 - S * 0.12, r = S * 0.32;
+      return () => {
+        ctx.beginPath(); ctx.arc(mx, my, r, Math.PI * 0.35, Math.PI * 1.65, false);
+        ctx.arc(mx + r * 0.55, my - r * 0.12, r * 0.82, Math.PI * 1.5, Math.PI * 0.42, true); ctx.closePath();
+        ctx.lineWidth = Math.max(3, S * 0.028); ctx.lineJoin = 'round'; ctx.stroke();
+      };
+    }
+    function draw(t, L, K, lx) {
+      const { ctx, w, h, dpr } = fit(cv);
+      if(w<=0||h<=0)return;
+      const illum = 0.012 + 0.988 * Math.pow(L, 1.3);
+      const tt = kelvinTint(K);
+      const wall = scaleY({ L: 0.9, a: tt[0] * 0.3, b: tt[1] * 0.3 }, illum);
+      ctx.fillStyle = css(wall); ctx.fillRect(0, 0, w, h);
+      ctx.save(); ctx.globalCompositeOperation = 'multiply'; ctx.globalAlpha = 0.55; ctx.drawImage(texture(w, h, dpr), 0, 0, w, h); ctx.restore();
+      const S = Math.min(w * (w < 600 ? 0.26 : 0.19), h * 0.3);
+      for (const s of signs) s.lv = lvOf(s, t);
+      // light spill onto the wall
+      ctx.save(); ctx.globalCompositeOperation = 'lighter';
+      const spill = [[w / 2 + S * 0.18, h * 0.40, S * 2.4, signs[1]], [w / 2, h * 0.40 + S * 0.78, S * 1.8, signs[2]], [w / 2 - S * 1.05, h * 0.40 - S * 0.12, S * 1.2, signs[0]]];
+      for (const [x, y, rr, s] of spill) {
+        if (s.lv <= 0) continue;
+        const g = ctx.createRadialGradient(x, y, 0, x, y, rr);
+        g.addColorStop(0, css(s.col, 0.30 * s.lv)); g.addColorStop(1, css(s.col, 0));
+        ctx.fillStyle = g; ctx.fillRect(x - rr, y - rr, rr * 2, rr * 2);
+      }
+      ctx.restore();
+      // tubes
+      for (const s of signs) {
+        const paint = shape(ctx, s, w, h, S), isStroke = s.kind === 'moon';
+        const set = (c) => { ctx.fillStyle = c; ctx.strokeStyle = c; };
+        // unlit glass + mounting shadow
+        const off = 1 - s.lv;
+        if (off > 0.01) {
+          ctx.save(); ctx.globalAlpha = off;
+          ctx.translate(-lx * 6, 7); set(css({ L: 0.1, a: 0, b: 0 }, 0.25 * L)); paint(); ctx.restore();
+          ctx.save(); ctx.globalAlpha = off;
+          set(css(mix(scaleY(lch(0.9, 0.03, Math.atan2(s.col.b, s.col.a) * 180 / Math.PI), illum * 0.95 + 0.04), wall, 0.15))); paint();
+          ctx.translate(-1, -1.2); set(`rgba(255, 255, 255, ${(0.55 * L).toFixed(3)})`); ctx.globalAlpha = off * 0.5; paint();
+          ctx.restore();
+        }
+        if (s.lv > 0.01) {
+          ctx.save(); ctx.globalAlpha = s.lv;
+          set(css(s.col)); ctx.shadowColor = css(s.col); ctx.shadowBlur = S * 0.32; paint();
+          ctx.shadowBlur = S * 0.1; paint();
+          ctx.shadowBlur = 0; set(css(s.core)); if (isStroke) ctx.lineWidth = Math.max(1.5, S * 0.012); paint();
+          ctx.restore();
+        }
+        if ('letterSpacing' in ctx) ctx.letterSpacing = '0px';
+      }
+      // dusk wash
+      const g = ctx.createLinearGradient(0, 0, 0, h);
+      g.addColorStop(0, `rgba(10, 14, 40, ${0.25 * (1 - L)})`); g.addColorStop(1, `rgba(0, 0, 0, ${0.35 * (1 - L)})`);
+      ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+    }
+    plate.addEventListener('click', () => { S4.toggle(plate); plate.blur(); });
+    let rx = 16;
+    return {
+      id: 'neon', name: '霓虹', el,
+      desc: '开关只是让天黑下来。招牌有自己的光敏开关：环境光低于 50 lux 才点亮。',
+      enter() { setLight({ L: 1, K: 5600, lx: 0.3, el: 0.6 }, null); signs.forEach((s) => { s.on = false; s.lv = 0; s.off = -1e9; }); },
+      toggle(origin) { tweenLight(light.L > 0.5 ? { L: 0.035, K: 7800 } : { L: 1, K: 5600 }, 3200, origin || plate); },
+      frame(t) {
+        const c = rootCur(), lux = Math.pow(10, 5 * c.L), dark = lux < 50;
+        signs.forEach((s) => {
+          if (dark && !s.on) { s.on = true; s.ign = now + s.delay; }
+          if (!dark && s.on) { s.on = false; s.off = now; }
+        });
+        draw(now, c.L, c.K, c.lx);
+        $('#pc-read').textContent = `环境光 ≈ ${nf.format(Math.round(lux))} lux · 阈值 50 lux · ${dark ? '已点亮' : '待机'}`;
+        $('#pc-dot').classList.toggle('on', dark);
+        const target = light.L > 0.5 ? 16 : -16; rx += (target - rx) * 0.25;
+        rocker.style.setProperty('--rx', rx.toFixed(2) + 'deg');
+      },
+      readout() { const lux = Math.pow(10, 5 * rootCur().L); return `环境光 ≈ ${nf.format(Math.round(lux))} lux · ${fmtK(light.K)} · 招牌${lux < 50 ? '已点亮' : '待机'}`; },
+    };
+  })();
+
+  /* =================================================================
+     05 · 色温
+     ================================================================= */
+  const S5 = (() => {
+    const el = $('#s-lamp'), track = $('#ktrack'), thumb = $('#kthumb'), bulb = $('#bulb'), cone = $('#cone'), art = $('#lp-article');
+    const kMin = 1900, kMax = 10000;
+    const stops = []; for (let i = 0; i <= 16; i++) stops.push(`${kcss(kMin + (kMax - kMin) * i / 16)} ${(i / 16 * 100).toFixed(1)}%`);
+    track.style.background = `linear-gradient(90deg, ${stops.join(', ')})`;
+    $('#kmarks').innerHTML = [[2700, '白炽灯'], [4000, '暖白'], [5600, '日光'], [6500, '阴天'], [9000, '蓝调']].map(([K, n]) => `<span style="left:${((K - kMin) / (kMax - kMin) * 100).toFixed(2)}%">${n}<em>${nf.format(K)}</em></span>`).join('');
+    const kFrom = (e) => { const b = track.getBoundingClientRect(); return kMin + clamp((e.clientX - b.left) / b.width) * (kMax - kMin); };
+    track.addEventListener('pointerdown', (e) => startDrag(e, { move(ev) { setLight({ K: kFrom(ev) }, thumb); } }));
+    sliderKeys(track, () => (light.K - kMin) / (kMax - kMin), (v) => setLight({ K: kMin + v * (kMax - kMin) }, thumb));
+    return {
+      id: 'lamp', name: '色温', el,
+      desc: '色温只移动白点。纸张跟着变暖，正文仍然每帧按对比度求解。',
+      enter() { setLight({ L: 1, K: 6500, lx: -0.3, el: 0.7 }, null); },
+      toggle(origin) { tweenLight(light.L > 0.7 ? { L: 0.26, K: 2400 } : { L: 1, K: 6500 }, 2200, origin || bulb); },
+      frame() {
+        const K = light.K, c = rootCur();
+        thumb.style.left = ((K - kMin) / (kMax - kMin) * 100).toFixed(2) + '%';
+        track.setAttribute('aria-valuenow', Math.round(K));
+        $('#k-num').firstChild.nodeValue = nf.format(Math.round(K / 50) * 50);
+        $('#k-sw').style.background = kcss(K);
+        $('#k-name').textContent = kName(K);
+        const glow = 1 - smooth(0.12, 0.62, c.L), power = 0.35 + 0.65 * glow;
+        bulb.style.background = `radial-gradient(circle at 50% 40%, #fff 0%, ${kcss(c.K)} 55%, ${kcss(c.K, 0.85)} 100%)`;
+        bulb.style.boxShadow = `0 0 ${30 + 60 * power}px ${10 + 22 * power}px ${kcss(c.K, 0.35 + 0.4 * glow)}`;
+        const [bx, by] = center(bulb), sb = el.getBoundingClientRect();
+        cone.style.background = `radial-gradient(ellipse ${Math.round(innerWidth * 0.55)}px ${Math.round(innerHeight * 0.9)}px at ${Math.round(bx - sb.left)}px ${Math.round(by - sb.top)}px, ${kcss(c.K, 0.05 + 0.3 * glow)}, transparent 70%)`;
+        const ar = regionMap.get(art);
+        if (ar && ar.T) {
+          const ct = ar.T.contrast;
+          $('#lp-badge').textContent = `正文对比度 ${ct.toFixed(1)} : 1 · ${ct >= 7 ? 'AAA' : ct >= 4.5 ? 'AA' : '不足'}`;
+          $('#lp-w').textContent = ar.T.darkInk ? '字重 400 · GRAD 0' : '暗底浅字：字重 370 · GRAD −50';
+        }
+      },
+      readout() { const ar = regionMap.get(art); return `${fmtK(light.K)} · ${kName(light.K)} · L ${light.L.toFixed(2)}${ar && ar.T ? ' · 正文 ' + ar.T.contrast.toFixed(1) + ':1' : ''}`; },
+      kPoint(K) { const b = track.getBoundingClientRect(); return [b.left + (K - kMin) / (kMax - kMin) * b.width, b.top + b.height / 2]; },
+    };
+  })();
+
+  /* ================= scene switching ================= */
+  const scenes = [S1, S2, S3, S4, S5];
+  let si = -1, trans = null;
+  function systemDark() { const t = root.getAttribute('data-theme'); if (t === 'dark') return true; if (t === 'light') return false; return matchMedia('(prefers-color-scheme: dark)').matches; }
+  function show(i, first) {
+    scenes.forEach((s, k) => { s.el.classList.toggle('on', k === i); s.el.style.opacity = ''; });
+    si = i;
+    document.body.classList.toggle('on-neon', scenes[i].id === 'neon');
+    buildRegions(scenes[i].el);
+    scenes[i].enter(first);
+    for (const r of regions) { if (r.isRoot || r.el === hud) continue; r.cur = { ...light }; r.delay = 0; apply(r); }
+    $('#hud-title').innerHTML = `<b>${String(i + 1).padStart(2, '0')}</b>${scenes[i].name}`;
+    $('#cap-text').textContent = scenes[i].desc;
+    if (!REC) { try { history.replaceState(null, '', '#' + scenes[i].id); } catch (_) {} }
+  }
+  function go(i) { i = (i + scenes.length) % scenes.length; if (i === si || trans) return; lt = null; drag = null; trans = { to: i, start: now, swapped: false }; }
+  function transFrame() {
+    if (!trans) return;
+    const cur = scenes[si].el;
+    if (!trans.swapped) {
+      const k = clamp((now - trans.start) / 320); cur.style.opacity = (1 - ease(k)).toFixed(3);
+      if (k >= 1) { show(trans.to); scenes[si].el.style.opacity = '0'; trans.swapped = true; trans.start = now; }
+    } else {
+      const k = clamp((now - trans.start) / 480); cur.style.opacity = ease(k).toFixed(3);
+      if (k >= 1) { cur.style.opacity = ''; trans = null; }
+    }
+  }
+
+  /* ================= input ================= */
+  function onKey(k) {
+    if (k === ' ') scenes[si].toggle();
+    else if (k === 'ArrowRight') go(si + 1);
+    else if (k === 'ArrowLeft') go(si - 1);
+    else if (k === 'h' || k === 'H') document.body.classList.toggle('hide-ui');
+    else if (k === 'f' || k === 'F') { try { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen().catch(() => {}); } catch (_) {} }
+  }
+  addEventListener('keydown', (e) => {
+    if (REC || e.metaKey || e.ctrlKey || e.altKey) return;
+    if ([' ', 'ArrowRight', 'ArrowLeft', 'h', 'H', 'f', 'F'].includes(e.key)) { e.preventDefault(); onKey(e.key); }
+  });
+  $('#prev').addEventListener('click', (e) => { go(si - 1); e.currentTarget.blur(); });
+  $('#next').addEventListener('click', (e) => { go(si + 1); e.currentTarget.blur(); });
+  $('#hud-toggle').addEventListener('click', (e) => { scenes[si].toggle(e.currentTarget); e.currentTarget.blur(); });
+  addEventListener('hashchange', () => { const i = scenes.findIndex((s) => s.id === location.hash.slice(1)); if (i >= 0 && i !== si) go(i); });
+  const onTheme = () => { if (!REC && si === 0 && !lt) setLight({ L: systemDark() ? 0.05 : 1 }, $('#hud')); };
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', onTheme);
+  new MutationObserver(onTheme).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+
+  /* ================= recording: virtual cursor + script ================= */
+  const curEl = $('#cursor'), curSvg = $('#cur-svg'), ringEl = $('#cur-ring'), keycap = $('#keycap'), tc = $('#titlecard');
+  const cur = { x: 0, y: 0, down: false, vis: 0, ring: -1e9, key: -1e9, keyLabel: '' };
+  let title = { start: -1e9, mode: 'none' };
+  function fire(type) {
+    const target = document.elementFromPoint(cur.x, cur.y) || document.body;
+    target.dispatchEvent(new PointerEvent(type, { bubbles: true, cancelable: true, clientX: cur.x, clientY: cur.y, pointerId: 1, pointerType: 'mouse', isPrimary: true, button: type === 'pointermove' ? -1 : 0, buttons: cur.down ? 1 : 0 }));
+    if (type === 'pointerup') target.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, clientX: cur.x, clientY: cur.y }));
+  }
+  function* wait(ms) { const end = now + ms; while (now < end) yield; }
+  function* move(to, ms, fn = ease) {
+    const p = typeof to === 'function' ? to() : to, sx = cur.x, sy = cur.y, st = now;
+    for (;;) { const k = clamp((now - st) / ms), e = fn(k); cur.x = sx + (p[0] - sx) * e; cur.y = sy + (p[1] - sy) * e; fire('pointermove'); if (k >= 1) break; yield; }
+  }
+  function* path(f, ms, fn = ease) { const st = now; for (;;) { const k = clamp((now - st) / ms); [cur.x, cur.y] = f(fn(k)); fire('pointermove'); if (k >= 1) break; yield; } }
+  function* down() { cur.down = true; cur.ring = now; fire('pointerdown'); yield* wait(120); }
+  function* up() { cur.down = false; fire('pointerup'); yield* wait(60); }
+  function* key(k, label) { cur.key = now; cur.keyLabel = label; onKey(k); yield; }
+  function* fade(v, ms) { const s = cur.vis, st = now; for (;;) { const k = clamp((now - st) / ms); cur.vis = s + (v - s) * k; if (k >= 1) break; yield; } }
+
+  function* SCRIPT() {
+    title = { start: 0, mode: 'intro' };
+    cur.x = innerWidth * 0.5; cur.y = innerHeight * 0.8;
+    yield* wait(2900);
+    // 01 dimmer
+    yield* fade(1, 300);
+    const [dcx, dcy] = center($('#dial')), dr = S1.dialRadius();
+    const onDial = (a) => [dcx + dr * Math.sin(a * Math.PI / 180), dcy - dr * Math.cos(a * Math.PI / 180)];
+    yield* move(onDial(122), 950);
+    yield* down();
+    yield* path((k) => onDial(122 - 165 * k), 2000);
+    yield* wait(450);
+    yield* path((k) => onDial(-43 - 90 * k), 1500);
+    yield* up();
+    yield* wait(1700);
+    yield* key(' ', '空格');
+    yield* wait(2300);
+    yield* key('ArrowRight', '→');
+    yield* wait(1000);
+    // 02 horizon
+    yield* move(S2.xAt(12), 900);
+    yield* down();
+    yield* path((k) => S2.xAt(12 + 6.7 * k), 3800);
+    yield* wait(700);
+    yield* path((k) => S2.xAt(18.7 + 3.1 * k), 1900);
+    yield* up();
+    yield* move(() => { const p = S2.xAt(21.8); return [p[0] + 40, p[1] + innerHeight * 0.2]; }, 700);
+    yield* wait(1700);
+    yield* key(' ', '空格');
+    yield* wait(3800);
+    yield* key('ArrowRight', '→');
+    yield* wait(1000);
+    // 03 garden
+    yield* move(S3.capPoint(), 950);
+    yield* down();
+    yield* path((k) => S3.trackPoint(1 - 0.94 * k), 3800);
+    yield* up();
+    yield* move(() => { const [x, y] = S3.capPoint(); return [x - innerWidth * 0.3, y - 30]; }, 900);
+    yield* wait(2600);
+    yield* key('ArrowRight', '→');
+    yield* wait(1000);
+    // 04 neon
+    yield* move(center($('#plate')), 1000);
+    yield* down(); yield* up();
+    yield* move(() => { const [x, y] = center($('#plate')); return [x + 120, y + 30]; }, 900);
+    yield* wait(4300);
+    yield* key('ArrowRight', '→');
+    yield* wait(1000);
+    // 05 lamp
+    yield* move(S5.kPoint(6500), 950);
+    yield* down();
+    yield* path((k) => S5.kPoint(6500 - 4100 * k), 2800);
+    yield* up();
+    yield* wait(800);
+    yield* key(' ', '空格');
+    yield* wait(3600);
+    yield* fade(0, 300);
+    title = { start: now, mode: 'outro' };
+    yield* wait(2600);
+    window.__done = true;
+    for (;;) yield;
+  }
+  const script = REC ? SCRIPT() : null;
+  function overlays() {
+    if (!REC) return;
+    curEl.style.transform = `translate(${cur.x.toFixed(1)}px, ${cur.y.toFixed(1)}px)`;
+    curEl.style.opacity = cur.vis.toFixed(3);
+    curSvg.style.transform = `scale(${cur.down ? 0.86 : 1})`;
+    const ra = now - cur.ring, rk = clamp(ra / 450);
+    ringEl.style.opacity = ra >= 0 && ra < 450 ? (0.8 * (1 - rk)).toFixed(3) : '0';
+    ringEl.style.transform = `scale(${(0.4 + 0.9 * rk).toFixed(3)})`;
+    const ka = now - cur.key;
+    keycap.textContent = cur.keyLabel;
+    keycap.style.opacity = ka < 0 ? 0 : (ka < 120 ? ka / 120 : ka < 900 ? 1 : clamp(1 - (ka - 900) / 300)).toFixed(3);
+    let op = 0;
+    if (title.mode === 'intro') { $('#tc-h').innerHTML = '没有亮色主题，<br>也没有暗色主题。<br>只有光。'; $('#tc-p').textContent = '颜色 = f(材质, 光)'; const a = now - title.start; op = a < 2300 ? 1 : clamp(1 - (a - 2300) / 600); }
+    if (title.mode === 'outro') { $('#tc-h').innerHTML = '一个变量，<br>五种光。'; $('#tc-p').textContent = '颜色 = f(材质, 光) · 浏览器原生 · 无需两套主题'; const a = now - title.start; op = clamp(a / 700); }
+    tc.style.opacity = op.toFixed(3);
+    tc.style.visibility = op > 0 ? 'visible' : 'hidden';
+  }
+
+  /* ================= main loop ================= */
+  function step(dt) {
+    now += dt;
+    if (script) script.next();
+    tweenFrame();
+    transFrame();
+    engineFrame(dt);
+    scenes[si].frame(now, dt);
+    $('#cap-read').textContent = scenes[si].readout();
+    overlays();
+  }
+  const ids = scenes.map((s) => s.id);
+  const startAt = REC ? 0 : Math.max(0, ids.indexOf(location.hash.slice(1)));
+  show(startAt, true);
+  regions.forEach((r) => { r.cur = { ...light }; apply(r); });
+  window.__step = (dt) => step(dt);
+  if (!REC) {
+    let last = performance.now();
+    const loop = (t) => { if(!root.dataset.embedded||(root.dataset.galleryActive!=='false'&&scenes[si].el.clientWidth>0&&scenes[si].el.clientHeight>0))step(Math.min(50, t - last)); last = t; requestAnimationFrame(loop); };
+    requestAnimationFrame(loop);
+  } else step(0);
+  window.__ready = (async () => {
+    try {
+      const txt = document.body.innerText + document.body.textContent.slice(0, 20000) + '夜读一个变量五种光没有亮色主题也暗只材质浏览器原生无需两套';
+      await Promise.all([
+        document.fonts.load('400 16px "Noto Sans SC"', txt), document.fonts.load('600 16px "Noto Sans SC"', txt),
+        document.fonts.load('200 100px "Noto Sans SC"', '夜读'), document.fonts.load('700 40px "Noto Serif SC"', txt),
+        document.fonts.load('300 40px "Roboto Flex"', '0123456789,.:%K READING ROOM'), document.fonts.load('400 12px "Martian Mono"', '0123456789 abcdefghijklmnopqrstuvwxyzLKW.:·,%()='),
+      ]);
+      await document.fonts.ready;
+    } catch (_) {}
+    return true;
+  })();
+})();
+</script>
+</body>
+</html>

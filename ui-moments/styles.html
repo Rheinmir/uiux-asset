@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="在 UI Moments 风格库中体验同一个组件的原版、孟菲斯、包豪斯与像素风。">
+  <meta name="color-scheme" content="dark light">
+  <title>风格库 · UI Moments</title>
+  <link rel="icon" href="assets/icon.svg">
+  <link rel="stylesheet" href="assets/site.css">
+  <link rel="stylesheet" href="assets/style-tokens.css">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <a class="skip" href="#comparisons">跳到组件与风格选择</a>
+  <header class="top" id="top">
+    <div class="wrap nav-inner">
+      <a class="site-brand" href="index.html" aria-label="UI Moments 首页">
+        <span class="site-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg></span>
+        <span>UI Moments</span>
+      </a>
+      <nav class="nav-links" aria-label="站点">
+        <a href="index.html#works">组件</a><a href="styles.html" aria-current="page">风格库</a><a href="index.html#sources">来源</a>
+      </nav>
+      <div class="nav-end"><a class="nav-follow" href="https://x.com/guanmo_ai" target="_blank" rel="noopener">关注观默 ↗</a><button class="theme-btn" id="theme" type="button" aria-label="切换浅色模式"></button></div>
+    </div>
+  </header>
+
+  <main class="wrap style-library">
+    <section class="hero">
+      <h1>风格库</h1>
+      <p>选一个组件，在四种外观之间切换。每一种都可以直接操作。</p>
+    </section>
+
+    <section class="style-workbench" id="comparisons" aria-label="组件与风格选择">
+      <fieldset class="component-picker">
+        <legend>组件</legend>
+        <div id="component-options" class="component-options"></div>
+      </fieldset>
+      <div class="work-area">
+        <div class="style-picker">
+          <fieldset>
+            <legend>风格</legend>
+            <div id="style-options" class="style-options"></div>
+          </fieldset>
+          <div class="style-note">
+            <p id="style-description"></p>
+            <a id="style-source" target="_blank" rel="noopener" hidden>Design Style ↗</a>
+          </div>
+        </div>
+        <section class="preview-panel" aria-labelledby="sample-title">
+          <header class="sample-heading">
+            <div><h2 id="sample-title"></h2><p id="sample-description"></p></div>
+            <div class="sample-actions">
+              <button class="fold-motion" id="fold-motion" type="button" hidden>暂停动效</button>
+              <a class="catalog-link" id="catalog-link">查看组件 ↗</a>
+            </div>
+          </header>
+          <div class="preview-stage" id="preview-stage"></div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <script src="gallery/works.js"></script>
+  <script type="module" src="assets/styles.mjs"></script>
+</body>
+</html>
