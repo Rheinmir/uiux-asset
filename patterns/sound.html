@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chuyển động có tiếng — 11 khoảnh khắc — uiux-asset</title>
+<meta name="description" content="Dựng lại luồng app mở chuyến (Iniciar operação) kèm âm thanh UI tổng hợp bằng Web Audio: chạm, lướt màn, gõ phím, tick checklist lên cao độ, nút nạp năng lượng, khoảng lặng rồi cú chạm. Có bảng thời gian âm thanh đo từ video gốc.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=950eb28ff4">
+<style>
+:root { --so-card: #fff; --so-line: #e4e2dc; --so-ink: #17160f; --so-ink2: #67645a; --so-y: #f2c21b; }
+:root[data-theme="dark"] { --so-card: #121212; --so-line: #2b2a26; --so-ink: #f1efe8; --so-ink2: #a3a092; }
+.so-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+.so-page a { color: inherit; }
+.so-src { font: 400 13px/1.5 var(--aw-font); color: var(--so-ink2); }
+.so-ctl { display: flex; flex-wrap: wrap; gap: 8px; }
+.so-ctl button, .so-card button { min-height: 44px; padding: 0 16px; border-radius: 10px; border: 1px solid var(--so-line); background: var(--so-card); color: var(--so-ink); font: 500 14px/1 var(--aw-font); cursor: pointer; }
+.so-ctl .so-play { background: var(--so-y); border-color: var(--so-y); color: #2a2200; }
+.so-main { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 1000px) { .so-main { grid-template-columns: minmax(0, 420px) minmax(0, 1fr); align-items: start; } }
+.so-stage { position: relative; height: 620px; border-radius: 20px; overflow: hidden; background: #f4f3ef; display: grid; place-items: center; }
+.so-tl { position: relative; height: 28px; margin-top: 8px; border-radius: 6px; background: var(--so-card); border: 1px solid var(--so-line); overflow: hidden; }
+.so-tl i { position: absolute; top: 6px; bottom: 6px; width: 2px; background: var(--so-ink2); opacity: .5; }
+.so-tl b { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: color-mix(in srgb, var(--so-y) 45%, transparent); }
+.so-tbl { width: 100%; border-collapse: collapse; font: 400 13px/1.45 var(--aw-font); color: var(--so-ink); }
+.so-tbl th, .so-tbl td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--so-line); vertical-align: top; }
+.so-tbl th { font-weight: 600; color: var(--so-ink2); }
+.so-tbl td:first-child { font-family: ui-monospace, Menlo, monospace; white-space: nowrap; }
+.so-wrapt { overflow-x: auto; }
+.so-note { font: 400 14px/1.6 var(--aw-font); color: var(--so-ink2); margin: 8px 0 0; }
+.so-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); }
+.so-card { display: flex; flex-direction: column; min-width: 0; border-radius: 16px; overflow: hidden; background: var(--so-card); border: 1px solid var(--so-line); color: var(--so-ink); }
+.so-mini { position: relative; height: 200px; display: grid; place-items: center; overflow: hidden; background: #f4f3ef; color: #222; }
+.so-n { position: absolute; top: 10px; left: 12px; z-index: 2; font: 500 11px/1 ui-monospace, Menlo, monospace; color: #8b877b; }
+.so-foot { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 6px; }
+.so-foot h3 { margin: 0; font: 600 16px/1.3 var(--aw-font); }
+.so-foot h3 small { display: block; font-size: 12px; font-weight: 400; color: var(--so-ink2); }
+.so-foot p { margin: 0; font: 400 13px/1.45 var(--aw-font); color: var(--so-ink2); }
+.so-foot code { font: 12px/1.4 ui-monospace, Menlo, monospace; }
+
+/* Điện thoại bản dựng đầy đủ */
+.ph { position: relative; width: 280px; height: 560px; border-radius: 30px; background: #fff; overflow: hidden; box-shadow: 0 20px 50px rgba(60, 50, 10, .14); font: 400 11px/1.35 system-ui, sans-serif; color: #2a2a2a; }
+.ph-s { position: absolute; inset: 0; padding: 18px 16px; display: flex; flex-direction: column; gap: 10px; background: #fff; transform: translateX(100%); transition: transform .5s cubic-bezier(.7, 0, .2, 1), opacity .5s; }
+.ph-s.cur { transform: none; }
+.ph-s.past { transform: translateX(-30%); opacity: .35; }
+.ph-hd { display: flex; align-items: center; gap: 8px; font: 600 14px/1 system-ui, sans-serif; }
+.ph-hd .av { width: 26px; height: 26px; border-radius: 50%; background: var(--so-y); }
+.ph-hd .bk { color: var(--so-y); font-size: 18px; }
+.ph-lb { display: flex; justify-content: space-between; margin: 4px 0 0; font-weight: 500; }
+.ph-lb em { font-style: normal; color: var(--so-y); font-size: 10px; }
+.ph-trip { display: flex; gap: 8px; justify-content: space-between; padding: 10px; border-left: 3px solid var(--so-y); border-radius: 6px; background: #faf9f6; }
+.ph-trip b, .ph-trip small { display: block; } .ph-trip small { color: #999; font-size: 9px; }
+.ph-row { display: flex; gap: 8px; }
+.ph-btn { flex: 1; height: 38px; border-radius: 8px; display: grid; place-items: center; font-weight: 600; font-size: 11px; transition: transform .12s; }
+.ph-btn.y { background: var(--so-y); color: #fff; } .ph-btn.g { background: #f0efeb; }
+.ph-btn.dn { transform: scale(.93); }
+.ph-st { flex: 1; padding: 10px; border-radius: 8px; background: #faf9f6; } .ph-st b { display: block; font: 500 20px/1.2 system-ui, sans-serif; }
+.ph-pg { height: 3px; border-radius: 2px; background: #eee; } .ph-pg i { display: block; height: 100%; width: var(--p); background: var(--so-y); border-radius: 2px; }
+.ph-h { margin: 6px 0 0; font: 500 14px/1.3 system-ui, sans-serif; }
+.ph-in { padding: 8px 10px; border: 1px solid #e8e6e0; border-radius: 8px; } .ph-in small { display: block; color: #aaa; font-size: 9px; } .ph-in span { font: 600 13px/1.4 system-ui, sans-serif; }
+.ph-in span::after { content: ""; display: inline-block; width: 1.5px; height: 13px; margin-left: 1px; vertical-align: -2px; background: var(--so-y); }
+.ph-tr { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; } .ph-tr i { height: 74px; border-radius: 8px; background: linear-gradient(140deg, var(--a), var(--b)); }
+.ph-cta { height: 34px; border-radius: 17px; background: var(--so-y); color: #fff; font-weight: 600; display: grid; place-items: center; transition: transform .18s cubic-bezier(.5, 0, .8, .5), color .15s; }
+.ph-cta.ch { transform: scale(1.45, 1.3); color: transparent; }
+.ph-an { text-align: center; color: #555; }
+.ph-ck { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid #f0eee8; font-size: 10px; color: #555; }
+.ph-ck i, .s-ck i { flex: none; width: 13px; height: 13px; border-radius: 3px; border: 1.5px solid #cfccc4; display: grid; place-items: center; transition: background .12s, border-color .12s; }
+.ph-ck i.on, .s-ck i.on { background: var(--so-y); border-color: var(--so-y); animation: s-pop .28s cubic-bezier(.3, 1.8, .5, 1); }
+.ph-ck i.on::after, .s-ck i.on::after { content: ""; width: 6px; height: 3px; margin-top: -2px; border: solid #fff; border-width: 0 0 2px 2px; transform: rotate(-45deg); }
+@keyframes s-pop { 50% { transform: scale(1.35); } }
+.ph-zoom { display: flex; flex-direction: column; gap: 8px; transform-origin: 75% 92%; transition: transform .7s cubic-bezier(.6, 0, .2, 1); }
+.ph-s.zoom .ph-zoom { transform: scale(1.3); }
+.so-flood { position: absolute; z-index: 3; border-radius: 99px; background: var(--so-y); opacity: 0; transition: transform .45s cubic-bezier(.7, 0, .2, 1); }
+.so-flood.go { opacity: 1; transform: scale(30); }
+.so-yl { position: absolute; inset: 0; z-index: 4; background: radial-gradient(circle at 50% 35%, #f7d84f, #e3b40c); opacity: 0; pointer-events: none; }
+.so-yl.on { opacity: 1; }
+.ph2 { position: absolute; left: 50%; bottom: -70px; width: 220px; margin-left: -110px; height: 470px; border-radius: 26px; background: #fff; padding: 16px; display: flex; flex-direction: column; gap: 10px; font: 400 10px/1.3 system-ui, sans-serif; color: #333; transform: translateY(560px); transition: transform .7s cubic-bezier(.2, 1.15, .3, 1); }
+.so-yl.up .ph2 { transform: none; }
+.gauge { display: flex; align-items: center; gap: 10px; }
+.gauge svg { flex: none; } .gauge b { display: block; font: 600 16px/1 system-ui, sans-serif; }
+.g-t { fill: none; stroke: #eee; stroke-width: 10; stroke-linecap: round; }
+.g-v { fill: none; stroke: var(--so-y); stroke-width: 10; stroke-linecap: round; stroke-dasharray: 100; stroke-dashoffset: 100; }
+.ph2 .kp { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; } .ph2 .kp div { padding: 8px; border-radius: 8px; background: #faf9f6; } .ph2 .kp b { display: block; font-size: 14px; }
+
+/* Ô nhỏ */
+.s-btn { display: inline-flex; align-items: center; gap: 8px; padding: 0 18px; height: 46px; border-radius: 10px; background: var(--so-y); color: #fff; font: 600 14px/1 system-ui, sans-serif; transition: transform .12s, filter .12s; }
+.s-btn.dn { transform: scale(.92); filter: brightness(.94); }
+.s-fr { position: relative; width: 150px; height: 170px; border-radius: 18px; background: #fff; overflow: hidden; box-shadow: 0 8px 24px rgba(60, 50, 10, .12); }
+.s-fr > div { position: absolute; inset: 0; padding: 16px 12px; display: flex; flex-direction: column; gap: 8px; background: #fff; transition: transform .45s cubic-bezier(.7, 0, .2, 1), opacity .45s; }
+.s-fr b { height: 10px; width: 60%; border-radius: 3px; background: var(--so-y); } .s-fr i { height: 14px; border-radius: 4px; background: #f0eee8; }
+.s-fr .s-pb { transform: translateX(100%); box-shadow: -8px 0 16px rgba(0, 0, 0, .06); }
+.s-fr.go .s-pa { transform: translateX(-30%); opacity: .4; } .s-fr.go .s-pb { transform: none; }
+.s-in { width: 190px; padding: 10px 12px; border: 1.5px solid #e4e2dc; border-radius: 10px; background: #fff; font: 600 20px/1.2 ui-monospace, Menlo, monospace; color: #222; }
+.s-in small { display: block; font: 500 10px/1.6 system-ui, sans-serif; color: #999; }
+.s-in .s-tx::after { content: ""; display: inline-block; width: 2px; height: 20px; vertical-align: -3px; background: var(--so-y); animation: s-car 1s steps(1) infinite; }
+.s-tx span { display: inline-block; animation: s-key .14s ease-out; }
+@keyframes s-key { from { transform: translateY(-6px); opacity: 0; } } @keyframes s-car { 50% { opacity: 0; } }
+.s-cards { display: grid; grid-template-columns: repeat(2, 70px); gap: 8px; }
+.s-cards i { height: 56px; border-radius: 8px; background: linear-gradient(140deg, var(--a), var(--b)); transition: transform .5s cubic-bezier(.2, 1.3, .4, 1), opacity .3s; transition-delay: calc(var(--i) * 70ms); }
+.s-cards.out i { transform: translate(40px, 10px) scale(.9); opacity: 0; transition: none; }
+.s-ck { width: 210px; display: flex; flex-direction: column; }
+.s-ck span { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid #ebe8e1; font: 500 11px/1.2 system-ui, sans-serif; color: #555; }
+.s-cam { width: 170px; height: 170px; overflow: hidden; border-radius: 16px; background: #fff; box-shadow: 0 8px 24px rgba(60, 50, 10, .12); }
+.s-cam > div { padding: 14px 12px; display: flex; flex-direction: column; gap: 7px; transform-origin: 50% 92%; transition: transform .8s cubic-bezier(.6, 0, .2, 1); font: 500 9px/1.2 system-ui, sans-serif; color: #555; }
+.s-cam.z > div { transform: scale(1.5); } .s-cam.nt > div { transition: none; }
+.s-cam i { height: 10px; border-radius: 3px; background: #f0eee8; } .s-cam u { text-decoration: none; height: 22px; border-radius: 11px; background: var(--so-y); }
+.s-cta { width: 170px; height: 40px; border-radius: 20px; background: var(--so-y); color: #fff; font: 600 13px/40px system-ui, sans-serif; text-align: center; transition: transform .18s cubic-bezier(.5, 0, .8, .5), color .15s; }
+.s-cta.ch { transform: scale(1.45, 1.3); color: transparent; } .s-cta.nt { transition: none; }
+.s-fl .s-cta { transform: scale(1.45, 1.3); color: transparent; transition: transform .45s cubic-bezier(.7, 0, .2, 1); }
+.s-fl.go .s-cta { transform: scale(2.4, 6); } .s-fl.nt .s-cta { transition: none; }
+.s-yl { position: absolute; inset: 0; background: radial-gradient(circle at 50% 30%, #f7d84f, #e3b40c); }
+.s-ph { position: absolute; left: 50%; bottom: -40px; width: 100px; height: 170px; margin-left: -50px; border-radius: 16px; background: #fff; padding: 12px 10px; display: flex; flex-direction: column; gap: 6px; transition: transform .7s cubic-bezier(.2, 1.15, .3, 1); }
+.s-ph i { height: 9px; border-radius: 3px; background: #f0eee8; } .s-ph b { height: 30px; border-radius: 15px 15px 0 0; border: 6px solid var(--so-y); border-bottom: 0; width: 60px; }
+.s-yl.dn .s-ph { transform: translateY(200px); transition: none; }
+.s-g { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 14px; background: #fff; }
+.s-g b { display: block; font: 600 22px/1 system-ui, sans-serif; } .s-g small { color: #888; font: 500 12px/1.6 system-ui, sans-serif; }
+.s-bt { display: flex; align-items: flex-end; gap: 6px; height: 50px; }
+.s-bt i { width: 9px; height: 16px; border-radius: 3px; background: #d8d4c8; transition: background .1s, transform .1s; }
+.s-bt i:nth-child(4n+1) { height: 34px; } .s-bt i.on { background: var(--so-y); transform: scaleY(1.25); }
+@media (max-width: 420px) { .s-bt { gap: 4px; } .s-bt i { width: 7px; } }
+@media (prefers-reduced-motion: reduce) { .so-stage *, .so-mini *, .so-tl b { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=950eb28ff4"></script>
+<div class="so-page">
+  <div class="aw-sotd" style="padding-top:16px">
+    <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">11 khoảnh khắc</span></p>
+    <h1 class="aw-h1" style="--aw-h1:clamp(40px,7vw,96px)">Chuyển động có tiếng</h1>
+    <p class="aw-lead">Luồng mở chuyến của một app tài xế: chạm, lướt màn, gõ biển số, tick checklist, nút nạp đà, im lặng rồi bùng vàng. Mọi âm tổng hợp bằng Web Audio, không có tệp âm thanh. Âm chỉ phát sau khi bạn bấm.</p>
+    <p class="so-src">Dựng lại từ video “vai tomando motion + sound design” của <a href="https://x.com/vitorcheddar/status/2125258992901308805" target="_blank" rel="noopener">@vitorcheddar</a>. Thời điểm âm đo bằng ffmpeg (astats, silencedetect, phổ) trên bản gốc 8,06 s.</p>
+  </div>
+  <div class="so-main">
+    <div>
+      <div class="so-stage" id="stage"><div class="ph" id="ph"></div><div class="so-flood" id="flood"></div>
+        <div class="so-yl" id="yl"><div class="ph2"><div class="ph-hd"><span class="av"></span>Olá, Cleiton</div><p class="ph-lb">Consumo e combustível <em>Detalhes</em></p>
+          <div class="gauge"><svg viewBox="0 0 120 70" width="96" aria-hidden="true"><path class="g-t" d="M10 62a50 50 0 0 1 100 0"/><path class="g-v" id="gv" pathLength="100" d="M10 62a50 50 0 0 1 100 0"/></svg><div><small>Média</small><b id="gn">0,0</b><small>R$</small><b id="gm">0,00</b></div></div>
+          <div class="kp"><div>Km rodado<b id="k1">0</b></div><div>Km livre<b id="k2">0</b></div><div>Paradas<b id="k3">0</b></div><div>Diesel<b>R$ 5,29</b></div></div></div></div>
+      </div>
+      <div class="so-tl" id="tl" aria-hidden="true"><b id="tlb"></b></div>
+      <div class="so-ctl" style="margin-top:12px"><button type="button" class="so-play" id="play">Phát cả luồng (8 s)</button><button type="button" id="mute" aria-pressed="false">Tắt tiếng</button><button type="button" id="beat" aria-pressed="true">Nhạc nền: bật</button></div>
+    </div>
+    <div>
+      <h2 class="aw-h3" style="margin:0 0 8px">Bảng thời gian âm thanh</h2>
+      <div class="so-wrapt"><table class="so-tbl"><thead><tr><th>t (s)</th><th>Hình</th><th>Âm nghe được</th><th>Tổng hợp</th></tr></thead><tbody id="tbody"></tbody></table></div>
+      <p class="so-note">Nền là một vòng nhạc có hi-hat đều 0,22 s; cứ 4 nhịp có một tiếng “xoẹt” nhiễu dải rộng (0,62 · 1,49 · 2,43 · 3,30 · 4,20 · 5,07 s). Các cú chuyển màn được đặt đúng vào tiếng xoẹt, và 6 tiếng tick checklist rơi đúng lưới 0,22 s. Trước cú bùng vàng, nhạc tắt hẳn 0,15 s (6,21–6,35 s) để cú chạm nghe nặng hơn.</p>
+    </div>
+  </div>
+  <h2 class="aw-h2" style="margin:8px 0 0">Từng khoảnh khắc</h2>
+  <div class="so-grid" id="grid"></div>
+</div>
+</main>
+<script>
+// ---- Âm: Web Audio, chỉ tạo sau cú bấm đầu tiên ----
+let ac = null, master = null, NB = null, muted = false, beatOn = true;
+const unlock = () => {
+  if (!ac) {
+    ac = new (window.AudioContext || window.webkitAudioContext)();
+    master = ac.createGain(); master.gain.value = .7; master.connect(ac.destination);
+    NB = ac.createBuffer(1, ac.sampleRate, ac.sampleRate); const d = NB.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  }
+  if (ac.state === 'suspended') ac.resume();
+};
+const env = (g, t, a, peak, d) => { g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(.0001, t + a + d); };
+const tone = ({ type = 'sine', f0, f1, dur, peak = .2, at = 0 }) => {
+  const t = ac.currentTime + at, o = ac.createOscillator(), g = ac.createGain();
+  o.type = type; o.frequency.setValueAtTime(f0, t); if (f1) o.frequency.exponentialRampToValueAtTime(f1, t + dur);
+  env(g, t, .004, peak, dur); o.connect(g).connect(master); o.start(t); o.stop(t + dur + .05);
+};
+const noise = ({ dur, a = .004, peak = .2, type = 'bandpass', f0, f1, q = 1, at = 0 }) => {
+  const t = ac.currentTime + at, s = ac.createBufferSource(), f = ac.createBiquadFilter(), g = ac.createGain();
+  s.buffer = NB; f.type = type; f.Q.value = q; f.frequency.setValueAtTime(f0, t); if (f1) f.frequency.exponentialRampToValueAtTime(f1, t + a + dur);
+  env(g, t, a, peak, dur); s.connect(f).connect(g).connect(master); s.start(t, Math.random() * .5); s.stop(t + a + dur + .05);
+};
+const SFX = {
+  tap: () => { tone({ f0: 2600, f1: 900, dur: .07, peak: .22 }); noise({ dur: .02, peak: .06, type: 'highpass', f0: 3000 }); },
+  whoosh: () => noise({ dur: .14, a: .14, peak: .3, f0: 300, f1: 2600, q: .8 }),
+  key: () => { noise({ dur: .025, a: .001, peak: .16, type: 'highpass', f0: 2500 }); tone({ type: 'square', f0: 2200, f1: 1800, dur: .02, peak: .025 }); },
+  check: (i) => { const f = 784 * 2 ** ([0, 2, 4, 7, 9, 12][i % 6] / 12); tone({ type: 'triangle', f0: f * .94, f1: f, dur: .14, peak: .22 }); tone({ f0: f * 2, dur: .08, peak: .04 }); },
+  charge: () => { tone({ f0: 700, f1: 1450, dur: .16, peak: .16 }); tone({ f0: 1050, f1: 2175, dur: .16, peak: .06 }); },
+  impact: () => { tone({ f0: 140, f1: 40, dur: .5, peak: .5 }); noise({ dur: .6, a: .003, peak: .3, type: 'lowpass', f0: 5000, f1: 300 }); [2093, 2637, 3136, 4186].forEach((f, i) => tone({ f0: f, dur: .9, peak: .025, at: .02 * i })); },
+  rise: () => noise({ dur: .12, a: .25, peak: .18, f0: 500, f1: 1800, q: 2 }),
+  count: (i) => tone({ f0: 1600 + i * 30, dur: .03, peak: .035 }),
+  hat: () => noise({ dur: .03, a: .001, peak: .05, type: 'highpass', f0: 7000 }),
+};
+const P = (n, ...a) => { if (ac && !muted) SFX[n](...a); };
+const RMQ = matchMedia('(prefers-reduced-motion: reduce)');
+const W = (ms) => new Promise((r) => setTimeout(r, ms));
+const rep = (k, f) => Array.from({ length: k }, (_, i) => f(i)).join('');
+const TR = [['#c7d2db', '#54616e'], ['#f3b48a', '#b5532a'], ['#d65d4a', '#7d8b5a'], ['#cfd4cc', '#6c7a84']];
+const CK = ['Documentação do veículo', 'Níveis de óleo do motor', 'Inspeção dos freios', 'Pneus calibrados', 'Luzes e faróis', 'Já realizei a volta olímpica'];
+const brl = (v, d = 2) => v.toLocaleString('pt-BR', { minimumFractionDigits: d, maximumFractionDigits: d });
+// Đếm số bằng rAF: f(p) với p 0→1 (ease-out). Giảm chuyển động → nhảy thẳng tới cuối.
+const tween = (ms, f, snd) => new Promise((res) => {
+  if (RMQ.matches) { f(1); return res(); }
+  const t0 = performance.now(); let k = 0;
+  const step = (now) => { const p = Math.min(1, (now - t0) / ms), e = 1 - (1 - p) ** 3; f(e); if (snd && p * 14 > k) P('count', k++); p < 1 ? requestAnimationFrame(step) : res(); };
+  requestAnimationFrame(step);
+});
+
+// ---- Từng khoảnh khắc: t = thời điểm trong video gốc ----
+const V = [
+{ id: 'tap-start', vi: 'Chạm nút bắt đầu', en: 'Start Tap', use: 'Nút chính lún 7 % trong 120 ms, kèm tiếng “tích” rơi cao độ 2,6→0,9 kHz.', t: '0,42', snd: 'Chirp sin 2,6→0,9 kHz 70 ms + nhiễu thông cao 20 ms',
+  html: `<div class="s-btn">▶ Iniciar operação</div>`,
+  run: async (el, s) => { const b = el.querySelector('.s-btn'); b.classList.add('dn'); s && P('tap'); await W(130); b.classList.remove('dn'); } },
+{ id: 'push-screen', vi: 'Đẩy sang màn mới', en: 'Push Transition', use: 'Màn cũ lùi 30 % và mờ, màn mới trượt vào; tiếng xoẹt trùng lúc chuyển.', t: '0,62', snd: 'Nhiễu dải thông quét 0,3→2,6 kHz, phồng 140 ms rồi tắt',
+  html: `<div class="s-fr"><div class="s-pa"><b></b><i></i><i></i><i></i><i></i></div><div class="s-pb"><b></b><i></i><i></i></div></div>`,
+  run: async (el, s) => { const f = el.querySelector('.s-fr'); if (f.classList.contains('go')) { f.classList.remove('go'); await W(600); } s && P('whoosh'); f.classList.add('go'); } },
+{ id: 'type-plate', vi: 'Gõ biển số', en: 'Keystroke Ticks', use: 'Mỗi ký tự rơi xuống 6 px, mỗi phím một tiếng tách khô, 80 ms/ký tự.', t: '1,36–1,76', snd: 'Nhiễu thông cao 25 ms + square 2,2 kHz rất nhỏ, mỗi phím',
+  html: `<div class="s-in"><small>Placa</small><span class="s-tx"></span></div>`,
+  run: async (el, s) => { const x = el.querySelector('.s-tx'); x.textContent = ''; for (const c of 'ABCD34') { x.insertAdjacentHTML('beforeend', `<span>${c}</span>`); s && P('key'); await W(80); } } },
+{ id: 'card-advance', vi: 'Thẻ trượt vào', en: 'Staggered Cards', use: 'Chạm “Continuar”, 4 thẻ đào tạo vào lệch nhau 70 ms; tách + xoẹt.', t: '2,22 · 2,43', snd: 'Chirp chạm, 210 ms sau là tiếng xoẹt',
+  html: `<div class="s-cards">${rep(4, (i) => `<i style="--i:${i};--a:${TR[i][0]};--b:${TR[i][1]}"></i>`)}</div>`,
+  run: async (el, s) => { const c = el.querySelector('.s-cards'); c.classList.add('out'); s && P('tap'); await W(210); c.offsetWidth; s && P('whoosh'); c.classList.remove('out'); } },
+{ id: 'check-ascend', vi: 'Tick lên cao độ', en: 'Ascending Checks', use: '6 ô tick cách nhau 220 ms, mỗi tiếng cao hơn một bậc ngũ cung: cảm giác tiến tới.', t: '4,42 → 5,52', snd: 'Triangle G5 A5 B5 D6 E6 G6, mỗi tiếng uốn lên 6 %, 140 ms',
+  html: `<div class="s-ck">${CK.map((c) => `<span>${c}<i></i></span>`).join('')}</div>`,
+  run: async (el, s) => { const b = [...el.querySelectorAll('.s-ck i')]; b.forEach((x) => x.classList.remove('on')); await W(250); for (let i = 0; i < b.length; i++) { b[i].classList.add('on'); s && P('check', i); await W(220); } } },
+{ id: 'camera-zoom', vi: 'Máy quay sà vào nút', en: 'Camera Push-in', use: 'Phóng 1,5× về đáy màn để mắt dồn vào ô cuối và nút; không có âm riêng, nằm trên nhạc.', t: '5,30–5,90', snd: 'Không có âm riêng',
+  html: `<div class="s-cam"><div><i></i><i></i><i></i><i></i><span>☑ Já realizei a volta olímpica</span><u></u></div></div>`,
+  run: async (el) => { const c = el.querySelector('.s-cam'); c.classList.add('nt'); c.classList.remove('z'); c.offsetWidth; c.classList.remove('nt'); await W(300); c.classList.add('z'); } },
+{ id: 'cta-charge', vi: 'Nút nạp đà', en: 'CTA Charge-up', use: 'Nút phồng 1,45× ngang, chữ tan, tiếng quét lên hai bè: báo sắp có chuyện lớn.', t: '6,06–6,18', snd: 'Hai sin quét lên 0,7→1,45 kHz và 1,05→2,2 kHz, 160 ms',
+  html: `<div class="s-cta">Continuar</div>`,
+  run: async (el, s) => { const b = el.querySelector('.s-cta'); b.classList.add('nt'); b.classList.remove('ch'); b.offsetWidth; b.classList.remove('nt'); await W(300); s && P('charge'); b.classList.add('ch'); } },
+{ id: 'silence-impact', vi: 'Lặng rồi bùng', en: 'Silence → Impact', use: 'Cắt hết âm 150 ms, rồi nút tràn vàng kín màn cùng cú “bùm” trầm và lớp lấp lánh.', t: '6,21 · 6,36', snd: 'Lặng 150 ms → sin 140→40 Hz + nhiễu thông thấp 5k→300 Hz + 4 sin cao C7–C8',
+  html: `<div class="s-fl"><div class="s-cta"></div></div>`,
+  run: async (el, s) => { const f = el.querySelector('.s-fl'); f.classList.add('nt'); f.classList.remove('go'); f.offsetWidth; f.classList.remove('nt'); await W(450); s && P('impact'); f.classList.add('go'); } },
+{ id: 'phone-rise', vi: 'Máy nổi lên', en: 'Phone Rise', use: 'Trên nền vàng, màn tổng quan trồi từ đáy có nảy nhẹ; tiếng xoẹt ngược lên.', t: '6,50–6,80', snd: 'Nhiễu dải thông quét lên 0,5→1,8 kHz, phồng 250 ms',
+  html: `<div class="s-yl"><div class="s-ph"><b></b><i></i><i></i><i></i><i></i></div></div>`,
+  run: async (el, s) => { const y = el.querySelector('.s-yl'); y.classList.add('dn'); y.offsetWidth; await W(250); s && P('rise'); y.classList.remove('dn'); } },
+{ id: 'gauge-count', vi: 'Đồng hồ và số đếm', en: 'Gauge Count-up', use: 'Cung đồng hồ đầy dần, số đếm lên kiểu ease-out; tiếng tích nhỏ thưa dần.', t: '6,80–8,00', snd: '14 sin 30 ms cao dần, thưa dần theo ease-out',
+  html: `<div class="s-g"><svg viewBox="0 0 120 70" width="96" aria-hidden="true"><path class="g-t" d="M10 62a50 50 0 0 1 100 0"/><path class="g-v" pathLength="100" d="M10 62a50 50 0 0 1 100 0"/></svg><div><b>0,0</b><small>R$ <span>0,00</span></small></div></div>`,
+  run: async (el, s) => { const g = el.querySelector('.g-v'), b = el.querySelector('.s-g b'), m = el.querySelector('.s-g span'); await tween(1100, (p) => { g.style.strokeDashoffset = 100 - p * 52; b.textContent = brl(p * 2.6, 1); m.textContent = brl(p * 16639.68); }, s); } },
+{ id: 'beat-grid', vi: 'Lưới nhịp', en: 'Beat Grid', use: 'Hi-hat mỗi 0,22 s, cột cao là tiếng xoẹt mỗi 4 nhịp: chỗ đặt các cú chuyển màn.', t: '0,20 → 8,0', snd: 'Nhiễu thông cao 7 kHz 30 ms; mỗi 4 nhịp là tiếng xoẹt',
+  html: `<div class="s-bt">${rep(16, () => '<i></i>')}</div>`,
+  run: async (el, s) => { const d = [...el.querySelectorAll('.s-bt i')]; for (let i = 0; i < d.length; i++) { d[i].classList.add('on'); s && P(i % 4 === 0 ? 'whoosh' : 'hat'); setTimeout(() => d[i].classList.remove('on'), 140); await W(217); } } },
+];
+
+// ---- Lưới ô ----
+const grid = document.getElementById('grid');
+grid.innerHTML = V.map((v, i) => `<article class="so-card" id="${v.id}"><div class="so-mini"><span class="so-n">${String(i + 1).padStart(2, '0')} · t ${v.t} s</span>${v.html}</div>
+  <div class="so-foot"><h3>${v.vi}<small>${v.en}</small></h3><p>${v.use}</p><p><code>${v.snd}</code></p>
+  <div class="so-ctl"><button type="button" data-run>Nghe</button></div></div></article>`).join('');
+const busy = new Set();
+const go = async (i, s) => { if (busy.has(i)) return; busy.add(i); try { await V[i].run(grid.children[i].querySelector('.so-mini'), s); } finally { busy.delete(i); } };
+grid.addEventListener('click', (e) => { const b = e.target.closest('[data-run]'); if (!b) return; unlock(); go([...grid.children].indexOf(b.closest('.so-card')), true); });
+V.forEach((_, i) => go(i, false));
+if (!RMQ.matches) setInterval(() => [...grid.children].forEach((c, i) => { const r = c.getBoundingClientRect(); if (r.bottom > 0 && r.top < innerHeight) go(i, false); }), 3600);
+
+// ---- Bản dựng đầy đủ ----
+const ph = document.getElementById('ph'), stage = document.getElementById('stage'), flood = document.getElementById('flood'), yl = document.getElementById('yl');
+const pg = (p) => `<div class="ph-hd"><span class="bk">‹</span>Iniciar operação</div><div class="ph-pg"><i style="--p:${p}%"></i></div>`;
+const trip = `<div class="ph-trip"><div><b>Tremembé, SP</b><small>Rua Paulo Afonso, 2323</small></div><span>⇄</span><div><b>Rio de Janeiro, RJ</b><small>Rua Paulo Afonso, 2323</small></div></div>`;
+ph.innerHTML = `<div class="ph-s" data-s="a"><div class="ph-hd"><span class="av"></span>Olá, Cleiton</div><p class="ph-lb">Minha viagem <em>Ver mais</em></p>${trip}
+  <div class="ph-row"><div class="ph-btn y" id="dA">▶ Iniciar operação</div><div class="ph-btn g">Ocorrências</div></div><p class="ph-lb">Performance <em>Ver tudo</em></p>
+  <div class="ph-row"><div class="ph-st">Média<b>12,22</b></div><div class="ph-st">Economia<b>12,24</b></div></div></div>
+ <div class="ph-s" data-s="b">${pg(25)}${trip}<p class="ph-h">Informe o conjunto (placa) associado</p><div class="ph-in"><small>Placa</small><span id="plate"></span></div></div>
+ <div class="ph-s" data-s="c">${pg(50)}<p class="ph-h">Revisão de treinamentos necessários</p><div class="ph-tr">${TR.map((c) => `<i style="--a:${c[0]};--b:${c[1]}"></i>`).join('')}</div><div class="ph-cta">Continuar</div><div class="ph-an">Anterior</div></div>
+ <div class="ph-s" data-s="d"><div class="ph-zoom">${pg(75)}<p class="ph-h">Check-list diário</p>${CK.map((c) => `<div class="ph-ck">${c}<i></i></div>`).join('')}<div class="ph-cta" id="cta">Continuar</div><div class="ph-an">Anterior</div></div></div>`;
+const S = (k) => ph.querySelector(`[data-s="${k}"]`);
+const show = (k) => { const order = 'abcd', n = order.indexOf(k); [...ph.children].forEach((s, i) => { s.classList.toggle('cur', i === n); s.classList.toggle('past', i < n); }); };
+const reset = () => {
+  stage.querySelectorAll('*').forEach((e) => e.style.transition = 'none');
+  show('a'); S('d').classList.remove('zoom'); document.getElementById('plate').textContent = '';
+  ph.querySelectorAll('.ph-ck i').forEach((i) => i.classList.remove('on')); document.getElementById('cta').classList.remove('ch');
+  flood.classList.remove('go'); yl.classList.remove('on', 'up'); count(0);
+  stage.offsetWidth; stage.querySelectorAll('*').forEach((e) => e.style.transition = '');
+};
+const count = (p) => { document.getElementById('gv').style.strokeDashoffset = 100 - p * 52; document.getElementById('gn').textContent = brl(p * 2.6, 1); document.getElementById('gm').textContent = brl(p * 16639.68);
+  document.getElementById('k1').textContent = Math.round(p * 44741); document.getElementById('k2').textContent = Math.round(p * 44550); document.getElementById('k3').textContent = Math.round(p * 2600); };
+const placeFlood = () => { const a = document.getElementById('cta').getBoundingClientRect(), b = stage.getBoundingClientRect(); Object.assign(flood.style, { left: a.left - b.left + 'px', top: a.top - b.top + 'px', width: a.width + 'px', height: a.height + 'px' }); };
+const typeAt = (i) => () => { document.getElementById('plate').textContent = 'ABCD34'.slice(0, i + 1); P('key'); };
+const checkAt = (i) => () => { ph.querySelectorAll('.ph-ck i')[i].classList.add('on'); P('check', i); };
+const SEQ = [
+  [0.42, () => { const b = document.getElementById('dA'); b.classList.add('dn'); setTimeout(() => b.classList.remove('dn'), 130); P('tap'); }, 'Chạm “Iniciar operação”', 'Tách ngắn, cao độ rơi'],
+  [0.62, () => { show('b'); P('whoosh'); }, 'Đẩy sang màn nhập biển số', 'Xoẹt (trùng nhịp nhạc)'],
+  ...[0, 1, 2, 3, 4, 5].map((i) => [1.36 + i * .08, typeAt(i), i ? null : 'Gõ “ABCD34”, 6 ký tự', i ? null : 'Tách phím ×6, 80 ms/phím']),
+  [2.22, () => P('tap'), 'Xác nhận biển số', 'Tách ngắn, cao độ rơi'],
+  [2.43, () => { show('c'); P('whoosh'); }, 'Sang “Revisão de treinamentos”', 'Xoẹt'],
+  [3.30, () => { show('d'); P('whoosh'); }, 'Sang “Check-list diário”', 'Xoẹt'],
+  ...[0, 1, 2, 3, 4, 5].map((i) => [4.42 + i * .22, checkAt(i), i ? null : 'Tick 6 ô lần lượt', i ? null : '6 nốt lên dần, mỗi nốt 140 ms']),
+  [5.35, () => S('d').classList.add('zoom'), 'Máy quay sà vào nút', '— (chỉ có nhạc)'],
+  [6.06, () => { document.getElementById('cta').classList.add('ch'); P('charge'); }, 'Nút “Continuar” phồng ra', 'Quét lên hai bè 160 ms'],
+  [6.21, () => placeFlood(), 'Cắt âm', 'Lặng hoàn toàn 150 ms'],
+  [6.36, () => { flood.classList.add('go'); setTimeout(() => yl.classList.add('on'), 300); P('impact'); }, 'Nút tràn vàng kín màn', 'Bùm trầm + lấp lánh cao'],
+  [6.50, () => { yl.classList.add('on', 'up'); P('rise'); }, 'Màn tổng quan trồi lên', 'Xoẹt ngược lên'],
+  [6.80, () => tween(1200, count, true), 'Đồng hồ + số đếm lên', 'Tích nhỏ thưa dần, nhạc trở lại'],
+];
+document.getElementById('tbody').innerHTML = SEQ.filter((r) => r[2]).map((r) => `<tr><td>${r[0].toFixed(2).replace('.', ',')}</td><td>${r[2]}</td><td>${r[3]}</td><td>${(V.find((v) => v.t.startsWith(r[0].toFixed(2).replace('.', ','))) || {}).snd || ''}</td></tr>`).join('');
+document.getElementById('tl').insertAdjacentHTML('beforeend', SEQ.filter((r) => r[2]).map((r) => `<i style="left:${(r[0] / 8.06 * 100).toFixed(1)}%"></i>`).join(''));
+let timers = [];
+const run = () => {
+  unlock(); timers.forEach(clearTimeout); timers = []; reset();
+  const bar = document.getElementById('tlb'); bar.style.transition = 'none'; bar.style.width = '0'; bar.offsetWidth;
+  if (RMQ.matches) { show('d'); ph.querySelectorAll('.ph-ck i').forEach((i) => i.classList.add('on')); yl.classList.add('on', 'up'); count(1); bar.style.width = '100%'; P('impact'); return; }
+  bar.style.transition = 'width 8.06s linear'; bar.style.width = '100%';
+  SEQ.forEach(([t, f]) => timers.push(setTimeout(f, t * 1000)));
+  for (let t = .2; t < 7.95; t += .2175) if ((t < 6.2 || t > 6.36) && beatOn) timers.push(setTimeout(() => P('hat'), t * 1000));
+};
+show('a');
+document.getElementById('play').onclick = run;
+document.getElementById('mute').onclick = (e) => { muted = !muted; e.target.setAttribute('aria-pressed', muted); e.target.textContent = muted ? 'Bật tiếng' : 'Tắt tiếng'; };
+document.getElementById('beat').onclick = (e) => { beatOn = !beatOn; e.target.setAttribute('aria-pressed', beatOn); e.target.textContent = 'Nhạc nền: ' + (beatOn ? 'bật' : 'tắt'); };
+</script>
+<script src="/search.js?v=950eb28ff4" defer></script><script src="/stats.js?v=950eb28ff4" defer></script>
+</body>
+</html>

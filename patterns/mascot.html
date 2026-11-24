@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Linh vật bot — 20 trạng thái — uiux-asset</title>
+<meta name="description" content="Linh vật bot tròn dựng bằng CSS thuần: 20 trạng thái và hiệu ứng (rảnh, nghĩ, làm việc, xong, lỗi, ngủ, chào) cho avatar agent trong Hang. Học từ video storyboard của Bitmap Studio. Chép HTML/CSS thẳng, đổi màu bằng biến CSS.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=950eb28ff4">
+<style>
+:root { --mc-card: #fff; --mc-line: #e2e5ea; --mc-ink: #15171a; --mc-ink2: #5f6670; --mc-stage: #f3f5f8; --mc-code: #f5f6f8; }
+:root[data-theme="dark"] { --mc-card: #111317; --mc-line: #2a2e35; --mc-ink: #eef0f3; --mc-ink2: #9aa1ab; --mc-stage: #1a1d23; --mc-code: #181b20; }
+.mc-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+.mc-page a { color: inherit; }
+.mc-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; color: var(--mc-ink2); font: 500 14px/1.4 var(--aw-font); }
+.mc-sw { width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--mc-line); background: var(--c); cursor: pointer; }
+.mc-sw[aria-pressed="true"] { border-color: var(--mc-ink); }
+.mc-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); }
+.mc-card { display: flex; flex-direction: column; min-width: 0; border-radius: 16px; overflow: hidden; background: var(--mc-card); border: 1px solid var(--mc-line); color: var(--mc-ink); }
+.mc-stage { position: relative; height: 190px; display: grid; place-items: center; overflow: hidden; background: var(--mc-stage); color: #15171a; --bot-ink: #15171a; }
+:root[data-theme="dark"] .mc-stage { --bot-body: #e9ecf1; --bot-eye: #1a1d23; --bot-ink: #e9ecf1; color: #e9ecf1; }
+.mc-n { position: absolute; top: 10px; left: 12px; font: 500 11px/1 ui-monospace, Menlo, monospace; color: #8a919b; }
+.mc-foot { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 6px; }
+.mc-foot h3 { margin: 0; font: 600 16px/1.3 var(--aw-font); }
+.mc-foot h3 small { display: block; font-size: 12px; font-weight: 400; color: var(--mc-ink2); }
+.mc-use { margin: 0; font: 400 13px/1.45 var(--aw-font); color: var(--mc-ink2); }
+.mc-act { display: flex; gap: 8px; }
+.mc-act button { flex: 1; min-height: 44px; border-radius: 10px; border: 1px solid var(--mc-line); background: transparent; color: var(--mc-ink); font: 500 13px/1 var(--aw-font); cursor: pointer; }
+.mc-act button:hover { background: var(--mc-code); }
+.mc-foot details summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; font: 500 13px/1 var(--aw-font); color: var(--mc-ink2); }
+.mc-foot pre { margin: 0; max-height: 240px; overflow: auto; padding: 10px; border-radius: 10px; background: var(--mc-code); color: var(--mc-ink); font: 11px/1.5 ui-monospace, Menlo, monospace; white-space: pre; }
+.mc-src { font: 400 13px/1.5 var(--aw-font); color: var(--mc-ink2); }
+@media (prefers-reduced-motion: reduce) { .mc-stage *, .mc-stage *::before, .mc-stage *::after { animation: none !important; } }
+</style>
+<style id="mc-css"></style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=950eb28ff4"></script>
+<div class="mc-page">
+  <div class="aw-sotd" style="padding-top:16px">
+    <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">20 trạng thái</span></p>
+    <h1 class="aw-h1" style="--aw-h1:clamp(40px,7vw,96px)">Linh vật bot</h1>
+    <p class="aw-lead">Một bot tròn nhỏ, dựng bằng CSS thuần, cho avatar agent trong Hang: rảnh, nghĩ, làm việc, xong, lỗi, ngủ, chào. Mỗi ô tự lặp, bấm “Chạy lại” để xem từ đầu, “Chép” để lấy HTML/CSS độc lập.</p>
+    <p class="mc-src">Học chuyển động từ video storyboard của <a href="https://x.com/bitmapstudio/status/2124906133660094712" target="_blank" rel="noopener">@bitmapstudio</a> (Grok Bot &amp; Allo launch). Nhân vật ở đây là thiết kế riêng, không dùng hình hay thương hiệu gốc.</p>
+  </div>
+  <div class="mc-bar" role="group" aria-label="Màu nhấn">Màu nhấn (--bot-accent):
+    <button type="button" class="mc-sw" style="--c:#ff7a45" data-c="" aria-pressed="true" aria-label="Cam (mặc định)"></button>
+    <button type="button" class="mc-sw" style="--c:#2bb673" data-c="#2bb673" aria-pressed="false" aria-label="Xanh lá"></button>
+    <button type="button" class="mc-sw" style="--c:#4c7dff" data-c="#4c7dff" aria-pressed="false" aria-label="Xanh dương"></button>
+    <button type="button" class="mc-sw" style="--c:#d14dff" data-c="#d14dff" aria-pressed="false" aria-label="Tím"></button>
+  </div>
+  <div class="mc-grid" id="mc-grid"></div>
+</div>
+</main>
+<script>
+// Thân bot dùng chung. Mọi kích thước tính theo em = --bot-size.
+const BASE = `.bot{position:relative;display:inline-block;vertical-align:middle;font-size:var(--bot-size,64px);width:1em;height:1em;flex:none}.bot-b{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 32% 26%,rgba(255,255,255,.2),transparent 42%) var(--bot-body,#232a3b);transform-origin:50% 100%}.bot-ant{position:absolute;left:.475em;top:-.15em;width:.05em;height:.2em;border-radius:.03em;background:var(--bot-body,#232a3b)}.bot-ant::after{content:"";position:absolute;left:-.05em;top:-.1em;width:.15em;height:.15em;border-radius:50%;background:var(--bot-accent,#ff7a45)}.bot-f{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:.14em}.bot-e{width:.1em;height:.22em;border-radius:.1em;background:var(--bot-eye,#fff)}`;
+const RM = `@media (prefers-reduced-motion:reduce){[class*="bot"],[class*="bot"]::before,[class*="bot"]::after{animation:none!important}}`;
+const BOT = (cls = '', inner = '', outer = '') => `<div class="bot ${cls}"><div class="bot-b"><i class="bot-ant"></i>${inner}<div class="bot-f"><i class="bot-e"></i><i class="bot-e"></i></div></div>${outer}</div>`;
+const HAPPY = (s) => `${s} .bot-e{width:.15em;height:.1em;background:none;border:.045em solid var(--bot-eye,#fff);border-bottom:0;border-radius:.15em .15em 0 0;margin-top:-.04em}`;
+const BUB = `.bot-say{display:inline-flex;align-items:center;gap:.14em;font-size:var(--bot-size,64px)}.bot-say .bot-f{transform:translateX(.07em)}.bot-bub{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:.06em;height:.36em;padding:0 .14em;border-radius:.18em .18em .18em .05em;background:var(--bot-accent,#ff7a45);transform-origin:0 100%}.bot-bub i{width:.07em;height:.07em;border-radius:50%;background:#fff;animation:bot-dot 1.2s infinite}.bot-bub i:nth-child(2){animation-delay:.15s}.bot-bub i:nth-child(3){animation-delay:.3s}@keyframes bot-dot{0%,60%,100%{transform:none;opacity:.5}30%{transform:translateY(-.06em);opacity:1}}`;
+const DOTS = '<i></i><i></i><i></i>';
+
+// Mỗi trạng thái: css riêng + html. Ô tự lặp; "Chạy lại" dựng lại nút để chạy từ 0.
+const V = [
+{ id: 'pop-in', vi: 'Hiện ra', en: 'Pop In', use: 'Agent vừa vào phòng: chấm nhỏ nở ra, mắt mở sau.',
+  css: `.bot.pop{animation:bot-pop 2.6s cubic-bezier(.34,1.56,.64,1) infinite}.bot.pop .bot-e{animation:bot-pop-e 2.6s infinite}@keyframes bot-pop{0%{transform:scale(0);opacity:0}6%{opacity:1}28%,88%{transform:scale(1);opacity:1;animation-timing-function:ease-in}100%{transform:scale(0);opacity:0}}@keyframes bot-pop-e{0%,18%{transform:scaleY(0)}30%,100%{transform:none}}`,
+  html: BOT('pop') },
+{ id: 'idle-bob', vi: 'Rảnh, thở nhẹ', en: 'Idle Bob', use: 'Avatar agent đang rảnh: nhấp nhô, thở, chớp mắt.',
+  css: `.bot.idle{animation:bot-bob 2.8s ease-in-out infinite}.bot.idle .bot-b{animation:bot-breathe 2.8s ease-in-out infinite}.bot.idle .bot-e{animation:bot-blink 4.2s infinite}@keyframes bot-bob{50%{transform:translateY(-.08em)}}@keyframes bot-breathe{50%{transform:scale(.97,1.03)}}@keyframes bot-blink{0%,46%,54%,100%{transform:none}50%{transform:scaleY(.1)}}`,
+  html: BOT('idle') },
+{ id: 'blink', vi: 'Chớp mắt đôi', en: 'Double Blink', use: 'Nhịp sống cho avatar tĩnh trong danh sách agent.',
+  css: `.bot.blink .bot-e{animation:bot-blink2 3s infinite}@keyframes bot-blink2{0%,30%,36%,42%,48%,100%{transform:none}33%,45%{transform:scaleY(.1)}}`,
+  html: BOT('blink') },
+{ id: 'look-around', vi: 'Nhìn quanh', en: 'Look Around', use: 'Đang đọc ngữ cảnh, chờ người trả lời.',
+  css: `.bot.look .bot-f{animation:bot-look 4s ease-in-out infinite}.bot.look .bot-e{animation:bot-look-e 4s ease-in-out infinite}@keyframes bot-look{0%,12%,100%{transform:none}20%,38%{transform:translate(-.16em,.02em)}46%,64%{transform:translate(.16em,-.03em)}72%,90%{transform:translateY(-.12em)}}@keyframes bot-look-e{0%,14%,40%,66%,92%,100%{transform:none}17%,43%,69%{transform:scale(1.25,.8)}}`,
+  html: BOT('look') },
+{ id: 'fly-land', vi: 'Bay vào, đáp xuống', en: 'Fly In & Land', use: 'Agent mới được gọi: lao vào có vệt kéo dài rồi nén khi chạm đất.',
+  css: `.bot.fly{animation:bot-fly 2.6s infinite}.bot.fly .bot-b{transform-origin:50% 80%;animation:bot-smear 2.6s infinite}@keyframes bot-fly{0%{transform:translate(-1.8em,-1.1em);opacity:0;animation-timing-function:cubic-bezier(.5,0,.9,.6)}4%{opacity:1}24%,100%{transform:none;opacity:1}}@keyframes bot-smear{0%,20%{transform:rotate(31deg) scale(1.5,.62)}24%{transform:scale(1.3,.7)}32%{transform:scale(.88,1.12)}40%{transform:scale(1.04,.96)}48%,100%{transform:none}}`,
+  html: BOT('fly') },
+{ id: 'happy-hop', vi: 'Nhảy mừng', en: 'Happy Hop', use: 'Việc xong: nén, bật lên, mắt cười, lấp lánh.',
+  css: `.bot.hop{animation:bot-hop 1.8s infinite}.bot.hop .bot-b{animation:bot-hop-b 1.8s infinite}${HAPPY('.bot.hop')}.bot.hop::before,.bot.hop::after{content:"";position:absolute;width:.16em;height:.16em;background:var(--bot-accent,#ff7a45);clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);animation:bot-spark 1.8s infinite}.bot.hop::before{left:-.26em;top:-.02em}.bot.hop::after{right:-.24em;top:-.22em;animation-delay:.08s}@keyframes bot-hop{0%,12%{transform:none;animation-timing-function:cubic-bezier(.2,.7,.4,1)}34%{transform:translateY(-.42em);animation-timing-function:cubic-bezier(.6,0,.8,.3)}54%,100%{transform:none}}@keyframes bot-hop-b{0%{transform:none}10%{transform:scale(1.15,.85)}18%{transform:scale(.9,1.12)}34%{transform:none}54%{transform:scale(1.18,.82)}64%{transform:scale(.96,1.04)}72%,100%{transform:none}}@keyframes bot-spark{0%,25%{transform:scale(0)}38%{transform:scale(1.2) rotate(45deg)}60%,100%{transform:scale(0) rotate(90deg)}}`,
+  html: BOT('hop') },
+{ id: 'gear-up', vi: 'Đeo tai nghe', en: 'Gear Up', use: 'Agent nhận việc: phụ kiện bay vào đội lên đầu.',
+  css: `.bot-hp{position:absolute;left:-.1em;right:-.1em;top:-.12em;height:.7em;border:.08em solid var(--bot-accent,#ff7a45);border-bottom:0;border-radius:.6em .6em 0 0}.bot-hp::before,.bot-hp::after{content:"";position:absolute;bottom:-.16em;width:.17em;height:.3em;border-radius:.08em;background:var(--bot-accent,#ff7a45)}.bot-hp::before{left:-.13em}.bot-hp::after{right:-.13em}.bot.gear .bot-hp{animation:bot-hp 2.8s infinite}.bot.gear .bot-b{animation:bot-gear-b 2.8s infinite}.bot.gear .bot-f{animation:bot-gear-f 2.8s infinite}@keyframes bot-hp{0%{transform:translate(.9em,-1.3em) rotate(-80deg) scale(.5);opacity:0;animation-timing-function:cubic-bezier(.3,.6,.5,1)}8%{opacity:1}32%{transform:translateY(-.06em) rotate(6deg)}40%{transform:translateY(.02em)}48%,100%{transform:none}}@keyframes bot-gear-b{0%,30%{transform:none}36%{transform:scale(1.08,.9)}46%{transform:scale(.97,1.03)}54%,100%{transform:none}}@keyframes bot-gear-f{0%,28%{transform:translate(.06em,-.1em)}36%,100%{transform:none}}`,
+  html: BOT('gear', '<i class="bot-hp"></i>') },
+{ id: 'wink', vi: 'Nháy mắt', en: 'Wink', use: 'Xác nhận vui: "ok, để mình lo".',
+  css: `.bot.wink .bot-e:last-child{animation:bot-wink 2.4s infinite}.bot.wink .bot-b{animation:bot-wink-b 2.4s ease-in-out infinite}@keyframes bot-wink{0%,30%,78%,100%{transform:none}38%,70%{transform:scale(1.3,.14)}}@keyframes bot-wink-b{0%,28%,80%,100%{transform:none}38%,70%{transform:rotate(-8deg)}}`,
+  html: BOT('wink') },
+{ id: 'head-tilt', vi: 'Nghiêng đầu', en: 'Head Tilt', use: 'Agent chưa hiểu, cần người làm rõ yêu cầu.',
+  css: `.bot.tilt .bot-b{animation:bot-tilt 3.2s ease-in-out infinite}.bot.tilt::after{content:"?";position:absolute;right:-.12em;top:-.3em;font:800 .3em/1 system-ui,sans-serif;color:var(--bot-accent,#ff7a45);animation:bot-q 3.2s infinite}@keyframes bot-tilt{0%,10%,100%{transform:none}25%,45%{transform:rotate(-16deg)}60%,85%{transform:rotate(12deg)}}@keyframes bot-q{0%,15%{transform:scale(0)}25%,85%{transform:none}95%,100%{transform:scale(0)}}`,
+  html: BOT('tilt') },
+{ id: 'typing', vi: 'Đang gõ', en: 'Typing Dots', use: 'Agent đang soạn trả lời trong luồng chat.',
+  css: `${BUB}.bot-say .bot-b{animation:bot-type 1.2s ease-in-out infinite}@keyframes bot-type{50%{transform:scale(1.02,.98) translateY(.01em)}}`,
+  html: `<div class="bot-say">${BOT()}<span class="bot-bub">${DOTS}</span></div>` },
+{ id: 'msg-pop', vi: 'Tin nhắn bật ra', en: 'Message Pop', use: 'Tin mới tới: bong bóng nảy ra, chấm đổi thành chữ.',
+  css: `${BUB}.bot-msg{width:1.3em;overflow:hidden;animation:bot-msg 3s cubic-bezier(.34,1.56,.64,1) infinite}.bot-dots{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:.06em;opacity:0;animation:bot-dots 3s infinite}.bot-txt{font:600 .17em/1 system-ui,sans-serif;color:#fff;white-space:nowrap;animation:bot-txt 3s infinite}@keyframes bot-msg{0%{transform:scale(0);width:.56em}12%,45%{transform:none;width:.56em}58%,100%{transform:none;width:1.3em}}@keyframes bot-dots{0%,45%{opacity:1}52%,100%{opacity:0}}@keyframes bot-txt{0%,52%{opacity:0;transform:translateY(.6em)}64%,100%{opacity:1;transform:none}}`,
+  html: `<div class="bot-say">${BOT()}<span class="bot-bub bot-msg"><span class="bot-dots">${DOTS}</span><span class="bot-txt">Xin chào!</span></span></div>` },
+{ id: 'inline-words', vi: 'Chữ hiện quanh bot', en: 'Inline Word Reveal', use: 'Tiêu đề trạng thái trống, màn chào: bot đứng giữa câu.',
+  css: `.bot-line{--bot-size:1.5em;margin:0;font:600 20px/1.6 system-ui,sans-serif;color:var(--bot-ink,#15171a)}.bot-line>span{display:inline-block;animation:bot-word 3.4s cubic-bezier(.3,1.4,.5,1) infinite;animation-delay:calc(var(--i)*.1s);animation-fill-mode:backwards}@keyframes bot-word{0%{opacity:0;transform:translateY(.5em) scale(.9)}14%,86%{opacity:1;transform:none}100%{opacity:0}}`,
+  html: `<div class="bot-line"><span style="--i:0">Gọi</span> <span style="--i:1">một</span> <span style="--i:2">${BOT()}</span> <span style="--i:3">vào</span> <span style="--i:4">phòng</span></div>` },
+{ id: 'working', vi: 'Đang làm việc', en: 'Working', use: 'Agent đang chạy tool: mắt quét, đèn nháy, vòng quay.',
+  css: `.bot.work .bot-f{animation:bot-scan 1.6s ease-in-out infinite}.bot.work .bot-e{height:.15em}.bot.work .bot-ant::after{animation:bot-led .8s infinite}.bot.work .bot-b{animation:bot-busy .4s ease-in-out infinite}.bot.work::after{content:"";position:absolute;inset:-.14em;border-radius:50%;border:.035em solid transparent;border-top-color:var(--bot-accent,#ff7a45);animation:bot-spin 1s linear infinite}@keyframes bot-scan{0%,100%{transform:translate(-.08em,.06em)}50%{transform:translate(.08em,.06em)}}@keyframes bot-led{50%{box-shadow:0 0 .12em .04em var(--bot-accent,#ff7a45);filter:brightness(1.4)}}@keyframes bot-busy{50%{transform:translateY(-.02em)}}@keyframes bot-spin{to{transform:rotate(360deg)}}`,
+  html: BOT('work') },
+{ id: 'sleeping', vi: 'Đang ngủ', en: 'Sleeping', use: 'Agent offline hoặc nghỉ: mắt nhắm, thở chậm, chữ z bay.',
+  css: `.bot.sleep .bot-e{width:.13em;height:.04em;margin-top:.04em}.bot.sleep .bot-ant::after{opacity:.4}.bot.sleep .bot-b{animation:bot-zzz 3.6s ease-in-out infinite}.bot-z{position:absolute;right:-.12em;top:-.08em;font:700 .22em/1 system-ui,sans-serif;font-style:normal;color:var(--bot-ink,#7c8596);transform:translate(calc(var(--k)*.4em),calc(var(--k)*-.6em));animation:bot-z 3.6s linear infinite;animation-delay:calc(var(--k)*1.2s);animation-fill-mode:backwards}@keyframes bot-zzz{50%{transform:scale(1.03,.97)}}@keyframes bot-z{0%{opacity:0;transform:scale(.6)}20%{opacity:1}100%{opacity:0;transform:translate(.9em,-1.6em) scale(1.2)}}`,
+  html: BOT('sleep', '', '<i class="bot-z" style="--k:0">z</i><i class="bot-z" style="--k:1">z</i><i class="bot-z" style="--k:2">z</i>') },
+{ id: 'error', vi: 'Gặp lỗi', en: 'Error Shake', use: 'Tool lỗi hoặc mất kết nối: lắc đầu, mắt X, đèn đỏ.',
+  css: `.bot.err{--bot-accent:#ff4d4f}.bot.err .bot-f{gap:.08em}.bot.err .bot-e{position:relative;width:.18em;height:.05em;transform:rotate(45deg)}.bot.err .bot-e::after{content:"";position:absolute;inset:0;border-radius:inherit;background:inherit;transform:rotate(90deg)}.bot.err .bot-b{animation:bot-shake 2.2s infinite}.bot.err .bot-ant::after{animation:bot-led .5s infinite}@keyframes bot-shake{0%,40%,100%{transform:none}44%,52%,60%{transform:translateX(-.06em) rotate(-4deg)}48%,56%,64%{transform:translateX(.06em) rotate(4deg)}68%{transform:none}}@keyframes bot-led{50%{box-shadow:0 0 .12em .04em var(--bot-accent);filter:brightness(1.4)}}`,
+  html: BOT('err') },
+{ id: 'wave', vi: 'Vẫy chào', en: 'Wave Hello', use: 'Mở chat mới với agent: vẫy tay, mắt cười.',
+  css: `.bot-hand{position:absolute;right:-.16em;top:.5em;width:.22em;height:.22em;border-radius:50%;background:var(--bot-body,#232a3b);transform-origin:-.3em .3em}.bot.wave .bot-hand{animation:bot-wave 2s ease-in-out infinite}.bot.wave .bot-b{animation:bot-lean 2s ease-in-out infinite}${HAPPY('.bot.wave')}@keyframes bot-wave{0%,60%,100%{transform:none}10%,30%{transform:rotate(-45deg)}20%,40%{transform:rotate(-10deg)}}@keyframes bot-lean{0%,60%,100%{transform:none}20%,40%{transform:rotate(-6deg)}}`,
+  html: BOT('wave', '', '<i class="bot-hand"></i>') },
+{ id: 'bye-drop', vi: 'Rơi xuống, rời đi', en: 'Drop Out', use: 'Agent rời phòng hoặc phiên kết thúc.',
+  css: `.bot.bye{animation:bot-bye 3s infinite}.bot.bye .bot-f{animation:bot-bye-f 3s infinite}@keyframes bot-bye{0%,35%{transform:none;opacity:1}45%{transform:translateY(-.18em) scale(1.06,.94);animation-timing-function:cubic-bezier(.6,0,.9,.4)}62%{transform:translateY(1.8em) scale(.85,1.2);opacity:1}64%{opacity:0}82%{transform:scale(0);opacity:0;animation-timing-function:cubic-bezier(.34,1.56,.64,1)}92%,100%{transform:none;opacity:1}}@keyframes bot-bye-f{0%,20%,90%,100%{transform:none}28%,62%{transform:translateY(.09em)}}`,
+  html: BOT('bye') },
+{ id: 'sketch-render', vi: 'Từ phác thảo ra hình', en: 'Sketch to Render', use: 'Khung xương đang tải đổ màu thành nội dung thật.',
+  css: `.bot.sketch .bot-b{background:transparent;outline:.03em dashed var(--bot-body,#232a3b);outline-offset:-.03em;animation:bot-sk-o 3.4s infinite}.bot.sketch .bot-b::before{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 32% 26%,rgba(255,255,255,.2),transparent 42%) var(--bot-body,#232a3b);animation:bot-sk 3.4s cubic-bezier(.6,0,.2,1) infinite}.bot.sketch .bot-e{animation:bot-sk-e 3.4s infinite}@keyframes bot-sk{0%,25%{clip-path:circle(0% at 30% 75%);opacity:1}60%,90%{clip-path:circle(150% at 30% 75%);opacity:1}100%{clip-path:circle(150% at 30% 75%);opacity:0}}@keyframes bot-sk-o{0%,40%{outline-color:var(--bot-body,#232a3b)}60%,100%{outline-color:transparent}}@keyframes bot-sk-e{0%,38%{background:transparent;box-shadow:inset 0 0 0 .018em var(--bot-body,#232a3b)}52%,100%{background:var(--bot-eye,#fff);box-shadow:none}}`,
+  html: BOT('sketch') },
+{ id: 'wordmark', vi: 'Chữ ký hiện dần', en: 'Wordmark Reveal', use: 'Màn mở app, tên phòng mới: bot nảy, từng chữ mờ ra.',
+  css: `.bot-mark{display:inline-flex;align-items:center;font-size:var(--bot-size,64px)}.bot-mark .bot{font-size:.62em;margin-right:.14em;animation:bot-mk 3.2s cubic-bezier(.34,1.56,.64,1) infinite}.bot-mark b{font:800 .62em/1 system-ui,sans-serif;letter-spacing:-.02em;color:var(--bot-ink,#15171a);animation:bot-let 3.2s infinite;animation-delay:calc(.25s + var(--i)*.09s);animation-fill-mode:backwards}@keyframes bot-mk{0%{transform:scale(0)}18%,88%{transform:none}100%{transform:scale(0)}}@keyframes bot-let{0%{opacity:0;filter:blur(.08em);transform:translateX(-.3em)}18%,82%{opacity:1;filter:none;transform:none}96%,100%{opacity:0}}`,
+  html: `<div class="bot-mark">${BOT()}<b style="--i:0">h</b><b style="--i:1">a</b><b style="--i:2">n</b><b style="--i:3">g</b></div>` },
+{ id: 'peek-up', vi: 'Ló lên từ mép', en: 'Peek Up', use: 'Gợi ý nhỏ ở góc màn hình, báo có agent mới.',
+  css: `.bot-peek{position:relative;display:inline-block;width:1.6em;height:.95em;overflow:hidden;font-size:var(--bot-size,64px);border-bottom:.03em solid var(--bot-ink,#c9ced6)}.bot-peek .bot{position:absolute;left:.3em;top:.3em;animation:bot-peek 3.6s cubic-bezier(.34,1.4,.64,1) infinite}.bot-peek .bot-f{animation:bot-peek-f 3.6s ease-in-out infinite}@keyframes bot-peek{0%{transform:translateY(.75em)}18%,72%{transform:none;animation-timing-function:ease-in}86%,100%{transform:translateY(.75em)}}@keyframes bot-peek-f{0%,25%,72%,100%{transform:none}33%,46%{transform:translate(-.12em,-.04em)}54%,66%{transform:translate(.12em,-.04em)}}`,
+  html: `<div class="bot-peek">${BOT()}</div>` }
+];
+
+const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const fmt = (css) => css.replace(/}(?=[.@#\[a-z])/g, '}\n');
+const snippet = (v) => `<style>\n${fmt(BASE)}\n${fmt(v.css)}\n${RM}\n</style>\n${v.html}\n`;
+document.getElementById('mc-css').textContent = BASE + V.map((v) => v.css).join('');
+const grid = document.getElementById('mc-grid');
+grid.innerHTML = V.map((v, i) => `<article class="mc-card" id="${v.id}">
+  <div class="mc-stage"><span class="mc-n">${String(i + 1).padStart(2, '0')}</span><div class="mc-slot">${v.html}</div></div>
+  <div class="mc-foot"><h3>${v.vi}<small>${v.en}</small></h3>
+  <p class="mc-use">Trong Hang: ${v.use}</p>
+  <div class="mc-act"><button type="button" data-run>Chạy lại</button><button type="button" data-copy>Chép</button></div>
+  <details><summary>Xem code</summary><pre><code>${esc(snippet(v))}</code></pre></details></div></article>`).join('');
+grid.addEventListener('click', (e) => {
+  const card = e.target.closest('.mc-card'); if (!card) return;
+  const v = V.find((x) => x.id === card.id);
+  if (e.target.closest('[data-run]')) card.querySelector('.mc-slot').innerHTML = v.html;
+  const b = e.target.closest('[data-copy]');
+  if (b) navigator.clipboard.writeText(snippet(v)).then(() => { b.textContent = 'Đã chép'; setTimeout(() => b.textContent = 'Chép', 1500); });
+});
+document.querySelectorAll('.mc-sw').forEach((b) => b.onclick = () => {
+  grid.style.setProperty('--bot-accent', b.dataset.c || '#ff7a45');
+  document.querySelectorAll('.mc-sw').forEach((x) => x.setAttribute('aria-pressed', x === b));
+});
+</script>
+<script src="/search.js?v=950eb28ff4" defer></script><script src="/stats.js?v=950eb28ff4" defer></script>
+</body>
+</html>

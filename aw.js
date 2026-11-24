@@ -36,7 +36,9 @@
       ['angles/', 'Góc máy', 'Camera angle, cảnh 3D bằng CSS', 8, 'angles/#a1'],
       ['teardown/', 'Teardown 3D', 'Máy 3D tháo rời được', 3, 'teardown/thumbs/v8.jpg'],
       ['patterns/toolkit.html', 'Bộ đồ nghề chuyển động', '16 repo motion, demo chạy thật', 16],
-      ['patterns/principles.html', '20 nguyên tắc UX', 'Trước/Sau cho từng nguyên tắc chuyển động', 20]]],
+      ['patterns/principles.html', '20 nguyên tắc UX', 'Trước/Sau cho từng nguyên tắc chuyển động', 20],
+      ['patterns/mascot.html', 'Linh vật bot', '20 trạng thái avatar agent, CSS thuần', 20],
+      ['patterns/sound.html', 'Chuyển động và âm thanh', 'Luồng app có âm thanh UI', 11]]],
     ['tai-nguyen', 'Tài nguyên', 'UI kit, font, thư viện, skill', [
       ['ui-kits/', 'UI kits', 'Hệ thiết kế rút từ site thật', 36, 'ui-kits/awwwards-com/latest/'],
       ['ui-libraries/', 'Thư viện UI', 'Thư viện trên GitHub, số liệu sống', 153],
