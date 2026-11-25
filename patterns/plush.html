@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Linh vật lông — 12 nhân vật — uiux-asset</title>
+<meta name="description" content="Linh vật lông xù và nhựa bóng dựng bằng SVG + CSS: 6 nhân vật dựng lại theo phong cách «mascot wave» và 6 nhân vật mới cùng chất liệu, mỗi con một vai agent trong Hang. Chép từng con thành snippet độc lập.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=66b5871e1e">
+<style>
+:root { --pl-card: #fff; --pl-line: #e2e5ea; --pl-ink: #15171a; --pl-ink2: #5f6670; --pl-stage: #f6f4ef; --pl-code: #f5f6f8; }
+:root[data-theme="dark"] { --pl-card: #111317; --pl-line: #2a2e35; --pl-ink: #eef0f3; --pl-ink2: #9aa1ab; --pl-stage: #1d1f24; --pl-code: #181b20; }
+.pl-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+.pl-page a { color: inherit; }
+.pl-page h2 { margin: 8px 0 0; font: 700 24px/1.2 var(--aw-font); color: var(--pl-ink); }
+.pl-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); }
+.pl-card { display: flex; flex-direction: column; min-width: 0; border-radius: 16px; overflow: hidden; background: var(--pl-card); border: 1px solid var(--pl-line); color: var(--pl-ink); }
+.pl-stage { position: relative; height: 230px; display: grid; place-items: center; background: var(--pl-stage); }
+.pl-stage .pl { width: 200px; }
+.pl-n { position: absolute; top: 10px; left: 12px; font: 500 11px/1 ui-monospace, Menlo, monospace; color: #686d75; }
+.pl-role { position: absolute; top: 8px; right: 10px; padding: 4px 8px; border-radius: 99px; background: var(--pl-card); border: 1px solid var(--pl-line); font: 500 12px/1 var(--aw-font); color: var(--pl-ink2); }
+.pl-foot { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 6px; }
+.pl-foot h3 { margin: 0; font: 600 16px/1.3 var(--aw-font); }
+.pl-foot h3 small { display: block; font-size: 12px; font-weight: 400; color: var(--pl-ink2); }
+.pl-use { margin: 0; font: 400 13px/1.45 var(--aw-font); color: var(--pl-ink2); }
+.pl-act { display: flex; gap: 8px; }
+.pl-act button { flex: 1; min-height: 44px; border-radius: 10px; border: 1px solid var(--pl-line); background: transparent; color: var(--pl-ink); font: 500 13px/1 var(--aw-font); cursor: pointer; }
+.pl-act button:hover { background: var(--pl-code); }
+.pl-act input { width: 44px; height: 44px; padding: 2px; border-radius: 10px; border: 1px solid var(--pl-line); background: transparent; cursor: pointer; }
+.pl-foot details summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; font: 500 13px/1 var(--aw-font); color: var(--pl-ink2); }
+.pl-foot pre { margin: 0; max-height: 240px; overflow: auto; padding: 10px; border-radius: 10px; background: var(--pl-code); color: var(--pl-ink); font: 11px/1.5 ui-monospace, Menlo, monospace; white-space: pre; }
+.pl-src { font: 400 13px/1.5 var(--aw-font); color: var(--pl-ink2); }
+</style>
+<style id="pl-css"></style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=66b5871e1e"></script>
+<div class="pl-page">
+  <div class="aw-sotd" style="padding-top:16px">
+    <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">12 nhân vật</span></p>
+    <h1 class="aw-h1" style="--aw-h1:clamp(40px,7vw,96px)">Linh vật lông</h1>
+    <p class="aw-lead">Nhân vật thú bông và nhựa bóng, dựng bằng SVG + CSS, không ảnh. Lông xù là một bộ lọc SVG (nhiễu + dịch mép), bóng khối là một lớp gradient. Mỗi con gắn một vai agent trong Hang. Ô màu đổi màu thân, “Chép” lấy snippet độc lập.</p>
+    <p class="pl-src">Phong cách học từ ảnh «The Mascot Wave» do chủ Hang gửi (phòng uiux-giatbh). Nhân vật ở đây là bản vẽ riêng mang tên chung, không dùng tên hay thương hiệu gốc.</p>
+  </div>
+  <h2 id="dung-lai">Dựng lại từ ảnh</h2>
+  <div class="pl-grid" id="pl-a"></div>
+  <h2 id="bo-moi">Bộ mới cùng phong cách</h2>
+  <div class="pl-grid" id="pl-b"></div>
+</div>
+</main>
+<script>
+// Bộ lọc lông + gradient bóng khối dùng chung. Hình vẽ trên khung 200×200, mặt đất y≈178.
+const DEFS = `<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<filter id="pl-fur" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="4" result="h"/><feDisplacementMap in="SourceGraphic" in2="h" scale="7" xChannelSelector="R" yChannelSelector="G" result="s"/><feColorMatrix in="h" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .9 0 0 0 -.45" result="k"/><feComposite in="k" in2="s" operator="in" result="k2"/><feMerge><feMergeNode in="s"/><feMergeNode in="k2"/></feMerge></filter>
+<filter id="pl-soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="4"/></filter>
+<radialGradient id="pl-shade" cx=".36" cy=".3" r=".85"><stop offset="0" stop-color="#fff" stop-opacity=".45"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".32"/></radialGradient>
+</defs></svg>`;
+const CSS = `.pl{display:inline-block;width:var(--pl-size,180px);line-height:0}.pl svg{width:100%;height:auto;overflow:visible}.pl-bob,.pl-squish,.pl-breathe,.pl-bop,.pl-blink,.pl-wave,.pl-tilt,.pl-sh,.pl-z,.pl-sway,.pl-led{transform-box:fill-box;transform-origin:50% 100%}.pl-bob{animation:pl-bob 3s ease-in-out infinite}.pl-squish{animation:pl-squish 2.4s ease-in-out infinite}.pl-bop{animation:pl-bop .9s ease-in-out infinite}.pl-breathe{animation:pl-breathe 4s ease-in-out infinite}.pl-sh{transform-origin:center;animation:pl-sh 3s ease-in-out infinite}.pl-blink{transform-origin:center;animation:pl-blink 4.2s infinite}.pl-look{animation:pl-look 5s ease-in-out infinite}.pl-wave{transform-origin:30% 90%;animation:pl-wave 1.4s ease-in-out infinite}.pl-tilt{transform-origin:50% 80%;animation:pl-tilt 3s ease-in-out infinite}.pl-sway{animation:pl-sway 2.4s ease-in-out infinite}.pl-led{transform-origin:center;animation:pl-led 1.2s infinite}.pl-z{transform-origin:center;opacity:0;animation:pl-z 3s ease-out infinite;animation-delay:calc(var(--k)*1s)}.pl-spin{animation:pl-spin 3s ease-in-out infinite}@keyframes pl-bob{50%{transform:translateY(-7px)}}@keyframes pl-squish{0%,100%{transform:none}50%{transform:translateY(-4px) scale(1.03,.97)}}@keyframes pl-bop{50%{transform:rotate(4deg) translateY(-3px)}}@keyframes pl-breathe{50%{transform:scale(1.03,.98)}}@keyframes pl-sh{50%{transform:scaleX(.86);opacity:.7}}@keyframes pl-blink{0%,90%,100%{transform:none}94%{transform:scaleY(.1)}}@keyframes pl-look{0%,15%,100%{transform:none}25%,45%{transform:translateX(-5px)}55%,80%{transform:translateX(5px)}}@keyframes pl-wave{50%{transform:rotate(-22deg)}}@keyframes pl-tilt{50%{transform:rotate(-6deg) translateY(-2px)}}@keyframes pl-sway{50%{transform:rotate(9deg)}}@keyframes pl-led{50%{opacity:.35}}@keyframes pl-z{0%{opacity:0;transform:translate(0,0) scale(.6)}20%{opacity:1}100%{opacity:0;transform:translate(14px,-34px) scale(1.2)}}@keyframes pl-spin{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(7deg) translateY(-6px)}}@media (prefers-reduced-motion:reduce){.pl *{animation:none!important}.pl-z{opacity:1}}`;
+
+// Thân lông: vẽ hình 2 lần (màu thân + lớp bóng khối) rồi qua bộ lọc lông. Thân nhựa: như vậy nhưng không lọc.
+const paint = (s, f) => s.replace(/\/>/g, ` fill="${f}"/>`);
+const FUR = (s, c = 'var(--pl-body)') => `<g filter="url(#pl-fur)">${paint(s, c)}${paint(s, 'url(#pl-shade)')}</g>`;
+const VINYL = (s, c = 'var(--pl-body)') => `${paint(s, c)}${paint(s, 'url(#pl-shade)')}`;
+const EYE = (x, y, rx, ry) => `<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="#111"/><circle cx="${x - rx * .3}" cy="${y - ry * .45}" r="${rx * .38}" fill="#fff"/>`;
+const ARC = (d, w = 3.5) => `<path d="${d}" fill="none" stroke="#111" stroke-width="${w}" stroke-linecap="round"/>`;
+const BLUSH = (a, b, y) => `<g filter="url(#pl-soft)" opacity=".75"><ellipse cx="${a}" cy="${y}" rx="8" ry="4.5" fill="#ff9aa2"/><ellipse cx="${b}" cy="${y}" rx="8" ry="4.5" fill="#ff9aa2"/></g>`;
+const SH = (rx = 62) => `<ellipse class="pl-sh" cx="100" cy="182" rx="${rx}" ry="7" fill="#000" opacity=".16" filter="url(#pl-soft)"/>`;
+const SVG = (body, inner) => `<div class="pl" style="--pl-body:${body}"><svg viewBox="0 0 200 200" role="img" aria-hidden="true">${inner}</svg></div>`;
+const STAR = (() => { const p = []; for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + i * Math.PI / 5, r = i % 2 ? 30 : 62; p.push(`${(100 + r * Math.cos(a)).toFixed(1)} ${(116 + r * Math.sin(a)).toFixed(1)}`); } return 'M' + p.join('L') + 'Z'; })();
+
+const A = [
+{ id: 'cloud-beret', vi: 'Mây xanh đội mũ nồi', en: 'Beret Cloud', role: 'ux', body: '#1f6bff', use: 'Avatar agent UX: mây lông nhấp nhô, mũ nồi nghiêng theo nhịp.',
+  svg: (b) => SVG(b, `${SH(70)}<g class="pl-bob">${FUR('<path d="M44 172C22 172 14 148 30 136C20 116 40 96 62 104C66 80 98 72 112 92C126 78 156 86 156 110C178 108 192 130 182 150C186 164 176 172 164 172Z"/>')}<g class="pl-tilt">${FUR('<ellipse cx="96" cy="86" rx="54" ry="19" transform="rotate(-10 96 86)"/><circle cx="90" cy="62" r="9"/>', '#1d1d1f')}</g><g class="pl-blink">${EYE(92, 134, 5.5, 9.5)}${EYE(124, 134, 5.5, 9.5)}</g></g>`) },
+{ id: 'drop-glasses', vi: 'Giọt vàng đeo kính', en: 'Spectacled Drop', role: 'reviewer', body: '#ffc21a', use: 'Agent soát bài: mắt khép đọc chậm, kính nhích nhẹ.',
+  svg: (b) => SVG(b, `${SH(56)}<g class="pl-squish">${FUR('<path d="M100 52C116 52 132 80 150 118C164 148 160 172 138 172H62C40 172 36 148 50 118C68 80 84 52 100 52Z"/>')}${ARC('M75 130q7 5 14 0')}${ARC('M113 130q7 5 14 0')}<g fill="rgba(255,255,255,.12)" stroke="#111" stroke-width="3.5"><circle cx="82" cy="127" r="15"/><circle cx="120" cy="127" r="15"/></g>${ARC('M97 125q4-4 8 0M67 125h-9M135 125h9', 3.5)}</g>`) },
+{ id: 'fuzzy-wave', vi: 'Bé lông kem vẫy tay', en: 'Fuzzy Greeter', role: 'support', body: '#e8dcc6', use: 'Agent hỗ trợ: mở chat mới thì vẫy tay chào, má hồng.',
+  svg: (b) => SVG(b, `${SH(52)}<g class="pl-bob">${FUR('<ellipse cx="52" cy="132" rx="12" ry="22" transform="rotate(14 52 132)"/><path d="M60 178C52 150 52 122 60 106C46 94 44 64 62 44C82 22 118 22 138 44C156 64 154 94 140 106C148 122 148 150 140 178Z"/>')}<g class="pl-wave">${FUR('<ellipse cx="156" cy="98" rx="13" ry="24" transform="rotate(28 156 98)"/>')}</g><ellipse cx="100" cy="74" rx="31" ry="25" fill="#f6ead9"/>${BLUSH(80, 120, 84)}<g class="pl-blink"><circle cx="88" cy="72" r="3.6" fill="#111"/><circle cx="112" cy="72" r="3.6" fill="#111"/></g>${ARC('M94 83q6 5 12 0', 2.8)}</g>`) },
+{ id: 'ball-pill', vi: 'Bóng đen mắt nhộng', en: 'Pill-Eyed Ball', role: 'coordinator', body: '#161618', use: 'Điều phối: tròn, chắc, nảy nhẹ khi chia việc.',
+  svg: (b) => SVG(b, `${SH(56)}<g class="pl-squish">${FUR('<circle cx="100" cy="118" r="60"/>')}<g class="pl-blink" fill="#fff"><rect x="76" y="92" width="15" height="34" rx="7.5" transform="rotate(10 83 109)"/><rect x="106" y="92" width="15" height="34" rx="7.5" transform="rotate(10 113 109)"/></g></g>`) },
+{ id: 'cloud-dash', vi: 'Mây cam mắt vạch', en: 'Dash-Eyed Cloud', role: 'worker', body: '#ff6a13', use: 'Agent làm việc: mắt liếc qua lại theo dòng log.',
+  svg: (b) => SVG(b, `${SH(70)}<g class="pl-bob" style="animation-delay:-1.2s">${FUR('<path d="M40 172C20 170 18 146 34 138C30 116 52 104 70 112C78 90 112 88 124 106C140 94 168 104 166 126C186 130 188 164 168 172Z"/>')}<g class="pl-look"><g class="pl-blink" fill="#fff"><rect x="98" y="122" width="24" height="9" rx="4.5" transform="rotate(-8 110 126)"/><rect x="130" y="117" width="24" height="9" rx="4.5" transform="rotate(-8 142 121)"/></g></g></g>`) },
+{ id: 'split-vinyl', vi: 'Bé nhựa hai nửa', en: 'Split-Face Vinyl', role: 'planner', body: '#2f7cf6', use: 'Agent lập kế hoạch: một nửa nghĩ, một nửa làm.',
+  svg: (b) => SVG(b, `<defs><clipPath id="pl-half"><path d="M0 0H104C98 52 110 66 101 82C96 92 106 100 101 126V200H0Z"/></clipPath></defs>${SH(36)}<g class="pl-bob"><g class="pl-wave">${VINYL('<ellipse cx="66" cy="128" rx="9" ry="20" transform="rotate(-42 66 128)"/>')}</g>${VINYL('<rect x="80" y="150" width="15" height="28" rx="7"/><rect x="105" y="150" width="15" height="28" rx="7"/><ellipse cx="134" cy="140" rx="9" ry="18" transform="rotate(16 134 140)"/><rect x="74" y="114" width="52" height="50" rx="18"/><circle cx="100" cy="80" r="46"/>', '#bcdcff')}<g clip-path="url(#pl-half)">${VINYL('<rect x="80" y="150" width="15" height="28" rx="7"/><rect x="74" y="114" width="52" height="50" rx="18"/><circle cx="100" cy="80" r="46"/>')}</g><ellipse cx="80" cy="58" rx="15" ry="8" fill="#fff" opacity=".45" transform="rotate(-32 80 58)"/><g class="pl-blink"><circle cx="90" cy="80" r="3.8" fill="#111"/><circle cx="114" cy="80" r="3.8" fill="#111"/></g>${ARC('M97 93q6 4 12 0', 2.8)}</g>`) }
+];
+const B = [
+{ id: 'mochi-sprout', vi: 'Bánh mochi nảy mầm', en: 'Sprout Mochi', role: 'marketing', body: '#ffb3c7', use: 'Agent marketing: mầm lá đung đưa, mắt cười.',
+  svg: (b) => SVG(b, `${SH(66)}<g class="pl-squish">${FUR('<path d="M30 160C26 120 60 92 100 92C140 92 174 120 170 160C168 174 152 176 100 176C48 176 32 174 30 160Z"/>')}<g class="pl-sway"><path d="M100 94q-3-16 2-28" fill="none" stroke="#2f9e5f" stroke-width="5" stroke-linecap="round"/>${VINYL('<ellipse cx="88" cy="64" rx="14" ry="7" transform="rotate(25 88 64)"/><ellipse cx="116" cy="60" rx="15" ry="7.5" transform="rotate(-25 116 60)"/>', '#3bb273')}</g>${BLUSH(70, 130, 146)}${ARC('M76 136q7-8 14 0')}${ARC('M110 136q7-8 14 0')}${ARC('M96 146q4 4 8 0', 2.8)}</g>`) },
+{ id: 'ghost-phones', vi: 'Ma tím đeo tai nghe', en: 'Headphone Ghost', role: 'researcher', body: '#a98bff', use: 'Agent nghiên cứu: lắc lư theo nhịp khi đang nghe và đọc.',
+  svg: (b) => SVG(b, `${SH(46)}<g class="pl-bop">${FUR('<path d="M52 172V100C52 66 74 46 100 46S148 66 148 100V172Q136 160 124 172Q112 160 100 172Q88 160 76 172Q64 160 52 172Z"/>')}<path d="M48 100C48 52 152 52 152 100" fill="none" stroke="#202024" stroke-width="8" stroke-linecap="round"/>${VINYL('<rect x="38" y="88" width="18" height="30" rx="8"/><rect x="144" y="88" width="18" height="30" rx="8"/>', 'var(--pl-acc,#ff6a13)')}<g class="pl-blink">${EYE(86, 112, 5.5, 8.5)}${EYE(114, 112, 5.5, 8.5)}</g>${ARC('M95 128q5 4 10 0', 2.8)}</g>`) },
+{ id: 'cube-bot', vi: 'Hộp bạc hà có ăng-ten', en: 'Mint Cube Bot', role: 'devops', body: '#2ec4a6', use: 'Agent DevOps: đèn ăng-ten nháy khi deploy chạy.',
+  svg: (b) => SVG(b, `${SH(50)}<g class="pl-bob"><path d="M100 76V52" stroke="#1d1d1f" stroke-width="4" stroke-linecap="round"/><circle class="pl-led" cx="100" cy="48" r="8" fill="var(--pl-acc,#ff6a13)"/>${VINYL('<rect x="52" y="72" width="96" height="92" rx="28"/>')}<rect x="64" y="96" width="72" height="42" rx="15" fill="#0f2b27"/><g class="pl-blink" fill="#7ff5dc"><rect x="80" y="107" width="11" height="18" rx="5.5"/><rect x="109" y="107" width="11" height="18" rx="5.5"/></g><ellipse cx="74" cy="82" rx="12" ry="5" fill="#fff" opacity=".4" transform="rotate(-20 74 82)"/></g>`) },
+{ id: 'coral-scarf', vi: 'Cầu san hô quàng khăn', en: 'Scarf Puff', role: 'qa', body: '#ff7a6b', use: 'Agent QA: mắt to, nhìn quanh tìm lỗi.',
+  svg: (b) => SVG(b, `${SH(54)}<g class="pl-squish">${FUR('<circle cx="100" cy="112" r="58"/>')}${FUR('<path d="M46 132Q100 156 154 132L156 148Q100 172 44 148Z"/><path d="M122 150L136 182L150 178L138 146Z"/>', '#2f5bd3')}<g class="pl-look"><g class="pl-blink">${EYE(84, 106, 7, 10)}${EYE(116, 106, 7, 10)}</g></g>${ARC('M95 124q5 3 10 0', 2.8)}</g>`) },
+{ id: 'sleepy-cloud', vi: 'Mây ngủ đội mũ đêm', en: 'Nightcap Cloud', role: 'offline', body: '#8ecbff', use: 'Agent nghỉ hoặc mất kết nối: thở chậm, chữ z bay lên.',
+  svg: (b) => SVG(b, `${SH(70)}<g class="pl-breathe">${FUR('<path d="M44 172C22 172 16 148 32 138C26 116 50 100 70 110C78 88 116 86 126 106C144 94 172 108 166 130C186 136 186 168 164 172Z"/>')}${FUR('<path d="M66 106Q96 46 150 64Q132 72 134 98Q100 92 66 106Z"/>', '#2b2d6e')}${FUR('<circle cx="152" cy="64" r="10"/>', '#f4f1ea')}${BLUSH(78, 130, 150)}${ARC('M86 138q7 6 14 0')}${ARC('M112 138q7 6 14 0')}</g><g fill="#2b2d6e" font="700 18px system-ui,sans-serif" font-family="system-ui,sans-serif" font-weight="800"><text class="pl-z" style="--k:0" x="158" y="40" font-size="16">z</text><text class="pl-z" style="--k:1" x="158" y="40" font-size="20">z</text><text class="pl-z" style="--k:2" x="158" y="40" font-size="24">Z</text></g>`) },
+{ id: 'leaf-star', vi: 'Sao lá xanh', en: 'Leaf Star', role: 'chief', body: '#4cc36a', use: 'Agent trưởng nhóm: lắc mừng khi cả đội xong việc.',
+  svg: (b) => SVG(b, `${SH(52)}<g class="pl-spin" style="transform-box:fill-box;transform-origin:50% 60%">${FUR(`<path d="${STAR}" stroke="var(--pl-body)" stroke-width="18" stroke-linejoin="round"/>`)}${BLUSH(80, 120, 128)}<g class="pl-blink">${EYE(88, 114, 4.5, 7)}${EYE(112, 114, 4.5, 7)}</g>${ARC('M94 128q6 6 12 0', 3)}</g>`) }
+];
+
+const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const fmt = (css) => css.replace(/}(?=[.@#a-z])/g, '}\n');
+const snippet = (v, c) => `<style>\n${fmt(CSS)}\n</style>\n${DEFS}\n${v.svg(c)}\n`;
+document.getElementById('pl-css').textContent = CSS;
+document.body.insertAdjacentHTML('afterbegin', DEFS);
+const ALL = [...A, ...B];
+const card = (v, i) => `<article class="pl-card" id="${v.id}">
+  <div class="pl-stage"><span class="pl-n">${String(i + 1).padStart(2, '0')}</span><span class="pl-role">${v.role}</span><div class="pl-slot">${v.svg(v.body)}</div></div>
+  <div class="pl-foot"><h3>${v.vi}<small>${v.en}</small></h3>
+  <p class="pl-use">Trong Hang: ${v.use}</p>
+  <div class="pl-act"><input type="color" value="${v.body}" aria-label="Màu thân ${v.vi}"><button type="button" data-copy>Chép</button></div>
+  <details><summary>Xem code</summary><pre><code></code></pre></details></div></article>`;
+document.getElementById('pl-a').innerHTML = A.map(card).join('');
+document.getElementById('pl-b').innerHTML = B.map((v, i) => card(v, i + A.length)).join('');
+const col = (el) => el.querySelector('input').value;
+const fill = (el) => { const v = ALL.find((x) => x.id === el.id); el.querySelector('code').innerHTML = esc(snippet(v, col(el))); };
+document.querySelectorAll('.pl-card').forEach((el) => {
+  fill(el);
+  el.querySelector('input').oninput = (e) => { el.querySelector('.pl').style.setProperty('--pl-body', e.target.value); fill(el); };
+  const b = el.querySelector('[data-copy]');
+  b.onclick = () => navigator.clipboard.writeText(snippet(ALL.find((x) => x.id === el.id), col(el))).then(() => { b.textContent = 'Đã chép'; setTimeout(() => b.textContent = 'Chép', 1500); });
+});
+</script>
+<script src="/search.js?v=66b5871e1e" defer></script><script src="/stats.js?v=66b5871e1e" defer></script>
+</body>
+</html>
