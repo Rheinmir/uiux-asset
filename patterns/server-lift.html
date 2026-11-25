@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Máy chủ mở nắp — uiux-asset</title>
+<meta name="description" content="Minh hoạ máy chủ đẳng cự nét mảnh: nắp nhấc lên lộ lõi phát sáng, gói dữ liệu xanh chạy bên dưới. SVG + CSS, không JS khi chạy. Dựng lại từ Server Lift của @vanta_ui.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=ca13477c3c">
+<style>
+:root { --sl-card: #fff; --sl-line: #e2e5ea; --sl-ink: #15171a; --sl-ink2: #5f6670; --sl-stage: #fbfbfc; --sl-code: #f5f6f8; }
+:root[data-theme="dark"] { --sl-card: #111317; --sl-line: #2a2e35; --sl-ink: #eef0f3; --sl-ink2: #9aa1ab; --sl-stage: #15171b; --sl-code: #181b20; }
+.sl-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+.sl-page a { color: inherit; }
+.sl-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); }
+.sl-card { display: flex; flex-direction: column; min-width: 0; border-radius: 16px; overflow: hidden; background: var(--sl-card); border: 1px solid var(--sl-line); color: var(--sl-ink); }
+.sl-stage { position: relative; display: grid; place-items: center; padding: 24px; background: var(--sl-stage); }
+.sl-stage .srv { width: min(100%, 440px); }
+:root[data-theme="dark"] .sl-stage .srv { --srv-face: #1b1e24; --srv-line: #59606b; --srv-faint: #353a43; }
+.sl-n { position: absolute; top: 10px; left: 12px; font: 500 11px/1 ui-monospace, Menlo, monospace; color: #686d75; }
+.sl-foot { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 6px; }
+.sl-foot h3 { margin: 0; font: 600 16px/1.3 var(--aw-font); }
+.sl-foot h3 small { display: block; font-size: 12px; font-weight: 400; color: var(--sl-ink2); }
+.sl-use { margin: 0; font: 400 13px/1.45 var(--aw-font); color: var(--sl-ink2); }
+.sl-act { display: flex; gap: 8px; }
+.sl-act button { flex: 1; min-height: 44px; border-radius: 10px; border: 1px solid var(--sl-line); background: transparent; color: var(--sl-ink); font: 500 13px/1 var(--aw-font); cursor: pointer; }
+.sl-act button:hover { background: var(--sl-code); }
+.sl-foot details summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; font: 500 13px/1 var(--aw-font); color: var(--sl-ink2); }
+.sl-foot pre { margin: 0; max-height: 240px; overflow: auto; padding: 10px; border-radius: 10px; background: var(--sl-code); color: var(--sl-ink); font: 11px/1.5 ui-monospace, Menlo, monospace; white-space: pre; }
+.sl-src { font: 400 13px/1.5 var(--aw-font); color: var(--sl-ink2); }
+</style>
+<style id="sl-css"></style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=ca13477c3c"></script>
+<div class="sl-page">
+  <div class="aw-sotd" style="padding-top:16px">
+    <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">2 kiểu chạy</span></p>
+    <h1 class="aw-h1" style="--aw-h1:clamp(40px,7vw,96px)">Máy chủ mở nắp</h1>
+    <p class="aw-lead">Máy chủ đẳng cự nét mảnh: nắp nhấc lên lộ lõi phát sáng, gói dữ liệu xanh chạy dọc mặt đất. Một SVG + CSS, không JS khi chạy. Đổi màu bằng --srv-accent, --srv-line, --srv-face.</p>
+    <p class="sl-src">Dựng lại từ video <a href="https://x.com/vanta_ui/status/2125348746334519434" target="_blank" rel="noopener">Server Lift của @vanta_ui</a>. Hình vẽ lại bằng phép chiếu đẳng cự, không dùng file gốc.</p>
+  </div>
+  <div class="sl-grid" id="sl-grid"></div>
+</div>
+</main>
+<script>
+// Phép chiếu đẳng cự: (x,y,z) → màn hình. Hộp W×W, đế cao 40, nắp cao 46 nằm trên đế (khe 4).
+const W = 100, P = (x, y, z) => `${((x - y) * .866).toFixed(1)},${((x + y) * .5 - z).toFixed(1)}`;
+const poly = (pts, cls = 'srv-f') => `<polygon class="${cls}" points="${pts.map((p) => P(...p)).join(' ')}"/>`;
+const line = (a, b, cls = 'srv-l') => `<polyline class="${cls}" points="${P(...a)} ${P(...b)}"/>`;
+const box = (z0, z1) => poly([[0, 0, z1], [W, 0, z1], [W, W, z1], [0, W, z1]]) + poly([[0, W, z0], [W, W, z0], [W, W, z1], [0, W, z1]]) + poly([[W, 0, z0], [W, W, z0], [W, W, z1], [W, 0, z1]])
+  + [[8, 8], [92, 8], [92, 92], [8, 92]].map(([x, y]) => `<circle class="srv-dot" cx="${P(x, y, z1).split(',')[0]}" cy="${P(x, y, z1).split(',')[1]}" r="1.6"/>`).join('');
+// Làn dữ liệu trên mặt đất: nét đứt xám + một vệt xanh chạy (dashoffset).
+const lanes = [-34, -20, W + 20, W + 34].map((y, i) => line([-90, y, 0], [W + 90, y, 0], 'srv-lane') + `<polyline class="srv-pk" style="--d:${i * -.7}s" points="${P(-90, y, 0)} ${P(W + 90, y, 0)}"/>`).join('')
+  + [-34, W + 34].map((x, i) => line([x, -90, 0], [x, W + 90, 0], 'srv-lane') + `<polyline class="srv-pk" style="--d:${-1.4 - i * .9}s" points="${P(x, -90, 0)} ${P(x, W + 90, 0)}"/>`).join('');
+const c = P(50, 50, 40).split(',');
+const core = poly([[15, 15, 40], [85, 15, 40], [85, 85, 40], [15, 85, 40]], 'srv-dash')
+  + [40, 46, 54, 60].map((y) => line([62, y, 40], [84, y, 40], 'srv-trace') + line([16, y, 40], [38, y, 40], 'srv-trace')).join('')
+  + poly([[38, 38, 40], [62, 38, 40], [62, 62, 40], [38, 62, 40]])
+  + `<circle class="srv-glow" cx="${c[0]}" cy="${c[1]}" r="10"/><circle class="srv-core" cx="${c[0]}" cy="${c[1]}" r="4"/>`;
+const vents = [10, 14, 18, 22].map((x) => line([x, W, 56], [x, W, 78])).join('');
+const leds = [62, 72, 82].map((y, i) => { const [x, yy] = P(W, y, 67).split(','); return `<circle class="srv-led" style="--d:${i * .2}s" cx="${x}" cy="${yy}" r="2.6"/>`; }).join('');
+const shadow = `<polygon class="srv-shadow" points="${[[-6, -6], [W + 10, -6], [W + 10, W + 10], [-6, W + 10]].map(([x, y]) => P(x, y, 0)).join(' ')}"/>`;
+const SVG = (cls) => `<svg class="srv ${cls}" viewBox="-200 -150 400 290" role="img" aria-label="Máy chủ mở nắp, lõi phát sáng"><g class="srv-ground">${lanes}</g>${shadow}<g class="srv-base">${box(0, 40)}${core}</g><g class="srv-lid">${box(44, 90)}${vents}${leds}</g></svg>`;
+const BASE = `.srv{--srv-accent:#2f5cf5;--srv-line:#8a9099;--srv-faint:#d9dde3;--srv-face:#fff;width:100%;height:auto;display:block;overflow:visible}.srv polygon,.srv polyline{stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke}.srv-f{fill:var(--srv-face);stroke:var(--srv-line);stroke-width:1}.srv-l{fill:none;stroke:var(--srv-line);stroke-width:1}.srv-dot{fill:var(--srv-line)}.srv-dash{fill:none;stroke:var(--srv-line);stroke-width:.8;stroke-dasharray:2 3}.srv-trace{fill:none;stroke:var(--srv-accent);stroke-width:.8;opacity:.25}.srv-lane{fill:none;stroke:var(--srv-faint);stroke-width:1;stroke-dasharray:2 5}.srv-pk{fill:none;stroke:var(--srv-accent);stroke-width:1.4;stroke-dasharray:14 420;animation:srv-pk 2.8s linear infinite;animation-delay:var(--d)}.srv-shadow{fill:#000;opacity:.05;filter:blur(6px)}.srv-core{fill:var(--srv-accent)}.srv-glow{fill:var(--srv-accent);opacity:0;filter:blur(5px)}.srv-led{fill:var(--srv-accent);animation:srv-led 1.6s steps(2) infinite;animation-delay:var(--d)}.srv-lid{transition:transform .8s cubic-bezier(.65,0,.35,1)}@keyframes srv-pk{from{stroke-dashoffset:434}to{stroke-dashoffset:0}}@keyframes srv-led{50%{opacity:.3}}`;
+const RM = `@media (prefers-reduced-motion:reduce){.srv *{animation:none!important;transition:none!important}}`;
+const V = [
+{ id: 'lift-loop', vi: 'Tự nhấc, lặp', en: 'Lift Loop', use: 'Màn trống «đang dựng máy chủ», trang giới thiệu hạ tầng, ô loading lớn.',
+  css: `.srv.loop .srv-lid{animation:srv-lift 5s cubic-bezier(.65,0,.35,1) infinite}.srv.loop .srv-glow{animation:srv-glow 5s ease-in-out infinite}.srv.loop .srv-trace{animation:srv-tr 5s ease-in-out infinite}@keyframes srv-lift{0%,14%,86%,100%{transform:none}30%,70%{transform:translateY(-58px)}}@keyframes srv-glow{0%,22%,80%,100%{opacity:0}40%,64%{opacity:.75}}@keyframes srv-tr{0%,22%,80%,100%{opacity:.25}40%,64%{opacity:.9}}`,
+  html: SVG('loop') },
+{ id: 'lift-hover', vi: 'Nhấc khi rê chuột', en: 'Lift on Hover', use: 'Thẻ chọn gói máy chủ, nút «Xem chi tiết»: rê hoặc focus thì mở nắp.',
+  css: `.srv-hit{display:block;width:min(100%,440px);border-radius:16px;outline-offset:4px}.srv-hit .srv-glow,.srv-hit .srv-trace{transition:opacity .6s}.srv-hit:hover .srv-lid,.srv-hit:focus-visible .srv-lid{transform:translateY(-58px)}.srv-hit:hover .srv-glow,.srv-hit:focus-visible .srv-glow{opacity:.75}.srv-hit:hover .srv-trace,.srv-hit:focus-visible .srv-trace{opacity:.9}`,
+  html: `<a class="srv-hit" href="#lift-hover" aria-label="Máy chủ: rê để mở nắp">${SVG('hover')}</a>` }
+];
+const fmt = (css) => css.replace(/}(?=[.@#a-z])/g, '}\n');
+const snippet = (v) => `<style>\n${fmt(BASE)}\n${fmt(v.css)}\n${RM}\n</style>\n${v.html}\n`;
+const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+document.getElementById('sl-css').textContent = BASE + V.map((v) => v.css).join('') + RM;
+const grid = document.getElementById('sl-grid');
+grid.innerHTML = V.map((v, i) => `<article class="sl-card" id="${v.id}">
+  <div class="sl-stage"><span class="sl-n">${String(i + 1).padStart(2, '0')}</span>${v.html}</div>
+  <div class="sl-foot"><h3>${v.vi}<small>${v.en}</small></h3><p class="sl-use">Dùng cho: ${v.use}</p>
+  <div class="sl-act"><button type="button" data-copy>Chép</button></div>
+  <details><summary>Xem code</summary><pre><code>${esc(snippet(v))}</code></pre></details></div></article>`).join('');
+grid.addEventListener('click', (e) => {
+  const b = e.target.closest('[data-copy]'); if (!b) return;
+  const v = V.find((x) => x.id === b.closest('.sl-card').id);
+  navigator.clipboard.writeText(snippet(v)).then(() => { b.textContent = 'Đã chép'; setTimeout(() => b.textContent = 'Chép', 1500); });
+});
+</script>
+<script src="/search.js?v=ca13477c3c" defer></script><script src="/stats.js?v=ca13477c3c" defer></script>
+</body>
+</html>

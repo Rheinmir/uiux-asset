@@ -6,7 +6,7 @@
 <title>Chuẩn UI của Hang — uiux-asset</title>
 <meta name="description" content="244 luật UI đo được, chi tiết tới từng vai (nút, chip, ô nhập, bảng…), rút từ 41k phần tử đo thật. Lọc theo vai, mức, tìm nhanh; tải bộ luật và chạy audit tự động.">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
-<link rel="stylesheet" href="../aw.css?v=66b5871e1e">
+<link rel="stylesheet" href="../aw.css?v=ca13477c3c">
 <style>
 .rl-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
 .rl { --line: var(--aw-border-gray); --card: var(--aw-bg-white); --mut: var(--aw-ink2);
@@ -55,7 +55,7 @@
 </style>
 </head>
 <body>
-<main class="aw-wrap"><script src="../aw.js?v=66b5871e1e"></script>
+<main class="aw-wrap"><script src="../aw.js?v=ca13477c3c"></script>
 <div class="rl-page rl">
   <div class="aw-sotd" style="padding-top:16px">
     <p class="aw-sotd__sub"><span>Tài nguyên</span><span class="aw-tag aw-tag--medium" id="rl-n">244 luật</span></p>
@@ -152,6 +152,6 @@ $('rl-roles').addEventListener('click', (e) => { const b = e.target.closest('but
   for (const x of $('rl-roles').children) x.setAttribute('aria-pressed', x === b); apply();
   if (st.role !== 'all' && matchMedia('(max-width: 999px)').matches) $('rl-list').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
 </script>
-<script src="/search.js?v=66b5871e1e" defer></script><script src="/stats.js?v=66b5871e1e" defer></script>
+<script src="/search.js?v=ca13477c3c" defer></script><script src="/stats.js?v=ca13477c3c" defer></script>
 </body>
 </html>

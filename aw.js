@@ -42,6 +42,7 @@
       ['patterns/principles.html', '20 nguyên tắc UX', 'Trước/Sau cho từng nguyên tắc chuyển động', 20],
       ['patterns/mascot.html', 'Linh vật bot', '20 trạng thái avatar agent, CSS thuần', 20],
       ['patterns/plush.html', 'Linh vật lông', '12 thú bông SVG, mỗi con một vai agent', 12],
+      ['patterns/server-lift.html', 'Máy chủ mở nắp', 'Minh hoạ đẳng cự, nắp nhấc, lõi sáng', 2],
       ['patterns/sound.html', 'Chuyển động và âm thanh', 'Luồng app có âm thanh UI', 11]]],
     ['tai-nguyen', 'Tài nguyên', 'UI kit, font, thư viện, skill', [
       ['ui-kits/', 'UI kits', 'Hệ thiết kế rút từ site thật', 36, 'ui-kits/awwwards-com/latest/'],
