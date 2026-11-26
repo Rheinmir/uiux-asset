@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cài đặt có duyệt thay đổi — uiux-asset</title>
+<meta name="description" content="Màn Cài đặt trên điện thoại: chế độ tối mở theo vòng tròn, màu nhấn sống, cỡ chữ, kiểu bo góc, đổi ngôn ngữ ngay, thanh «N thay đổi» với Huỷ / Xem lại và tấm duyệt thay đổi cũ → mới trước khi lưu. JS/CSS thuần.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=b19a7efb67">
+<style>
+.sf-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+.sf-page a { color: inherit; }
+.sf-wrap { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; justify-content: center; padding: 24px 0; border-radius: 20px; background: radial-gradient(120% 90% at 50% 100%, #5b2a8a 0, #1a1030 55%, #0c0a14 100%); }
+.sf-notes { max-width: 360px; color: #e9e4f5; font: 400 14px/1.55 var(--aw-font); }
+.sf-notes h2 { margin: 0 0 8px; font-size: 18px; } .sf-notes ol { margin: 0; padding-left: 20px; } .sf-notes li { margin-bottom: 6px; }
+/* Điện thoại. Token của app: --a (màu nhấn), --fs (cỡ chữ), --r (bo góc). .dk = tối. */
+.ph { --a: #7b5cff; --fs: 1; --r: 18px; --bg: #f2f2f7; --card: #fff; --ink: #111; --ink2: #6b6b76; --line: #e5e5ea; --cap: #6a6a74;
+  position: relative; width: 340px; height: 700px; border-radius: 48px; padding: 10px; background: #0b0b0d; box-shadow: 0 0 0 2px #2a2a30, 0 30px 60px rgba(0,0,0,.5); flex: none; }
+.ph-scr { position: relative; height: 100%; border-radius: 38px; overflow: hidden; background: var(--bg); color: var(--ink); font: 400 calc(14px * var(--fs))/1.35 -apple-system, "SF Pro Text", system-ui, sans-serif; view-transition-name: sf-screen; }
+.ph.dk { --bg: #000; --card: #1c1c1e; --ink: #f5f5f7; --ink2: #9a9aa3; --line: #2c2c2e; --cap: #7c7c85; }
+.ph button { font: inherit; color: inherit; cursor: pointer; }
+.ph-bar { display: flex; justify-content: space-between; align-items: center; height: 44px; padding: 0 26px; font: 600 14px/1 system-ui, sans-serif; }
+.ph-isl { position: absolute; top: 10px; left: 50%; width: 96px; height: 28px; margin-left: -48px; border-radius: 20px; background: #000; }
+.ph-body { position: absolute; inset: 44px 0 0; overflow: auto; padding: 4px 16px 110px; }
+.ph-body.in { animation: sf-in .32s cubic-bezier(.2,.8,.2,1); } .ph-body.back { animation: sf-back .32s cubic-bezier(.2,.8,.2,1); }
+@keyframes sf-in { from { transform: translateX(40px); opacity: 0; } } @keyframes sf-back { from { transform: translateX(-40px); opacity: 0; } }
+.ph-nav { display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; height: 44px; }
+.ph-nav h2 { margin: 0; text-align: center; font-size: calc(16px * var(--fs)); font-weight: 600; }
+.ph-back { width: 36px; height: 36px; border: 0; border-radius: 50%; background: var(--card); display: grid; place-items: center; }
+.ph-h1 { margin: 10px 0 2px; font-size: calc(30px * var(--fs)); font-weight: 700; letter-spacing: -.02em; } .ph-sub { margin: 0 0 16px; color: var(--ink2); font-size: calc(13px * var(--fs)); }
+.ph-cap { margin: 18px 4px 6px; font-size: calc(11px * var(--fs)); letter-spacing: .06em; color: var(--cap); display: flex; justify-content: space-between; } .ph-cap b { color: var(--a); font-weight: 600; letter-spacing: 0; }
+.ph-grp { border-radius: var(--r); background: var(--card); overflow: hidden; }
+.ph-row { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 56px; padding: 8px 14px; border: 0; background: none; text-align: left; border-top: 1px solid var(--line); }
+.ph-row:first-child { border-top: 0; } a.ph-row { color: inherit; text-decoration: none; } a.ph-row:active { background: var(--line); }
+.ph-ic { width: 32px; height: 32px; border-radius: calc(var(--r) * .5); display: grid; place-items: center; background: color-mix(in srgb, var(--a) 14%, transparent); color: var(--a); flex: none; }
+.ph-ic svg { width: 17px; height: 17px; }
+.ph-tx { flex: 1; min-width: 0; } .ph-tx b { display: block; font-weight: 500; } .ph-tx small { color: var(--ink2); font-size: calc(12px * var(--fs)); }
+.ph-chev { color: var(--cap); }
+.sw { position: relative; width: 50px; height: 30px; border-radius: 15px; border: 0; padding: 0; background: #d1d1d6; transition: background .25s; flex: none; }
+.ph.dk .sw { background: #39393d; }
+.sw::after { content: ""; position: absolute; top: 2px; left: 2px; width: 26px; height: 26px; border-radius: 50%; background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,.2); transition: transform .25s cubic-bezier(.3,1.4,.5,1); }
+.sw[aria-checked="true"] { background: var(--a) !important; } .sw[aria-checked="true"]::after { transform: translateX(20px); }
+.ph-prev { display: flex; gap: 12px; align-items: center; padding: 14px; border-radius: var(--r); background: var(--card); }
+.ph-prev .ph-ic { width: 40px; height: 40px; background: var(--a); color: #fff; }
+.ph-prev button { margin-top: 6px; min-height: 28px; padding: 0 12px; border: 0; border-radius: calc(var(--r) * .6); background: color-mix(in srgb, var(--a) 78%, #000); color: #fff; font-size: calc(12px * var(--fs)); font-weight: 600; }
+.ph-sw { display: flex; justify-content: space-between; padding: 14px; border-radius: var(--r); background: var(--card); }
+.ph-sw button { width: 40px; height: 40px; border-radius: 50%; border: 0; background: var(--c); box-shadow: 0 0 0 0 var(--c); transition: box-shadow .2s; }
+.ph-sw button[aria-checked="true"] { box-shadow: 0 0 0 3px var(--card), 0 0 0 5px var(--c); }
+.ph-opts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 10px; border-radius: var(--r); background: var(--card); }
+.ph-opts.three { grid-template-columns: repeat(3, 1fr); }
+.ph-opts button { min-height: 44px; border: 1.5px solid transparent; border-radius: calc(var(--r) * .6); background: var(--bg); color: var(--ink2); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 6px 4px; }
+.ph-opts button[aria-checked="true"] { border-color: var(--a); color: var(--a); background: color-mix(in srgb, var(--a) 12%, transparent); }
+.ph-shape { width: 44px; height: 22px; background: var(--a); }
+.ph-opts small { font-size: 11px; }
+.ph-flag { width: 28px; height: 28px; border-radius: 50%; background: var(--line); display: grid; place-items: center; font-size: 10px; font-weight: 700; color: var(--ink2); flex: none; }
+.ph-tick { width: 20px; height: 20px; border-radius: 50%; background: var(--a); color: #fff; display: grid; place-items: center; }
+.ph-chg { position: absolute; left: 12px; right: 12px; bottom: 24px; display: flex; align-items: center; gap: 8px; padding: 8px 8px 8px 16px; border-radius: calc(var(--r) * .9); background: var(--card); box-shadow: 0 10px 30px rgba(0,0,0,.18); transform: translateY(140%); transition: transform .35s cubic-bezier(.3,1.3,.5,1); }
+.ph-chg.on { transform: none; }
+.ph-chg span { flex: 1; font-size: calc(13px * var(--fs)); } .ph-chg span::before { content: ""; display: inline-block; width: 7px; height: 7px; margin-right: 8px; border-radius: 50%; background: var(--a); vertical-align: middle; }
+.ph-chg button { min-height: 36px; padding: 0 14px; border: 0; border-radius: calc(var(--r) * .55); background: none; color: var(--ink2); font-size: calc(13px * var(--fs)); }
+.ph-chg .pri { background: color-mix(in srgb, var(--a) 78%, #000); color: #fff; font-weight: 600; }
+.ph-sheet { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; background: rgba(0,0,0,.35); opacity: 0; pointer-events: none; transition: opacity .25s; }
+.ph-sheet.on { opacity: 1; pointer-events: auto; }
+.ph-sheet > div { padding: 18px 16px 28px; border-radius: 26px 26px 0 0; background: var(--card); transform: translateY(100%); transition: transform .35s cubic-bezier(.2,.8,.2,1); }
+.ph-sheet.on > div { transform: none; }
+.ph-sheet h3 { margin: 0; font-size: calc(18px * var(--fs)); } .ph-sheet p { margin: 2px 0 12px; color: var(--ink2); font-size: calc(12px * var(--fs)); }
+.ph-diff { display: flex; justify-content: space-between; gap: 8px; padding: 9px 0; border-top: 1px solid var(--line); font-size: calc(13px * var(--fs)); }
+.ph-diff s { color: var(--ink2); } .ph-diff b { color: var(--a); font-weight: 600; }
+.ph-save { width: 100%; min-height: 48px; margin-top: 12px; border: 0; border-radius: calc(var(--r) * .7); background: color-mix(in srgb, var(--a) 78%, #000); color: #fff !important; font-weight: 600; }
+.ph-toast { position: absolute; left: 50%; bottom: 34px; display: flex; align-items: center; gap: 6px; padding: 10px 16px; border-radius: 99px; background: var(--ink); color: var(--bg); font-weight: 600; font-size: 13px; transform: translate(-50%, 160%); opacity: 0; transition: transform .4s cubic-bezier(.3,1.4,.5,1), opacity .2s; }
+.ph-toast.on { transform: translate(-50%, 0); opacity: 1; }
+.ph-toast i { width: 18px; height: 18px; border-radius: 50%; background: var(--a); display: grid; place-items: center; color: #fff; font-style: normal; font-size: 11px; }
+::view-transition-old(sf-screen), ::view-transition-new(sf-screen) { animation: none; mix-blend-mode: normal; height: 100%; }
+::view-transition-group(sf-screen) { animation: none; }
+@media (prefers-reduced-motion: reduce) { .ph * { animation: none !important; transition: none !important; } }
+@media (max-width: 400px) { .ph { width: 100%; max-width: 340px; } }
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=b19a7efb67"></script>
+<div class="sf-page">
+  <div class="aw-sotd" style="padding-top:16px">
+    <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">5 phần</span></p>
+    <h1 class="aw-h1" style="--aw-h1:clamp(40px,7vw,96px)">Cài đặt có duyệt</h1>
+    <p class="aw-lead">Màn Cài đặt áp thay đổi ngay để xem thử, nhưng chỉ lưu khi bấm duyệt. Thanh dưới đếm số thay đổi, «Review» mở tấm liệt kê cũ → mới, «Discard» trả về như cũ. Chế độ tối mở theo vòng tròn từ công tắc.</p>
+    <p class="aw-lead" style="font-size:14px">Dựng lại từ <a href="https://www.facebook.com/watch/?v=1431825925755306" target="_blank" rel="noopener">reel của Muhammad Anees</a> (Flutter, "This settings screen is too smooth"). Viết lại bằng JS/CSS thuần, chạy được trên trang.</p>
+  </div>
+  <div class="sf-wrap">
+    <div class="ph" id="ph"><div class="ph-scr" id="scr"></div></div>
+    <div class="sf-notes"><h2>Thử theo thứ tự</h2><ol>
+      <li>Gạt «Dark mode»: màn tối loang ra từ công tắc.</li>
+      <li>Appearance: đổi màu nhấn, cỡ chữ, kiểu bo góc. Cả app đổi theo ngay.</li>
+      <li>Language → Español: mọi nhãn đổi tiếng ngay.</li>
+      <li>Thanh dưới đếm thay đổi. «Review» xem cũ → mới, «Save changes» lưu.</li>
+      <li>«Discard» trả mọi thứ về bản đã lưu.</li></ol></div>
+  </div>
+</div>
+</main>
+<script>
+// Các phần của pattern (sổ patterns.json trỏ tới các id này).
+const PARTS = [{ id: 'dark-reveal' }, { id: 'appearance' }, { id: 'language' }, { id: 'change-bar' }, { id: 'review-sheet' }];
+const T = {
+  en: { settings: 'Settings', sub: 'Make the app feel like yours.', dark: 'Dark mode', darkSub: 'Tap to switch the mood', pers: 'PERSONALIZATION', appearance: 'Appearance', language: 'Language', alerts: 'ALERTS', notif: 'Notifications', notifSub: 'Messages and promos',
+    privsec: 'PRIVACY & SECURITY', privacy: 'Privacy', privacySub: 'Visible to everyone', security: 'Security', securitySub: 'Basic protection', color: 'THEME COLOR', size: 'TEXT SIZE', style: 'UI STYLE', weekly: 'Weekly summary', weeklySub: 'Your plan for the week is ready.', open: 'Open',
+    one: 'change', many: 'changes', discard: 'Discard', review: 'Review', reviewT: 'Review changes', reviewSub: 'ready to apply', save: 'Save changes', saved: 'Saved', push: 'Push notifications', pushSub: 'On this device', about: 'NOTIFY ME ABOUT', msgs: 'Messages', msgsSub: 'Replies and new chats',
+    promos: 'Promotions', promosSub: 'Offers and news', sv: 'SOUND & VIBRATION', sound: 'Sound', soundSub: 'A soft tone for alerts', vib: 'Vibration', vibSub: 'A gentle buzz', on: 'On', off: 'Off', light: 'Light', darkV: 'Dark',
+    colors: ['Violet', 'Rose', 'Blue', 'Green', 'Amber'], sizes: ['Small', 'Default', 'Large', 'X-Large'], styles: ['Rounded', 'Soft', 'Crisp'] },
+  es: { settings: 'Ajustes', sub: 'Haz que la app sea tuya.', dark: 'Modo oscuro', darkSub: 'Toca para cambiar el ambiente', pers: 'PERSONALIZACIÓN', appearance: 'Apariencia', language: 'Idioma', alerts: 'ALERTAS', notif: 'Notificaciones', notifSub: 'Mensajes y promos',
+    privsec: 'PRIVACIDAD Y SEGURIDAD', privacy: 'Privacidad', privacySub: 'Visible para todos', security: 'Seguridad', securitySub: 'Protección básica', color: 'COLOR DEL TEMA', size: 'TAMAÑO DE TEXTO', style: 'ESTILO', weekly: 'Resumen semanal', weeklySub: 'Tu plan de la semana está listo.', open: 'Abrir',
+    one: 'cambio', many: 'cambios', discard: 'Descartar', review: 'Revisar', reviewT: 'Revisar cambios', reviewSub: 'listos para aplicar', save: 'Guardar cambios', saved: 'Guardado', push: 'Notificaciones push', pushSub: 'En este dispositivo', about: 'AVÍSAME SOBRE', msgs: 'Mensajes', msgsSub: 'Respuestas y chats nuevos',
+    promos: 'Promociones', promosSub: 'Ofertas y novedades', sv: 'SONIDO Y VIBRACIÓN', sound: 'Sonido', soundSub: 'Un tono suave para alertas', vib: 'Vibración', vibSub: 'Un zumbido suave', on: 'Activado', off: 'Desactivado', light: 'Claro', darkV: 'Oscuro',
+    colors: ['Violeta', 'Rosa', 'Azul', 'Verde', 'Ámbar'], sizes: ['Pequeño', 'Normal', 'Grande', 'Muy grande'], styles: ['Redondo', 'Suave', 'Nítido'] },
+  fr: { settings: 'Réglages', sub: 'Faites de l’app la vôtre.', dark: 'Mode sombre', darkSub: 'Touchez pour changer l’ambiance', pers: 'PERSONNALISATION', appearance: 'Apparence', language: 'Langue', alerts: 'ALERTES', notif: 'Notifications', notifSub: 'Messages et promos',
+    privsec: 'CONFIDENTIALITÉ', privacy: 'Confidentialité', privacySub: 'Visible par tous', security: 'Sécurité', securitySub: 'Protection de base', color: 'COULEUR', size: 'TAILLE DU TEXTE', style: 'STYLE', weekly: 'Résumé hebdo', weeklySub: 'Votre plan de la semaine est prêt.', open: 'Ouvrir',
+    one: 'modification', many: 'modifications', discard: 'Annuler', review: 'Vérifier', reviewT: 'Vérifier les modifications', reviewSub: 'prêtes à appliquer', save: 'Enregistrer', saved: 'Enregistré', push: 'Notifications push', pushSub: 'Sur cet appareil', about: 'ME PRÉVENIR POUR', msgs: 'Messages', msgsSub: 'Réponses et nouveaux chats',
+    promos: 'Promotions', promosSub: 'Offres et nouveautés', sv: 'SON ET VIBRATION', sound: 'Son', soundSub: 'Un son doux pour les alertes', vib: 'Vibration', vibSub: 'Une vibration légère', on: 'Activé', off: 'Désactivé', light: 'Clair', darkV: 'Sombre',
+    colors: ['Violet', 'Rose', 'Bleu', 'Vert', 'Ambre'], sizes: ['Petit', 'Normal', 'Grand', 'Très grand'], styles: ['Arrondi', 'Doux', 'Net'] } };
+const LANGS = [['en', 'English', 'EN'], ['fr', 'Français', 'FR'], ['es', 'Español', 'ES']];
+const ACC = ['#7b5cff', '#ff3d7f', '#3d7bff', '#22c55e', '#f5a524'], FS = [.9, 1, 1.12, 1.25], RAD = [22, 12, 4];
+const SAVED = { dark: false, acc: 0, size: 1, style: 0, lang: 'en', push: true, msgs: true, promos: false, sound: true, vib: true };
+let D = { ...SAVED }, screen = 'main', sheet = false;
+const ph = document.getElementById('ph'), scr = document.getElementById('scr');
+const I = (d) => `<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const IC = { moon: '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>', brush: '<path d="M9.06 11.9l8.07-8.06a2.85 2.85 0 1 1 4.03 4.03l-8.06 8.08M7.07 14.94c-1.66 0-3 1.35-3 3.02 0 1.33-2.5 1.52-2 2.02 1.08 1.1 2.49 2.02 4 2.02 2.2 0 4-1.8 4-4.04a3.01 3.01 0 0 0-3-3.02z"/>',
+  globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>', bell: '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 8 3 8H3s3-1 3-8M10.3 21a1.9 1.9 0 0 0 3.4 0"/>', eye: '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>', chev: '<path d="M9 6l6 6-6 6"/>', back: '<path d="M15 6l-6 6 6 6"/>', msg: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>', tag: '<path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L2 12V2h10l8.6 8.6a2 2 0 0 1 0 2.8z"/><circle cx="7" cy="7" r="1.5"/>',
+  vol: '<path d="M11 5L6 9H2v6h4l5 4zM15.5 8.5a5 5 0 0 1 0 7"/>', vib: '<rect x="7" y="3" width="10" height="18" rx="2"/><path d="M3 8v8M21 8v8"/>', spark: '<path d="M12 3l2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5z"/>', check: '<path d="M5 12l5 5 9-10"/>' };
+const t = () => T[D.lang];
+const sw = (k) => `<button type="button" class="sw" role="switch" aria-checked="${D[k]}" data-sw="${k}" aria-label="${t()[k] || k}"></button>`;
+const row = (ic, k, sub, end, go) => `<${go ? `a href="#${go}" data-go="${go}"` : 'div'} class="ph-row"><span class="ph-ic">${I(IC[ic])}</span><span class="ph-tx"><b>${t()[k]}</b><small>${sub}</small></span>${end || `<span class="ph-chev">${I(IC.chev)}</span>`}</${go ? 'a' : 'div'}>`;
+const nav = (k) => `<div class="ph-nav"><button type="button" class="ph-back" data-go="main" aria-label="Quay lại">${I(IC.back)}</button><h2>${t()[k]}</h2><span></span></div>`;
+// Danh sách thay đổi: [nhãn, cũ, mới] — dùng cho thanh đếm và tấm duyệt.
+function diffs() {
+  const L = t(), yes = (v) => v ? L.on : L.off, out = [];
+  if (D.dark !== SAVED.dark) out.push([L.dark, SAVED.dark ? L.darkV : L.light, D.dark ? L.darkV : L.light]);
+  if (D.acc !== SAVED.acc) out.push([L.color, L.colors[SAVED.acc], L.colors[D.acc]]);
+  if (D.size !== SAVED.size) out.push([L.size, L.sizes[SAVED.size], L.sizes[D.size]]);
+  if (D.style !== SAVED.style) out.push([L.style, L.styles[SAVED.style], L.styles[D.style]]);
+  if (D.lang !== SAVED.lang) out.push([L.language, LANGS.find((l) => l[0] === SAVED.lang)[1], LANGS.find((l) => l[0] === D.lang)[1]]);
+  for (const k of ['push', 'msgs', 'promos', 'sound', 'vib']) if (D[k] !== SAVED[k]) out.push([L[k], yes(SAVED[k]), yes(D[k])]);
+  return out.map(([a, b, c]) => [a.charAt(0) + a.slice(1).toLowerCase(), b, c]);
+}
+function body() {
+  const L = t();
+  if (screen === 'appearance') return `${nav('appearance')}<div class="ph-prev"><span class="ph-ic">${I(IC.spark)}</span><span class="ph-tx"><b>${L.weekly}</b><small>${L.weeklySub}</small><br><button type="button">${L.open}</button></span></div>
+    <p class="ph-cap">${L.color}<b>${L.colors[D.acc]}</b></p><div class="ph-sw" role="radiogroup" aria-label="${L.color}">${ACC.map((c, i) => `<button type="button" role="radio" style="--c:${c}" data-acc="${i}" aria-checked="${D.acc === i}" aria-label="${L.colors[i]}"></button>`).join('')}</div>
+    <p class="ph-cap">${L.size}<b>${L.sizes[D.size]}</b></p><div class="ph-opts" role="radiogroup" aria-label="${L.size}">${FS.map((f, i) => `<button type="button" role="radio" data-size="${i}" aria-checked="${D.size === i}" aria-label="${L.sizes[i]}" style="font-size:${12 * f + i * 2}px;font-weight:600">Aa</button>`).join('')}</div>
+    <p class="ph-cap">${L.style}<b>${L.styles[D.style]}</b></p><div class="ph-opts three" role="radiogroup" aria-label="${L.style}">${RAD.map((r, i) => `<button type="button" role="radio" data-style="${i}" aria-checked="${D.style === i}"><span class="ph-shape" style="border-radius:${r / 2}px"></span><small>${L.styles[i]}</small></button>`).join('')}</div>`;
+  if (screen === 'language') return `${nav('language')}<div class="ph-grp" role="radiogroup" aria-label="${L.language}">${LANGS.map(([k, n, c]) => `<button type="button" role="radio" class="ph-row" data-lang="${k}" aria-checked="${D.lang === k}"><span class="ph-flag">${c}</span><span class="ph-tx"><b>${n}</b><small>${{ en: 'English', fr: 'French', es: 'Spanish' }[k]}</small></span>${D.lang === k ? `<span class="ph-tick">${I(IC.check).replace(/17/g, '12')}</span>` : ''}</button>`).join('')}</div>`;
+  if (screen === 'notif') return `${nav('notif')}<div class="ph-grp">${row('bell', 'push', L.pushSub, sw('push'))}</div><p class="ph-cap">${L.about}</p>
+    <div class="ph-grp">${row('msg', 'msgs', L.msgsSub, sw('msgs'))}${row('tag', 'promos', L.promosSub, sw('promos'))}</div><p class="ph-cap">${L.sv}</p>
+    <div class="ph-grp">${row('vol', 'sound', L.soundSub, sw('sound'))}${row('vib', 'vib', L.vibSub, sw('vib'))}</div>`;
+  return `<h1 class="ph-h1">${L.settings}</h1><p class="ph-sub">${L.sub}</p>
+    <div class="ph-grp">${row('moon', 'dark', L.darkSub, sw('dark'))}</div><p class="ph-cap">${L.pers}</p>
+    <div class="ph-grp">${row('brush', 'appearance', `${L.colors[D.acc]} · ${L.sizes[D.size]} · ${L.styles[D.style]}`, '', 'appearance')}${row('globe', 'language', LANGS.find((l) => l[0] === D.lang)[1], '', 'language')}</div>
+    <p class="ph-cap">${L.alerts}</p><div class="ph-grp">${row('bell', 'notif', L.notifSub, '', 'notif')}</div>
+    <p class="ph-cap">${L.privsec}</p><div class="ph-grp">${row('eye', 'privacy', L.privacySub)}${row('shield', 'security', L.securitySub)}</div>`;
+}
+function render(dir) {
+  const L = t(), ch = diffs(), y = scr.querySelector('.ph-body')?.scrollTop || 0;
+  ph.classList.toggle('dk', D.dark);
+  ph.style.setProperty('--a', ACC[D.acc]); ph.style.setProperty('--fs', FS[D.size]); ph.style.setProperty('--r', RAD[D.style] + 'px');
+  scr.innerHTML = `<div class="ph-bar"><span>10:59</span><span>●●● ▮</span></div><span class="ph-isl"></span>
+    <div class="ph-body${dir ? ' ' + dir : ''}">${body()}</div>
+    <div class="ph-chg${ch.length ? ' on' : ''}" aria-live="polite"><span>${ch.length} ${ch.length === 1 ? L.one : L.many}</span><button type="button" data-discard>${L.discard}</button><button type="button" class="pri" data-review>${L.review}</button></div>
+    <div class="ph-sheet${sheet ? ' on' : ''}" data-close><div role="dialog" aria-modal="true" aria-label="${L.reviewT}"><h3>${L.reviewT}</h3><p>${ch.length} ${ch.length === 1 ? L.one : L.many} ${L.reviewSub}</p>
+      ${ch.map(([k, a, b]) => `<div class="ph-diff"><span>${k}</span><span><s>${a}</s> → <b>${b}</b></span></div>`).join('')}<button type="button" class="ph-save" data-save>${L.save}</button></div></div>
+    <div class="ph-toast" role="status"><i>✓</i>${L.saved}</div>`;
+  if (!dir) scr.querySelector('.ph-body').scrollTop = y;
+}
+function toggleDark(btn) {
+  const go = () => { D.dark = !D.dark; render(); };
+  if (!document.startViewTransition || matchMedia('(prefers-reduced-motion: reduce)').matches) return go();
+  const s = scr.getBoundingClientRect(), b = btn.getBoundingClientRect(), x = b.left + b.width / 2 - s.left, y = b.top + b.height / 2 - s.top, r = Math.hypot(Math.max(x, s.width - x), Math.max(y, s.height - y));
+  document.startViewTransition(go).ready.then(() => document.documentElement.animate({ clipPath: [`circle(0 at ${x}px ${y}px)`, `circle(${r}px at ${x}px ${y}px)`] }, { duration: 700, easing: 'cubic-bezier(.65,0,.35,1)', pseudoElement: '::view-transition-new(sf-screen)' }));
+}
+scr.addEventListener('click', (e) => {
+  const b = e.target.closest('button,a,[data-close]'); if (!b) return; const d = b.dataset; if (b.tagName === 'A') e.preventDefault();
+  if (d.close !== undefined && e.target !== b) return;
+  if (d.sw === 'dark') return toggleDark(b);
+  if (d.sw) D[d.sw] = !D[d.sw];
+  else if (d.go) { const back = d.go === 'main'; screen = d.go; return render(back ? 'back' : 'in'); }
+  else if (d.acc) D.acc = +d.acc; else if (d.size) D.size = +d.size; else if (d.style) D.style = +d.style; else if (d.lang) D.lang = d.lang;
+  else if ('discard' in d) D = { ...SAVED };
+  else if ('review' in d) { render(); sheet = true; return requestAnimationFrame(() => scr.querySelector('.ph-sheet').classList.add('on')); }
+  else if ('close' in d) sheet = false;
+  else if ('save' in d) { Object.assign(SAVED, D); sheet = false; render(); requestAnimationFrame(() => { const t = scr.querySelector('.ph-toast'); t.classList.add('on'); setTimeout(() => t.classList.remove('on'), 1800); }); return; }
+  else return;
+  render();
+});
+scr.addEventListener('keydown', (e) => { if (e.key === 'Escape' && sheet) { sheet = false; render(); } });
+render();
+</script>
+<script src="/search.js?v=b19a7efb67" defer></script><script src="/stats.js?v=b19a7efb67" defer></script>
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bảng nghe nhạc — uiux-asset</title>
+<meta name="description" content="Dashboard app nghe nhạc tông kem + xanh xô thơm: thư viện bài hát và album có lọc thể loại, trang thống kê có biểu đồ vùng và đồng hồ giờ nghe, thanh phát nhạc, chế độ tối mở ra theo vòng tròn từ nút bấm. JS/CSS thuần.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=b19a7efb67">
+<style>
+.md-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+.md-page a { color: inherit; }
+/* App: token riêng, không theo theme của site. .dk = chế độ tối của app. */
+.lu { --bg: #f8eee2; --side: linear-gradient(180deg, #c3d4bf, #aec4ab); --side-ink: #24322a; --card: #fbf4ea; --line: #ecdfcf; --ink: #2b2420; --ink2: #6f655c; --acc: #e9825c; --accb: #b5492a; --acctx: #b5492a; --chip: #f3e6d6; --hi: #fff6ec;
+  --t1: #e3e3c9; --t2: #f6c9b4; --t3: #f8dfac; --t4: #d6dbe0;
+  position: relative; display: grid; grid-template-columns: 220px 1fr; gap: 14px; height: 760px; padding: 12px; border-radius: 20px; background: var(--bg); color: var(--ink); font: 400 14px/1.4 "Outfit", var(--aw-font); overflow: hidden; }
+.lu.dk { --bg: #1c1916; --side: linear-gradient(180deg, #2b3a2f, #243128); --side-ink: #e7efe6; --card: #25211d; --line: #37302a; --ink: #f3ebe2; --ink2: #a89d92; --chip: #302a25; --hi: #2f2924; --t1: #3a3b2c; --t2: #4b3029; --t3: #46391f; --t4: #2b3440; --acctx: #f3a07e; }
+.lu button { font: inherit; color: inherit; cursor: pointer; }
+.lu-side { display: flex; flex-direction: column; gap: 4px; padding: 12px; border-radius: 18px; background: var(--side); color: var(--side-ink); min-height: 0; }
+.lu-brand { display: flex; align-items: center; gap: 10px; padding: 4px 4px 12px; }
+.lu-logo { width: 38px; height: 38px; border-radius: 12px; background: #3f6b50; display: grid; place-items: center; color: #fff; }
+.lu-brand b { display: block; font-size: 17px; font-weight: 600; } .lu-brand small { font-size: 11px; opacity: .75; }
+.lu-cap { margin: 4px 8px; font-size: 10px; letter-spacing: .08em; opacity: .7; }
+.lu-nav { display: flex; align-items: center; gap: 10px; min-height: 40px; padding: 0 10px; border: 0; border-radius: 12px; background: none; text-align: left; }
+.lu-nav:hover { background: rgba(255,255,255,.25); }
+.lu-nav[aria-current="page"] { background: var(--hi); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.06); }
+.lu-nav svg { width: 18px; height: 18px; flex: none; }
+.lu-plus { margin-top: auto; padding: 14px; border-radius: 16px; background: #f6cbb4; color: #3b2a22; text-align: center; }
+.lu-plus b { display: block; margin: 4px 0 2px; } .lu-plus p { margin: 0 0 8px; font-size: 11px; }
+.lu-plus button { min-height: 32px; padding: 0 14px; border: 0; border-radius: 99px; background: var(--accb); color: #fff; font-size: 12px; font-weight: 600; }
+.lu-me { display: flex; align-items: center; gap: 8px; margin-top: 8px; padding: 8px; border-radius: 12px; background: rgba(255,255,255,.3); font-size: 12px; }
+.lu.dk .lu-me { background: rgba(255,255,255,.06); }
+.lu-av { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: #f5e3b9; color: #3b2a22; font-size: 11px; font-weight: 600; flex: none; }
+.lu-main { position: relative; display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.lu-top { display: flex; align-items: center; gap: 10px; padding: 6px 4px 0; }
+.lu-crumb { flex: 1; font-size: 12px; color: var(--ink2); } .lu-crumb b { color: var(--ink); font-weight: 500; }
+.lu-search { display: flex; align-items: center; gap: 8px; width: 220px; height: 38px; padding: 0 10px; border-radius: 12px; background: var(--card); border: 1px solid var(--line); color: var(--ink2); font-size: 12px; }
+.lu-search input { align-self: stretch; flex: 1; min-width: 0; border: 0; background: none; color: var(--ink); font: inherit; outline: 0; }
+.lu-ic { position: relative; width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--line); background: var(--card); display: grid; place-items: center; }
+.lu-ic svg { width: 17px; height: 17px; }
+.lu-badge { position: absolute; top: -3px; right: -3px; min-width: 16px; height: 16px; border-radius: 8px; background: var(--accb); color: #fff; font-size: 10px; display: grid; place-items: center; }
+.lu-scroll { flex: 1; min-height: 0; overflow: auto; padding: 12px 4px 96px; }
+.lu-h { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+.lu-h h2 { margin: 0; font-size: 34px; font-weight: 500; letter-spacing: -.01em; } .lu-h p { margin: 2px 0 0; color: var(--ink2); font-size: 12px; }
+.lu-pill { min-height: 36px; padding: 0 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--card); font-size: 12px; }
+.lu-tabs { display: flex; gap: 4px; margin: 14px 0 12px; border-bottom: 1px solid var(--line); }
+.lu-tabs button { min-height: 36px; padding: 0 10px; border: 0; background: none; color: var(--ink2); border-bottom: 2px solid transparent; margin-bottom: -1px; font-size: 13px; }
+.lu-tabs button[aria-selected="true"] { color: var(--ink); border-color: var(--acc); }
+.lu-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 10px; }
+.lu-seg { display: flex; padding: 3px; border-radius: 12px; background: var(--chip); }
+.lu-seg button { min-height: 28px; padding: 0 10px; border: 0; border-radius: 9px; background: none; font-size: 12px; color: var(--ink2); }
+.lu-seg button[aria-pressed="true"] { background: var(--card); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+.lu-play { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 16px; border: 0; border-radius: 12px; background: var(--accb); color: #fff !important; font-weight: 600; font-size: 13px; box-shadow: 0 4px 12px rgba(233,130,92,.35); }
+.lu-chip { display: inline-flex; align-items: center; gap: 6px; min-height: 30px; padding: 0 10px; border-radius: 99px; border: 1px solid var(--line); background: var(--card); font-size: 12px; }
+.lu-chip i { width: 7px; height: 7px; border-radius: 50%; background: var(--c); } .lu-chip em { font-style: normal; padding: 1px 6px; border-radius: 99px; background: var(--chip); font-size: 10px; color: var(--ink2); }
+.lu-chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); } .lu-chip[aria-pressed="true"] em { background: rgba(255,255,255,.2); color: inherit; }
+.lu-table { border-radius: 16px; background: var(--card); border: 1px solid var(--line); overflow: hidden; }
+.lu-tr { display: grid; grid-template-columns: 32px 1.6fr 1fr 48px 28px 44px 28px; align-items: center; gap: 8px; min-height: 52px; padding: 0 12px; border-top: 1px solid var(--line); font-size: 13px; }
+.lu-tr:first-child { border: 0; min-height: 40px; font-size: 11px; color: var(--ink2); }
+.lu-tr:not(:first-child):hover { background: var(--hi); }
+.lu-tr.on .lu-t b { color: var(--acctx); }
+.lu-n { color: var(--ink2); font-size: 12px; text-align: center; }
+.lu-t { display: flex; align-items: center; gap: 10px; min-width: 0; } .lu-t b { display: block; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .lu-t small { color: var(--ink2); font-size: 11px; }
+.lu-cv { width: 36px; height: 36px; border-radius: 8px; flex: none; background: var(--g); }
+.lu-heart { border: 0; background: none; padding: 0; width: 28px; height: 28px; display: grid; place-items: center; color: var(--ink2); }
+.lu-heart[aria-pressed="true"] { color: var(--acc); } .lu-heart svg { width: 15px; height: 15px; }
+.lu-eq { display: inline-flex; gap: 2px; align-items: flex-end; height: 12px; } .lu-eq i { width: 3px; background: var(--acc); animation: lu-eq .9s ease-in-out infinite; } .lu-eq i:nth-child(2) { animation-delay: -.3s; } .lu-eq i:nth-child(3) { animation-delay: -.6s; }
+.lu-paused .lu-eq i { animation-play-state: paused; }
+@keyframes lu-eq { 0%, 100% { height: 3px; } 50% { height: 12px; } }
+.lu-albums { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+.lu-alb { border: 0; padding: 0; background: none; text-align: left; } .lu-alb .lu-cv { display: block; width: 100%; height: auto; aspect-ratio: 1; border-radius: 12px; transition: transform .25s; } .lu-alb:hover .lu-cv { transform: translateY(-3px); }
+.lu-alb b { display: block; margin-top: 6px; font-size: 12px; font-weight: 500; } .lu-alb small { font-size: 11px; color: var(--ink2); }
+.lu-tiles { display: grid; gap: 12px; grid-template-columns: repeat(4, 1fr); margin-bottom: 12px; }
+.lu-tile { padding: 14px 16px; border-radius: 16px; background: var(--c); } .lu-tile small { font-size: 12px; } .lu-tile b { display: block; margin-top: 4px; font-size: 24px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.lu-charts { display: grid; gap: 12px; grid-template-columns: 1.6fr 1fr; }
+.lu-box { padding: 14px 16px; border-radius: 16px; background: var(--card); border: 1px solid var(--line); min-width: 0; }
+.lu-box h3 { margin: 0; font-size: 14px; font-weight: 500; } .lu-box p { margin: 0 0 8px; font-size: 11px; color: var(--ink2); }
+.lu-box svg { width: 100%; height: auto; display: block; overflow: visible; }
+.lu-box text { fill: var(--ink2); font-size: 10px; font-family: inherit; }
+.lu-area { fill: var(--acc); opacity: .22; } .lu-lineg { fill: none; stroke: #8a3b1c; stroke-width: 2; stroke-dasharray: 1200; stroke-dashoffset: 1200; animation: lu-draw 1.4s ease-out forwards; }
+.lu.dk .lu-lineg { stroke: #f3a07e; }
+@keyframes lu-draw { to { stroke-dashoffset: 0; } }
+.lu-ray { transform-origin: 100px 100px; transform: scale(0); animation: lu-ray .7s cubic-bezier(.34,1.56,.64,1) forwards; animation-delay: calc(var(--i) * 25ms); }
+@keyframes lu-ray { to { transform: none; } }
+.lu-player { position: absolute; left: 4px; right: 4px; bottom: 4px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 18px; background: var(--card); border: 1px solid var(--line); box-shadow: 0 8px 24px rgba(60,40,20,.12); }
+.lu-now { display: flex; align-items: center; gap: 10px; min-width: 0; } .lu-now .lu-cv { width: 44px; height: 44px; }
+.lu-ctl { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.lu-btns { display: flex; align-items: center; gap: 14px; } .lu-btns button { border: 0; background: none; width: 30px; height: 30px; display: grid; place-items: center; padding: 0; } .lu-btns svg { width: 16px; height: 16px; }
+.lu-btns .lu-pp { width: 38px; height: 38px; border-radius: 50%; background: var(--accb); color: #fff; }
+.lu-prog { display: flex; align-items: center; gap: 8px; font-size: 10px; color: var(--ink2); font-variant-numeric: tabular-nums; }
+.lu-bar { width: 280px; height: 4px; border-radius: 2px; background: var(--chip); } .lu-bar i { display: block; height: 100%; border-radius: 2px; background: var(--acc); }
+.lu-vol { justify-self: end; display: flex; align-items: center; gap: 8px; color: var(--ink2); } .lu-vol input { width: 90px; accent-color: #6e9a7f; }
+/* Vòng tròn chế độ tối: View Transitions, cắt ảnh mới bằng clip-path. */
+::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+@media (max-width: 860px) {
+  .lu { grid-template-columns: 1fr; height: 820px; }
+  .lu-side { flex-direction: row; overflow-x: auto; padding: 6px; } .lu-brand small, .lu-cap, .lu-plus, .lu-me, .lu-nav span + svg { display: none; }
+  .lu-brand { padding: 0 6px 0 0; } .lu-nav { flex: none; } .lu-search { display: none; }
+  .lu-tiles { grid-template-columns: 1fr 1fr; } .lu-charts { grid-template-columns: 1fr; }
+  .lu-tr { grid-template-columns: 24px 1fr 28px 44px; } .lu-tr > :nth-child(3), .lu-tr > :nth-child(4), .lu-tr > :nth-child(7) { display: none; }
+  .lu-player { grid-template-columns: 1fr auto; } .lu-vol, .lu-prog, .lu-now .lu-heart, .lu-btns button:not(.lu-pp):not([data-skip="1"]) { display: none; } .lu-now b { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+}
+@media (prefers-reduced-motion: reduce) { .lu * { animation: none !important; transition: none !important; } .lu-lineg { stroke-dashoffset: 0; } .lu-ray { transform: none; } }
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=b19a7efb67"></script>
+<div class="md-page">
+  <div class="aw-sotd" style="padding-top:16px">
+    <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">5 phần</span></p>
+    <h1 class="aw-h1" style="--aw-h1:clamp(40px,7vw,96px)">Bảng nghe nhạc</h1>
+    <p class="aw-lead">Dashboard app nghe nhạc tông kem và xanh xô thơm. Bấm thanh bên để đổi Thư viện / Thống kê, lọc thể loại, đổi tab Bài hát / Album, thả tim, phát / dừng. Nút trăng mở chế độ tối theo vòng tròn từ chỗ bấm.</p>
+    <p class="aw-lead" style="font-size:14px">Dựng lại từ <a href="https://www.facebook.com/watch/?v=1955007802326328" target="_blank" rel="noopener">reel của Code &amp; Chill</a> ("Music listening app dashboard", React). Viết lại bằng JS/CSS thuần, ảnh bìa thay bằng gradient, dữ liệu mẫu.</p>
+  </div>
+  <div class="lu" id="lu"></div>
+</div>
+</main>
+<script>
+// Các phần của pattern (sổ patterns.json trỏ tới các id này).
+const PARTS = [
+  { id: 'library-songs', vi: 'Thư viện: bài hát' }, { id: 'library-albums', vi: 'Thư viện: album' },
+  { id: 'stats', vi: 'Thống kê' }, { id: 'now-playing', vi: 'Thanh phát nhạc' }, { id: 'dark-reveal', vi: 'Tối theo vòng tròn' }];
+const I = (d) => `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const IC = {
+  home: '<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>', note: '<path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/>',
+  heart: '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l8.8 8.8 8.8-8.8a5.5 5.5 0 0 0 0-7.8z"/>', list: '<path d="M3 6h13M3 12h13M3 18h8M18 12v8m-3-3h6"/>',
+  mic: '<rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>', pulse: '<path d="M3 12h4l3-7 4 14 3-7h4"/>',
+  gear: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2V21a2 2 0 0 1-4 0v-.1a1.7 1.7 0 0 0-2.9-1.2l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9H3a2 2 0 0 1 0-4h.1a1.7 1.7 0 0 0 1.2-2.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 2.9-1.2V3a2 2 0 0 1 4 0v.1a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9H21a2 2 0 0 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',
+  help: '<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6M12 17h.01"/>', chev: '<path d="M9 6l6 6-6 6"/>',
+  moon: '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>', sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+  bell: '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 8 3 8H3s3-1 3-8M10.3 21a1.9 1.9 0 0 0 3.4 0"/>', search: '<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>',
+  play: '<path d="M7 4l13 8-13 8z" fill="currentColor"/>', pause: '<path d="M8 4v16M16 4v16" stroke-width="3"/>', prev: '<path d="M19 20L9 12l10-8zM5 19V5"/>', next: '<path d="M5 4l10 8-10 8zM19 5v14"/>',
+  shuf: '<path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>', rep: '<path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>',
+  vol: '<path d="M11 5L6 9H2v6h4l5 4zM15.5 8.5a5 5 0 0 1 0 7"/>', crown: '<path d="M3 18h18M4 8l4 5 4-7 4 7 4-5-2 10H6z"/>' };
+const G = ['linear-gradient(135deg,#5b3a21,#d9a35f 60%,#f3e3c4)', 'linear-gradient(160deg,#2a1416,#b8402c 55%,#f08a4b)', 'linear-gradient(170deg,#9cc3e6,#e9d7b0 55%,#5b6b3c)', 'linear-gradient(160deg,#0d1631,#3b4f8a 60%,#c9d3ef)',
+  'linear-gradient(160deg,#1f2a22,#4f6b55 60%,#a6b9a0)', 'linear-gradient(180deg,#ff6a88,#ff9a62 55%,#3d1b4e)', 'linear-gradient(180deg,#f7b267,#f25c54 55%,#2d1e2f)', 'linear-gradient(180deg,#0b1b3a,#24407a 60%,#7f9fd6)',
+  'linear-gradient(160deg,#e9e6df,#c9c4b8 60%,#8f8a80)', 'linear-gradient(160deg,#d5d0c8,#9d978e 55%,#4f4a44)'];
+const GEN = [['Pop', '#e9825c'], ['Lo-fi', '#e9a07e'], ['Hip hop', '#e8b04f'], ['Rock', '#7fae6f'], ['Jazz & soul', '#8d9bc4']];
+const ALB = [['Steam & Static', 'Juniper Hollow', 'Lo-fi'], ['Red Moon Freestyle', 'Kofi Mensah', 'Hip hop'], ['Glasshouse', 'Low Orchard', 'Pop'], ['Night Dunes', 'Dune State', 'Lo-fi'], ['Soft Green Rooms', 'Moss & Linen', 'Jazz & soul'],
+  ['Golden Hour Club', 'Mara Okonkwo', 'Pop'], ['Low Tide Tapes', 'Palm Static', 'Rock'], ['Lantern Town', 'Ivo Hart', 'Jazz & soul'], ['White Noise Summer', 'Vela', 'Pop'], ['Slow Sunday', 'Ana Ruiz', 'Rock']];
+const SONG = [['Milk Foam Clouds', 0, 33, '2:34'], ['Window Seat', 0, 24, '2:52'], ['Two Sugars', 0, 20, '2:19'], ['Rainy Commute', 0, 33, '3:08'], ['Golden Hour Club', 5, 68, '3:21'], ['Red Moon', 1, 41, '2:47'],
+  ['Glasshouse', 2, 29, '3:02'], ['Dune Walk', 3, 18, '4:10'], ['Linen Light', 4, 22, '3:33'], ['Low Tide', 6, 15, '2:58'], ['Paper Lanterns', 7, 27, '3:41'], ['Static Bloom', 8, 12, '2:26'], ['Sunday Toast', 9, 30, '3:15']]
+  .map(([t, a, p, d], i) => ({ t, a, p, d, i, g: ALB[a][2], love: i === 0 || i === 4 }));
+const S = { view: 'library', tab: 'songs', gen: 'All', sort: 'Recent', cur: 0, playing: true, pos: 84, q: '' };
+const app = document.getElementById('lu');
+const NAV = [['home', 'Home', 0], ['library', 'Library', 1, 'note'], ['loved', 'Loved', 0, 'heart'], ['playlists', 'Playlists', 1, 'list'], ['podcasts', 'Podcasts', 1, 'mic'], ['stats', 'Stats', 1, 'pulse'], ['settings', 'Settings', 1, 'gear'], ['help', 'Help', 1, 'help']];
+const dur = (s) => s.split(':').reduce((m, x) => m * 60 + +x, 0), mmss = (n) => `${Math.floor(n / 60)}:${String(n % 60).padStart(2, '0')}`;
+
+function songs() {
+  let l = SONG.filter((s) => (S.gen === 'All' || s.g === S.gen) && (s.t + ALB[s.a][1]).toLowerCase().includes(S.q.toLowerCase()));
+  if (S.sort === 'Title') l = [...l].sort((a, b) => a.t.localeCompare(b.t));
+  if (S.sort === 'Artist') l = [...l].sort((a, b) => ALB[a.a][1].localeCompare(ALB[b.a][1]));
+  if (S.sort === 'Most played') l = [...l].sort((a, b) => b.p - a.p);
+  return l;
+}
+const chips = () => `<div class="lu-row" role="group" aria-label="Thể loại">${[['All', ''], ...GEN].map(([g, c]) => `<button type="button" class="lu-chip" data-gen="${g}" aria-pressed="${S.gen === g}">${c ? `<i style="--c:${c}"></i>` : ''}${g} <em>${g === 'All' ? SONG.length : SONG.filter((s) => s.g === g).length}</em></button>`).join('')}</div>`;
+function library() {
+  const tabs = ['songs', 'albums', 'artists'].map((t) => `<button type="button" role="tab" data-tab="${t}" aria-selected="${S.tab === t}">${t[0].toUpperCase() + t.slice(1)}</button>`).join('');
+  let body;
+  if (S.tab === 'songs') body = `<div class="lu-row"><label class="lu-search" style="width:260px">${I(IC.search)}<input data-q placeholder="Search your songs" value="${S.q}" aria-label="Tìm bài hát"></label>
+    <div class="lu-seg" role="group" aria-label="Sắp xếp">${['Recent', 'Title', 'Artist', 'Most played'].map((s) => `<button type="button" data-sort="${s}" aria-pressed="${S.sort === s}">${s}</button>`).join('')}</div>
+    <button type="button" class="lu-play" data-playall>${I(IC.play)} Play all</button></div>${chips()}
+    <div class="lu-table" role="table"><div class="lu-tr" role="row"><span class="lu-n">#</span><span>Title</span><span>Album</span><span>Plays</span><span></span><span>${'⏱'}</span><span></span></div>
+    ${songs().map((s, k) => `<div class="lu-tr${s.i === S.cur ? ' on' : ''}" role="row" data-song="${s.i}"><span class="lu-n">${s.i === S.cur ? '<span class="lu-eq"><i></i><i></i><i></i></span>' : k + 1}</span>
+      <span class="lu-t"><span class="lu-cv" style="--g:${G[s.a]}"></span><span style="min-width:0"><b>${s.t}</b><small>${ALB[s.a][1]}</small></span></span><span>${ALB[s.a][0]}</span><span>${s.p}</span>
+      <button type="button" class="lu-heart" data-love="${s.i}" aria-pressed="${s.love}" aria-label="Yêu thích ${s.t}">${I(IC.heart).replace('fill="none"', s.love ? 'fill="currentColor"' : 'fill="none"')}</button><span>${s.d}</span><span class="lu-n">···</span></div>`).join('')}</div>`;
+  else if (S.tab === 'albums') body = `${chips()}<div class="lu-albums">${ALB.map((a, i) => [a, i]).filter(([a]) => S.gen === 'All' || a[2] === S.gen).map(([a, i]) => `<button type="button" class="lu-alb" data-alb="${i}"><span class="lu-cv" style="--g:${G[i]}"></span><b>${a[0]}</b><small>${a[1]} · 2026</small></button>`).join('')}</div>`;
+  else body = `<div class="lu-albums">${[...new Set(ALB.map((a) => a[1]))].map((n, i) => `<div class="lu-alb"><span class="lu-cv" style="--g:${G[i % G.length]};border-radius:50%"></span><b>${n}</b><small>Artist</small></div>`).join('')}</div>`;
+  return `<div class="lu-h"><div><h2>Library</h2><p>${SONG.length} songs · ${ALB.length} albums · 2 h 42 min of music</p></div><button type="button" class="lu-pill">Playlists</button></div>
+    <div class="lu-tabs" role="tablist">${tabs}</div>${body}`;
+}
+function smooth(pts) { // Catmull-Rom → Bézier
+  return pts.map((p, i) => { if (!i) return `M${p[0]},${p[1]}`; const a = pts[i - 2] || pts[i - 1], b = pts[i - 1], c = pts[i + 1] || p;
+    return `C${b[0] + (p[0] - a[0]) / 6},${b[1] + (p[1] - a[1]) / 6} ${p[0] - (c[0] - b[0]) / 6},${p[1] - (c[1] - b[1]) / 6} ${p[0]},${p[1]}`; }).join('');
+}
+function stats() {
+  const wk = S.metric === 'Songs' ? [96, 92, 90, 88, 99, 86, 118, 102, 131] : [455, 449, 438, 437, 456, 425, 490, 455, 512];
+  const mx = Math.max(...wk) * 1.06, pts = wk.map((v, i) => [40 + i * 52, 150 - v / mx * 130]);
+  const line = smooth(pts), area = `${line}L${pts.at(-1)[0]},150L40,150Z`;
+  const H = [2, 1, 1, 0, 0, 1, 3, 6, 9, 7, 5, 4, 4, 5, 3, 3, 4, 5, 6, 7, 8, 6, 4, 3], C = ['#e9825c', '#f2b66d', '#8fb39a', '#c79bb5', '#8d9bc4', '#e8c66a'];
+  const rays = H.map((v, i) => { const a = (i / 24) * 2 * Math.PI - Math.PI / 2, r0 = 34, r1 = 38 + v * 4.6;
+    return `<line class="lu-ray" style="--i:${i}" x1="${100 + r0 * Math.cos(a)}" y1="${100 + r0 * Math.sin(a)}" x2="${100 + r1 * Math.cos(a)}" y2="${100 + r1 * Math.sin(a)}" stroke="${C[i % 6]}" stroke-width="7"/>`; }).join('');
+  const tabs = ['Overview', 'History', 'Streak & goal'].map((t, i) => `<button type="button" role="tab" aria-selected="${!i}">${t}</button>`).join('');
+  return `<div class="lu-h"><div><h2>Stats</h2><p>Since 16 Sept · 1,818 plays</p></div></div><div class="lu-tabs" role="tablist">${tabs}</div>
+  <div class="lu-tiles">${[['Minutes · 30 days', 2724, '--t1'], ['Songs played', 917, '--t2'], ['Artists heard', 12, '--t3'], ['A day, on average', '1h 31m', '--t4']].map(([l, v, c]) => `<div class="lu-tile" style="--c:var(${c})"><small>${l}</small><b data-count="${typeof v === 'number' ? v : ''}">${v}</b></div>`).join('')}</div>
+  <div class="lu-charts"><div class="lu-box"><div class="lu-h"><div><h3>Nine weeks</h3><p>${S.metric === 'Songs' ? 'Songs' : 'Minutes'} listened each week</p></div>
+    <div class="lu-seg" role="group" aria-label="Đơn vị">${['Minutes', 'Songs'].map((m) => `<button type="button" data-metric="${m}" aria-pressed="${(S.metric || 'Minutes') === m}">${m}</button>`).join('')}</div></div>
+    <svg viewBox="0 0 470 172" role="img" aria-label="Biểu đồ 9 tuần"><line x1="40" y1="20" x2="460" y2="20" stroke="var(--line)" stroke-dasharray="3 4"/><line x1="40" y1="85" x2="460" y2="85" stroke="var(--line)" stroke-dasharray="3 4"/>
+    <text x="0" y="24">${S.metric === 'Songs' ? '139' : '12h 51m'}</text><text x="0" y="89">${S.metric === 'Songs' ? '70' : '6h 25m'}</text><text x="0" y="153">0</text>
+    <path class="lu-area" d="${area}"/><path class="lu-lineg" d="${line}"/>${['17 Sept', '1 Oct', '15 Oct', '29 Oct', '12 Nov'].map((t, i) => `<text x="${40 + i * 104}" y="168">${t}</text>`).join('')}</svg></div>
+    <div class="lu-box"><h3>When you listen</h3><p>Minutes by hour, 30 days</p><svg viewBox="0 0 200 200" role="img" aria-label="Giờ nghe nhiều nhất 08:00">${rays}
+    <circle cx="100" cy="100" r="30" fill="var(--hi)" stroke="var(--line)"/><text x="100" y="99" text-anchor="middle" style="font-size:13px;fill:var(--ink);font-weight:600">08:00</text><text x="100" y="112" text-anchor="middle" style="font-size:7px">your peak hour</text>
+    <text x="100" y="8" text-anchor="middle">00</text><text x="196" y="103" text-anchor="middle">06</text><text x="100" y="199" text-anchor="middle">12</text><text x="4" y="103" text-anchor="middle">18</text></svg></div></div>`;
+}
+function player() {
+  const s = SONG[S.cur], d = dur(s.d);
+  return `<div class="lu-now"><span class="lu-cv" style="--g:${G[s.a]}"></span><span style="min-width:0"><b style="display:block;font-weight:500">${s.t}</b><small style="color:var(--ink2);font-size:11px">${ALB[s.a][1]}</small></span>
+    <button type="button" class="lu-heart" data-love="${s.i}" aria-pressed="${s.love}" aria-label="Yêu thích">${I(IC.heart).replace('fill="none"', s.love ? 'fill="currentColor"' : 'fill="none"')}</button></div>
+  <div class="lu-ctl"><div class="lu-btns"><button type="button" aria-label="Trộn bài">${I(IC.shuf)}</button><button type="button" data-skip="-1" aria-label="Bài trước">${I(IC.prev)}</button>
+    <button type="button" class="lu-pp" data-pp aria-label="${S.playing ? 'Dừng' : 'Phát'}">${I(S.playing ? IC.pause : IC.play)}</button><button type="button" data-skip="1" aria-label="Bài sau">${I(IC.next)}</button><button type="button" aria-label="Lặp lại">${I(IC.rep)}</button></div>
+    <div class="lu-prog"><span data-pos>${mmss(S.pos)}</span><span class="lu-bar"><i data-bar style="width:${S.pos / d * 100}%"></i></span><span>${s.d}</span></div></div>
+  <div class="lu-vol">${I(IC.vol).replace('<svg', '<svg width="16" height="16"')}<input type="range" value="70" aria-label="Âm lượng"></div>`;
+}
+function render(keepScroll) {
+  const sc = app.querySelector('.lu-scroll')?.scrollTop || 0, dk = app.classList.contains('dk');
+  app.classList.toggle('lu-paused', !S.playing);
+  app.innerHTML = `<nav class="lu-side" aria-label="Điều hướng app"><div class="lu-brand"><span class="lu-logo">${I(IC.home)}</span><span><b>Lullo</b><small>Your listening room</small></span></div><p class="lu-cap">LISTEN</p>
+    ${NAV.map(([k, l, ch, ic]) => `<button type="button" class="lu-nav" data-view="${k}"${S.view === k ? ' aria-current="page"' : ''}>${I(IC[ic || k])}<span style="flex:1">${l}</span>${ch ? I(IC.chev) : ''}</button>`).join('')}
+    <div class="lu-plus">${I(IC.crown).replace('<svg', '<svg width="22" height="22" style="color:#c8901f"')}<b>Go Plus</b><p>No ads, lossless sound and downloads</p><button type="button">See plans</button></div>
+    <div class="lu-me"><span class="lu-av">NH</span><span style="flex:1"><b style="font-weight:500">Noor Haddad</b><br><small>@noorlistens</small></span></div></nav>
+  <section class="lu-main"><div class="lu-top"><div class="lu-crumb">Lullo › ${S.view === 'stats' ? 'Stats › <b>Overview</b>' : `Library › <b>${S.tab[0].toUpperCase() + S.tab.slice(1)}</b>`}</div>
+    <label class="lu-search">${I(IC.search).replace('<svg', '<svg width="15" height="15"')}<input placeholder="Search songs, artists…" aria-label="Tìm kiếm"></label>
+    <button type="button" class="lu-ic" data-dark aria-label="${dk ? 'Chế độ sáng' : 'Chế độ tối'}" title="${dk ? 'Light mode' : 'Dark mode'}">${I(dk ? IC.sun : IC.moon)}</button>
+    <button type="button" class="lu-ic" aria-label="Thông báo, 3 mới">${I(IC.bell)}<span class="lu-badge">3</span></button><span class="lu-av" style="width:38px;height:38px;border:2px solid #9fc0a4">NH</span></div>
+    <div class="lu-scroll">${S.view === 'stats' ? stats() : library()}</div><div class="lu-player">${player()}</div></section>`;
+  if (keepScroll) app.querySelector('.lu-scroll').scrollTop = sc;
+  app.querySelectorAll('[data-count]').forEach((b) => { const n = +b.dataset.count; if (!n || matchMedia('(prefers-reduced-motion: reduce)').matches) return; const t0 = performance.now();
+    const f = (t) => { const k = Math.min(1, (t - t0) / 900); b.textContent = Math.round(n * (1 - (1 - k) ** 3)).toLocaleString('en'); if (k < 1) requestAnimationFrame(f); }; requestAnimationFrame(f); });
+}
+function dark(e) {
+  const go = () => { app.classList.toggle('dk'); render(true); };
+  if (!document.startViewTransition || matchMedia('(prefers-reduced-motion: reduce)').matches) return go();
+  const b = e.target.closest('button').getBoundingClientRect(), x = b.left + b.width / 2, y = b.top + b.height / 2, r = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+  document.startViewTransition(go).ready.then(() => document.documentElement.animate({ clipPath: [`circle(0 at ${x}px ${y}px)`, `circle(${r}px at ${x}px ${y}px)`] }, { duration: 650, easing: 'cubic-bezier(.65,0,.35,1)', pseudoElement: '::view-transition-new(root)' }));
+}
+app.addEventListener('click', (e) => {
+  const t = e.target.closest('button,[data-song]'); if (!t) return; const d = t.dataset;
+  if ('dark' in d) return dark(e);
+  if (d.view) { if (d.view === 'library' || d.view === 'stats') S.view = d.view; }
+  else if (d.tab && S.view === 'library') S.tab = d.tab;
+  else if (d.gen) S.gen = d.gen;
+  else if (d.sort) S.sort = d.sort;
+  else if (d.metric) S.metric = d.metric;
+  else if (d.love) { const s = SONG[+d.love]; s.love = !s.love; }
+  else if ('pp' in d) S.playing = !S.playing;
+  else if (d.skip) { S.cur = (S.cur + +d.skip + SONG.length) % SONG.length; S.pos = 0; S.playing = true; }
+  else if ('playall' in d) { S.cur = songs()[0]?.i ?? 0; S.pos = 0; S.playing = true; }
+  else if (d.alb) { S.cur = SONG.find((s) => s.a === +d.alb)?.i ?? S.cur; S.pos = 0; S.playing = true; }
+  else if (d.song) { S.cur = +d.song; S.pos = 0; S.playing = true; }
+  else return;
+  render(!d.view);
+});
+app.addEventListener('input', (e) => { if (!('q' in e.target.dataset)) return; S.q = e.target.value; render(true); const q = app.querySelector('[data-q]'); q.focus(); q.setSelectionRange(S.q.length, S.q.length); });
+setInterval(() => { if (!S.playing) return; const d = dur(SONG[S.cur].d); S.pos = (S.pos + 1) % d; const p = app.querySelector('[data-pos]'), b = app.querySelector('[data-bar]'); if (p) { p.textContent = mmss(S.pos); b.style.width = S.pos / d * 100 + '%'; } }, 1000);
+render();
+</script>
+<script src="/search.js?v=b19a7efb67" defer></script><script src="/stats.js?v=b19a7efb67" defer></script>
+</body>
+</html>
