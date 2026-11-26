@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Báo cáo quảng cáo — uiux-asset</title>
+<meta name="description" content="Bảng báo cáo quảng cáo tông xanh dương: Tổng quan có chi tiêu theo ngày, nền tảng, tuổi và giới tính, bản đồ nhiệt theo giờ, phễu chuyển đổi; bảng Chiến dịch dạng cây mở ra tấm chi tiết trượt từ phải; trang Tài khoản có chi tiêu theo tháng và nhật ký thao tác. JS/CSS thuần.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=82ebd55262">
+<style>
+.md-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+.md-page a { color: inherit; }
+/* App: token riêng, không theo theme của site. */
+.sa { --bg: #f4f7fb; --card: #fff; --line: #e4e9f2; --ink: #16213a; --ink2: #5b6680; --chip: #eef2f9; --acc: #1f5eff; --acc2: #1a9be0; --acctx: #1846c9;
+  --up: #157a3c; --upbg: #e3f4e9; --dn: #c0362c; --dnbg: #fde8e6; --gr: #12a36b; --pink: #e8508a; --cyan: #26b4d8; --gold: #b7791f;
+  position: relative; display: grid; grid-template-columns: 220px 1fr; height: 860px; border-radius: 20px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); font: 400 13px/1.4 "Inter", var(--aw-font); overflow: hidden; box-shadow: 0 24px 60px -30px rgba(20,40,90,.35); transition: grid-template-columns .35s cubic-bezier(.3,.7,.2,1); }
+.sa.mini { grid-template-columns: 68px 1fr; }
+.sa button, .sa select, .sa input { font: inherit; color: inherit; }
+.sa button { cursor: pointer; }
+.sa-side { position: relative; display: flex; flex-direction: column; gap: 2px; padding: 16px 12px; background: var(--card); border-right: 1px solid var(--line); min-width: 0; }
+.sa-brand { display: flex; align-items: center; gap: 10px; padding: 0 4px 14px; white-space: nowrap; }
+.sa-logo { width: 34px; height: 34px; flex: none; border-radius: 10px; display: grid; place-items: center; background: linear-gradient(135deg, var(--acc), var(--acc2)); color: #fff; font-weight: 800; font-size: 15px; }
+.sa-brand b { display: block; font-size: 15px; font-weight: 800; letter-spacing: .02em; } .sa-brand small { font-size: 10px; color: var(--ink2); letter-spacing: .08em; }
+.sa .sa-fold { position: absolute; top: 20px; right: -14px; z-index: 2; width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--line); background: var(--card); color: var(--ink); display: grid; place-items: center; transition: transform .35s; }
+.sa.mini .sa-fold { transform: rotate(180deg); }
+.sa-acct { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; padding: 10px 12px; border-radius: 12px; background: linear-gradient(135deg, var(--acc), #1746c4); color: #fff; white-space: nowrap; overflow: hidden; }
+.sa-acct i { width: 8px; height: 8px; flex: none; border-radius: 50%; background: #4ade80; box-shadow: 0 0 0 3px rgba(74,222,128,.25); }
+.sa-acct b { display: block; font-size: 13px; } .sa-acct small { font: 10px var(--aw-mono, monospace); opacity: .85; }
+.sa-cap { margin: 10px 10px 4px; font-size: 10px; font-weight: 700; letter-spacing: .1em; color: var(--ink2); white-space: nowrap; }
+.sa-nav { display: flex; align-items: center; gap: 10px; min-height: 40px; padding: 0 10px; border: 0; border-radius: 10px; background: none; text-align: left; white-space: nowrap; overflow: hidden; color: var(--ink2) !important; font-weight: 500; }
+.sa-nav:hover { background: var(--chip); }
+.sa-nav[aria-current="page"] { background: #e8efff; color: var(--acctx) !important; font-weight: 700; box-shadow: inset 3px 0 0 var(--acc); }
+.sa-nav svg { width: 18px; height: 18px; flex: none; }
+.sa.mini .sa-brand div, .sa.mini .sa-nav span, .sa.mini .sa-cap, .sa.mini .sa-acct div { display: none; }
+.sa.mini .sa-nav { justify-content: center; padding: 0; } .sa.mini .sa-acct { justify-content: center; padding: 12px 0; }
+.sa-main { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.sa-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 12px 20px; background: var(--card); border-bottom: 1px solid var(--line); }
+.sa-chip { display: inline-flex; align-items: center; gap: 6px; min-height: 34px; padding: 0 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--card); font-size: 12px; white-space: nowrap; }
+.sa-chip b { font-weight: 600; } .sa-chip svg { width: 15px; height: 15px; color: var(--ink2); }
+.sa-me { margin-left: auto; display: flex; align-items: center; gap: 8px; font-size: 12px; }
+.sa-me span { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: var(--acc); color: #fff; font-weight: 700; }
+.sa-me small { display: block; color: var(--ink2); font-size: 10px; }
+.sa-body { flex: 1; min-height: 0; overflow: auto; padding: 18px 20px 28px; }
+.sa-h { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+.sa-h h2 { margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -.01em; } .sa-h p { margin: 2px 0 0; color: var(--ink2); font-size: 12px; }
+.sa-grid { display: grid; gap: 14px; }
+.sa-ov { grid-template-columns: 290px minmax(0, 1.3fr) minmax(0, 1fr); align-items: start; }
+.w2 { grid-column: span 2; } .w3 { grid-column: 1 / -1; }
+.sa-card { position: relative; min-width: 0; padding: 16px; border-radius: 16px; background: var(--card); border: 1px solid var(--line); }
+.sa-ct { display: flex; align-items: center; gap: 8px; margin: 0 0 12px; font-size: 14px; font-weight: 700; }
+.sa-ct svg { width: 16px; height: 16px; color: var(--acc); }
+.sa-ct .r { margin-left: auto; display: flex; gap: 6px; align-items: center; font-weight: 500; }
+.sa-ct small { color: var(--ink2); font-weight: 500; font-size: 11px; }
+.sa-sel { min-height: 32px; padding: 0 8px; border-radius: 9px; border: 1px solid var(--line); background: var(--card); font-size: 12px; }
+.sa-pm { display: inline-block; padding: 2px 7px; border-radius: 99px; font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.pm-up { background: var(--upbg); color: var(--up); } .pm-dn { background: var(--dnbg); color: var(--dn); }
+/* Hero chi tiêu */
+.sa-hero { display: grid; gap: 8px; padding: 10px; }
+.sa-spend { padding: 16px; border-radius: 12px; background: linear-gradient(135deg, var(--acc), var(--acc2)); color: #fff; }
+.sa-spend .t { display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 600; }
+.sa-spend .sa-pm { background: #fff; color: var(--acctx); }
+.sa-spend b { display: block; margin-top: 8px; font-size: 28px; font-weight: 800; letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
+.sa-stat { display: flex; justify-content: space-between; align-items: flex-start; padding: 10px 12px; border-radius: 10px; background: #f6f8fc; }
+.sa-stat span { color: var(--ink2); font-size: 11px; } .sa-stat b { display: block; margin-top: 2px; font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.sa-chart { position: relative; }
+.sa-chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.sa-tip { position: absolute; z-index: 3; transform: translate(-50%, -110%); padding: 6px 10px; border-radius: 8px; background: var(--ink); color: #fff; font-size: 11px; font-weight: 600; white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity .15s; }
+.sa-tip.on { opacity: 1; } .sa-tip small { display: block; font-weight: 400; opacity: .75; }
+.hit { fill: transparent; cursor: pointer; outline: none; }
+.hit:hover, .hit:focus-visible { fill: rgba(31,94,255,.07); }
+/* Nền tảng */
+.sa-plat { display: grid; grid-template-columns: minmax(0, 1fr) 120px; gap: 12px; align-items: center; }
+.sa-plat ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.sa-plat li { padding: 8px 10px; border-radius: 10px; background: #f6f8fc; }
+.sa-plat li div { display: flex; justify-content: space-between; gap: 6px; font-size: 12px; font-weight: 600; }
+.sa-plat li div i { display: inline-block; width: 8px; height: 8px; margin-right: 6px; border-radius: 50%; background: var(--c); }
+.sa-plat li div span:last-child { color: var(--ink2); font-weight: 500; }
+.sa-plat li b { display: block; margin-top: 2px; font-size: 13px; font-variant-numeric: tabular-nums; }
+.sa-plat li small { color: var(--acctx); font-weight: 600; font-size: 10px; margin-left: 4px; }
+.sa-ring { position: relative; } .sa-ring svg { display: block; width: 100%; height: auto; }
+.sa-ring div { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
+.sa-ring b { font-size: 18px; font-weight: 800; } .sa-ring small { color: var(--ink2); font-size: 10px; }
+.sa-legend { display: flex; flex-wrap: wrap; gap: 12px; font-size: 11px; color: var(--ink2); }
+.sa-legend i { display: inline-block; width: 9px; height: 9px; margin-right: 5px; border-radius: 3px; background: var(--c); vertical-align: -1px; }
+.sa-split { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; font-size: 11px; }
+.sa-split div { padding: 8px 10px; border-radius: 10px; background: #f6f8fc; color: var(--ink2); } .sa-split b { color: var(--acctx); }
+/* Bản đồ nhiệt */
+.scrollx { overflow-x: auto; scrollbar-width: thin; }
+.sa-hm { display: grid; grid-template-columns: 40px repeat(24, minmax(16px, 1fr)); gap: 3px; min-width: 560px; font-size: 10px; color: var(--ink2); }
+.sa-hm span { text-align: center; }
+.sa-hm .d { text-align: right; padding-right: 6px; line-height: 20px; }
+.sa-hm .c { height: 20px; border-radius: 4px; background: color-mix(in srgb, var(--acc) var(--p), #eef2f9); cursor: pointer; transition: transform .12s; }
+.sa-hm .c:hover { transform: scale(1.18); box-shadow: 0 0 0 2px #fff, 0 0 0 3px var(--acc); }
+.sa-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; font-size: 11px; }
+.sa-best { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 8px; background: #fff7e6; color: #8a5a00; font-weight: 600; }
+.sa-best.g { background: var(--upbg); color: var(--up); } .sa-best em { font-style: normal; padding: 0 5px; border-radius: 5px; background: var(--up); color: #fff; }
+.sa-scale { margin-left: auto; display: flex; align-items: center; gap: 3px; color: var(--ink2); }
+.sa-scale i { width: 12px; height: 12px; border-radius: 3px; background: color-mix(in srgb, var(--acc) var(--p), #eef2f9); }
+/* Phễu */
+.sa-fun { display: grid; gap: 8px; }
+.sa-fun div { padding: 8px 10px; border-radius: 10px; border: 1px solid var(--line); }
+.sa-fun p { display: flex; align-items: center; gap: 8px; margin: 0 0 6px; font-size: 12px; font-weight: 600; }
+.sa-fun p em { margin-left: auto; font-style: normal; padding: 1px 7px; border-radius: 6px; background: var(--chip); color: var(--ink2); font-size: 10px; font-weight: 500; }
+.sa-fun p b { min-width: 72px; text-align: right; font-size: 13px; font-variant-numeric: tabular-nums; }
+.sa-bar { height: 6px; border-radius: 6px; background: #edf1f8; overflow: hidden; }
+.sa-bar i { display: block; height: 100%; border-radius: inherit; background: var(--c, var(--acc)); transition: width .6s cubic-bezier(.3,.7,.2,1); }
+/* Top chiến dịch */
+.sa-top10 { display: grid; gap: 4px; }
+.sa-tc { display: grid; grid-template-columns: 24px 36px minmax(0, 1fr) auto; align-items: center; gap: 10px; min-height: 48px; padding: 4px 8px; border: 0; border-radius: 10px; background: none; text-align: left; }
+.sa-tc:hover { background: #f6f8fc; }
+.sa-tc > span:first-child { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; background: var(--chip); font-size: 11px; font-weight: 700; color: var(--ink2); }
+.sa-tc:first-child > span:first-child { background: var(--acc); color: #fff; }
+.sa-th { width: 36px; height: 36px; border-radius: 8px; background: var(--g); flex: none; }
+.sa-tc .n { min-width: 0; font-weight: 600; } .sa-tc .n div { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-bottom: 5px; }
+.sa-tc .v { text-align: right; } .sa-tc .v b { display: block; color: var(--acctx); font-variant-numeric: tabular-nums; } .sa-tc .v small { color: var(--ink2); font-size: 10px; }
+/* Chiến dịch */
+.sa-tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 12px; }
+.sa-search { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 200px; max-width: 320px; min-height: 36px; padding: 0 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--card); color: var(--ink2); }
+.sa-search input { flex: 1; min-width: 0; align-self: stretch; border: 0; background: none; outline: 0; }
+.sa-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--card); font-size: 12px; font-weight: 600; white-space: nowrap; }
+.sa-btn svg { width: 15px; height: 15px; }
+.sa-btn.pri { border-color: transparent; background: var(--acc); color: #fff !important; box-shadow: 0 6px 14px -6px rgba(31,94,255,.6); }
+.sa-btn.sm { min-height: 32px; padding: 0 10px; font-size: 11px; }
+.sa-tbl { width: 100%; min-width: 960px; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.sa-tbl th { position: sticky; top: 0; z-index: 1; padding: 10px 8px; background: #f6f8fc; color: var(--ink2); font-size: 11px; font-weight: 600; text-align: right; white-space: nowrap; }
+.sa-tbl th:first-child, .sa-tbl td:first-child, .sa-tbl th:nth-child(2), .sa-tbl td:nth-child(2) { text-align: left; }
+.sa-tbl th button { border: 0; background: none; padding: 0; font-weight: 600; color: var(--acctx); }
+.sa-tbl td { padding: 8px; border-top: 1px solid var(--line); text-align: right; white-space: nowrap; vertical-align: middle; }
+.sa-tbl tr.l1 td { background: #fbfcfe; } .sa-tbl tr.l2 td { background: #f8fafd; }
+.sa-tbl tr.row-in td { animation: rowIn .35s cubic-bezier(.3,.7,.2,1) both; }
+@keyframes rowIn { from { opacity: 0; transform: translateY(-4px); } }
+.sa-nm { display: flex; align-items: center; gap: 8px; padding-left: calc(var(--lv) * 22px); }
+.sa-ex { width: 28px; height: 28px; flex: none; border: 0; border-radius: 8px; background: none; display: grid; place-items: center; color: var(--ink2); transition: transform .2s; }
+.sa-ex:hover { background: var(--chip); } .sa-ex[aria-expanded="true"] { transform: rotate(90deg); }
+.sa-ex.no { visibility: hidden; }
+.sa-nm .sa-th { width: 34px; height: 34px; }
+.sa-nm b { display: block; font-weight: 600; } .sa-nm small { color: var(--ink2); font: 10px var(--aw-mono, monospace); }
+.sa-st { display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px; border-radius: 99px; font-size: 11px; font-weight: 600; }
+.sa-st::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.st-on { background: var(--upbg); color: var(--up); } .st-done { background: #e6effd; color: var(--acctx); }
+.sa-cbo { margin-left: 4px; padding: 1px 5px; border-radius: 5px; background: var(--chip); color: var(--ink2); font-size: 9px; font-weight: 700; }
+.sa-tbl td small.u { display: block; color: var(--ink2); font-size: 9px; letter-spacing: .04em; }
+.cpr { color: var(--acctx); font-weight: 700; }
+/* Tấm chi tiết */
+.sa-dim { position: absolute; inset: 0; z-index: 8; background: rgba(15,25,50,.38); opacity: 0; pointer-events: none; transition: opacity .3s; }
+.sa-dr { position: absolute; top: 0; right: 0; bottom: 0; z-index: 9; display: flex; flex-direction: column; width: min(760px, 100%); background: var(--bg); box-shadow: -20px 0 50px -20px rgba(15,25,50,.4); transform: translateX(102%); transition: transform .42s cubic-bezier(.3,.7,.2,1); visibility: hidden; }
+.sa.dr-on .sa-dim { opacity: 1; pointer-events: auto; } .sa.dr-on .sa-dr { transform: none; visibility: visible; }
+.sa-drh { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: var(--card); border-bottom: 1px solid var(--line); }
+.sa-drh .sa-th { width: 40px; height: 40px; }
+.sa-drh .n { min-width: 0; flex: 1; } .sa-drh .n div { display: flex; gap: 6px; align-items: center; font-size: 10px; }
+.sa-drh .n b { display: block; margin-top: 3px; font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sa-type { padding: 2px 7px; border-radius: 6px; background: #e8efff; color: var(--acctx); font-weight: 700; letter-spacing: .04em; }
+.sa-x { width: 36px; height: 36px; flex: none; border: 1px solid var(--line); border-radius: 50%; background: var(--card); display: grid; place-items: center; }
+.sa-drb { flex: 1; min-height: 0; overflow: auto; padding: 16px; display: grid; gap: 14px; align-content: start; }
+.sa-kp { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.sa-kp div { padding: 10px 12px; border-radius: 12px; background: var(--card); border: 1px solid var(--line); }
+.sa-kp span { color: var(--ink2); font-size: 11px; } .sa-kp b { display: block; margin-top: 2px; font-size: 17px; font-variant-numeric: tabular-nums; }
+.sa-tabs { display: flex; gap: 4px; padding: 4px; border-radius: 12px; background: #eef2f9; margin-bottom: 10px; overflow-x: auto; }
+.sa-tabs button { flex: none; min-height: 32px; padding: 0 12px; border: 0; border-radius: 9px; background: none; font-size: 12px; font-weight: 600; color: var(--ink2); }
+.sa-tabs button[aria-selected="true"] { background: var(--card); color: var(--acctx); box-shadow: 0 1px 2px rgba(0,0,0,.06); }
+.sa-bd { width: 100%; min-width: 520px; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.sa-bd th { padding: 8px; color: var(--ink2); font-size: 11px; font-weight: 600; text-align: right; } .sa-bd th:first-child, .sa-bd td:first-child { text-align: left; }
+.sa-bd td { padding: 8px; border-top: 1px solid var(--line); text-align: right; white-space: nowrap; }
+.sa-bd td:first-child { font-weight: 600; } .sa-bd td:first-child .sa-bar { width: 140px; height: 4px; margin-top: 6px; }
+.sa-bd td small { display: block; color: var(--ink2); font-size: 10px; }
+.sa-bd td i.dot { display: inline-block; width: 8px; height: 8px; margin-right: 6px; border-radius: 50%; background: var(--c); }
+.sa-aud { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.sa-aud > div { padding: 12px; border-radius: 12px; background: #f6f8fc; }
+.sa-aud h5 { margin: 0 0 6px; color: var(--ink2); font-size: 10px; font-weight: 700; letter-spacing: .08em; }
+.sa-aud b { font-size: 15px; }
+.sa-age { position: relative; height: 6px; margin: 10px 0 4px; border-radius: 6px; background: #e2e8f3; }
+.sa-age i { position: absolute; top: 0; bottom: 0; border-radius: inherit; background: linear-gradient(90deg, var(--acc), var(--acc2)); }
+.sa-ticks { display: flex; justify-content: space-between; color: var(--ink2); font-size: 10px; }
+.sa-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.sa-tag { padding: 4px 9px; border-radius: 8px; background: var(--card); border: 1px solid var(--line); font-size: 11px; }
+.sa-tag.b { background: #e8efff; border-color: transparent; color: var(--acctx); font-weight: 600; }
+/* Tài khoản */
+.sa-acc { grid-template-columns: 360px minmax(0, 1fr); align-items: start; }
+.sa-bal { padding: 18px; border-radius: 14px; background: linear-gradient(135deg, #1739b8, var(--acc) 55%, var(--acc2)); color: #fff; }
+.sa-bal .t { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; font-weight: 700; }
+.sa-bal .t code { padding: 2px 7px; border-radius: 6px; background: rgba(255,255,255,.18); font-size: 10px; }
+.sa-bal b { display: block; margin: 10px 0 4px; font-size: 28px; font-weight: 800; font-variant-numeric: tabular-nums; } .sa-bal small { opacity: .85; font-size: 11px; }
+.sa-two { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.sa-two div { padding: 10px 12px; border-radius: 10px; background: #f6f8fc; } .sa-two span { color: var(--ink2); font-size: 11px; } .sa-two b { display: block; margin-top: 2px; font-size: 15px; font-variant-numeric: tabular-nums; }
+.sa-info { margin: 10px 0 0; padding: 10px 12px; border-radius: 10px; background: #f6f8fc; display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; font-size: 12px; }
+.sa-info dt { color: var(--ink2); } .sa-info dd { margin: 0; text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+.sa-log { display: grid; gap: 6px; }
+.sa-lg { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 10px; background: #f6f8fc; }
+.sa-lg .k { width: 30px; height: 30px; flex: none; border-radius: 8px; display: grid; place-items: center; background: color-mix(in srgb, var(--c) 14%, #fff); color: var(--c); }
+.sa-lg .k svg { width: 15px; height: 15px; }
+.sa-lg .t { min-width: 0; flex: 1; } .sa-lg .t b { font-weight: 600; } .sa-lg .t b a { color: var(--acctx); text-decoration: none; }
+.sa-lg .t small { display: block; color: var(--ink2); font-size: 11px; }
+.sa-lg time { color: var(--ink2); font: 11px var(--aw-mono, monospace); white-space: nowrap; text-align: right; }
+.sa-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.sa-pills button { min-height: 32px; padding: 0 12px; border: 1px solid var(--line); border-radius: 99px; background: var(--card); font-size: 12px; font-weight: 600; color: var(--ink2); }
+.sa-pills button[aria-pressed="true"] { background: var(--acc); border-color: var(--acc); color: #fff; }
+.sa-toast { position: absolute; left: 50%; bottom: 22px; z-index: 12; transform: translate(-50%, 20px); padding: 10px 16px; border-radius: 12px; background: var(--ink); color: #fff; font-size: 12px; font-weight: 600; opacity: 0; pointer-events: none; transition: .3s cubic-bezier(.3,.7,.2,1); }
+.sa-toast.on { opacity: 1; transform: translate(-50%, 0); }
+/* Vào trang: mờ + nhoè rồi rõ, lần lượt theo --i */
+.sa-body.enter [data-in] { animation: saIn .55s cubic-bezier(.3,.7,.2,1) both; animation-delay: calc(var(--i, 0) * 55ms); }
+@keyframes saIn { from { opacity: 0; filter: blur(6px); transform: translateY(10px); } }
+@media (prefers-reduced-motion: reduce) { .sa-body.enter [data-in], .sa-tbl tr.row-in td { animation: none; } .sa, .sa-dr, .sa-bar i { transition: none; } }
+@media (max-width: 1100px) { .sa-ov { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } .sa-acc { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 720px) {
+  .sa, .sa.mini { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); height: 800px; border-radius: 16px; }
+  .sa-side { flex-direction: row; align-items: center; gap: 4px; padding: 8px; border-right: 0; border-bottom: 1px solid var(--line); overflow-x: auto; }
+  .sa-brand div, .sa-cap, .sa-acct, .sa .sa-fold { display: none; } .sa-brand { padding: 0 4px; }
+  .sa-nav { flex: none; padding: 0 12px; }
+  .sa-top { padding: 10px 12px; } .sa-me div { display: none; }
+  .sa-body { padding: 14px 12px 24px; }
+  .sa-ov { grid-template-columns: minmax(0, 1fr); } .w2, .w3 { grid-column: auto; }
+  .sa-kp { grid-template-columns: 1fr 1fr; } .sa-aud { grid-template-columns: minmax(0, 1fr); }
+  .sa-search { max-width: none; }
+}
+@media (max-width: 520px) { .sa-plat { grid-template-columns: minmax(0, 1fr); } .sa-plat .sa-ring { width: 140px; margin: 0 auto; } .sa-lg { flex-wrap: wrap; } .sa-lg time { width: 100%; padding-left: 42px; text-align: left; } }
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=82ebd55262"></script>
+<div class="md-page">
+  <div class="aw-sotd" style="padding-top:16px">
+    <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">5 phần</span></p>
+    <h1 class="aw-h1" style="--aw-h1:clamp(40px,7vw,96px)">Báo cáo quảng cáo</h1>
+    <p class="aw-lead">Bảng báo cáo quảng cáo tông xanh dương, 3 trang. Di chuột lên biểu đồ và bản đồ nhiệt để xem số. Ở trang Chiến dịch, mở cây chiến dịch rồi bấm «Chi tiết» để mở tấm trượt từ phải. Trang Tài khoản lọc nhật ký thao tác.</p>
+    <p class="aw-lead" style="font-size:14px">Dựng lại từ <a href="https://www.facebook.com/share/v/19raz25jq5/" target="_blank" rel="noopener">reel Facebook, bảng báo cáo quảng cáo Meta</a>. Viết lại bằng JS/CSS thuần, tên và số liệu là mẫu.</p>
+  </div>
+  <div class="sa" id="sa"></div>
+</div>
+</main>
+<script>
+// Các phần của pattern (sổ patterns.json trỏ tới các id này).
+const PARTS = [
+  { id: 'overview', vi: 'Tổng quan' }, { id: 'campaigns', vi: 'Cây chiến dịch' }, { id: 'drawer', vi: 'Tấm chi tiết trượt' },
+  { id: 'account', vi: 'Tài khoản' }, { id: 'heatmap', vi: 'Bản đồ nhiệt theo giờ' }];
+const I = (d, s = 18) => `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const IC = {
+  grid: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+  list: '<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>', card: '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>',
+  chev: '<path d="M15 6l-6 6 6 6"/>', right: '<path d="M9 6l6 6-6 6"/>', search: '<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>', dl: '<path d="M12 4v11m-5-5 5 5 5-5M5 20h14"/>',
+  cal: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/>', trend: '<path d="M3 17l6-6 4 4 8-8M15 7h6v6"/>', clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  pin: '<path d="M12 21s-7-6.1-7-11a7 7 0 0 1 14 0c0 4.9-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>', users: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6 6 0 0 1 3.5 6"/>',
+  layers: '<path d="M12 3 2 8l10 5 10-5zM2 13l10 5 10-5"/>', bars: '<path d="M5 20V10M12 20V4M19 20v-7"/>', pie: '<path d="M21 12A9 9 0 1 1 12 3v9z"/><path d="M15 3.5A9 9 0 0 1 20.5 9H15z"/>',
+  eye: '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>', x: '<path d="M6 6l12 12M18 6 6 18"/>', funnel: '<path d="M3 4h18l-7 8v6l-4 2v-8z"/>',
+  wallet: '<rect x="3" y="6" width="18" height="14" rx="2"/><path d="M16 13h2M3 10h18"/>', edit: '<path d="M4 20h4L20 8l-4-4L4 16z"/>', play: '<path d="M7 4l13 8-13 8z"/>', pause: '<path d="M8 4v16M16 4v16"/>', target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>' };
+const vn = (n, d = 0) => n.toLocaleString('vi-VN', { minimumFractionDigits: d, maximumFractionDigits: d });
+const d$ = (n) => vn(Math.round(n)) + 'đ';
+const tr = (n) => vn(n / 1e6, 2) + 'tr';
+
+// ---- biểu đồ SVG nhỏ ----
+function smooth(pts) { // catmull-rom → bezier
+  let d = `M${pts[0][0]},${pts[0][1]}`;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const [p0, p1, p2, p3] = [pts[i - 1] || pts[i], pts[i], pts[i + 1], pts[i + 2] || pts[i + 1]];
+    d += ` C${p1[0] + (p2[0] - p0[0]) / 6},${p1[1] + (p2[1] - p0[1]) / 6} ${p2[0] - (p3[0] - p1[0]) / 6},${p2[1] - (p3[1] - p1[1]) / 6} ${p2[0]},${p2[1]}`;
+  } return d;
+}
+function ring(segs, size = 150, w = 18, gap = 2) { // segs: [[pct, color]]
+  const r = (size - w) / 2, L = 2 * Math.PI * r; let off = 0;
+  return `<svg viewBox="0 0 ${size} ${size}" aria-hidden="true"><circle cx="${size / 2}" cy="${size / 2}" r="${r}" fill="none" stroke="#eef2f9" stroke-width="${w}"/>` + segs.map(([p, c]) => {
+    const len = Math.max(L * p / 100 - gap, 0.5), s = `<circle cx="${size / 2}" cy="${size / 2}" r="${r}" fill="none" stroke="${c}" stroke-width="${w}" stroke-dasharray="${len} ${L}" stroke-dashoffset="${-off}" transform="rotate(-90 ${size / 2} ${size / 2})"/>`;
+    off += L * p / 100; return s; }).join('') + '</svg>';
+}
+const rnd = (i) => { const x = Math.sin(i * 12.9898) * 43758.5453; return x - Math.floor(x); };
+
+// ---- dữ liệu mẫu ----
+const DAYS7 = ['16/11', '17/11', '18/11', '19/11', '20/11', '21/11', '22/11'];
+const DAILY = [22.72, 16.45, 6.68, 0.42, 19.10, 19.03, 18.33].map((v) => v * 1e6);
+const PLAT = [['Facebook', 91.8, 93878001, 90, '#1f5eff'], ['Instagram', 5.4, 5559822, 2, '#e8508a'], ['Audience Network', 2.6, 2694638, 1, '#16213a'], ['Threads', 0.2, 177760, 0, '#8a94a8']];
+const AGES = ['18-24', '25-34', '35-44', '45-54', '55-64', '65+'], MALE = [1.2, 46.3, 30.45, 16.02, 2.1, 3.0], FEMALE = [1.0, 31.2, 14.1, 7.3, 1.4, 1.8];
+const WD = ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'CN'];
+const HM = WD.map((_, d) => Array.from({ length: 24 }, (_, h) => {
+  if (d === 3 || (d === 2 && h >= 10) || (d === 1 && h > 0 && h < 9)) return [0, 0];
+  const curve = .35 + .65 * Math.max(0, Math.sin((h - 4) / 24 * Math.PI)), s = Math.round((curve * .8 + rnd(d * 24 + h) * .45) * 420) * 1000;
+  return [s, Math.round(rnd(d * 31 + h * 7) * curve * 6 * (s > 200000))];
+}));
+const HOUR_R = [1, 4, 2, 1, 2, 0, 4, 4, 1, 3, 2, 1, 7, 13, 7, 8, 4, 2, 5, 5, 6, 5, 8, 1];
+const HOUR_S = [3.1, 5.4, 2.4, 1.8, 1.7, 2.2, 3.0, 2.6, 2.1, 2.7, 2.9, 2.6, 3.0, 3.2, 3.6, 3.7, 3.8, 3.4, 4.2, 4.4, 5.0, 5.6, 4.8, 2.1].map((v) => v * 1e6);
+const FUNNEL = [['Hiển thị', 2035163, 'Tần suất 1,95'], ['Tiếp cận', 1044964, '51,3% hiển thị'], ['Lượt nhấp', 18890, 'CTR 0,93%'], ['Nhấp liên kết', 13474, '71,3% lượt nhấp'], ['Chuyển đổi', 97, 'CPR 1,05tr']];
+const G = ['linear-gradient(135deg,#0f5132,#3aa36b 55%,#e9d58c)', 'linear-gradient(135deg,#7a5a3a,#d6b58a 60%,#f3ead9)', 'linear-gradient(135deg,#0b1f3a,#2d5f9e 60%,#9cc6f0)', 'linear-gradient(135deg,#3a2a1a,#b0884f 55%,#efd9a8)', 'linear-gradient(135deg,#123b3a,#2f8f8a 60%,#b6e3dd)', 'linear-gradient(135deg,#4a3b2a,#a39070 60%,#e6dccb)'];
+// Cây chiến dịch: [id, tên, loại, trạng thái, chi tiêu, kết quả, đơn vị, CPM, tiếp cận, tần suất, ngân sách/ngày, ngày, cbo, con]
+const mk = (id, n, type, st, sp, res, unit, cpm, reach, freq, extra = {}) => ({ id, n, type, st, sp, res, unit, cpm, reach, freq, kids: [], ...extra });
+const TREE = [
+  mk('c1', 'Lead_DatCho_T11', 'Chiến dịch', 'on', 82424609, 80, 'LEAD', 81803, 359578, 2.80, { g: 0, daily: 15e6, from: '04/11/2026', kids: [
+    mk('s1', '01_TepChung_DaNang', 'Nhóm QC', 'on', 44279877, 49, 'LEAD', 56776, 301037, 2.59, { g: 0, cbo: 1, from: '04/11/2026', kids: [mk('a1', 'Ad_DatCho_TepChung', 'Quảng cáo', 'on', 44279877, 49, 'LEAD', 56776, 301037, 2.59, { g: 3 })] }),
+    mk('s2', '03_TA_DauTu_DaNang', 'Nhóm QC', 'on', 29881031, 26, 'LEAD', 159615, 64708, 2.89, { g: 1, cbo: 1, from: '12/11/2026', kids: [mk('a2', 'Ad_DatCho_DauTu', 'Quảng cáo', 'on', 29881031, 26, 'LEAD', 159615, 64708, 2.89, { g: 4 })] }),
+    mk('s3', '02_TA_OThat_DaNang', 'Nhóm QC', 'done', 8263701, 5, 'LEAD', 204087, 18726, 2.16, { g: 5, cbo: 1, from: '12/11 → 19/11', kids: [mk('a3', 'Ad_DatCho_OThat', 'Quảng cáo', 'done', 8263701, 5, 'LEAD', 204087, 18726, 2.16, { g: 2 })] })] }),
+  mk('c2', 'Lead Form Chung - Carousel', 'Chiến dịch', 'on', 14019029, 13, 'LEAD', 87533, 101329, 1.58, { g: 1, daily: 3e6, from: '13/11/2026', kids: [
+    mk('s4', 'Carousel_TepRong', 'Nhóm QC', 'on', 14019029, 13, 'LEAD', 87533, 101329, 1.58, { g: 1, from: '13/11/2026', kids: [mk('a4', 'Ad_Carousel_4Anh', 'Quảng cáo', 'on', 14019029, 13, 'LEAD', 87533, 101329, 1.58, { g: 1 })] })] }),
+  mk('c3', '[T11 - NHẬN DIỆN] Video', 'Chiến dịch', 'on', 3414675, 389087, 'TIẾP CẬN', 6900, 389087, 1.27, { g: 2, from: '20/11/2026', kids: [
+    mk('s5', 'Video_KienTao_MienTrung', 'Nhóm QC', 'on', 2010000, 229100, 'TIẾP CẬN', 6800, 229100, 1.25, { g: 2, from: '20/11/2026', kids: [mk('a5', 'Ad_Video_KienTao', 'Quảng cáo', 'on', 2010000, 229100, 'TIẾP CẬN', 6800, 229100, 1.25, { g: 2 })] }),
+    mk('s6', 'Video_SuKien_MienTrung', 'Nhóm QC', 'on', 1404675, 159987, 'TIẾP CẬN', 7050, 159987, 1.30, { g: 4, from: '20/11/2026', kids: [mk('a6', 'Ad_Video_SuKien', 'Quảng cáo', 'on', 1404675, 159987, 'TIẾP CẬN', 7050, 159987, 1.30, { g: 4 })] })] }),
+  mk('c4', '[Tương tự - Lead] Đặt chỗ', 'Chiến dịch', 'done', 372850, 34236, 'TIẾP CẬN', 7066, 34236, 1.54, { g: 3, from: '12/11 → 19/12', kids: [
+    mk('s7', 'LAL_1pct_KhachVIP', 'Nhóm QC', 'done', 372850, 34236, 'TIẾP CẬN', 7066, 34236, 1.54, { g: 3, from: '12/11 → 19/12', kids: [mk('a7', 'Ad_LAL_DatCho', 'Quảng cáo', 'done', 372850, 34236, 'TIẾP CẬN', 7066, 34236, 1.54, { g: 3 })] })] })];
+const BY_ID = {}; (function walk(list) { list.forEach((x) => { BY_ID[x.id] = x; walk(x.kids); }); })(TREE);
+const cpr = (x) => x.res ? x.sp / x.res : 0;
+const BD = {
+  plat: [['Facebook · Bảng tin', 39354828, 6451, 1.01, 41, '#1f5eff'], ['Facebook · Stories', 22360658, 5053, 2.56, 24, '#1f5eff'], ['Facebook · Reels', 13048965, 1133, 0.92, 11, '#1f5eff'], ['Instagram · Stories', 1821829, 95, 0.63, 0, '#e8508a'], ['Audience Network', 1802572, 70, 1.79, 1, '#16213a'], ['Instagram · Bảng tin', 1344169, 96, 0.72, 0, '#e8508a']],
+  age: [['25-34 · Nam', 28100000, 5320, 1.12, 34, '#1f5eff'], ['35-44 · Nam', 19400000, 3010, 0.96, 18, '#1f5eff'], ['25-34 · Nữ', 16200000, 2650, 1.20, 14, '#26b4d8'], ['45-54 · Nam', 9800000, 1500, 0.88, 7, '#1f5eff'], ['35-44 · Nữ', 6100000, 940, 0.91, 5, '#26b4d8'], ['45-54 · Nữ', 2824609, 480, 0.84, 2, '#26b4d8']],
+  geo: [['Đà Nẵng', 34150000, 6020, 1.21, 28, '#1f5eff'], ['Quảng Nam', 15390000, 2410, 0.98, 16, '#1f5eff'], ['Hà Nội', 14310000, 2290, 1.02, 13, '#1f5eff'], ['Thừa Thiên–Huế', 13650000, 1980, 0.95, 8, '#1f5eff'], ['Quảng Ngãi', 9310000, 1270, 0.90, 11, '#1f5eff']] };
+const LOG = [['budget', 'Tài khoản đã thanh toán', 'TK-8580', 'Hệ thống', '21:33:31 22/11/2026'], ['ad', 'Đổi nội dung quảng cáo', 'Ad_DatCho_TepChung', 'Lan Phạm', '18:02:10 22/11/2026'],
+  ['budget', 'Tài khoản đã thanh toán', 'TK-8580', 'Hệ thống', '14:43:29 22/11/2026'], ['adset', 'Tăng ngân sách nhóm QC lên 15tr/ngày', '01_TepChung_DaNang', 'Minh Trần', '09:15:44 22/11/2026'],
+  ['campaign', 'Tạo chiến dịch', '[T11 - NHẬN DIỆN] Video', 'Minh Trần', '08:40:02 20/11/2026'], ['ad', 'Tạm dừng quảng cáo', 'Ad_DatCho_OThat', 'Lan Phạm', '17:20:15 19/11/2026'],
+  ['adset', 'Đổi độ tuổi 25–54', '03_TA_DauTu_DaNang', 'Minh Trần', '11:05:51 18/11/2026'], ['budget', 'Tài khoản đã thanh toán', 'TK-8580', 'Hệ thống', '14:01:59 21/11/2026'],
+  ['campaign', 'Kết thúc chiến dịch', '[Tương tự - Lead] Đặt chỗ', 'Hệ thống', '23:59:00 19/11/2026'], ['budget', 'Đổi hạn mức chi tiêu 225tr', 'TK-8580', 'Minh Trần', '10:12:30 16/11/2026']];
+const LOG_K = { campaign: ['Chiến dịch', '#1f5eff', 'target'], adset: ['Nhóm QC', '#8e4fc7', 'layers'], ad: ['Quảng cáo', '#e8508a', 'play'], budget: ['Ngân sách', '#12a36b', 'wallet'] };
+const MONTH = [0.257, 0, 0.276, 0.962, 0.494, 0, 0, 0, 0, 0, 267.75, 218.52].map((v) => v * 1e6);
+const S = { page: 'overview', mini: false, hm: 'spend', open: new Set(['c1', 's1']), q: '', st: 'all', sort: 0, log: 'all', dr: null, tab: 'plat' };
+
+// ---- trang ----
+const thumb = (g) => `<span class="sa-th" style="--g:${G[g]}" aria-hidden="true"></span>`;
+const pm = (v, good = v >= 0) => `<span class="sa-pm ${good ? 'pm-up' : 'pm-dn'}">${v > 0 ? '+' : ''}${vn(v, 1)}%</span>`;
+function daily() {
+  const W = 520, H = 190, mx = Math.max(...DAILY) * 1.12, pts = DAILY.map((v, i) => [24 + i * (W - 48) / 6, 24 + (H - 44) * (1 - v / mx)]);
+  return `<div class="sa-chart" data-chart><svg viewBox="0 0 ${W} ${H + 18}"><defs><linearGradient id="dg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1f5eff" stop-opacity=".2"/><stop offset="1" stop-color="#1f5eff" stop-opacity="0"/></linearGradient></defs>
+    ${[.3, .55, .8].map((f) => `<line x1="0" x2="${W}" y1="${H * f}" y2="${H * f}" stroke="#edf1f8"/>`).join('')}
+    <path d="${smooth(pts)} L${pts[6][0]},${H} L${pts[0][0]},${H}Z" fill="url(#dg)"/><path d="${smooth(pts)}" fill="none" stroke="#1846c9" stroke-width="2.5"/>
+    ${pts.map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="4" fill="#fff" stroke="#1846c9" stroke-width="2"/><text x="${x}" y="${y - 10}" text-anchor="middle" font-size="10" font-weight="600" fill="#16213a">${vn(DAILY[i] / 1e6, 2)}tr</text><text x="${x}" y="${H + 14}" text-anchor="middle" font-size="10" fill="#5b6680">${DAYS7[i]}</text>`).join('')}
+    ${pts.map(([x], i) => `<rect class="hit" x="${x - (W - 48) / 12}" y="0" width="${(W - 48) / 6}" height="${H}" rx="8" tabindex="0" data-t="${DAYS7[i]}|Chi tiêu ${d$(DAILY[i])}" aria-label="${DAYS7[i]}: ${d$(DAILY[i])}"/>`).join('')}</svg><div class="sa-tip" role="status"></div></div>`;
+}
+function ageBars() {
+  const W = 360, H = 150, mx = 50;
+  return `<div class="sa-chart" data-chart><svg viewBox="0 0 ${W} ${H + 18}">${AGES.map((a, i) => { const x = 14 + i * 58, hm = MALE[i] / mx * H, hf = FEMALE[i] / mx * H; return `
+    <rect class="hit" x="${x - 6}" y="0" width="52" height="${H}" rx="8" tabindex="0" data-t="${a} tuổi|Nam ${vn(MALE[i], 2)}tr · Nữ ${vn(FEMALE[i], 2)}tr" aria-label="${a} tuổi: nam ${vn(MALE[i], 2)} triệu, nữ ${vn(FEMALE[i], 2)} triệu"/>
+    <rect x="${x}" y="${H - hm}" width="18" height="${hm}" rx="5" fill="#1f5eff" pointer-events="none"/><rect x="${x + 21}" y="${H - hf}" width="18" height="${hf}" rx="5" fill="#26b4d8" pointer-events="none"/>
+    ${MALE[i] > 10 ? `<text x="${x + 9}" y="${H - hm - 5}" text-anchor="middle" font-size="9" font-weight="600" fill="#16213a">${vn(MALE[i], 1)}tr</text>` : ''}
+    <text x="${x + 20}" y="${H + 14}" text-anchor="middle" font-size="10" fill="#5b6680">${a}</text>`; }).join('')}</svg><div class="sa-tip" role="status"></div></div>`;
+}
+function heatmap() {
+  const k = S.hm === 'spend' ? 0 : 1, mx = Math.max(...HM.flat().map((c) => c[k])) || 1;
+  const best = HM.flatMap((r, d) => r.map((c, h) => ({ d, h, r: c[1], s: c[0] }))).filter((c) => c.r).sort((a, b) => b.r - a.r || a.s - b.s).slice(0, 2);
+  return `<section class="sa-card w2" data-in style="--i:4"><p class="sa-ct">${I(IC.clock)}Bản đồ nhiệt theo giờ<span class="r"><select class="sa-sel" data-hm aria-label="Chỉ số bản đồ nhiệt"><option value="spend" ${k ? '' : 'selected'}>Chi tiêu</option><option value="res" ${k ? 'selected' : ''}>Kết quả</option></select></span></p>
+    <div class="sa-chart" data-chart><div class="scrollx"><div class="sa-hm" role="img" aria-label="Bản đồ nhiệt 7 ngày × 24 giờ theo ${k ? 'kết quả' : 'chi tiêu'}"><span></span>${Array.from({ length: 24 }, (_, h) => `<span>${h}</span>`).join('')}
+      ${HM.map((r, d) => `<span class="d">${WD[d]}</span>` + r.map((c, h) => `<span class="c" style="--p:${Math.round(8 + 92 * c[k] / mx)}%" data-t="${WD[d]} ${h}h|${d$(c[0])} · ${c[1]} KQ"></span>`).join('')).join('')}</div></div><div class="sa-tip" role="status"></div></div>
+    <div class="sa-foot">${best.map((b, i) => `<span class="sa-best">#${i + 1} ${WD[b.d]} ${b.h}h: ${b.r} KQ · CPR ${tr(b.s / b.r)}</span>`).join('')}
+      <span class="sa-scale">Ít ${[10, 35, 60, 85, 100].map((p) => `<i style="--p:${p}%"></i>`).join('')} Nhiều</span></div></section>`;
+}
+function hours() {
+  const W = 720, H = 170, mx = Math.max(...HOUR_S) * 1.1, rm = 15, top = [...HOUR_R.keys()].sort((a, b) => HOUR_R[b] - HOUR_R[a]).slice(0, 3);
+  const pts = HOUR_R.map((r, h) => [16 + h * 29 + 10, H - r / rm * (H - 20)]);
+  return `<section class="sa-card w2" data-in style="--i:6"><p class="sa-ct">${I(IC.bars)}Chi tiêu và kết quả theo 24 giờ<span class="r"><small>Bấm cột để xem CPR</small></span></p>
+    <div class="sa-legend"><span><i style="--c:#1f5eff"></i>Chi tiêu</span><span><i style="--c:#12a36b"></i>Giờ vàng</span><span><i style="--c:#12a36b;border-radius:50%"></i>Kết quả</span></div>
+    <div class="sa-chart" data-chart><div class="scrollx"><svg viewBox="0 0 ${W} ${H + 18}" style="min-width:560px"><defs><linearGradient id="hb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1f5eff"/><stop offset="1" stop-color="#6f9bff"/></linearGradient><linearGradient id="hg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#12a36b"/><stop offset="1" stop-color="#5fd3a1"/></linearGradient></defs>
+      ${HOUR_S.map((s, h) => { const x = 16 + h * 29, bh = s / mx * H; return `<rect x="${x}" y="${H - bh}" width="20" height="${bh}" rx="5" fill="url(#${top.includes(h) ? 'hg' : 'hb'})"/><text x="${x + 10}" y="${H + 14}" text-anchor="middle" font-size="9" fill="#5b6680">${String(h).padStart(2, '0')}h</text>`; }).join('')}
+      <path d="${smooth(pts)}" fill="none" stroke="#12a36b" stroke-width="2"/>${pts.map(([x, y], h) => `<circle cx="${x}" cy="${y}" r="7" fill="#fff" stroke="#12a36b" stroke-width="1.5"/><text x="${x}" y="${y + 3}" text-anchor="middle" font-size="8" font-weight="700" fill="#157a3c">${HOUR_R[h]}</text>`).join('')}
+      ${HOUR_S.map((s, h) => `<rect class="hit" x="${16 + h * 29 - 4}" y="0" width="28" height="${H}" rx="6" tabindex="0" data-t="${String(h).padStart(2, '0')}:00|${d$(s)} · ${HOUR_R[h]} KQ${HOUR_R[h] ? ' · CPR ' + tr(s / HOUR_R[h]) : ''}" aria-label="${h} giờ: ${d$(s)}, ${HOUR_R[h]} kết quả"/>`).join('')}</svg></div><div class="sa-tip" role="status"></div></div>
+    <div class="sa-foot">${top.map((h, i) => `<span class="sa-best g"><em>#${i + 1}</em>${String(h).padStart(2, '0')}:00 · ${HOUR_R[h]} KQ · CPR ${tr(HOUR_S[h] / HOUR_R[h])}</span>`).join('')}</div></section>`;
+}
+const funnel = (f, k = 1) => `<div class="sa-fun">${f.map(([t, v, note], i) => `<div><p>${t}<em>${note}</em><b>${vn(Math.round(v * k))}</b></p><span class="sa-bar" style="display:block"><i style="width:${Math.max(2, i === 4 ? 12 : Math.pow(v / f[0][1], .32) * 100)}%;--c:${['#16213a', '#1f5eff', '#1a9be0', '#26b4d8', '#12a36b'][i]}"></i></span></div>`).join('')}</div>`;
+function overview() {
+  const tops = TREE.flatMap((c) => [c, ...c.kids]).sort((a, b) => b.sp - a.sp).slice(0, 6), mx = tops[0].sp;
+  return `<div class="sa-grid sa-ov">
+  <section class="sa-card sa-hero" data-in style="--i:0"><div class="sa-spend"><div class="t">Chi tiêu ${pm(51.1)}</div><b>${d$(102310227)}</b></div>
+    <div class="sa-stat"><div><span>Tiếp cận</span><b>1.044.964</b></div>${pm(-10)}</div>
+    <div class="sa-stat"><div><span>Khách tiềm năng</span><b>93</b></div>${pm(-23.8)}</div>
+    <div class="sa-stat"><div><span>Hiển thị</span><b>2.035.163</b></div>${pm(7.4)}</div></section>
+  <section class="sa-card" data-in style="--i:1"><p class="sa-ct">${I(IC.trend)}Chi tiêu theo ngày<span class="r"><small>16–22/11</small></span></p>${daily()}</section>
+  <section class="sa-card" data-in style="--i:2"><p class="sa-ct">${I(IC.pie)}Nền tảng</p><div class="sa-plat"><ul>${PLAT.map(([n, p, s, r, c]) => `<li><div><span><i style="--c:${c}"></i>${n}</span><span>${vn(p, 1)}%</span></div><b>${d$(s)}${r ? `<small>${r} KQ</small>` : ''}</b></li>`).join('')}</ul>
+    <div class="sa-ring">${ring(PLAT.map(([, p, , , c]) => [p, c]))}<div><b>91,8%</b><small>Facebook</small></div></div></div></section>
+  ${heatmap()}
+  <section class="sa-card" data-in style="--i:5"><p class="sa-ct">${I(IC.users)}Tuổi và giới tính</p><div class="sa-legend"><span><i style="--c:#1f5eff"></i>Nam</span><span><i style="--c:#26b4d8"></i>Nữ</span></div>${ageBars()}
+    <div class="sa-split"><div><b>Nam 62,8%</b> · 53 KQ · 1,21tr/KQ</div><div><b>Nữ 36,2%</b> · 38 KQ · 975k/KQ</div></div></section>
+  ${hours()}
+  <section class="sa-card" data-in style="--i:7"><p class="sa-ct">${I(IC.funnel)}Phễu chuyển đổi<span class="r"><span class="sa-pm pm-up">CTR riêng 1,59%</span></span></p>${funnel(FUNNEL)}</section>
+  <section class="sa-card w3" data-in style="--i:8"><p class="sa-ct">${I(IC.list)}Chi tiêu cao nhất<span class="r"><button class="sa-btn sm" data-page="campaigns">Xem tất cả</button></span></p>
+    <div class="sa-top10">${tops.map((x, i) => `<button class="sa-tc" data-dr="${x.id}"><span>${i + 1}</span>${thumb(x.g)}<span class="n"><div>${x.n}</div><span class="sa-bar" style="display:block"><i style="width:${x.sp / mx * 100}%"></i></span></span><span class="v"><b>${tr(x.sp)}</b><small>${vn(x.res)} ${x.unit === 'LEAD' ? 'KQ' : 'tiếp cận'}</small></span></button>`).join('')}</div></section>
+  </div>`;
+}
+function rows() {
+  const q = S.q.trim().toLowerCase(), hit = (x) => !q || x.n.toLowerCase().includes(q) || x.kids.some(hit), out = [];
+  let list = TREE.filter((c) => (S.st === 'all' || c.st === S.st) && hit(c));
+  const sorter = (l) => S.sort ? [...l].sort((a, b) => S.sort * (a.sp - b.sp)) : l;
+  (function add(l, lv) { sorter(l).forEach((x) => { if (lv && !hit(x)) return; out.push([x, lv]); if (x.kids.length && (S.open.has(x.id) || q)) add(x.kids, lv + 1); }); })(list, 0);
+  return out;
+}
+function campaigns() {
+  const r = rows();
+  return `<div class="sa-h" data-in style="--i:0"><div><h2>Chiến dịch</h2><p>Cây Chiến dịch → Nhóm QC → Quảng cáo · ${TREE.length} chiến dịch</p></div><button class="sa-btn pri" data-toast="Đã xuất ${r.length} dòng ra CSV">${I(IC.dl)}Xuất CSV</button></div>
+  <section class="sa-card" data-in style="--i:1"><div class="sa-tools"><label class="sa-search">${I(IC.search, 15)}<input type="search" data-q value="${S.q}" placeholder="Tên chiến dịch, nhóm, quảng cáo" aria-label="Tìm chiến dịch"></label>
+    <select class="sa-sel" data-st aria-label="Lọc trạng thái" style="min-height:36px">${[['all', 'Mọi trạng thái'], ['on', 'Đang chạy'], ['done', 'Hoàn tất']].map(([k, t]) => `<option value="${k}" ${S.st === k ? 'selected' : ''}>${t}</option>`).join('')}</select></div>
+    <div class="scrollx"><table class="sa-tbl"><thead><tr><th>Chiến dịch / Nhóm QC / Quảng cáo</th><th>Trạng thái</th><th><button data-sort aria-label="Sắp xếp theo chi tiêu">Chi tiêu ${S.sort ? (S.sort < 0 ? '↓' : '↑') : '↕'}</button></th><th>Kết quả</th><th>CPR</th><th>CPM</th><th>Tiếp cận</th><th>Tần suất</th><th></th></tr></thead><tbody>
+    ${r.map(([x, lv]) => `<tr class="l${lv}${S.fresh && S.fresh.has(x.id) ? ' row-in' : ''}"><td><div class="sa-nm" style="--lv:${lv}"><button class="sa-ex${x.kids.length ? '' : ' no'}" data-ex="${x.id}" aria-expanded="${S.open.has(x.id) || !!S.q}" aria-label="Mở ${x.n}">${I(IC.right, 14)}</button>${thumb(x.g)}<div><b>${x.n}</b><small>${x.kids.length ? `${x.kids.length} ${lv ? 'quảng cáo' : 'nhóm'} · ` : ''}${x.type}</small></div></div></td>
+      <td><span class="sa-st ${x.st === 'on' ? 'st-on' : 'st-done'}">${x.st === 'on' ? 'Đang chạy' : 'Hoàn tất'}</span>${x.cbo ? '<span class="sa-cbo" title="Ngân sách tối ưu ở cấp chiến dịch">CBO</span>' : ''}${x.from ? `<small class="u" style="text-align:left;margin-top:3px">${x.daily ? `${tr(x.daily)}/ngày · ` : ''}${x.from}</small>` : ''}</td>
+      <td>${d$(x.sp)}</td><td><b>${vn(x.res)}</b><small class="u">${x.unit}</small></td><td class="cpr">${d$(cpr(x))}</td><td>${d$(x.cpm)}</td><td>${vn(x.reach)}</td><td>${vn(x.freq, 2)}</td>
+      <td><button class="sa-btn sm" data-dr="${x.id}">${I(IC.eye, 14)}Chi tiết</button></td></tr>`).join('') || '<tr><td colspan="9" style="text-align:center;padding:28px;color:var(--ink2)">Không có dòng khớp. Thử từ khác.</td></tr>'}</tbody></table></div></section>`;
+}
+function account() {
+  const L = LOG.filter((l) => S.log === 'all' || l[0] === S.log), W = 640, H = 170, mx = Math.max(...MONTH) * 1.12;
+  return `<div class="sa-h" data-in style="--i:0"><div><h2>Tài khoản</h2><p>TK-8580 · múi giờ Asia/Ho_Chi_Minh</p></div></div>
+  <div class="sa-grid sa-acc"><section class="sa-card" data-in style="--i:1"><div class="sa-bal"><div class="t">TK-8580<code>VND</code></div><b>${d$(102310227)}</b><small>Thẻ Mastercard •5721</small></div>
+    <div class="sa-two"><div><span>Gồm VAT (+10%)</span><b>${d$(112541250)}</b></div><div><span>Tổng chi lũy kế</span><b style="color:var(--acctx)">187,07tr</b></div></div>
+    <dl class="sa-info"><dt>Doanh nghiệp</dt><dd>Công ty CP Mẫu</dd><dt>Dư nợ hiện tại</dt><dd style="color:var(--gold)">${d$(2199621)}</dd><dt>Hạn mức chi tiêu</dt><dd>${d$(225e6)}</dd><dt>Mã số thuế</dt><dd style="font-family:var(--aw-mono,monospace)">0100000000</dd></dl></section>
+  <section class="sa-card" data-in style="--i:2"><p class="sa-ct">${I(IC.bars)}Chi tiêu theo tháng<span class="r"><small>Năm 2026</small></span></p>
+    <div class="sa-chart" data-chart><div class="scrollx"><svg viewBox="0 0 ${W} ${H + 20}" style="min-width:480px"><defs><linearGradient id="mb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1f5eff"/><stop offset="1" stop-color="#1a9be0"/></linearGradient></defs>
+      ${[.25, .5, .75].map((f) => `<line x1="0" x2="${W}" y1="${H * f}" y2="${H * f}" stroke="#edf1f8"/>`).join('')}
+      ${MONTH.map((v, i) => { const x = 14 + i * 52, bh = Math.max(v / mx * H, v ? 5 : 2); return `<rect x="${x}" y="${H - bh}" width="30" height="${bh}" rx="6" fill="${v ? 'url(#mb)' : '#e4e9f2'}"/>${v ? `<text x="${x + 15}" y="${H - bh - 6}" text-anchor="middle" font-size="10" font-weight="600" fill="#16213a">${v >= 1e6 ? vn(v / 1e6, 1) + 'tr' : vn(v / 1e3) + 'k'}</text>` : ''}<text x="${x + 15}" y="${H + 15}" text-anchor="middle" font-size="10" fill="#5b6680">T${i + 1}</text>
+        <rect class="hit" x="${x - 6}" y="0" width="42" height="${H}" rx="8" tabindex="0" data-t="Tháng ${i + 1}|${d$(v)}" aria-label="Tháng ${i + 1}: ${d$(v)}"/>`; }).join('')}</svg></div><div class="sa-tip" role="status"></div></div></section>
+  <section class="sa-card w3" data-in style="--i:3" style="grid-column:1/-1"><p class="sa-ct">${I(IC.edit)}Nhật ký thao tác<span class="r"><small>${L.length} dòng</small></span></p>
+    <div class="sa-pills" role="group" aria-label="Lọc nhật ký" style="margin-bottom:12px">${[['all', 'Tất cả'], ...Object.entries(LOG_K).map(([k, v]) => [k, v[0]])].map(([k, t]) => `<button data-log="${k}" aria-pressed="${S.log === k}">${t}</button>`).join('')}</div>
+    <div class="sa-log">${L.map(([k, t, obj, by, at]) => `<div class="sa-lg"><span class="k" style="--c:${LOG_K[k][1]}">${I(IC[LOG_K[k][2]])}</span><span class="t"><b>${t} · <a>${obj}</a></b><small>Thực hiện bởi ${by}</small></span><time>${at}</time></div>`).join('')}</div></section></div>`;
+}
+function drawer(x) {
+  const k = x.sp / 82424609, rowsBD = BD[S.tab], tot = rowsBD.reduce((a, r) => a + r[1], 0), F = FUNNEL.map(([t, v, n]) => [t, v * k * 0.38, n]);
+  return `<header class="sa-drh">${thumb(x.g)}<div class="n"><div><span class="sa-type">${x.type.toUpperCase()}</span><span class="sa-st ${x.st === 'on' ? 'st-on' : 'st-done'}">${x.st === 'on' ? 'Đang chạy' : 'Hoàn tất'}</span></div><b id="dr-t">${x.n}</b></div>
+    <button class="sa-x" data-close aria-label="Đóng">${I(IC.x, 16)}</button></header>
+  <div class="sa-drb"><div class="sa-kp"><div><span>Chi tiêu</span><b>${tr(x.sp)}</b></div><div><span>Kết quả</span><b>${vn(x.res)}</b></div><div><span>CPR</span><b style="color:var(--acctx)">${d$(cpr(x))}</b></div><div><span>Tần suất</span><b>${vn(x.freq, 2)}</b></div></div>
+    <section class="sa-card"><p class="sa-ct">${I(IC.layers)}Phân rã chi tiêu</p>
+      <div class="sa-tabs" role="tablist">${[['plat', 'Nền tảng × Vị trí'], ['age', 'Tuổi & giới tính'], ['geo', 'Tỉnh thành']].map(([t, n]) => `<button role="tab" data-tab="${t}" aria-selected="${S.tab === t}">${n}</button>`).join('')}</div>
+      <div class="scrollx"><table class="sa-bd"><thead><tr><th>Phân khúc</th><th>Chi tiêu</th><th>Nhấp / CTR</th><th>Kết quả</th><th>CPR</th></tr></thead><tbody>
+      ${rowsBD.map(([n, s, c, ctr, r, col]) => `<tr><td><i class="dot" style="--c:${col}"></i>${n}<span class="sa-bar" style="display:block"><i style="width:${s / rowsBD[0][1] * 100}%;--c:${col}"></i></span></td><td>${d$(s * k)}<small>${vn(s / tot * 100, 1)}%</small></td><td>${vn(Math.round(c * k))}<small>${vn(ctr, 2)}%</small></td><td>${Math.round(r * k)}</td><td class="cpr">${Math.round(r * k) ? d$(s / r) : '–'}</td></tr>`).join('')}</tbody></table></div></section>
+    <section class="sa-card"><p class="sa-ct">${I(IC.target)}Đối tượng nhắm</p><div class="sa-aud">
+      <div><h5>ĐỘ TUỔI</h5><b>25 – 54 tuổi</b><div class="sa-age"><i style="left:23%;right:22%"></i></div><div class="sa-ticks"><span>13</span><span>25</span><span>45</span><span>65+</span></div></div>
+      <div><h5>GIỚI TÍNH</h5><b>Nam và Nữ</b><p style="margin:10px 0 0;color:var(--ink2);font-size:11px">Phân phối: tự tối ưu</p></div>
+      <div><h5>KHU VỰC · 6</h5><div class="sa-tags">${['Quảng Nam', 'Quảng Bình', 'Quảng Ngãi', 'Quảng Trị', 'Thừa Thiên–Huế', 'Đà Nẵng'].map((t) => `<span class="sa-tag">${t}</span>`).join('')}</div></div>
+      <div><h5>SỞ THÍCH · 51</h5><div class="sa-tags">${['Doanh nghiệp nhỏ', 'Tiết kiệm', 'Du lịch hạng nhất', 'Golf', 'Xuất khẩu'].map((t) => `<span class="sa-tag b">${t}</span>`).join('')}<span class="sa-tag">+46</span></div></div></div></section>
+    <section class="sa-card"><p class="sa-ct">${I(IC.funnel)}Hành trình chuyển đổi</p>${funnel(F)}</section></div>`;
+}
+const PAGES = [['overview', 'Tổng quan', 'grid', overview], ['campaigns', 'Chiến dịch', 'list', campaigns], ['account', 'Tài khoản', 'card', account]];
+
+// ---- khung app ----
+const app = document.getElementById('sa');
+app.innerHTML = `<nav class="sa-side" aria-label="Điều hướng app"><div class="sa-brand"><span class="sa-logo">S</span><div><b>Sổ Ads</b><small>BÁO CÁO QC</small></div></div>
+  <button class="sa-fold" data-fold aria-label="Thu gọn thanh bên" title="Thu gọn">${I(IC.chev, 14)}</button>
+  <div class="sa-acct" title="TK-8580"><i></i><div><b>TK-8580</b><small>#3027•••6580</small></div></div>
+  <p class="sa-cap">CHỨC NĂNG</p>${PAGES.map(([id, t, ic]) => `<button class="sa-nav" data-page="${id}" title="${t}">${I(IC[ic])}<span>${t}</span></button>`).join('')}</nav>
+  <div class="sa-main"><div class="sa-top"><span class="sa-chip">${I(IC.cal)}<b>16/11 – 22/11/2026</b></span><span class="sa-chip">${I(IC.card)}TK-8580</span><span class="sa-me"><span>N</span><div>Người xem<small>Chỉ xem</small></div></span></div>
+  <div class="sa-body" tabindex="-1"></div></div>
+  <div class="sa-dim" data-close></div><aside class="sa-dr" role="dialog" aria-modal="true" aria-labelledby="dr-t"></aside><div class="sa-toast" role="status" aria-live="polite"></div>`;
+const body = app.querySelector('.sa-body'), dr = app.querySelector('.sa-dr'), toastEl = app.querySelector('.sa-toast');
+let tt, opener;
+const toast = (m) => { toastEl.textContent = m; toastEl.classList.add('on'); clearTimeout(tt); tt = setTimeout(() => toastEl.classList.remove('on'), 2200); };
+function render(enter) {
+  body.innerHTML = PAGES.find((p) => p[0] === S.page)[3]();
+  app.querySelectorAll('[data-page].sa-nav').forEach((b) => b.dataset.page === S.page ? b.setAttribute('aria-current', 'page') : b.removeAttribute('aria-current'));
+  if (enter) { body.classList.remove('enter'); void body.offsetWidth; body.classList.add('enter'); body.scrollTop = 0; } else body.classList.remove('enter');
+  S.fresh = null;
+}
+function openDr(id, from) { S.dr = id; opener = from; dr.innerHTML = drawer(BY_ID[id]); app.classList.add('dr-on'); dr.querySelector('.sa-drb').scrollTop = 0; setTimeout(() => dr.querySelector('[data-close]').focus(), 50); }
+function closeDr() { if (!S.dr) return; S.dr = null; app.classList.remove('dr-on'); if (opener && opener.isConnected) opener.focus(); }
+function tip(el, show) {
+  const box = el.closest('[data-chart]'), t = box.querySelector('.sa-tip');
+  if (!show) return t.classList.remove('on');
+  const r = el.getBoundingClientRect(), b = box.getBoundingClientRect(), [h, v] = el.dataset.t.split('|');
+  t.innerHTML = `${v}<small>${h}</small>`;
+  t.style.left = Math.min(Math.max(r.left - b.left + r.width / 2, 80), b.width - 80) + 'px'; t.style.top = Math.max(r.top - b.top + (el.classList.contains('c') ? 0 : 24), 34) + 'px'; t.classList.add('on');
+}
+for (const [ev, on] of [['pointerover', 1], ['pointerout', 0], ['focusin', 1], ['focusout', 0]]) app.addEventListener(ev, (e) => { const h = e.target.closest('[data-t]'); if (h) tip(h, on); });
+app.addEventListener('click', (e) => {
+  if (e.target.matches('.sa-dim')) return closeDr();
+  const b = e.target.closest('button'); if (!b) return; const d = b.dataset;
+  if (d.page) { if (d.page !== S.page) { S.page = d.page; render(true); } }
+  else if (d.fold !== undefined) { S.mini = !S.mini; app.classList.toggle('mini', S.mini); b.setAttribute('aria-label', S.mini ? 'Mở rộng thanh bên' : 'Thu gọn thanh bên'); }
+  else if (d.ex) { const x = BY_ID[d.ex]; if (S.open.has(d.ex)) S.open.delete(d.ex); else { S.open.add(d.ex); S.fresh = new Set(x.kids.map((k) => k.id)); } render(); app.querySelector(`[data-ex="${d.ex}"]`)?.focus(); }
+  else if (d.sort !== undefined) { S.sort = S.sort === 0 ? -1 : S.sort === -1 ? 1 : 0; render(); app.querySelector('[data-sort]').focus(); }
+  else if (d.dr) openDr(d.dr, b);
+  else if (d.close !== undefined) closeDr();
+  else if (d.tab) { S.tab = d.tab; dr.innerHTML = drawer(BY_ID[S.dr]); dr.querySelector(`[data-tab="${d.tab}"]`).focus(); }
+  else if (d.log) { S.log = d.log; render(); app.querySelector(`[data-log="${d.log}"]`).focus(); }
+  else if (d.toast) toast(d.toast);
+});
+app.addEventListener('change', (e) => {
+  if ('hm' in e.target.dataset) { S.hm = e.target.value; render(); app.querySelector('[data-hm]').focus(); }
+  if ('st' in e.target.dataset) { S.st = e.target.value; render(); app.querySelector('[data-st]').focus(); }
+});
+app.addEventListener('input', (e) => { if (!('q' in e.target.dataset)) return; S.q = e.target.value; render(); const q = body.querySelector('[data-q]'); q.focus(); q.setSelectionRange(S.q.length, S.q.length); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDr(); });
+render(true);
+</script>
+<script src="/search.js?v=82ebd55262" defer></script><script src="/stats.js?v=82ebd55262" defer></script>
+</body>
+</html>
