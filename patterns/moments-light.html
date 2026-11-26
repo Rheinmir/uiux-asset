@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Khoảnh khắc UI · Theo ánh sáng — uiux-asset</title>
+<meta name="description" content="36 micro-interaction dựng lại từ video UI Moments kỳ 7 «Follow the light»: lưới 6×6 ô tối, một quầng sáng trôi qua lưới làm viền từng ô sáng lên. Mỗi ô bấm được, tự chạy. JS/CSS thuần.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=7aa7115402">
+<style>
+.ml-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+.ml-page a { color: inherit; }
+/* Sân khấu tối riêng, không theo theme của site. */
+.ml { position: relative; padding: 28px 24px 18px; border-radius: 24px; background: #0b0b0d; color: #f2f2f2; overflow: hidden; font: 400 13px/1.4 var(--aw-font); }
+.ml-head { position: relative; z-index: 2; display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; margin-bottom: 18px; }
+.ml-head b { font-size: clamp(26px, 4vw, 40px); font-weight: 800; letter-spacing: -.02em; }
+.ml-head span { font-size: clamp(14px, 2vw, 22px); color: #b5b5bb; }
+.ml-head em { margin-left: auto; font: 500 12px/1 ui-monospace, Menlo, monospace; letter-spacing: .25em; color: #a0a0a8; font-style: normal; }
+.ml-grid { position: relative; z-index: 1; display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 720px) { .ml-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (min-width: 1100px) { .ml-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+.ml-tile { --g: 0; --lx: -999px; --ly: -999px; position: relative; aspect-ratio: 1; border-radius: 16px; background: #151518; border: 1px solid #2a2a2e; overflow: hidden; cursor: pointer; outline: none; touch-action: manipulation;
+  box-shadow: 0 0 calc(var(--g) * 26px) calc(var(--g) * 1px) rgba(190, 170, 255, calc(var(--g) * .35)); }
+.ml-tile:focus-visible { border-color: #f2f2f2; }
+/* Viền sáng: vùng gần quầng sáng của viền bừng lên, ánh cầu vồng. */
+.ml-tile::before { content: ""; position: absolute; inset: -1px; z-index: 2; border-radius: inherit; padding: 2px; pointer-events: none; opacity: var(--g);
+  background: radial-gradient(circle at var(--lx) var(--ly), #fff 0, #ffd6f0 12%, #b9a8ff 26%, #79d3ff 40%, rgba(121,211,255,0) 62%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+.ml-tile::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: calc(var(--g) * .5);
+  background: radial-gradient(circle at var(--lx) var(--ly), rgba(255,255,255,.14), transparent 55%); }
+.ml-n { position: absolute; top: 10px; left: 12px; z-index: 1; font: 500 11px/1 ui-monospace, Menlo, monospace; color: #77777f; }
+.ml-l { position: absolute; left: 0; right: 0; bottom: 10%; z-index: 1; text-align: center; font-size: clamp(12px, 1.25vw, 15px); font-weight: 500; color: #ececf0; }
+.ml-fit { position: absolute; left: 50%; top: 44%; width: 160px; height: 120px; margin: -60px 0 0 -80px; display: grid; place-items: center; scale: var(--k, 1); }
+.ml-orb { position: absolute; z-index: 0; left: 0; top: 0; width: 340px; height: 340px; margin: -170px 0 0 -170px; border-radius: 50%; pointer-events: none; mix-blend-mode: screen; filter: blur(18px);
+  background: radial-gradient(circle, rgba(255,255,255,.85) 0, rgba(255,210,240,.4) 12%, rgba(170,150,255,.26) 28%, rgba(110,200,255,.12) 46%, transparent 66%); }
+.ml-orb::after { content: ""; position: absolute; left: 50%; top: 50%; width: 26px; height: 26px; margin: -13px; border-radius: 50%; background: #fff; filter: blur(6px); }
+.ml-foot { position: relative; z-index: 2; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; margin-top: 16px; font-size: 12px; color: #8a8a92; }
+@media (max-width: 720px) { .ml { padding: 20px 12px 14px; } .ml-head em { margin-left: 0; } .ml-grid { gap: 10px; } }
+@media (prefers-reduced-motion: reduce) { .ml-fit * { animation-duration: 0s !important; transition-duration: 0s !important; } }
+</style>
+<style id="ml-css"></style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=7aa7115402"></script>
+<div class="ml-page">
+  <div class="aw-sotd" style="padding-top:16px">
+    <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">36 chuyển động</span></p>
+    <h1 class="aw-h1" style="--aw-h1:clamp(40px,7vw,96px)">Khoảnh khắc UI · Theo ánh sáng</h1>
+    <p class="aw-lead">UI Moments kỳ 7. Một quầng sáng trôi qua lưới, viền ô nào gần nó thì sáng lên. Rê chuột vào lưới để dẫn ánh sáng. Bấm ô để chạy, rê chuột lên ô để dừng tự chạy.</p>
+    <p class="aw-lead" style="font-size:14px">Dựng lại từ <a href="https://x.com/guanmo_ai/status/2125922208421978615" target="_blank" rel="noopener">bài X của @guanmo_ai</a> (bộ UI Moments, MIT, kỳ 7). Elastic controls ref. @yui540 · Motion set ref. amicro. Viết lại bằng JS/CSS thuần.</p>
+  </div>
+  <section class="ml" id="ml" aria-label="Lưới 36 chuyển động">
+    <div class="ml-orb" aria-hidden="true"></div>
+    <div class="ml-head"><b>UI Moments</b><span>36 Interactions · 6 × 6</span><em>FOLLOW THE LIGHT</em></div>
+    <div class="ml-grid" id="ml-grid"></div>
+    <div class="ml-foot"><span>Elastic controls ref. @yui540 · Motion set ref. amicro</span><span>github.com/guanmo-ai/ui-moments</span></div>
+  </section>
+</div>
+</main>
+<script>
+const P = { home: 'M3 11 12 4l9 7v9h-6v-6H9v6H3z', search: 'M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zm9 16-4-4', heart: 'M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z', user: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm-7 9a7 7 0 0 1 14 0',
+  up: 'M12 19V6m-5 5 5-5 5 5', check: 'M5 12l5 5 9-10', bag: 'M6 8h12l-1 12H7zM9 8a3 3 0 0 1 6 0', plus: 'M12 5v14M5 12h14', minus: 'M5 12h14', play: 'M8 5v14l11-7z', pause: 'M8 5v14M16 5v14', prev: 'M18 6 9 12l9 6zM6 6v12', next: 'M6 6l9 6-9 6zM18 6v12',
+  sun: 'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4', moon: 'M20 13A8 8 0 1 1 11 4a6 6 0 0 0 9 9z', arrow: 'M5 12h14m-5-5 5 5-5 5', chevl: 'M15 6l-6 6 6 6', chevr: 'M9 6l6 6-6 6', vol: 'M11 5 6 9H3v6h3l5 4z' };
+const I = (n, w = 16, f = 'none') => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="${f}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${P[n]}"/></svg>`;
+const rep = (k, f) => Array.from({ length: k }, (_, i) => f(i)).join('');
+const W = '#f2f2f2', D = '#2a2a2e';
+
+// Mỗi ô: css + html (+ step(el, n) mỗi nhịp, move(el, x, y) khi rê chuột, x/y 0..1). Lớp .on bật/tắt theo nhịp.
+const V = [
+{ id: 'breath-rings', vi: 'Vòng thở', en: 'Breath Rings',
+  css: `.t-br{position:relative;width:64px;height:64px}.t-br i{position:absolute;inset:0;border-radius:50%;border:1.5px solid #8d8d95;animation:t-br 2.4s ease-in-out infinite}.t-br i:nth-child(2){inset:12px;animation-delay:.3s}.t-br b{position:absolute;inset:22px;border-radius:50%;background:${W};box-shadow:0 0 14px rgba(255,255,255,.5)}.t-br.on i{animation-duration:1.1s}@keyframes t-br{50%{transform:scale(1.12);opacity:.45}}`,
+  html: `<div class="t-br"><i></i><i></i><b></b></div>` },
+{ id: 'like', vi: 'Thích', en: 'Like',
+  css: `.t-lk{display:flex;align-items:center;gap:12px;font:700 22px/1 system-ui,sans-serif}.t-lk span{width:48px;height:48px;border-radius:50%;background:#222226;display:grid;place-items:center;color:#cfcfd4;transition:transform .35s cubic-bezier(.3,1.8,.5,1),color .3s}.t-lk.on span{color:#ff5c8a;transform:scale(1.12)}.t-lk.on svg{fill:currentColor}`,
+  html: `<div class="t-lk"><span>${I('heart', 22)}</span><b>128</b></div>`,
+  step: (el) => el.querySelector('b').textContent = el.classList.contains('on') ? 129 : 128 },
+{ id: 'segmented', vi: 'Nút phân đoạn', en: 'Segmented',
+  css: `.t-sg{position:relative;display:flex;padding:3px;border-radius:8px;background:#26262b;font:600 10px/1 system-ui,sans-serif;color:#8d8d95}.t-sg span{position:relative;z-index:1;width:42px;height:22px;display:grid;place-items:center;transition:color .3s}.t-sg span:nth-child(calc(var(--i)+1)){color:#111}.t-sg b{position:absolute;top:3px;left:calc(3px + var(--i,0)*42px);width:42px;height:22px;border-radius:6px;background:${W};transition:left .4s cubic-bezier(.3,1.4,.5,1)}`,
+  html: `<div class="t-sg" style="--i:0"><span>Day</span><span>Week</span><span>Month</span><b></b></div>`,
+  step: (el, n) => el.style.setProperty('--i', n % 3) },
+{ id: 'theme-switch', vi: 'Công tắc giao diện', en: 'Theme Switch',
+  css: `.t-ts{position:relative;width:96px;height:48px;border-radius:99px;background:#2b2b30;transition:background .4s}.t-ts b{position:absolute;top:4px;left:4px;width:40px;height:40px;border-radius:50%;background:#1b1b1f;color:${W};display:grid;place-items:center;transition:transform .45s cubic-bezier(.3,1.4,.5,1),background .4s,color .4s}.t-ts b svg:last-child{display:none}.t-ts.on{background:#e8e8ec}.t-ts.on b{transform:translateX(48px);background:#fff;color:#111}.t-ts.on b svg:first-child{display:none}.t-ts.on b svg:last-child{display:block}`,
+  html: `<div class="t-ts"><b>${I('sun', 18)}${I('moon', 18)}</b></div>` },
+{ id: 'tab-bar', vi: 'Thanh tab', en: 'Tab Bar',
+  css: `.t-tb{position:relative;display:flex;gap:4px;padding:4px;border-radius:12px;background:#222226;color:#9a9aa2}.t-tb span{position:relative;z-index:1;width:28px;height:26px;display:grid;place-items:center;transition:color .3s}.t-tb span:nth-child(calc(var(--i)+1)){color:#111}.t-tb b{position:absolute;top:4px;left:calc(4px + var(--i,0)*32px);width:28px;height:26px;border-radius:8px;background:${W};transition:left .4s cubic-bezier(.3,1.5,.5,1)}`,
+  html: `<div class="t-tb" style="--i:0"><span>${I('home', 13)}</span><span>${I('search', 13)}</span><span>${I('heart', 13)}</span><span>${I('user', 13)}</span><b></b></div>`,
+  step: (el, n) => el.style.setProperty('--i', n % 4) },
+{ id: 'arc-breath', vi: 'Cung thở', en: 'Arc Breath',
+  css: `.t-ab{width:56px;height:56px;animation:t-abr 1.6s linear infinite}.t-ab circle{fill:none;stroke:${W};stroke-width:3;stroke-linecap:round;stroke-dasharray:40 140;animation:t-ab 1.6s ease-in-out infinite}.t-ab.on{animation-duration:.8s}@keyframes t-abr{to{transform:rotate(360deg)}}@keyframes t-ab{50%{stroke-dasharray:100 140}}`,
+  html: `<svg class="t-ab" viewBox="0 0 56 56"><circle cx="28" cy="28" r="22"/></svg>` },
+{ id: 'upload', vi: 'Tải lên', en: 'Upload',
+  css: `.t-up{position:relative;width:120px;height:40px;border-radius:99px;background:${W};color:#111;display:grid;place-items:center;font:600 13px/1 system-ui,sans-serif;overflow:hidden;transition:width .4s cubic-bezier(.3,1.3,.5,1)}.t-up span{display:flex;gap:6px;align-items:center}.t-up i{position:absolute;left:0;top:0;bottom:0;width:0;background:#c9c9d0}.t-up.s1 i{width:100%;transition:width 1.4s linear}.t-up.s1 span{position:relative}.t-up.s2{width:40px;background:#4ade80}.t-up .ok{display:none}.t-up.s2 .ok{display:block}.t-up.s2 span{display:none}`,
+  html: `<div class="t-up"><i></i><span>${I('up', 14)}Upload</span><b class="ok">${I('check', 18)}</b></div>`,
+  step: (el, n) => { el.classList.remove('s1', 's2'); const s = n % 3; if (s) el.classList.add('s' + s); el.querySelector('span').lastChild.textContent = s === 1 ? 'Uploading' : 'Upload'; } },
+{ id: 'star-rating', vi: 'Chấm sao', en: 'Star Rating',
+  css: `.t-sr{text-align:center;font:500 10px/1 system-ui,sans-serif;color:#9a9aa2}.t-sr div{display:flex;gap:6px;margin-bottom:8px;color:#44444b}.t-sr svg{transition:transform .3s cubic-bezier(.3,1.8,.5,1),color .2s}.t-sr svg.f{color:${W};fill:currentColor;transform:scale(1.15)}`,
+  html: `<div class="t-sr"><div>${rep(5, () => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l2.8 5.8 6.2.9-4.5 4.4 1.1 6.2L12 17.4l-5.6 2.9 1.1-6.2L3 9.7l6.2-.9z"/></svg>')}</div><span>3.0 · Good</span></div>`,
+  step: (el, n) => { const r = [3, 4, 5, 1, 2][n % 5]; el.querySelectorAll('svg').forEach((s, i) => s.classList.toggle('f', i < r)); el.querySelector('span').textContent = `${r}.0 · ${['Poor', 'Fair', 'Good', 'Great', 'Loved'][r - 1]}`; } },
+{ id: 'radar', vi: 'Radar quét', en: 'Radar',
+  css: `.t-rd{position:relative;width:76px;height:76px;border-radius:50%;border:1px solid #3a3a40;background:radial-gradient(circle,transparent 30%,#3a3a40 31%,transparent 32%,transparent 62%,#3a3a40 63%,transparent 64%)}.t-rd i{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,rgba(255,255,255,.55),transparent 70deg);animation:t-rd 2.4s linear infinite}.t-rd b{position:absolute;left:54px;top:20px;width:6px;height:6px;border-radius:50%;background:${W};box-shadow:0 0 8px #fff;animation:t-rdb 2.4s ease-out infinite}.t-rd.on i{animation-duration:1s}@keyframes t-rd{to{transform:rotate(360deg)}}@keyframes t-rdb{0%,20%{opacity:1}60%,100%{opacity:.15}}`,
+  html: `<div class="t-rd"><i></i><b></b></div>` },
+{ id: 'mini-player', vi: 'Trình phát nhỏ', en: 'Mini Player',
+  css: `.t-mp{width:130px;padding:10px;border-radius:12px;background:#222226;font:600 9px/1.2 system-ui,sans-serif}.t-mp header{display:flex;gap:8px;align-items:center}.t-mp header i{width:26px;height:26px;border-radius:6px;background:linear-gradient(135deg,#d9d9de,#6b6b73)}.t-mp header small{display:block;color:#8d8d95;font-weight:400}.t-mp p{height:3px;margin:10px 0 8px;border-radius:2px;background:#3a3a40;overflow:hidden}.t-mp p b{display:block;height:100%;width:30%;background:${W}}.t-mp.on p b{animation:t-mp 6s linear infinite}.t-mp nav{display:flex;justify-content:center;gap:12px;align-items:center;color:#9a9aa2}.t-mp nav span{width:22px;height:22px;border-radius:50%;background:${W};color:#111;display:grid;place-items:center}.t-mp nav span svg:last-child{display:none}.t-mp.on nav span svg:first-child{display:none}.t-mp.on nav span svg:last-child{display:block}@keyframes t-mp{from{width:30%}to{width:100%}}`,
+  html: `<div class="t-mp"><header><i></i><div>Golden Hour<small>Lumen</small></div></header><p><b></b></p><nav>${I('prev', 10)}<span>${I('play', 10, 'currentColor')}${I('pause', 10)}</span>${I('next', 10)}</nav></div>` },
+{ id: 'cover-flow', vi: 'Lật bìa', en: 'Cover Flow',
+  css: `.t-cf{position:relative;width:150px;height:84px;perspective:300px}.t-cf i{position:absolute;left:55px;top:0;width:40px;height:56px;border-radius:6px;background:linear-gradient(160deg,#5a5a62,#2a2a2e);border:1px solid #4a4a52;transition:transform .5s cubic-bezier(.3,1.2,.5,1),opacity .4s;--d:calc(var(--k) - var(--i,2));transform:translateX(calc(clamp(-2, var(--d), 2)*24px)) rotateY(calc(clamp(-1, var(--d), 1)*-40deg)) scale(calc(1 - min(1, max(var(--d), -1*var(--d)))*.14));z-index:calc(10 - max(var(--d), -1*var(--d)));opacity:calc(1 - max(var(--d), -1*var(--d))*.2)}.t-cf i:nth-child(calc(var(--i,2)+1)){background:linear-gradient(160deg,#f0f0f3,#9a9aa2)}.t-cf nav{position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:center;gap:6px;color:#bdbdc4}.t-cf nav span{width:18px;height:18px;border-radius:50%;background:#2a2a2e;display:grid;place-items:center}`,
+  html: `<div class="t-cf" style="--i:2">${rep(5, (k) => `<i style="--k:${k}"></i>`)}<nav><span>${I('chevl', 10)}</span><span>${I('chevr', 10)}</span></nav></div>`,
+  step: (el, n) => el.style.setProperty('--i', [2, 3, 4, 3, 2, 1, 0, 1][n % 8]) },
+{ id: 'tilt-card', vi: 'Thẻ nghiêng', en: 'Tilt Card',
+  css: `.t-tc{perspective:400px}.t-tc div{width:96px;height:62px;border-radius:10px;padding:10px;box-sizing:border-box;background:linear-gradient(145deg,#5a5a62,#2c2c31);border:1px solid #6a6a72;transform:rotateX(var(--rx,8deg)) rotateY(var(--ry,-12deg));transition:transform .35s ease-out;box-shadow:0 12px 20px rgba(0,0,0,.5)}.t-tc i{display:block;width:18px;height:18px;border-radius:50%;background:#9a9aa2;margin-bottom:8px}.t-tc b{display:block;height:4px;width:60%;border-radius:2px;background:#9a9aa2}`,
+  html: `<div class="t-tc"><div><i></i><b></b></div></div>`,
+  step: (el, n) => { const a = [[8, -12], [-8, 12], [10, 10], [-6, -14]][n % 4]; el.style.setProperty('--rx', a[0] + 'deg'); el.style.setProperty('--ry', a[1] + 'deg'); },
+  move: (el, x, y) => { el.style.setProperty('--rx', ((.5 - y) * 30).toFixed(1) + 'deg'); el.style.setProperty('--ry', ((x - .5) * 36).toFixed(1) + 'deg'); } },
+{ id: 'face-id', vi: 'Nhận diện khuôn mặt', en: 'Face ID',
+  css: `.t-fi{position:relative;width:56px;height:56px;color:${W};text-align:center}.t-fi svg{width:56px;height:56px}.t-fi i{position:absolute;left:4px;right:4px;top:4px;height:2px;background:#79d3ff;box-shadow:0 0 8px #79d3ff;opacity:0}.t-fi.on i{animation:t-fi 1.2s ease-in-out}.t-fi.on svg{color:#4ade80;transition:color .3s 1.1s}.t-fi small{display:block;margin-top:6px;font:500 9px/1 system-ui,sans-serif;color:#8d8d95}@keyframes t-fi{0%{opacity:1;top:4px}100%{opacity:1;top:50px}}`,
+  html: `<div class="t-fi"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M4 16V8a4 4 0 0 1 4-4h8M40 4h8a4 4 0 0 1 4 4v8M52 40v8a4 4 0 0 1-4 4h-8M16 52H8a4 4 0 0 1-4-4v-8M20 21v3M36 21v3M28 22v9h-3M21 38c4 3 10 3 14 0"/></svg><i></i><small>Face ID</small></div>` },
+{ id: 'stories', vi: 'Tin ngắn', en: 'Stories',
+  css: `.t-st{width:74px;height:84px;border-radius:10px;padding:6px;box-sizing:border-box;background:repeating-linear-gradient(45deg,#4a4a52 0 6px,#2c2c31 6px 12px);position:relative}.t-st nav{display:flex;gap:3px}.t-st nav i{flex:1;height:2px;border-radius:1px;background:rgba(255,255,255,.3);overflow:hidden}.t-st nav i b{display:block;height:100%;width:0;background:#fff}.t-st nav i.d b{width:100%}.t-st nav i.a b{animation:t-st 1.6s linear forwards}.t-st span{position:absolute;left:6px;bottom:8px;width:10px;height:10px;border-radius:50%;background:#fff}.t-st em{position:absolute;left:20px;right:8px;bottom:11px;height:3px;border-radius:2px;background:rgba(255,255,255,.6)}@keyframes t-st{to{width:100%}}`,
+  html: `<div class="t-st"><nav><i><b></b></i><i><b></b></i><i><b></b></i></nav><span></span><em></em></div>`,
+  step: (el, n) => el.querySelectorAll('nav i').forEach((s, i) => { s.className = i < n % 3 ? 'd' : i === n % 3 ? 'a' : ''; }) },
+{ id: 'toast', vi: 'Thông báo nổi', en: 'Toast',
+  css: `.t-to{position:relative;width:130px;height:90px;display:grid;place-items:center}.t-to button{all:unset;padding:6px 12px;border-radius:99px;background:#2e2e33;font:600 10px/1 system-ui,sans-serif;color:${W}}.t-to div{position:absolute;top:0;left:50%;display:flex;gap:6px;align-items:center;padding:7px 10px;border-radius:99px;background:${W};color:#111;font:600 10px/1 system-ui,sans-serif;white-space:nowrap;transform:translate(-50%,-30px);opacity:0;transition:.45s cubic-bezier(.3,1.5,.5,1)}.t-to.on div{transform:translate(-50%,4px);opacity:1}`,
+  html: `<div class="t-to"><button tabindex="-1">Save</button><div>${I('check', 11)}Saved</div></div>` },
+{ id: 'wave-bars', vi: 'Thanh sóng', en: 'Wave Bars',
+  css: `.t-wb{display:flex;gap:5px;align-items:center;height:56px}.t-wb i{width:5px;height:56px;border-radius:3px;background:${W};animation:t-wb 1s ease-in-out infinite;animation-delay:calc(var(--i)*-.12s);transform-origin:center}.t-wb.on i{animation-duration:.5s}@keyframes t-wb{50%{transform:scaleY(.3)}}`,
+  html: `<div class="t-wb">${rep(5, (i) => `<i style="--i:${i}"></i>`)}</div>` },
+{ id: 'message', vi: 'Tin nhắn', en: 'Message',
+  css: `.t-ms{display:flex;flex-direction:column;gap:5px;width:130px;font:500 8px/1 system-ui,sans-serif}.t-ms span{padding:6px 8px;border-radius:9px;background:#2e2e33;color:#d0d0d6;align-self:flex-start;opacity:0;transform:translateY(6px) scale(.9);transition:.35s cubic-bezier(.3,1.5,.5,1)}.t-ms span:nth-child(even){align-self:flex-end;background:${W};color:#111}.t-ms span.v{opacity:1;transform:none}`,
+  html: `<div class="t-ms"><span>See you soon</span><span>On my way!</span><span>No rush</span></div>`,
+  step: (el, n) => el.querySelectorAll('span').forEach((s, i) => s.classList.toggle('v', i < n % 4)) },
+{ id: 'magnetic', vi: 'Nút hút', en: 'Magnetic',
+  css: `.t-mg{width:120px;height:100px;display:grid;place-items:center}.t-mg b{width:34px;height:34px;border-radius:50%;background:#7ee0d0;color:#0b3a33;display:grid;place-items:center;transform:translate(var(--x,0),var(--y,0));transition:transform .35s cubic-bezier(.3,1.5,.5,1);box-shadow:0 0 18px rgba(126,224,208,.5)}`,
+  html: `<div class="t-mg"><b>${I('arrow', 14)}</b></div>`,
+  step: (el, n) => { const a = [[0, 0], [14, -8], [-12, 6], [6, 12]][n % 4]; el.style.setProperty('--x', a[0] + 'px'); el.style.setProperty('--y', a[1] + 'px'); },
+  move: (el, x, y) => { el.style.setProperty('--x', ((x - .5) * 40).toFixed(1) + 'px'); el.style.setProperty('--y', ((y - .5) * 34).toFixed(1) + 'px'); } },
+{ id: 'skeleton', vi: 'Khung chờ', en: 'Skeleton',
+  css: `.t-sk{position:relative;width:110px;padding:10px;border-radius:10px;background:#222226}.t-sk div{display:flex;gap:8px;align-items:center;margin-bottom:9px}.t-sk i,.t-sk b,.t-sk em{display:block;border-radius:4px;background:linear-gradient(90deg,#33333a 25%,#4a4a52 50%,#33333a 75%) 0 0/200% 100%;animation:t-sk 1.2s linear infinite}.t-sk i{width:22px;height:22px;border-radius:50%}.t-sk b{flex:1;height:6px}.t-sk em{height:22px}.t-sk.on i{background:#d9d9de}.t-sk.on b{background:#9a9aa2}.t-sk.on em{background:linear-gradient(120deg,#6b6b73,#d0d0d6)}.t-sk.on *{animation:none}@keyframes t-sk{to{background-position:-200% 0}}`,
+  html: `<div class="t-sk"><div><i></i><b></b></div><em></em></div>` },
+{ id: 'text-reveal', vi: 'Chữ hiện dần', en: 'Text Reveal',
+  css: `.t-tr{display:flex;font:800 26px/1 system-ui,sans-serif;letter-spacing:-.02em}.t-tr span{display:inline-block;opacity:.12;filter:blur(4px);transform:translateY(6px);transition:.5s cubic-bezier(.3,1.3,.5,1);transition-delay:calc(var(--i)*.06s)}.t-tr.on span{opacity:1;filter:none;transform:none}`,
+  html: `<div class="t-tr">${[...'Moments'].map((c, i) => `<span style="--i:${i}">${c}</span>`).join('')}</div>` },
+{ id: 'orbit', vi: 'Quỹ đạo', en: 'Orbit',
+  css: `.t-ob{position:relative;width:60px;height:60px;border-radius:50%;border:1px solid #3a3a40}.t-ob b{position:absolute;left:22px;top:22px;width:16px;height:16px;border-radius:50%;background:${W}}.t-ob i{position:absolute;inset:0;animation:t-ob 2s linear infinite}.t-ob i::after{content:"";position:absolute;left:50%;top:-4px;width:8px;height:8px;margin-left:-4px;border-radius:50%;background:${W};box-shadow:0 0 8px #fff}.t-ob.on i{animation-duration:.8s}@keyframes t-ob{to{transform:rotate(360deg)}}`,
+  html: `<div class="t-ob"><b></b><i></i></div>` },
+{ id: 'cart-badge', vi: 'Huy hiệu giỏ hàng', en: 'Cart Badge',
+  css: `.t-cb{display:flex;gap:14px;align-items:center}.t-cb span{position:relative;width:46px;height:46px;border-radius:12px;background:#222226;display:grid;place-items:center;color:${W}}.t-cb span em{position:absolute;top:-5px;right:-5px;min-width:18px;height:18px;border-radius:9px;background:#ff5c8a;color:#fff;font:700 10px/18px system-ui,sans-serif;text-align:center;font-style:normal;transform:scale(0);transition:transform .35s cubic-bezier(.3,2,.5,1)}.t-cb span em.v{transform:scale(1)}.t-cb span em.p{animation:t-cb .4s}.t-cb b{width:34px;height:34px;border-radius:10px;background:${W};color:#111;display:grid;place-items:center}@keyframes t-cb{50%{transform:scale(1.4)}}`,
+  html: `<div class="t-cb"><span>${I('bag', 18)}<em>0</em></span><b>${I('plus', 16)}</b></div>`,
+  step: (el, n) => { const e = el.querySelector('em'), c = n % 6; e.textContent = c; e.classList.toggle('v', c > 0); e.classList.remove('p'); void e.offsetWidth; if (c) e.classList.add('p'); } },
+{ id: 'heartbeat', vi: 'Nhịp tim', en: 'Heartbeat',
+  css: `.t-hb{text-align:center;font:700 11px/1 system-ui,sans-serif}.t-hb svg{display:block;width:120px;height:40px;margin-bottom:6px}.t-hb path{fill:none;stroke:${W};stroke-width:2;stroke-linejoin:round;stroke-dasharray:240;animation:t-hb 1.6s linear infinite}.t-hb span{display:inline-flex;gap:5px;align-items:center}.t-hb span svg{display:inline;width:11px;height:11px;margin:0;fill:currentColor;animation:t-hbh .8s ease-in-out infinite}@keyframes t-hb{from{stroke-dashoffset:240}to{stroke-dashoffset:-240}}@keyframes t-hbh{30%{transform:scale(1.3)}}`,
+  html: `<div class="t-hb"><svg viewBox="0 0 120 40"><path d="M0 24h40l6-6 6 6h4l6-20 6 34 6-18h42"/></svg><span>${I('heart', 11, 'currentColor')}<b>72</b> bpm</span></div>`,
+  step: (el, n) => el.querySelector('b').textContent = [72, 74, 76, 73][n % 4] },
+{ id: 'swipe-actions', vi: 'Vuốt hành động', en: 'Swipe Actions',
+  css: `.t-sa{position:relative;width:130px;height:34px;border-radius:99px;background:#26262b;overflow:hidden}.t-sa i{position:absolute;left:0;top:0;bottom:0;width:calc(17px + var(--p,0)*96px);background:linear-gradient(90deg,#3a3a40,#8d8d95);border-radius:99px;transition:width .4s cubic-bezier(.3,1.2,.5,1)}.t-sa b{position:absolute;top:5px;left:calc(5px + var(--p,0)*96px);width:24px;height:24px;border-radius:50%;background:${W};transition:left .4s cubic-bezier(.3,1.2,.5,1)}.t-sa em{position:absolute;right:12px;top:15px;width:40px;height:3px;border-radius:2px;background:#5a5a62}`,
+  html: `<div class="t-sa"><em></em><i></i><b></b></div>`,
+  step: (el, n) => el.style.setProperty('--p', [0, 1, 0, .5][n % 4]),
+  move: (el, x) => el.style.setProperty('--p', Math.min(1, Math.max(0, (x - .15) / .7)).toFixed(2)) },
+{ id: 'bulge-volume', vi: 'Âm lượng phồng', en: 'Bulge Volume',
+  css: `.t-bv{display:flex;flex-direction:column;align-items:center;gap:8px;color:#9a9aa2}.t-bv div{position:relative;width:26px;height:74px;border-radius:13px;background:#2b2b30;overflow:hidden;transition:width .3s cubic-bezier(.3,1.6,.5,1)}.t-bv:hover div,.t-bv.on div{width:32px}.t-bv i{position:absolute;left:0;right:0;bottom:0;height:calc(var(--v,.35)*100%);background:${W};border-radius:13px;transition:height .35s cubic-bezier(.3,1.2,.5,1)}`,
+  html: `<div class="t-bv" style="--v:.35"><div><i></i></div>${I('vol', 12)}</div>`,
+  step: (el, n) => el.style.setProperty('--v', [.35, .7, .95, .15][n % 4]),
+  move: (el, x, y) => el.style.setProperty('--v', Math.min(1, Math.max(.05, 1 - (y - .1) / .7)).toFixed(2)) },
+{ id: 'ring-dots', vi: 'Vòng chấm', en: 'Ring Dots',
+  css: `.t-rg{position:relative;width:56px;height:56px}.t-rg i{position:absolute;left:24px;top:0;width:8px;height:8px;border-radius:50%;background:${W};transform-origin:4px 28px;transform:rotate(calc(var(--i)*45deg));animation:t-rg 1.2s linear infinite;animation-delay:calc(var(--i)*.15s - 1.2s)}.t-rg.on i{animation-duration:.6s;animation-delay:calc(var(--i)*.075s - .6s)}@keyframes t-rg{0%{opacity:1;scale:1}100%{opacity:.15;scale:.5}}`,
+  html: `<div class="t-rg">${rep(8, (i) => `<i style="--i:${i}"></i>`)}</div>` },
+{ id: 'step-track', vi: 'Thanh bước', en: 'Step Track',
+  css: `.t-sp{width:130px;text-align:center}.t-sp div{position:relative;display:flex;justify-content:space-between;margin-bottom:12px}.t-sp div::before,.t-sp div::after{content:"";position:absolute;left:5px;top:5px;height:2px;background:#3a3a40;right:5px}.t-sp div::after{right:auto;width:calc(var(--i,1)*(120px/3));background:${W};transition:width .4s cubic-bezier(.3,1.2,.5,1)}.t-sp i{position:relative;z-index:1;width:12px;height:12px;border-radius:50%;background:#3a3a40;transition:background .3s .1s}.t-sp i.d{background:${W}}.t-sp nav{display:inline-flex;gap:6px}.t-sp button{all:unset;cursor:pointer;width:22px;height:22px;border-radius:50%;background:#2b2b30;color:#cfcfd4;display:grid;place-items:center}.t-sp button:focus-visible{outline:2px solid #fff}`,
+  html: `<div class="t-sp" style="--i:1"><div><i class="d"></i><i class="d"></i><i></i><i></i></div><nav><button data-d="-1" aria-label="Lùi bước">${I('chevl', 11)}</button><button data-d="1" aria-label="Tới bước">${I('chevr', 11)}</button></nav></div>`,
+  step: (el, n, d) => { let i = d == null ? n % 4 : Math.min(3, Math.max(0, +el.style.getPropertyValue('--i') + d)); el.style.setProperty('--i', i); el.querySelectorAll('div i').forEach((e, k) => e.classList.toggle('d', k <= i)); },
+  inner: true },
+{ id: 'breath-orb', vi: 'Quả cầu thở', en: 'Breath Orb',
+  css: `.t-bo{position:relative;width:76px;height:76px;border-radius:50%;border:1px solid #3a3a40;display:grid;place-items:center}.t-bo b{width:40px;height:40px;border-radius:50%;background:${W};box-shadow:0 0 20px rgba(255,255,255,.35);animation:t-bo 3.2s ease-in-out infinite}.t-bo.on b{animation-duration:1.4s}@keyframes t-bo{50%{transform:scale(1.45);box-shadow:0 0 34px rgba(255,255,255,.6)}}`,
+  html: `<div class="t-bo"><b></b></div>` },
+{ id: 'notch-slider', vi: 'Thanh trượt nấc', en: 'Notch Slider',
+  css: `.t-ns{width:130px;font:600 8px/1 system-ui,sans-serif;color:#77777f}.t-ns header{display:flex;justify-content:space-between;padding:0 6px;margin-bottom:8px}.t-ns header span.a{color:${W}}.t-ns div{position:relative;height:18px;border-radius:9px;background:#26262b;display:flex;justify-content:space-around;align-items:center}.t-ns div i{width:3px;height:3px;border-radius:50%;background:#5a5a62}.t-ns div b{position:absolute;top:2px;left:calc(2px + var(--i,1)*24.5px);width:28px;height:14px;border-radius:7px;background:#4a4a52;box-shadow:inset 0 1px 0 #6a6a72;transition:left .35s cubic-bezier(.3,1.6,.5,1)}`,
+  html: `<div class="t-ns" style="--i:1"><header>${['XS', 'S', 'M', 'L', 'XL'].map((s) => `<span>${s}</span>`).join('')}</header><div>${rep(5, () => '<i></i>')}<b></b></div></div>`,
+  step: (el, n) => { const i = [1, 2, 3, 4, 3, 2, 1, 0][n % 8]; el.style.setProperty('--i', i); el.querySelectorAll('header span').forEach((s, k) => s.classList.toggle('a', k === i)); },
+  move: (el, x) => { const i = Math.min(4, Math.max(0, Math.round((x - .12) / .76 * 4))); el.style.setProperty('--i', i); el.querySelectorAll('header span').forEach((s, k) => s.classList.toggle('a', k === i)); } },
+{ id: 'quantity', vi: 'Số lượng', en: 'Quantity',
+  css: `.t-qt{text-align:center;font:500 10px/1 system-ui,sans-serif;color:#9a9aa2}.t-qt div{display:flex;align-items:center;gap:12px;padding:5px;border-radius:99px;background:#222226;margin-bottom:9px}.t-qt button{all:unset;cursor:pointer;width:28px;height:28px;border-radius:50%;background:#3a3a40;color:${W};display:grid;place-items:center}.t-qt button:last-child{background:${W};color:#111}.t-qt button:focus-visible{outline:2px solid #fff}.t-qt b{min-width:20px;font:800 22px/1 system-ui,sans-serif;color:${W};display:inline-block}.t-qt b.p{animation:t-qt .3s}.t-qt span b{font-size:11px;min-width:0}@keyframes t-qt{50%{transform:translateY(-4px) scale(1.15)}}`,
+  html: `<div class="t-qt" data-q="2"><div><button data-d="-1" aria-label="Bớt">${I('minus', 12)}</button><b>2</b><button data-d="1" aria-label="Thêm">${I('plus', 12)}</button></div><span>Total <b>$48</b></span></div>`,
+  step: (el, n, d) => { let q = d == null ? [2, 3, 4, 3, 2, 1][n % 6] : Math.min(9, Math.max(1, +el.dataset.q + d)); el.dataset.q = q; const b = el.querySelector('div b'); b.textContent = q; b.classList.remove('p'); void b.offsetWidth; b.classList.add('p'); el.querySelector('span b').textContent = '$' + q * 24; },
+  inner: true },
+{ id: 'pulse-dots', vi: 'Chấm nhịp', en: 'Pulse Dots',
+  css: `.t-pd{display:flex;gap:10px}.t-pd i{width:14px;height:14px;border-radius:50%;background:${W};animation:t-pd 1.2s ease-in-out infinite;animation-delay:calc(var(--i)*.16s)}.t-pd.on i{animation-duration:.6s}@keyframes t-pd{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1.1);opacity:1}}`,
+  html: `<div class="t-pd">${rep(3, (i) => `<i style="--i:${i}"></i>`)}</div>` },
+{ id: 'plan-picker', vi: 'Chọn gói', en: 'Plan Picker',
+  css: `.t-pp{display:flex;gap:5px;font:700 8px/1.3 system-ui,sans-serif}.t-pp span{position:relative;width:40px;padding:7px 6px;border-radius:7px;background:#222226;border:1px solid #33333a;color:#cfcfd4;transition:transform .35s cubic-bezier(.3,1.6,.5,1),border-color .3s,background .3s}.t-pp span small{display:block;font-weight:400;color:#8d8d95}.t-pp span.a{background:#2e2e33;border-color:${W};transform:translateY(-4px)}.t-pp span.a::after{content:"";position:absolute;top:-4px;right:-4px;width:9px;height:9px;border-radius:50%;background:${W}}`,
+  html: `<div class="t-pp"><span>Basic<small>Free</small></span><span>Pro<small>$4/mo</small></span><span>Team<small>$12/mo</small></span></div>`,
+  step: (el, n) => el.querySelectorAll('span').forEach((s, k) => s.classList.toggle('a', k === n % 3)) },
+{ id: 'pull-cord', vi: 'Dây kéo đèn', en: 'Pull Cord',
+  css: `.t-pc{position:relative;width:60px;height:104px}.t-pc b{position:absolute;left:18px;top:4px;width:22px;height:22px;border-radius:50%;background:#4a4a52;transition:background .3s,box-shadow .3s}.t-pc.on b{background:#ffd23f;box-shadow:0 0 24px 6px rgba(255,210,63,.45)}.t-pc i{position:absolute;left:44px;top:6px;width:2px;height:56px;background:#cfcfd4;transform-origin:top;transition:height .25s}.t-pc em{position:absolute;left:40px;top:60px;width:10px;height:10px;border-radius:50%;background:${W};transition:top .25s}.t-pc.p i{height:76px}.t-pc.p em{top:80px}`,
+  html: `<div class="t-pc"><b></b><i></i><em></em></div>`,
+  step: (el) => { el.classList.add('p'); setTimeout(() => el.classList.remove('p'), 260); } },
+{ id: 'elastic-slider', vi: 'Thanh trượt dẻo', en: 'Elastic Slider',
+  css: `.t-es{position:relative;width:130px;height:40px}.t-es::before{content:"";position:absolute;left:10px;right:10px;top:19px;height:2px;background:#3a3a40}.t-es::after{content:"";position:absolute;left:10px;top:19px;height:2px;width:calc(var(--p,.2)*110px);background:${W};transition:width .4s cubic-bezier(.3,1.6,.5,1)}.t-es b{position:absolute;top:6px;left:calc(var(--p,.2)*110px - 6px);z-index:1;min-width:26px;height:24px;padding:0 4px;border-radius:12px;border:2px solid ${W};background:#151518;font:700 11px/24px system-ui,sans-serif;text-align:center;transition:left .4s cubic-bezier(.3,1.6,.5,1)}.t-es span{position:absolute;left:10px;right:10px;top:30px;display:flex;justify-content:space-between}.t-es span i{width:1px;height:5px;background:#5a5a62}`,
+  html: `<div class="t-es" style="--p:.2"><b>12</b><span>${rep(9, () => '<i></i>')}</span></div>`,
+  step: (el, n) => { const p = [.2, .55, .9, .4][n % 4]; el.style.setProperty('--p', p); el.querySelector('b').textContent = Math.round(p * 60); },
+  move: (el, x) => { const p = Math.min(1, Math.max(0, (x - .1) / .8)); el.style.setProperty('--p', p.toFixed(2)); el.querySelector('b').textContent = Math.round(p * 60); } },
+{ id: 'alignment', vi: 'Căn lề', en: 'Alignment',
+  css: `.t-al{width:110px;text-align:center}.t-al div{display:flex;flex-direction:column;gap:4px;align-items:var(--a,flex-end);margin:0 8px 12px}.t-al div i{height:3px;border-radius:2px;background:${W};transition:all .35s}.t-al div i:nth-child(1){width:48px}.t-al div i:nth-child(2){width:66px}.t-al div i:nth-child(3){width:36px}.t-al nav{position:relative;display:flex;padding:3px;border-radius:9px;background:#2b2b30;color:#9a9aa2}.t-al nav span{position:relative;z-index:1;flex:1;height:22px;display:grid;place-items:center;transition:color .3s}.t-al nav span:nth-child(calc(var(--i)+1)){color:#111}.t-al nav b{position:absolute;top:3px;left:calc(3px + var(--i,2)*34.6px);width:34px;height:22px;border-radius:7px;background:${W};transition:left .4s cubic-bezier(.3,1.4,.5,1)}.t-al svg{width:12px;height:12px}`,
+  html: `<div class="t-al" style="--i:2;--a:flex-end"><div><i></i><i></i><i></i></div><nav>${['M4 6h16M4 12h10M4 18h13', 'M4 6h16M7 12h10M5 18h14', 'M4 6h16M10 12h10M7 18h13'].map((d) => `<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="${d}"/></svg></span>`).join('')}<b></b></nav></div>`,
+  step: (el, n) => { const i = [2, 0, 1][n % 3]; el.style.setProperty('--i', i); el.style.setProperty('--a', ['flex-start', 'center', 'flex-end'][i]); } },
+{ id: 'morph', vi: 'Biến hình', en: 'Morph',
+  css: `.t-mo{width:44px;height:44px;background:${W};border-radius:42% 58% 63% 37%/45% 40% 60% 55%;animation:t-mo 3.2s ease-in-out infinite}.t-mo.on{animation-duration:1.2s}@keyframes t-mo{33%{border-radius:60% 40% 35% 65%/55% 62% 38% 45%;transform:rotate(60deg)}66%{border-radius:38% 62% 50% 50%/62% 38% 62% 38%;transform:rotate(-30deg) scale(1.08)}}`,
+  html: `<div class="t-mo"></div>` }
+];
+// Các phần của pattern (sổ patterns.json trỏ tới các id này).
+const PARTS = V.map(({ id, vi }) => ({ id, vi }));
+
+document.getElementById('ml-css').textContent = V.map((v) => v.css).join('\n');
+const root = document.getElementById('ml'), grid = document.getElementById('ml-grid'), orb = root.querySelector('.ml-orb');
+grid.innerHTML = V.map((v, i) => `<div class="ml-tile" id="${v.id}" role="button" tabindex="0" aria-label="${v.en}: ${v.vi}"><span class="ml-n">${String(i + 1).padStart(2, '0')}</span><div class="ml-fit">${v.html}</div><span class="ml-l">${v.en}</span></div>`).join('');
+
+// Nhịp: tự chạy 1.8 s/lần (dừng khi rê chuột lên ô), bấm / Enter = sang nhịp kế.
+const tiles = [...grid.children];
+const ticks = tiles.map((t, i) => {
+  const v = V[i], el = t.querySelector('.ml-fit > :last-child'), s = { n: 0, hold: false };
+  const tick = (d) => { s.n++; el.classList.toggle('on', s.n % 2 === 1); v.step?.(el, s.n, d); };
+  t.onclick = (e) => { const b = e.target.closest('button[data-d]'); if (b) { e.stopPropagation(); v.step(el, s.n, +b.dataset.d); } else tick(); };
+  t.onkeydown = (e) => { if ((e.key === 'Enter' || e.key === ' ') && !e.target.closest('button')) { e.preventDefault(); tick(); } };
+  t.onpointerenter = () => s.hold = true; t.onpointerleave = () => s.hold = false;
+  if (v.move) t.onpointermove = (e) => { const r = el.getBoundingClientRect(); v.move(el, (e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height); };
+  return () => { if (!s.hold) tick(); };
+});
+const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (!still) setInterval(() => { const r = grid.getBoundingClientRect(); if (r.bottom > 0 && r.top < innerHeight) ticks.forEach((f) => f()); }, 1800);
+const fit = () => tiles.forEach((t) => t.querySelector('.ml-fit').style.setProperty('--k', Math.min(1.3, t.clientWidth * .78 / 160).toFixed(3)));
+fit(); addEventListener('resize', fit);
+
+// Ánh sáng: trôi theo đường Lissajous, rê chuột thì theo chuột. Mỗi khung: đặt --g (độ sáng viền) và --lx/--ly cho từng ô.
+let lx = 0, ly = 0, px = null, py = null;
+root.addEventListener('pointermove', (e) => { const r = root.getBoundingClientRect(); px = e.clientX - r.left; py = e.clientY - r.top; });
+root.addEventListener('pointerleave', () => { px = py = null; });
+function frame(t) {
+  const W0 = root.clientWidth, H0 = root.clientHeight, s = t / 1000;
+  const tx = px ?? W0 * (.5 + .44 * Math.sin(s * .37)), ty = py ?? H0 * (.5 + .42 * Math.sin(s * .53 + 1.2));
+  lx += (tx - lx) * .06; ly += (ty - ly) * .06;
+  orb.style.transform = `translate(${lx}px,${ly}px)`;
+  const R = tiles[0].offsetWidth * 1.9;
+  for (const el of tiles) {
+    const x = el.offsetLeft + grid.offsetLeft, y = el.offsetTop + grid.offsetTop, w = el.offsetWidth, h = el.offsetHeight;
+    const d = Math.hypot(lx - (x + w / 2), ly - (y + h / 2)), g = Math.max(0, 1 - d / R);
+    el.style.setProperty('--g', Math.pow(g, 1.4).toFixed(3)); el.style.setProperty('--lx', (lx - x).toFixed(0) + 'px'); el.style.setProperty('--ly', (ly - y).toFixed(0) + 'px');
+  }
+  if (!still) requestAnimationFrame(frame);
+}
+if (still) { lx = 60; ly = 120; requestAnimationFrame(() => frame(0)); } else requestAnimationFrame(frame);
+</script>
+<script src="/search.js?v=7aa7115402" defer></script><script src="/stats.js?v=7aa7115402" defer></script>
+</body>
+</html>
