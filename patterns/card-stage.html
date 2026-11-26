@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sân khấu thẻ 3D — uiux-asset</title>
+<meta name="description" content="6 sân khấu thẻ có bảng tuỳ chỉnh: thẻ thư mục, thẻ đánh dấu, băng chuyền vòng cung, vòng thẻ xoay 3D, băng chuyền tiêu điểm, vòng ảnh ném được. Kéo thanh trượt đổi ngay, chép HTML + CSS. JS/CSS thuần.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=7af788eb33">
+<style>
+.md-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+.md-page a { color: inherit; }
+/* Khung sân khấu */
+.cs-list { display: grid; gap: 40px; }
+.cs-st { display: grid; gap: 10px; }
+.cs-hd { display: flex; align-items: baseline; gap: 10px; font-size: 13px; }
+.cs-hd b { font-size: 16px; font-weight: 600; } .cs-hd span { opacity: .6; } .cs-hd em { font-style: normal; font: 12px/1 var(--aw-mono, monospace); opacity: .5; }
+.cs-row { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 12px; align-items: start; }
+.cs-frame { position: relative; aspect-ratio: 19 / 11; border-radius: 14px; overflow: hidden; background: var(--stage); --stage: #f3f4f6; color: #16161a; user-select: none; -webkit-user-select: none; touch-action: pan-y; }
+.cs-frame.clay { --stage: #b4552e; } .cs-frame.night { --stage: #101014; color: #f2f2f5; }
+.cs-in { position: absolute; left: 50%; top: 50%; width: 760px; height: 440px; transform: translate(-50%, -50%) scale(var(--fit, 1)); display: grid; place-items: center; font-family: "Inter", var(--aw-font); }
+.cs-in.intro > * { animation: csIn .7s cubic-bezier(.3,.7,.2,1) both; }
+@keyframes csIn { from { opacity: 0; transform: translateY(18px) scale(.96); filter: blur(4px); } }
+.cs-pan { display: grid; gap: 12px; padding: 14px; border-radius: 14px; background: #17171a; color: #e9e9ee; font: 12px/1.3 "Inter", var(--aw-font); }
+.cs-pan h4 { margin: 0; font-size: 12px; font-weight: 600; }
+.cs-sel { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 10px; color: #a6a6b0; }
+.cs-sel select { min-height: 32px; padding: 0 8px; border: 1px solid #2c2c33; border-radius: 8px; background: #222227; color: #fff; font: inherit; }
+.cs-rg { display: grid; gap: 4px; }
+.cs-rg label { display: flex; justify-content: space-between; color: #a6a6b0; } .cs-rg output { color: #fff; font: 11px/1.3 var(--aw-mono, monospace); }
+.cs-rg input { width: 100%; height: 18px; margin: 0; accent-color: #7c6cf2; }
+.cs-btns { display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 6px; }
+.cs-btns button, .cs-tog { min-height: 32px; padding: 0 8px; border: 1px solid #2c2c33; border-radius: 8px; background: #222227; color: #fff; font: 600 12px/1 "Inter", var(--aw-font); cursor: pointer; }
+.cs-btns button:hover { background: #2c2c33; } .cs-btns button.pri { background: #7c6cf2; border-color: #7c6cf2; }
+.cs-tog { display: none; min-height: 44px; }
+.cs-toast { position: fixed; left: 50%; bottom: 24px; z-index: 50; transform: translate(-50%, 20px); padding: 10px 16px; border-radius: 10px; background: #17171a; color: #fff; font: 600 13px/1 "Inter", var(--aw-font); opacity: 0; pointer-events: none; transition: .3s; }
+.cs-toast.on { opacity: 1; transform: translate(-50%, 0); }
+@media (max-width: 860px) {
+  .cs-row { grid-template-columns: minmax(0, 1fr); }
+  .cs-tog { display: block; }
+  .cs-pan { display: none; } .cs-st.open .cs-pan { display: grid; }
+}
+@media (prefers-reduced-motion: reduce) { .cs-in.intro > * { animation: none; } }
+</style>
+<style id="cs-css"></style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=7af788eb33"></script>
+<div class="md-page">
+  <div class="aw-sotd" style="padding-top:16px">
+    <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">6 phần</span></p>
+    <h1 class="aw-h1" style="--aw-h1:clamp(40px,7vw,96px)">Sân khấu thẻ 3D</h1>
+    <p class="aw-lead">6 kiểu bày thẻ: thư mục, đánh dấu, vòng cung, vòng xoay 3D, tiêu điểm, vòng ảnh. Rê chuột, kéo hoặc bấm để xem chuyển động. Kéo thanh trượt bên phải để đổi ngay, bấm «Chép code» để lấy HTML + CSS.</p>
+    <p class="aw-lead" style="font-size:14px">Dựng lại từ <a href="https://x.com/amananimates/status/2125714083416793577" target="_blank" rel="noopener">bài X của @amananimates</a>. Viết lại bằng JS/CSS thuần, ảnh thay bằng gradient, chữ là mẫu.</p>
+  </div>
+  <div class="cs-list" id="cs"></div>
+</div>
+</main>
+<div class="cs-toast" role="status" aria-live="polite"></div>
+<script>
+// Các phần của pattern (sổ patterns.json trỏ tới các id này).
+const PARTS = [
+  { id: 'folder-card', vi: 'Thẻ thư mục' }, { id: 'bookmark-card', vi: 'Thẻ đánh dấu' }, { id: 'arc-carousel', vi: 'Băng chuyền vòng cung' },
+  { id: 'ring-slider', vi: 'Vòng thẻ xoay' }, { id: 'spotlight-carousel', vi: 'Băng chuyền tiêu điểm' }, { id: 'image-ring', vi: 'Vòng ảnh' }];
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// ---- 1. Thẻ thư mục ----
+const FOLD = { indigo: ['linear-gradient(160deg,#6a4cff,#2a1c9e 55%,#16125a)', '#16125a', '#fff'], porcelain: ['linear-gradient(135deg,#ff9a6b,#e0446d 55%,#7c1d6f)', '#f6f6f8', '#16161a'], steel: ['linear-gradient(180deg,#d4e3ee,#6f8698 60%,#1c232b)', '#151a20', '#fff'] };
+const FOLD_TX = [['Đơn giản, dễ dùng', 'Tuỳ chỉnh theo nhu cầu.'], ['Số hai làm ví dụ', 'Mô tả thẻ thứ hai, thêm vào dễ.'], ['Số ba, dòng dài hơn', 'Chữ dài hơn để thấy khoảng trống co giãn.']];
+// ---- 2. Thẻ đánh dấu ----
+const BK = { blue: ['#2f6bff', '#7fd0ff'], red: ['#ff3b2f', '#ff9b6b'], purple: ['#8b3dff', '#ff5bd6'] };
+const BK_TX = [['— Xưởng Lưu°', 'Đến lúc ngồi lại bàn chi tiết.', 'Cùng trao đổi.'], ['— Lên Hạng°', 'Một mức chất lượng mới cho thương hiệu.', '+190%'], ['— Tổ Nhện°', 'Đội đã sẵn sàng vào việc.', 'Một cuộc gọi.']];
+function waves([a, b], id) {
+  let p = '';
+  for (let i = 0; i < 16; i++) { const y = 40 + i * 5.5, h = 26 + i * 1.4; p += `<path d="M-10,${y} C40,${y - h} 80,${y + h} 130,${y} S220,${y - h} 270,${y}" stroke="url(#${id})" stroke-opacity="${.25 + i / 22}" />`; }
+  return `<svg viewBox="0 0 260 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" x2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs><g fill="none" stroke-width="1.4">${p}</g></svg>`;
+}
+// ---- 5. Chân dung gradient ----
+const PORT = [['#c98b6b', '#2a1a14', '#7a2b22', '#e8d6c8'], ['#8a5a44', '#120c0a', '#3b3b44', '#d9c1a8'], ['#d8a27e', '#5b2a12', '#a3351f', '#f2b38a'], ['#7a4b37', '#0e0a09', '#1f2b3a', '#c45a3a'], ['#b97c5c', '#2b1810', '#355c4a', '#e9e1d6'], ['#a06a4e', '#1a1210', '#5a2a6a', '#f0c9a0'], ['#c48f70', '#3a2014', '#203a5a', '#dde6ee']];
+const portrait = ([skin, hair, cloth, bg]) => `radial-gradient(circle at 50% 36%, ${skin} 0 15%, transparent 15.5%), radial-gradient(circle at 50% 31%, ${hair} 0 21%, transparent 21.5%), radial-gradient(ellipse 46% 34% at 50% 98%, ${cloth} 0 99%, transparent 100%), linear-gradient(170deg, ${bg}, color-mix(in srgb, ${bg} 60%, #000))`;
+const SPOT_TX = [['Cận cảnh', 'Chi tiết chỉ bạn nhận ra.'], ['Tự tin lặng lẽ', 'Giữ vững mà không cần to tiếng.'], ['Ánh chiều', 'Màu ấm cho ngày dài.'], ['Đêm thành phố', 'Đèn đường làm nền.'], ['Gió biển', 'Nhẹ và thoáng.'], ['Sân khấu', 'Một chùm sáng là đủ.'], ['Buổi sáng', 'Bắt đầu chậm rãi.']];
+const RING_TX = [['Dữ liệu gọn', 'Mọi số ở một chỗ, đội làm nhanh hơn.', 'Minh Anh'], ['Khung không gian', 'Bố cục thoáng, dễ đọc.', ''], ['Hỗ trợ nhanh', 'Hỏi gì cũng có trả lời trong vài phút.', 'Lan Phạm'], ['Kiểu chữ rõ', 'Chữ độc lập, dễ thay.', ''], ['Đổi cuộc chơi', 'Gọn quy trình, đỡ việc lặp.', 'Tuấn Lê'], ['Điều khiển dữ liệu', 'Thấy hết, sửa ngay.', ''], ['Đáng tin', 'Ổn định qua mỗi lần ra bản.', 'Hà Vũ'], ['Sổ studio', 'Lưu ý tưởng theo nhóm.', ''], ['Gọn gàng', 'Ít nút, đúng việc.', 'Quân Đỗ'], ['Nhịp đều', 'Ra bản mỗi tuần không trễ.', ''], ['Dễ bắt đầu', 'Mười phút là quen tay.', 'Thu Hằng'], ['Không gian số', 'Mọi thứ ở một màn.', '']];
+const IR_COL = ['#7fb3ff', '#ffd166', '#9be7c4', '#ff9aa2', '#b39ddb', '#ffb38a', '#80deea', '#c5e1a5', '#2d2d33', '#f48fb1'];
+
+const STAGES = [
+{ id: 'folder-card', vi: 'Thẻ thư mục', hint: 'Rê chuột lên thẻ', presets: { mix: 'Mỗi màu một kiểu', indigo: 'Chàm', porcelain: 'Sứ', steel: 'Thép' },
+  vars: [['w', 'Rộng thẻ', 120, 220, 1, 176, 'px'], ['r', 'Bo góc', 6, 30, 1, 18, 'px'], ['tab', 'Rộng tai', 20, 60, 1, 42, '%'], ['notch', 'Sâu tai', 0, 40, 1, 22, 'px'], ['lift', 'Nhấc lên', 0, 30, 1, 12, 'px'], ['gap', 'Khoảng cách', 8, 48, 1, 20, 'px']],
+  css: `.fc{display:flex;gap:var(--gap);align-items:center;justify-content:center}
+.fc-c{position:relative;width:var(--w);aspect-ratio:.72;border-radius:var(--r);overflow:hidden;background:var(--b);color:var(--i);box-shadow:0 22px 40px -22px rgba(0,0,0,.55),0 0 0 1px rgba(0,0,0,.06);transition:transform .5s cubic-bezier(.34,1.45,.64,1)}
+.fc-c:hover{transform:translateY(calc(var(--lift) * -1))}
+.fc-top{position:absolute;inset:0 0 auto;height:56%;background:var(--g)}
+.fc-c::after{content:"";position:absolute;top:0;right:0;width:var(--tab);height:var(--notch);background:var(--stage,#f3f4f6);border-bottom-left-radius:calc(var(--r) * .8);transition:height .45s cubic-bezier(.34,1.45,.64,1)}
+.fc-c:hover::after{height:0}
+.fc-n{position:absolute;left:11%;top:24%;color:#fff;font:700 calc(var(--w) * .24)/1 Inter,system-ui,sans-serif;letter-spacing:-.03em}
+.fc-ar{position:absolute;right:11%;top:calc(var(--notch) + 12px);color:#fff;font-size:12px}
+.fc-t{position:absolute;left:11%;right:11%;bottom:10%;font:600 11px/1.3 Inter,system-ui,sans-serif}
+.fc-t small{display:block;margin-top:3px;font-weight:400;opacity:.65;font-size:9.5px}`,
+  html: (s) => `<div class="fc">${[0, 1, 2].map((i) => { const [g, b, ink] = FOLD[s.preset === 'mix' ? ['indigo', 'porcelain', 'steel'][i] : s.preset]; return `<article class="fc-c" style="--g:${g};--b:${b};--i:${ink}"><div class="fc-top"></div><span class="fc-n">0${i + 1}</span><span class="fc-ar">↗</span><p class="fc-t">${FOLD_TX[i][0]}<small>${FOLD_TX[i][1]}</small></p></article>`; }).join('')}</div>` },
+{ id: 'bookmark-card', vi: 'Thẻ đánh dấu', hint: 'Rê chuột lên thẻ', presets: { mix: 'Mỗi thẻ một màu', blue: 'Toàn xanh', red: 'Toàn đỏ' },
+  vars: [['w', 'Rộng thẻ', 130, 220, 1, 178, 'px'], ['r', 'Bo góc', 6, 30, 1, 16, 'px'], ['notch', 'Sâu tai', 0, 24, 1, 12, 'px'], ['lift', 'Nhấc lên', 0, 30, 1, 14, 'px'], ['dur', 'Thời lượng', 200, 900, 10, 620, 'ms'], ['bounce', 'Độ nảy', 1, 2.2, .02, 1.56, ''], ['gap', 'Khoảng cách', 8, 48, 1, 18, 'px']],
+  css: `.bk{display:flex;gap:var(--gap);justify-content:center}
+.bk-c{position:relative;width:var(--w);aspect-ratio:.78;border-radius:var(--r);background:#0c0c10;color:#fff;overflow:hidden;box-shadow:0 24px 40px -22px rgba(0,0,0,.7);transition:transform var(--dur) cubic-bezier(.34,var(--bounce),.64,1)}
+.bk-c:hover{transform:translateY(calc(var(--lift) * -1))}
+.bk-c::before{content:"";position:absolute;z-index:2;top:0;left:50%;width:34%;height:var(--notch);transform:translateX(-50%);background:var(--stage,#f3f4f6);border-radius:0 0 calc(var(--notch) * .9) calc(var(--notch) * .9)}
+.bk-art{position:absolute;left:6%;right:6%;top:6%;height:56%;border-radius:calc(var(--r) * .6);overflow:hidden;background:#050508}
+.bk-art svg{position:absolute;inset:0;width:100%;height:100%}
+.bk-art g{animation:bkDrift 6s ease-in-out infinite alternate}
+@keyframes bkDrift{to{transform:translateX(-18px)}}
+@media (prefers-reduced-motion:reduce){.bk-art g{animation:none}}
+.bk-tag{position:absolute;right:8%;top:calc(var(--notch) + 6px);font:600 8px/1 Inter,system-ui,sans-serif}
+.bk-cap{position:absolute;left:8%;right:20%;bottom:10%;font:600 10px/1.3 Inter,system-ui,sans-serif}
+.bk-big{position:absolute;left:8%;bottom:13%;font:300 calc(var(--w) * .135)/1 Inter,system-ui,sans-serif;letter-spacing:-.02em}
+.bk-dots{position:absolute;left:8%;bottom:6%;display:flex;gap:4px}.bk-dots i{width:5px;height:5px;border-radius:50%;background:var(--a)}.bk-dots i:nth-child(n+2){opacity:.4}`,
+  html: (s) => `<div class="bk">${[0, 1, 2].map((i) => { const c = BK[s.preset === 'mix' ? ['blue', 'red', 'purple'][i] : s.preset]; return `<article class="bk-c" style="--a:${c[0]}"><div class="bk-art">${waves(c, 'bkw' + i)}<span class="bk-tag">${BK_TX[i][0]}</span><p class="bk-cap">${BK_TX[i][1]}</p></div><span class="bk-big">${BK_TX[i][2]}</span><span class="bk-dots"><i></i><i></i><i></i></span></article>`; }).join('')}</div>` },
+{ id: 'arc-carousel', vi: 'Băng chuyền vòng cung', hint: 'Kéo, bấm thẻ hoặc dùng mũi tên', presets: { sand: 'Cát', stone: 'Đá', night: 'Đêm' },
+  vars: [['R', 'Bán kính', 200, 600, 5, 360, 'px'], ['sp', 'Giãn cách', 10, 35, .5, 21.5, '°'], ['w', 'Rộng thẻ', 60, 140, 1, 96, 'px'], ['as', 'Thẻ giữa to', 1, 1.6, .02, 1.34, ''], ['is', 'Thẻ bên nhỏ', .6, 1, .02, .86, ''], ['io', 'Độ rõ thẻ bên', .3, 1, .05, .95, ''], ['dur', 'Thời lượng', 300, 1200, 10, 720, 'ms']],
+  css: `.ar{position:absolute;inset:0}
+.ar-c{position:absolute;left:50%;top:70px;width:var(--w);aspect-ratio:.8;margin-left:calc(var(--w) / -2);border:0;border-radius:14px;background:var(--cg);box-shadow:0 18px 30px -16px rgba(60,40,20,.45);cursor:pointer;transition:transform var(--dur) cubic-bezier(.3,.7,.2,1),opacity var(--dur)}
+.ar.stone .ar-c{--cg:linear-gradient(160deg,#d9dde2,#8b929b)}.ar.night .ar-c{--cg:linear-gradient(160deg,#4a4a58,#17171d)}
+.ar-c{--cg:linear-gradient(160deg,#e2c9a8,#a98059)}
+.ar-cap{position:absolute;left:0;right:0;bottom:44px;display:grid;justify-items:center;gap:6px;text-align:center}
+.ar-cap div{display:flex;align-items:center;gap:22px}.ar-cap b{min-width:220px;font:500 26px/1.1 Inter,system-ui,sans-serif}
+.ar-cap p{margin:0;font-size:11px;opacity:.6}
+.ar-cap button{min-width:32px;min-height:32px;border:0;border-radius:50%;background:none;color:inherit;font-size:20px;cursor:pointer}
+.ar-cap .ar-go{min-height:32px;padding:0 16px;border-radius:99px;background:#16161a;color:#fff;font:600 11px/1 Inter,system-ui,sans-serif}
+.night .ar-cap .ar-go{background:#fff;color:#16161a}
+.ar-dots{position:absolute;left:50%;bottom:20px;display:flex;gap:4px;transform:translateX(-50%)}.ar-dots i{width:4px;height:4px;border-radius:2px;background:currentColor;opacity:.25;transition:.3s}.ar-dots i.on{width:14px;opacity:.9}`,
+  html: (s) => `<div class="ar ${s.preset}">${Array.from({ length: 9 }, (_, i) => `<button class="ar-c" data-i="${i}" aria-label="Thẻ ${i + 1}"></button>`).join('')}
+    <div class="ar-cap"><div><button data-step="-1" aria-label="Thẻ trước">‹</button><b></b><button data-step="1" aria-label="Thẻ sau">›</button></div><p></p><button class="ar-go">Chi tiết</button></div><div class="ar-dots">${'<i></i>'.repeat(9)}</div></div>`,
+  mount(el, s) {
+    const CAP = [['Làm bằng tay', 'Vết nhỏ là chất riêng, không phải lỗi.'], ['Đồ thường ngày', 'Dùng mỗi ngày, bền theo năm.'], ['Ánh và bóng', 'Bề mặt bắt sáng theo giờ.']];
+    let act = 4; const cards = [...el.querySelectorAll('.ar-c')], dots = [...el.querySelectorAll('.ar-dots i')];
+    const place = () => { const v = s.v; cards.forEach((c, i) => { const k = i - act, a = k * v.sp, r = a * Math.PI / 180;
+      c.style.transform = `translate(${v.R * Math.sin(r)}px, ${v.R * (1 - Math.cos(r))}px) rotate(${a}deg) scale(${k ? v.is : v.as})`; c.style.opacity = Math.abs(a) > 95 ? 0 : k ? v.io : 1; c.style.zIndex = 20 - Math.abs(k); });
+      el.querySelector('.ar-cap b').textContent = CAP[act % 3][0]; el.querySelector('.ar-cap p').textContent = CAP[act % 3][1]; dots.forEach((d, i) => d.classList.toggle('on', i === act)); };
+    const go = (n) => { act = Math.max(0, Math.min(8, n)); place(); };
+    el.addEventListener('click', (e) => { const c = e.target.closest('.ar-c'), b = e.target.closest('[data-step]'); if (c) go(+c.dataset.i); if (b) go(act + +b.dataset.step); });
+    let x0 = null; el.addEventListener('pointerdown', (e) => { x0 = e.clientX; });
+    el.addEventListener('pointermove', (e) => { if (x0 == null) return; const d = e.clientX - x0; if (Math.abs(d) > 50) { go(act - Math.sign(d)); x0 = e.clientX; } });
+    addEventListener('pointerup', () => { x0 = null; });
+    place(); return { update: place };
+  } },
+{ id: 'ring-slider', vi: 'Vòng thẻ xoay', hint: 'Kéo để xoay', frame: 'clay', presets: { clay: 'Đất nung', night: 'Đêm' },
+  vars: [['R', 'Bán kính', 180, 420, 5, 300, 'px'], ['tilt', 'Nghiêng', -20, 20, .5, -4, '°'], ['persp', 'Phối cảnh', 600, 2000, 10, 1100, 'px'], ['w', 'Rộng thẻ', 100, 180, 1, 132, 'px'], ['speed', 'Tốc độ xoay', 0, 30, .5, 8, '°/s'], ['minop', 'Mờ phía sau', 0, 1, .02, .35, '']],
+  css: `.rg{position:absolute;inset:0;perspective:var(--persp);cursor:grab}.rg:active{cursor:grabbing}
+.rg-sc{position:absolute;left:50%;top:50%;transform-style:preserve-3d;transform:rotateX(var(--tilt))}
+.rg-cy{position:absolute;transform-style:preserve-3d}
+.rg-c{position:absolute;left:calc(var(--w) / -2);top:-62px;width:var(--w);height:124px;box-sizing:border-box;padding:12px;border-radius:12px;background:#fff;color:#16161a;font:400 9.5px/1.4 Inter,system-ui,sans-serif;box-shadow:0 10px 24px -12px rgba(0,0,0,.5)}
+.rg-c.dk{background:#141418;color:#f2f2f5}.rg-c.gl{background:rgba(255,255,255,.22);color:#fff;border:1px solid rgba(255,255,255,.4);backdrop-filter:blur(6px)}
+.rg-c b{display:block;margin-bottom:4px;font-size:11.5px;font-weight:600}
+.rg-c i{position:absolute;left:12px;bottom:10px;font-style:normal;font-weight:600;opacity:.8}
+.rg-c i::before{content:"";display:inline-block;width:14px;height:14px;margin-right:5px;border-radius:50%;background:#7c6cf2;vertical-align:-3px}`,
+  html: () => `<div class="rg"><div class="rg-sc"><div class="rg-cy">${RING_TX.map(([t, d, n], i) => `<article class="rg-c ${['', 'dk', 'gl'][i % 3]}"><b>${t}</b>${d}${n ? `<i>${n}</i>` : ''}</article>`).join('')}</div></div></div>`,
+  mount(el, s) {
+    const cy = el.querySelector('.rg-cy'), cards = [...el.querySelectorAll('.rg-c')], n = cards.length; let ang = 0, vel = 0, drag = null, t0 = performance.now(), alive = true;
+    const draw = () => { cy.style.transform = `rotateY(${ang}deg)`; cards.forEach((c, i) => { const a = i * 360 / n; c.style.transform = `rotateY(${a}deg) translateZ(${s.v.R}px)`;
+      const f = Math.cos((a + ang) * Math.PI / 180); c.style.opacity = s.v.minop + (1 - s.v.minop) * (f + 1) / 2; }); };
+    const tick = (t) => { if (!alive) return; const dt = Math.min((t - t0) / 1000, .05); t0 = t;
+      if (drag == null) { ang += vel * dt * 60; vel *= .94; if (!RM && Math.abs(vel) < .05) ang += s.v.speed * dt; } draw(); requestAnimationFrame(tick); };
+    el.addEventListener('pointerdown', (e) => { drag = e.clientX; vel = 0; el.setPointerCapture?.(e.pointerId); });
+    el.addEventListener('pointermove', (e) => { if (drag == null) return; const d = (e.clientX - drag) * .3; ang += d; vel = d / 2; drag = e.clientX; });
+    el.addEventListener('pointerup', () => { drag = null; });
+    requestAnimationFrame(tick); return { update: draw, stop: () => { alive = false; } };
+  } },
+{ id: 'spotlight-carousel', vi: 'Băng chuyền tiêu điểm', hint: 'Bấm ảnh, kéo hoặc dùng chấm', presets: { day: 'Ban ngày', night: 'Ban đêm' },
+  vars: [['W', 'Rộng thẻ giữa', 160, 300, 2, 220, 'px'], ['ss', 'Thẻ bên nhỏ', .5, 1, .02, .74, ''], ['ov', 'Chồng lên', 0, .5, .01, .1, ''], ['r', 'Bo góc', 0, 30, 1, 16, 'px'], ['fade', 'Mờ hai mép', 0, 30, 1, 10, '%'], ['dim', 'Tối thẻ bên', 0, .8, .02, .25, '']],
+  css: `.sp{position:absolute;inset:0;-webkit-mask:linear-gradient(90deg,transparent,#000 var(--fade),#000 calc(100% - var(--fade)),transparent);mask:linear-gradient(90deg,transparent,#000 var(--fade),#000 calc(100% - var(--fade)),transparent)}
+.sp-c{position:absolute;left:50%;top:50%;width:var(--W);aspect-ratio:.86;margin:calc(var(--W) * -.58) 0 0 calc(var(--W) / -2);padding:0;border:0;border-radius:var(--r);overflow:hidden;background:var(--p);background-size:cover;cursor:pointer;box-shadow:0 20px 36px -20px rgba(0,0,0,.6);transition:transform .7s cubic-bezier(.3,.7,.2,1),filter .7s}
+.sp-c::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(0,0,0,.7));opacity:0;transition:opacity .5s}
+.sp-c.on::after{opacity:1}
+.sp-t{position:absolute;z-index:1;left:0;right:0;bottom:16px;color:#fff;text-align:center;opacity:0;transform:translateY(8px);transition:.5s .15s}
+.sp-c.on .sp-t{opacity:1;transform:none}
+.sp-t b{display:block;font:700 17px/1.2 Inter,system-ui,sans-serif}.sp-t small{display:block;margin:3px 16px 10px;font-size:10px;opacity:.85}
+.sp-t span{display:inline-block;padding:7px 14px;border-radius:99px;background:#fff;color:#16161a;font:600 10px/1 Inter,system-ui,sans-serif}
+.sp-dots{position:absolute;left:50%;bottom:16px;display:flex;gap:5px;transform:translateX(-50%)}
+.sp-dots button{width:6px;height:6px;padding:0;border:0;border-radius:3px;background:currentColor;opacity:.3;cursor:pointer;transition:.3s}.sp-dots button.on{width:18px;opacity:.9}`,
+  html: () => `<div class="sp">${PORT.map((p, i) => `<button class="sp-c" data-i="${i}" style="--p:${portrait(p)}" aria-label="${SPOT_TX[i][0]}"><span class="sp-t"><b>${SPOT_TX[i][0]}</b><small>${SPOT_TX[i][1]}</small><span>Xem thêm</span></span></button>`).join('')}</div><div class="sp-dots">${PORT.map((_, i) => `<button data-d="${i}" aria-label="Ảnh ${i + 1}"></button>`).join('')}</div>`,
+  mount(el, s) {
+    let act = 3; const cards = [...el.querySelectorAll('.sp-c')], dots = [...el.querySelectorAll('[data-d]')];
+    const place = () => { const v = s.v, step = v.W * v.ss * (1 - v.ov); cards.forEach((c, i) => { const k = i - act, x = k ? Math.sign(k) * (v.W * (1 + v.ss) / 2 - v.W * v.ss * v.ov) + (k - Math.sign(k)) * step : 0;
+      c.style.transform = `translateX(${x}px) scale(${k ? v.ss : 1})`; c.style.zIndex = 10 - Math.abs(k); c.style.filter = k ? `brightness(${1 - v.dim})` : ''; c.classList.toggle('on', !k); });
+      dots.forEach((d, i) => d.classList.toggle('on', i === act)); };
+    const go = (n) => { act = (n + cards.length) % cards.length; place(); };
+    el.addEventListener('click', (e) => { const c = e.target.closest('.sp-c'), d = e.target.closest('[data-d]'); if (c) go(+c.dataset.i); if (d) go(+d.dataset.d); });
+    let x0 = null; el.addEventListener('pointerdown', (e) => { x0 = e.clientX; });
+    el.addEventListener('pointermove', (e) => { if (x0 == null) return; const d = e.clientX - x0; if (Math.abs(d) > 60) { go(act - Math.sign(d)); x0 = e.clientX; } });
+    addEventListener('pointerup', () => { x0 = null; });
+    place(); return { update: place };
+  } },
+{ id: 'image-ring', vi: 'Vòng ảnh', hint: 'Kéo để ném, bấm đúp để phóng to', presets: { studio: 'Studio', night: 'Bóng đêm' },
+  vars: [['n', 'Số thẻ', 12, 60, 1, 36, '', 1], ['R', 'Bán kính', 120, 320, 2, 220, 'px'], ['tilt', 'Nghiêng', 0, 40, .5, 14, '°'], ['roll', 'Lật', -30, 30, .5, -16, '°'], ['persp', 'Phối cảnh', 400, 1600, 10, 800, 'px'], ['w', 'Rộng thẻ', 30, 80, 1, 46, 'px']],
+  css: `.ir{position:absolute;inset:0;perspective:var(--persp);cursor:grab}.ir:active{cursor:grabbing}
+.ir-sc{position:absolute;left:50%;top:50%;transform-style:preserve-3d;transform:rotateX(var(--tilt)) rotateZ(var(--roll)) scale(1);transition:transform .6s cubic-bezier(.3,.7,.2,1)}
+.ir.zoom .ir-sc{transform:rotateX(var(--tilt)) rotateZ(var(--roll)) scale(1.55)}
+.ir-wh{position:absolute;transform-style:preserve-3d}
+.ir-c{position:absolute;left:calc(var(--w) / -2);top:calc(var(--w) * -.7);width:var(--w);height:calc(var(--w) * 1.4);box-sizing:border-box;padding:3px 3px 10px;border-radius:3px;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.08),0 6px 12px -8px rgba(0,0,0,.4)}
+.ir-c i{display:block;height:62%;border-radius:2px;background:var(--c)}
+.ir-cap{position:absolute;left:28px;bottom:22px;font:600 13px/1.2 Inter,system-ui,sans-serif}.ir-cap small{display:block;font-weight:400;opacity:.55;font-size:10px}`,
+  html: (s) => `<div class="ir"><div class="ir-sc"><div class="ir-wh">${Array.from({ length: s.v.n }, (_, i) => `<span class="ir-c"><i style="--c:${IR_COL[i % IR_COL.length]}"></i></span>`).join('')}</div></div><p class="ir-cap">Phương Bắc<small>Ảnh du lịch · ${s.v.n} khung</small></p></div>`,
+  mount(el, s) {
+    const ring = el.querySelector('.ir'), wh = el.querySelector('.ir-wh'), cards = [...el.querySelectorAll('.ir-c')]; let ang = 0, vel = 0, drag = null, t0 = performance.now(), alive = true;
+    const draw = () => { wh.style.transform = `rotateY(${ang}deg)`; cards.forEach((c, i) => { c.style.transform = `rotateY(${i * 360 / cards.length}deg) translateZ(${s.v.R}px)`; }); };
+    const tick = (t) => { if (!alive) return; const dt = Math.min((t - t0) / 1000, .05); t0 = t;
+      if (drag == null) { ang += vel; vel *= .95; if (!RM && Math.abs(vel) < .02) ang += 4 * dt; } wh.style.transform = `rotateY(${ang}deg)`; requestAnimationFrame(tick); };
+    el.addEventListener('pointerdown', (e) => { drag = e.clientX; vel = 0; });
+    el.addEventListener('pointermove', (e) => { if (drag == null) return; const d = (e.clientX - drag) * .35; ang += d; vel = d; drag = e.clientX; });
+    el.addEventListener('pointerup', () => { drag = null; });
+    el.addEventListener('dblclick', () => ring.classList.toggle('zoom'));
+    draw(); requestAnimationFrame(tick); return { update: draw, stop: () => { alive = false; } };
+  } }];
+
+// ---- dựng trang ----
+document.getElementById('cs-css').textContent = STAGES.map((st) => st.css).join('\n');
+const list = document.getElementById('cs'), toastEl = document.querySelector('.cs-toast');
+let tt; const toast = (m) => { toastEl.textContent = m; toastEl.classList.add('on'); clearTimeout(tt); tt = setTimeout(() => toastEl.classList.remove('on'), 1800); };
+const fmt = (v, st) => (+v).toFixed((String(st).split('.')[1] || '').length);
+STAGES.forEach((st, si) => {
+  const s = { preset: Object.keys(st.presets)[0], v: {} }; st.vars.forEach(([k, , , , , d]) => (s.v[k] = d));
+  const sec = document.createElement('section'); sec.className = 'cs-st'; sec.id = st.id;
+  sec.innerHTML = `<div class="cs-hd"><em>0${si + 1}</em><b>${st.vi}</b><span>${st.hint}</span></div>
+    <div class="cs-row"><div class="cs-frame ${st.frame || ''}"><div class="cs-in"></div></div>
+    <button class="cs-tog" aria-expanded="false">Tuỳ chỉnh</button>
+    <div class="cs-pan"><h4>${st.vi}</h4>
+      <label class="cs-sel">Kiểu<select>${Object.entries(st.presets).map(([k, t]) => `<option value="${k}">${t}</option>`).join('')}</select></label>
+      ${st.vars.map(([k, t, mn, mx, stp, d, u]) => `<div class="cs-rg"><label for="${st.id}-${k}">${t}<output>${fmt(d, stp)}${u}</output></label><input type="range" id="${st.id}-${k}" data-k="${k}" min="${mn}" max="${mx}" step="${stp}" value="${d}"></div>`).join('')}
+      <div class="cs-btns"><button data-a="reset">Đặt lại</button><button data-a="replay">Chạy lại</button><button class="pri" data-a="copy">Chép code</button></div></div></div>`;
+  list.append(sec);
+  const frame = sec.querySelector('.cs-frame'), inn = sec.querySelector('.cs-in'); let api;
+  const applyVars = () => st.vars.forEach(([k, , , , , , u]) => inn.style.setProperty('--' + k, s.v[k] + (u === '°' ? 'deg' : u === '°/s' ? '' : u)));
+  const night = () => frame.classList.toggle('night', s.preset === 'night');
+  const build = (intro) => { api?.stop?.(); applyVars(); night(); inn.innerHTML = st.html(s); api = st.mount?.(inn, s);
+    if (intro) { inn.classList.remove('intro'); void inn.offsetWidth; inn.classList.add('intro'); } };
+  build(false);
+  new ResizeObserver(() => frame.style.setProperty('--fit', Math.min(frame.clientWidth / 760, frame.clientHeight / 440, 1.2))).observe(frame);
+  sec.addEventListener('input', (e) => { const k = e.target.dataset.k; if (!k) return; const def = st.vars.find((v) => v[0] === k);
+    s.v[k] = +e.target.value; e.target.previousElementSibling.querySelector('output').textContent = fmt(s.v[k], def[4]) + def[6];
+    if (def[7]) build(false); else { applyVars(); api?.update?.(); } });
+  sec.querySelector('select').addEventListener('change', (e) => { s.preset = e.target.value; build(true); });
+  sec.querySelector('.cs-tog').addEventListener('click', (e) => { const o = sec.classList.toggle('open'); e.target.setAttribute('aria-expanded', o); });
+  sec.querySelector('.cs-btns').addEventListener('click', async (e) => { const a = e.target.dataset.a; if (!a) return;
+    if (a === 'reset') { st.vars.forEach(([k, , , , stp, d, u]) => { s.v[k] = d; const r = sec.querySelector(`[data-k="${k}"]`); r.value = d; r.previousElementSibling.querySelector('output').textContent = fmt(d, stp) + u; }); s.preset = Object.keys(st.presets)[0]; sec.querySelector('select').value = s.preset; build(true); }
+    if (a === 'replay') build(true);
+    if (a === 'copy') {
+      const vars = st.vars.map(([k, , , , , , u]) => `--${k}:${s.v[k]}${u === '°' ? 'deg' : u === '°/s' ? '' : u}`).join(';');
+      const code = `<!-- ${st.vi}: HTML + CSS tĩnh; kéo/xoay cần JS riêng -->\n<style>\n.cs-demo{${vars};--stage:${getComputedStyle(frame).getPropertyValue('--stage').trim()};position:relative;width:760px;height:440px;display:grid;place-items:center;background:var(--stage)}\n${st.css}\n</style>\n<div class="cs-demo">${inn.innerHTML.replace(/ style="opacity:[^"]*"/g, '')}</div>`;
+      try { await navigator.clipboard.writeText(code); toast('Đã chép HTML + CSS'); } catch { toast('Trình duyệt chặn chép'); } }
+  });
+});
+</script>
+<script src="/search.js?v=7af788eb33" defer></script><script src="/stats.js?v=7af788eb33" defer></script>
+</body>
+</html>

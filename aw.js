@@ -20,6 +20,7 @@
       ['patterns/taste.html?k=ui', 'Widget có gu', 'Đồng hồ, bản đồ, bảng, máy nghe nhạc', 9],
       ['patterns/moments.html', 'Khoảnh khắc UI', 'Công tắc, nút, spinner tự chạy', 36],
       ['patterns/moments-light.html', 'Khoảnh khắc UI · Theo ánh sáng', '36 tương tác, đốm sáng trôi qua lưới', 36],
+      ['patterns/card-stage.html', 'Sân khấu thẻ 3D', 'Vòng cung, trụ xoay, vòng ảnh, có thanh tuỳ chỉnh', 6],
       ['ui-moments/', 'UI Moments gốc', 'Bộ gốc MIT: 164 UI, chép HTML/React', 164],
       ['patterns/glow.html', 'Viền cầu vồng', 'Công tắc, ô nhập, thẻ sáng ngũ sắc', 4],
       ['patterns/navigation.html', 'Điều hướng thanh bên', '9 kiểu đánh dấu mục đang chọn', 9],
