@@ -6,7 +6,7 @@
 <title>Hộp thoại ký hợp đồng — uiux-asset</title>
 <meta name="description" content="Hộp thoại ký hợp đồng: lật vào 3D, bảng ký tự vẽ chữ ký mẫu, hoàn tác và xoá, công tắc đồng ý có cảnh báo. Dựng lại từ video Sign Dialog của @vanta_ui, kèm code chép thẳng.">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
-<link rel="stylesheet" href="../aw.css?v=82ebd55262">
+<link rel="stylesheet" href="../aw.css?v=91bac53a57">
 <style>
 .mo-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
 .mo-demo { position: relative; display: grid; place-items: center; gap: 12px; min-height: 360px; padding: 24px 16px; border-radius: 16px; background: #fafafa; border: 1px solid #e6e6e8; color: #18181b; text-align: center; }
@@ -70,7 +70,7 @@
 </style>
 </head>
 <body>
-<main class="aw-wrap"><script src="../aw.js?v=82ebd55262"></script>
+<main class="aw-wrap"><script src="../aw.js?v=91bac53a57"></script>
 <div class="mo-page">
   <div class="aw-sotd" style="padding-top:16px">
     <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">4 phần</span></p>
@@ -230,6 +230,6 @@ document.getElementById('sd-code').textContent = SRC;
 document.getElementById('sd-dialog').addEventListener('sd-result', (e) => { document.getElementById('sd-status').textContent = e.detail === 'signed' ? 'Đã ký hợp đồng.' : 'Đã đóng, chưa ký.'; });
 document.querySelector('[data-copy]').onclick = (e) => navigator.clipboard.writeText(SRC).then(() => { e.target.textContent = 'Đã chép'; setTimeout(() => e.target.textContent = 'Chép', 1500); });
 </script>
-<script src="/search.js?v=82ebd55262" defer></script><script src="/stats.js?v=82ebd55262" defer></script>
+<script src="/search.js?v=91bac53a57" defer></script><script src="/stats.js?v=91bac53a57" defer></script>
 </body>
 </html>
