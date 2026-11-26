@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bảng cho vay — uiux-asset</title>
+<meta name="description" content="Dashboard cho vay khung xanh lá: Tổng quan có biểu đồ token hoá và việc cần làm, Phân tích có thẻ số và cột theo tuần, Hồ sơ vay dạng thư mục có lọc, Token hoá có dây chuyền 4 bước và nút đúc lô. Chuyển trang mờ dần theo nhịp. JS/CSS thuần.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=c701084038">
+<style>
+.md-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+.md-page a { color: inherit; }
+/* App: token riêng, không theo theme của site. */
+.ob { --frame: linear-gradient(160deg, #78c56c, #4ea24a); --side: linear-gradient(180deg, #3d8f3e, #2b7531); --bg: #f2f5f4; --card: #fff; --line: #e3e9e7; --ink: #1c2a29; --ink2: #5d6b69; --chip: #eef2f1;
+  --g: #4caf50; --gd: #2e7d32; --teal: #2f5d6e; --pur: #8e4fc7; --org: #e08a2c; --red: #d64545; --peach: #fdf0e1; --up: #1f7a3a; --upbg: #e4f3e7;
+  position: relative; display: grid; grid-template-columns: 200px 1fr; height: 820px; padding: 10px; border-radius: 26px; background: var(--frame); color: var(--ink); font: 400 13px/1.4 "Montserrat", var(--aw-font); overflow: hidden; box-shadow: 0 24px 60px -24px rgba(40,90,40,.45); transition: grid-template-columns .35s cubic-bezier(.3,.7,.2,1); }
+.ob.mini { grid-template-columns: 64px 1fr; }
+.ob button, .ob select, .ob input { font: inherit; color: inherit; }
+.ob button { cursor: pointer; }
+.ob-side { position: relative; display: flex; flex-direction: column; gap: 2px; padding: 10px 10px 8px 6px; color: #fff; min-width: 0; }
+.ob-brand { display: flex; align-items: center; gap: 10px; padding: 4px 6px 14px; white-space: nowrap; }
+.ob-brand svg { flex: none; }
+.ob-brand b { display: block; font-size: 15px; font-weight: 700; } .ob-brand small { font-size: 10px; opacity: .9; }
+.ob .ob-fold { position: absolute; top: 14px; right: -14px; z-index: 2; width: 28px; height: 28px; border-radius: 50%; border: 0; background: #fff; color: var(--ink); box-shadow: 0 2px 6px rgba(0,0,0,.15); display: grid; place-items: center; transition: transform .35s; }
+.ob.mini .ob-fold { transform: rotate(180deg); }
+.ob-cap { margin: 8px 10px 4px; font-size: 10px; font-weight: 600; letter-spacing: .1em; opacity: .85; white-space: nowrap; }
+.ob-nav { display: flex; align-items: center; gap: 10px; min-height: 40px; padding: 0 10px; border: 0; border-radius: 12px; background: none; color: #fff !important; text-align: left; white-space: nowrap; overflow: hidden; }
+.ob-nav:hover { background: rgba(255,255,255,.14); }
+.ob-nav[aria-current="page"] { background: #fff; color: var(--ink) !important; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,.12); }
+.ob-nav svg { width: 18px; height: 18px; flex: none; }
+.ob-nav em { margin-left: auto; font-style: normal; min-width: 20px; padding: 1px 6px; border-radius: 99px; background: rgba(255,255,255,.22); font-size: 10px; font-weight: 600; text-align: center; }
+.ob-nav[aria-current="page"] em { background: var(--upbg); color: var(--up); }
+.ob-me { display: flex; align-items: center; gap: 8px; margin-top: auto; padding: 8px; border-radius: 14px; background: rgba(255,255,255,.14); white-space: nowrap; overflow: hidden; font-size: 12px; }
+.ob-me small { display: block; opacity: .85; font-size: 10px; }
+.ob-av { width: 32px; height: 32px; flex: none; border-radius: 50%; display: grid; place-items: center; background: #f3d9b1; color: #4a3522; font-size: 11px; font-weight: 700; }
+.ob.mini .ob-brand div, .ob.mini .ob-nav span, .ob.mini .ob-nav em, .ob.mini .ob-cap, .ob.mini .ob-me div { display: none; }
+.ob.mini .ob-nav { justify-content: center; padding: 0; }
+.ob-main { min-width: 0; min-height: 0; border-radius: 20px; background: var(--bg); overflow: auto; padding: 22px 24px 28px; }
+.ob-h { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+.ob-h h2 { margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -.01em; }
+.ob-h p { margin: 2px 0 0; color: var(--ink2); font-size: 12px; } .ob-h p b { color: var(--ink); }
+.ob-acts { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.ob-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 14px; border: 0; border-radius: 10px; background: var(--card); font-size: 12px; font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,.06); }
+.ob-btn svg { width: 15px; height: 15px; }
+.ob-btn.pri { background: var(--teal); color: #fff !important; box-shadow: 0 6px 14px -6px rgba(47,93,110,.6); }
+.ob-btn:disabled { opacity: .55; cursor: default; }
+.ob-seg { display: inline-flex; padding: 3px; border-radius: 10px; background: #e6ecea; }
+.ob-seg button { min-height: 30px; min-width: 40px; padding: 0 10px; border: 0; border-radius: 8px; background: none; font-size: 11px; font-weight: 600; color: var(--ink2); }
+.ob-seg button[aria-pressed="true"] { background: var(--card); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+.ob-card { position: relative; min-width: 0; padding: 16px; border-radius: 16px; background: var(--card); box-shadow: 0 1px 2px rgba(20,40,30,.05); }
+.ob-ct { display: flex; align-items: center; gap: 8px; margin: 0 0 2px; font-size: 13px; font-weight: 700; }
+.ob-ct small { color: var(--ink2); font-weight: 500; }
+.ob-cs { margin: 0 0 10px; color: var(--ink2); font-size: 11px; }
+.ob-grid { display: grid; gap: 14px; }
+.ob-kpis { grid-template-columns: repeat(4, minmax(0, 1fr)); margin-bottom: 14px; }
+.ob-kpi .top { display: flex; align-items: center; gap: 8px; color: var(--ink2); font-size: 11px; }
+.ob-ico { width: 28px; height: 28px; flex: none; border-radius: 8px; display: grid; place-items: center; background: color-mix(in srgb, var(--c) 15%, #fff); color: var(--c); }
+.ob-ico svg { width: 15px; height: 15px; }
+.ob-up { margin-left: auto; padding: 2px 7px; border-radius: 99px; background: var(--upbg); color: var(--up); font-size: 10px; font-weight: 700; white-space: nowrap; }
+.ob-kpi b { display: block; margin: 8px 0 4px; font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.ob-kpi small { color: var(--ink2); font-size: 10px; }
+.ob-kpi svg.sp { display: block; width: 100%; height: 38px; }
+button.ob-kpi { display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; border: 0; text-align: left; font: inherit; }
+button.ob-kpi:not(:disabled):hover { box-shadow: 0 0 0 2px #f3c99a; }
+/* Tổng quan */
+.ob-ov { grid-template-columns: 1.15fr 1fr .85fr; align-items: start; }
+.ob-col { display: grid; gap: 14px; min-width: 0; }
+.ob-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; font-size: 11px; color: var(--ink2); }
+.ob-legend i { display: inline-block; width: 9px; height: 9px; margin-right: 5px; border-radius: 50%; background: var(--c); vertical-align: -1px; }
+.ob-chart { position: relative; margin-top: 8px; }
+.ob-chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.ob-tip { position: absolute; z-index: 3; transform: translate(-50%, -110%); padding: 5px 9px; border-radius: 8px; background: var(--ink); color: #fff; font-size: 11px; font-weight: 600; white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity .15s; }
+.ob-tip.on { opacity: 1; }
+.ob-tip small { display: block; font-weight: 400; opacity: .75; }
+.hit { fill: transparent; cursor: pointer; outline: none; }
+.hit:hover, .hit:focus-visible { fill: rgba(76,175,80,.08); }
+.ob-folders { grid-template-columns: 1fr 1fr; }
+.ob-fd { position: relative; padding: 14px; margin-top: 10px; border-radius: 0 14px 14px 14px; background: var(--card); box-shadow: 0 1px 2px rgba(20,40,30,.06); min-width: 0; }
+.ob-fd::before { content: ""; position: absolute; left: 0; top: -10px; width: 46%; height: 12px; border-radius: 12px 14px 0 0; background: inherit; clip-path: polygon(0 0, 82% 0, 100% 100%, 0 100%); }
+.ob-fd.int { background: var(--peach); }
+.ob-fd .meta { display: flex; justify-content: space-between; gap: 6px; color: var(--ink2); font-size: 10px; }
+.ob-fd .meta span:last-child { color: var(--ink); font-weight: 600; }
+.ob-fd h4 { margin: 8px 0 2px; font-size: 13px; font-weight: 700; }
+.ob-fd p { margin: 0 0 8px; color: var(--ink2); font-size: 10px; }
+.ob-st { display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 10px; font-weight: 600; }
+.st-p { background: #fbe3bf; color: #8a4f06; } .st-r { background: #d8efd9; color: #23692a; } .st-c { background: var(--teal); color: #fff; }
+.ob-prog { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 12px; color: var(--ink2); font-size: 10px; }
+.ob-bar { flex: 1; max-width: 70px; height: 4px; border-radius: 4px; background: #e3e8e6; overflow: hidden; }
+.ob-bar i { display: block; height: 100%; border-radius: inherit; background: var(--c, var(--teal)); transition: width .6s cubic-bezier(.3,.7,.2,1); }
+.ob-save { overflow: hidden; padding-bottom: 0; }
+.ob-save .nums { display: grid; grid-template-columns: 1fr 1fr; text-align: center; }
+.ob-save .nums div + div { border-left: 1px solid var(--line); }
+.ob-save .nums b { display: block; font-size: 22px; font-weight: 700; } .ob-save .nums small { color: var(--ink2); font-size: 10px; }
+.ob-save .area { position: relative; margin: 10px -16px 0; }
+.ob-save .area svg { display: block; width: 100%; height: 150px; }
+.ob-save .area div { text-shadow: 0 1px 6px rgba(0,40,0,.35); position: absolute; left: 0; right: 0; bottom: 18px; text-align: center; color: #fff; }
+.ob-save .area b { display: block; font-size: 26px; font-weight: 700; letter-spacing: .01em; } .ob-save .area small { font-size: 11px; }
+.ob-search { display: flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 12px; border-radius: 12px; background: var(--card); color: var(--ink2); box-shadow: 0 1px 2px rgba(20,40,30,.05); }
+.ob-search input { flex: 1; min-width: 0; align-self: stretch; border: 0; background: none; outline: 0; }
+.ob-search kbd { padding: 0 6px; border-radius: 6px; border: 1px solid var(--line); font: 10px/18px var(--aw-mono, monospace); }
+.ob-tasks { display: grid; gap: 8px; }
+.ob-task { display: flex; gap: 10px; align-items: flex-start; padding: 10px; border-radius: 12px; background: #e9f1f7; font-size: 11px; line-height: 1.45; cursor: pointer; transition: opacity .2s, background .2s; }
+.ob-task:nth-child(2) { background: #e6f3e4; } .ob-task:nth-child(3) { background: var(--peach); }
+.ob-task input { width: 16px; height: 16px; margin: 1px 0 0; flex: none; accent-color: var(--gd); }
+.ob-task small { display: block; margin-top: 3px; color: var(--ink2); font-size: 10px; } .ob-task small b { color: var(--red); font-weight: 600; }
+.ob-task.done { opacity: .55; } .ob-task.done span { text-decoration: line-through; }
+.ob-team { display: flex; justify-content: space-between; gap: 6px; }
+.ob-team div { text-align: center; font-size: 10px; color: var(--ink2); }
+.ob-team svg { display: block; margin: 0 auto 4px; }
+/* Phân tích */
+.ob-in { grid-template-columns: 1.6fr 1fr; }
+.ob-mix { display: grid; grid-template-columns: 150px 1fr; align-items: center; gap: 18px; }
+.ob-mix ul, .ob-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; font-size: 12px; }
+.ob-mix li, .ob-list li { display: flex; align-items: center; gap: 8px; } .ob-mix li i, .ob-list li i { width: 9px; height: 9px; border-radius: 50%; background: var(--c); }
+.ob-mix li b, .ob-list li b { margin-left: auto; font-variant-numeric: tabular-nums; }
+.ob-ring { position: relative; } .ob-ring svg { display: block; width: 100%; height: auto; }
+.ob-ring div { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
+.ob-ring b { font-size: 20px; font-weight: 700; } .ob-ring small { color: var(--ink2); font-size: 10px; }
+/* Hồ sơ vay */
+.ob-lf { grid-template-columns: 1fr 280px; align-items: start; }
+.ob-tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 6px; }
+.ob-tools .ob-seg { max-width: 100%; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+.ob-tools .ob-seg button { white-space: nowrap; flex: none; display: inline-flex; gap: 6px; align-items: center; }
+.ob-tools .ob-seg em { font-style: normal; padding: 0 6px; border-radius: 99px; background: #dfe6e3; font-size: 10px; }
+.ob-tools .ob-seg button[aria-pressed="true"] em { background: var(--upbg); color: var(--up); }
+.ob-tools .ob-search { flex: 1; min-width: 170px; max-width: 260px; min-height: 36px; margin-left: auto; font-size: 12px; }
+.ob-sort { min-height: 36px; padding: 0 10px; border: 0; border-radius: 10px; background: var(--card); font-size: 12px; box-shadow: 0 1px 2px rgba(0,0,0,.06); }
+.ob-files { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); }
+.ob-files .ob-fd { cursor: default; transition: transform .2s, box-shadow .2s; }
+.ob-files .ob-fd:hover { transform: translateY(-3px); box-shadow: 0 10px 22px -12px rgba(20,40,30,.35); }
+.ob-empty { grid-column: 1 / -1; padding: 30px; text-align: center; color: var(--ink2); }
+.ob-docs { display: grid; grid-template-columns: 110px 1fr; align-items: center; gap: 16px; }
+.ob-docs b { display: block; font-size: 20px; font-weight: 700; } .ob-docs small { color: var(--ink2); font-size: 10px; }
+/* Token hoá */
+.ob-pipe { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 22px; }
+.ob-stage { position: relative; padding: 12px; border-radius: 12px; background: #f4f7f6; border: 1px solid transparent; }
+.ob-stage + .ob-stage::before { content: "›"; position: absolute; left: -16px; top: 50%; transform: translateY(-50%); color: var(--ink2); font-size: 18px; }
+.ob-stage.hot { background: #eaf1f5; border-color: #9fb9c6; }
+.ob-stage .t { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 600; }
+.ob-stage b { display: block; margin: 8px 0; font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.ob-stage .ob-bar { max-width: none; height: 5px; }
+.ob-stage small { display: block; margin-top: 6px; color: var(--ink2); font-size: 10px; }
+.ob-toast { position: absolute; left: 50%; bottom: 22px; z-index: 5; transform: translate(-50%, 20px); padding: 10px 16px; border-radius: 12px; background: var(--ink); color: #fff; font-size: 12px; font-weight: 600; opacity: 0; pointer-events: none; transition: .3s cubic-bezier(.3,.7,.2,1); }
+.ob-toast.on { opacity: 1; transform: translate(-50%, 0); }
+/* Vào trang: mờ + nhoè rồi rõ, lần lượt theo --i */
+.ob-main.enter [data-in] { animation: obIn .55s cubic-bezier(.3,.7,.2,1) both; animation-delay: calc(var(--i, 0) * 60ms); }
+@keyframes obIn { from { opacity: 0; filter: blur(6px); transform: translateY(10px); } }
+@media (prefers-reduced-motion: reduce) { .ob-main.enter [data-in] { animation: none; } .ob, .ob-bar i { transition: none; } }
+@media (max-width: 1100px) { .ob-ov { grid-template-columns: 1fr 1fr; } .ob-ov > .ob-col:last-child { grid-column: 1 / -1; grid-template-columns: 1fr 1fr; } .ob-kpis { grid-template-columns: 1fr 1fr; } .ob-lf { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 720px) {
+  .ob, .ob.mini { grid-template-columns: 1fr; grid-template-rows: auto 1fr; height: 760px; padding: 8px; border-radius: 20px; }
+  .ob-side { flex-direction: row; gap: 4px; padding: 2px 2px 8px; overflow-x: auto; }
+  .ob-brand div, .ob-cap, .ob-me, .ob .ob-fold { display: none; } .ob-brand { padding: 0 6px; }
+  .ob-nav { flex: none; padding: 0 12px; } .ob-nav em { display: none; }
+  .ob-main { padding: 16px 14px 24px; }
+  .ob-ov, .ob-in, .ob-folders, .ob-ov > .ob-col:last-child { grid-template-columns: 1fr; }
+  .ob-pipe { grid-template-columns: 1fr 1fr; } .ob-stage:nth-child(3)::before { display: none; }
+  .ob-mix, .ob-docs { grid-template-columns: 110px 1fr; }
+  .ob-tools .ob-search { max-width: none; margin-left: 0; }
+}
+@media (max-width: 520px) { .ob-kpis { grid-template-columns: 1fr; } .ob-kpi svg.sp { height: 30px; } }
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=c701084038"></script>
+<div class="md-page">
+  <div class="aw-sotd" style="padding-top:16px">
+    <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">5 phần</span></p>
+    <h1 class="aw-h1" style="--aw-h1:clamp(40px,7vw,96px)">Bảng cho vay</h1>
+    <p class="aw-lead">Dashboard cho vay khung xanh lá, 4 trang. Bấm thanh bên để đổi trang, nút ‹ để thu gọn. Di chuột lên biểu đồ để xem số. Lọc và tìm hồ sơ vay. Bấm «Đúc lô» để chuyển khoản vay sang token.</p>
+    <p class="aw-lead" style="font-size:14px">Dựng lại từ <a href="https://www.facebook.com/share/r/1E2RdGymzQ/" target="_blank" rel="noopener">reel Facebook «Dashboard V28»</a> (React + framer-motion). Viết lại bằng JS/CSS thuần, tên và số liệu là mẫu.</p>
+  </div>
+  <div class="ob" id="ob"></div>
+</div>
+</main>
+<script>
+// Các phần của pattern (sổ patterns.json trỏ tới các id này).
+const PARTS = [
+  { id: 'overview', vi: 'Tổng quan' }, { id: 'insights', vi: 'Phân tích' }, { id: 'loan-files', vi: 'Hồ sơ vay' },
+  { id: 'tokenize', vi: 'Token hoá' }, { id: 'page-enter', vi: 'Chuyển trang nhoè dần' }];
+const I = (d, s = 18) => `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const IC = {
+  grid: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+  coin: '<circle cx="12" cy="12" r="9"/><path d="M8 12h8M12 8v8"/>', case: '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/>',
+  bulb: '<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/>',
+  chev: '<path d="M15 6l-6 6 6 6"/>', search: '<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>', dl: '<path d="M12 4v11m-5-5 5 5 5-5M5 20h14"/>', ul: '<path d="M12 20V9m-5 5 5-5 5 5M5 4h14"/>',
+  bolt: '<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>', layers: '<path d="M12 3 2 8l10 5 10-5zM2 13l10 5 10-5"/>', clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>', wallet: '<rect x="3" y="6" width="18" height="14" rx="2"/><path d="M16 13h2M3 10h18"/>',
+  share: '<path d="M12 3v12m-4-8 4-4 4 4M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/>', lock: '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+  folder: '<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>', shield: '<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/>', check: '<circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/>',
+  bars: '<path d="M5 20V10M12 20V4M19 20v-7"/>', pie: '<path d="M21 12A9 9 0 1 1 12 3v9z"/><path d="M15 3.5A9 9 0 0 1 20.5 9H15z"/>', plus: '<path d="M12 5v14M5 12h14"/>' };
+const C = { g: '#4caf50', teal: '#2f5d6e', pur: '#8e4fc7', org: '#e08a2c' };
+const vn = (n, d = 0) => n.toLocaleString('vi-VN', { minimumFractionDigits: d, maximumFractionDigits: d });
+
+// ---- biểu đồ SVG nhỏ ----
+function smooth(pts) { // catmull-rom → bezier
+  let d = `M${pts[0][0]},${pts[0][1]}`;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const [p0, p1, p2, p3] = [pts[i - 1] || pts[i], pts[i], pts[i + 1], pts[i + 2] || pts[i + 1]];
+    d += ` C${p1[0] + (p2[0] - p0[0]) / 6},${p1[1] + (p2[1] - p0[1]) / 6} ${p2[0] - (p3[0] - p1[0]) / 6},${p2[1] - (p3[1] - p1[1]) / 6} ${p2[0]},${p2[1]}`;
+  } return d;
+}
+const scale = (v, w, h, pad = 4) => { const mn = Math.min(...v), mx = Math.max(...v), r = mx - mn || 1; return v.map((y, i) => [i * w / (v.length - 1), pad + (h - 2 * pad) * (1 - (y - mn) / r)]); };
+let gid = 0;
+function spark(v, c, end = true) {
+  const p = scale(v, 200, 38), id = 'sg' + gid++, d = smooth(p), [x, y] = p.at(-1);
+  return `<svg class="sp" viewBox="0 0 200 38" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c}" stop-opacity=".18"/><stop offset="1" stop-color="${c}" stop-opacity="0"/></linearGradient></defs>
+    <path d="${d} L200,38 L0,38Z" fill="url(#${id})"/><path d="${d}" fill="none" stroke="${c}" stroke-width="2" vector-effect="non-scaling-stroke"/>${end ? `<circle cx="${x}" cy="${y}" r="3" fill="#fff" stroke="${c}" stroke-width="2" vector-effect="non-scaling-stroke"/>` : ''}</svg>`;
+}
+function ring(segs, size = 150, w = 16, gap = 3) { // segs: [[pct, color]]
+  const r = (size - w) / 2, L = 2 * Math.PI * r; let off = 0;
+  return `<svg viewBox="0 0 ${size} ${size}" aria-hidden="true"><circle cx="${size / 2}" cy="${size / 2}" r="${r}" fill="none" stroke="#edf1f0" stroke-width="${w}"/>` + segs.map(([p, c]) => {
+    const len = Math.max(L * p / 100 - gap, 0), s = `<circle cx="${size / 2}" cy="${size / 2}" r="${r}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-dasharray="${len} ${L}" stroke-dashoffset="${-off}" transform="rotate(-90 ${size / 2} ${size / 2})"/>`;
+    off += L * p / 100; return s; }).join('') + '</svg>';
+}
+
+// ---- dữ liệu mẫu ----
+const DAYS = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
+const RANGE = { 'Giờ': [0.08, 'giờ'], 'Ngày': [0.4, 'ngày'], 'Tuần': [1, 'tuần'], 'Tháng': [4.2, 'tháng'], 'Năm': [50, 'năm'] };
+const LINE = { a: [42, 58, 70, 88, 81, 86, 89], b: [64, 63, 70, 62, 58, 61, 62] }; // triệu đ
+const FILES = [
+  ['1470 Đường Rạch Bần', 'Ngân hàng Nhà Tốt', 'ext', 'p', 24, 45], ['2964 Đường Long Biên', 'Tín dụng Dễ Vay', 'ext', 'r', 31, 40],
+  ['4294 Phố Hàng Lược', 'Quỹ Phiêu Lưu', 'int', 'r', 14, 20], ['2778 Đường Phan Đình', 'Tín dụng Dễ Vay', 'int', 'p', 12, 38],
+  ['512 Ngõ Hoa Phượng', 'Tín dụng Đỉnh Cao', 'ext', 'p', 9, 30], ['22 Phố Bến Cảng', 'Ngân hàng Chân Trời', 'int', 'r', 18, 24],
+  ['738 Đường Bạch Dương', 'Quỹ Phiêu Lưu', 'ext', 'c', 28, 28], ['88 Đường Cây Du', 'Ngân hàng Nhà Tốt', 'ext', 'c', 26, 26],
+  ['1051 Đường Thanh Niên', 'Ngân hàng Chân Trời', 'ext', 'c', 34, 34]].map(([a, l, k, s, n, t], i) => ({ a, l, k, s, n, t, i }));
+const ST = { p: ['Đang chờ', 'st-p'], r: ['Đang duyệt', 'st-r'], c: ['Đã đóng', 'st-c'] };
+const TASKS = [['Hồ sơ 2964 Long Biên đã đủ giấy tờ, gửi Dễ Vay thẩm định.', 'Hôm nay', true], ['Hồ sơ 1051 Thanh Niên đã đóng. Rà lại bộ hồ sơ chốt.', 'còn 3 ngày 12 giờ'], ['Hồ sơ 1470 Rạch Bần sẵn sàng token hoá.', 'còn 5 ngày']];
+const S = { page: 'overview', mini: false, mode: 'line', range: 'Tuần', per: '30N', filt: 'all', q: '', sort: 'new', done: new Set(), ready: 5, minted: 1284, week: 38 };
+
+// ---- trang ----
+const head = (t, sub, acts = '') => `<div class="ob-h" data-in style="--i:0"><div><h2>${t}</h2><p>${sub}</p></div><div class="ob-acts">${acts}</div></div>`;
+const kpi = (i, ic, c, t, v, up, sp, note = '', tag = 'div', attr = '') => `<${tag} class="ob-card ob-kpi" data-in style="--i:${i}" ${attr}><div class="top"><span class="ob-ico" style="--c:${c}">${I(IC[ic], 15)}</span>${t}${up ? `<span class="ob-up">↗ ${up}</span>` : ''}</div><b>${v}</b>${note ? `<small>${note}</small>` : ''}${sp || ''}</${tag}>`;
+const folder = (f, i) => `<article class="ob-fd ${f.k}" data-in style="--i:${i}"><div class="meta"><span>${f.k === 'int' ? 'Nội bộ' : 'Bên ngoài'}</span><span>${I(IC[f.k === 'int' ? 'lock' : 'share'], 11)} ${f.k === 'int' ? 'Riêng tư' : 'Chia sẻ'}</span></div>
+  <h4>${f.a}</h4><p>${f.l}</p><span class="ob-st ${ST[f.s][1]}">${ST[f.s][0]}</span>
+  <div class="ob-prog">${f.s === 'c' ? `<span>${f.t} tệp</span><span>${15 - f.i}/11/2026</span>` : `<span class="ob-bar"><i style="width:${f.n / f.t * 100}%"></i></span><span>${f.n}/${f.t}</span>`}</div></article>`;
+
+function lineChart(W = 340) {
+  const H = 150, k = RANGE[S.range][0], a = LINE.a.map((v) => v * k), b = LINE.b.map((v) => v * k), mx = Math.max(...a, ...b) * 1.15;
+  const xy = (v, i) => [16 + i * (W - 32) / 6, 14 + (H - 28) * (1 - v / mx)];
+  const pa = a.map(xy), pb = b.map(xy), bw = 12;
+  const body = S.mode === 'line'
+    ? `<path d="${smooth(pa)} L${pa[6][0]},${H} L${pa[0][0]},${H}Z" fill="url(#lg)"/><path d="${smooth(pa)}" fill="none" stroke="${C.g}" stroke-width="2.5"/><path d="${smooth(pb)}" fill="none" stroke="${C.pur}" stroke-width="2.5"/>`
+      + pa.map(([x, y]) => `<circle cx="${x}" cy="${y}" r="3.5" fill="#fff" stroke="${C.g}" stroke-width="2"/>`).join('') + pb.map(([x, y]) => `<circle cx="${x}" cy="${y}" r="3.5" fill="#fff" stroke="${C.pur}" stroke-width="2"/>`).join('')
+    : pa.map(([x, y], i) => `<rect x="${x - bw - 1}" y="${y}" width="${bw}" height="${H - y}" rx="4" fill="${C.g}"/><rect x="${x + 1}" y="${pb[i][1]}" width="${bw}" height="${H - pb[i][1]}" rx="4" fill="${C.pur}"/>`).join('');
+  const grid = [0.25, 0.5, 0.75].map((f) => `<line x1="0" x2="${W}" y1="${H * f}" y2="${H * f}" stroke="#e8eeec" stroke-dasharray="4 4"/>`).join('');
+  const hits = pa.map(([x], i) => `<rect class="hit" x="${x - (W - 32) / 12}" y="0" width="${(W - 32) / 6}" height="${H}" rx="8" tabindex="0" data-tip="${i}" aria-label="${DAYS[i]}: ${vn(a[i], 1)} triệu"/>`).join('');
+  return `<div class="ob-chart" data-chart><svg viewBox="0 0 ${W} ${H + 18}"><defs><linearGradient id="lg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${C.g}" stop-opacity=".18"/><stop offset="1" stop-color="${C.g}" stop-opacity="0"/></linearGradient></defs>
+    ${grid}${body}${DAYS.map((d, i) => `<text x="${pa[i][0]}" y="${H + 14}" text-anchor="middle" font-size="10" fill="#5d6b69">${d}</text>`).join('')}${hits}</svg><div class="ob-tip" role="status"></div></div>`;
+}
+function overview() {
+  const left = TASKS.length - S.done.size;
+  return head('Tổng quan', `<b>1.215</b> khoản vay đã token hoá`) + `<div class="ob-grid ob-ov">
+  <div class="ob-col">
+    <section class="ob-card" data-in style="--i:1"><p class="ob-ct">Token hoá <small>theo ${RANGE[S.range][1]}, triệu đ</small></p>
+      <div class="ob-legend"><span><i style="--c:${C.g}"></i>Thế chấp</span><span><i style="--c:${C.pur}"></i>Chứng khoán hoá</span>
+        <span class="ob-seg" style="margin-left:auto">${[['line', 'Đường'], ['bars', 'Cột']].map(([k, t]) => `<button data-mode="${k}" aria-pressed="${S.mode === k}">${t}</button>`).join('')}</span></div>
+      ${lineChart()}
+      <div class="ob-seg" style="display:flex;justify-content:space-between;margin-top:6px">${Object.keys(RANGE).map((r) => `<button data-range="${r}" aria-pressed="${S.range === r}">${r}</button>`).join('')}</div></section>
+    <section class="ob-card" data-in style="--i:4"><p class="ob-ct">Danh mục mua bán sáp nhập</p><p class="ob-cs">Tỷ trọng dư nợ của 2 nhóm</p>
+      <div class="ob-mix"><div class="ob-ring">${ring([[58, C.g], [42, C.teal]])}<div><b>58%</b><small>Thế chấp</small></div></div>
+      <ul><li><i style="--c:${C.g}"></i>Thế chấp<b>184 tỷ</b></li><li><i style="--c:${C.teal}"></i>Dịch vụ khoản vay<b>133 tỷ</b></li></ul></div></section>
+  </div>
+  <div class="ob-col">
+    <div class="ob-grid ob-folders">${folder(FILES[0], 2)}${folder(FILES[8], 3)}</div>
+    <section class="ob-card ob-save" data-in style="--i:4"><p class="ob-ct">Tiết kiệm nhờ token hoá</p>
+      <div class="nums"><div><b>14.187</b><small>giờ công</small></div><div><b>122</b><small>khoản vay</small></div></div>
+      <div class="area"><svg viewBox="0 0 300 150" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="ga" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5cb860"/><stop offset="1" stop-color="#2e7d32"/></linearGradient></defs>
+        <path d="${smooth(scale([30, 34, 28, 40, 52, 44, 60, 55, 70, 64, 82, 78, 96], 300, 60).map(([x, y]) => [x, y + 20]))} L300,150 L0,150Z" fill="url(#ga)"/>
+        <path d="${smooth(scale([40, 42, 46, 44, 52, 58, 56, 66, 70, 74, 80, 86, 90], 300, 60).map(([x, y]) => [x, y + 4]))}" fill="none" stroke="${C.org}" stroke-width="1.5" stroke-dasharray="4 4"/></svg>
+        <div><b>6,07 tỷ đ</b><small>tổng tiết kiệm</small></div></div></section>
+  </div>
+  <div class="ob-col">
+    <label class="ob-search" data-in style="--i:2">${I(IC.search, 16)}<input type="search" placeholder="Tìm hồ sơ" aria-label="Tìm hồ sơ" data-jump><kbd>/</kbd></label>
+    <section class="ob-card" data-in style="--i:3"><p class="ob-ct">Việc cần làm <span class="ob-up" style="margin-left:0">${left}</span></p>
+      <div class="ob-tasks">${TASKS.map(([t, due, hot], i) => `<label class="ob-task${S.done.has(i) ? ' done' : ''}"><input type="checkbox" data-task="${i}" ${S.done.has(i) ? 'checked' : ''}><span>${t}<small>Hạn: ${hot ? `<b>${due}</b>` : due}</small></span></label>`).join('')}</div></section>
+    <section class="ob-card" data-in style="--i:5"><p class="ob-ct">Hoạt động nhóm</p><p class="ob-cs">Việc xong tuần này</p>
+      <div class="ob-team">${[['MA', 63, C.g], ['TQ', 48, C.teal], ['LH', 81, C.g], ['PN', 35, C.org]].map(([n, p, c]) => `<div><svg width="48" height="48" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="21" fill="none" stroke="#edf1f0" stroke-width="3"/><circle cx="24" cy="24" r="21" fill="none" stroke="${c}" stroke-width="3" stroke-linecap="round" stroke-dasharray="${132 * p / 100} 132" transform="rotate(-90 24 24)"/><circle cx="24" cy="24" r="16" fill="#f3d9b1"/><text x="24" y="28" text-anchor="middle" font-size="11" font-weight="700" fill="#4a3522">${n}</text></svg>${p}%</div>`).join('')}</div></section>
+  </div></div>`;
+}
+const PER = { '7N': [.24, 'tuần qua'], '30N': [1, '30 ngày qua'], '90N': [2.9, '90 ngày qua'], '12T': [11.6, '12 tháng qua'] };
+function insights() {
+  const k = PER[S.per][0], wk = [[62, 48], [70, 55], [64, 50], [78, 61], [84, 66]];
+  const mx = 100, H = 170;
+  const bars = wk.map(([o, t], i) => { const x = 40 + i * 70; return `<g class="bargrp" tabindex="0" data-bar="${i}" aria-label="Tuần ${i + 1}: giải ngân ${vn(o * k / 10, 1)} tỷ, token hoá ${vn(t * k / 10, 1)} tỷ">
+    <rect class="hit" x="${x - 6}" y="0" width="58" height="${H}" rx="8"/><rect x="${x}" y="${H - o / mx * H}" width="20" height="${o / mx * H}" rx="7" fill="${C.g}"/><rect x="${x + 24}" y="${H - t / mx * H}" width="20" height="${t / mx * H}" rx="7" fill="${C.teal}"/>
+    <text x="${x + 22}" y="${H + 16}" text-anchor="middle" font-size="10" fill="#5d6b69">T${i + 1}</text></g>`; }).join('');
+  return head('Phân tích', `Hiệu quả danh mục cho vay · ${PER[S.per][1]}`, `<span class="ob-seg">${Object.keys(PER).map((p) => `<button data-per="${p}" aria-pressed="${S.per === p}">${p}</button>`).join('')}</span><button class="ob-btn" data-toast="Đã xuất báo cáo ${PER[S.per][1]}">${I(IC.dl)}Xuất</button>`)
+  + `<div class="ob-grid ob-kpis">${kpi(1, 'layers', C.g, 'Giải ngân', vn(112 * k, 1) + ' tỷ', '6,4%', spark([3, 4, 3.6, 4.4, 4.2, 5, 5.6], C.g, false))}${kpi(2, 'coin', C.teal, 'Đã token hoá', vn(80 * k, 1) + ' tỷ', '9,8%', spark([3, 4.2, 3.4, 4.6, 3.8, 5, 4.6], C.teal, false))}
+    ${kpi(3, 'bolt', C.pur, 'Tỷ lệ token hoá', '49,2%', '2,6%', spark([4, 5, 3.6, 5.2, 3.8, 4.8, 5.4], C.pur, false))}${kpi(4, 'wallet', C.org, 'Khoản vay TB', '3,1 tỷ', '3,1%', spark([4, 3.4, 4.6, 3.8, 4.4, 4, 4.2], C.org, false))}</div>
+  <div class="ob-grid ob-in">
+    <section class="ob-card" data-in style="--i:5"><p class="ob-ct">${I(IC.bars, 15)} Khối lượng cho vay</p><p class="ob-cs">Giải ngân và token hoá theo tuần, tỷ đ</p>
+      <div class="ob-legend"><span><i style="--c:${C.g}"></i>Giải ngân</span><span><i style="--c:${C.teal}"></i>Token hoá</span></div>
+      <div class="ob-chart" data-chart><svg viewBox="0 0 400 ${H + 20}">${[.25, .5, .75].map((f) => `<line x1="0" x2="400" y1="${H * f}" y2="${H * f}" stroke="#e8eeec" stroke-dasharray="4 4"/>`).join('')}${bars}</svg><div class="ob-tip" role="status"></div></div></section>
+    <section class="ob-card" data-in style="--i:6"><p class="ob-ct">${I(IC.pie, 15)} Cơ cấu danh mục</p><p class="ob-cs">Tỷ trọng dư nợ</p>
+      <div class="ob-mix"><div class="ob-ring">${ring([[42, C.g], [26, C.teal], [18, C.pur], [14, C.org]])}<div><b>100%</b><small>dư nợ</small></div></div>
+      <ul>${[['Nhà ở', 42, C.g], ['Thương mại', 26, C.teal], ['Gói chứng khoán', 18, C.pur], ['Vay bắc cầu', 14, C.org]].map(([t, p, c]) => `<li><i style="--c:${c}"></i>${t}<b>${p}%</b></li>`).join('')}</ul></div></section>
+  </div>`;
+}
+function files() {
+  const q = S.q.trim().toLowerCase(), cnt = (s) => FILES.filter((f) => s === 'all' || f.s === s).length;
+  let list = FILES.filter((f) => (S.filt === 'all' || f.s === S.filt) && (!q || (f.a + ' ' + f.l).toLowerCase().includes(q)));
+  if (S.sort === 'prog') list = [...list].sort((a, b) => b.n / b.t - a.n / a.t); else if (S.sort === 'name') list = [...list].sort((a, b) => a.a.localeCompare(b.a, 'vi'));
+  const open = FILES.filter((f) => f.s !== 'c').length;
+  return head('Hồ sơ vay', `<b>${FILES.length}</b> hồ sơ · <b>${open}</b> còn thiếu giấy tờ`, `<button class="ob-btn" data-toast="Đã xuất ${list.length} hồ sơ ra CSV">${I(IC.dl)}Xuất CSV</button><button class="ob-btn pri" data-toast="Mẫu: chọn tệp để tải lên">${I(IC.ul)}Tải tệp lên</button>`)
+  + `<div class="ob-grid ob-lf"><div>
+    <div class="ob-tools" data-in style="--i:1"><span class="ob-seg" role="group" aria-label="Lọc theo trạng thái">${[['all', 'Tất cả'], ['p', 'Đang chờ'], ['r', 'Đang duyệt'], ['c', 'Đã đóng']].map(([k, t]) => `<button data-filt="${k}" aria-pressed="${S.filt === k}">${t}<em>${cnt(k)}</em></button>`).join('')}</span>
+      <label class="ob-search">${I(IC.search, 15)}<input type="search" data-q value="${S.q}" placeholder="Địa chỉ hoặc bên cho vay" aria-label="Tìm hồ sơ"></label>
+      <select class="ob-sort" data-sort aria-label="Sắp xếp">${[['new', 'Mới nhất'], ['prog', 'Tiến độ'], ['name', 'Tên A–Z']].map(([k, t]) => `<option value="${k}" ${S.sort === k ? 'selected' : ''}>${t}</option>`).join('')}</select></div>
+    <div class="ob-grid ob-files" data-files>${list.map((f, i) => folder(f, i + 2)).join('') || '<p class="ob-empty">Không có hồ sơ khớp. Thử từ khác.</p>'}</div></div>
+    <div class="ob-col">
+      <section class="ob-card" data-in style="--i:3"><p class="ob-ct">${I(IC.folder, 15)} Giấy tờ</p><p class="ob-cs">Đã xác minh trên mọi hồ sơ</p>
+        <div class="ob-docs"><div class="ob-ring">${ring([[69, C.g]], 110, 12, 0)}<div><b style="font-size:18px">69%</b><small>xác minh</small></div></div><div><b>196</b><small>đã nhận</small><b style="margin-top:8px">89</b><small>còn thiếu</small></div></div></section>
+      <section class="ob-card" data-in style="--i:4"><p class="ob-ct">${I(IC.pie, 15)} Theo trạng thái</p><p class="ob-cs">Mọi hồ sơ trong không gian</p>
+        <div class="ob-docs"><div class="ob-ring">${ring([[33.3, C.org], [33.3, C.g], [33.4, C.teal]], 110, 12)}<div><b style="font-size:18px">9</b><small>hồ sơ</small></div></div>
+        <ul class="ob-list"><li><i style="--c:${C.org}"></i>Đang chờ<b>3</b></li><li><i style="--c:${C.g}"></i>Đang duyệt<b>3</b></li><li><i style="--c:${C.teal}"></i>Đã đóng<b>3</b></li></ul></div></section>
+    </div></div>`;
+}
+function tokenize() {
+  const none = !S.ready, stage = (i, ic, c, t, n, pct, note, hot) => `<div class="ob-stage${hot ? ' hot' : ''}"><div class="t"><span class="ob-ico" style="--c:${c}">${I(IC[ic], 14)}</span>${t}</div><b data-n="${t}">${vn(n)}</b><span class="ob-bar" style="display:block"><i style="--c:${c};width:${pct}%"></i></span><small>${note}</small></div>`;
+  return head('Token hoá', `<b>${vn(S.minted)}</b> khoản đã token hoá · <b>${S.ready}</b> chờ đúc`, `<button class="ob-btn" data-toast="Đã xuất danh sách token ra CSV">${I(IC.dl)}Xuất CSV</button><button class="ob-btn pri" data-mint ${none ? 'disabled' : ''}>${I(IC.bolt)}${none ? 'Không còn khoản chờ' : 'Đúc lô'}</button>`)
+  + `<div class="ob-grid ob-kpis">${kpi(1, 'coin', C.g, 'Đúc tuần này', vn(S.week), '12,4%', spark([3, 3.2, 3, 3.6, 3.8, 3.7, 4.4], C.g))}${kpi(2, 'layers', C.teal, 'Token hoá quý 4', '55,3 tỷ', '9,6%', spark([3, 4, 3.4, 4.2, 3.6, 4.4, 4.8], C.teal))}
+    ${kpi(3, 'bolt', C.org, 'Chờ đúc', `<span data-ready>${S.ready}</span>`, '', '', none ? 'Đã đúc hết' : `${vn(S.ready * 8.3, 1)} tỷ đang chờ · bấm để đúc`, 'button', 'data-mint ' + (none ? 'disabled' : ''))}${kpi(4, 'clock', C.pur, 'Giờ TB để đúc', '6,3', '', spark([5, 4.6, 4.8, 4.2, 4.4, 3.8, 3.6], C.pur), 'nhanh hơn quý 3: 18%')}</div>
+  <section class="ob-card" data-in style="--i:5"><div class="ob-h" style="margin-bottom:10px;align-items:center"><div><p class="ob-ct">${I(IC.layers, 15)} Dây chuyền</p><p class="ob-cs" style="margin:0">Mỗi khoản vay đang ở bước nào trước khi thành token</p></div></div>
+    <div class="ob-pipe">${stage(0, 'folder', '#7b8a88', 'Gom giấy tờ', 18, 100, 'TB 2,4 ngày')}${stage(1, 'shield', C.pur, 'Thẩm định', 11, 62, 'TB 1,8 ngày')}${stage(2, 'bolt', C.teal, 'Chờ đúc', S.ready, S.ready * 6, 'TB 6,4 giờ', S.ready > 0)}${stage(3, 'check', C.g, 'Đã đúc', S.minted, 68 + (S.minted - 1284) * .4, '68% mục tiêu quý 4')}</div></section>
+  <div class="ob-grid ob-in" style="margin-top:14px">
+    <section class="ob-card" data-in style="--i:6"><p class="ob-ct">Token hoá <small>theo ${RANGE[S.range][1]}, triệu đ</small></p>
+      <div class="ob-legend"><span><i style="--c:${C.g}"></i>Thế chấp</span><span><i style="--c:${C.pur}"></i>Chứng khoán hoá</span></div>${lineChart(620)}</section>
+    <section class="ob-card" data-in style="--i:7"><p class="ob-ct">${I(IC.check, 15)} Mục tiêu quý 4</p><p class="ob-cs">Khoản vay đã đúc so với mục tiêu 1.890</p>
+      <div class="ob-mix"><div class="ob-ring">${ring([[Math.round(S.minted / 18.9), C.g]], 150, 16, 0)}<div><b>${Math.round(S.minted / 18.9)}%</b><small>đạt</small></div></div>
+      <ul><li><i style="--c:${C.g}"></i>Đã đúc<b>${vn(S.minted)}</b></li><li><i style="--c:${C.teal}"></i>Chờ đúc<b>${S.ready}</b></li><li><i style="--c:#c9d3d1"></i>Còn lại<b>${vn(1890 - S.minted - S.ready)}</b></li></ul></div></section>
+  </div>`;
+}
+const PAGES = [['overview', 'Tổng quan', 'grid', overview], ['tokenize', 'Token hoá', 'coin', tokenize, '5'], ['loan-files', 'Hồ sơ vay', 'case', files, '9'], ['insights', 'Phân tích', 'bulb', insights, 'Mới']];
+
+// ---- khung app ----
+const app = document.getElementById('ob');
+app.innerHTML = `<nav class="ob-side" aria-label="Điều hướng app"><div class="ob-brand"><svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="13" fill="none" stroke="#fff" stroke-width="6" stroke-dasharray="58 24" transform="rotate(-60 17 17)"/><circle cx="17" cy="17" r="13" fill="none" stroke="#1f4d5c" stroke-width="6" stroke-dasharray="20 62" stroke-dashoffset="-62" transform="rotate(-60 17 17)"/></svg><div><b>Sổ Vay</b><small>Không gian cho vay</small></div></div>
+  <button class="ob-fold" data-fold aria-label="Thu gọn thanh bên" title="Thu gọn">${I(IC.chev, 14)}</button>
+  <p class="ob-cap">MENU</p>${PAGES.map(([id, t, ic, , n]) => `<button class="ob-nav" data-page="${id}" title="${t}">${I(IC[ic])}<span>${t}</span>${n ? `<em>${n}</em>` : ''}</button>`).join('')}
+  <div class="ob-me"><span class="ob-av">MA</span><div>Minh Anh<small>Quản lý tín dụng</small></div></div></nav>
+  <div class="ob-main" tabindex="-1"></div><div class="ob-toast" role="status" aria-live="polite"></div>`;
+const main = app.querySelector('.ob-main'), toastEl = app.querySelector('.ob-toast');
+let tt;
+const toast = (m) => { toastEl.textContent = m; toastEl.classList.add('on'); clearTimeout(tt); tt = setTimeout(() => toastEl.classList.remove('on'), 2200); };
+function render(enter) {
+  main.innerHTML = PAGES.find((p) => p[0] === S.page)[3]();
+  app.querySelectorAll('[data-page]').forEach((b) => b.dataset.page === S.page ? b.setAttribute('aria-current', 'page') : b.removeAttribute('aria-current'));
+  if (enter) { main.classList.remove('enter'); void main.offsetWidth; main.classList.add('enter'); main.scrollTop = 0; } else main.classList.remove('enter');
+}
+function tip(el, show) {
+  const box = el.closest('[data-chart]'), t = box.querySelector('.ob-tip');
+  if (!show) return t.classList.remove('on');
+  const r = el.getBoundingClientRect(), b = box.getBoundingClientRect();
+  if (el.dataset.tip !== undefined) { const i = +el.dataset.tip, k = RANGE[S.range][0]; t.innerHTML = `${vn(LINE.a[i] * k, 1)} tr<small>${DAYS[i]} · chứng khoán hoá ${vn(LINE.b[i] * k, 1)}</small>`; }
+  else t.innerHTML = el.getAttribute('aria-label').replace(/^(Tuần \d): /, '<small>$1</small>').replace(', ', '<br>');
+  t.style.left = Math.min(Math.max(r.left - b.left + r.width / 2, 70), b.width - 70) + 'px'; t.style.top = Math.max(r.top - b.top + 20, 30) + 'px'; t.classList.add('on');
+}
+app.addEventListener('pointerover', (e) => { const h = e.target.closest('[data-tip],[data-bar]'); if (h) tip(h, true); });
+app.addEventListener('pointerout', (e) => { const h = e.target.closest('[data-tip],[data-bar]'); if (h) tip(h, false); });
+app.addEventListener('focusin', (e) => { const h = e.target.closest('[data-tip],[data-bar]'); if (h) tip(h, true); });
+app.addEventListener('focusout', (e) => { const h = e.target.closest('[data-tip],[data-bar]'); if (h) tip(h, false); });
+function countTo(el, from, to, ms = 700) { const t0 = performance.now(); const step = (t) => { const p = Math.min((t - t0) / ms, 1), e = 1 - (1 - p) ** 3; el.textContent = vn(Math.round(from + (to - from) * e)); if (p < 1) requestAnimationFrame(step); }; requestAnimationFrame(step); }
+app.addEventListener('click', (e) => {
+  const b = e.target.closest('button'); if (!b) return; const d = b.dataset;
+  if (d.page) { if (d.page !== S.page) { S.page = d.page; render(true); } }
+  else if (d.fold !== undefined) { S.mini = !S.mini; app.classList.toggle('mini', S.mini); b.setAttribute('aria-label', S.mini ? 'Mở rộng thanh bên' : 'Thu gọn thanh bên'); }
+  else if (d.mode) { S.mode = d.mode; render(); } else if (d.range) { S.range = d.range; render(); } else if (d.per) { S.per = d.per; render(); }
+  else if (d.filt) { S.filt = d.filt; render(); }
+  else if (d.toast) toast(d.toast);
+  else if (d.mint !== undefined && S.ready) {
+    const n = S.ready, from = S.minted; S.minted += n; S.week += n; S.ready = 0; render();
+    const m = [...main.querySelectorAll('[data-n="Đã đúc"]')][0]; if (m) countTo(m, from, S.minted);
+    toast(`Đã đúc ${n} khoản vay thành token`);
+  }
+});
+app.addEventListener('change', (e) => {
+  if (e.target.dataset.task !== undefined) { const i = +e.target.dataset.task; S.done.has(i) ? S.done.delete(i) : S.done.add(i); render(); }
+  if ('sort' in e.target.dataset) { S.sort = e.target.value; render(); }
+});
+app.addEventListener('input', (e) => { if (!('q' in e.target.dataset)) return; S.q = e.target.value; const box = main.querySelector('[data-files]'); render(); const q = main.querySelector('[data-q]'); q.focus(); q.setSelectionRange(S.q.length, S.q.length); });
+app.addEventListener('keydown', (e) => { if ('jump' in e.target.dataset && e.key === 'Enter') { S.q = e.target.value; S.page = 'loan-files'; S.filt = 'all'; render(true); } });
+render(true);
+</script>
+<script src="/search.js?v=c701084038" defer></script><script src="/stats.js?v=c701084038" defer></script>
+</body>
+</html>

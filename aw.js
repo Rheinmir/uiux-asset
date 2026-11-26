@@ -23,6 +23,7 @@
       ['patterns/glow.html', 'Viền cầu vồng', 'Công tắc, ô nhập, thẻ sáng ngũ sắc', 4],
       ['patterns/navigation.html', 'Điều hướng thanh bên', '9 kiểu đánh dấu mục đang chọn', 9],
       ['patterns/sign-dialog.html', 'Hộp thoại ký', 'Ký tay, hoàn tác, công tắc đồng ý', 4],
+      ['patterns/slide-login.html', 'Đăng nhập trượt', 'Tấm chéo trượt giữa Đăng ký và Đăng nhập', 5],
       ['patterns/factory.html', 'Bảng agent', 'Kanban dây chuyền agent, chép code', 1]]],
     ['man-hinh', 'Màn hình', 'Trang web và màn app dựng lại', [
       ['patterns/taste.html', 'Hero và màn app', 'Hero website và màn app có gu', 11],
@@ -33,7 +34,8 @@
       ['patterns/saltmere.html', 'Saltmere 3D', 'Trang đích tối, hạt 3D tan theo chuột', 10],
       ['topo/', 'Topo', 'Sơ đồ «Build Your AI App»', 0, 'topo/shots/mock.webp'],
       ['patterns/music-dashboard.html', 'Bảng nghe nhạc', 'Thư viện, thống kê, tối theo vòng tròn', 5],
-      ['patterns/settings-flow.html', 'Cài đặt có duyệt', 'Đổi ngay, đếm thay đổi, duyệt cũ → mới', 5]]],
+      ['patterns/settings-flow.html', 'Cài đặt có duyệt', 'Đổi ngay, đếm thay đổi, duyệt cũ → mới', 5],
+      ['patterns/loan-dashboard.html', 'Bảng cho vay', '4 trang cho vay, thư mục hồ sơ, đúc token', 5]]],
     ['chuyen-dong', 'Chuyển động', 'Cuộn trang, motion, 3D', [
       ['scroll-effects/', 'Scroll effects', 'Hiệu ứng cuộn trang, CodePen', 65, 'scroll-effects/thumbs/interactive-cicada-genomics-landing-page.jpg'],
       ['motion/', 'Motion', 'Thư viện chuyển động chạy thật', 28, 'motion/thumbs/animate-ui.jpg'],

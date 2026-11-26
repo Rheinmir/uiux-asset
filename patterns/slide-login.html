@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Đăng nhập trượt — uiux-asset</title>
+<meta name="description" content="Thẻ kính đỏ hai mặt Đăng ký / Đăng nhập: tấm chéo trượt sang phía bên kia khi đổi form, nền mạch điện có chấm sáng chạy. Kiểm tra ô nhập, nút chờ giữ nguyên cỡ, đổi màu nhấn. JS/CSS thuần.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=c701084038">
+<style>
+.md-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+.md-page a { color: inherit; }
+/* App: token riêng, luôn tối đỏ, không theo theme của site. --acc là màu nhấn duy nhất. */
+.sl { --acc: #e5243b; --acc2: #ff6a5c; --ink: #f6eeee; --ink2: #c9b3b5; --glass: rgba(70, 12, 18, .42); --edge: rgba(255, 225, 225, .14); --field: rgba(255, 255, 255, .06);
+  position: relative; display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 32px 16px 48px; min-height: 640px; border-radius: 20px; overflow: hidden;
+  background: radial-gradient(120% 80% at 50% 45%, #3a0a10 0%, #1c0508 55%, #0b0203 100%); color: var(--ink); font: 400 14px/1.4 "Poppins", var(--aw-font); }
+.sl button, .sl input { font: inherit; color: inherit; }
+.sl-bg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.sl-bg .tr { fill: none; stroke: var(--acc); stroke-width: 1.5; opacity: .55; }
+.sl-bg .fa { fill: none; stroke: #fff; stroke-width: 1; opacity: .05; }
+.sl-bg .nd { fill: #1c0508; stroke: var(--acc); stroke-width: 1.5; }
+.sl-bg .dot { fill: #fff; filter: drop-shadow(0 0 6px var(--acc)) drop-shadow(0 0 2px #fff); }
+.sl-sw { position: relative; display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--ink2); }
+.sl-sw button { width: 32px; height: 32px; border-radius: 50%; border: 2px solid transparent; background: var(--c); cursor: pointer; box-shadow: inset 0 0 0 3px #1c0508; }
+.sl-sw button[aria-pressed="true"] { border-color: #fff; }
+.sl-card { position: relative; width: min(760px, 100%); height: 460px; border-radius: 18px; border: 1px solid var(--edge); background: var(--glass);
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); box-shadow: 0 30px 80px rgba(0, 0, 0, .55), inset 0 1px 0 rgba(255, 255, 255, .06); overflow: hidden; }
+.sl-form { position: absolute; top: 0; bottom: 0; width: 50%; display: flex; flex-direction: column; justify-content: center; gap: 12px; padding: 0 44px;
+  transition: opacity .45s ease, transform .7s cubic-bezier(.7, 0, .2, 1); }
+.sl-form h2 { margin: 0 0 4px; text-align: center; font-size: 26px; font-weight: 600; }
+.sl-in-f { left: 0; padding-right: 60px; } .sl-up-f { right: 0; padding-left: 60px; }
+.sl-card[data-mode="up"] .sl-in-f { opacity: 0; transform: translateX(-30px); }
+.sl-card[data-mode="in"] .sl-up-f { opacity: 0; transform: translateX(30px); }
+.sl-f { display: flex; flex-direction: column; gap: 6px; }
+.sl-f > span { font-size: 12px; color: var(--ink2); }
+.sl-box { display: flex; align-items: center; gap: 10px; height: 44px; padding: 0 6px 0 12px; border-radius: 10px; border: 1px solid var(--edge); background: var(--field); transition: border-color .2s, box-shadow .2s; }
+.sl-box svg { width: 18px; height: 18px; flex: none; color: var(--ink2); transition: color .2s; }
+.sl-box:focus-within { border-color: var(--acc); box-shadow: 0 0 0 3px color-mix(in srgb, var(--acc) 30%, transparent); }
+.sl-box:focus-within > svg { color: var(--acc2); }
+.sl-box input { flex: 1; min-width: 0; align-self: stretch; border: 0; background: none; outline: 0; }
+.sl-box input::placeholder { color: rgba(255, 255, 255, .35); }
+.sl-eye { width: 32px; height: 32px; display: grid; place-items: center; border: 0; border-radius: 8px; background: none; cursor: pointer; color: var(--ink2); }
+.sl-eye:hover { background: rgba(255, 255, 255, .08); } .sl-eye svg { width: 18px; height: 18px; }
+.sl-go { position: relative; height: 44px; margin-top: 4px; border: 0; border-radius: 10px; cursor: pointer; font-weight: 600 !important;
+  background: linear-gradient(90deg, var(--acc), var(--acc2)); color: #fff !important; box-shadow: 0 8px 24px color-mix(in srgb, var(--acc) 45%, transparent); }
+.sl-go:disabled { cursor: progress; opacity: .85; }
+.sl-go.busy span { visibility: hidden; }
+.sl-go.busy::after { content: ""; position: absolute; inset: 0; margin: auto; width: 18px; height: 18px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, .4); border-top-color: #fff; animation: sl-spin .8s linear infinite; }
+@keyframes sl-spin { to { transform: rotate(1turn); } }
+.sl-sw-l { margin: 0; text-align: center; font-size: 12px; color: var(--ink2); }
+.sl-link { padding: 4px 2px; border: 0; background: none; cursor: pointer; color: var(--acc2) !important; font-weight: 600; }
+.sl-link:hover { text-decoration: underline; }
+.sl-ok { margin: -4px 0; min-height: 16px; text-align: center; font-size: 12px; color: #7ee2a0; }
+/* Tấm chéo: phủ nửa kia, trượt + đổi góc nghiêng khi đổi form. */
+.sl-pan { position: absolute; top: 0; bottom: 0; left: 0; width: 56%; z-index: 2; display: grid; place-items: center;
+  background: linear-gradient(150deg, rgba(150, 30, 40, .55), rgba(60, 8, 14, .6)); border-right: 1px solid var(--edge);
+  clip-path: polygon(0 0, 100% 0, 82% 100%, 0 100%); transition: left .7s cubic-bezier(.7, 0, .2, 1), clip-path .7s cubic-bezier(.7, 0, .2, 1); }
+.sl-card[data-mode="in"] .sl-pan { left: 44%; clip-path: polygon(18% 0, 100% 0, 100% 100%, 0 100%); }
+.sl-pan > div { grid-area: 1 / 1; width: 70%; text-align: center; transition: opacity .4s ease .2s; }
+.sl-pan h3 { margin: 0 0 8px; font-size: 26px; font-weight: 800; letter-spacing: .02em; text-transform: uppercase; }
+.sl-pan p { margin: 0; color: var(--ink2); font-size: 13px; }
+.sl-pan .p-up { padding-right: 14%; } .sl-pan .p-in { padding-left: 14%; }
+.sl-card[data-mode="up"] .p-in, .sl-card[data-mode="in"] .p-up { opacity: 0; transition-delay: 0s; }
+@media (max-width: 640px) {
+  .sl { padding: 24px 12px 32px; min-height: 0; }
+  .sl-card { height: auto; display: flex; flex-direction: column; }
+  .sl-pan, .sl-card[data-mode="in"] .sl-pan { position: relative; left: 0; width: 100%; height: 120px; border: 0; order: -1; clip-path: polygon(0 0, 100% 0, 100% 78%, 0 100%); }
+  .sl-pan > div { width: 86%; padding: 0 0 16px !important; } .sl-pan h3 { font-size: 21px; }
+  .sl-form { position: relative; width: 100%; padding: 12px 20px 22px; transform: none !important; }
+  .sl-card[data-mode="up"] .sl-in-f, .sl-card[data-mode="in"] .sl-up-f { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .sl * { transition-duration: 0s !important; } }
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=c701084038"></script>
+<div class="md-page">
+  <div class="aw-sotd" style="padding-top:16px">
+    <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">5 phần</span></p>
+    <h1 class="aw-h1" style="--aw-h1:clamp(40px,7vw,96px)">Đăng nhập trượt</h1>
+    <p class="aw-lead">Thẻ kính đỏ có hai form Đăng ký và Đăng nhập. Bấm link dưới form, tấm chéo trượt sang phía bên kia và đổi góc nghiêng. Nền là mạch điện có chấm sáng chạy. Bấm chấm màu để đổi màu nhấn.</p>
+    <p class="aw-lead" style="font-size:14px">Dựng lại từ <a href="https://www.facebook.com/share/r/1SRNguqKtE/" target="_blank" rel="noopener">reel Facebook «Login form V5»</a> (React + Tailwind). Viết lại bằng JS/CSS thuần, không gửi dữ liệu đi đâu.</p>
+  </div>
+  <div class="sl" id="sl"></div>
+</div>
+</main>
+<script>
+// Các phần của pattern (sổ patterns.json trỏ tới các id này).
+const PARTS = [
+  { id: 'sign-up', vi: 'Form đăng ký' }, { id: 'login', vi: 'Form đăng nhập' }, { id: 'slide', vi: 'Tấm chéo trượt' },
+  { id: 'circuit', vi: 'Nền mạch điện' }, { id: 'submit', vi: 'Gửi có chờ' }];
+const I = (d) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const IC = { user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>', mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
+  lock: '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>', eye: '<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  off: '<path d="M3 3l18 18M10.6 5.1A10 10 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-3 3.9M6.6 6.6A17 17 0 0 0 2 12s3.6 7 10 7a9.7 9.7 0 0 0 4.4-1M9.9 9.9a3 3 0 0 0 4.2 4.2"/>' };
+const field = (id, label, icon, type, ph, extra = '') => `<label class="sl-f" for="${id}"><span>${label}</span><span class="sl-box">${I(IC[icon])}<input id="${id}" name="${id}" type="${type}" placeholder="${ph}" required ${extra}>${type === 'password' ? `<button type="button" class="sl-eye" aria-label="Hiện mật khẩu" aria-pressed="false">${I(IC.eye)}</button>` : ''}</span></label>`;
+// Mạch điện: đường vuông góc, nút tròn, chấm sáng chạy dọc đường (animateMotion).
+const TR = ['M60 0 V330 H250', 'M1140 0 V330 H950', 'M0 560 H150 V640', 'M1200 110 H1060 V0', 'M250 640 V540 H470', 'M1200 520 H1010 V640'];
+const svg = `<svg class="sl-bg" viewBox="0 0 1200 640" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+  <path class="fa" d="M250 0V640M950 0V640M0 330H1200"/>
+  ${TR.map((d, i) => `<path class="tr" id="tr${i}" d="${d}"/>`).join('')}
+  ${[[60, 330], [250, 330], [1140, 330], [950, 330], [150, 560], [1060, 110], [250, 540], [470, 540], [1010, 520]].map(([x, y]) => `<circle class="nd" cx="${x}" cy="${y}" r="6"/>`).join('')}
+  ${TR.map((_, i) => `<circle class="dot" r="3"><animateMotion dur="${3.2 + (i % 3) * .9}s" begin="${-i * .7}s" repeatCount="indefinite"><mpath href="#tr${i}"/></animateMotion></circle>`).join('')}
+</svg>`;
+const ACC = [['Đỏ', '#e5243b', '#ff6a5c'], ['Xanh dương', '#2563eb', '#5aa2ff'], ['Xanh lá', '#14a058', '#45d48a']];
+const sl = document.getElementById('sl');
+sl.innerHTML = `${svg}
+<div class="sl-sw" role="group" aria-label="Màu nhấn"><span>Màu nhấn</span>${ACC.map(([n, c, c2], i) => `<button type="button" style="--c:${c}" data-c="${c}" data-c2="${c2}" aria-label="${n}" title="${n}" aria-pressed="${!i}"></button>`).join('')}</div>
+<div class="sl-card" data-mode="up">
+  <form class="sl-form sl-in-f" data-ok="Đã đăng nhập">
+    <h2>Đăng nhập</h2>
+    ${field('in-user', 'Tên đăng nhập', 'user', 'text', 'vd: minhanh', 'autocomplete="username"')}
+    ${field('in-pass', 'Mật khẩu', 'lock', 'password', 'Ít nhất 6 ký tự', 'minlength="6" autocomplete="current-password"')}
+    <button class="sl-go" type="submit"><span>Đăng nhập</span></button>
+    <p class="sl-ok" role="status"></p>
+    <p class="sl-sw-l">Chưa có tài khoản? <button type="button" class="sl-link" data-to="up">Đăng ký</button></p>
+  </form>
+  <form class="sl-form sl-up-f" data-ok="Đã tạo tài khoản">
+    <h2>Đăng ký</h2>
+    ${field('up-user', 'Tên đăng nhập', 'user', 'text', 'vd: minhanh', 'autocomplete="username"')}
+    ${field('up-mail', 'Email', 'mail', 'email', 'ban@vidu.vn', 'autocomplete="email"')}
+    ${field('up-pass', 'Mật khẩu', 'lock', 'password', 'Ít nhất 6 ký tự', 'minlength="6" autocomplete="new-password"')}
+    <button class="sl-go" type="submit"><span>Đăng ký</span></button>
+    <p class="sl-ok" role="status"></p>
+    <p class="sl-sw-l">Đã có tài khoản? <button type="button" class="sl-link" data-to="in">Đăng nhập</button></p>
+  </form>
+  <div class="sl-pan" aria-hidden="true">
+    <div class="p-up"><h3>Chào bạn!</h3><p>Nhập vài thông tin để bắt đầu cùng chúng tôi.</p></div>
+    <div class="p-in"><h3>Chào mừng trở lại!</h3><p>Đăng nhập để tiếp tục công việc của bạn.</p></div>
+  </div>
+</div>`;
+const card = sl.querySelector('.sl-card'), fIn = sl.querySelector('.sl-in-f'), fUp = sl.querySelector('.sl-up-f');
+const setMode = (m) => { card.dataset.mode = m; fIn.inert = m !== 'in'; fUp.inert = m !== 'up'; };
+setMode('up');
+sl.addEventListener('click', (e) => {
+  const to = e.target.closest('[data-to]'), eye = e.target.closest('.sl-eye'), sw = e.target.closest('.sl-sw button');
+  if (to) { setMode(to.dataset.to); setTimeout(() => (to.dataset.to === 'in' ? fIn : fUp).querySelector('input').focus({ preventScroll: true }), 450); }
+  if (eye) { const inp = eye.previousElementSibling, show = inp.type === 'password'; inp.type = show ? 'text' : 'password';
+    eye.setAttribute('aria-pressed', show); eye.setAttribute('aria-label', show ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'); eye.innerHTML = I(show ? IC.off : IC.eye); }
+  if (sw) { sl.style.setProperty('--acc', sw.dataset.c); sl.style.setProperty('--acc2', sw.dataset.c2);
+    sl.querySelectorAll('.sl-sw button').forEach((b) => b.setAttribute('aria-pressed', b === sw)); }
+});
+// Gửi: trình duyệt tự kiểm (required, email, minlength) trước khi tới đây. Nút giữ cỡ, quay ~1.1s.
+sl.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const f = e.target, b = f.querySelector('.sl-go'), ok = f.querySelector('.sl-ok');
+  b.disabled = true; b.classList.add('busy'); ok.textContent = '';
+  setTimeout(() => { b.disabled = false; b.classList.remove('busy'); ok.textContent = '✓ ' + f.dataset.ok; }, 1100);
+});
+if (matchMedia('(prefers-reduced-motion: reduce)').matches) sl.querySelector('.sl-bg').pauseAnimations();
+</script>
+<script src="/search.js?v=c701084038" defer></script><script src="/stats.js?v=c701084038" defer></script>
+</body>
+</html>
