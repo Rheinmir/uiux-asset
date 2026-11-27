@@ -38,7 +38,8 @@
       ['patterns/music-dashboard.html', 'Bảng nghe nhạc', 'Thư viện, thống kê, tối theo vòng tròn', 5],
       ['patterns/settings-flow.html', 'Cài đặt có duyệt', 'Đổi ngay, đếm thay đổi, duyệt cũ → mới', 5],
       ['patterns/loan-dashboard.html', 'Bảng cho vay', '4 trang cho vay, thư mục hồ sơ, đúc token', 5],
-      ['patterns/ads-report.html', 'Báo cáo quảng cáo', 'Cây chiến dịch, bản đồ nhiệt giờ, ngăn chi tiết', 5]]],
+      ['patterns/ads-report.html', 'Báo cáo quảng cáo', 'Cây chiến dịch, bản đồ nhiệt giờ, ngăn chi tiết', 5],
+      ['patterns/dev-portfolio.html', 'Trang cá nhân lập trình viên', 'Lưới đóng góp, ⌘K, trợ lý chat', 8]]],
     ['chuyen-dong', 'Chuyển động', 'Cuộn trang, motion, 3D', [
       ['scroll-effects/', 'Scroll effects', 'Hiệu ứng cuộn trang, CodePen', 65, 'scroll-effects/thumbs/interactive-cicada-genomics-landing-page.jpg'],
       ['motion/', 'Motion', 'Thư viện chuyển động chạy thật', 28, 'motion/thumbs/animate-ui.jpg'],
