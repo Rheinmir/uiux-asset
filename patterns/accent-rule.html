@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Một màu nhấn — 2 màu nền + 1 màu cho nút — uiux-asset</title>
+<meta name="description" content="Luật màu: 2 màu nền trung tính + 1 màu nhấn chỉ dành cho nút chính. 3 trang mẫu (mỹ phẩm, nhà hàng, app chạy bộ), bật/tắt màu nhấn, thử nheo mắt để thấy nút nổi nhất. CSS thuần.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=6d5d6735a9">
+<style>
+.md-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+.md-page a { color: inherit; }
+.ac { --ink: #1d1b19; --ink2: #6a655e; --line: #e2ddd4; display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 24px; padding: 24px; border-radius: 20px; background: #efe9df; color: var(--ink); font: 400 14px/1.45 "Inter", var(--aw-font); }
+.ac button { font: inherit; color: inherit; cursor: pointer; }
+.ac-side { display: flex; flex-direction: column; gap: 16px; }
+.ac-tabs { display: grid; gap: 6px; }
+.ac-tab { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 12px; border: 1px solid transparent; border-radius: 12px; background: transparent; text-align: left; }
+.ac-tab i { display: flex; } .ac-tab i b { width: 12px; height: 22px; border-radius: 3px; }
+.ac-tab[aria-selected="true"] { background: #fff; border-color: var(--line); box-shadow: 0 1px 2px rgba(0,0,0,.05); font-weight: 600; }
+.ac-sw { display: grid; gap: 8px; }
+.ac-card { position: relative; display: flex; flex-direction: column; justify-content: flex-end; height: 74px; padding: 10px 12px; border: 0; border-radius: 12px; text-align: left; box-shadow: 0 4px 12px -6px rgba(0,0,0,.25); transition: transform .15s; }
+.ac-card:hover { transform: translateY(-1px); }
+.ac-card b { font-size: 14px; font-weight: 600; } .ac-card small { font: 500 11px/1.3 var(--aw-mono, ui-monospace, monospace); opacity: .8; }
+.ac-card em { position: absolute; top: 8px; right: 10px; font-style: normal; font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 2px 7px; border-radius: 99px; background: rgba(255,255,255,.85); color: #1d1b19; }
+.ac-ctl { display: grid; gap: 8px; }
+.ac-sw-row { width: 100%; text-align: left; display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 44px; padding: 0 12px; border-radius: 12px; background: #fff; border: 1px solid var(--line); }
+.ac-sw-row span { font-weight: 500; }
+.ac-tg { position: relative; width: 44px; height: 26px; flex: none; border: 0; border-radius: 99px; background: #cfc8bc; transition: background .2s; }
+.ac-tg::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.25); transition: transform .2s cubic-bezier(.3,.7,.2,1); }
+[aria-checked="true"] > .ac-tg { background: #1d1b19; } [aria-checked="true"] > .ac-tg::after { transform: translateX(18px); }
+.ac-rules { margin: 0; padding: 14px 14px 14px 30px; border-radius: 12px; background: #fff; border: 1px solid var(--line); color: var(--ink2); font-size: 13px; } .ac-rules li { margin: 4px 0; } .ac-rules b { color: var(--ink); }
+.ac-note { margin: 0; min-height: 17px; font-size: 12px; color: var(--ink2); }
+.ac-stage { position: relative; min-width: 0; border-radius: 16px; overflow: hidden; background: #fff; box-shadow: 0 18px 40px -22px rgba(40,30,20,.45); }
+.ac-fit { width: 960px; transform-origin: 0 0; }
+.ac-stage .ac-cap { position: absolute; left: 50%; bottom: 14px; z-index: 3; transform: translateX(-50%); padding: 6px 14px; border-radius: 99px; background: rgba(20,20,20,.82); color: #fff; font-size: 13px; font-weight: 600; opacity: 0; transition: opacity .25s; pointer-events: none; white-space: nowrap; }
+.ac.squint .ac-cap { opacity: 1; }
+.ac.squint .ac-fit { filter: blur(7px) saturate(.9); transition: filter .4s; }
+.ac-fit { transition: filter .4s; }
+/* màu nhấn tắt: nút về màu nền đậm */
+.site { --acc: var(--a); font-family: "Inter", var(--aw-font); }
+.ac.noacc .site { --acc: var(--d); }
+.site .cta { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 40px; padding: 0 20px; border-radius: 99px; background: var(--acc); color: var(--on); font-weight: 600; font-size: 13px; transition: background .3s, color .3s; }
+.ac.noacc .site .cta { color: var(--b); }
+.serif { font-family: "Iowan Old Style", "Times New Roman", Georgia, serif; font-weight: 400; letter-spacing: -.01em; }
+/* 1. Mỹ phẩm */
+.s1 { --a: #8EC5FF; --on: #13263b; --d: #3B2418; --b: #F2E8DA; background: #F2E8DA; color: #2b1d14; }
+.s1 .bar { background: #3B2418; color: #F2E8DA; font-size: 11px; text-align: center; padding: 7px; }
+.s1 .bar i { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--acc); margin-right: 8px; vertical-align: 1px; }
+.s1 nav { display: flex; align-items: center; gap: 26px; padding: 14px 28px; font-size: 12px; border-bottom: 1px solid #e3d6c2; }
+.s1 nav .logo { font: 400 22px/1 "Iowan Old Style", Georgia, serif; margin-right: 18px; } .s1 nav .r { margin-left: auto; display: flex; gap: 18px; }
+.s1 .body { display: grid; grid-template-columns: 64px 1fr 1fr; gap: 18px; padding: 22px 28px 28px; }
+.s1 .th { display: grid; gap: 8px; align-content: start; } .s1 .th span { height: 64px; border-radius: 8px; background: linear-gradient(160deg, #e9dcc6, #c9a77d); }
+.s1 .th span:first-child { outline: 2px solid #3B2418; outline-offset: 2px; }
+.s1 .hero { position: relative; height: 380px; border-radius: 14px; overflow: hidden; background: repeating-linear-gradient(115deg, #efe4d2 0 26px, #e5d6bf 26px 40px); }
+.s1 .hero .pd { position: absolute; left: 50%; bottom: 60px; width: 150px; height: 26px; transform: translateX(-50%); border-radius: 50%; background: #d8c8b0; box-shadow: 0 10px 0 #c9b597; }
+.s1 .hero .bt { position: absolute; left: 50%; bottom: 82px; width: 62px; height: 130px; transform: translateX(-50%); border-radius: 12px 12px 10px 10px; background: linear-gradient(90deg, #6b3410, #a5561f 45%, #6b3410); box-shadow: inset -8px 0 14px rgba(0,0,0,.25); }
+.s1 .hero .bt::before { content: ""; position: absolute; left: 50%; top: -46px; width: 26px; height: 48px; transform: translateX(-50%); border-radius: 6px 6px 3px 3px; background: linear-gradient(90deg, #1d120c, #3a2618, #1d120c); }
+.s1 .hero .badge { position: absolute; top: 14px; left: 14px; padding: 4px 10px; border-radius: 99px; background: #fff8ee; font-size: 11px; font-weight: 600; }
+.s1 .info small { display: block; font-size: 11px; color: #8a7562; margin-bottom: 10px; }
+.s1 .chip { display: inline-block; padding: 3px 10px; border-radius: 99px; background: var(--acc); color: var(--on); font-size: 11px; font-weight: 700; transition: background .3s; }
+.ac.noacc .s1 .chip { color: var(--b); }
+.s1 h3 { margin: 10px 0 6px; font-size: 40px; line-height: 1.05; } .s1 h3 em { font-style: italic; }
+.s1 .st { font-size: 12px; color: #6d5845; } .s1 .pr { display: flex; justify-content: space-between; margin: 14px 0 10px; font-size: 22px; font-weight: 700; } .s1 .pr small { font-size: 11px; font-weight: 400; color: #8a7562; }
+.s1 p { margin: 0 0 14px; font-size: 12.5px; color: #5d4a3a; }
+.s1 .sizes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; } .s1 .sizes span { padding: 8px; border: 1px solid #d9c9b2; border-radius: 10px; text-align: center; font-size: 12px; } .s1 .sizes span:first-child { border-color: #3B2418; border-width: 1.5px; }
+.s1 .cta { width: 100%; height: 44px; }
+.s1 .rev { margin-top: 14px; padding: 12px; border-radius: 12px; background: #fbf5ec; font: italic 13px/1.4 "Iowan Old Style", Georgia, serif; }
+/* 2. Nhà hàng */
+.s2 { --a: #E8412C; --on: #fff; --d: #6f8a62; --b: #F7F5EF; background: #F7F5EF; color: #22301d; }
+.s2 nav { display: flex; align-items: center; gap: 24px; padding: 16px 28px; font-size: 12px; }
+.s2 nav .logo { font: italic 400 24px/1 "Iowan Old Style", Georgia, serif; } .s2 nav .logo small { font: 600 9px/1 "Inter", sans-serif; letter-spacing: .18em; margin-left: 6px; vertical-align: 4px; font-style: normal; }
+.s2 nav .r { margin-left: auto; display: flex; align-items: center; gap: 14px; } .s2 nav .r i { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--acc); margin-right: 6px; transition: background .3s; }
+.s2 nav .cta { height: 32px; padding: 0 16px; }
+.s2 .hero { display: grid; grid-template-columns: 1fr 1fr; margin: 0 22px; border-radius: 16px; overflow: hidden; background: #9CAF88; color: #fff; min-height: 330px; }
+.s2 .hero .l { padding: 34px 30px; } .s2 .hero small { font-size: 10px; letter-spacing: .16em; }
+.s2 .hero h3 { margin: 14px 0 10px; font-size: 54px; line-height: 1.02; } .s2 .hero h3 em { font-style: italic; text-decoration: underline; text-decoration-color: var(--acc); text-decoration-thickness: 3px; text-underline-offset: 6px; transition: text-decoration-color .3s; }
+.s2 .hero p { margin: 0 0 20px; font-size: 12.5px; opacity: .92; max-width: 320px; }
+.s2 .ghost { display: inline-flex; align-items: center; height: 40px; padding: 0 18px; margin-left: 8px; border-radius: 99px; border: 1px solid rgba(255,255,255,.6); font-size: 13px; }
+.s2 .hero .r { position: relative; background: radial-gradient(circle at 30% 20%, #b9c6a8 0 8%, transparent 9%), radial-gradient(circle at 70% 18%, #b9c6a8 0 7%, transparent 8%), linear-gradient(170deg, #7c9470, #5d7552); }
+.s2 .slots { position: absolute; right: 22px; bottom: 22px; width: 300px; padding: 14px; border-radius: 14px; background: #fbfaf6; color: #22301d; box-shadow: 0 10px 30px -10px rgba(0,0,0,.4); }
+.s2 .slots .g { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 10px 0; } .s2 .slots .g span { padding: 6px 0; border-radius: 8px; background: #eef0e8; text-align: center; font-size: 11px; color: #9aa592; }
+.s2 .slots .f { display: flex; justify-content: space-between; align-items: center; font-size: 11px; } .s2 .slots .cta { height: 30px; padding: 0 12px; font-size: 11px; }
+.s2 .menu { display: grid; grid-template-columns: 1.1fr 1fr 1fr 1fr .8fr; gap: 14px; padding: 22px; align-items: center; }
+.s2 .menu h4 { margin: 0; font-size: 26px; line-height: 1.05; }
+.s2 .dish { position: relative; height: 110px; border-radius: 12px; background: radial-gradient(circle at 50% 55%, #e9e3d2 0 34%, #c9c0a9 35% 40%, transparent 41%), #6e8463; }
+.s2 .dish.b { background: radial-gradient(circle at 50% 55%, #f0ead9 0 36%, transparent 37%), #8ea27f; } .s2 .dish.c { background: radial-gradient(circle at 35% 45%, #4f6a3f 0 14%, transparent 15%), radial-gradient(circle at 62% 60%, #5d7a49 0 16%, transparent 17%), #7d9670; }
+.s2 .dish em { position: absolute; top: 8px; left: 8px; padding: 2px 8px; border-radius: 99px; background: var(--acc); color: #fff; font-style: normal; font-size: 10px; font-weight: 700; transition: background .3s; }
+.s2 .score { text-align: right; } .s2 .score b { display: block; font: 400 42px/1 "Iowan Old Style", Georgia, serif; } .s2 .score small { font-size: 11px; color: #6b7a62; }
+/* 3. App chạy bộ */
+.s3 { --a: #FFC93C; --on: #1b1c1f; --d: #4a4c54; --b: #D9DADC; background: #2B2D31; color: #f2f2f3; }
+.s3 nav { display: flex; align-items: center; gap: 24px; padding: 16px 28px; font-size: 12px; color: #b9bbc0; } .s3 nav .logo { color: #fff; font-weight: 700; font-size: 15px; } .s3 nav .r { margin-left: auto; display: flex; gap: 14px; align-items: center; } .s3 nav .cta { height: 30px; padding: 0 14px; font-size: 11px; }
+.s3 .hero { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; padding: 14px 28px 30px; }
+.s3 .pill { display: inline-block; padding: 4px 10px; border-radius: 99px; background: #3a3c42; font-size: 11px; color: #c9cbd0; }
+.s3 h3 { margin: 14px 0 12px; font-size: 50px; line-height: 1.02; font-weight: 700; letter-spacing: -.03em; } .s3 h3 mark { background: var(--acc); color: var(--on); padding: 0 6px; border-radius: 6px; transition: background .3s, color .3s; }
+.ac.noacc .s3 h3 mark { color: #fff; }
+.s3 p { margin: 0 0 18px; color: #a9abb1; font-size: 13px; max-width: 380px; }
+.s3 .stats { display: flex; gap: 34px; margin-top: 26px; } .s3 .stats b { display: block; font-size: 26px; } .s3 .stats small { font-size: 11px; color: #9a9ca2; }
+.s3 .phone-wrap { position: relative; height: 330px; border-radius: 16px; background: linear-gradient(160deg, #5c5e64, #2f3135); overflow: hidden; }
+.s3 .phone { position: absolute; left: 50%; top: 24px; width: 150px; height: 300px; transform: translateX(-50%) rotate(-6deg); border-radius: 26px; background: #111214; border: 5px solid #26272b; box-shadow: 0 20px 40px -10px rgba(0,0,0,.6); }
+.s3 .phone b { position: absolute; top: 34px; left: 16px; font-size: 26px; } .s3 .phone small { position: absolute; top: 68px; left: 16px; font-size: 10px; color: #8c8e94; }
+.s3 .phone svg { position: absolute; left: 10px; top: 90px; width: 120px; } .s3 .phone .pp { position: absolute; left: 50%; bottom: 24px; width: 38px; height: 38px; transform: translateX(-50%); border-radius: 50%; background: var(--acc); transition: background .3s; }
+@media (max-width: 860px) { .ac { grid-template-columns: 1fr; padding: 14px; } .ac-tabs { grid-template-columns: repeat(3, 1fr); } .ac-tab { justify-content: center; padding: 0 6px; font-size: 13px; } .ac-tab i { display: none; } .ac-sw { grid-template-columns: repeat(3, 1fr); } .ac-card { height: 64px; } .ac-stage { order: -1; } }
+@media (prefers-reduced-motion: reduce) { .ac-fit, .ac-tg::after, .site * { transition: none !important; } }
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=6d5d6735a9"></script>
+<div class="md-page">
+  <div class="aw-sotd" style="padding-top:16px">
+    <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">3 trang mẫu</span></p>
+    <h1 class="aw-h1" style="--aw-h1:clamp(40px,7vw,96px)">Một màu nhấn</h1>
+    <p class="aw-lead">Hai màu nền trung tính, một màu nhấn chỉ cho nút chính. Tắt màu nhấn để thấy trang «nhạt». Bật «Nheo mắt» để làm mờ cả trang: thứ còn nổi phải là nút.</p>
+    <p class="aw-lead" style="font-size:14px">Dựng lại từ <a href="https://www.facebook.com/share/r/1A9yKBpVoy/" target="_blank" rel="noopener">reel Facebook</a>. Mã màu chép đúng từ video, tên thương hiệu và nội dung là mẫu.</p>
+  </div>
+  <section class="ac" id="ac" aria-label="Luật một màu nhấn">
+    <div class="ac-side">
+      <div class="ac-tabs" role="tablist" aria-label="Trang mẫu" id="ac-tabs"></div>
+      <div class="ac-sw" id="ac-sw"></div>
+      <div class="ac-ctl">
+        <button class="ac-sw-row" id="ac-acc" type="button" role="switch" aria-checked="true"><span>Màu nhấn</span><i class="ac-tg"></i></button>
+        <button class="ac-sw-row" id="ac-sq" type="button" role="switch" aria-checked="false"><span>Nheo mắt</span><i class="ac-tg"></i></button>
+      </div>
+      <ol class="ac-rules"><li><b>2 màu nền</b>: một đậm, một nhạt, phủ 90% trang.</li><li><b>1 màu nhấn</b>: nút chính, trạng thái gấp, một điểm nhấn chữ.</li><li><b>Nheo mắt</b>: mờ cả trang, nút phải nổi nhất.</li></ol>
+      <p class="ac-note" id="ac-note" role="status">Bấm thẻ màu để chép mã hex.</p>
+    </div>
+    <div class="ac-stage" id="ac-stage"><div class="ac-fit" id="ac-fit"></div><span class="ac-cap" id="ac-cap"></span></div>
+  </section>
+</div>
+</main>
+<script>
+// Các phần của pattern (sổ patterns.json trỏ tới các id này).
+const PARTS = [
+  { id: 'skincare', vi: 'Mỹ phẩm: nâu + kem + xanh baby' }, { id: 'restaurant', vi: 'Nhà hàng: xanh xô thơm + trắng ngà + đỏ cà chua' },
+  { id: 'run-app', vi: 'App chạy bộ: xám + bạc + vàng' }, { id: 'accent-toggle', vi: 'Bật/tắt màu nhấn' }, { id: 'squint-test', vi: 'Thử nheo mắt' }];
+const SITES = [
+  { id: 's1', tab: 'Mỹ phẩm', cap: 'Nút «Báo khi có lại» vẫn nổi nhất', sw: [['Nâu', '#3B2418', '#F2E8DA'], ['Kem', '#F2E8DA', '#3B2418'], ['Xanh baby', '#8EC5FF', '#13263b', 1]],
+    html: `<div class="site s1"><div class="bar"><i></i>Serum Hàng Rào hết sau 9 phút. Đăng ký chờ hàng.</div>
+      <nav><span class="logo">mộc</span><span>Tất cả</span><span>Serum</span><span>Liệu trình</span><span>Thành phần</span><span class="r"><span>Tìm</span><span>Tài khoản</span><span>Giỏ (2)</span></span></nav>
+      <div class="body"><div class="th"><span></span><span></span><span></span><span></span></div>
+      <div class="hero"><span class="badge">★ Bán chạy</span><span class="pd"></span><span class="bt"></span></div>
+      <div class="info"><small>Cửa hàng / Serum / Serum Hàng Rào</small><span class="chip">● Hết hàng</span><h3 class="serif">Serum <em>Hàng Rào</em></h3>
+        <div class="st">★★★★★ 4,9 · 2.184 đánh giá</div><div class="pr">890.000 đ <small>30 ml</small></div>
+        <p>Ceramide và yến mạch làm dịu da đỏ qua một đêm. Không hương liệu, đã thử trên da nhạy cảm.</p>
+        <div class="sizes"><span>30 ml<br>890k</span><span>50 ml<br>1,29 tr</span><span>Bộ đôi<br>1,59 tr</span></div>
+        <span class="cta">Hết hàng · Báo khi có lại</span><div class="rev">«Da đỏ hết sau một tuần. Mua thêm ba chai.» — Dương R.</div></div></div></div>` },
+  { id: 's2', tab: 'Nhà hàng', cap: 'Mắt đi thẳng tới «Đặt bàn»', sw: [['Xô thơm', '#9CAF88', '#22301d'], ['Trắng ngà', '#F7F5EF', '#22301d'], ['Đỏ cà chua', '#E8412C', '#ffffff', 1]],
+    html: `<div class="site s2"><nav><span class="logo">Lá Sồi<small>QUÁN MÌ</small></span><span>Thực đơn</span><span>Rượu</span><span>Phòng riêng</span><span class="r"><span><i></i>Mở hôm nay, 17–23 giờ</span><span class="cta">Đặt bàn</span></span></nav>
+      <div class="hero"><div class="l"><small>— MÌ LÀM TAY · HÀ NỘI</small><h3 class="serif">Mì tươi đáng để <em>chờ</em>.</h3><p>Cán tay mỗi sáng, sốt nấu theo từng đĩa. Khách vãng lai vẫn được đón, nếu chịu chờ.</p><span class="cta">Đặt bàn</span><span class="ghost">Xem thực đơn</span></div>
+      <div class="r"><div class="slots"><div class="f"><b>Tối nay</b><span>2 người</span></div><div class="g">${['17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:15'].map((t) => `<span>${t}<br>hết</span>`).join('')}</div><div class="f"><span>38 bàn đang chờ</span><span class="cta">Chờ · 2 giờ</span></div></div></div></div>
+      <div class="menu"><h4 class="serif">Thực đơn<br>ngắn, đậm vị.</h4><div class="dish"><em>Gọi nhiều</em></div><div class="dish b"></div><div class="dish c"></div><div class="score"><b>4,8</b>★★★★★<br><small>3.214 đánh giá</small></div></div></div>` },
+  { id: 's3', tab: 'App chạy bộ', cap: 'Chỉ nút «Tải về» và chữ nhấn còn sáng', sw: [['Xám', '#2B2D31', '#f2f2f3'], ['Bạc', '#D9DADC', '#2B2D31'], ['Vàng', '#FFC93C', '#1b1c1f', 1]],
+    html: `<div class="site s3"><nav><span class="logo">▲ sải</span><span>Tính năng</span><span>Kế hoạch</span><span>Câu lạc bộ</span><span>Giá</span><span class="r"><span>Đăng nhập</span><span class="cta">Tải app</span></span></nav>
+      <div class="hero"><div><span class="pill">Mới · kế hoạch cho mọi chặng đua</span><h3>Ứng dụng chạy bộ bạn sẽ <mark>không</mark> xoá.</h3><p>Lên kế hoạch theo nhịp của bạn, đi theo đường chạy, giữ chuỗi ngày qua cả những ngày lười.</p><span class="cta">↓ Tải về miễn phí</span>
+        <div class="stats"><div><b>2,7 tr</b><small>người chạy</small></div><div><b>47 ngày</b><small>chuỗi trung bình</small></div><div><b>#3</b><small>thể thao</small></div></div></div>
+      <div class="phone-wrap"><div class="phone"><b>5,20</b><small>km · 28:14</small><svg viewBox="0 0 120 110" aria-hidden="true"><path d="M8 96 C 20 70, 30 86, 44 60 S 70 40, 82 52 S 104 20, 112 8" fill="none" stroke="var(--acc)" stroke-width="3" stroke-linecap="round"/><circle cx="112" cy="8" r="4" fill="var(--acc)"/></svg><span class="pp"></span></div></div></div></div>` }];
+const ac = document.getElementById('ac'), fit = document.getElementById('ac-fit'), stage = document.getElementById('ac-stage');
+let cur = 0;
+document.getElementById('ac-tabs').innerHTML = SITES.map((s, i) => `<button class="ac-tab" role="tab" type="button" data-i="${i}" aria-selected="${i === 0}"><i>${s.sw.map((c) => `<b style="background:${c[1]}"></b>`).join('')}</i>${s.tab}</button>`).join('');
+function show(i) {
+  cur = i; const s = SITES[i];
+  fit.innerHTML = s.html;
+  document.getElementById('ac-cap').textContent = s.cap;
+  document.getElementById('ac-sw').innerHTML = s.sw.map(([n, hex, on, acc]) => `<button class="ac-card" type="button" data-hex="${hex}" style="background:${hex};color:${on}" aria-label="${n} ${hex}, bấm để chép">${acc ? '<em>Nhấn</em>' : ''}<b>${n}</b><small>${hex}</small></button>`).join('');
+  document.querySelectorAll('.ac-tab').forEach((b) => b.setAttribute('aria-selected', +b.dataset.i === i));
+  scale();
+}
+function scale() { const k = stage.clientWidth / 960; fit.style.transform = `scale(${k})`; stage.style.height = fit.offsetHeight * k + 'px'; }
+new ResizeObserver(scale).observe(stage);
+ac.addEventListener('click', async (e) => {
+  const t = e.target.closest('[data-i]'); if (t) return show(+t.dataset.i);
+  const c = e.target.closest('[data-hex]'); if (c) { try { await navigator.clipboard.writeText(c.dataset.hex); document.getElementById('ac-note').textContent = 'Đã chép ' + c.dataset.hex; } catch { document.getElementById('ac-note').textContent = c.dataset.hex; } }
+});
+document.getElementById('ac-tabs').addEventListener('keydown', (e) => { if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return; const n = (cur + (e.key === 'ArrowRight' ? 1 : 2)) % 3; show(n); document.querySelector(`.ac-tab[data-i="${n}"]`).focus(); });
+const tg = (id, cls, invert) => document.getElementById(id).addEventListener('click', (e) => { const on = e.currentTarget.getAttribute('aria-checked') !== 'true'; e.currentTarget.setAttribute('aria-checked', on); ac.classList.toggle(cls, invert ? !on : on); });
+tg('ac-acc', 'noacc', true); tg('ac-sq', 'squint', false);
+show(0);
+</script>
+<script src="/search.js?v=6d5d6735a9" defer></script><script src="/stats.js?v=6d5d6735a9" defer></script>
+</body>
+</html>

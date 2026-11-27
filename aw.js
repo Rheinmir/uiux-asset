@@ -62,6 +62,7 @@
       ['patterns/toolbox.html', 'Hộp đồ nghề web', '50 trang miễn phí hay dùng', 50],
       ['fonts/', 'Font', 'Font family và bảng màu', 9],
       ['patterns/palettes.html', 'Bảng màu', 'Bảng màu 4 màu, chép hex', 6],
+      ['patterns/accent-rule.html', 'Một màu nhấn', '2 màu nền + 1 màu cho nút, thử nheo mắt', 3],
       ['skills/', 'Skills', 'Claude skill từ một bài viết', 40],
       ['rules/', 'Chuẩn UI Hang', '244 luật đo được, audit tự động', 244]]]];
   window.AW_CAT = CAT;

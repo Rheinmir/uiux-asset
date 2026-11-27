@@ -6,7 +6,7 @@
 <title>Bảng cho vay — uiux-asset</title>
 <meta name="description" content="Dashboard cho vay khung xanh lá: Tổng quan có biểu đồ token hoá và việc cần làm, Phân tích có thẻ số và cột theo tuần, Hồ sơ vay dạng thư mục có lọc, Token hoá có dây chuyền 4 bước và nút đúc lô. Chuyển trang mờ dần theo nhịp. JS/CSS thuần.">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
-<link rel="stylesheet" href="../aw.css?v=1e9d826577">
+<link rel="stylesheet" href="../aw.css?v=6d5d6735a9">
 <style>
 .md-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
 .md-page a { color: inherit; }
@@ -162,7 +162,7 @@ button.ob-kpi:not(:disabled):hover { box-shadow: 0 0 0 2px #f3c99a; }
 </style>
 </head>
 <body>
-<main class="aw-wrap"><script src="../aw.js?v=1e9d826577"></script>
+<main class="aw-wrap"><script src="../aw.js?v=6d5d6735a9"></script>
 <div class="md-page">
   <div class="aw-sotd" style="padding-top:16px">
     <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">5 phần</span></p>
@@ -381,6 +381,6 @@ app.addEventListener('input', (e) => { if (!('q' in e.target.dataset)) return; S
 app.addEventListener('keydown', (e) => { if ('jump' in e.target.dataset && e.key === 'Enter') { S.q = e.target.value; S.page = 'loan-files'; S.filt = 'all'; render(true); } });
 render(true);
 </script>
-<script src="/search.js?v=1e9d826577" defer></script><script src="/stats.js?v=1e9d826577" defer></script>
+<script src="/search.js?v=6d5d6735a9" defer></script><script src="/stats.js?v=6d5d6735a9" defer></script>
 </body>
 </html>
