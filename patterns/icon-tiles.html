@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Icon ô màu — glyph khoét âm bản — uiux-asset</title>
+<meta name="description" content="Bộ icon ô vuông màu phẳng trên dải sắc cam → tím, glyph trắng khoét âm bản từ hình tròn. 12 glyph gốc + chế độ chữ cái, chọn màu, bo góc, cỡ, xuất SVG/PNG, chép code. SVG thuần.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=1e9d826577">
+<style>
+.md-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+.it { --bg: #ececec; --card: #fff; --ink: #1d1d1f; --ink2: #6b6b70; --line: #dcdcde; display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 24px; padding: 28px; border-radius: 20px; background: var(--bg); color: var(--ink); font: 400 14px/1.4 "Inter", var(--aw-font); }
+.it button, .it input, .it select { font: inherit; color: inherit; }
+.it h2 { margin: 0 0 4px; font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink2); }
+.it-strip { display: flex; flex-wrap: wrap; gap: 10px; padding: 18px; border-radius: 14px; background: #e8e8e8; margin-bottom: 22px; }
+.it-tile { width: 64px; height: 64px; padding: 0; border: 0; background: none; cursor: pointer; border-radius: 6px; transition: transform .18s cubic-bezier(.3,.7,.2,1); }
+.it-tile svg { display: block; width: 100%; height: 100%; }
+.it-tile:hover { transform: translateY(-2px); }
+.it-tile[aria-pressed="true"] { outline: 2px solid var(--ink); outline-offset: 3px; }
+.it-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); gap: 14px; }
+.it-cell { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 8px 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--card); cursor: pointer; }
+.it-cell svg { width: 56px; height: 56px; }
+.it-cell span { font-size: 12px; color: var(--ink2); }
+.it-cell[aria-pressed="true"] { border-color: var(--ink); box-shadow: 0 0 0 1px var(--ink); }
+.it-side { display: flex; flex-direction: column; gap: 14px; padding: 18px; border-radius: 16px; background: var(--card); border: 1px solid var(--line); align-self: start; }
+.it-big { display: grid; place-items: center; padding: 18px; border-radius: 12px; background: repeating-conic-gradient(#f2f2f2 0 25%, #fff 0 50%) 0 0 / 16px 16px; }
+.it-big svg { width: 160px; height: 160px; filter: drop-shadow(0 8px 18px rgba(0,0,0,.12)); }
+.it-f { display: grid; gap: 6px; }
+.it-f label { display: flex; justify-content: space-between; font-size: 12px; color: var(--ink2); }
+.it-f input[type="text"] { height: 38px; padding: 0 12px; border: 1px solid var(--line); border-radius: 10px; background: #fafafa; }
+.it-f input[type="range"] { width: 100%; accent-color: var(--ink); }
+.it-hues { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; }
+.it-hues button { aspect-ratio: 1; min-height: 24px; border: 0; border-radius: 6px; cursor: pointer; }
+.it-hues button[aria-pressed="true"] { outline: 2px solid var(--ink); outline-offset: 2px; }
+.it-row { display: flex; gap: 8px; }
+.it-btn { flex: 1; min-height: 38px; padding: 0 10px; border: 1px solid var(--line); border-radius: 10px; background: #f6f6f7; cursor: pointer; font-size: 13px; font-weight: 500; }
+.it-btn.pri { background: var(--ink); color: #fff !important; border-color: var(--ink); }
+.it-note { margin: 0; min-height: 17px; font-size: 12px; color: var(--ink2); }
+.it-rule { margin: 0; padding-left: 18px; color: var(--ink2); font-size: 13px; } .it-rule li { margin: 3px 0; }
+@media (max-width: 960px) { .it { grid-template-columns: 1fr; padding: 16px; } }
+@media (max-width: 420px) { .it-tile { width: 52px; height: 52px; } .it-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=1e9d826577"></script>
+<div class="md-page">
+  <div class="aw-sotd" style="padding-top:16px">
+    <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">12 glyph</span></p>
+    <h1 class="aw-h1" style="--aw-h1:clamp(40px,7vw,96px)">Icon ô màu</h1>
+    <p class="aw-lead">Ô vuông màu phẳng trên dải sắc cam → tím, glyph trắng khoét âm bản từ một hình tròn. Bấm một ô để chỉnh: đổi glyph, màu, bo góc, gõ chữ cái, rồi tải SVG/PNG hoặc chép code.</p>
+    <p class="aw-lead" style="font-size:14px">Bóc phong cách từ ảnh owner gửi ở phòng uiux-giatbh. Glyph vẽ mới, không chép logo thương hiệu nào.</p>
+  </div>
+  <section class="it" id="it" aria-label="Bộ tạo icon ô màu">
+    <div>
+      <h2>Dải 10 màu</h2>
+      <div class="it-strip" id="it-strip"></div>
+      <h2>12 glyph</h2>
+      <div class="it-grid" id="it-grid"></div>
+    </div>
+    <aside class="it-side">
+      <div class="it-big" id="it-big"></div>
+      <div class="it-f"><label for="it-letter">Chữ cái (để trống = dùng glyph)</label><input type="text" id="it-letter" maxlength="2" placeholder="vd: K"></div>
+      <div class="it-f"><label>Màu nền</label><div class="it-hues" id="it-hues" role="group" aria-label="Màu nền"></div></div>
+      <div class="it-f"><label for="it-rad">Bo góc <b id="it-radv">4</b></label><input type="range" id="it-rad" min="0" max="32" value="4"></div>
+      <div class="it-f"><label for="it-scale">Cỡ glyph <b id="it-scalev">100%</b></label><input type="range" id="it-scale" min="70" max="115" value="100"></div>
+      <div class="it-row"><button class="it-btn" id="it-svg" type="button">Tải SVG</button><button class="it-btn" id="it-png" type="button">Tải PNG 512</button></div>
+      <button class="it-btn pri" id="it-copy" type="button">Chép code SVG</button>
+      <p class="it-note" id="it-note" role="status"></p>
+      <ol class="it-rule"><li>Nền: 1 màu phẳng, không gradient.</li><li>Glyph: trắng, dựng từ hình tròn ~70% ô.</li><li>Chi tiết: khoét bằng mask, không viền.</li><li>Dải màu: cam → vàng → lục → lam → tím.</li></ol>
+    </aside>
+  </section>
+</div>
+</main>
+<script>
+// Các phần của pattern (sổ patterns.json trỏ tới các id này).
+const PARTS = [
+  { id: 'hue-strip', vi: 'Dải 10 màu' }, { id: 'glyph-set', vi: 'Bộ 12 glyph' }, { id: 'letter-mode', vi: 'Chữ cái khoét' }, { id: 'export', vi: 'Xuất SVG/PNG, chép code' }];
+// Dải màu đo từ ảnh mẫu (cam → tím).
+const HUES = ['#f26a21', '#f7901e', '#f2b129', '#6fae2b', '#178a7a', '#10a5b7', '#1e96d8', '#2a4aa0', '#6a3fa7', '#8e2f86'];
+// Mỗi glyph: [tên, phần trắng (fill), phần khoét (vẽ đen trong mask)]. Hệ toạ độ 64×64, tâm 32,32, đĩa r=22.
+const D = '<circle cx="32" cy="32" r="22"/>';
+const G = [
+  ['Vòng lửa', '<circle cx="30" cy="35" r="18"/><ellipse cx="36" cy="13" rx="3.2" ry="6.5" transform="rotate(12 36 13)"/><ellipse cx="45" cy="16" rx="4" ry="8" transform="rotate(38 45 16)"/><ellipse cx="51" cy="26" rx="3.6" ry="7" transform="rotate(68 51 26)"/>', '<circle cx="30" cy="35" r="8.5"/>'],
+  ['Khay xếp', '<path d="M32 11l22 13-22 13-22-13z"/><path d="M10 33l22 13 22-13v8L32 54 10 41z"/>', '<path d="M24 22h16l-8 5z"/>'],
+  ['Nốt nhạc', D, '<path d="M30 18v20a6 6 0 1 1-4-5.6V18h4z"/><path d="M30 18c6 1 10 5 12 10-4-2-8-3-12-3z"/>'],
+  ['Sao bốn cánh', D, '<path d="M32 16l4 12 12 4-12 4-4 12-4-12-12-4 12-4z"/>'],
+  ['Phát', D, '<path d="M26 20l18 12-18 12z"/><path d="M29 26l9 6-9 6z" fill="#fff"/>'],
+  ['Trăng khuyết', D, '<circle cx="32" cy="32" r="13"/><circle cx="37" cy="30" r="10" fill="#fff"/>'],
+  ['Mây vòm', '<path d="M10 30a22 22 0 0 1 44 0h-7a15 15 0 0 0-30 0z"/><path d="M16 48a8 8 0 0 1 4-15 10 10 0 0 1 19-2 8 8 0 0 1 9 9 6 6 0 0 1-2 8z"/>', ''],
+  ['Chữ V', D, '<path d="M20 20h7l5 14 6-14h7L36 44h-8z"/>'],
+  ['Bảng màu', '<path d="M32 10a22 22 0 1 0 0 44c4 0 4-4 2-7s0-7 4-7h6a10 10 0 0 0 10-10c0-11-10-20-22-20z"/>', '<circle cx="22" cy="28" r="4"/><circle cx="30" cy="20" r="3"/><circle cx="41" cy="22" r="3.5"/>'],
+  ['Vạch chéo', D, '<path d="M28 50L48 18h4L32 50zM36 52L54 24v5L40 52zM20 46L42 12h4L24 46z"/>'],
+  ['Hạt mầm', D, '<path d="M32 46V28"/><path d="M32 32c-8 0-12-5-12-12 8 0 12 5 12 12zM32 28c0-7 4-12 12-12 0 7-4 12-12 12z"/>'],
+  ['Khoá vòng', D, '<rect x="23" y="29" width="18" height="14" rx="2"/><path d="M26 29v-4a6 6 0 0 1 12 0v4h-3v-4a3 3 0 0 0-6 0v4z"/>']];
+const S = { g: 0, hue: 0, rad: 4, scale: 100, letter: '' };
+let uid = 0;
+function svg(gi, hue, rad = S.rad, scale = S.scale, letter = '') {
+  const id = 'm' + uid++, [, fill, cut] = G[gi], k = scale / 100, tf = `translate(32 32) scale(${k}) translate(-32 -32)`;
+  const body = letter
+    ? `<g transform="${tf}"><circle cx="32" cy="32" r="22" fill="#fff" mask="url(#${id})"/></g><mask id="${id}"><rect width="64" height="64" fill="#fff"/><text x="32" y="33" text-anchor="middle" dominant-baseline="central" font-family="Inter,Arial,sans-serif" font-weight="800" font-size="${letter.length > 1 ? 20 : 27}" fill="#000">${letter.replace(/[<&]/g, '')}</text></mask>`
+    : `<mask id="${id}"><rect width="64" height="64" fill="#fff"/><g fill="#000" stroke="#000" stroke-width="${gi === 10 ? 3 : 0}" stroke-linecap="round">${cut}</g></mask><g transform="${tf}" fill="#fff" mask="url(#${id})">${fill}</g>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="${G[gi][0]}"><rect width="64" height="64" rx="${rad}" fill="${HUES[hue]}"/>${body}</svg>`;
+}
+const $ = (id) => document.getElementById(id);
+// Dải 10 ô như ảnh mẫu: glyph i trên màu i.
+$('it-strip').innerHTML = HUES.map((h, i) => `<button class="it-tile" type="button" data-g="${i}" data-h="${i}" aria-label="${G[i][0]}" aria-pressed="${i === 0}">${svg(i, i, 4, 100)}</button>`).join('');
+$('it-hues').innerHTML = HUES.map((h, i) => `<button type="button" data-hue="${i}" style="background:${h}" aria-label="Màu ${i + 1}" aria-pressed="${i === S.hue}"></button>`).join('');
+function render() {
+  $('it-grid').innerHTML = G.map((g, i) => `<button class="it-cell" type="button" data-g="${i}" aria-pressed="${i === S.g && !S.letter}">${svg(i, S.hue, S.rad, S.scale)}<span>${g[0]}</span></button>`).join('');
+  $('it-big').innerHTML = svg(S.g, S.hue, S.rad, S.scale, S.letter);
+  document.querySelectorAll('[data-hue]').forEach((b) => b.setAttribute('aria-pressed', +b.dataset.hue === S.hue));
+  document.querySelectorAll('.it-tile').forEach((b) => b.setAttribute('aria-pressed', +b.dataset.g === S.g && +b.dataset.h === S.hue));
+}
+$('it').addEventListener('click', (e) => {
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.g != null) { S.g = +b.dataset.g; if (b.dataset.h != null) S.hue = +b.dataset.h; S.letter = ''; $('it-letter').value = ''; render(); }
+  else if (b.dataset.hue != null) { S.hue = +b.dataset.hue; render(); }
+});
+$('it-letter').addEventListener('input', (e) => { S.letter = e.target.value.trim().toUpperCase(); render(); });
+$('it-rad').addEventListener('input', (e) => { S.rad = +e.target.value; $('it-radv').textContent = S.rad; render(); });
+$('it-scale').addEventListener('input', (e) => { S.scale = +e.target.value; $('it-scalev').textContent = S.scale + '%'; render(); });
+const cur = () => svg(S.g, S.hue, S.rad, S.scale, S.letter), name = () => 'icon-' + (S.letter || G[S.g][0]).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').replace(/\W+/g, '-');
+const dl = (href, fn) => { const a = document.createElement('a'); a.href = href; a.download = fn; a.click(); };
+$('it-svg').onclick = () => { dl(URL.createObjectURL(new Blob([cur()], { type: 'image/svg+xml' })), name() + '.svg'); $('it-note').textContent = 'Đã tải ' + name() + '.svg'; };
+$('it-png').onclick = () => { const im = new Image(); im.onload = () => { const c = document.createElement('canvas'); c.width = c.height = 512; c.getContext('2d').drawImage(im, 0, 0, 512, 512); dl(c.toDataURL('image/png'), name() + '.png'); $('it-note').textContent = 'Đã tải ' + name() + '.png'; };
+  im.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(cur()); };
+$('it-copy').onclick = async () => { try { await navigator.clipboard.writeText(cur()); $('it-note').textContent = 'Đã chép SVG.'; } catch { $('it-note').textContent = 'Trình duyệt chặn chép. Bấm vào trang rồi thử lại.'; } };
+render();
+</script>
+<script src="/search.js?v=1e9d826577" defer></script><script src="/stats.js?v=1e9d826577" defer></script>
+</body>
+</html>

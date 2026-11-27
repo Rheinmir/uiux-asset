@@ -1,8 +1,8 @@
 <!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>uiux-asset</title>
 <meta name="description" content="Code gốc nguyên văn các pattern UI/UX — hiệu ứng cuộn, component, UI kit rút từ site thật. Xem chạy thật, copy nguyên file.">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
-<link rel="stylesheet" href="aw.css?v=c628d5da9a"></head><body>
-<main class="aw-wrap"><script src="aw.js?v=c628d5da9a"></script>
+<link rel="stylesheet" href="aw.css?v=1e9d826577"></head><body>
+<main class="aw-wrap"><script src="aw.js?v=1e9d826577"></script>
 <div class="aw-sotd" style="padding-top:16px"><p class="aw-sotd__sub"><span>Kho pattern UI/UX</span><span class="aw-tag aw-tag--medium">Code gốc nguyên văn</span></p>
 <h1 class="aw-h1" style="--aw-h1:clamp(42px,9.4vw,126.7px)">uiux asset<span class="aw-sticker" aria-hidden="true"></span></h1>
 <p class="aw-lead">Bốn nhóm: thành phần, màn hình, chuyển động, tài nguyên. Xem chạy thật, copy nguyên file.</p></div>
@@ -22,8 +22,8 @@ document.getElementById('cats').innerHTML = AW_CAT.map(([id, g, d, it]) => `<sec
   <div class="aw-cat__grid">${it.map((x) => `<div class="aw-card-slide"><a class="aw-fig is-large" href="${x[0]}" aria-label="Mở ${x[1]}">${shot(x)}</a>
   <div class="aw-card-slide__foot"><h3 class="aw-card-slide__title"><a href="${x[0]}">${x[1]}</a></h3>${x[3] ? `<span class="aw-tag aw-tag--bold"${x[0] === 'ui-kits/' ? ' id="kit-total"' : ''}>${fmt(x[3])}</span>` : ''}<p>${x[2]}</p></div></div>`).join('')}</div></section>`).join('');
 }</script>
-<script src="ui-kits/kits.js?v=c628d5da9a"></script><script src="galaxy/galaxy.js?v=c628d5da9a"></script>
+<script src="ui-kits/kits.js?v=1e9d826577"></script><script src="galaxy/galaxy.js?v=1e9d826577"></script>
 <script>awGalaxy.load().then((all) => { const m = document.getElementById('gx-mosaic');   // 4 element đầu tiên không dùng Tailwind của 4 nhóm
   m.append(...['Buttons', 'loaders', 'Toggle-switches', 'Checkboxes'].map((c) => awGalaxy.frame(all.find((it) => it[0] === c && !it[5])))); }).catch(() => {});
 awKits.load().then((k) => { document.getElementById('kit-total').textContent = k.length; }).catch(() => {});</script>
-<script src="/search.js?v=c628d5da9a" defer></script><script src="/stats.js?v=c628d5da9a" defer></script></body></html>
+<script src="/search.js?v=1e9d826577" defer></script><script src="/stats.js?v=1e9d826577" defer></script></body></html>

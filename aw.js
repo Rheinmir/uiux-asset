@@ -25,6 +25,7 @@
       ['patterns/glow.html', 'Viền cầu vồng', 'Công tắc, ô nhập, thẻ sáng ngũ sắc', 4],
       ['patterns/navigation.html', 'Điều hướng thanh bên', '9 kiểu đánh dấu mục đang chọn', 9],
       ['patterns/sign-dialog.html', 'Hộp thoại ký', 'Ký tay, hoàn tác, công tắc đồng ý', 4],
+      ['patterns/icon-tiles.html', 'Icon ô màu', 'Glyph trắng khoét âm bản, xuất SVG/PNG', 12],
       ['patterns/slide-login.html', 'Đăng nhập trượt', 'Tấm chéo trượt giữa Đăng ký và Đăng nhập', 5],
       ['patterns/factory.html', 'Bảng agent', 'Kanban dây chuyền agent, chép code', 1]]],
     ['man-hinh', 'Màn hình', 'Trang web và màn app dựng lại', [
