@@ -1,0 +1,772 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cửa hàng phụ kiện bếp — uiux-asset</title>
+<meta name="description" content="Trang chủ cửa hàng phụ kiện tủ bếp tông kem và nâu: header có mega menu tối, hero tủ bếp đổi cảnh, dải danh mục cong 3D, sơ đồ bố trí chữ I/L/U, chọn cỡ thùng tủ để lọc sản phẩm, lưới bán chạy có giỏ hàng, showroom, chọn khu vực, bài viết và footer tối. JS/CSS thuần, hình vẽ bằng SVG.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=c628d5da9a">
+<style>
+.md-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+.md-page a { color: inherit; }
+/* Demo: token riêng, không theo theme của site. */
+.ks { --bg: #f6efe6; --bg2: #efe2d4; --card: #fffaf4; --ink: #1c1a17; --ink2: #6c6258; --line: rgba(28,26,23,.12); --tan: #c9a27a; --tan2: #8a6a48; --dark: #1d1a17; --dark2: #2a2622;
+  --serif: "Cormorant Garamond", "Cormorant", "EB Garamond", Garamond, "Hoefler Text", Georgia, "Times New Roman", serif; --sans: var(--aw-font, system-ui, sans-serif);
+  position: relative; background: var(--bg); color: var(--ink); font: 400 14px/1.55 var(--sans); border-radius: 22px; overflow: clip; color-scheme: light; box-shadow: 0 30px 70px -40px rgba(60,40,20,.5); }
+.ks *, .ks *::before, .ks *::after { box-sizing: border-box; }
+.ks a { color: inherit; text-decoration: none; }
+.ks button, .ks input { font: inherit; color: inherit; }
+.ks button { cursor: pointer; }
+.ks svg { display: block; }
+.ks :focus-visible { outline: 2px solid var(--tan2); outline-offset: 2px; }
+.ks-k { display: inline-flex; align-items: center; gap: 8px; font: 600 11px/1.2 var(--sans); letter-spacing: .18em; text-transform: uppercase; color: var(--tan2); }
+.ks-h2 { margin: 8px 0 10px; font: 500 clamp(32px, 4.2vw, 54px)/1.04 var(--serif); letter-spacing: -.01em; }
+.ks-p { margin: 0; color: var(--ink2); max-width: 560px; }
+.ks-sec { padding: 76px clamp(16px, 5vw, 64px); }
+.ks-sh { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 14px 24px; margin-bottom: 30px; }
+.ks-more { font-weight: 500; border-bottom: 1px solid var(--line); padding-bottom: 4px; white-space: nowrap; }
+.ks-more:hover { border-color: var(--ink); }
+.ks-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border: 0; border-radius: 8px; font-weight: 600; font-size: 13px; white-space: nowrap; transition: transform .2s, background .2s; }
+.ks-btn:hover { transform: translateY(-1px); }
+.ks .ks-btn--tan { background: var(--tan); color: var(--ink); }
+.ks .ks-btn--dark { background: var(--dark); color: #fff; }
+.ks-btn--line { background: transparent; border: 1px solid var(--line); }
+/* ---------- header ---------- */
+.ks-head { position: sticky; top: var(--ks-top, 0px); z-index: 40; display: flex; align-items: center; gap: 18px; height: 68px; padding: 0 22px; background: rgba(250,245,238,.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); border-radius: 22px 22px 0 0; }
+.ks-logo { display: flex; align-items: center; gap: 10px; flex: none; font: 600 22px/1 var(--serif); letter-spacing: .04em; }
+.ks-logo svg { width: 34px; height: 34px; }
+.ks-nav { flex: 1; display: flex; justify-content: center; min-width: 0; }
+.ks-nav > ul { display: flex; gap: 2px; margin: 0; padding: 0; list-style: none; }
+.ks-nav li { position: static; }
+.ks-ni { display: flex; align-items: center; gap: 5px; height: 36px; padding: 0 8px; border: 0; border-radius: 99px; background: none; font-size: 13px; font-weight: 500; white-space: nowrap; transition: background .2s, color .2s; }
+.ks-ni .ic { width: 12px; height: 12px; opacity: .55; }
+.ks-ni .ch { width: 10px; height: 10px; transition: transform .25s; }
+.ks-ni:hover { background: rgba(28,26,23,.06); }
+.ks-nav li.open > .ks-ni { background: var(--dark); color: #fff; }
+.ks-nav li.open > .ks-ni .ch { transform: rotate(180deg); }
+.ks-mega { position: absolute; top: 60px; left: var(--mx, 200px); width: 540px; padding: 18px 20px 20px; border-radius: 18px; background: var(--dark); color: #efe7dc; box-shadow: 0 30px 60px -20px rgba(0,0,0,.5); opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity .2s, transform .2s, visibility .2s; }
+.ks-nav li.open > .ks-mega { opacity: 1; visibility: visible; transform: none; transition: opacity .2s, transform .2s, visibility 0s; }
+.ks-mega-h { display: flex; align-items: baseline; justify-content: space-between; padding-bottom: 12px; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,.12); }
+.ks-mega-h b { font: 500 24px/1 var(--serif); }
+.ks .ks-mega-h a { font-size: 12px; color: var(--tan); }
+.ks-mega-b { display: grid; grid-template-columns: 1fr 1fr 150px; gap: 6px; }
+.ks-mega-b a.l { display: block; padding: 10px 12px; border-radius: 10px; font-weight: 600; font-size: 13px; }
+.ks-mega-b a.l small { display: block; margin-top: 2px; font-weight: 400; font-size: 11px; color: #a89d90; }
+.ks-mega-b a.l:hover, .ks-mega-b a.l:focus-visible { background: rgba(255,255,255,.08); color: var(--tan); }
+.ks-mega-f { grid-column: 3; grid-row: 1 / span 2; position: relative; border-radius: 12px; overflow: hidden; min-height: 150px; }
+.ks-mega-f svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.ks-mega-f::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(20,16,12,.85), rgba(20,16,12,0) 60%); }
+.ks-mega-f span { position: absolute; z-index: 1; left: 10px; bottom: 10px; right: 10px; font-size: 13px; font-weight: 600; color: #fff; text-shadow: 0 1px 6px rgba(0,0,0,.6); }
+.ks-mega-f span small { display: block; font-size: 9px; letter-spacing: .14em; color: var(--tan); }
+.ks-act { display: flex; align-items: center; gap: 8px; flex: none; }
+.ks-ib { position: relative; width: 40px; height: 40px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: #fff; }
+.ks-ib svg { width: 17px; height: 17px; }
+.ks-badge { position: absolute; top: -4px; right: -4px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 99px; background: var(--tan); color: var(--ink); font: 700 10px/18px var(--sans); text-align: center; }
+.ks-badge.bump { animation: ks-bump .45s cubic-bezier(.3,1.6,.5,1); }
+@keyframes ks-bump { 40% { transform: scale(1.5); } }
+.ks .ks-quote { display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 6px 0 14px; border-radius: 8px; background: var(--dark); color: #fff; font-size: 13px; font-weight: 600; white-space: nowrap; }
+.ks-quote i { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 6px; background: var(--tan); color: var(--ink); font-style: normal; }
+.ks-burger { display: none; }
+/* drawer (mobile) */
+.ks-scrim { position: fixed; inset: 0; z-index: 70; background: rgba(20,16,12,.45); opacity: 0; visibility: hidden; transition: opacity .25s, visibility .25s; }
+.ks-drawer { position: fixed; top: 0; right: 0; bottom: 0; z-index: 71; width: min(340px, 86vw); padding: 18px 18px 24px; background: var(--bg); color: var(--ink); overflow-y: auto; transform: translateX(100%); visibility: hidden; transition: transform .3s cubic-bezier(.3,.7,.2,1), visibility .3s; font: 400 14px/1.5 var(--sans); }
+.ks.drawer-open .ks-scrim { opacity: 1; visibility: visible; }
+.ks.drawer-open .ks-drawer { transform: none; visibility: visible; }
+.ks-drawer-h { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.ks-drawer details, .ks-drawer > a.dl { display: block; border-bottom: 1px solid var(--line); }
+.ks-drawer summary, .ks-drawer a.dl { display: flex; align-items: center; justify-content: space-between; padding: 14px 4px; font-weight: 600; cursor: pointer; list-style: none; }
+.ks-drawer summary::-webkit-details-marker { display: none; }
+.ks-drawer details[open] summary .ch { transform: rotate(180deg); }
+.ks-drawer .ch { width: 12px; height: 12px; transition: transform .2s; }
+.ks-drawer details a { display: block; padding: 8px 12px; color: var(--ink2); font-size: 13px; }
+.ks-drawer details div { padding-bottom: 10px; }
+.ks-drawer .ks-btn { width: 100%; margin-top: 18px; }
+/* ---------- hero ---------- */
+.ks-hero { position: relative; min-height: 740px; overflow: hidden; }
+.ks-hero-art { position: absolute; top: 0; right: 0; bottom: 0; width: 72%; }
+.ks-slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1s ease; }
+.ks-slide.on { opacity: 1; }
+.ks-slide svg { width: 100%; height: 100%; }
+.ks-hero-art::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, var(--bg) 0%, rgba(246,239,230,.86) 22%, rgba(246,239,230,0) 55%), linear-gradient(0deg, rgba(246,239,230,.5), rgba(246,239,230,0) 30%); pointer-events: none; }
+.ks-hero-txt { position: relative; z-index: 2; max-width: 760px; padding: 120px 0 0 clamp(16px, 5vw, 64px); }
+.ks-hero h1 { margin: 18px 0 18px; font: 500 clamp(46px, 6.4vw, 88px)/.98 var(--serif); letter-spacing: -.015em; }
+.ks-hero h1 em { font-style: normal; color: var(--tan2); }
+.ks-hero-txt p { max-width: 400px; margin: 0 0 26px; color: var(--ink2); font-size: 15px; }
+.ks-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 18px; }
+.ks-play { display: inline-flex; align-items: center; gap: 10px; border: 0; background: none; padding: 0; font-weight: 600; font-size: 13px; }
+.ks-play i { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; border: 2px solid var(--ink); box-shadow: 0 0 0 4px rgba(255,255,255,.7); font-style: normal; transition: transform .2s; }
+.ks-play:hover i { transform: scale(1.08); }
+.ks-hero-foot { position: absolute; z-index: 3; left: clamp(16px, 2.4vw, 28px); right: clamp(16px, 2.4vw, 28px); bottom: 24px; display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; }
+.ks-feat { display: grid; grid-template-columns: 92px 1fr; gap: 12px; width: 340px; padding: 10px; border-radius: 14px; background: rgba(255,250,244,.94); box-shadow: 0 14px 30px -18px rgba(40,25,10,.5); }
+.ks-feat .th { height: 80px; border-radius: 9px; overflow: hidden; }
+.ks-feat .th svg { width: 100%; height: 100%; }
+.ks-feat .mt { display: flex; justify-content: space-between; font-size: 9px; letter-spacing: .14em; color: var(--ink2); }
+.ks-feat b { display: block; margin-top: 3px; font-size: 14px; line-height: 1.3; }
+.ks-feat .dsc { margin: 1px 0 6px; font-size: 11px; color: var(--ink2); line-height: 1.35; min-height: 15px; }
+.ks-feat .bt { display: flex; align-items: center; justify-content: space-between; }
+.ks-dash { display: flex; gap: 4px; }
+.ks-dash span { width: 12px; height: 2px; background: #cfc4b6; transition: width .3s, background .3s; }
+.ks-dash span.on { width: 22px; background: var(--ink); }
+.ks-arw { display: flex; gap: 6px; }
+.ks-arw button { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 6px; border: 1px solid var(--line); background: #fff; }
+.ks-arw button + button { background: var(--dark); color: #fff; border-color: var(--dark); }
+.ks-arw svg { width: 14px; height: 14px; }
+.ks-fr { display: flex; align-items: flex-end; gap: 12px; }
+.ks-stats { display: grid; grid-template-columns: repeat(3, 1fr); width: 320px; padding: 12px 6px; border-radius: 14px; background: rgba(255,250,244,.5); border: 1px solid rgba(255,255,255,.65); backdrop-filter: blur(14px) saturate(1.2); -webkit-backdrop-filter: blur(14px) saturate(1.2); text-align: center; }
+.ks-stats div + div { border-left: 1px solid rgba(28,26,23,.1); }
+.ks-stats svg { width: 14px; height: 14px; margin: 0 auto 4px; opacity: .6; }
+.ks-stats b { display: block; font-size: 22px; line-height: 1.1; }
+.ks-stats small { font-size: 10px; color: var(--ink2); }
+.ks-consult { width: 150px; padding: 12px; border-radius: 12px; background: var(--dark); color: #fff; }
+.ks-consult .tp { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+.ks-consult .av { width: 32px; height: 32px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #e8c9a2, #8a6a48 70%); border: 2px solid rgba(255,255,255,.3); }
+.ks .ks-consult a { width: 26px; height: 26px; display: grid; place-items: center; border-radius: 5px; background: #fff; color: var(--ink); font-size: 12px; }
+.ks-consult b { display: block; font-size: 12px; line-height: 1.3; }
+.ks-consult small { display: block; margin-top: 6px; font-size: 10px; color: #bfb4a6; line-height: 1.5; }
+.ks-prog { height: 2px; margin-top: 10px; background: rgba(255,255,255,.18); overflow: hidden; }
+.ks-prog i { display: block; height: 100%; width: 100%; background: #fff; transform-origin: left; transform: scaleX(0); }
+.ks-prog i.run { animation: ks-prog 6s linear forwards; }
+.ks-hero:hover .ks-prog i.run { animation-play-state: paused; }
+@keyframes ks-prog { to { transform: scaleX(1); } }
+/* ---------- category rail ---------- */
+.ks-cats { padding-left: 0; padding-right: 0; }
+.ks-cats .ks-sh { padding: 0 clamp(16px, 5vw, 64px); }
+.ks-rail-nav { display: flex; gap: 8px; }
+.ks-rail-nav button { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--line); background: #fff; }
+.ks-rail-nav svg { width: 16px; height: 16px; }
+.ks-rail { display: flex; gap: 16px; overflow-x: auto; padding: 18px clamp(16px, 5vw, 64px) 26px; scroll-snap-type: x proximity; scrollbar-width: none; cursor: grab; }
+.ks-rail::-webkit-scrollbar { display: none; }
+.ks-rail.drag { cursor: grabbing; scroll-snap-type: none; }
+.ks-rail > a { flex: none; width: 230px; scroll-snap-align: center; }
+.ks-cc { position: relative; height: 330px; border-radius: 16px; overflow: hidden; background: var(--dark); color: #fff; box-shadow: 0 20px 34px -22px rgba(20,12,5,.7); transition: transform .15s linear; user-select: none; }
+.ks-cc svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.ks-cc::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(20,16,12,.92) 0%, rgba(20,16,12,.25) 45%, rgba(20,16,12,0) 70%); }
+.ks-cc div { position: absolute; z-index: 1; left: 16px; right: 16px; bottom: 16px; }
+.ks-cc b { display: block; font: 500 26px/1.05 var(--serif); }
+.ks-cc small { color: var(--tan); font-size: 11px; letter-spacing: .1em; }
+/* ---------- planner ---------- */
+.ks-plan { display: grid; grid-template-columns: 1fr 1fr; border-radius: 18px; background: var(--dark); color: #efe7dc; overflow: hidden; }
+.ks-plan-l { padding: 56px 48px; }
+.ks-plan-l .ks-k { color: var(--tan); }
+.ks-plan-l .ks-k::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--tan); }
+.ks-plan-l .ks-p { color: #b9ad9f; }
+.ks-steps { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 14px; padding: 0; list-style: none; }
+.ks-steps li { display: flex; align-items: center; gap: 6px; padding: 7px 11px; border: 1px solid rgba(255,255,255,.14); border-radius: 6px; font-size: 12px; }
+.ks-steps li i { font-style: normal; color: var(--tan); font-size: 11px; }
+.ks-note { margin: 0 0 22px; padding-left: 10px; border-left: 1px solid rgba(255,255,255,.3); font-size: 12px; color: #9d9285; }
+.ks-plan-r { position: relative; padding: 28px; border-left: 1px solid rgba(255,255,255,.08); background-image: radial-gradient(rgba(255,255,255,.07) 1px, transparent 1px); background-size: 18px 18px; display: flex; flex-direction: column; }
+.ks-seg { display: inline-flex; gap: 2px; padding: 3px; border-radius: 8px; background: rgba(255,255,255,.06); align-self: flex-end; }
+.ks-seg button { min-height: 32px; padding: 0 12px; border: 0; border-radius: 6px; background: none; font-size: 12px; font-weight: 600; color: inherit; transition: background .2s; }
+.ks-seg button[aria-pressed="true"] { background: var(--tan); color: var(--ink); }
+.ks-plan svg.pl { flex: 1; width: 100%; min-height: 250px; max-height: 330px; margin: 8px 0; }
+.ks-plan svg.pl rect { transition: x .5s cubic-bezier(.3,.7,.2,1), y .5s cubic-bezier(.3,.7,.2,1), width .5s cubic-bezier(.3,.7,.2,1), height .5s cubic-bezier(.3,.7,.2,1), opacity .3s; }
+.ks-plan svg.pl text { transition: transform .5s cubic-bezier(.3,.7,.2,1), opacity .3s; font: 600 13px var(--sans); fill: #efe7dc; }
+.ks-dims { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; font-size: 12px; color: #b9ad9f; }
+.ks-dims label { display: grid; gap: 4px; }
+.ks-dims input { width: 96px; height: 36px; padding: 0 10px; border: 1px solid rgba(255,255,255,.18); border-radius: 6px; background: rgba(255,255,255,.05); color: #fff; font-weight: 600; }
+.ks-dims span { margin-left: auto; color: var(--tan); }
+/* ---------- size picker ---------- */
+.ks-size { display: grid; grid-template-columns: 1.05fr .9fr 1.05fr; align-items: center; gap: 24px; padding: 48px 40px; border-radius: 18px; background: var(--bg2); border: 1px solid rgba(138,106,72,.15); }
+.ks-size .ks-h2 { font-size: clamp(30px, 3.4vw, 46px); }
+.ks-size .ks-p b { color: var(--ink); border-bottom: 1px solid var(--ink); }
+.ks-box { width: 100%; max-width: 320px; margin: 0 auto; }
+.ks-box rect, .ks-box line, .ks-box g { transition: x .4s cubic-bezier(.3,.7,.2,1), width .4s cubic-bezier(.3,.7,.2,1), transform .4s cubic-bezier(.3,.7,.2,1); }
+.ks-ctl > b { display: block; margin: 0 0 8px; font-size: 12px; }
+.ks-ctl > b ~ b { margin-top: 16px; }
+.ks-pos { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; padding: 3px; border-radius: 8px; background: #fff; }
+.ks-pos button { min-height: 34px; padding: 0 4px; border: 0; border-radius: 6px; background: none; font-size: 12px; white-space: nowrap; }
+.ks-pos button[aria-pressed="true"] { background: var(--dark); color: #fff; }
+.ks-step { display: grid; grid-template-columns: 44px 1fr 44px; height: 46px; border: 1px solid var(--line); border-radius: 8px; background: #fff; overflow: hidden; }
+.ks-step button { height: 100%; border: 0; background: none; font-size: 18px; }
+.ks-step button:hover { background: var(--bg); }
+.ks-step input { height: 100%; width: 100%; min-width: 0; border: 0; border-left: 1px solid var(--line); border-right: 1px solid var(--line); text-align: center; font-weight: 700; font-size: 17px; -moz-appearance: textfield; }
+.ks-step input::-webkit-inner-spin-button, .ks-step input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.ks-chips { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 8px; }
+.ks-chips button { min-height: 32px; border: 1px solid var(--line); border-radius: 6px; background: rgba(255,255,255,.55); font-size: 12px; }
+.ks-chips button[aria-pressed="true"] { background: #e6d2bb; border-color: var(--tan); font-weight: 700; }
+.ks-hint { margin: 8px 0 12px; font-size: 12px; color: var(--ink2); }
+.ks-ctl .ks-btn { width: 100%; min-height: 48px; font-size: 14px; }
+.ks-ctl .ks-btn span { color: var(--tan); }
+.ks-ctl > small { display: block; margin-top: 10px; text-align: center; font-size: 12px; color: var(--ink2); }
+/* ---------- products ---------- */
+.ks-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.ks-tabs button { min-height: 36px; padding: 0 14px; border: 1px solid var(--line); border-radius: 99px; background: transparent; font-size: 13px; font-weight: 500; }
+.ks-tabs button[aria-selected="true"] { background: var(--dark); color: #fff; border-color: var(--dark); }
+.ks-fchip { display: inline-flex; align-items: center; gap: 8px; margin: 0 0 16px; padding: 6px 8px 6px 12px; border-radius: 99px; border: 1px solid var(--tan); background: #f3e5d3; font-size: 12px; font-weight: 600; }
+.ks-fchip button { width: 22px; height: 22px; border: 0; border-radius: 50%; background: var(--dark); color: #fff; font-size: 11px; line-height: 1; }
+.ks-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+.ks-pc { display: flex; flex-direction: column; border-radius: 14px; background: var(--card); border: 1px solid var(--line); overflow: hidden; transition: transform .25s, box-shadow .25s; animation: ks-in .35s ease both; }
+.ks-pc:hover { transform: translateY(-3px); box-shadow: 0 18px 30px -20px rgba(40,25,10,.45); }
+@keyframes ks-in { from { opacity: 0; transform: translateY(8px); } }
+.ks-pc .art { position: relative; aspect-ratio: 5 / 4; }
+.ks-pc .art svg { width: 100%; height: 100%; }
+.ks-pc .art em { position: absolute; top: 10px; left: 10px; padding: 3px 8px; border-radius: 99px; background: var(--tan); font: 700 10px/1.4 var(--sans); font-style: normal; }
+.ks-pc .bd { display: flex; flex-direction: column; flex: 1; padding: 12px 14px 14px; }
+.ks-pc .ct { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--tan2); }
+.ks-pc h3 { margin: 4px 0 4px; font-size: 15px; line-height: 1.3; font-weight: 600; }
+.ks-pc .sz { font-size: 12px; color: var(--ink2); }
+.ks-pc .ft { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: auto; padding-top: 12px; }
+.ks-pc .pr { font-weight: 700; font-size: 15px; }
+.ks .ks-add { width: 38px; height: 38px; flex: none; display: grid; place-items: center; border: 0; border-radius: 8px; background: var(--dark); color: #fff; transition: transform .15s, background .2s; }
+.ks .ks-add:hover { background: var(--tan2); }
+.ks-add:active { transform: scale(.92); }
+.ks-add svg { width: 17px; height: 17px; }
+.ks-empty { grid-column: 1 / -1; padding: 40px; border: 1px dashed var(--line); border-radius: 14px; text-align: center; color: var(--ink2); }
+/* ---------- showroom ---------- */
+.ks-show { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+.ks-sr { border-radius: 16px; overflow: hidden; background: var(--card); border: 1px solid var(--line); }
+.ks-sr .art { position: relative; height: 320px; }
+.ks-sr .art svg { width: 100%; height: 100%; }
+.ks-sr .art b { position: absolute; left: 22px; bottom: 16px; font: 500 40px/1 var(--serif); color: #fff; text-shadow: 0 2px 14px rgba(0,0,0,.5); }
+.ks-sr .bd { padding: 18px 22px 22px; }
+.ks-sr p { display: flex; align-items: center; gap: 8px; margin: 0 0 6px; font-size: 13px; color: var(--ink2); }
+.ks-sr p svg { width: 15px; height: 15px; flex: none; }
+.ks-sr .bt { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+/* ---------- room chooser ---------- */
+.ks-rooms { background: var(--bg2); }
+.ks-rt { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 26px; }
+.ks-rt button { display: flex; align-items: center; gap: 12px; padding: 12px; border: 1px solid transparent; border-radius: 14px; background: transparent; text-align: left; transition: background .2s, border-color .2s; }
+.ks-rt button i { width: 44px; height: 44px; flex: none; display: grid; place-items: center; border-radius: 50%; background: #fff; transition: background .2s, color .2s; }
+.ks-rt button i svg { width: 20px; height: 20px; }
+.ks-rt button b { display: block; font-size: 14px; }
+.ks-rt button small { font-size: 12px; color: var(--ink2); }
+.ks-rt button[aria-selected="true"] { background: var(--card); border-color: var(--line); }
+.ks-rt button[aria-selected="true"] i { background: var(--dark); color: #fff; }
+.ks-rc { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.ks-rc a { position: relative; display: block; height: 340px; border-radius: 16px; overflow: hidden; animation: ks-in .4s ease both; }
+.ks-rc a svg { position: absolute; inset: 0; width: 100%; height: 100%; transition: transform .6s; }
+.ks-rc a:hover svg { transform: scale(1.04); }
+.ks-rc a::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(20,16,12,.85), rgba(20,16,12,0) 55%); }
+.ks-rc a div { position: absolute; z-index: 1; left: 18px; right: 18px; bottom: 18px; color: #fff; }
+.ks-rc a b { display: block; font: 500 28px/1.05 var(--serif); }
+.ks-rc a small { font-size: 12px; color: #e0d4c5; }
+/* ---------- journal ---------- */
+.ks-jr { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.ks-jr article .art { aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; }
+.ks-jr article .art svg { width: 100%; height: 100%; transition: transform .6s; }
+.ks-jr article:hover .art svg { transform: scale(1.04); }
+.ks-jr .ks-k { margin-top: 14px; color: var(--tan); font-size: 10px; }
+.ks-jr h3 { margin: 6px 0 6px; font-size: 17px; line-height: 1.35; }
+.ks-jr p { margin: 0; font-size: 13px; color: var(--ink2); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+/* ---------- footer ---------- */
+.ks-foot { background: var(--dark); color: #d9cfc2; padding: 64px clamp(16px, 5vw, 64px) 26px; }
+.ks-fg { display: grid; grid-template-columns: 1.3fr 1fr 1fr 1fr; gap: 32px; }
+.ks-fb b { display: block; font: 500 30px/1 var(--serif); letter-spacing: .22em; color: #fff; }
+.ks-fb b span { color: var(--tan); }
+.ks-fb p { margin: 12px 0 2px; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; }
+.ks-fb small { color: #9d9285; }
+.ks-soc { display: flex; gap: 8px; margin-top: 18px; }
+.ks-soc a { width: 38px; height: 38px; display: grid; place-items: center; border: 1px solid rgba(255,255,255,.16); border-radius: 6px; transition: background .2s, border-color .2s; }
+.ks-soc a:hover { background: var(--tan); border-color: var(--tan); color: var(--ink); }
+.ks-soc svg { width: 16px; height: 16px; }
+.ks-foot details summary { list-style: none; margin-bottom: 12px; color: #fff; font-weight: 600; pointer-events: none; }
+.ks-foot details summary::-webkit-details-marker { display: none; }
+.ks-foot details summary .ch { display: none; width: 12px; height: 12px; transition: transform .2s; }
+.ks-foot details a, .ks-foot details p { display: flex; align-items: flex-start; gap: 8px; margin: 0 0 10px; font-size: 13px; }
+.ks-foot details a:hover { color: var(--tan); }
+.ks-foot details svg { width: 14px; height: 14px; flex: none; margin-top: 3px; color: var(--tan); }
+.ks-fbot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; margin-top: 40px; padding-top: 22px; border-top: 1px solid rgba(255,255,255,.1); font-size: 12px; color: #9d9285; }
+.ks-pay { display: flex; flex-wrap: wrap; gap: 6px; }
+.ks-pay span { padding: 5px 10px; border-radius: 5px; background: rgba(255,255,255,.08); color: #e6ddd1; font: 700 10px/1.4 var(--sans); letter-spacing: .06em; }
+/* reveal */
+.ks-js .ks-rv { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
+.ks-js .ks-rv.in { opacity: 1; transform: none; }
+/* ---------- responsive ---------- */
+@media (max-width: 1520px) { .ks-ni .ic { display: none; } .ks-head { gap: 12px; } }
+@media (max-width: 1320px) {
+  .ks-nav, .ks .ks-quote, .ks-act .ks-search { display: none; }
+  .ks-head { justify-content: space-between; }
+  .ks-burger { display: grid; }
+}
+@media (max-width: 980px) {
+  .ks-hero { display: flex; flex-direction: column; min-height: 0; }
+  .ks-hero-art { position: relative; order: -1; width: 100%; height: 320px; }
+  .ks-hero-art::after { background: linear-gradient(0deg, var(--bg), rgba(246,239,230,0) 35%); }
+  .ks-hero-txt { padding: 8px clamp(16px, 5vw, 64px) 0; }
+  .ks-hero-foot { position: static; flex-direction: column; align-items: stretch; padding: 26px clamp(16px, 5vw, 64px) 30px; }
+  .ks-feat, .ks-stats { width: auto; }
+  .ks-fr { flex-wrap: wrap; align-items: stretch; }
+  .ks-stats { flex: 1 1 260px; }
+  .ks-consult { flex: 1 1 160px; width: auto; }
+  .ks-plan, .ks-size { grid-template-columns: 1fr; }
+  .ks-plan-l { padding: 36px 24px 8px; }
+  .ks-plan-r { border-left: 0; padding: 18px 20px 24px; }
+  .ks-seg { align-self: flex-start; }
+  .ks-size { padding: 32px 22px; }
+  .ks-grid { grid-template-columns: repeat(2, 1fr); }
+  .ks-show, .ks-rc, .ks-jr { grid-template-columns: 1fr; }
+  .ks-rc a { height: 240px; }
+  .ks-rt { grid-template-columns: repeat(2, 1fr); }
+  .ks-fg { grid-template-columns: 1fr 1fr; }
+  .ks-fb { grid-column: 1 / -1; }
+}
+@media (max-width: 640px) {
+  .ks-sec { padding-top: 56px; padding-bottom: 56px; }
+  .ks-head { padding: 0 14px; height: 62px; }
+  .ks-logo { font-size: 20px; }
+  .ks-hero-art { height: 270px; }
+  .ks-hero h1 { font-size: 40px; }
+  .ks-feat { grid-template-columns: 76px 1fr; }
+  .ks-grid { gap: 10px; }
+  .ks-pc .bd { padding: 10px; }
+  .ks-pc h3 { font-size: 13px; }
+  .ks-pc .pr { font-size: 13px; }
+  .ks-pc .ft { flex-wrap: wrap; }
+  .ks .ks-add { width: 34px; height: 34px; }
+  .ks-rail > a { width: 200px; }
+  .ks-cc { height: 290px; }
+  .ks-sr .art { height: 230px; }
+  .ks-rt button { flex-direction: column; text-align: center; gap: 6px; padding: 10px 4px; }
+  .ks-rt button small { display: none; }
+  .ks-pos button { font-size: 11px; }
+  .ks-fg { grid-template-columns: 1fr; gap: 0; }
+  .ks-fb { margin-bottom: 22px; }
+  .ks-foot details { border-top: 1px solid rgba(255,255,255,.1); }
+  .ks-foot details summary { display: flex; justify-content: space-between; align-items: center; margin: 0; padding: 15px 0; pointer-events: auto; cursor: pointer; }
+  .ks-foot details summary .ch { display: block; }
+  .ks-foot details[open] summary .ch { transform: rotate(180deg); }
+  .ks-foot details[open] > div { padding-bottom: 10px; }
+  .ks-fbot { flex-direction: column; text-align: center; }
+  .ks-pay { justify-content: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ks *, .ks *::before, .ks *::after { animation: none !important; transition: none !important; }
+  .ks-js .ks-rv { opacity: 1; transform: none; }
+}
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=c628d5da9a"></script>
+<div class="md-page">
+  <div class="aw-sotd" style="padding-top:16px">
+    <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">10 phần</span></p>
+    <h1 class="aw-h1" style="--aw-h1:clamp(40px,7vw,96px)">Cửa hàng phụ kiện bếp</h1>
+    <p class="aw-lead">Trang chủ cửa hàng phụ kiện tủ bếp. Rê chuột lên menu để mở bảng tối, đổi kiểu bếp chữ I/L/U và gõ số đo, chỉnh bề rộng thùng tủ rồi bấm «Xem sản phẩm vừa tủ» để lọc lưới, thêm vào giỏ, kéo dải danh mục.</p>
+    <p class="aw-lead" style="font-size:14px">Dựng lại từ <a href="https://www.facebook.com/share/v/1CEtwfANkT/" target="_blank" rel="noopener">video Facebook</a>. Viết lại bằng JS/CSS thuần, hình vẽ bằng SVG, thương hiệu và số liệu là mẫu.</p>
+  </div>
+  <div class="ks" id="ks"></div>
+</div>
+</main>
+<script>
+// Các phần của pattern (sổ patterns.json trỏ tới các id này).
+const PARTS = [
+  { id: 'hero', vi: 'Hero tủ bếp đổi cảnh' },
+  { id: 'mega-menu', vi: 'Mega menu tối' },
+  { id: 'category-rail', vi: 'Dải danh mục cong' },
+  { id: 'layout-planner', vi: 'Bố trí theo mặt bằng' },
+  { id: 'size-picker', vi: 'Chọn cỡ thùng tủ' },
+  { id: 'product-tabs', vi: 'Sản phẩm theo tab' },
+  { id: 'showroom', vi: 'Showroom' },
+  { id: 'room-chooser', vi: 'Chọn khu vực' },
+  { id: 'journal', vi: 'Bài viết' },
+  { id: 'footer', vi: 'Footer tối' }];
+(() => {
+const ks = document.getElementById('ks');
+const RM = matchMedia('(prefers-reduced-motion: reduce)');
+const I = (d, cls = '') => `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const IC = {
+  grid: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
+  chev: '<path d="m6 9 6 6 6-6"/>', search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>', menu: '<path d="M4 7h16M4 12h16M4 17h16"/>', x: '<path d="M6 6l12 12M18 6 6 18"/>',
+  cart: '<path d="M3 4h2l2.4 11h11L21 8H6.2"/><circle cx="9.5" cy="19.5" r="1.4"/><circle cx="17" cy="19.5" r="1.4"/>',
+  cartp: '<path d="M3 4h2l2.4 11h11L21 8H6.2"/><circle cx="9.5" cy="19.5" r="1.4"/><circle cx="17" cy="19.5" r="1.4"/><path d="M13 9.5v4M11 11.5h4"/>',
+  doc: '<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/>', left: '<path d="M19 12H5m6-6-6 6 6 6"/>', right: '<path d="M5 12h14m-6-6 6 6-6 6"/>',
+  box: '<path d="M12 3 3 7.5v9L12 21l9-4.5v-9z"/><path d="M3 7.5 12 12l9-4.5M12 12v9"/>', layout: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 9v12"/>', home: '<path d="M3 11 12 4l9 7v9H3z"/><path d="M9 20v-6h6v6"/>',
+  pin: '<path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/>', clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  phone: '<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>', mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
+  pot: '<path d="M4 10h16v6a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/><path d="M2 10h20M9 6c0-1 1-2 3-2s3 1 3 2"/>', shirt: '<path d="M8 3 3 6l2 4 2-1v12h10V9l2 1 2-4-5-3a4 4 0 0 1-8 0z"/>', door: '<path d="M6 21V3h12v18M3 21h18"/><circle cx="15" cy="12" r="1"/>',
+  bath: '<path d="M3 12h18v3a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5z"/><path d="M6 12V6a2 2 0 0 1 4 0M7 20l-1 2M17 20l1 2"/>',
+  fb: '<path d="M14 8h3V4h-3a4 4 0 0 0-4 4v3H7v4h3v6h4v-6h3l1-4h-4V8z"/>', ig: '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6"/>',
+  tt: '<path d="M14 3v11a4 4 0 1 1-4-4"/><path d="M14 3a5 5 0 0 0 5 5"/>', yt: '<rect x="2" y="5" width="20" height="14" rx="4"/><path d="m10 9 5 3-5 3z"/>' };
+const vnd = (n) => n.toLocaleString('vi-VN') + ' đ';
+
+// ---------------- vẽ SVG (khung 200×160) ----------------
+let U = 0;
+function wood(id, a = '#4a3424', b = '#8a6342') {
+  let grain = ''; for (let i = 0; i < 9; i++) grain += `<path d="M${20 + i * 19} 0q${i % 2 ? 3 : -3} 80 0 160" stroke="#000" stroke-opacity=".07" fill="none"/>`;
+  return `<defs><linearGradient id="${id}w" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset=".55" stop-color="${b}"/><stop offset="1" stop-color="${a}"/></linearGradient>
+  <radialGradient id="${id}l" cx=".5" cy="0" r=".85"><stop offset="0" stop-color="#ffd59a" stop-opacity=".8"/><stop offset="1" stop-color="#ffd59a" stop-opacity="0"/></radialGradient>
+  <linearGradient id="${id}m" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4f2ee"/><stop offset="1" stop-color="#9a958e"/></linearGradient>
+  <linearGradient id="${id}p" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fffaf1"/><stop offset=".6" stop-color="#efe6d8"/><stop offset="1" stop-color="#d8ccba"/></linearGradient></defs>
+  <rect width="200" height="160" fill="url(#${id}w)"/>${grain}<rect width="200" height="160" fill="url(#${id}l)"/><rect width="200" height="5" fill="#24180f"/><rect y="5" width="200" height="1.6" fill="#ffe7bd"/>
+  <rect width="12" height="160" fill="#5d4029"/><rect x="188" width="12" height="160" fill="#5d4029"/><rect x="12" width="1" height="160" fill="#000" opacity=".25"/><rect x="187" width="1" height="160" fill="#000" opacity=".25"/>`;
+}
+const JAR = ['#c9a35f', '#7d8a3c', '#8b3a2a', '#e8dcc4', '#b5651d', '#5b4636'];
+function jars(x0, y, n, w = 16, gap = 4) {
+  let s = ''; for (let j = 0; j < n; j++) { const x = x0 + j * (w + gap), h = 22 + (j * 7) % 9, c = JAR[(j + y) % JAR.length];
+    s += `<rect x="${x}" y="${y - h}" width="${w}" height="${h}" rx="3" fill="${c}" opacity=".92"/><rect x="${x}" y="${y - h}" width="${w}" height="${h}" rx="3" fill="#fff" opacity=".18"/><rect x="${x + 2.5}" y="${y - h + 4}" width="2.5" height="${h - 8}" rx="1" fill="#fff" opacity=".45"/><rect x="${x - .5}" y="${y - h - 5}" width="${w + 1}" height="6" rx="1.5" fill="#3a2a1c"/>`; }
+  return s;
+}
+const ART = {
+  dish(id) {
+    let p = '', w = ''; for (let i = 0; i < 11; i++) { const x = 34 + i * 13; p += `<ellipse cx="${x}" cy="54" rx="15" ry="32" fill="url(#${id}p)" stroke="#cbbfae" stroke-width=".7"/>`; w += `<path d="M${x - 7} 66v20" stroke="url(#${id}m)" stroke-width="1.2"/>`; }
+    let g = ''; for (let i = 0; i < 3; i++) g += `<rect x="${30 + i * 22}" y="112" width="17" height="30" rx="2" fill="#fff" opacity=".28" stroke="#fff" stroke-opacity=".65" stroke-width=".7"/><path d="M${33 + i * 22} 116v22" stroke="#fff" opacity=".4"/>`;
+    let b = ''; for (let i = 0; i < 2; i++) b += `<path d="M${110 + i * 40} 120h34c0 14-8 22-17 22s-17-8-17-22z" fill="url(#${id}p)" stroke="#cbbfae" stroke-width=".7"/><ellipse cx="${127 + i * 40}" cy="120" rx="17" ry="3" fill="#f7f1e6" stroke="#cbbfae" stroke-width=".6"/>`;
+    return wood(id) + p + w + `<path d="M20 78h160M20 86h160" stroke="url(#${id}m)" stroke-width="2.2"/><path d="M20 142h160" stroke="url(#${id}m)" stroke-width="2.4"/>${g}${b}<path d="M176 20l-10 46" stroke="#cfcac2" stroke-width="3"/><circle cx="176" cy="20" r="3" fill="#8f8a82"/>`;
+  },
+  spice(id) {
+    let s = ''; [52, 98, 144].forEach((y, k) => { s += jars(66, y - 1, 4, 15, 3.5) + `<rect x="60" y="${y}" width="80" height="3" rx="1" fill="url(#${id}m)"/><path d="M60 ${y - 13}h80" stroke="url(#${id}m)" stroke-width="1.3"/>`; });
+    return wood(id, '#3f2c1e', '#7a5638') + `<rect x="44" y="10" width="112" height="150" fill="#2e2117" opacity=".45"/>` + s + `<rect x="57" y="10" width="3.5" height="150" fill="url(#${id}m)"/><rect x="139.5" y="10" width="3.5" height="150" fill="url(#${id}m)"/><rect x="146" y="40" width="4" height="70" rx="2" fill="#d8d3cb"/>`;
+  },
+  rice(id) {
+    let d = ''; for (let i = 0; i < 70; i++) d += `<circle cx="${70 + (i * 37) % 60}" cy="${66 + (i * 23) % 40}" r=".9" fill="#d9caa0"/>`;
+    return wood(id, '#d8c4ab', '#efe2d0') + `<rect x="50" y="22" width="100" height="126" rx="7" fill="url(#${id}m)" stroke="#8f8a82"/><rect x="62" y="38" width="76" height="76" rx="4" fill="#f6efdc" stroke="#b9b2a7"/><rect x="62" y="38" width="76" height="22" fill="#fff" opacity=".55"/>${d}<rect x="86" y="122" width="28" height="9" rx="3" fill="#2b2420"/><circle cx="100" cy="30" r="3" fill="#2b2420"/>`;
+  },
+  pots(id) {
+    let w = ''; for (let i = 0; i < 16; i++) w += `<path d="M${24 + i * 10} 92v46" stroke="url(#${id}m)" stroke-width="1"/>`;
+    const pot = (x, y, r, c) => `<rect x="${x - r}" y="${y}" width="${r * 2}" height="${r * .9}" rx="3" fill="url(#${id}m)"/><ellipse cx="${x}" cy="${y}" rx="${r}" ry="${r * .3}" fill="${c}"/><rect x="${x - 3}" y="${y - r * .3 - 3}" width="6" height="4" rx="2" fill="#111"/><rect x="${x - r - 7}" y="${y + 3}" width="8" height="3" rx="1.5" fill="#222"/><rect x="${x + r - 1}" y="${y + 3}" width="8" height="3" rx="1.5" fill="#222"/>`;
+    return wood(id) + w + `<rect x="22" y="90" width="156" height="50" rx="3" fill="none" stroke="url(#${id}m)" stroke-width="2.4"/>` + pot(58, 100, 22, '#2d2d2d') + pot(124, 104, 18, '#3b3b3b') + pot(160, 30, 14, '#383838') + `<path d="M22 60h156" stroke="url(#${id}m)" stroke-width="2"/>` + pot(54, 38, 14, '#2a2a2a') + pot(100, 34, 18, '#333');
+  },
+  pantry(id) {
+    let s = ''; [36, 66, 96, 126, 154].forEach((y, k) => { s += (k % 2 ? jars(68, y - 1, 3, 18, 5) + `<rect x="134" y="${y - 20}" width="10" height="19" rx="2" fill="#c96b3c"/>` : jars(64, y - 1, 4, 14, 5)) + `<rect x="58" y="${y}" width="90" height="2.5" fill="url(#${id}m)"/>`; });
+    return wood(id, '#3a281b', '#6e4d33') + `<rect x="54" y="8" width="98" height="152" fill="#22180f" opacity=".5"/>` + s + `<rect x="54" y="8" width="3" height="152" fill="url(#${id}m)"/><rect x="149" y="8" width="3" height="152" fill="url(#${id}m)"/>`;
+  },
+  tray(id) {
+    let c = ''; for (let i = 0; i < 4; i++) c += `<rect x="${46 + i * 7}" y="52" width="3" height="66" rx="1.5" fill="url(#${id}m)"/>`;
+    for (let i = 0; i < 3; i++) c += `<rect x="${92 + i * 8}" y="58" width="3" height="58" rx="1.5" fill="url(#${id}m)"/><ellipse cx="${93.5 + i * 8}" cy="58" rx="3.5" ry="6" fill="url(#${id}m)"/>`;
+    for (let i = 0; i < 3; i++) c += `<rect x="${136 + i * 9}" y="50" width="3.5" height="70" rx="1.7" fill="url(#${id}m)"/><rect x="${135 + i * 9}" y="90" width="5.5" height="30" rx="2" fill="#2d2521"/>`;
+    return `<defs><linearGradient id="${id}m" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f4f2ee"/><stop offset="1" stop-color="#9a958e"/></linearGradient></defs>
+    <rect width="200" height="160" fill="#cdb08e"/><rect y="0" width="200" height="30" fill="#bf9f7b"/><rect x="18" y="30" width="164" height="118" rx="8" fill="#a7835f"/><rect x="26" y="38" width="148" height="102" rx="5" fill="#e6d4bd"/>
+    <path d="M78 38v102M124 38v102" stroke="#b99772" stroke-width="3"/><rect x="26" y="124" width="148" height="16" fill="#d8c3a8"/>${c}<rect x="70" y="146" width="60" height="5" rx="2.5" fill="#6b5039"/>`;
+  },
+  lift(id) {
+    let c = ''; for (let i = 0; i < 4; i++) c += `<rect x="${36 + i * 26}" y="104" width="18" height="22" rx="3" fill="url(#${id}p)" stroke="#cbbfae" stroke-width=".6"/><path d="M${54 + i * 26} 110a4 4 0 0 1 0 9" stroke="#e8dfd2" stroke-width="2.4" fill="none"/>`;
+    let p = ''; for (let i = 0; i < 5; i++) p += `<ellipse cx="148" cy="${124 - i * 3}" rx="22" ry="4" fill="url(#${id}p)" stroke="#cbbfae" stroke-width=".6"/>`;
+    return wood(id) + `<polygon points="14,7 186,7 196,-30 4,-30" fill="#a57b55"/><polygon points="10,7 190,7 190,13 10,13" fill="#6b4a30"/>` + c + p + `<rect x="14" y="126" width="172" height="4" fill="#5d4029"/><path d="M174 98 152 22" stroke="#d6d1c9" stroke-width="4" stroke-linecap="round"/><path d="M174 98 162 60" stroke="#8f8a82" stroke-width="6" stroke-linecap="round"/><circle cx="174" cy="98" r="4" fill="#77726b"/><circle cx="152" cy="22" r="3" fill="#77726b"/><rect x="14" y="130" width="172" height="30" fill="#e8ddd0"/>`;
+  },
+  hinge(id) {
+    return `<defs><linearGradient id="${id}m" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4f2ee"/><stop offset="1" stop-color="#8f8a82"/></linearGradient></defs>
+    <rect width="200" height="160" fill="#efe6da"/><rect x="22" y="14" width="76" height="140" rx="3" fill="#b88b5f"/><rect x="98" y="14" width="10" height="140" fill="#8a6342"/><rect x="108" y="14" width="76" height="140" rx="3" fill="#d6c3ab" opacity=".7"/>
+    <circle cx="74" cy="58" r="15" fill="#8f8a82"/><circle cx="74" cy="58" r="12" fill="url(#${id}m)"/><rect x="74" y="50" width="56" height="16" rx="5" fill="url(#${id}m)" stroke="#77726b" stroke-width=".7"/><rect x="118" y="44" width="40" height="28" rx="5" fill="url(#${id}m)" stroke="#77726b" stroke-width=".7"/><circle cx="128" cy="58" r="2.5" fill="#77726b"/><circle cx="148" cy="58" r="2.5" fill="#77726b"/>
+    <circle cx="74" cy="112" r="15" fill="#8f8a82"/><circle cx="74" cy="112" r="12" fill="url(#${id}m)"/><rect x="74" y="104" width="56" height="16" rx="5" fill="url(#${id}m)" stroke="#77726b" stroke-width=".7"/><rect x="118" y="98" width="40" height="28" rx="5" fill="url(#${id}m)" stroke="#77726b" stroke-width=".7"/>`;
+  },
+  wardrobe(id) {
+    const cl = ['#8d7b68', '#c9b79c', '#5c4a3b', '#e3d6c3', '#a68a6d', '#3f3a35', '#d8c7ae'];
+    let h = ''; cl.forEach((c, i) => { const x = 30 + i * 21; h += `<path d="M${x + 8} 30v-4a3 3 0 1 1 3 3" stroke="#cfcac2" fill="none" stroke-width="1.4"/><path d="M${x} 38l${8} -6 ${8} 6" stroke="#cfcac2" fill="none" stroke-width="1.4"/><rect x="${x - 1}" y="38" width="19" height="${70 + (i * 13) % 30}" rx="3" fill="${c}"/>`; });
+    return wood(id, '#efe5d8', '#d9c6ae') + `<path d="M16 30h168" stroke="#9a958e" stroke-width="3"/>` + h + `<rect x="16" y="138" width="168" height="22" fill="#b99772"/><rect x="30" y="142" width="40" height="12" rx="2" fill="#5c4a3b"/><rect x="80" y="142" width="40" height="12" rx="2" fill="#8d7b68"/>`;
+  },
+  door(id) {
+    let k = ''; for (let i = 0; i < 9; i++) k += `<circle cx="${121 + (i % 3) * 6}" cy="${62 + Math.floor(i / 3) * 6}" r="1.6" fill="#c9a27a"/>`;
+    return `<defs><linearGradient id="${id}d" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7a5536"/><stop offset="1" stop-color="#a3774f"/></linearGradient></defs>
+    <rect width="200" height="160" fill="#e9dfd2"/><rect x="50" y="8" width="100" height="152" fill="#cbb79e"/><rect x="56" y="14" width="88" height="146" fill="url(#${id}d)"/><rect x="66" y="26" width="68" height="50" rx="2" fill="none" stroke="#000" stroke-opacity=".15"/><rect x="66" y="90" width="68" height="60" rx="2" fill="none" stroke="#000" stroke-opacity=".15"/>
+    <rect x="114" y="50" width="26" height="56" rx="5" fill="#1e1b18"/>${k}<rect x="104" y="86" width="30" height="5" rx="2.5" fill="#d9d4cc"/><rect x="0" y="150" width="200" height="10" fill="#cdbfae"/>`;
+  },
+  bath(id) {
+    let t = ''; for (let i = 1; i < 10; i++) t += `<path d="M${i * 20} 0v160" stroke="#fff" stroke-opacity=".55"/>`; for (let i = 1; i < 8; i++) t += `<path d="M0 ${i * 20}h200" stroke="#fff" stroke-opacity=".55"/>`;
+    return `<defs><radialGradient id="${id}r" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#fbfaf7"/><stop offset="1" stop-color="#cfd5d6"/></radialGradient></defs>
+    <rect width="200" height="160" fill="#dcd3c7"/>${t}<circle cx="72" cy="58" r="36" fill="#b89a74"/><circle cx="72" cy="58" r="32" fill="url(#${id}r)"/><rect x="128" y="40" width="54" height="4" rx="2" fill="#9a958e"/><rect x="134" y="44" width="40" height="58" rx="3" fill="#f1e8da"/><path d="M134 92h40" stroke="#c9a27a" stroke-width="3"/>
+    <rect x="22" y="112" width="156" height="48" rx="4" fill="#8a6a48"/><rect x="22" y="108" width="156" height="8" rx="3" fill="#efe9e1"/><rect x="66" y="98" width="12" height="12" rx="2" fill="#bdb7af"/>`;
+  },
+  room(id, v = 0) {
+    const up = v ? '#5d6b73' : '#7a5638', lo = v ? '#4c5961' : '#3c2c20';
+    let cab = ''; for (let i = 0; i < 4; i++) cab += `<rect x="${70 + i * 32}" y="22" width="30" height="44" rx="1.5" fill="${up}"/><rect x="${83 + i * 32}" y="56" width="4" height="1.5" fill="#d9d4cc"/>`;
+    for (let i = 0; i < 4; i++) cab += `<rect x="${70 + i * 32}" y="104" width="30" height="40" rx="1.5" fill="${lo}"/><rect x="${78 + i * 32}" y="110" width="14" height="1.5" fill="#d9d4cc"/>`;
+    return `<defs><linearGradient id="${id}a" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f3e9dc"/><stop offset="1" stop-color="#d8c7b2"/></linearGradient><linearGradient id="${id}g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe2b3" stop-opacity=".75"/><stop offset="1" stop-color="#ffe2b3" stop-opacity="0"/></linearGradient></defs>
+    <rect width="200" height="160" fill="url(#${id}a)"/><rect x="10" y="20" width="44" height="70" rx="2" fill="#fbf6ee"/><path d="M32 20v70M10 55h44" stroke="#d8c7b2" stroke-width="2"/><rect x="10" y="20" width="44" height="70" rx="2" fill="none" stroke="#bfa887" stroke-width="2"/>
+    ${cab}<rect x="70" y="66" width="126" height="20" fill="url(#${id}g)"/><rect x="70" y="86" width="126" height="18" fill="#efe9e1"/><rect x="66" y="100" width="134" height="5" fill="#f7f3ed"/><rect x="0" y="144" width="200" height="16" fill="#b99772"/>
+    <path d="M30 0v20M44 0v26" stroke="#3a2a1c"/><ellipse cx="30" cy="22" rx="6" ry="3" fill="#2a2622"/><ellipse cx="44" cy="28" rx="6" ry="3" fill="#2a2622"/>
+    <rect x="14" y="112" width="46" height="32" rx="2" fill="#d9cbb7"/><rect x="10" y="108" width="54" height="5" rx="1" fill="#f7f3ed"/><circle cx="160" cy="80" r="5" fill="#6c8f5a"/><rect x="157" y="84" width="6" height="7" fill="#c9a27a"/>`;
+  }
+};
+const art = (k, opt) => { const id = 'k' + (++U); return `<svg viewBox="0 0 200 160" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${ART[k](id, opt)}</svg>`; };
+
+// ---------------- dữ liệu ----------------
+const MENU = [
+  { t: 'Phụ kiện tủ bếp', l: [['Giá bát nâng hạ', 'Kéo xuống ngang tầm tay'], ['Kệ gia vị kéo', 'Gọn khoang hẹp cạnh bếp'], ['Thùng gạo âm tủ', 'Lấy gạo bằng một nút bấm'], ['Giá xoong nồi', 'Chia ngăn khoang tủ dưới']], f: ['dish', 'Giá bát nâng hạ'] },
+  { t: 'Tủ quần áo', l: [['Thanh treo nâng hạ', 'Với tới tủ cao không cần ghế'], ['Giỏ kéo đa năng', 'Chia đồ gấp theo ngăn'], ['Kệ giày xoay', 'Tận dụng góc tủ chết'], ['Khay phụ kiện', 'Đồng hồ, cà vạt, trang sức']], f: ['wardrobe', 'Tủ áo gọn'] },
+  { t: 'Thiết bị bếp', l: [['Bếp điện', 'Bố trí vùng nấu'], ['Chậu và vòi rửa', 'Đo khoang tủ phía trên bếp'], ['Lò nướng và máy rửa bát', 'Tổ chức khu vực sơ chế'], ['Máy hút mùi', 'Dự trù khoang thiết bị']], f: ['room', 'Bếp đồng bộ'] },
+  { t: 'Ray & bản lề', l: [['Ray bi 3 tầng', 'Kéo hết lòng ngăn kéo'], ['Ray âm giảm chấn', 'Đóng êm, không va đập'], ['Bản lề giảm chấn', 'Bộ 4, mở 110°'], ['Bản lề góc', 'Cho tủ góc chữ L']], f: ['hinge', 'Bản lề giảm chấn'] },
+  { t: 'Phụ kiện cửa', l: [['Khoá điện tử', 'Vân tay, mã số, thẻ từ'], ['Tay nắm cửa', 'Inox mờ, đồng cổ'], ['Chặn cửa', 'Nam châm âm sàn'], ['Bản lề sàn', 'Cho cửa kính nặng']], f: ['door', 'Khoá vân tay'] },
+  { t: 'Tủ bếp' }, { t: 'Ưu đãi' }, { t: 'Showroom' }];
+const SLIDES = [
+  { k: 'dish', t: 'Giá bát nâng hạ', d: 'Kéo xuống ngang tầm tay, đẩy lên gọn gàng.' },
+  { k: 'spice', t: 'Kệ gia vị kéo', d: 'Khoang 200 mm vẫn đủ chỗ cho lọ gia vị.' },
+  { k: 'lift', t: 'Tay nâng khoang tủ trên', d: 'Mở cánh tủ trên nhẹ nhàng hơn.' },
+  { k: 'tray', t: 'Khay chia ngăn kéo', d: 'Dao, thìa, đũa có chỗ riêng.' }];
+const CATS = [['dish', 'Giá bát nâng hạ', 12], ['spice', 'Kệ gia vị', 9], ['rice', 'Thùng gạo', 6], ['pots', 'Giá xoong nồi', 8], ['pantry', 'Tủ đồ khô', 7], ['tray', 'Khay chia đồ', 10], ['lift', 'Tay nâng cánh', 5], ['hinge', 'Ray & bản lề', 14], ['wardrobe', 'Phụ kiện tủ áo', 11], ['door', 'Khoá & tay nắm', 9]];
+const TABS = [['all', 'Tất cả'], ['giabat', 'Giá bát'], ['giavi', 'Kệ gia vị'], ['gao', 'Thùng gạo'], ['cua', 'Phụ kiện cửa']];
+const PROD = [
+  { n: 'Giá bát nâng hạ inox 304', c: 'giabat', p: 'tren', a: 600, b: 900, v: 6290000, k: 'dish', hot: 1 },
+  { n: 'Giá bát cố định 2 tầng', c: 'giabat', p: 'tren', a: 600, b: 1000, v: 2690000, k: 'dish' },
+  { n: 'Kệ gia vị kéo 3 tầng', c: 'giavi', p: 'duoi', a: 200, b: 400, v: 1890000, k: 'spice', hot: 1 },
+  { n: 'Thùng gạo âm tủ 25 kg', c: 'gao', p: 'duoi', a: 300, b: 400, v: 2150000, k: 'rice' },
+  { n: 'Giá xoong nồi chia ngăn', c: 'giabat', p: 'duoi', a: 600, b: 900, v: 3450000, k: 'pots' },
+  { n: 'Tủ đồ khô 6 tầng', c: 'giavi', p: 'cao', a: 400, b: 600, v: 7900000, k: 'pantry' },
+  { n: 'Tay nâng cánh tủ trên', c: 'cua', p: 'tren', a: 600, b: 1200, v: 1290000, k: 'lift', hot: 1 },
+  { n: 'Bản lề giảm chấn (bộ 4)', c: 'cua', p: 'all', a: 300, b: 1200, v: 480000, k: 'hinge' }];
+const CATN = Object.fromEntries(TABS);
+const POS = [['all', 'Tất cả'], ['tren', 'Tủ bếp trên'], ['duoi', 'Tủ bếp dưới'], ['cao', 'Tủ cao']];
+const ROOMS = [
+  { t: 'Bếp', s: 'Giá bát, gia vị, thùng gạo', i: 'pot', c: [['dish', 'Giá bát nâng hạ', '12 mẫu · tủ 600–900'], ['spice', 'Kệ gia vị kéo', '9 mẫu · tủ 200–400'], ['tray', 'Khay chia ngăn kéo', '10 mẫu · mọi ngăn kéo']] },
+  { t: 'Tủ áo', s: 'Thanh treo, giỏ kéo', i: 'shirt', c: [['wardrobe', 'Thanh treo nâng hạ', '6 mẫu · tủ cao 2,4 m'], ['tray', 'Khay phụ kiện', '8 mẫu · ngăn kéo tủ áo'], ['pantry', 'Kệ giày nhiều tầng', '5 mẫu · tủ 400–600']] },
+  { t: 'Cửa', s: 'Khoá, tay nắm, bản lề', i: 'door', c: [['door', 'Khoá vân tay', '7 mẫu · cửa gỗ, cửa nhôm'], ['hinge', 'Bản lề giảm chấn', '14 mẫu · mở 95–165°'], ['door', 'Tay nắm âm', '9 mẫu · inox mờ']] },
+  { t: 'Phòng tắm', s: 'Giá khăn, gương, kệ góc', i: 'bath', c: [['bath', 'Gương tủ đèn LED', '4 mẫu · rộng 600–900'], ['bath', 'Giá treo khăn', '6 mẫu · inox 304'], ['pantry', 'Kệ góc nhiều tầng', '5 mẫu · góc 90°']] }];
+const POSTS = [
+  ['tray', 'Đo kích thước tủ trước khi mua phụ kiện', 'Để mua phụ kiện vừa khít, trơn tru và không bị cấn kẹt, bạn cần đo kích thước lọt lòng bên trong khoang tủ bằng thước dây, ghi lại ba số rộng, sâu, cao.'],
+  ['room', 'Bố trí phụ kiện theo thói quen nấu', 'Bố trí phụ kiện tủ bếp theo thói quen nấu nên bám sát trình tự thao tác thực tế: lấy, rửa, sơ chế, nấu và cất, để mỗi bước chỉ cần một tầm với.'],
+  ['dish', 'Chọn giá bát tủ trên thế nào?', 'Để chọn giá bát tủ bếp trên phù hợp, hãy ưu tiên đo đúng kích thước lọt lòng khoang tủ, chọn inox 304 chống gỉ và quyết định có cần nâng hạ hay không.']];
+
+// ---------------- dựng trang ----------------
+const navItem = (m, i) => m.l
+  ? `<li><button class="ks-ni" aria-expanded="false" aria-controls="ks-mm${i}">${I(IC.grid, 'ic')}${m.t}${I(IC.chev, 'ch')}</button>
+    <div class="ks-mega" id="ks-mm${i}"><div class="ks-mega-h"><b>${m.t}</b><a href="#ks-products">Xem tất cả →</a></div>
+    <div class="ks-mega-b">${m.l.map(([a, b]) => `<a class="l" href="#ks-products">${a}<small>${b}</small></a>`).join('')}<a class="ks-mega-f" href="#ks-products" tabindex="-1">${art(m.f[0], 1)}<span><small>BÁN CHẠY</small>${m.f[1]}</span></a></div></div></li>`
+  : `<li><a class="ks-ni" href="#${m.t === 'Showroom' ? 'showroom' : 'ks-products'}">${I(IC.grid, 'ic')}${m.t}</a></li>`;
+const logo = `<svg viewBox="0 0 40 40" aria-hidden="true"><rect x="7" y="7" width="26" height="26" rx="4" transform="rotate(45 20 20)" fill="none" stroke="#1c1a17" stroke-width="3"/><path d="M14 22h12M16 17h8" stroke="#8a6a48" stroke-width="3" stroke-linecap="round"/></svg>`;
+ks.innerHTML = `
+<header class="ks-head">
+  <a class="ks-logo" href="#hero">${logo}Bếp Gọn</a>
+  <nav class="ks-nav" id="mega-menu" aria-label="Danh mục"><ul>${MENU.map(navItem).join('')}</ul></nav>
+  <div class="ks-act">
+    <button class="ks-ib ks-search" aria-label="Tìm kiếm">${I(IC.search)}</button>
+    <a class="ks-ib" href="#ks-products" aria-label="Giỏ hàng, 0 món" id="ks-cart">${I(IC.cart)}<span class="ks-badge" id="ks-badge">0</span></a>
+    <a class="ks-quote" href="#showroom">${I(IC.doc).replace('<svg', '<svg width="15" height="15"')}Báo giá nhanh<i>→</i></a>
+    <button class="ks-ib ks-burger" aria-label="Mở menu" aria-expanded="false" aria-controls="ks-drawer">${I(IC.menu)}</button>
+  </div>
+</header>
+<div class="ks-scrim" data-close></div>
+<aside class="ks-drawer" id="ks-drawer" aria-label="Menu" role="dialog" aria-modal="true">
+  <div class="ks-drawer-h"><a class="ks-logo" href="#hero" data-close>${logo}Bếp Gọn</a><button class="ks-ib" data-close aria-label="Đóng menu">${I(IC.x)}</button></div>
+  ${MENU.map((m) => m.l ? `<details><summary>${m.t}${I(IC.chev, 'ch')}</summary><div>${m.l.map(([a]) => `<a href="#ks-products" data-close>${a}</a>`).join('')}</div></details>` : `<a class="dl" href="#${m.t === 'Showroom' ? 'showroom' : 'ks-products'}" data-close>${m.t}</a>`).join('')}
+  <a class="ks-btn ks-btn--dark" href="#showroom" data-close>Báo giá nhanh →</a>
+</aside>
+
+<section class="ks-hero" id="hero">
+  <div class="ks-hero-art">${SLIDES.map((s, i) => `<div class="ks-slide${i ? '' : ' on'}">${art(s.k)}</div>`).join('')}</div>
+  <div class="ks-hero-txt">
+    <span class="ks-k">Giải pháp lưu trữ cho nhà Việt</span>
+    <h1>Không Gian<br>Bếp <em>Thông Minh</em></h1>
+    <p>Phụ kiện vừa vặn với tủ bếp, để từng thao tác nấu nướng mỗi ngày gọn gàng hơn.</p>
+    <div class="ks-cta"><a class="ks-btn ks-btn--tan" href="#category-rail">Khám phá phụ kiện ↗</a><button class="ks-play" type="button"><i>▶</i>Xem video lắp đặt</button></div>
+  </div>
+  <div class="ks-hero-foot">
+    <div class="ks-feat" aria-live="polite">
+      <div class="th" id="ks-fth"></div>
+      <div><div class="mt"><span>PHỤ KIỆN NỔI BẬT</span><span id="ks-fno">01 / 04</span></div><b id="ks-ft">—</b><div class="dsc" id="ks-fd"></div>
+        <div class="bt"><div class="ks-dash">${SLIDES.map(() => '<span></span>').join('')}</div><div class="ks-arw"><button data-go="-1" aria-label="Phụ kiện trước">${I(IC.left)}</button><button data-go="1" aria-label="Phụ kiện sau">${I(IC.right)}</button></div></div></div>
+    </div>
+    <div class="ks-fr">
+      <div class="ks-stats"><div>${I(IC.box)}<b>80</b><small>Mẫu phụ kiện</small></div><div>${I(IC.layout)}<b>3</b><small>Kiểu bố trí tủ</small></div><div>${I(IC.home)}<b>2</b><small>Showroom</small></div></div>
+      <div class="ks-consult"><div class="tp"><span class="av"></span><a href="#showroom" aria-label="Đặt lịch tư vấn">↗</a></div><b>Tư vấn &amp; lắp đặt phụ kiện tủ bếp</b><small>↔ Đo kích thước khoang<br>⌂ Xem showroom</small><div class="ks-prog"><i id="ks-prog"></i></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="ks-sec ks-cats ks-rv" id="category-rail">
+  <div class="ks-sh"><div><span class="ks-k">Danh mục tiêu biểu</span><h2 class="ks-h2">Phụ kiện tủ bếp</h2><p class="ks-p">Kéo ngang hoặc dùng mũi tên để xem các nhóm phụ kiện.</p></div>
+    <div class="ks-rail-nav"><button data-rail="-1" aria-label="Danh mục trước">${I(IC.left)}</button><button data-rail="1" aria-label="Danh mục sau">${I(IC.right)}</button></div></div>
+  <div class="ks-rail" id="ks-rail">${CATS.map(([k, n, c]) => `<a href="#ks-products" draggable="false"><div class="ks-cc">${art(k)}<div><small>${c} MẪU</small><b>${n}</b></div></div></a>`).join('')}</div>
+</section>
+
+<section class="ks-sec ks-rv" id="layout-planner" style="padding-top:20px">
+  <div class="ks-plan">
+    <div class="ks-plan-l">
+      <span class="ks-k">Bố trí theo mặt bằng</span>
+      <h2 class="ks-h2" style="color:#fff">Tủ bếp theo mặt bằng</h2>
+      <p class="ks-p">Chọn kiểu bố trí hợp với không gian bếp, hình dung vị trí tủ và đo kích thước từng khoang trước khi chọn phụ kiện.</p>
+      <ol class="ks-steps"><li><i>01</i>Chọn mặt bằng</li><li><i>02</i>Đo kích thước</li><li><i>03</i>Chọn phụ kiện</li></ol>
+      <p class="ks-note">Kích thước trên sơ đồ dùng để tham khảo.</p>
+      <a class="ks-btn ks-btn--tan" href="#size-picker">Đo kích thước khoang →</a>
+    </div>
+    <div class="ks-plan-r">
+      <div class="ks-seg" role="group" aria-label="Kiểu bố trí"><button aria-pressed="false" data-shape="I">Chữ I</button><button aria-pressed="true" data-shape="L">Chữ L</button><button aria-pressed="false" data-shape="U">Chữ U</button></div>
+      <svg class="pl" viewBox="0 0 420 300" role="img" aria-label="Sơ đồ mặt bằng tủ bếp">
+        <rect data-r="0" fill="#4a3f35" stroke="#c9a27a" stroke-width="1.5" rx="3"/><rect data-r="1" fill="#4a3f35" stroke="#c9a27a" stroke-width="1.5" rx="3"/><rect data-r="2" fill="#4a3f35" stroke="#c9a27a" stroke-width="1.5" rx="3"/>
+        <text data-t="A" text-anchor="middle"></text><text data-t="B" text-anchor="end"></text><text data-t="C" text-anchor="start"></text>
+      </svg>
+      <div class="ks-dims"><label>Cạnh A (m)<input type="number" id="ks-A" min="1.5" max="6" step="0.1" value="3.2"></label><label>Cạnh B (m)<input type="number" id="ks-B" min="1" max="4" step="0.1" value="2"></label><span id="ks-run">Tổng 5,2 m tủ</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="ks-sec ks-rv" id="size-picker" style="padding-top:0">
+  <div class="ks-size">
+    <div><span class="ks-k">◇ Chọn đúng cỡ</span><h2 class="ks-h2">Nhập kích thước thùng tủ, xem mã lắp vừa</h2><p class="ks-p">Đo lọt lòng bề rộng thùng tủ. Chưa chắc cách đo? <b>Xem hướng dẫn</b> trước khi chọn phụ kiện.</p></div>
+    <svg class="ks-box" viewBox="0 0 300 200" aria-hidden="true">
+      <path d="M10 172h280" stroke="#8a6a48" stroke-dasharray="3 4"/>
+      <line id="ks-dl" y1="34" y2="34" stroke="#1c1a17"/><line id="ks-d1" y1="28" y2="40" stroke="#1c1a17"/><line id="ks-d2" y1="28" y2="40" stroke="#1c1a17"/>
+      <g id="ks-lab"><rect x="-34" y="23" width="68" height="20" rx="3" fill="#1c1a17"/><text id="ks-labt" y="37" text-anchor="middle" fill="#fff" style="font:700 11px var(--sans)">700 mm</text></g>
+      <rect id="ks-bx" y="60" height="112" rx="3" fill="#faf1e7" stroke="#1c1a17" stroke-width="2"/>
+      <rect id="ks-bi" y="66" height="100" fill="none" stroke="#8a6a48" stroke-dasharray="3 3"/>
+      <line id="ks-s1" y1="98" y2="98" stroke="#8a6a48"/><line id="ks-s2" y1="132" y2="132" stroke="#8a6a48"/>
+    </svg>
+    <div class="ks-ctl">
+      <b>Vị trí</b><div class="ks-pos" role="group" aria-label="Vị trí tủ">${POS.map(([v, t], i) => `<button data-pos="${v}" aria-pressed="${!i}">${t}</button>`).join('')}</div>
+      <b><label for="ks-w">Bề rộng lọt lòng (mm)</label></b>
+      <div class="ks-step"><button data-step="-1" aria-label="Giảm 50 mm">−</button><input id="ks-w" type="number" min="300" max="1200" step="50" value="700" inputmode="numeric"><button data-step="1" aria-label="Tăng 50 mm">+</button></div>
+      <div class="ks-chips">${[600, 700, 800, 900].map((v) => `<button data-chip="${v}" aria-pressed="${v === 700}">${v}</button>`).join('')}</div>
+      <p class="ks-hint" id="ks-hint">Hiện mã theo tủ 700 mm · tất cả vị trí</p>
+      <button class="ks-btn ks-btn--dark" id="ks-fit">Xem sản phẩm vừa tủ <span>→</span></button>
+      <small>Cần tư vấn? <a href="#showroom" style="text-decoration:underline">Xem thông tin showroom →</a></small>
+    </div>
+  </div>
+</section>
+
+<section class="ks-sec ks-rv" id="product-tabs" style="padding-top:20px">
+  <div class="ks-sh" id="ks-products"><div><span class="ks-k">Được chọn nhiều</span><h2 class="ks-h2">Sản phẩm bán chạy</h2><p class="ks-p">Những phụ kiện lắp nhiều nhất trong năm, giá đã gồm VAT.</p></div><a class="ks-more" href="#category-rail">Tất cả danh mục →</a></div>
+  <div class="ks-tabs" role="tablist" aria-label="Nhóm sản phẩm">${TABS.map(([v, t], i) => `<button role="tab" data-tab="${v}" aria-selected="${!i}">${t}</button>`).join('')}</div>
+  <div id="ks-fchip"></div>
+  <div class="ks-grid" id="ks-grid" aria-live="polite"></div>
+</section>
+
+<section class="ks-sec ks-rv" id="showroom" style="padding-top:20px">
+  <div class="ks-sh"><div><span class="ks-k">Không gian trưng bày</span><h2 class="ks-h2">Showroom Bếp Gọn</h2><p class="ks-p">Khám phá cách bố trí phụ kiện trong tủ, từ giá bát nâng hạ đến hệ tủ kho kéo.</p></div><a class="ks-more" href="#product-tabs">Xem sản phẩm →</a></div>
+  <div class="ks-show">${[['Hà Nội', 'Cầu Giấy, Hà Nội', 0], ['Hồ Chí Minh', 'Quận 1, TP.HCM', 1]].map(([n, a, v]) => `<article class="ks-sr"><div class="art">${art('room', v)}<b>${n}</b></div><div class="bd"><p>${I(IC.pin)}${a}</p><p>${I(IC.clock)}Mở cửa 8:00 – 17:30, Thứ 2 – Thứ 7</p><div class="bt"><a class="ks-btn ks-btn--line" href="#showroom">${I(IC.pin).replace('<svg', '<svg width="15" height="15"')}Chỉ đường</a><a class="ks-btn ks-btn--dark" href="#showroom">Đặt lịch xem</a></div></div></article>`).join('')}</div>
+</section>
+
+<section class="ks-sec ks-rooms ks-rv" id="room-chooser">
+  <div class="ks-sh"><div><span class="ks-k">Theo không gian</span><h2 class="ks-h2">Bạn đang hoàn thiện khu vực nào?</h2><p class="ks-p">Chọn khu vực để xem nhóm phụ kiện hay dùng nhất ở đó.</p></div><a class="ks-more" href="#product-tabs">Tất cả sản phẩm →</a></div>
+  <div class="ks-rt" role="tablist" aria-label="Khu vực">${ROOMS.map((r, i) => `<button role="tab" data-room="${i}" aria-selected="${!i}"><i>${I(IC[r.i])}</i><span><b>${r.t}</b><small>${r.s}</small></span></button>`).join('')}</div>
+  <div class="ks-rc" id="ks-rc" role="tabpanel"></div>
+</section>
+
+<section class="ks-sec ks-rv" id="journal">
+  <div class="ks-sh"><div><span class="ks-k">Kiến thức</span><h2 class="ks-h2">Chọn phụ kiện đúng ngay từ đầu</h2><p class="ks-p">Hướng dẫn từ đội kỹ thuật giúp bạn chọn đúng chất liệu, đúng loại, đúng kích thước.</p></div><a class="ks-more" href="#journal">Tất cả bài viết →</a></div>
+  <div class="ks-jr">${POSTS.map(([k, t, p]) => `<article><a href="#journal"><div class="art">${art(k)}</div><span class="ks-k">Hướng dẫn</span><h3>${t}</h3><p>${p}</p></a></article>`).join('')}</div>
+</section>
+
+<footer class="ks-foot" id="footer">
+  <div class="ks-fg">
+    <div class="ks-fb"><b>BẾP <span>GỌN</span></b><p>Phụ kiện nội thất Bếp Gọn</p><small>Tủ bếp · Tủ áo · Phụ kiện cửa</small>
+      <div class="ks-soc">${[['fb', 'Facebook'], ['ig', 'Instagram'], ['tt', 'TikTok'], ['yt', 'YouTube']].map(([k, n]) => `<a href="#footer" aria-label="${n}">${I(IC[k])}</a>`).join('')}</div></div>
+    <details open><summary>Liên hệ${I(IC.chev, 'ch')}</summary><div><a href="#footer">${I(IC.phone)}Hotline: 0900 000 000</a><a href="#footer">${I(IC.mail)}Email: ban@vidu.vn</a><p>${I(IC.pin)}Quận 1, TP.HCM</p><p>${I(IC.pin)}Cầu Giấy, Hà Nội</p></div></details>
+    <details open><summary>Chính sách${I(IC.chev, 'ch')}</summary><div>${['Bảo hành', 'Đổi trả', 'Vận chuyển & lắp đặt', 'Thanh toán', 'Bảo mật thông tin'].map((t) => `<a href="#footer">${t}</a>`).join('')}</div></details>
+    <details open><summary>Về chúng tôi${I(IC.chev, 'ch')}</summary><div>${['Giới thiệu', 'Sản phẩm', 'Công trình & đánh giá', 'Bố trí tủ bếp', 'Showroom', 'Kiến thức'].map((t) => `<a href="#footer">${t}</a>`).join('')}</div></details>
+  </div>
+  <div class="ks-fbot"><div class="ks-pay"><span>VISA</span><span>MASTERCARD</span><span>CHUYỂN KHOẢN</span><span>COD</span></div><span>© 2026 Bếp Gọn. Tên, số điện thoại và địa chỉ là mẫu.</span></div>
+</footer>`;
+const $ = (s, r = ks) => r.querySelector(s), $$ = (s, r = ks) => [...r.querySelectorAll(s)];
+
+// header dính ngay dưới header của site
+const sh = document.querySelector('.aw-site-head');
+const setTop = () => ks.style.setProperty('--ks-top', sh ? Math.max(0, sh.offsetHeight - 50 + 8) + 'px' : '0px');
+setTop(); addEventListener('resize', setTop);
+
+// ---- mega menu: hover / focus mở, Esc đóng ----
+let closeT, hold = null;
+const openLi = (li) => { clearTimeout(closeT); $$('.ks-nav li.open').forEach((o) => o !== li && shut(o)); if (!li || !li.querySelector('.ks-mega')) return;
+  const b = li.firstElementChild, mg = li.lastElementChild, hr = $('.ks-head').getBoundingClientRect(), br = b.getBoundingClientRect();
+  mg.style.setProperty('--mx', Math.max(12, Math.min(hr.width - 552, br.left - hr.left + br.width / 2 - 270)) + 'px');
+  li.classList.add('open'); b.setAttribute('aria-expanded', 'true'); };
+const shut = (li) => { li.classList.remove('open'); li.firstElementChild.setAttribute('aria-expanded', 'false'); };
+$$('.ks-nav > ul > li').forEach((li) => {
+  li.addEventListener('mouseenter', () => openLi(li));
+  li.addEventListener('mouseleave', () => { closeT = setTimeout(() => shut(li), 160); });
+  li.addEventListener('focusin', () => { if (hold === li) { hold = null; return; } openLi(li); });
+  li.addEventListener('focusout', (e) => { if (!li.contains(e.relatedTarget)) shut(li); });
+  const b = li.firstElementChild; if (b.tagName === 'BUTTON') b.addEventListener('click', () => li.classList.contains('open') ? shut(li) : openLi(li));
+});
+$('.ks-head').addEventListener('mouseleave', () => { closeT = setTimeout(() => $$('.ks-nav li.open').forEach(shut), 160); });
+
+// ---- drawer ----
+const burger = $('.ks-burger');
+const drawer = (on) => { ks.classList.toggle('drawer-open', on); burger.setAttribute('aria-expanded', on); if (on) $('#ks-drawer [data-close]:not(a)').focus(); else burger.focus({ preventScroll: true }); };
+burger.addEventListener('click', () => drawer(true));
+ks.addEventListener('click', (e) => { if (e.target.closest('[data-close]') && ks.classList.contains('drawer-open')) drawer(false); });
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Escape') return;
+  if (ks.classList.contains('drawer-open')) return drawer(false);
+  const o = $('.ks-nav li.open'); if (o) { shut(o); const t = o.firstElementChild; if (o.contains(document.activeElement) && document.activeElement !== t) { hold = o; t.focus(); } }
+});
+
+// ---- hero ----
+let cur = 0, timer;
+const slides = $$('.ks-slide'), dashes = $$('.ks-dash span'), prog = $('#ks-prog');
+function show(i) {
+  cur = (i + SLIDES.length) % SLIDES.length; const s = SLIDES[cur];
+  slides.forEach((el, j) => el.classList.toggle('on', j === cur)); dashes.forEach((el, j) => el.classList.toggle('on', j === cur));
+  $('#ks-fth').innerHTML = art(s.k); $('#ks-ft').textContent = s.t + ' ↗'; $('#ks-fd').textContent = s.d; $('#ks-fno').textContent = `0${cur + 1} / 0${SLIDES.length}`;
+  if (!RM.matches) { prog.classList.remove('run'); void prog.offsetWidth; prog.classList.add('run'); }
+}
+const hero = $('#hero');
+prog.addEventListener('animationend', () => show(cur + 1)); // ponytail: thanh tiến độ làm đồng hồ, tự dừng khi rê chuột (animation-play-state)
+$$('[data-go]').forEach((b) => b.addEventListener('click', () => show(cur + +b.dataset.go)));
+show(0);
+
+// ---- dải danh mục: kéo + cong 3D ----
+const rail = $('#ks-rail');
+const curve = () => { const r = rail.getBoundingClientRect(), c = r.left + r.width / 2;
+  for (const a of rail.children) { const b = a.getBoundingClientRect(), t = Math.max(-1, Math.min(1, (b.left + b.width / 2 - c) / (r.width / 2)));
+    a.firstElementChild.style.transform = `perspective(900px) rotateY(${-t * 22}deg) scale(${1 - Math.abs(t) * .1})`; } };
+rail.addEventListener('scroll', () => requestAnimationFrame(curve), { passive: true }); addEventListener('resize', curve); curve();
+$$('[data-rail]').forEach((b) => b.addEventListener('click', () => rail.scrollBy({ left: +b.dataset.rail * 246, behavior: RM.matches ? 'auto' : 'smooth' })));
+let dx = null, moved = 0;
+rail.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') return; dx = [e.clientX, rail.scrollLeft]; moved = 0; });
+addEventListener('pointermove', (e) => { if (!dx) return; const d = e.clientX - dx[0]; moved = Math.max(moved, Math.abs(d)); if (moved > 4) rail.classList.add('drag'); rail.scrollLeft = dx[1] - d; });
+addEventListener('pointerup', () => { dx = null; rail.classList.remove('drag'); });
+rail.addEventListener('click', (e) => { if (moved > 4) { e.preventDefault(); moved = 0; } });
+
+// ---- planner ----
+let shape = 'L';
+const pl = $('svg.pl'), rr = $$('rect[data-r]', pl), tt = Object.fromEntries($$('text[data-t]', pl).map((t) => [t.dataset.t, t]));
+const fmt = (n) => n.toLocaleString('vi-VN', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+function plan() {
+  const A = Math.min(6, Math.max(1.5, +$('#ks-A').value || 3.2)), B = Math.min(4, Math.max(1, +$('#ks-B').value || 2));
+  const s = Math.min(250 / A, 200 / B), w = A * s, h = shape === 'I' ? 0 : B * s, d = Math.max(16, .6 * s);
+  const ox = (420 - w) / 2, oy = shape === 'I' ? 150 - d / 2 : (300 - h) / 2 + 8;
+  const R = [[ox, oy, w, d], shape === 'I' ? [ox, oy + d, d, 0] : [ox, oy + d, d, h - d], shape === 'U' ? [ox + w - d, oy + d, d, h - d] : [ox + w - d, oy + d, d, 0]];
+  rr.forEach((r, i) => { const [x, y, ww, hh] = R[i]; Object.assign(r.style, { x: x + 'px', y: y + 'px', width: ww + 'px', height: Math.max(0, hh) + 'px', opacity: hh > 0 ? 1 : 0 }); });
+  const lab = (t, x, y, txt, on) => { t.textContent = txt; t.style.transform = `translate(${x}px,${y}px)`; t.style.opacity = on ? 1 : 0; };
+  lab(tt.A, ox + w / 2, oy - 12, `A = ${fmt(A)} m`, 1);
+  lab(tt.B, ox - 10, oy + h / 2 + 4, `B = ${fmt(B)} m`, shape !== 'I');
+  lab(tt.C, ox + w + 10, oy + h / 2 + 4, `C = ${fmt(B)} m`, shape === 'U');
+  $('#ks-run').textContent = `Tổng ${fmt(A + (shape === 'I' ? 0 : shape === 'L' ? B : 2 * B))} m tủ`;
+}
+$$('[data-shape]').forEach((b) => b.addEventListener('click', () => { shape = b.dataset.shape; $$('[data-shape]').forEach((x) => x.setAttribute('aria-pressed', x === b)); plan(); }));
+$('#ks-A').addEventListener('input', plan); $('#ks-B').addEventListener('input', plan); plan();
+
+// ---- size picker + lưới sản phẩm ----
+const S = { w: 700, pos: 'all', tab: 'all', fit: null, cart: 0 };
+const wIn = $('#ks-w');
+function size(v) {
+  S.w = Math.min(1200, Math.max(300, Math.round(v / 50) * 50)); wIn.value = S.w;
+  const bw = 70 + (S.w - 300) / 900 * 170, x = 150 - bw / 2;
+  const set = (id, a) => Object.assign($(id).style, a);
+  set('#ks-bx', { x: x + 'px', width: bw + 'px' }); set('#ks-bi', { x: x + 6 + 'px', width: bw - 12 + 'px' });
+  ['#ks-s1', '#ks-s2'].forEach((id) => { $(id).setAttribute('x1', x + 6); $(id).setAttribute('x2', x + bw - 6); });
+  $('#ks-dl').setAttribute('x1', x); $('#ks-dl').setAttribute('x2', x + bw); $('#ks-d1').setAttribute('x1', x); $('#ks-d1').setAttribute('x2', x); $('#ks-d2').setAttribute('x1', x + bw); $('#ks-d2').setAttribute('x2', x + bw);
+  $('#ks-lab').style.transform = 'translate(150px,0)'; $('#ks-labt').textContent = S.w + ' mm';
+  $$('[data-chip]').forEach((c) => c.setAttribute('aria-pressed', +c.dataset.chip === S.w)); hint();
+}
+const posName = () => S.pos === 'all' ? 'tất cả vị trí' : POS.find((p) => p[0] === S.pos)[1].toLowerCase();
+const hint = () => { $('#ks-hint').textContent = `Hiện mã theo tủ ${S.w} mm · ${posName()}`; };
+$$('[data-step]').forEach((b) => b.addEventListener('click', () => size(S.w + 50 * b.dataset.step)));
+$$('[data-chip]').forEach((b) => b.addEventListener('click', () => size(+b.dataset.chip)));
+wIn.addEventListener('change', () => size(+wIn.value || 700));
+$$('[data-pos]').forEach((b) => b.addEventListener('click', () => { S.pos = b.dataset.pos; $$('[data-pos]').forEach((x) => x.setAttribute('aria-pressed', x === b)); hint(); }));
+$('#ks-fit').addEventListener('click', () => { S.fit = { w: S.w, pos: S.pos }; grid(); $('#ks-products').scrollIntoView({ behavior: RM.matches ? 'auto' : 'smooth', block: 'start' }); });
+function grid() {
+  const f = S.fit, list = PROD.filter((p) => (S.tab === 'all' || p.c === S.tab) && (!f || (f.w >= p.a && f.w <= p.b && (f.pos === 'all' || p.p === 'all' || p.p === f.pos))));
+  $('#ks-fchip').innerHTML = f ? `<span class="ks-fchip">Lọc theo tủ ${f.w} mm${f.pos === 'all' ? '' : ' · ' + POS.find((p) => p[0] === f.pos)[1]}<button data-clear aria-label="Bỏ lọc theo kích thước">✕</button></span>` : '';
+  $('#ks-grid').innerHTML = list.length ? list.map((p, i) => `<article class="ks-pc" style="animation-delay:${i * 40}ms"><div class="art">${art(p.k)}${p.hot ? '<em>Bán chạy</em>' : ''}</div><div class="bd"><span class="ct">${CATN[p.c]}</span><h3>${p.n}</h3><span class="sz">Lọt lòng ${p.a}–${p.b} mm</span><div class="ft"><span class="pr">${vnd(p.v)}</span><button class="ks-add" data-add="${p.n}" aria-label="Thêm ${p.n} vào giỏ">${I(IC.cartp)}</button></div></div></article>`).join('')
+    : `<p class="ks-empty">Chưa có mã nào vừa tủ ${f ? f.w : ''} mm trong nhóm này. Thử nhóm khác hoặc bỏ lọc.</p>`;
+}
+$$('[data-tab]').forEach((b) => b.addEventListener('click', () => { S.tab = b.dataset.tab; $$('[data-tab]').forEach((x) => x.setAttribute('aria-selected', x === b)); grid(); }));
+ks.addEventListener('click', (e) => {
+  if (e.target.closest('[data-clear]')) { S.fit = null; grid(); }
+  const add = e.target.closest('[data-add]'); if (!add) return;
+  S.cart++; const bd = $('#ks-badge'); bd.textContent = S.cart; $('#ks-cart').setAttribute('aria-label', `Giỏ hàng, ${S.cart} món`);
+  bd.classList.remove('bump'); void bd.offsetWidth; bd.classList.add('bump');
+});
+size(700); grid();
+
+// ---- chọn khu vực ----
+const room = (i) => { $$('[data-room]').forEach((b) => b.setAttribute('aria-selected', +b.dataset.room === i));
+  $('#ks-rc').innerHTML = ROOMS[i].c.map(([k, t, s], j) => `<a href="#product-tabs" style="animation-delay:${j * 60}ms">${art(k)}<div><b>${t}</b><small>${s} · Xem phụ kiện →</small></div></a>`).join(''); };
+$$('[data-room]').forEach((b) => b.addEventListener('click', () => room(+b.dataset.room))); room(0);
+
+// ---- footer: accordion trên mobile ----
+const mq = matchMedia('(max-width: 640px)');
+const acc = () => $$('.ks-foot details').forEach((d) => { d.open = !mq.matches; }); mq.addEventListener('change', acc); acc();
+
+// ---- hiện dần khi cuộn ----
+if (!RM.matches && 'IntersectionObserver' in window) {
+  ks.classList.add('ks-js');
+  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
+  $$('.ks-rv').forEach((el) => io.observe(el));
+}
+})();
+</script>
+<script src="/search.js?v=c628d5da9a" defer></script><script src="/stats.js?v=c628d5da9a" defer></script>
+</body>
+</html>
