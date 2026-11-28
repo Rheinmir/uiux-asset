@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tháng không tiêu — dashboard thử thách tiết kiệm — uiux-asset</title>
+<meta name="description" content="Dashboard thử thách «tháng không tiêu»: lịch 30 ngày, check-in hằng ngày, tiền giữ được, danh sách chờ 72 giờ với nút Buông, toast có Hoàn tác, chế độ tối. Dựng lại từ reel Facebook, thương hiệu mẫu «Ví Nghỉ». CSS + JS thuần.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=05090f5cab">
+<style>
+.md-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+.md-page a { color: inherit; }
+.ns-ctl { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.ns-ctl button { min-height: 40px; padding: 0 14px; border-radius: 99px; border: 1px solid var(--aw-line, #ddd); background: transparent; color: inherit; font: inherit; cursor: pointer; }
+.ns-ctl button[aria-pressed="true"] { background: #23402c; border-color: #23402c; color: #fff; }
+.ns-stage { position: relative; border-radius: 18px; overflow: hidden; box-shadow: 0 24px 60px -30px rgba(20,40,25,.55); }
+.ns-fit { width: 1280px; transform-origin: 0 0; }
+/* app: kem + xanh rừng */
+.app { --bg: #f5f1e8; --card: #fbf9f3; --card2: #f1ecdf; --line: #e7e1d3; --ink: #1f2a20; --ink2: #6f7368; --g: #23402c; --g2: #3d6b47; --gl: #d6e4c4; --side: #1f3a27; --warn: #8a5a12; --amber: #efe3c4;
+  display: grid; grid-template-columns: 230px 1fr; height: 820px; background: var(--bg); color: var(--ink); font: 400 13px/1.4 "Lexend", "Inter", var(--aw-font); transition: background .35s, color .35s; }
+.app.dark { --bg: #17221a; --card: #1e2b21; --card2: #243326; --line: #2e3e31; --ink: #eef0e6; --ink2: #9aa596; --g: #cfe3a8; --g2: #a8c983; --gl: #34492f; --side: #132017; --warn: #e3c46a; --amber: #2f3a25; }
+.app button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
+.app svg { display: block; }
+/* thanh bên */
+.sd { display: flex; flex-direction: column; gap: 2px; padding: 16px 12px; background: var(--side); color: #e6eadc; }
+.sd .lg { display: flex; align-items: center; gap: 10px; padding: 0 6px 14px; } .sd .lg i { width: 36px; height: 36px; border-radius: 10px; border: 1px solid rgba(255,255,255,.3); display: grid; place-items: center; font-style: normal; font-size: 17px; }
+.sd .lg b { display: block; font-size: 17px; font-weight: 500; } .sd .lg small { font-size: 11px; opacity: .7; }
+.sd h6 { margin: 12px 8px 4px; font-size: 10px; letter-spacing: .1em; font-weight: 500; opacity: .6; }
+.sd .it { display: flex; align-items: center; gap: 12px; height: 38px; padding: 0 12px; border-radius: 10px; text-align: left; transition: background .2s; }
+.sd .it:hover { background: rgba(255,255,255,.07); }
+.sd .it[aria-current="page"] { background: #f5f1e8; color: #1f3a27; font-weight: 500; }
+.sd .it .ic { width: 16px; text-align: center; opacity: .85; } .sd .it em { margin-left: auto; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 99px; background: #f5f1e8; color: #1f3a27; font: 600 11px/20px "Lexend", sans-serif; font-style: normal; text-align: center; }
+.sd .it[aria-current="page"] em { background: #1f3a27; color: #fff; }
+.sd .sp { flex: 1; }
+.sd .me { display: flex; align-items: center; gap: 10px; margin-top: 10px; padding: 10px; border-radius: 12px; background: rgba(255,255,255,.08); } .sd .me i { width: 32px; height: 32px; border-radius: 50%; background: #d6e4c4; color: #1f3a27; display: grid; place-items: center; font: 600 11px/1 sans-serif; font-style: normal; }
+.sd .me small { display: block; font-size: 10px; opacity: .7; }
+/* vùng chính */
+.mn { position: relative; overflow: hidden; display: flex; flex-direction: column; }
+.tb { display: flex; align-items: center; gap: 10px; padding: 16px 24px 0; }
+.tb .bc { color: var(--ink2); font-size: 12px; } .tb .bc b { color: var(--ink); font-weight: 500; }
+.tb .sp { flex: 1; }
+.pill { display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px 0 6px; border-radius: 99px; background: var(--card); border: 1px solid var(--line); font-size: 12px; }
+.pill i { width: 26px; height: 26px; border-radius: 50%; background: var(--gl); display: grid; place-items: center; font-style: normal; font-size: 12px; }
+.round { width: 36px; height: 36px; border-radius: 50%; background: var(--card); border: 1px solid var(--line) !important; display: grid; place-items: center; position: relative; }
+.round em { position: absolute; top: -4px; right: -4px; width: 17px; height: 17px; border-radius: 50%; background: #d9412b; color: #fff; font: 600 10px/17px sans-serif; font-style: normal; text-align: center; }
+.btn { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 16px; border-radius: 99px; background: var(--g) !important; color: var(--bg) !important; font-weight: 500 !important; transition: transform .15s, filter .2s; }
+.btn:hover { filter: brightness(1.12); } .btn:active { transform: scale(.97); }
+.btn.gh { background: var(--card) !important; color: var(--ink) !important; border: 1px solid var(--line) !important; }
+.vw { flex: 1; overflow: hidden; padding: 14px 24px 24px; }
+.hd { display: flex; align-items: flex-end; gap: 10px; margin-bottom: 14px; } .hd h2 { margin: 0; font-size: 30px; font-weight: 400; letter-spacing: -.02em; } .hd p { margin: 4px 0 0; color: var(--ink2); } .hd p b { color: var(--ink); font-weight: 500; } .hd .sp { flex: 1; }
+.cd { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px 18px; transition: background .35s, border-color .35s; }
+.cap { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink2); font-weight: 500; }
+.in { animation: up .55s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(var(--d, 0) * 70ms); }
+@keyframes up { from { opacity: 0; transform: translateY(14px); } }
+/* trang chủ */
+.g1 { display: grid; grid-template-columns: 1fr 270px; gap: 14px; } .g2 { display: grid; grid-template-columns: 1.1fr .9fr .9fr; gap: 14px; margin-top: 14px; }
+.pr { display: grid; grid-template-columns: 1fr 270px; gap: 20px; }
+.pr .dy { margin: 14px 0 10px; font-size: 18px; } .pr .dy b { font-size: 34px; font-weight: 500; }
+.bar { height: 7px; border-radius: 99px; background: var(--card2); overflow: hidden; } .bar i { display: block; height: 100%; width: var(--w); background: var(--g2); border-radius: 99px; transition: width .8s cubic-bezier(.2,.8,.2,1); }
+.pr .row { display: flex; align-items: center; gap: 10px; font-size: 11px; color: var(--ink2); } .pr .row .bar { flex: 1; }
+.pr .st { display: grid; grid-template-columns: auto 1fr 1fr; gap: 14px; align-items: center; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
+.pr .st .fl { width: 50px; height: 50px; border-radius: 50%; background: var(--card2); display: grid; place-items: center; font-size: 18px; }
+.pr .st b { display: block; font-size: 18px; font-weight: 500; } .pr .st small { color: var(--ink2); font-size: 11px; }
+.cal { display: grid; grid-template-columns: repeat(7, 30px); gap: 6px 7px; justify-content: end; font-size: 11px; }
+.cal span { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; color: var(--ink2); }
+.cal .h { height: 16px; font-size: 10px; } .cal .c { background: var(--g); color: var(--bg); transition: transform .3s; } .cal .s { background: var(--amber); } .cal .s::after { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--warn); }
+.cal .t { border: 2px solid var(--ink); color: var(--ink); font-weight: 500; } .cal .f { border: 1px solid var(--line); }
+.cal .pop { animation: pop .5s cubic-bezier(.3,1.6,.5,1); } @keyframes pop { 0% { transform: scale(.4); } }
+.lgd { display: flex; gap: 14px; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line); font-size: 11px; color: var(--ink2); } .lgd span::before { content: "●"; margin-right: 5px; color: var(--c); }
+.mk .big { font-size: 28px; font-weight: 500; letter-spacing: -.02em; margin: 6px 0 2px; } .mk p { margin: 0 0 8px; font-size: 11px; color: var(--ink2); }
+.mk .two { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; } .mk .two div { padding: 8px 10px; border-radius: 10px; background: var(--card2); font-size: 10px; color: var(--ink2); } .mk .two b { display: block; font-size: 14px; color: var(--ink); font-weight: 500; }
+.sk li, .cu li { display: grid; align-items: center; gap: 10px; } .sk ul, .cu ul { margin: 10px 0 0; padding: 0; list-style: none; display: grid; gap: 12px; }
+.sk li { grid-template-columns: 30px 1fr 90px 70px; } .sk li > i { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: var(--c); color: #1f2a20; font-style: normal; font-size: 13px; } .sk small { display: block; color: var(--warn); font-size: 10px; } .sk b { text-align: right; font-weight: 500; }
+.ck .em { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; }
+.ck .em button { height: 66px; border-radius: 12px; border: 1px solid var(--line); background: var(--card); display: grid; place-items: center; align-content: center; gap: 4px; font-size: 11px; transition: background .2s, transform .15s; }
+.ck .em button span { font-size: 20px; } .ck .em button:hover { background: var(--card2); } .ck .em button:active { transform: scale(.95); }
+.ck .em button[aria-pressed="true"] { background: var(--g); color: var(--bg); border-color: var(--g); }
+.ck .ct { float: right; padding: 3px 9px; border-radius: 99px; background: var(--amber); font-size: 11px; }
+.cu li { grid-template-columns: 34px 1fr auto; } .cu li > i { width: 34px; height: 36px; border-radius: 8px; border: 1px solid var(--line); display: grid; place-items: center; font: 500 13px/1 sans-serif; font-style: normal; text-align: center; } .cu li > i small { display: block; font-size: 8px; color: var(--ink2); }
+.cu small { display: block; font-size: 10px; color: var(--ink2); } .cu b { font-weight: 500; }
+/* kế hoạch */
+.tabs { display: inline-flex; gap: 2px; padding: 3px; margin-bottom: 14px; border-radius: 99px; background: var(--card); border: 1px solid var(--line); }
+.tabs button { height: 30px; padding: 0 14px; border-radius: 99px; color: var(--ink2); } .tabs button[aria-selected="true"] { background: var(--g); color: var(--bg); }
+.tabs em { margin-left: 6px; padding: 0 6px; border-radius: 99px; background: var(--bg); color: var(--g); font-style: normal; font-size: 11px; }
+.p1 { display: grid; grid-template-columns: 330px 1fr; gap: 14px; }
+.kept .big { font-size: 34px; font-weight: 500; letter-spacing: -.02em; margin: 4px 0 2px; } .kept small { color: var(--ink2); }
+.rule { display: flex; align-items: center; gap: 14px; background: var(--amber); } .rule > i { width: 38px; height: 38px; flex: none; border-radius: 50%; background: rgba(0,0,0,.06); display: grid; place-items: center; font-style: normal; } .rule p { margin: 0; flex: 1; } .rule b { font-weight: 500; }
+.urg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px; min-height: 236px; }
+.u { display: flex; flex-direction: column; gap: 9px; transition: opacity .35s, transform .45s cubic-bezier(.4,0,.2,1); } .u.out { opacity: 0; transform: translateY(-10px) scale(.96); }
+.u.ready { border: 1.5px solid var(--ink); }
+.u .top { display: grid; grid-template-columns: 34px 1fr auto; gap: 10px; align-items: center; } .u .top > i { width: 34px; height: 34px; border-radius: 9px; background: var(--c); color: #1f2a20; display: grid; place-items: center; font-style: normal; }
+.u .top small { display: block; color: var(--ink2); font-size: 11px; } .u .top b { font-size: 15px; font-weight: 500; }
+.u q { display: block; padding: 10px 12px; border-radius: 10px; background: var(--card2); font-size: 12px; } .u .wt { font-size: 11px; color: var(--ink2); } .u.ready .wt { color: var(--ink); }
+.u .wn { font-size: 11px; color: var(--warn); } .u .ac { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: auto; } .u .ac button { height: 36px; border-radius: 99px; } .u .ac .ghb { border: 1px solid var(--line); }
+.empty { grid-column: 1 / -1; display: grid; place-items: center; border: 1px dashed var(--line); border-radius: 16px; color: var(--ink2); }
+.dec { margin-top: 14px; } .dec ul { margin: 8px 0 0; padding: 0; list-style: none; display: grid; gap: 8px; } .dec li { display: grid; grid-template-columns: 28px 1fr auto; gap: 10px; align-items: center; animation: up .4s both; } .dec li > i { width: 28px; height: 28px; border-radius: 8px; background: var(--card2); display: grid; place-items: center; font-style: normal; font-size: 12px; } .dec small { display: block; font-size: 10px; color: var(--ink2); } .dec .kp { color: var(--g2); font-weight: 500; } .dec .sl { color: var(--warn); font-weight: 500; }
+/* toast */
+.toast { position: absolute; left: 50%; bottom: 22px; display: flex; align-items: center; gap: 10px; padding: 6px 6px 6px 8px; border-radius: 99px; background: #1f3a27; color: #fff; box-shadow: 0 12px 30px -10px rgba(0,0,0,.5); transform: translate(-50%, 140%); opacity: 0; transition: transform .45s cubic-bezier(.2,1.2,.4,1), opacity .3s; }
+.toast.on { transform: translate(-50%, 0); opacity: 1; } .toast > i { width: 24px; height: 24px; border-radius: 50%; background: #d6e4c4; color: #1f3a27; display: grid; place-items: center; font-style: normal; font-size: 12px; }
+.toast button { height: 26px; padding: 0 12px; border-radius: 99px !important; background: #f5f1e8 !important; color: #1f3a27 !important; font-size: 12px; font-weight: 500; }
+@media (prefers-reduced-motion: reduce) { .in, .dec li, .cal .pop { animation: none; } .u, .toast, .bar i { transition: none; } }
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=05090f5cab"></script>
+<div class="md-page">
+  <div class="aw-sotd" style="padding-top:16px">
+    <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">2 màn · 6 tương tác</span></p>
+    <h1 class="aw-h1" style="--aw-h1:clamp(40px,7vw,96px)">Tháng không tiêu</h1>
+    <p class="aw-lead">Dashboard thử thách tiết kiệm: lịch 30 ngày, check-in mỗi tối, tiền giữ được. Mỗi món muốn mua vào danh sách chờ 72 giờ, hết giờ thì chọn Buông hoặc Mua. Mọi thao tác có toast Hoàn tác. Bấm thử trực tiếp trong khung.</p>
+    <p class="aw-lead" style="font-size:14px">Bố cục và chuyển động dựng lại từ <a href="https://www.facebook.com/share/r/19cuQ7uuSQ/" target="_blank" rel="noopener">reel Facebook</a> (một template bán sẵn). Thương hiệu «Ví Nghỉ», tên người, số tiền và nội dung là mẫu.</p>
+  </div>
+  <div class="ns-ctl" role="toolbar" aria-label="Điều khiển">
+    <button type="button" data-go="home" aria-pressed="true">Trang chủ</button><button type="button" data-go="plan" aria-pressed="false">Danh sách chờ</button>
+    <button type="button" id="replay">Chạy lại hiệu ứng</button><button type="button" id="dk" aria-pressed="false">Chế độ tối</button>
+  </div>
+  <div class="ns-stage" id="stage"><div class="ns-fit" id="fit"><div class="app" id="app">
+    <nav class="sd" aria-label="Ví Nghỉ">
+      <div class="lg"><i>🌱</i><div><b>Ví Nghỉ</b><small>Tháng không tiêu</small></div></div>
+      <h6>THỬ THÁCH</h6><button class="it" data-go="home" aria-current="page"><span class="ic">⌂</span>Trang chủ</button><button class="it" data-go="plan"><span class="ic">▦</span>Kế hoạch<em id="nb">3</em></button><button class="it"><span class="ic">◔</span>Theo dõi</button>
+      <h6>TIỀN</h6><button class="it"><span class="ic">◎</span>Mục tiêu</button><button class="it"><span class="ic">▭</span>Ngân sách<em>1</em></button>
+      <h6>HẰNG NGÀY</h6><button class="it"><span class="ic">♨</span>Bữa ăn</button><button class="it"><span class="ic">☑</span>Thói quen<em>5</em></button><button class="it"><span class="ic">✎</span>Nhật ký</button><button class="it"><span class="ic">▤</span>Ghi chú</button>
+      <span class="sp"></span><button class="it"><span class="ic">⚙</span>Cài đặt</button><button class="it"><span class="ic">?</span>Trợ giúp</button>
+      <div class="me"><i>NH</i><div>Ngọc Hà<small>Ngày 17 · còn 13 ngày</small></div></div>
+    </nav>
+    <div class="mn">
+      <div class="tb"><span class="bc" id="bc"></span><span class="sp"></span>
+        <span class="pill" id="pill"></span><button class="round" aria-label="Tìm">⌕</button><button class="btn" type="button">＋ Mới</button><button class="round" id="th" aria-label="Đổi sáng tối">☾</button><button class="round" aria-label="Thông báo">♢<em>3</em></button></div>
+      <div class="vw" id="vw"></div>
+      <div class="toast" id="toast" role="status"><i>✓</i><span id="tt"></span><button type="button" id="undo">Hoàn tác</button></div>
+    </div>
+  </div></div></div>
+</div>
+</main>
+<script>
+// Các phần của pattern (sổ patterns.json trỏ tới các id này).
+const PARTS = [
+  { id: 'home', vi: 'Trang chủ: tiến độ 30 ngày, tiền giữ được, check-in, sắp tới' }, { id: 'check-in', vi: 'Check-in một chạm: ngày 17 bật xanh, chuỗi +1' },
+  { id: 'waiting-list', vi: 'Danh sách chờ 72 giờ: thẻ món muốn mua có thanh hạ nhiệt' }, { id: 'let-go', vi: 'Buông: thẻ bay đi, số tiền giữ được đếm lên' },
+  { id: 'undo-toast', vi: 'Toast có Hoàn tác cho mọi thao tác' }, { id: 'dark', vi: 'Chế độ tối: rừng đêm + chanh nhạt' }];
+const $ = (id) => document.getElementById(id), app = $('app'), vw = $('vw');
+const vnd = (n) => n.toLocaleString('vi-VN') + ' đ';
+const S = { view: 'home', checked: false, mood: null, kept: 2917000, streak: 10,
+  urges: [
+    { id: 've', ic: '♫', c: '#d8e4ec', n: 'Vé show — Ngọt', w: 'Ticketbox · để từ 10/11', p: 1550000, q: 'Minh cũng đi. Hay đi buổi acoustic miễn phí?', t: 100, ready: 1, wn: 'Giải trí đang tạm dừng: mua là trượt.' },
+    { id: 'ao', ic: '👕', c: '#dbe8cf', n: 'Áo sơ mi linen', w: 'Routine · để T7, 22:10', p: 1200000, q: 'Thấy trên đường về sau ca tối.', t: 82, wt: 'Quyết sau 13 giờ', wn: 'Quần áo đang tạm dừng: mua là trượt.' },
+    { id: 'am', ic: '☕', c: '#efe3c4', n: 'Ấm rót pour-over', w: 'Cà phê Mộc · để CN, 21:30', p: 975000, q: 'Ấm cũ vẫn dùng tốt. Chỉ là cái này đẹp hơn.', t: 30, wt: 'Quyết sau 2 ngày', wn: 'Đồ bếp đang tạm dừng: mua là trượt.' }],
+  done: [{ ic: '✿', n: 'Serum dưỡng', w: 'Đã buông 8/11', p: 650000, k: 1 }] };
+let undo = null, tmr;
+function toast(msg, fn) { undo = fn; $('tt').textContent = msg; $('toast').classList.add('on'); clearTimeout(tmr); tmr = setTimeout(() => $('toast').classList.remove('on'), 5000); }
+$('undo').onclick = () => { $('toast').classList.remove('on'); if (undo) undo(); undo = null; };
+function count(el, from, to) { const t0 = performance.now(), D = 900; const f = (t) => { const k = Math.min(1, (t - t0) / D), e = 1 - Math.pow(1 - k, 3); el.textContent = vnd(Math.round((from + (to - from) * e) / 100) * 100); if (k < 1) requestAnimationFrame(f); }; requestAnimationFrame(f); }
+function chrome() {
+  $('bc').innerHTML = S.view === 'home' ? 'Thử thách › <b>Trang chủ</b>' : 'Thử thách › Kế hoạch › <b>Danh sách chờ</b>';
+  $('pill').innerHTML = `<i>${S.checked ? '✓' : '🔥'}</i>Ngày 17/30 · <b>chuỗi ${S.streak + (S.checked ? 1 : 0)} ngày</b> · ${S.checked ? 'đã check-in' : 'tối nay check-in'}`;
+  $('nb').textContent = S.urges.length;
+  document.querySelectorAll('.it[data-go]').forEach((b) => b.dataset.go === S.view ? b.setAttribute('aria-current', 'page') : b.removeAttribute('aria-current'));
+  document.querySelectorAll('.ns-ctl [data-go]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.go === S.view));
+}
+function cal(pop) {
+  const st = (d) => d < 17 ? ([2, 5].includes(d) ? 's' : 'c') : d === 17 ? (S.checked ? 'c' + (pop ? ' pop' : '') : 't') : 'f';
+  return ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'].map((d) => `<span class="h">${d}</span>`).join('') + '<span></span>'.repeat(6)
+    + Array.from({ length: 30 }, (_, i) => i + 1).map((d) => { const s = st(d); return `<span class="${s}">${s.startsWith('c') ? '✓' : s === 's' ? '' : d}</span>`; }).join('');
+}
+function home(anim) {
+  const n = 17 + (S.checked ? 0 : -1), pct = Math.round(17 / 30 * 100), a = anim ? 'in' : '';
+  const pts = [0, 30, 52, 70, 88, 110, 126, 150, 168, 182, 200, 222, 240, 262, 280, 300, 318].map((v, i) => [16 + i * 14.5, 112 - v / 3.2]);
+  vw.innerHTML = `<div class="hd"><div><h2>Chào buổi sáng, Ngọc</h2><p>Ngày 17 của Tháng không tiêu. ${S.streak} ngày sạch liên tiếp — check-in tối nay để giữ chuỗi.</p></div><span class="sp"></span><button class="btn gh">▤ Ghi một khoản</button><button class="btn" data-ck="great">☺ Check-in</button></div>
+  <div class="g1"><div class="cd pr ${a}" style="--d:0"><div><span class="cap">Tiến độ thử thách</span><p class="dy">Ngày <b>17</b> / 30</p><div class="row"><div class="bar"><i style="--w:${anim ? 0 : pct}%"></i></div>${pct}%</div>
+    <div class="st"><span class="fl">🔥</span><div><b>${S.streak + (S.checked ? 1 : 0)} ngày</b><small>Chuỗi dài nhất</small></div><div><b>13</b><small>Ngày còn lại</small></div></div></div>
+    <div><div class="cal" id="cal">${cal(false)}</div></div>
+    <div class="lgd" style="grid-column:1/-1"><span style="--c:var(--g)">Sạch</span><span style="--c:var(--warn)">Trượt, đã ghi</span><span style="--c:var(--ink)">Hôm nay</span><span style="--c:var(--line)">Sắp tới</span></div></div>
+  <div class="cd mk ${a}" style="--d:1"><span class="cap">Tiền giữ được</span><div class="big" id="kept">${vnd(S.kept)}</div><p>So với mức tiêu thường ngày ở các mục tạm dừng</p>
+    <svg viewBox="0 0 250 120" width="100%"><defs><linearGradient id="ga" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="currentColor" stop-opacity=".18"/><stop offset="1" stop-color="currentColor" stop-opacity="0"/></linearGradient></defs>
+      ${[0, 1, 2, 3].map((i) => `<line x1="16" x2="250" y1="${16 + i * 32}" y2="${16 + i * 32}" stroke="var(--line)"/>`).join('')}
+      <path d="M${pts.map((p) => p.join(' ')).join(' L')} L${pts.at(-1)[0]} 112 L16 112Z" fill="url(#ga)" style="color:var(--g2)"/>
+      <path d="M${pts.map((p) => p.join(' ')).join(' L')}" fill="none" stroke="var(--g)" stroke-width="2" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="${anim ? 1 : 0}" id="ln" style="transition:stroke-dashoffset 1.2s ease-out"/></svg>
+    <div class="two"><div>Đúng hướng tới<b>5,2 tr</b></div><div>Ngày sạch<b>14 / ${S.checked ? 15 : 14}</b></div></div></div></div>
+  <div class="g2"><div class="cd sk ${a}" style="--d:2"><span class="cap">Bạn đang nhịn</span><ul>
+    ${[['👕', '#dbe8cf', 'Quần áo, mua sắm', '72.000 đ trượt', 82, '1,1 tr'], ['🍜', '#f3d9cc', 'Đặt đồ ăn, ăn ngoài', '', 70, '1,0 tr'], ['☕', '#efe3c4', 'Cà phê ngoài', '35.000 đ trượt', 30, '380 k']].map(([i, c, n, s, w, v]) => `<li><i style="--c:${c}">${i}</i><span>${n}${s ? `<small>${s}</small>` : ''}</span><div class="bar"><i style="--w:${anim ? 0 : w}%" data-w="${w}"></i></div><b>${v}</b></li>`).join('')}</ul></div>
+  <div class="cd ck ${a}" style="--d:3"><span class="ct">🔥 ${S.streak + (S.checked ? 1 : 0)}</span><span class="cap">Check-in hằng ngày</span><p style="margin:4px 0 0;color:var(--ink2)">Hôm nay không tiêu thế nào?</p>
+    <div class="em">${[['great', '☺', 'Tốt'], ['ok', '😐', 'Tạm'], ['hard', '☹', 'Khó']].map(([k, e, l]) => `<button type="button" data-ck="${k}" aria-pressed="${S.mood === k}"><span>${e}</span>${l}</button>`).join('')}</div></div>
+  <div class="cd cu ${a}" style="--d:4"><span class="cap">Sắp tới</span><ul>
+    ${[['19', 'Điện thoại', 'Viettel · 2 ngày nữa', '180 k'], ['24', 'Bảo hiểm nhà', 'Bảo Việt · 7 ngày nữa', '98 k'], ['28', 'Phí chung cư', 'BQL · 11 ngày nữa', '1,3 tr']].map(([d, n, s, v]) => `<li><i>${d}<small>TH11</small></i><span><b>${n}</b><small>${s}</small></span><b>${v}</b></li>`).join('')}</ul></div></div>`;
+  if (anim) requestAnimationFrame(() => requestAnimationFrame(() => { vw.querySelectorAll('.bar i').forEach((b) => b.style.setProperty('--w', (b.dataset.w || pct) + '%')); $('ln').style.strokeDashoffset = 0; count($('kept'), 0, S.kept); }));
+}
+function plan(anim) {
+  const a = anim ? 'in' : '';
+  vw.innerHTML = `<div class="hd"><div><h2>Kế hoạch</h2><p>Luật của Tháng không tiêu, lịch từng ngày, và những thứ bạn <b>đang chờ</b>.</p></div><span class="sp"></span><button class="btn gh">⧗ Gửi một cơn thèm</button></div>
+  <div class="tabs" role="tablist"><button role="tab" aria-selected="false">Luật</button><button role="tab" aria-selected="false">Lịch</button><button role="tab" aria-selected="true">Danh sách chờ<em>${S.urges.length}</em></button></div>
+  <div class="p1"><div class="cd kept ${a}" style="--d:0"><span class="cap">Giữ được nhờ buông</span><div class="big" id="kb">${vnd(S.done.filter((d) => d.k).reduce((s, d) => s + d.p, 0))}</div><small>${S.done.filter((d) => d.k).length} món đã buông tháng này · ${S.urges.length} món đang hạ nhiệt</small></div>
+    <div class="cd rule ${a}" style="--d:1"><i>⧗</i><p><b>Luật 72 giờ.</b> Món nào muốn mua thì vào đây trước. Hết giờ mới quyết, khi đầu đã nguội: hầu hết bạn sẽ mừng vì đã buông.</p><button class="btn">＋ Gửi một cơn thèm</button></div></div>
+  <div class="urg" id="urg">${S.urges.length ? S.urges.map((u, i) => `<div class="cd u ${u.ready ? 'ready' : ''} ${a}" style="--d:${i + 2}" data-u="${u.id}"><div class="top"><i style="--c:${u.c}">${u.ic}</i><div><b>${u.n}</b><small>${u.w}</small></div><b>${vnd(u.p)}</b></div>
+    <q>${u.q}</q><div class="bar"><i style="--w:${u.t}%"></i></div><span class="wt">${u.ready ? 'Đã nguội — quyết ngay' : u.wt}</span><span class="wn">⚠ ${u.wn}</span>
+    <div class="ac"><button class="btn" data-go-u="keep">❦ Buông</button><button class="ghb" data-go-u="buy">Mua</button></div></div>`).join('') : '<div class="empty">Không còn món nào đang chờ. Giỏi lắm.</div>'}</div>
+  <div class="cd dec"><span class="cap" style="text-transform:none;letter-spacing:0;font-size:13px;color:var(--ink)">Đã quyết</span><small style="display:block;color:var(--ink2)">Chuyện gì đã xảy ra với những thứ bạn muốn</small>
+    <ul>${S.done.map((d) => `<li><i>${d.ic}</i><span>${d.n}<small>${d.w}</small></span><span class="${d.k ? 'kp' : 'sl'}">${d.k ? '+' : '−'}${vnd(d.p)}</span></li>`).join('')}</ul></div>`;
+}
+function render(anim) { chrome(); (S.view === 'home' ? home : plan)(anim); }
+function go(v) { S.view = v; render(true); }
+// check-in: ngày 17 bật, chuỗi +1, toast có hoàn tác
+function checkIn(m) {
+  if (S.checked) { S.mood = m; return render(false); }
+  S.checked = true; S.mood = m; chrome(); home(false);
+  vw.querySelector('#cal').innerHTML = cal(true);
+  toast('Đã check-in — ngày 17 sạch.', () => { S.checked = false; S.mood = null; render(false); });
+}
+// buông / mua: thẻ bay đi, tiền giữ được đếm lên
+function decide(id, keep) {
+  const i = S.urges.findIndex((u) => u.id === id), u = S.urges[i], card = vw.querySelector(`[data-u="${id}"]`);
+  const before = S.done.filter((d) => d.k).reduce((s, d) => s + d.p, 0);
+  card.classList.add('out');
+  setTimeout(() => {
+    S.urges.splice(i, 1); S.done.unshift({ ic: u.ic, n: u.n, w: keep ? 'Đã buông hôm nay' : 'Đã mua hôm nay · tính là trượt', p: u.p, k: keep });
+    chrome(); plan(false); if (keep) count($('kb'), before, before + u.p);
+    toast(keep ? `Đã buông ${u.n} — giữ ${vnd(u.p)}.` : `Đã mua ${u.n} — ghi là trượt.`, () => { S.done.shift(); S.urges.splice(i, 0, u); render(false); });
+  }, 380);
+}
+app.addEventListener('click', (e) => {
+  const g = e.target.closest('[data-go]'); if (g) return go(g.dataset.go);
+  const c = e.target.closest('[data-ck]'); if (c) return checkIn(c.dataset.ck);
+  const u = e.target.closest('[data-go-u]'); if (u) return decide(u.closest('[data-u]').dataset.u, u.dataset.goU === 'keep');
+  if (e.target.closest('#th')) setDark(!app.classList.contains('dark'));
+});
+document.querySelector('.ns-ctl').addEventListener('click', (e) => { const g = e.target.closest('[data-go]'); if (g) go(g.dataset.go); });
+function setDark(on) { app.classList.toggle('dark', on); $('dk').setAttribute('aria-pressed', on); $('th').textContent = on ? '☀' : '☾'; }
+$('dk').onclick = () => setDark(!app.classList.contains('dark'));
+$('replay').onclick = () => render(true);
+const stage = $('stage'), fit = $('fit');
+function scale() { const k = Math.min(1, stage.clientWidth / 1280); fit.style.transform = `scale(${k})`; stage.style.height = 820 * k + 'px'; }
+new ResizeObserver(scale).observe(stage);
+render(true); scale();
+</script>
+<script src="/search.js?v=05090f5cab" defer></script><script src="/stats.js?v=05090f5cab" defer></script>
+</body>
+</html>

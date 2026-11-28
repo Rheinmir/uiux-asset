@@ -6,7 +6,7 @@
 <title>Đang nghĩ — 8 nhịp chấm sáng — uiux-asset</title>
 <meta name="description" content="Viên «Đang nghĩ» cho trợ lý AI: ma trận 9×9 chấm sáng chạy 8 nhịp khác nhau (rắn, vòng, gợn, nụ cười, viền, chữ thập, sao chổi, mưa), chữ loé sáng theo màu. Canvas thuần, có chép code.">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
-<link rel="stylesheet" href="../aw.css?v=8414035277">
+<link rel="stylesheet" href="../aw.css?v=05090f5cab">
 <style>
 .md-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
 .md-page a { color: inherit; }
@@ -45,7 +45,7 @@
 </style>
 </head>
 <body>
-<main class="aw-wrap"><script src="../aw.js?v=8414035277"></script>
+<main class="aw-wrap"><script src="../aw.js?v=05090f5cab"></script>
 <div class="md-page">
   <div class="aw-sotd" style="padding-top:16px">
     <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">8 nhịp</span></p>
@@ -126,6 +126,6 @@ let on = true; new IntersectionObserver(([e]) => on = e.isIntersecting).observe(
 let tt = 0, last = performance.now();
 (function loop(now) { const dt = Math.min(0.05, (now - last) / 1000); last = now; if (on) { tt += dt * speed; views.forEach((v) => draw(v, reduce ? 1.3 : tt)); } requestAnimationFrame(loop); })(last);
 </script>
-<script src="/search.js?v=8414035277" defer></script><script src="/stats.js?v=8414035277" defer></script>
+<script src="/search.js?v=05090f5cab" defer></script><script src="/stats.js?v=05090f5cab" defer></script>
 </body>
 </html>
