@@ -46,7 +46,8 @@
       ['patterns/kitchen-store.html', 'Cửa hàng phụ kiện bếp', 'Menu lớn, bố trí chữ I/L/U, chọn cỡ tủ', 10],
       ['patterns/no-spend.html', 'Tháng không tiêu', 'Check-in, danh sách chờ 72 giờ, Hoàn tác', 6],
       ['patterns/health-dashboard.html', 'Sổ sức khoẻ', 'Chỉ số, liều thuốc trượt, lịch kéo thả, nhắn bác sĩ', 7],
-      ['patterns/orbit-hud.html', 'Bản đồ HUD tương lai', 'Sát ảnh gốc, delta 98%, 18 bảng kính sống', 6]]],
+      ['patterns/orbit-hud.html', 'Bản đồ HUD tương lai', 'Sát ảnh gốc, delta 98%, 18 bảng kính sống', 6],
+      ['patterns/web-studio.html', 'Xưởng bộ website', 'Trang studio, trang bộ, 5 web mẫu, thành phần, mock', 7]]],
     ['chuyen-dong', 'Chuyển động', 'Cuộn trang, motion, 3D', [
       ['scroll-effects/', 'Scroll effects', 'Hiệu ứng cuộn trang, CodePen', 65, 'scroll-effects/thumbs/interactive-cicada-genomics-landing-page.jpg'],
       ['motion/', 'Motion', 'Thư viện chuyển động chạy thật', 28, 'motion/thumbs/animate-ui.jpg'],
