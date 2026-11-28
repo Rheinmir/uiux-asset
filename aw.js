@@ -43,7 +43,8 @@
       ['patterns/ads-report.html', 'Báo cáo quảng cáo', 'Cây chiến dịch, bản đồ nhiệt giờ, ngăn chi tiết', 5],
       ['patterns/dev-portfolio.html', 'Trang cá nhân lập trình viên', 'Lưới đóng góp, ⌘K, trợ lý chat', 8],
       ['patterns/kitchen-store.html', 'Cửa hàng phụ kiện bếp', 'Menu lớn, bố trí chữ I/L/U, chọn cỡ tủ', 10],
-      ['patterns/no-spend.html', 'Tháng không tiêu', 'Check-in, danh sách chờ 72 giờ, Hoàn tác', 6]]],
+      ['patterns/no-spend.html', 'Tháng không tiêu', 'Check-in, danh sách chờ 72 giờ, Hoàn tác', 6],
+      ['patterns/health-dashboard.html', 'Sổ sức khoẻ', 'Chỉ số, liều thuốc trượt, lịch kéo thả, nhắn bác sĩ', 7]]],
     ['chuyen-dong', 'Chuyển động', 'Cuộn trang, motion, 3D', [
       ['scroll-effects/', 'Scroll effects', 'Hiệu ứng cuộn trang, CodePen', 65, 'scroll-effects/thumbs/interactive-cicada-genomics-landing-page.jpg'],
       ['motion/', 'Motion', 'Thư viện chuyển động chạy thật', 28, 'motion/thumbs/animate-ui.jpg'],

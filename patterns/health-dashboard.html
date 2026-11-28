@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sổ sức khoẻ — dashboard chỉ số, thuốc, lịch khám, đội chăm sóc — uiux-asset</title>
+<meta name="description" content="Dashboard sức khoẻ cá nhân êm dịu: thẻ chỉ số có đường nhịp, cột tuần mọc lên, vòng điểm sức khoẻ, tick liều thuốc thì dòng trượt xuống cuối, kéo lịch khám sang ngày khác, nhắn bác sĩ có chấm đang gõ, dock nổi, chế độ tối. Dựng lại từ video Facebook, thương hiệu mẫu «Me Xanh». CSS + JS thuần.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=065220d9a7">
+<style>
+.md-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+.md-page a { color: inherit; }
+.hc-ctl { display: flex; flex-wrap: wrap; gap: 8px; }
+.hc-ctl button { min-height: 40px; padding: 0 14px; border-radius: 99px; border: 1px solid var(--aw-line, #ddd); background: transparent; color: inherit; font: inherit; cursor: pointer; }
+.hc-ctl button[aria-pressed="true"] { background: #111; border-color: #111; color: #fff; }
+.hc-stage { position: relative; border-radius: 18px; overflow: hidden; box-shadow: 0 24px 60px -30px rgba(10,40,30,.5); }
+.hc-fit { width: 1100px; transform-origin: 0 0; }
+.app { --bg: #f6f8f7; --card: #fff; --soft: #f1f4f3; --line: #e8ecea; --ink: #121614; --ink2: #6b7470; --teal: #12a37f; --blue: #5b5bd6; --red: #e0524a; --amber: #e39a1d; --ink-btn: #111;
+  position: relative; height: 900px; overflow: hidden; color: var(--ink); font: 400 13px/1.4 "Inter", var(--aw-font);
+  background: radial-gradient(600px 380px at 10% 0%, #d4f1e5 0, transparent 70%), radial-gradient(520px 420px at 95% 30%, #e6e4fb 0, transparent 70%), radial-gradient(500px 300px at 60% 100%, #fbeedb 0, transparent 70%), var(--bg); transition: color .3s; }
+.app.dark { --bg: #0d1110; --card: #161b19; --soft: #1d2421; --line: #252d2a; --ink: #eef2f0; --ink2: #8f9a95; --ink-btn: #eef2f0;
+  background: radial-gradient(600px 380px at 10% 0%, #0f3329 0, transparent 70%), radial-gradient(520px 420px at 95% 30%, #1d1c3a 0, transparent 70%), var(--bg); }
+.app button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
+.app svg { display: block; }
+.scr { position: absolute; inset: 0; overflow-y: auto; padding: 14px 24px 110px; scrollbar-width: none; } .scr::-webkit-scrollbar { display: none; }
+/* đầu trang */
+.nav { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; gap: 14px; height: 60px; padding: 0 14px; border-radius: 16px; background: color-mix(in srgb, var(--card) 82%, transparent); backdrop-filter: blur(14px); border: 1px solid var(--line); box-shadow: 0 8px 24px -16px rgba(0,0,0,.2); }
+.nav .lg { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; } .nav .lg i { width: 32px; height: 32px; border-radius: 9px; background: var(--teal); color: #fff; display: grid; place-items: center; font-style: normal; }
+.tabs { display: flex; gap: 2px; margin: 0 auto; padding: 4px; border-radius: 99px; background: var(--soft); border: 1px solid var(--line); }
+.tabs button { height: 32px; padding: 0 13px; border-radius: 99px; color: var(--ink2); display: flex; align-items: center; gap: 6px; transition: background .25s, color .25s; }
+.tabs button em { font-style: normal; font-size: 10px; min-width: 16px; height: 16px; border-radius: 99px; background: #d7f0e6; color: #0b7a5e; display: grid; place-items: center; }
+.tabs button[aria-selected="true"] { background: var(--ink-btn); color: var(--bg); }
+.ic { width: 34px; height: 34px; border-radius: 50%; background: var(--card); border: 1px solid var(--line) !important; display: grid; place-items: center; position: relative; }
+.ic em { position: absolute; top: -4px; right: -4px; width: 16px; height: 16px; border-radius: 50%; background: var(--red); color: #fff; font: 600 9px/16px sans-serif; font-style: normal; text-align: center; }
+.av { width: 34px; height: 34px; border-radius: 50%; background: #d3e9f0; color: #123; display: grid; place-items: center; font-weight: 600; font-size: 11px; position: relative; } .av::after { content: ""; position: absolute; right: 0; bottom: 0; width: 9px; height: 9px; border-radius: 50%; background: var(--teal); border: 2px solid var(--card); }
+.hd { display: flex; align-items: flex-end; gap: 10px; margin: 22px 0 14px; } .hd small { color: var(--ink2); } .hd h2 { margin: 2px 0 0; font-size: 28px; font-weight: 600; letter-spacing: -.02em; } .hd p { margin: 4px 0 0; color: var(--ink2); } .hd .sp { flex: 1; }
+.btn { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 16px; border-radius: 99px; background: var(--ink-btn) !important; color: var(--bg) !important; font-weight: 500; transition: transform .15s; } .btn:active { transform: scale(.97); }
+.btn.lt { background: var(--card) !important; color: var(--ink) !important; border: 1px solid var(--line) !important; }
+.cd { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 16px 18px; }
+.cd h3 { margin: 0; font-size: 15px; font-weight: 600; } .cd .sub { margin: 2px 0 0; color: var(--ink2); font-size: 12px; }
+.in { animation: up .5s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(var(--d, 0) * 60ms); } @keyframes up { from { opacity: 0; transform: translateY(12px); } }
+/* chỉ số */
+.vt { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.vt .cd { display: grid; grid-template-columns: 34px 1fr 64px; white-space: nowrap; gap: 10px; align-items: center; padding: 12px 14px; }
+.vt .cd > i { width: 34px; height: 34px; border-radius: 50%; background: color-mix(in srgb, var(--c) 14%, transparent); color: var(--c); display: grid; place-items: center; font-style: normal; }
+.vt b { font-size: 17px; font-weight: 600; } .vt b small { font-size: 11px; font-weight: 400; color: var(--ink2); } .vt span { display: block; font-size: 11px; color: var(--ink2); }
+.vt .live { animation: beat 1.2s infinite; } @keyframes beat { 0%, 100% { transform: scale(1); } 15% { transform: scale(1.15); } }
+/* tuần */
+.wk { margin-top: 12px; }
+.wk .top { display: flex; align-items: flex-start; } .wk .top .sp { flex: 1; }
+.seg { display: flex; padding: 3px; border-radius: 99px; background: var(--soft); } .seg button { height: 28px; padding: 0 12px; border-radius: 99px; color: var(--ink2); } .seg button[aria-pressed="true"] { background: var(--card); color: var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,.1); font-weight: 500; }
+.chips { display: flex; gap: 6px; margin: 14px 0; } .chips button { height: 30px; padding: 0 12px; border-radius: 99px; border: 1px solid var(--line); } .chips button[aria-pressed="true"] { background: var(--ink-btn); color: var(--bg); border-color: var(--ink-btn); }
+.kp { display: grid; grid-template-columns: repeat(4, 1fr); } .kp small { color: var(--ink2); font-size: 11px; } .kp b { display: block; font-size: 22px; font-weight: 600; } .kp b span { font-size: 11px; font-weight: 400; color: var(--ink2); } .kp .g { color: var(--teal); } .kp .r { color: var(--red); }
+.ch { position: relative; height: 210px; margin: 14px 0 4px 34px; display: flex; align-items: flex-end; gap: var(--gap, 46px); padding: 0 10px; border-bottom: 1px solid var(--line); }
+.ch .gl { position: absolute; left: -34px; right: 0; border-top: 1px dashed var(--line); font-size: 9px; color: var(--ink2); } .ch .gl span { position: absolute; top: -6px; left: 0; background: var(--card); }
+.ch .gl.goal { border-top: 1.5px dotted var(--ink2); } .ch .gl.goal b { position: absolute; right: 0; top: -10px; padding: 2px 6px; border-radius: 5px; background: var(--ink-btn); color: var(--bg); font-size: 10px; font-weight: 500; }
+.ch .b { position: relative; flex: 1; height: var(--h); border-radius: 10px; transform-origin: bottom; background: repeating-linear-gradient(135deg, var(--soft) 0 4px, color-mix(in srgb, var(--line) 70%, var(--card)) 4px 6px); }
+.ch .b.now { background: linear-gradient(var(--teal), #0c8a6a); }
+.ch .b.grow { animation: grow .7s cubic-bezier(.2,.9,.3,1) both; animation-delay: calc(var(--i) * 45ms); } @keyframes grow { from { transform: scaleY(0); } }
+.ch .b label { position: absolute; left: 50%; bottom: -20px; transform: translateX(-50%); font-size: 10px; color: var(--ink2); white-space: nowrap; } .ch .b.now label { color: var(--ink); font-weight: 600; }
+.mac { display: grid; grid-template-columns: repeat(3, 1fr) 90px; gap: 10px; margin-top: 30px; }
+.mac > div { padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; } .mac p { display: flex; margin: 0 0 8px; color: var(--ink2); font-size: 11px; } .mac p b { margin-left: auto; color: var(--ink); } .mac p b small { color: var(--ink2); font-weight: 400; }
+.pb { height: 5px; border-radius: 99px; background: var(--soft); } .pb i { display: block; height: 100%; width: var(--w); border-radius: 99px; background: var(--c); }
+.mac button { border: 1px dashed var(--line) !important; border-radius: 12px; color: var(--ink2); font-size: 11px; }
+/* dòng 2 */
+.r2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+.hs { background: radial-gradient(300px 200px at 0% 0%, #d5f2e6, transparent 70%), radial-gradient(280px 220px at 100% 100%, #e7e5fb, transparent 70%), var(--card); }
+.app.dark .hs { background: radial-gradient(300px 200px at 0% 0%, #10352a, transparent 70%), var(--card); }
+.hs .bd { display: grid; grid-template-columns: 170px 1fr; gap: 20px; align-items: center; margin-top: 12px; }
+.hs .rg { position: relative; } .hs .rg b { position: absolute; inset: 0; display: grid; place-items: center; align-content: center; font-size: 36px; font-weight: 600; line-height: 1; } .hs .rg b small { font-size: 10px; font-weight: 400; color: var(--ink2); }
+.hs .rg circle.v { transition: stroke-dashoffset 1.1s cubic-bezier(.2,.8,.2,1); }
+.hs ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; } .hs li { display: flex; gap: 8px; align-items: center; } .hs li i { width: 9px; height: 9px; border-radius: 50%; background: var(--c); } .hs li b { margin-left: auto; font-weight: 600; }
+.hs .ft { margin: 12px 0 0; font-size: 11px; color: var(--ink2); } .hs .ft span { padding: 2px 6px; border-radius: 6px; background: #d7f0e6; color: #0b7a5e; margin-right: 6px; }
+.nv { background: #121513; color: #eef2f0; border-color: #121513; background-image: repeating-linear-gradient(135deg, rgba(255,255,255,.025) 0 2px, transparent 2px 7px); }
+.nv .sub { color: #8f9a95; } .nv .top { display: flex; } .nv .top .sp { flex: 1; } .nv .top button { width: 30px; height: 30px; border-radius: 50%; background: rgba(255,255,255,.08); }
+.nv .who { display: flex; gap: 10px; align-items: center; margin-top: 14px; } .nv .who i { width: 30px; height: 30px; border-radius: 50%; background: #fbe5cc; color: #3a2a12; display: grid; place-items: center; font: 600 10px/1 sans-serif; font-style: normal; } .nv .who small { display: block; color: #8f9a95; font-size: 11px; }
+.nv h4 { margin: 12px 0 10px; font-size: 19px; font-weight: 500; } .nv .tm { padding: 12px 14px; border-radius: 12px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.08); } .nv .tm small { display: block; color: #8f9a95; }
+.nv ul { margin: 12px 0; padding: 0; list-style: none; font-size: 12px; color: #c9d2ce; } .nv li::before { content: "✓ "; color: var(--teal); }
+.nv .bt { display: flex; align-items: center; } .nv .bt span { padding: 3px 8px; border-radius: 6px; background: #2a2852; color: #c4c2ff; font-size: 10px; } .nv .bt button { margin-left: auto; height: 30px; padding: 0 12px; border-radius: 99px; border: 1px solid rgba(255,255,255,.15); font-size: 12px; }
+.nv .sl { transition: opacity .25s, transform .25s; } .nv .sl.sw { opacity: 0; transform: translateX(14px); }
+.r3 { display: grid; grid-template-columns: 1.6fr 1fr; gap: 12px; margin-top: 12px; }
+.ds .top { display: flex; align-items: flex-start; } .ds .top a { margin-left: auto; color: var(--teal); font-size: 12px; font-weight: 500; }
+.ds ul { position: relative; margin: 10px 0 0; padding: 0; list-style: none; }
+.ds li { display: grid; grid-template-columns: 48px 10px 1fr 26px; gap: 10px; align-items: center; height: 52px; border-bottom: 1px solid var(--line); background: var(--card); }
+.ds li > i { width: 7px; height: 7px; border-radius: 50%; background: var(--c); } .ds li small { display: block; color: var(--ink2); font-size: 11px; } .ds li.due small { color: var(--red); }
+.ds .tk { width: 22px; height: 22px; border-radius: 6px; border: 1.5px solid var(--line) !important; display: grid; place-items: center; color: #fff; font-size: 12px; transition: background .2s, border-color .2s; }
+.ds li.done .tk { background: var(--teal); border-color: var(--teal) !important; } .ds li.done span b { color: var(--ink2); font-weight: 400; }
+.wt .top { display: flex; } .wt .top button { margin-left: auto; } .wt .big { margin: 10px 0; font-size: 30px; font-weight: 600; } .wt .big small { font-size: 12px; font-weight: 400; color: var(--ink2); }
+.wt .gs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; } .wt .gs span { height: 74px; border-radius: 10px; background: repeating-linear-gradient(135deg, var(--soft) 0 4px, var(--line) 4px 6px); position: relative; overflow: hidden; }
+.wt .gs span::after { content: ""; position: absolute; inset: 0; background: linear-gradient(#5aa9f0, #2d7fd8); transform: translateY(var(--y, 100%)); transition: transform .6s cubic-bezier(.3,1.3,.5,1); }
+/* lịch */
+.cal .bar { display: flex; align-items: center; gap: 8px; } .cal .bar b { margin-left: 6px; font-size: 15px; } .cal .bar .sp { flex: 1; }
+.cal .bar .lg { padding: 4px 10px; border-radius: 99px; font-size: 11px; font-weight: 500; background: color-mix(in srgb, var(--c) 14%, var(--card)); border: 1px solid color-mix(in srgb, var(--c) 30%, transparent); } .cal .bar .lg::before { content: "● "; color: var(--c); }
+.gd { position: relative; display: grid; grid-template-columns: 48px repeat(7, 1fr); margin-top: 14px; border-top: 1px solid var(--line); user-select: none; }
+.gd .dh { height: 44px; display: grid; place-items: center; font-size: 12px; color: var(--ink2); border-bottom: 1px solid var(--line); } .gd .dh b { color: var(--ink); font-size: 15px; margin-left: 4px; } .gd .dh.now b { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--teal); color: #fff; }
+.gd .tc { position: relative; } .gd .tc span { display: block; height: 46px; font-size: 10px; color: var(--ink2); transform: translateY(-6px); }
+.gd .col { position: relative; border-left: 1px solid var(--line); background: repeating-linear-gradient(var(--card) 0 45px, var(--line) 45px 46px); } .gd .col.now { background: repeating-linear-gradient(color-mix(in srgb, var(--teal) 7%, var(--card)) 0 45px, var(--line) 45px 46px); }
+.gd .col.over { outline: 2px dashed var(--teal); outline-offset: -2px; }
+.ev { position: absolute; left: 4px; right: 4px; padding: 4px 7px; border-radius: 7px; border-left: 3px solid var(--c); background: color-mix(in srgb, var(--c) 13%, var(--card)); font-size: 11px; line-height: 1.25; overflow: hidden; cursor: grab; touch-action: none; transition: box-shadow .2s; }
+.ev b { font-weight: 600; } .ev small { color: var(--ink2); white-space: nowrap; } .ev.drag { cursor: grabbing; z-index: 3; box-shadow: 0 10px 24px -8px rgba(0,0,0,.35); transition: none; }
+/* đội chăm sóc */
+.ct { display: grid; grid-template-columns: 290px 1fr; gap: 12px; height: 640px; }
+.ct .ls { display: flex; flex-direction: column; gap: 4px; padding: 12px; } .ct .q { height: 36px; padding: 0 12px; border-radius: 10px; border: 1px solid var(--line); display: flex; align-items: center; color: var(--ink2); margin-bottom: 6px; }
+.ct .p { display: grid; grid-template-columns: 36px 1fr; gap: 10px; align-items: center; padding: 9px 10px; border-radius: 12px; text-align: left; } .ct .p[aria-current="true"] { background: color-mix(in srgb, var(--teal) 12%, var(--card)); }
+.ct .p i, .ct .ch-h i { width: 36px; height: 36px; border-radius: 50%; background: var(--c); color: #223; display: grid; place-items: center; font: 600 11px/1 sans-serif; font-style: normal; position: relative; }
+.ct .p i.on::after, .ct .ch-h i::after { content: ""; position: absolute; right: -1px; bottom: -1px; width: 9px; height: 9px; border-radius: 50%; background: var(--teal); border: 2px solid var(--card); }
+.ct .p b { font-size: 12px; } .ct .p small { display: block; color: var(--ink2); font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ct .cv { display: flex; flex-direction: column; padding: 0; overflow: hidden; }
+.ct .ch-h { display: flex; gap: 10px; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--line); } .ct .ch-h small { display: block; color: var(--teal); font-size: 11px; }
+.chl { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 4px; }
+.chl .dt { align-self: center; padding: 3px 9px; border-radius: 6px; background: var(--soft); font-size: 10px; color: var(--ink2); margin: 8px 0; }
+.chl .m { align-self: flex-start; max-width: 70%; padding: 9px 13px; border-radius: 14px; background: var(--soft); animation: up .35s both; } .chl .m.me { align-self: flex-end; background: var(--teal); color: #fff; } .chl time { font-size: 10px; color: var(--ink2); margin-bottom: 6px; } .chl time.me { align-self: flex-end; }
+.chl .typ { display: flex; gap: 4px; padding: 12px 14px; } .chl .typ i { width: 7px; height: 7px; border-radius: 50%; background: var(--ink2); animation: blink 1.2s infinite ease-in-out; } .chl .typ i:nth-child(2) { animation-delay: .15s; } .chl .typ i:nth-child(3) { animation-delay: .3s; }
+@keyframes blink { 0%, 80%, 100% { opacity: .25; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-3px); } }
+.qr { display: flex; gap: 6px; padding: 10px 16px 0; border-top: 1px solid var(--line); } .qr button { height: 28px; padding: 0 11px; border-radius: 99px; border: 1px solid var(--line); font-size: 11px; }
+.cmp { display: flex; gap: 8px; padding: 10px 16px 14px; } .cmp input { flex: 1; height: 38px; padding: 0 14px; border-radius: 99px; border: 1px solid var(--line); background: var(--card); color: var(--ink); font: inherit; } .cmp button { width: 38px; height: 38px; border-radius: 50%; background: var(--teal) !important; color: #fff !important; }
+/* dock + toast */
+.dock { position: absolute; left: 50%; bottom: 18px; z-index: 6; transform: translateX(-50%); display: flex; align-items: center; gap: 4px; padding: 6px; border-radius: 18px; background: color-mix(in srgb, var(--card) 85%, transparent); backdrop-filter: blur(14px); border: 1px solid var(--line); box-shadow: 0 14px 30px -14px rgba(0,0,0,.35); }
+.dock button { position: relative; width: 38px; height: 38px; border-radius: 12px; display: grid; place-items: center; transition: background .2s; } .dock button:hover { background: var(--soft); } .dock button[aria-pressed="true"] { background: var(--ink-btn); color: var(--bg); }
+.dock em { position: absolute; top: -4px; right: -4px; width: 16px; height: 16px; border-radius: 50%; background: var(--red); color: #fff; font: 600 9px/16px sans-serif; font-style: normal; text-align: center; } .dock hr { width: 1px; height: 22px; border: 0; background: var(--line); margin: 0 4px; }
+.toast { position: absolute; right: 18px; bottom: 22px; z-index: 7; display: flex; align-items: center; gap: 10px; padding: 9px 14px 9px 9px; border-radius: 12px; background: #121513; color: #fff; box-shadow: 0 14px 30px -10px rgba(0,0,0,.5); transform: translateY(150%); opacity: 0; transition: transform .45s cubic-bezier(.2,1.2,.4,1), opacity .3s; }
+.toast.on { transform: none; opacity: 1; } .toast > i { width: 24px; height: 24px; border-radius: 7px; background: var(--teal); display: grid; place-items: center; font-style: normal; } .toast button { color: #4fd1a8 !important; font-weight: 600; margin-left: 6px; }
+@media (prefers-reduced-motion: reduce) { .in, .ch .b.grow, .chl .m, .vt .live, .chl .typ i { animation: none; } }
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=065220d9a7"></script>
+<div class="md-page">
+  <div class="aw-sotd" style="padding-top:16px">
+    <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">3 màn · 7 tương tác</span></p>
+    <h1 class="aw-h1" style="--aw-h1:clamp(40px,7vw,96px)">Sổ sức khoẻ</h1>
+    <p class="aw-lead">Dashboard sức khoẻ cá nhân êm dịu: chỉ số, liều thuốc, lịch khám và đội chăm sóc ở một chỗ. Tick một liều thì dòng trượt xuống cuối. Kéo một lịch sang ngày khác. Nhắn bác sĩ và xem chấm đang gõ. Bấm thử trực tiếp trong khung.</p>
+    <p class="aw-lead" style="font-size:14px">Bố cục và chuyển động dựng lại từ <a href="https://www.facebook.com/share/v/1KMbQRRJKf/" target="_blank" rel="noopener">video Facebook</a> (một template bán sẵn). Thương hiệu «Me Xanh», tên người và số liệu là mẫu, không phải lời khuyên y tế.</p>
+  </div>
+  <div class="hc-ctl" role="toolbar" aria-label="Điều khiển"><button type="button" data-v="today" aria-pressed="true">Hôm nay</button><button type="button" data-v="sched" aria-pressed="false">Lịch</button><button type="button" data-v="team" aria-pressed="false">Đội chăm sóc</button><button type="button" id="dkb" aria-pressed="false">Chế độ tối</button></div>
+  <div class="hc-stage" id="stage"><div class="hc-fit" id="fit"><div class="app" id="app">
+    <div class="scr" id="scr"></div>
+    <div class="dock" role="toolbar" aria-label="Dock"><button aria-label="Tìm">⌕</button><button aria-label="Thêm">＋</button><button data-v="today" aria-label="Hôm nay">∿</button><button data-v="sched" aria-label="Lịch">▦</button><button data-v="team" aria-label="Tin nhắn">✉<em id="unr">2</em></button><button aria-label="Chia sẻ">⇪</button><hr><button aria-label="Cài đặt">⚙</button><button aria-label="Trợ giúp">?</button><button id="moon" aria-label="Đổi sáng tối">☾</button></div>
+    <div class="toast" id="toast" role="status"><i>✓</i><span id="tt"></span><button type="button" id="undo">Hoàn tác</button></div>
+  </div></div></div>
+</div>
+</main>
+<script>
+// Các phần của pattern (sổ patterns.json trỏ tới các id này).
+const PARTS = [
+  { id: 'today', vi: 'Hôm nay: 4 thẻ chỉ số có đường nhịp, cột tuần, macro, điểm sức khoẻ, lịch khám tới, nước' }, { id: 'grow-bars', vi: 'Cột mọc lên lệch nhịp khi đổi chỉ số hoặc 7/30 ngày' },
+  { id: 'dose-flip', vi: 'Tick liều thuốc: dòng trượt xuống cuối danh sách (FLIP)' }, { id: 'schedule-drag', vi: 'Lịch tuần: kéo một lịch sang ngày giờ khác, bắt 15 phút' },
+  { id: 'care-chat', vi: 'Nhắn đội chăm sóc: trả lời nhanh, chấm đang gõ, tin đến' }, { id: 'dock-toast', vi: 'Dock nổi đáy màn và toast Hoàn tác' }, { id: 'dark', vi: 'Chế độ tối' }];
+const $ = (id) => document.getElementById(id), app = $('app'), scr = $('scr');
+const S = { v: 'today', metric: 'cal', days: 7, visit: 0, water: 2, unread: 2,
+  doses: [['07:00', 'Levothyroxine 50 mcg', '#5b5bd6', 1, 'Đã uống 07:04'], ['08:00', 'Amlodipine 5 mg', '#e0524a', 1, 'Đã uống 08:11'], ['08:00', 'Vitamin B12 1000 mcg', '#e39a1d', 0, 'Quá giờ'], ['08:00', 'Xịt mũi Mometasone 50 mcg', '#6b7470', 1, 'Đã uống 08:13'], ['13:00', 'Omega-3 1 g', '#12a37f', 0, 'Sau bữa trưa'], ['21:30', 'Magie citrate 200 mg', '#5b5bd6', 0, 'Trước khi ngủ']].map(([t, n, c, d, s], i) => ({ i, t, n, c, d, s, at: i })),
+  ev: [['Đo huyết áp tại nhà', 0, 8.5, .5, '#e39a1d'], ['Đo huyết áp tại nhà', 3, 8.5, .5, '#e39a1d'], ['Giãn cơ + yoga', 1, 12.25, .5, '#12a37f'], ['Giãn cơ + yoga', 3, 12.25, .5, '#12a37f'], ['Khám định kỳ quý', 6, 9.25, .5, '#5b5bd6'], ['Muối và B12', 3, 16.5, .5, '#5b5bd6'], ['Chạy vùng 2', 2, 18, .67, '#12a37f'], ['Đi bộ dài', 4, 18, 1, '#12a37f'], ['Lấy mẫu xét nghiệm', 5, 17.5, .33, '#e39a1d']].map(([n, d, h, l, c]) => ({ n, d, h, l, c })),
+  chat: [['dt', 'T3 10/11'], ['them', 'Có kết quả mới rồi. B12 vẫn hơi thấp, chị cứ uống bổ sung tiếp nhé.', '15:56'], ['me', 'Vâng ạ. Em có cần đổi gì với amlodipine không?', '16:56'], ['dt', 'Hôm nay'], ['them', 'Chưa cần đổi. Số đo ở nhà ổn. Hai tuần nữa mình gọi điện trao đổi nhé.', '18:56']] };
+const VIS = [['PR', 'Phạm Ry', 'Chuyên gia dinh dưỡng', 'Muối và B12', 'Th5 12/11', '16:30 · Gọi video', ['Ghi bữa ăn 3 ngày', 'Ghi lại lúc mệt sau bữa trưa'], 'còn 18 giờ 33 phút'], ['SO', 'BS. Sơn Ốc', 'Bác sĩ gia đình', 'Khám định kỳ quý', 'CN 15/11', '09:15 · Tại phòng khám', ['Mang sổ đo huyết áp', 'Nhịn ăn từ 22 giờ'], 'còn 3 ngày'], ['LB', 'BS. Lan Bình', 'Tim mạch', 'Xem lại huyết áp', 'T4 18/11', '10:00 · Gọi video', ['Đo huyết áp sáng tối'], 'còn 6 ngày'], ['TR', 'Tâm Rô', 'Vật lý trị liệu', 'Bài tập hông', 'T6 20/11', '17:00 · Tại phòng tập', ['Mặc đồ thoải mái'], 'còn 8 ngày']];
+const MET = { cal: ['Năng lượng', 'kcal', [1950, 1940, 2050, 1980, 2100, 1970, 1889], 2500, 2200, '−5,5%'], hr: ['Nhịp tim', 'bpm', [64, 66, 61, 63, 60, 62, 61], 90, 70, '−0,7%'], glu: ['Đường huyết', 'mg/dL', [96, 92, 99, 94, 90, 95, 93], 140, 100, '−1,2%'], bp: ['Huyết áp', 'mmHg', [131, 128, 133, 127, 126, 130, 128], 160, 130, '−2,1%'], sl: ['Giấc ngủ', 'giờ', [6.8, 7.2, 7.5, 6.9, 7.8, 7.1, 7.4], 10, 8, '+3,4%'], st: ['Bước chân', 'bước', [6400, 8100, 9900, 7200, 10400, 6800, 7600], 12000, 8000, '+6,0%'] };
+const DAYS = ['T5', 'T6', 'T7', 'CN', 'T2', 'T3', 'Hôm nay'], fmt = (n) => n.toLocaleString('vi-VN');
+let undoFn = null, tmr;
+function toast(m, fn) { undoFn = fn; $('tt').textContent = m; $('toast').classList.add('on'); clearTimeout(tmr); tmr = setTimeout(() => $('toast').classList.remove('on'), 5000); }
+$('undo').onclick = () => { $('toast').classList.remove('on'); undoFn && undoFn(); undoFn = null; };
+const spark = (c, seed) => { let y = 20, d = 'M0 20'; for (let x = 6; x <= 80; x += 6) { y = 20 + Math.sin(x * .3 + seed) * 9 + Math.cos(x * .7 + seed * 2) * 4; d += ` L${x} ${y.toFixed(1)}`; } return `<svg viewBox="0 0 80 40" width="80" height="34"><path d="${d}" fill="none" stroke="${c}" stroke-width="1.6" stroke-linejoin="round"/></svg>`; };
+const nav = () => `<div class="nav"><span class="lg"><i>◈</i>Me Xanh</span><div class="tabs" role="tablist">${[['today', 'Hôm nay'], ['', 'Chỉ số'], ['', 'Hồ sơ', 4], ['', 'Lần khám'], ['sched', 'Lịch'], ['', 'Thuốc', 1], ['team', 'Đội chăm sóc', S.unread]].map(([v, n, b]) => `<button role="tab" ${v ? `data-v="${v}"` : ''} aria-selected="${v === S.v}">${n}${b ? `<em>${b}</em>` : ''}</button>`).join('')}</div><button class="ic" aria-label="Tìm">⌕</button><button class="ic" aria-label="Thông báo">🔔<em>3</em></button><span class="av">AL</span></div>`;
+function bars(anim) {
+  const [, u, w7, max, goal, vs] = MET[S.metric], vals = S.days === 7 ? w7 : Array.from({ length: 30 }, (_, i) => w7[i % 7] * (0.9 + ((i * 37) % 20) / 100)).map((v, i, a) => i === 29 ? w7[6] : v);
+  const lab = S.days === 7 ? DAYS : vals.map((_, i) => i === 29 ? '11' : (i % 5 === 1 ? String((i + 13) % 31 || 31) : ''));
+  const avg = vals.reduce((s, v) => s + v, 0) / vals.length, f = (v) => S.metric === 'sl' ? v.toFixed(1).replace('.', ',') : fmt(Math.round(v));
+  return `<div class="kp"><div><small>Hôm nay</small><b class="g">${f(vals.at(-1))} <span>${u}</span></b></div><div><small>Trung bình</small><b>${f(avg)} <span>${u}</span></b></div><div><small>Ngày tốt nhất</small><b>${f(Math.max(...vals))} <span>${u}</span></b></div><div><small>So với kỳ trước</small><b class="${vs[0] === '+' ? 'g' : 'r'}">${vs}</b></div></div>
+  <div class="ch" style="--gap:${S.days === 7 ? 46 : 6}px">${[0, .25, .5, .75, 1].map((k) => `<div class="gl" style="bottom:${k * 100}%"><span>${f(max * k)}</span></div>`).join('')}<div class="gl goal" style="bottom:${goal / max * 100}%"><b>${f(goal)}</b></div>
+  ${vals.map((v, i) => `<div class="b ${i === vals.length - 1 ? 'now' : ''} ${anim ? 'grow' : ''}" style="--h:${v / max * 100}%;--i:${i}"><label>${lab[i]}</label></div>`).join('')}</div>`;
+}
+function ring() {
+  const R = [[74, '#12a37f', 99], [62, '#5b5bd6', 94], [50, '#e0524a', 77], [38, '#e39a1d', 94]];
+  return `<svg viewBox="0 0 170 170" width="170" height="170">${R.map(([r, c, p]) => { const C = 2 * Math.PI * r; return `<circle cx="85" cy="85" r="${r}" fill="none" stroke="${c}" stroke-opacity=".15" stroke-width="9"/><circle class="v" cx="85" cy="85" r="${r}" fill="none" stroke="${c}" stroke-width="9" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" data-o="${C * (1 - p / 100)}" transform="rotate(-90 85 85)"/>`; }).join('')}</svg>`;
+}
+const visit = () => { const [ab, n, r, t, d, h, l, c] = VIS[S.visit]; return `<div class="sl"><div class="who"><i>${ab}</i><div>${n}<small>${r}</small></div></div><h4>${t}</h4><div class="tm"><b>${d}</b><small>${h}</small></div><ul>${l.map((x) => `<li>${x}</li>`).join('')}</ul><div class="bt"><span>${c}</span><button>Chi tiết ↗</button></div></div>`; };
+const doseList = () => S.doses.slice().sort((a, b) => a.d - b.d || (a.d ? a.at - b.at : a.i - b.i)).map((d) => `<li data-ds="${d.i}" class="${d.d ? 'done' : d.s === 'Quá giờ' ? 'due' : ''}"><span>${d.t}</span><i style="--c:${d.c}"></i><span><b>${d.n}</b><small>${d.s}</small></span><button class="tk" aria-label="Đánh dấu ${d.n}" aria-pressed="${!!d.d}">${d.d ? '✓' : ''}</button></li>`).join('');
+function today() {
+  scr.innerHTML = nav() + `<div class="hd"><div><small>Thứ Tư, 11 tháng 11</small><h2>Chào buổi tối, An</h2></div><span class="sp"></span><button class="btn lt">▦ 4 lịch sắp tới</button><button class="btn">＋ Ghi một số đo</button></div>
+  <div class="vt">${[['♥', '#e0524a', '66', 'bpm', 'Nhịp tim · trực tiếp', 1], ['≋', '#2d9cdb', '14,5', 'lần/phút', 'Nhịp thở', 2], ['◔', '#5b5bd6', '128/79', 'mmHg', 'Huyết áp', 3], ['◍', '#e39a1d', '93', 'mg/dL', 'Đường huyết lúc đói', 4]].map(([ic, c, v, u, l, s], i) => `<div class="cd in" style="--c:${c};--d:${i}"><i class="${i ? '' : 'live'}">${ic}</i><div><b>${v} <small>${u}</small></b><span>${l}</span></div>${spark(c, s).replace('width="80"', 'width="64"')}</div>`).join('')}</div>
+  <div class="cd wk in" style="--d:4"><div class="top"><div><h3>Tuần của bạn</h3><p class="sub">${MET[S.metric][0]} trong ngày, nghỉ và vận động.</p></div><span class="sp"></span><div class="seg" id="days"><button data-days="7" aria-pressed="${S.days === 7}">7 ngày</button><button data-days="30" aria-pressed="${S.days === 30}">30 ngày</button></div></div>
+    <div class="chips" id="chips">${[['cal', '◌ Năng lượng'], ['hr', '♡ Nhịp tim'], ['glu', '◍ Đường huyết'], ['bp', '◔ Huyết áp'], ['sl', '☾ Ngủ'], ['st', '⋔ Bước chân']].map(([k, n]) => `<button data-m="${k}" aria-pressed="${k === S.metric}">${n}</button>`).join('')}</div>
+    <div id="bars">${bars(true)}</div>
+    <div class="mac">${[['Đạm', 77, 95, '#12a37f'], ['Tinh bột', 223, 240, '#5b5bd6'], ['Chất béo', 75, 70, '#e39a1d']].map(([n, v, g, c]) => `<div><p>${n}<b>${v} <small>/ ${g} g</small></b></p><div class="pb"><i style="--w:${Math.min(100, v / g * 100)}%;--c:${c}"></i></div></div>`).join('')}<button>＋<br>Ghi bữa ăn</button></div></div>
+  <div class="r2"><div class="cd hs in" style="--d:5"><div class="top" style="display:flex"><div><h3>Điểm sức khoẻ</h3><p class="sub">7 ngày qua · ngủ, vận động, huyết áp, thuốc</p></div></div>
+    <div class="bd"><div class="rg">${ring()}<b>91<small>trên 100</small></b></div><ul>${[['Giấc ngủ', '#12a37f', 99], ['Vận động', '#5b5bd6', 94], ['Huyết áp', '#e0524a', 77], ['Uống thuốc đủ', '#e39a1d', 94]].map(([n, c, p]) => `<li><i style="--c:${c}"></i>${n}<b>${p}%</b></li>`).join('')}</ul></div>
+    <p class="ft"><span>+0</span>so với tuần trước: ngủ đều hơn và huyết áp thấp hơn là chính.</p></div>
+  <div class="cd nv in" style="--d:6"><div class="top"><div><h3>Lần khám tới</h3><p class="sub">4 lịch đã đặt</p></div><span class="sp"></span><button data-vs="-1" aria-label="Trước">‹</button><button data-vs="1" aria-label="Sau" style="margin-left:6px">›</button></div><div id="vis">${visit()}</div></div></div>
+  <div class="r3"><div class="cd ds in" style="--d:7"><div class="top"><div><h3>Liều hôm nay</h3><p class="sub" id="dn"></p></div><a>Tất cả thuốc ›</a></div><ul id="dl">${doseList()}</ul></div>
+  <div class="cd wt in" style="--d:8"><div class="top"><div><h3>Nước</h3><p class="sub">Mục tiêu 2,4 lít</p></div><button class="ic" id="wa" aria-label="Thêm một ly">＋</button></div><div class="big" id="wb"></div><div class="gs" id="gs">${'<span></span>'.repeat(8)}</div></div></div>`;
+  doseCount(); water();
+  requestAnimationFrame(() => requestAnimationFrame(() => scr.querySelectorAll('.rg circle.v').forEach((c) => c.style.strokeDashoffset = c.dataset.o)));
+}
+function doseCount() { $('dn').textContent = `${S.doses.filter((d) => d.d).length} / ${S.doses.length} đã uống`; }
+function water() { $('wb').innerHTML = `${(S.water * .3).toFixed(1).replace('.', ',')} <small>lít · còn ${8 - S.water} ly</small>`; $('gs').querySelectorAll('span').forEach((s, i) => s.style.setProperty('--y', i < S.water ? '0%' : '100%')); }
+// FLIP: ghi vị trí cũ, vẽ lại thứ tự mới, đẩy từng dòng từ chỗ cũ về chỗ mới
+function tick(i) {
+  const ul = $('dl'), old = new Map([...ul.children].map((li) => [li.dataset.ds, li.getBoundingClientRect().top]));
+  const d = S.doses[i], prev = [d.d, d.s, d.at]; d.d = d.d ? 0 : 1; d.at = Date.now(); d.s = d.d ? 'Đã uống ' + '19:42' : (d.i === 2 ? 'Quá giờ' : 'Chưa uống');
+  ul.innerHTML = doseList(); doseCount();
+  const k = parseFloat(getComputedStyle($('fit')).transform.split(',')[3]) || 1;
+  [...ul.children].forEach((li) => { const dy = (old.get(li.dataset.ds) - li.getBoundingClientRect().top) / k; if (dy) li.animate([{ transform: `translateY(${dy}px)` }, { transform: 'none' }], { duration: 520, easing: 'cubic-bezier(.2,.8,.2,1)' }); });
+  if (d.d) toast('Đã đánh dấu liều này', () => { [d.d, d.s, d.at] = prev; ul.innerHTML = doseList(); doseCount(); });
+}
+// lịch tuần: kéo một sự kiện, bắt 15 phút
+const H0 = 8, PX = 46, WD = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'], hm = (h) => `${String(Math.floor(h)).padStart(2, '0')}:${String(Math.round(h % 1 * 60)).padStart(2, '0')}`;
+function sched() {
+  scr.innerHTML = nav() + `<div class="hd"><div><h2>Lịch</h2><p>Lần khám, xét nghiệm, tập luyện và nhắc nhở. Kéo một lịch để dời nó.</p></div><span class="sp"></span><div class="seg"><button aria-pressed="true">Tuần</button><button aria-pressed="false">Tháng</button></div></div>
+  <div class="cd cal in"><div class="bar"><button class="ic">‹</button><button class="btn lt" style="height:32px">Hôm nay</button><button class="ic">›</button><b>9 – 15 tháng 11, 2026</b><span class="sp"></span>${[['Lần khám', '#5b5bd6'], ['Xét nghiệm', '#e0524a'], ['Vận động', '#12a37f'], ['Nhắc nhở', '#e39a1d']].map(([n, c]) => `<span class="lg" style="--c:${c}">${n}</span>`).join('')}</div>
+  <div class="gd" id="gd"><div class="dh"></div>${WD.map((d, i) => `<div class="dh ${i === 2 ? 'now' : ''}">${d}<b>${9 + i}</b></div>`).join('')}
+  <div class="tc">${Array.from({ length: 13 }, (_, i) => `<span>${hm(H0 + i)}</span>`).join('')}</div>${WD.map((_, i) => `<div class="col ${i === 2 ? 'now' : ''}" data-col="${i}" style="height:${13 * PX}px"></div>`).join('')}</div></div>`;
+  drawEv();
+}
+function drawEv() { $('gd').querySelectorAll('.col').forEach((c) => c.innerHTML = S.ev.filter((e) => e.d === +c.dataset.col).map((e) => `<div class="ev" data-e="${S.ev.indexOf(e)}" style="--c:${e.c};top:${(e.h - H0) * PX}px;height:${Math.max(e.l * PX - 2, 24)}px"><b>${e.n}</b> <small>${hm(e.h)}–${hm(e.h + e.l)}</small></div>`).join('')); }
+let drag = null;
+scr.addEventListener('pointerdown', (e) => {
+  const ev = e.target.closest('.ev'); if (!ev) return;
+  const k = parseFloat(getComputedStyle($('fit')).transform.split(',')[3]) || 1, r = ev.getBoundingClientRect();
+  drag = { el: ev, i: +ev.dataset.e, k, dx: (e.clientX - r.left) / k, dy: (e.clientY - r.top) / k }; ev.classList.add('drag'); ev.setPointerCapture(e.pointerId);
+});
+scr.addEventListener('pointermove', (e) => {
+  if (!drag) return; const g = $('gd'), cols = [...g.querySelectorAll('.col')], el = drag.el;
+  const col = cols.find((c) => { const r = c.getBoundingClientRect(); return e.clientX >= r.left && e.clientX < r.right; }) || cols[S.ev[drag.i].d];
+  const top = (e.clientY - col.getBoundingClientRect().top) / drag.k - drag.dy, h = Math.max(H0, Math.min(H0 + 12.5, H0 + Math.round(top / PX * 4) / 4));
+  cols.forEach((c) => c.classList.toggle('over', c === col)); if (el.parentNode !== col) col.append(el);
+  el.style.top = (h - H0) * PX + 'px'; drag.to = [+col.dataset.col, h]; el.querySelector('small').textContent = `${WD[col.dataset.col]} ${9 + +col.dataset.col}/11 · ${hm(h)}`;
+});
+scr.addEventListener('pointerup', () => {
+  if (!drag) return; const e = S.ev[drag.i], prev = [e.d, e.h]; $('gd').querySelectorAll('.col').forEach((c) => c.classList.remove('over'));
+  if (drag.to && (drag.to[0] !== e.d || drag.to[1] !== e.h)) { [e.d, e.h] = drag.to; toast(`Đã dời sang ${WD[e.d]} ${9 + e.d}/11, ${hm(e.h)}`, () => { [e.d, e.h] = prev; drawEv(); }); }
+  drag = null; drawEv();
+});
+// đội chăm sóc: trả lời nhanh → tin của mình → chấm đang gõ → bác sĩ trả lời
+const TEAM = [['SO', 'BS. Sơn Ốc', 'Chưa cần đổi. Số đo ở nhà ổn…', '#d7f0e6', 1], ['LB', 'BS. Lan Bình', 'Bạn: Em đặt buổi sáng, cảm ơn chị.', '#e3e2fb', 0], ['PR', 'Phạm Ry', 'Mai chị ghi giúp em cảm giác sau ăn…', '#fbe5cc', 1], ['TR', 'Tâm Rô', 'Buổi tập hôm qua tốt. Video bài hông…', '#d8ecf6', 0], ['HK', 'Hà Kim', 'Thuốc amlodipine đã sẵn để lấy…', '#f8dbe5', 1]];
+const REPLY = { 'Cảm ơn bác sĩ!': 'Không có gì. Cứ giữ đo đều hai lần một tuần nhé.', 'Mình dời lịch hẹn được không?': 'Được chứ. Thứ Năm 16:30 có trống, tôi đổi luôn nhé?', 'Tôi muốn hỏi về kết quả': 'Chị hỏi đi, tôi đang mở kết quả B12 của chị đây.' };
+function team() {
+  S.unread = 0;
+  scr.innerHTML = nav() + `<div class="hd"><div><h2>Đội chăm sóc</h2><p>5 người có thể giúp bạn. Tin nhắn được trả lời trong một ngày làm việc.</p></div><span class="sp"></span><button class="btn lt">✆ Cấp cứu: 115</button></div>
+  <div class="ct in"><div class="cd ls"><div class="q">⌕ Tìm trong đội</div>${TEAM.map(([a, n, m, c, on], i) => `<button class="p" aria-current="${!i}"><i class="${on ? 'on' : ''}" style="--c:${c}">${a}</i><div><b>${n}</b><small>${m}</small></div></button>`).join('')}</div>
+  <div class="cd cv"><div class="ch-h"><i style="--c:#d7f0e6">SO</i><div><b>BS. Sơn Ốc</b><small>Bác sĩ gia đình · Đang trực tuyến</small></div></div>
+  <div class="chl" id="chl">${S.chat.map(msg).join('')}</div>
+  <div class="qr" id="qr">${Object.keys(REPLY).map((q) => `<button data-q="${q}">${q}</button>`).join('')}</div>
+  <form class="cmp" id="cmp"><input id="mi" placeholder="Nhắn BS. Sơn Ốc…" aria-label="Tin nhắn"><button aria-label="Gửi">➤</button></form></div></div>`;
+  $('unr').hidden = true; $('chl').scrollTop = 1e4;
+}
+const msg = ([w, t, tm]) => w === 'dt' ? `<span class="dt">${t}</span>` : `<div class="m ${w === 'me' ? 'me' : ''}">${t}</div><time class="${w === 'me' ? 'me' : ''}">${tm}</time>`;
+function send(t) {
+  if (!t.trim()) return; const ms = $('chl'), now = '19:4' + (S.chat.length % 10);
+  S.chat.push(['me', t, now]); ms.insertAdjacentHTML('beforeend', msg(['me', t, now]) + '<div class="m typ" id="typ"><i></i><i></i><i></i></div>'); ms.scrollTop = 1e4;
+  setTimeout(() => { $('typ')?.remove(); const r = ['them', REPLY[t] || 'Tôi đã nhận được. Chiều nay tôi trả lời kỹ hơn nhé.', now]; S.chat.push(r); if (S.v === 'team') { $('chl').insertAdjacentHTML('beforeend', msg(r)); $('chl').scrollTop = 1e4; } }, 1600);
+}
+function show(v) { S.v = v; ({ today, sched, team })[v](); scr.scrollTop = 0; document.querySelectorAll('[data-v]').forEach((b) => b.closest('.tabs') || b.setAttribute('aria-pressed', b.dataset.v === v)); }
+app.addEventListener('click', (e) => {
+  const v = e.target.closest('[data-v]'); if (v) return show(v.dataset.v);
+  const m = e.target.closest('[data-m]'); if (m) { S.metric = m.dataset.m; $('chips').querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', b === m)); scr.querySelector('.wk .sub').textContent = MET[S.metric][0] + ' trong ngày, nghỉ và vận động.'; $('bars').innerHTML = bars(true); return; }
+  const dd = e.target.closest('[data-days]'); if (dd) { S.days = +dd.dataset.days; $('days').querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', b === dd)); $('bars').innerHTML = bars(true); return; }
+  const vs = e.target.closest('[data-vs]'); if (vs) { const sl = $('vis').firstChild; sl.classList.add('sw'); setTimeout(() => { S.visit = (S.visit + +vs.dataset.vs + VIS.length) % VIS.length; $('vis').innerHTML = visit(); }, 220); return; }
+  const tk = e.target.closest('.tk'); if (tk) return tick(+tk.closest('li').dataset.ds);
+  if (e.target.closest('#wa')) { S.water = Math.min(8, S.water + 1); water(); return; }
+  const q = e.target.closest('[data-q]'); if (q) return send(q.dataset.q);
+  if (e.target.closest('#moon')) setDark(!app.classList.contains('dark'));
+});
+app.addEventListener('submit', (e) => { e.preventDefault(); send($('mi').value); $('mi').value = ''; });
+function setDark(on) { app.classList.toggle('dark', on); $('moon').textContent = on ? '☀' : '☾'; $('dkb').setAttribute('aria-pressed', on); }
+$('dkb').onclick = () => setDark(!app.classList.contains('dark'));
+document.querySelector('.hc-ctl').addEventListener('click', (e) => { const v = e.target.closest('[data-v]'); if (v) show(v.dataset.v); });
+const stage = $('stage'), fit = $('fit');
+function scale() { const k = stage.clientWidth / 1100; fit.style.transform = `scale(${k})`; stage.style.height = 900 * k + 'px'; }
+new ResizeObserver(scale).observe(stage);
+scale(); show('today');
+</script>
+<script src="/search.js?v=065220d9a7" defer></script><script src="/stats.js?v=065220d9a7" defer></script>
+</body>
+</html>
