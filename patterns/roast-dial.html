@@ -8,7 +8,7 @@
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
 <link rel="stylesheet" href="../aw.css?v=e3b39182c0">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:wght@400;700&family=Archivo:wdth,wght@75,800&family=Hanken+Grotesk:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&family=Archivo:wght@800&family=Hanken+Grotesk:wght@500;600&display=swap">
 <style>
 .md-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
 .md-page a { color: inherit; }
@@ -38,7 +38,7 @@
 .rd .hl { position: absolute; left: 113px; right: 120px; top: 103px; height: 1px; background: var(--line); transition: background .9s; }
 .rd .ic { position: absolute; top: 42px; font-size: 26px; } .rd .ic.s { left: 1205px; } .rd .ic.c { left: 1276px; } .rd .ic.c i { position: absolute; right: -8px; top: -6px; width: 16px; height: 16px; border-radius: 50%; background: var(--acc); }
 /* tiêu đề + nhãn vị */
-.rd h1 { position: absolute; left: 104px; top: 214px; margin: 0; font: 400 58px/1 "Libre Caslon Text", serif; letter-spacing: .005em; text-transform: uppercase; white-space: nowrap; transition: opacity .35s; }
+.rd h1 { position: absolute; left: 104px; top: 214px; margin: 0; font: 500 60px/1 "EB Garamond", serif; letter-spacing: .005em; text-transform: uppercase; white-space: nowrap; transition: opacity .35s; }
 .rd .tag { position: absolute; left: 104px; top: 302px; width: 205px; justify-content: center; height: 34px; padding: 0; border: 1.6px solid var(--ink); border-radius: 18px; display: flex; align-items: center; font-size: 15px; letter-spacing: .08em; text-transform: uppercase; transition: border-color .9s; }
 /* núm xoay */
 .rd .dial { position: absolute; left: 121px; top: 368px; width: 300px; height: 300px; touch-action: none; }
@@ -50,7 +50,7 @@
 .rd .knob.drag { transition: none; cursor: grabbing; }
 /* bảng nhiệt rang */
 .rd .chart { position: absolute; left: 458px; top: 548px; width: 482px; height: 312px; border-radius: 14px; background: var(--card); box-shadow: 0 24px 40px -22px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,255,255,.35); backdrop-filter: blur(10px); transition: background .9s; }
-.rd .chart .t { position: absolute; left: 32px; top: 32px; font-size: 14px; letter-spacing: .08em; } .rd .chart .deg { position: absolute; right: 36px; top: 24px; font: 400 30px "Libre Caslon Text", serif; opacity: 0; transition: opacity .4s; } .rd[data-r="1"] .chart .deg, .rd[data-r="2"] .chart .deg, .rd[data-r="3"] .chart .deg { opacity: 1; }
+.rd .chart .t { position: absolute; left: 32px; top: 32px; font-size: 14px; letter-spacing: .08em; } .rd .chart .deg { position: absolute; right: 36px; top: 24px; font: 400 30px "EB Garamond", serif; opacity: 0; transition: opacity .4s; } .rd[data-r="1"] .chart .deg, .rd[data-r="2"] .chart .deg, .rd[data-r="3"] .chart .deg { opacity: 1; }
 .rd .chart svg { position: absolute; left: 0; top: 0; overflow: visible; } .rd .chart .ax { font-size: 9px; fill: var(--ink2); }
 .rd .chart .curve { fill: none; stroke: var(--acc); stroke-width: 2.2; stroke-linecap: round; transition: d .8s; } .rd .chart .area { fill: var(--acc); opacity: .12; transition: d .8s; }
 .rd .chart .fc { opacity: 0; transition: opacity .4s; } .rd[data-r="2"] .chart .fc, .rd[data-r="3"] .chart .fc { opacity: 1; }
