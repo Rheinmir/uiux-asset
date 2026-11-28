@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bản đồ HUD thành phố tương lai — bảng kính neon trên thành phố vẽ canvas — uiux-asset</title>
+<meta name="description" content="Bản đồ HUD khoa học viễn tưởng: thành phố neon vẽ bằng canvas phối cảnh, tháp trung tâm có vòng sáng, tuyến đường chạy, bảng kính xanh: thẻ địa điểm, giao thông công cộng, thời tiết, tối ưu tuyến, xe tự lái, mật độ giao thông, quanh đây, thanh dẫn đường ETA. CSS + JS + canvas thuần.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=6ad729a312">
+<style>
+.md-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+.md-page a { color: inherit; }
+.oh-stage { position: relative; border-radius: 16px; overflow: hidden; background: #02060d; box-shadow: 0 30px 70px -30px rgba(0,60,140,.7); }
+.oh-fit { width: 1600px; height: 900px; transform-origin: 0 0; }
+.hud { --cy: #45d4ff; --cy2: #1a8fff; --mg: #ff4fd8; --gn: #3dffa2; --am: #ffc94a; --ink: #d9f3ff; --dim: #7fa6bf; --gl: rgba(6,18,36,.66); --ln: rgba(80,200,255,.32);
+  position: relative; width: 1600px; height: 900px; overflow: hidden; color: var(--ink); font: 400 13px/1.35 "Rajdhani", "Inter", var(--aw-font); letter-spacing: .02em; }
+.hud *, .hud *::before, .hud *::after { box-sizing: border-box; }
+.hud canvas { position: absolute; inset: 0; width: 1600px; height: 900px; }
+.hud button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
+.pn { position: absolute; padding: 12px 14px; border-radius: 10px; background: var(--gl); border: 1px solid var(--ln); backdrop-filter: blur(8px) saturate(1.3); box-shadow: inset 0 0 24px rgba(40,160,255,.08), 0 0 0 1px rgba(0,0,0,.4); }
+.pn::before, .pn::after { content: ""; position: absolute; width: 12px; height: 12px; border: 2px solid var(--cy); opacity: .8; }
+.pn::before { left: -1px; top: -1px; border-right: 0; border-bottom: 0; border-radius: 10px 0 0 0; } .pn::after { right: -1px; bottom: -1px; border-left: 0; border-top: 0; border-radius: 0 0 10px 0; }
+.h { display: flex; align-items: center; margin: 0 0 8px; font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; } .h a { margin-left: auto; color: var(--cy); font-size: 10px; cursor: pointer; } .h .r { margin-left: auto; letter-spacing: 0; text-transform: none; }
+.dim { color: var(--dim); } .cy { color: var(--cy); } .gn { color: var(--gn); }
+/* đầu */
+.top { position: absolute; left: 16px; top: 12px; display: flex; align-items: center; gap: 22px; }
+.logo { display: flex; align-items: center; gap: 10px; } .logo i { width: 46px; height: 46px; border-radius: 50%; border: 2px solid var(--cy); display: grid; place-items: center; font-style: normal; font-size: 20px; box-shadow: 0 0 18px var(--cy2), inset 0 0 12px var(--cy2); }
+.logo b { display: block; font-size: 19px; letter-spacing: .08em; } .logo small { font-size: 9px; letter-spacing: .18em; color: var(--dim); }
+.tabs { display: flex; gap: 4px; } .tabs button { height: 34px; padding: 0 16px; border-radius: 4px; font-size: 13px; letter-spacing: .1em; color: var(--dim); }
+.tabs button[aria-selected="true"] { color: #fff; background: linear-gradient(rgba(69,212,255,.25), transparent); box-shadow: inset 0 -2px 0 var(--cy); }
+.srch { position: absolute; left: 92px; top: 74px; width: 400px; display: flex; gap: 8px; } .srch div { flex: 1; display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px; border-radius: 99px; background: var(--gl); border: 1px solid var(--ln); color: var(--dim); }
+.srch button { width: 36px; height: 36px; border-radius: 8px; background: var(--gl); border: 1px solid var(--ln) !important; }
+.clock { position: absolute; right: 290px; top: 14px; text-align: right; } .clock b { font-size: 34px; font-weight: 600; letter-spacing: .02em; } .clock b small { font-size: 18px; color: var(--dim); } .clock span { display: block; font-size: 14px; }
+.moon { position: absolute; right: 200px; top: 18px; width: 58px; height: 58px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #e9eef5, #8e99a8 60%, #4b5563); box-shadow: 0 0 24px rgba(200,220,255,.35); }
+.wx { position: absolute; right: 70px; top: 16px; font-size: 16px; line-height: 1.8; } .wx b { font-weight: 600; }
+/* thanh trái */
+.rail { position: absolute; left: 10px; top: 104px; width: 74px; display: grid; gap: 6px; padding: 6px; }
+.rail button { display: grid; place-items: center; gap: 3px; padding: 8px 0; border-radius: 8px; font-size: 11px; color: var(--dim); } .rail button span { font-size: 20px; }
+.rail button[aria-current="true"] { color: #fff; background: linear-gradient(rgba(26,143,255,.35), rgba(26,143,255,.1)); box-shadow: 0 0 16px rgba(26,143,255,.5); }
+/* thẻ địa điểm */
+.place { left: 92px; top: 122px; width: 334px; } .place .tp { display: grid; grid-template-columns: 130px 1fr; gap: 14px; }
+.ph { height: 120px; border-radius: 6px; background: linear-gradient(transparent 55%, rgba(0,0,0,.6)), repeating-linear-gradient(90deg, transparent 0 9px, rgba(255,255,255,.08) 9px 10px), linear-gradient(#30507a, #0b1630); position: relative; overflow: hidden; }
+.ph::after { content: ""; position: absolute; left: 50%; bottom: 0; width: 14px; height: 100px; margin-left: -7px; background: linear-gradient(#bfe8ff, #3b6ea8); clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+.place h3 { margin: 4px 0 2px; font-size: 21px; font-weight: 600; letter-spacing: .06em; } .place p { margin: 10px 0; }
+.place .ac { display: grid; grid-template-columns: repeat(4, 1fr); text-align: center; } .place .ac button { display: grid; gap: 4px; font-size: 12px; } .place .ac button span { font-size: 18px; color: var(--cy); } .place .ac button[aria-pressed="true"] span { color: var(--am); }
+.th { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-top: 10px; } .th span { height: 46px; border-radius: 4px; background: linear-gradient(transparent 50%, rgba(0,0,0,.5)), repeating-linear-gradient(90deg, transparent 0 6px, rgba(150,210,255,.12) 6px 7px), linear-gradient(var(--a, #24476f), #0a1428); }
+.tr { left: 92px; top: 452px; width: 334px; } .tr li { display: grid; grid-template-columns: 30px 1fr auto; gap: 8px; align-items: center; padding: 6px 0; border-top: 1px solid rgba(80,200,255,.12); } .tr ul { margin: 0; padding: 0; list-style: none; }
+.tr li > i { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-style: normal; font-size: 11px; font-weight: 700; background: var(--c); color: #021; box-shadow: 0 0 10px var(--c); } .tr small { display: block; color: var(--dim); font-size: 10px; } .tr .eta { color: var(--gn); }
+.wt { left: 16px; top: 640px; width: 350px; } .wt .nw { display: flex; align-items: center; gap: 12px; } .wt .nw b { font-size: 34px; font-weight: 600; } .wt .nw span { font-size: 34px; } .wt .aq { margin-left: auto; text-align: right; }
+.wt .hr { display: grid; grid-template-columns: repeat(5, 1fr); text-align: center; margin-top: 8px; font-size: 11px; } .wt .hr span { display: block; font-size: 16px; }
+.globe { position: absolute; left: 14px; top: 796px; width: 96px; height: 96px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #1d5fa8, #071a38 60%, #02060d); box-shadow: 0 0 30px rgba(26,143,255,.55), inset 0 0 20px rgba(69,212,255,.4); overflow: hidden; }
+.globe::before { content: ""; position: absolute; inset: 0; border-radius: 50%; background: repeating-linear-gradient(90deg, transparent 0 14px, rgba(69,212,255,.25) 14px 15px), repeating-linear-gradient(transparent 0 14px, rgba(69,212,255,.18) 14px 15px); animation: spin 14s linear infinite; }
+@keyframes spin { to { background-position: 120px 0, 0 0; } }
+.globe::after { content: ""; position: absolute; left: 62%; top: 52%; width: 10px; height: 10px; border-radius: 50%; background: var(--cy); box-shadow: 0 0 0 6px rgba(69,212,255,.25), 0 0 14px var(--cy); }
+.el { left: 124px; top: 800px; width: 380px; height: 92px; } .el b { font-size: 22px; font-weight: 600; } .el svg { position: absolute; right: 12px; bottom: 10px; }
+/* phải */
+.ro { left: 1040px; top: 74px; width: 186px; } .ro label { display: flex; align-items: center; gap: 8px; padding: 4px 0; cursor: pointer; } .ro input { appearance: none; width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--dim); display: grid; place-items: center; margin: 0; }
+.ro input:checked { border-color: var(--gn); background: rgba(61,255,162,.15); } .ro input:checked::after { content: "✓"; color: var(--gn); font-size: 11px; }
+.ro .go { width: 100%; height: 28px; margin-top: 8px; border-radius: 6px; background: linear-gradient(rgba(61,255,162,.35), rgba(61,255,162,.1)); border: 1px solid rgba(61,255,162,.6) !important; color: #dfffee; }
+.ro .go.busy { animation: busy .8s linear infinite; } @keyframes busy { 50% { box-shadow: 0 0 18px rgba(61,255,162,.7); } }
+.car { left: 1236px; top: 96px; width: 350px; display: grid; grid-template-columns: 1fr 140px; gap: 10px; } .car svg { width: 180px; }
+.car dl { margin: 0; display: grid; grid-template-columns: 1fr auto; gap: 8px 6px; align-content: start; } .car dd { margin: 0; text-align: right; font-weight: 600; }
+.car .ct { grid-column: 2; height: 28px; border-radius: 6px; border: 1px solid var(--cy) !important; background: rgba(26,143,255,.2); }
+.tf { left: 1300px; top: 322px; width: 286px; } .tf .bars { display: flex; align-items: flex-end; gap: 2px; height: 36px; } .tf .bars i { flex: 1; height: var(--h); background: linear-gradient(var(--gn), var(--am)); border-radius: 1px; transition: height .5s; }
+.tf canvas { position: static; width: 100%; height: 110px; margin-top: 8px; border-radius: 6px; }
+.nb { left: 1300px; top: 562px; width: 286px; } .nb li { display: grid; grid-template-columns: 22px 1fr auto; align-items: center; gap: 8px; padding: 6px 4px; border-radius: 6px; cursor: pointer; } .nb li:hover { background: rgba(69,212,255,.12); } .nb ul { margin: 0; padding: 0; list-style: none; } .nb li > span { color: var(--c); }
+/* dưới */
+.nav { position: absolute; left: 560px; top: 790px; width: 520px; height: 110px; padding: 14px 70px; clip-path: polygon(8% 0, 92% 0, 100% 100%, 0 100%); background: linear-gradient(rgba(8,28,60,.85), rgba(4,12,26,.92)); border-top: 1px solid var(--cy); }
+.nav .row { display: flex; align-items: center; gap: 12px; } .nav b { font-size: 30px; font-weight: 600; } .nav .ar { margin-left: auto; text-align: right; } .nav .ar b { display: block; font-size: 26px; }
+.nav .pr { position: relative; height: 2px; margin: 14px 4px 0; background: rgba(69,212,255,.3); } .nav .pr i { position: absolute; left: 0; top: 0; height: 2px; width: var(--p); background: var(--cy); box-shadow: 0 0 8px var(--cy); transition: width .6s; } .nav .pr b { position: absolute; top: -6px; left: var(--p); width: 14px; height: 14px; margin-left: -7px; border-radius: 50%; background: #02060d; border: 2px solid var(--cy); transition: left .6s; }
+.env { left: 1132px; top: 800px; width: 316px; } .env .g { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; } .env b { display: block; font-size: 18px; font-weight: 600; }
+.sys { left: 1466px; top: 800px; width: 120px; padding: 10px 12px; } .sys li { display: flex; justify-content: space-between; gap: 6px; font-size: 11px; } .sys ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 3px; } .sys li::before { content: "●"; color: var(--gn); }
+.mk { position: absolute; display: flex; gap: 8px; align-items: center; padding: 8px 12px; border-radius: 8px; background: var(--gl); border: 1px solid var(--ln); backdrop-filter: blur(6px); cursor: pointer; }
+.mk b { font-size: 13px; letter-spacing: .08em; } .mk small { display: block; color: var(--dim); }
+.mk.eta b { font-size: 22px; letter-spacing: 0; }
+@media (prefers-reduced-motion: reduce) { .globe::before, .ro .go.busy { animation: none; } }
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=6ad729a312"></script>
+<div class="md-page">
+  <div class="aw-sotd" style="padding-top:16px">
+    <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">1 màn · 12 bảng</span></p>
+    <h1 class="aw-h1" style="--aw-h1:clamp(40px,7vw,96px)">Bản đồ HUD tương lai</h1>
+    <p class="aw-lead">Thành phố neon vẽ bằng canvas phối cảnh, tháp trung tâm có vòng sáng, tuyến đường chạy về tháp. Xung quanh là bảng kính xanh có góc bấm: địa điểm, giao thông công cộng, thời tiết, tối ưu tuyến, xe tự lái, mật độ, quanh đây, dẫn đường. Bấm thử: tick tuỳ chọn rồi «Tối ưu tuyến», chọn địa điểm quanh đây, bấm Lưu.</p>
+    <p class="aw-lead" style="font-size:14px">Bố cục từ ảnh concept AI owner gửi trong phòng Hang uiux-giatbh. Thành phố, tên địa điểm và số liệu là mẫu, ảnh thành phố được thay bằng canvas tự vẽ.</p>
+  </div>
+  <div class="oh-stage" id="stage"><div class="oh-fit" id="fit"><div class="hud" id="hud">
+    <canvas id="city" width="1600" height="900" aria-label="Bản đồ thành phố"></canvas>
+    <div class="top"><div class="logo"><i>✦</i><div><b>QUỸ ĐẠO</b><small>ĐI XA HƠN BẢN ĐỒ</small></div></div>
+      <div class="tabs" role="tablist" id="tabs"><button role="tab" aria-selected="true">BẢN ĐỒ</button><button role="tab" aria-selected="false">DI CHUYỂN</button><button role="tab" aria-selected="false">PHÂN TÍCH</button><button role="tab" aria-selected="false">TRÍ TUỆ</button><button role="tab" aria-selected="false">CÀI ĐẶT</button></div></div>
+    <div class="srch"><div>⌕ Tìm điểm đến, địa danh, toạ độ… <span style="margin-left:auto">🎙</span></div><button aria-label="Quét">⌖</button></div>
+    <div class="clock"><b id="ck">14:27<small>:36</small></b><span>T3, 27 tháng 11, 2125</span></div><i class="moon"></i><div class="wx">☀ <b>32°C</b><br><span class="gn">▮</span> <b>78%</b></div>
+    <nav class="rail pn" id="rail"><button aria-current="true"><span>🌐</span>Toàn cầu</button><button><span>⌂</span>Gần đây</button><button><span>▤</span>Tàu xe</button><button><span>◈</span>Lớp</button><button><span>⋯</span>Thêm</button></nav>
+    <section class="pn place" aria-label="Địa điểm"><div class="tp"><div class="ph"></div><div><h3 id="pn">THÁP TRUNG TÂM</h3><span class="dim" id="pt">Địa danh đô thị</span><p style="margin:12px 0 4px">↗ <span id="pd">1,2 km</span></p><p style="margin:0">★ <b>4,9</b> <span class="dim">(2,8 tr đánh giá)</span></p></div></div>
+      <p id="pdsc">Trái tim của Tân Sài Gòn, nơi hội tụ văn hoá, sáng tạo và kết nối.</p>
+      <div class="ac"><button><span>➤</span>Chỉ đường</button><button id="sv" aria-pressed="false"><span>❏</span>Lưu</button><button><span>⇪</span>Chia sẻ</button><button><span>⋯</span>Thêm</button></div>
+      <div class="th"><span></span><span style="--a:#3a2d6e"></span><span style="--a:#163f5a"></span><span style="--a:#4a2a5a"></span><span style="--a:#1c4a6e"></span></div></section>
+    <section class="pn tr" aria-label="Giao thông công cộng"><p class="h">TÀU XE TRỰC TIẾP<a>XEM HẾT →</a></p><ul id="tr"></ul></section>
+    <section class="pn wt" aria-label="Thời tiết"><p class="h">THỜI TIẾT & KHÔNG KHÍ</p><div class="nw"><span>⛅</span><div><b>32°C</b><br><span class="dim" style="font-size:12px">Ít mây</span></div><div class="aq"><span class="gn">❦ AQI 42</span><br>Tốt</div></div>
+      <div class="hr"><div>Giờ<span>☀</span>32°</div><div>15h<span>⛅</span>33°</div><div>18h<span>☁</span>31°</div><div>21h<span>☾</span>29°</div><div>0h<span>☾</span>28°</div></div></section>
+    <i class="globe"></i>
+    <section class="pn el" aria-label="Độ cao"><p class="h" style="font-size:11px">ĐỘ CAO</p><b>+128 m</b><p class="dim" style="margin:6px 0 0;font-size:12px">10,7769° B<br>106,7014° Đ</p>
+      <svg width="200" height="56" viewBox="0 0 200 56"><defs><linearGradient id="eg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#3dffa2" stop-opacity=".45"/><stop offset="1" stop-color="#3dffa2" stop-opacity="0"/></linearGradient></defs><path d="M0 50 C30 46 40 40 60 38 S90 30 110 14 S150 26 170 34 S190 40 200 42 V56 H0Z" fill="url(#eg)"/><path d="M0 50 C30 46 40 40 60 38 S90 30 110 14 S150 26 170 34 S190 40 200 42" fill="none" stroke="#3dffa2" stroke-width="1.5"/></svg></section>
+    <section class="pn ro" aria-label="Tối ưu tuyến"><p class="h" style="font-size:11px">TỐI ƯU TUYẾN</p>
+      <label><input type="checkbox" checked data-k="short"> Đường ngắn nhất</label><label><input type="checkbox" checked data-k="eco"> Ít phát thải</label><label><input type="checkbox" checked data-k="jam"> Tránh kẹt xe</label>
+      <button class="go" id="opt" type="button">Tối ưu tuyến</button></section>
+    <section class="pn car" aria-label="Xe tự lái"><svg viewBox="0 0 180 120" aria-hidden="true"><g fill="none" stroke="#45d4ff" stroke-width="1.2" opacity=".9"><path d="M14 78 L30 52 L70 40 L120 40 L150 56 L168 62 L168 82 L14 86Z"/><path d="M40 52 L70 44 L112 44 L132 56 L44 58Z"/><circle cx="46" cy="86" r="14"/><circle cx="140" cy="84" r="14"/><circle cx="46" cy="86" r="6"/><circle cx="140" cy="84" r="6"/><path d="M14 70 H168 M30 52 L44 58 M70 40 L74 58 M120 40 L112 58" opacity=".5"/></g><path d="M0 104 H180" stroke="#45d4ff" stroke-opacity=".3"/></svg>
+      <div><p class="h" style="font-size:11px;margin-bottom:4px">XE TỰ LÁI</p><p class="gn" style="margin:0 0 10px">● Đang trực tuyến</p><dl><dt>Tốc độ</dt><dd id="spd">72 km/h</dd><dt>ETA</dt><dd id="ceta">12 phút</dd><dt>Quãng</dt><dd id="cdis">4,8 km</dd></dl></div><button class="ct" type="button">Điều khiển</button></section>
+    <section class="pn tf" aria-label="Giao thông"><p class="h">MẬT ĐỘ GIAO THÔNG<span class="r">Lưu lượng: <b id="fl">87%</b></span></p><div class="bars" id="bars"></div><canvas id="heat" width="286" height="110"></canvas></section>
+    <section class="pn nb" aria-label="Quanh đây"><p class="h">QUANH ĐÂY<a>XEM HẾT →</a></p><ul id="nb"></ul></section>
+    <section class="nav" aria-label="Dẫn đường"><div class="row"><span style="font-size:22px">🚘</span><div><b id="nm">12 phút</b><br><span id="nk">4,8 km</span></div><div class="ar"><span class="dim">Đến lúc</span><b id="na">14:39</b></div></div><div class="pr" id="pr" style="--p:8%"><i></i><b></b></div></section>
+    <section class="pn env" aria-label="Môi trường"><p class="h" style="font-size:11px">DỮ LIỆU MÔI TRƯỜNG</p><div class="g"><div><span class="dim">☀ UV</span><b class="cy">Cao</b></div><div><span class="dim">≋ Gió</span><b>12 · ĐB</b></div><div><span class="dim">Độ ẩm</span><b>68%</b></div></div></section>
+    <section class="pn sys" aria-label="Hệ thống"><p class="h" style="font-size:10px;margin-bottom:4px">HỆ THỐNG</p><ul><li>GPS<b class="gn">100%</b></li><li>Mạng<b class="gn">Ổn</b></li><li>Đồng bộ<b class="gn">OK</b></li></ul></section>
+    <button class="mk" id="mk" style="left:880px;top:196px"><span style="color:var(--am);font-size:20px">⬤</span><div><b id="mkn">THÁP TRUNG TÂM</b><small id="mkd">1,2 km ↗</small></div></button>
+    <div class="mk eta" style="left:618px;top:356px"><span style="font-size:22px">🚘</span><div><b id="me">12 phút</b><small id="mkm">4,8 km</small></div></div>
+  </div></div></div>
+</div>
+</main>
+<script>
+// Các phần của pattern (sổ patterns.json trỏ tới các id này).
+const PARTS = [
+  { id: 'city-canvas', vi: 'Thành phố neon vẽ canvas phối cảnh: tháp trung tâm có vòng, đường sáng, tuyến chạy' }, { id: 'place-card', vi: 'Thẻ địa điểm kính: ảnh, khoảng cách, đánh giá, 4 nút, dải ảnh' },
+  { id: 'route-opt', vi: 'Tối ưu tuyến: 3 tuỳ chọn, nút chạy, ETA và tuyến đổi theo' }, { id: 'live-traffic', vi: 'Mật độ giao thông: cột nhảy và bản đồ nhiệt' },
+  { id: 'nav-eta', vi: 'Thanh dẫn đường hình thang: phút, km, giờ đến, tiến độ' }, { id: 'side-rail', vi: 'Thanh bên trái, đồng hồ, trăng, tình trạng hệ thống' }];
+const $ = (id) => document.getElementById(id);
+// ---------- thành phố: phối cảnh một điểm, vẽ tĩnh vào canvas phụ, mỗi khung chỉ vẽ lại phần chạy ----------
+const W = 1600, H = 900, CX = 800, HZ = 70, F = 900, CAMH = 300, D = 260;
+const P = (x, y, z) => { const zc = z + D; return [CX + x * F / zc, HZ + (CAMH - y) * F / zc, F / zc]; };
+let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+const routeX = (z) => { const t = (z - 150) / 750; return t < 0 || t > 1 ? null : Math.sin(t * 3.2) * 260 * (1 - t) - 40 * t; };
+const nearRoute = (x, z) => { const rx = routeX(z); return rx !== null && Math.abs(x - rx) < 70 + (900 - z) * .08; };
+const base = document.createElement('canvas'); base.width = W; base.height = H; const b = base.getContext('2d');
+(function drawCity() {
+  const g = b.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#02060d'); g.addColorStop(.3, '#06142a'); g.addColorStop(1, '#030a16'); b.fillStyle = g; b.fillRect(0, 0, W, H);
+  // sông: dải tối cong phía trước
+  b.fillStyle = 'rgba(20,60,110,.45)'; b.beginPath(); for (let z = 40; z < 2600; z += 40) { const [sx, sy] = P(-900 + Math.sin(z / 400) * 300 + z * .35, 0, z); z === 40 ? b.moveTo(sx, sy) : b.lineTo(sx, sy); } for (let z = 2600; z >= 40; z -= 40) { const [sx, sy] = P(-700 + Math.sin(z / 400) * 300 + z * .35, 0, z); b.lineTo(sx, sy); } b.fill();
+  b.globalCompositeOperation = 'lighter';
+  // đường phố: lưới sáng
+  for (let x = -3000; x <= 3000; x += 160) { const a = P(x, 0, 30), c = P(x, 0, 3000); b.strokeStyle = `rgba(${x % 480 === 0 ? '255,80,216' : '69,180,255'},.22)`; b.lineWidth = 1.2; b.beginPath(); b.moveTo(a[0], a[1]); b.lineTo(c[0], c[1]); b.stroke(); }
+  for (let z = 60; z <= 3000; z *= 1.16) { const a = P(-3000, 0, z), c = P(3000, 0, z); b.strokeStyle = `rgba(69,200,255,${.08 + 30 / z})`; b.lineWidth = Math.max(.5, 260 / z); b.beginPath(); b.moveTo(a[0], a[1]); b.lineTo(c[0], c[1]); b.stroke(); }
+  // vòng quảng trường quanh tháp
+  for (const r of [120, 200, 300]) { b.strokeStyle = 'rgba(255,190,90,.35)'; b.lineWidth = 2; b.beginPath(); for (let t = 0; t <= 6.3; t += .1) { const [sx, sy] = P(Math.cos(t) * r, 0, 900 + Math.sin(t) * r); t === 0 ? b.moveTo(sx, sy) : b.lineTo(sx, sy); } b.stroke(); }
+  b.globalCompositeOperation = 'source-over';
+  // toà nhà: xa vẽ trước
+  const T = []; for (let i = 0; i < 620; i++) { const x = (rnd() - .5) * 4200, z = 300 + rnd() * 2400; if (Math.abs(x) < 360 && Math.abs(z - 900) < 360) continue; if (nearRoute(x, z)) continue; const near = Math.max(0, 1 - Math.hypot(x, z - 900) / 1600); T.push([x, z, 40 + rnd() * 160 + near * near * 380, 18 + rnd() * 36, rnd()]); }
+  for (let i = 0; i < 260; i++) { const x = (rnd() - .5) * 2600, z = 160 + rnd() * 500; if (nearRoute(x, z)) continue; T.push([x, z, 12 + rnd() * 50, 30 + rnd() * 50, rnd()]); }
+  T.sort((a, b2) => b2[1] - a[1]);
+  for (const [x, z, h, w, k] of T) {
+    const [x0, y0, s] = P(x, 0, z), [, y1] = P(x, h, z), ww = w * s; const hue = k < .55 ? '69,170,255' : k < .8 ? '120,120,255' : '255,90,210';
+    const gr = b.createLinearGradient(0, y1, 0, y0); gr.addColorStop(0, `rgba(${hue},.55)`); gr.addColorStop(1, 'rgba(4,14,30,.95)');
+    b.fillStyle = gr; b.fillRect(x0 - ww / 2, y1, ww, y0 - y1); b.strokeStyle = `rgba(${hue},.6)`; b.lineWidth = .6; b.strokeRect(x0 - ww / 2, y1, ww, y0 - y1);
+    if (ww > 6) { b.fillStyle = `rgba(255,${k < .7 ? 220 : 160},140,.5)`; for (let yy = y1 + 4; yy < y0 - 3; yy += 4 + 6 * s) for (let xx = x0 - ww / 2 + 2; xx < x0 + ww / 2 - 2; xx += 3 + 4 * s) if (rnd() < .35) b.fillRect(xx, yy, 1.2, 1.2); }
+  }
+})();
+const cv = $('city'), c = cv.getContext('2d');
+const spire = P(0, 0, 900), spTop = P(0, 980, 900);
+const route = []; for (let t = 0; t <= 1; t += .02) { const z = 150 + t * 750, x = Math.sin(t * 3.2) * 260 * (1 - t) - 40 * t; route.push(P(x, 0, z)); }
+const route2 = route.map(([x, y], i) => [x + Math.sin(i / 6) * 40 * (1 - i / route.length), y]);
+let alt = false, t0 = performance.now();
+function frame(now) {
+  const t = (now - t0) / 1000; c.drawImage(base, 0, 0);
+  c.globalCompositeOperation = 'lighter';
+  // tháp trung tâm + chùm sáng + vòng
+  const [sx, sy] = spire, [, ty] = spTop, sw = 26;
+  const gt = c.createLinearGradient(0, ty, 0, sy); gt.addColorStop(0, 'rgba(200,240,255,.95)'); gt.addColorStop(1, 'rgba(60,120,255,.25)');
+  c.fillStyle = gt; c.beginPath(); c.moveTo(sx, ty); c.lineTo(sx + sw, sy); c.lineTo(sx - sw, sy); c.fill();
+  c.fillStyle = 'rgba(110,200,255,.18)'; c.fillRect(sx - 3, 0, 6, sy);
+  for (let i = 0; i < 4; i++) { const y = ty + 30 + i * 18, r = 46 + i * 22 + Math.sin(t * 2 + i) * 4; c.strokeStyle = `rgba(110,210,255,${.6 - i * .12})`; c.lineWidth = 1.5; c.beginPath(); c.ellipse(sx, y, r, r * .22, 0, 0, 7); c.stroke(); }
+  const pr = 30 + (t * 40) % 90; c.strokeStyle = `rgba(69,212,255,${1 - pr / 120})`; c.lineWidth = 2; c.beginPath(); c.ellipse(sx, sy - 220, pr, pr * .4, 0, 0, 7); c.stroke();
+  // tuyến đường chạy
+  const r = alt ? route2 : route; c.lineCap = 'round';
+  for (const [w, a] of [[18, .12], [8, .35], [3, .95]]) { c.strokeStyle = `rgba(${alt ? '61,255,162' : '60,170,255'},${a})`; c.lineWidth = w; c.beginPath(); r.forEach(([x, y], i) => i ? c.lineTo(x, y) : c.moveTo(x, y)); c.stroke(); }
+  c.setLineDash([6, 22]); c.lineDashOffset = -t * 60; c.strokeStyle = '#fff'; c.lineWidth = 2; c.beginPath(); r.forEach(([x, y], i) => i ? c.lineTo(x, y) : c.moveTo(x, y)); c.stroke(); c.setLineDash([]);
+  // xe đang chạy trên tuyến
+  const k = Math.max(0, t * .05) % 1, p = r[Math.floor(k * (r.length - 1))]; c.fillStyle = '#fff'; c.beginPath(); c.arc(p[0], p[1], 5, 0, 7); c.fill();
+  c.globalCompositeOperation = 'source-over';
+  // mũi tên dẫn đường
+  const [ax, ay] = route[0]; c.fillStyle = 'rgba(69,180,255,.9)'; c.beginPath(); c.moveTo(ax, ay - 70); c.lineTo(ax + 46, ay - 10); c.lineTo(ax, ay - 30); c.lineTo(ax - 46, ay - 10); c.fill();
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+// ---------- bảng ----------
+const TR = [['M1', '#45d4ff', 'Tuyến Metro 1', 60], ['B', '#3dffa2', 'Buýt 152', 120], ['S', '#b06bff', 'Tàu trên cao S3', 180]];
+const NB = [['🛍', '#ff9a3c', 'TTTM Bến Sông', '0,3 km', 'Trung tâm thương mại', 'Ba tầng mua sắm bên bờ sông, mở tới nửa đêm.'], ['🌳', '#3dffa2', 'Vườn Trên Mây', '0,5 km', 'Công viên trên cao', 'Vườn treo tầng 40, nhìn thẳng ra tháp.'],
+  ['🚇', '#ff5a6e', 'Ga Metro A1', '0,6 km', 'Nhà ga', 'Đầu mối tuyến 1 và tàu trên cao S3.'], ['🏨', '#ffc94a', 'Khách sạn Hợp Nhất', '0,7 km', 'Khách sạn', 'Khách sạn 60 tầng, có bến đậu xe bay.'], ['🌸', '#b06bff', 'Công viên Hoa Sen', '0,9 km', 'Công viên', 'Hồ sen phát sáng về đêm, đường chạy 3 km.']];
+const PLACE0 = ['THÁP TRUNG TÂM', '1,2 km', 'Địa danh đô thị', 'Trái tim của Tân Sài Gòn, nơi hội tụ văn hoá, sáng tạo và kết nối.'];
+let tk = 0;
+function trans() { $('tr').innerHTML = TR.map(([s, c2, n, sec]) => { const left = Math.max(0, sec - tk % sec); return `<li><i style="--c:${c2}">${s}</i><div>${n}<small>Còn ${Math.ceil(left / 60)} phút</small></div><span class="eta">${left < 20 ? 'Đang vào ga' : 'Tới sau ' + Math.ceil(left / 60) + ' phút'}</span></li>`; }).join(''); }
+$('nb').innerHTML = NB.map(([ic, c2, n, d], i) => `<li data-p="${i}" style="--c:${c2}"><span>${ic}</span>${n}<span class="dim">${d}</span></li>`).join('');
+$('bars').innerHTML = Array.from({ length: 60 }, () => '<i></i>').join('');
+function traffic() { const v = 80 + Math.round(Math.random() * 10); $('fl').textContent = v + '%'; $('bars').querySelectorAll('i').forEach((i, n) => i.style.setProperty('--h', 20 + Math.abs(Math.sin(n / 4 + tk / 3)) * 60 + Math.random() * 20 + '%')); }
+(function heat() { const h = $('heat').getContext('2d'); h.fillStyle = '#04101f'; h.fillRect(0, 0, 286, 110); h.globalCompositeOperation = 'lighter';
+  for (let i = 0; i < 70; i++) { const x = rnd() * 286, y = rnd() * 110, r = 6 + rnd() * 18, hot = Math.hypot(x - 170, y - 60) < 50; const g = h.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, hot ? 'rgba(255,90,40,.6)' : 'rgba(61,255,120,.35)'); g.addColorStop(1, 'transparent'); h.fillStyle = g; h.fillRect(x - r, y - r, r * 2, r * 2); }
+  h.strokeStyle = 'rgba(255,160,60,.5)'; for (let i = 0; i < 14; i++) { h.beginPath(); h.moveTo(rnd() * 286, rnd() * 110); h.lineTo(rnd() * 286, rnd() * 110); h.stroke(); } })();
+function tickClock() { const d = new Date(), p = (n) => String(n).padStart(2, '0'); $('ck').innerHTML = `${p(d.getHours())}:${p(d.getMinutes())}<small>:${p(d.getSeconds())}</small>`; }
+setInterval(() => { tk++; tickClock(); trans(); if (tk % 2) traffic(); }, 1000); tickClock(); trans(); traffic();
+// tối ưu tuyến: đổi tuyến + ETA theo tuỳ chọn
+const S = { min: 12, km: 4.8, prog: 8 };
+function eta() { const d = new Date(Date.now() + S.min * 60000), p = (n) => String(n).padStart(2, '0'), km = S.km.toFixed(1).replace('.', ',') + ' km';
+  ['nm', 'me', 'ceta'].forEach((id) => $(id).textContent = S.min + ' phút'); ['nk', 'mkm', 'cdis'].forEach((id) => $(id).textContent = km); $('na').textContent = `${p(d.getHours())}:${p(d.getMinutes())}`; $('pr').style.setProperty('--p', S.prog + '%'); }
+$('opt').onclick = (e) => { const bt = e.currentTarget, on = [...document.querySelectorAll('.ro input:checked')].map((i) => i.dataset.k); bt.classList.add('busy'); bt.textContent = 'Đang tính…';
+  setTimeout(() => { alt = !alt; S.min = 9 + (on.includes('jam') ? 0 : 4) + (on.includes('short') ? 0 : 2) + (alt ? 1 : 0); S.km = 4.2 + (on.includes('short') ? 0 : .9) + (on.includes('eco') ? .3 : 0); S.prog = 14; eta(); bt.classList.remove('busy'); bt.textContent = 'Đã tối ưu ✓'; setTimeout(() => bt.textContent = 'Tối ưu tuyến', 1600); }, 900); };
+$('nb').addEventListener('click', (e) => { const li = e.target.closest('[data-p]'); if (!li) return; const [, , n, d, t, dsc] = NB[li.dataset.p]; place([n.toUpperCase(), d, t, dsc]); });
+$('mk').onclick = () => place(PLACE0);
+function place([n, d, t, dsc]) { $('pn').textContent = n; $('pd').textContent = d; $('pt').textContent = t; $('pdsc').textContent = dsc; $('mkn').textContent = n; $('mkd').textContent = d + ' ↗'; $('sv').setAttribute('aria-pressed', 'false'); }
+$('sv').onclick = (e) => e.currentTarget.setAttribute('aria-pressed', e.currentTarget.getAttribute('aria-pressed') !== 'true');
+$('tabs').addEventListener('click', (e) => { const bt = e.target.closest('button'); if (bt) $('tabs').querySelectorAll('button').forEach((x) => x.setAttribute('aria-selected', x === bt)); });
+$('rail').addEventListener('click', (e) => { const bt = e.target.closest('button'); if (bt) $('rail').querySelectorAll('button').forEach((x) => x.setAttribute('aria-current', x === bt)); });
+eta();
+const stage = $('stage'), fit = $('fit');
+function scale() { const k2 = stage.clientWidth / 1600; fit.style.transform = `scale(${k2})`; stage.style.height = 900 * k2 + 'px'; }
+new ResizeObserver(scale).observe(stage); scale();
+</script>
+<script src="/search.js?v=6ad729a312" defer></script><script src="/stats.js?v=6ad729a312" defer></script>
+</body>
+</html>
