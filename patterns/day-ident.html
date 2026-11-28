@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Một ngày bằng đất sét — chuỗi motion kiểu ident truyền hình — uiux-asset</title>
+<meta name="description" content="Chuỗi 6 cảnh motion kiểu ident kênh truyền hình, vật thể đất sét mềm bằng CSS: đồng hồ quay số 06:00, lịch lật trang tới 31, lưới lịch bật hình màu, phố hình khối mọc lên ban ngày, chuyển sang đêm, thẻ kết. Có tua cảnh, dừng, tốc độ. CSS + JS thuần.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=692b1bfa83">
+<style>
+.md-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+.md-page a { color: inherit; }
+.id-ctl { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.id-ctl button { min-height: 40px; padding: 0 14px; border-radius: 99px; border: 1px solid var(--aw-line, #ddd); background: transparent; color: inherit; font: inherit; cursor: pointer; }
+.id-ctl button[aria-pressed="true"] { background: #2b55c4; border-color: #2b55c4; color: #fff; }
+.id-ctl .sp { flex: 1; }
+.id-stage { position: relative; border-radius: 18px; overflow: hidden; box-shadow: 0 24px 60px -30px rgba(20,40,110,.55); }
+.id-fit { width: 1280px; height: 720px; transform-origin: 0 0; }
+.id-prog { position: absolute; left: 0; bottom: 0; height: 3px; background: #2b55c4; width: 0; z-index: 9; }
+/* bảng màu: xanh kênh, vàng, hồng, xanh lá, trắng đất sét */
+.tv { --b: #2b55c4; --b2: #1c3a96; --y: #ffd21f; --m: #d8216e; --g: #1f8a6b; --w: #f3f4f7; --sp: 1;
+  position: relative; width: 1280px; height: 720px; overflow: hidden; background: radial-gradient(900px 600px at 30% 20%, #fff, #dcdfe6); font: 700 16px/1 "Inter", var(--aw-font); }
+.sc { position: absolute; inset: 0; opacity: 0; visibility: hidden; transition: opacity calc(.5s / var(--sp)), visibility 0s calc(.5s / var(--sp)); }
+.sc.on { opacity: 1; visibility: visible; transition: opacity calc(.5s / var(--sp)); }
+.sc * { animation-duration: calc(var(--t, 1s) / var(--sp)) !important; animation-delay: calc(var(--dl, 0s) / var(--sp)) !important; animation-play-state: paused; }
+.sc.on * { animation-play-state: running; }
+.tv.pause .sc.on * { animation-play-state: paused; }
+.clay { box-shadow: inset 0 -10px 18px rgba(0,0,0,.12), inset 0 8px 14px rgba(255,255,255,.7), 0 26px 40px -18px rgba(20,30,70,.45); }
+/* 1. đồng hồ quay số */
+.s1 { background: radial-gradient(700px 500px at 50% 40%, #fff, #d9dce4); }
+.dial { position: absolute; left: 50%; top: 50%; width: 420px; height: 420px; margin: -210px 0 0 -210px; border-radius: 50%; background: var(--w); animation: zin both cubic-bezier(.2,1.3,.4,1); --t: .9s; }
+.dial .disc { position: absolute; inset: 42px; border-radius: 50%; background: radial-gradient(circle at 40% 30%, #4a74e0, var(--b) 60%, var(--b2)); }
+.dial .in { position: absolute; inset: 118px; border-radius: 50%; border: 2px solid rgba(255,255,255,.18); }
+.dial svg { position: absolute; inset: 0; }
+.dial .arc { fill: none; stroke: #fff; stroke-width: 7; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw both cubic-bezier(.5,0,.2,1); --t: 2.2s; --dl: .4s; }
+.dial .tm { position: absolute; inset: 0; display: grid; place-items: center; color: #fff; font: 800 64px/1 "Inter", sans-serif; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.dial .bell { position: absolute; left: 50%; bottom: 70px; width: 60px; margin-left: -30px; display: flex; gap: 8px; align-items: center; justify-content: center; color: #fff; font-size: 16px; animation: ring both; --t: .5s; --dl: 2.6s; }
+.dial .bead { position: absolute; left: 50%; top: 50%; width: 22px; height: 22px; margin: -11px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff, #9fb3e6); offset-path: circle(222px at 50% 50%); animation: orbit both linear; --t: 2.6s; --dl: .4s; }
+@keyframes zin { from { transform: scale(.6) rotate(-40deg); opacity: 0; } }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+@keyframes ring { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(14deg); } 75% { transform: rotate(-14deg); } }
+@keyframes orbit { from { offset-distance: 0%; } to { offset-distance: 100%; } }
+/* 2. lịch lật trang */
+.s2 { background: radial-gradient(700px 500px at 60% 40%, #fff, #d9dce4); perspective: 1200px; }
+.cal { position: absolute; left: 50%; top: 50%; width: 300px; height: 320px; margin: -160px 0 0 -150px; transform-style: preserve-3d; transform: rotateX(18deg) rotateZ(-6deg); animation: rise both cubic-bezier(.2,1.2,.4,1); --t: .8s; }
+.cal .base { position: absolute; inset: 20px -10px -16px 10px; border-radius: 30px; background: linear-gradient(160deg, #4a74e0, var(--b2)); }
+.pg { position: absolute; inset: 0; border-radius: 26px; background: linear-gradient(#fff, #e9ebf1); display: grid; place-items: center; transform-origin: 50% 0; backface-visibility: hidden; color: var(--b); font: 900 150px/1 "Inter", sans-serif; letter-spacing: -.05em; }
+.pg::before { content: ""; position: absolute; top: 26px; left: 50%; width: 70px; height: 10px; margin-left: -35px; border-radius: 9px; background: #c9cfdd; }
+.pg::after { content: ""; position: absolute; bottom: 30px; left: 50%; width: 50px; height: 6px; margin-left: -25px; border-radius: 9px; background: #9fb3e6; }
+.pg.f { animation: flip both cubic-bezier(.6,0,.3,1); --t: .7s; }
+@keyframes flip { to { transform: rotateX(-200deg) translateY(-40px); opacity: 0; } }
+@keyframes rise { from { transform: rotateX(60deg) rotateZ(-6deg) translateY(200px); opacity: 0; } }
+.rb { position: absolute; left: var(--px); top: var(--py); width: var(--w2, 70px); height: 30px; border-radius: 16px; background: var(--c); animation: drift both ease-out; --t: 2.4s; }
+.rb.ball { width: 34px; height: 34px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff8c4, var(--y) 45%, #d39a00); }
+@keyframes drift { from { transform: translate(var(--fx, -60px), 40px) rotate(-60deg) scale(.3); opacity: 0; } 40% { opacity: 1; } to { transform: translate(0, 0) rotate(var(--r, 12deg)); } }
+/* 3. lưới lịch */
+.s3 { background: radial-gradient(700px 500px at 50% 40%, #fff, #d9dce4); }
+.tab { position: absolute; left: 50%; top: 50%; width: 560px; height: 470px; margin: -235px 0 0 -280px; padding: 30px; border-radius: 38px; background: var(--w); animation: zin both cubic-bezier(.2,1.2,.4,1); --t: .7s; }
+.tab::before { content: ""; position: absolute; top: -14px; left: 50%; width: 90px; height: 24px; margin-left: -45px; border-radius: 12px; background: var(--y); box-shadow: inset 0 -4px 6px rgba(0,0,0,.15); }
+.gr { display: grid; grid-template-columns: repeat(7, 1fr); grid-template-rows: 34px; grid-auto-rows: 64px; height: 100%; border: 3px solid #1d2b55; border-radius: 10px; overflow: hidden; background: #fff; }
+.gr > i { position: relative; border-right: 1px solid #c8cdd9; border-bottom: 1px solid #c8cdd9; }
+.gr > i.h { height: 34px; display: grid; place-items: center; } .gr > i.h::after { content: ""; width: 36px; height: 8px; border-radius: 9px; background: var(--b); opacity: .8; }
+.ov { position: absolute; inset: 33px; }
+.tk { position: absolute; z-index: 2; animation: pop both cubic-bezier(.2,1.6,.4,1); --t: .55s; }
+@keyframes pop { from { transform: scale(0); } }
+.rail { position: absolute; z-index: 2; height: 26px; border-radius: 13px; background: #dfe5f4; box-shadow: inset 0 3px 6px rgba(0,0,0,.12); }
+.roll { position: absolute; z-index: 3; width: 22px; height: 22px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff8c4, var(--y) 45%, #d39a00); animation: roll both cubic-bezier(.4,0,.2,1); --t: 1.6s; }
+@keyframes roll { from { transform: translateX(0) rotate(0); } to { transform: translateX(var(--to)) rotate(540deg); } }
+/* 4–5. phố ngày và đêm */
+.s4 { background: linear-gradient(#cfe0ff, #8fa9e8 70%); transition: background 1.2s; }
+.s4.night { background: linear-gradient(#0e1a44, #1d2f78 70%); }
+.ground { position: absolute; left: 0; right: 0; bottom: 0; height: 230px; background: linear-gradient(#e9eefb, #9fb1df); transition: background 1.2s; }
+.s4.night .ground { background: linear-gradient(#2a3a80, #121c4a); }
+.ground::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 12px; background: #1d6a5a; }
+.sun { position: absolute; left: 600px; top: 120px; width: 160px; height: 160px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff6a8, var(--y) 50%, #e6b400); box-shadow: inset -12px -14px 24px rgba(0,0,0,.12); animation: sunup both cubic-bezier(.2,.9,.3,1); --t: 1.4s; transition: background 1.2s, box-shadow 1.2s; }
+.s4.night .sun { background: radial-gradient(circle at 35% 30%, #fff, #dfe4f2 55%, #aeb6cf); box-shadow: 0 0 80px rgba(255,255,255,.35), inset -12px -14px 24px rgba(0,0,0,.12); }
+@keyframes sunup { from { transform: translateY(260px); } }
+.bd { position: absolute; bottom: 230px; transform-origin: bottom; animation: grow both cubic-bezier(.2,1.4,.4,1); --t: .7s; transition: filter 1.2s; }
+.s4.night .bd { filter: brightness(.55) saturate(.8); }
+.bd.win::after { content: ""; position: absolute; left: 28%; top: 30%; width: 44%; height: 22%; border-radius: 4px; background: #fff3a0; opacity: 0; transition: opacity .6s .9s; box-shadow: 0 0 18px #ffe27a; }
+.s4.night .bd.win { filter: brightness(.6); } .s4.night .bd.win::after { opacity: 1; filter: brightness(2); }
+@keyframes grow { from { transform: scaleY(0); } }
+.star { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: #fff; opacity: 0; transition: opacity 1s 1s; } .s4.night .star { opacity: .8; }
+.pin { position: absolute; bottom: 200px; width: 18px; height: 46px; border-radius: 9px; background: var(--c); box-shadow: inset 0 -6px 8px rgba(0,0,0,.2); animation: grow both; --t: .5s; }
+.pin::after { content: ""; position: absolute; left: 8px; top: 46px; width: 2px; height: 50px; background: #5c6c9e; }
+/* 6. thẻ kết */
+.s6 { background: radial-gradient(700px 500px at 50% 40%, #4a74e0, var(--b) 55%, var(--b2)); transition: background .8s; }
+.s6 .btn { position: absolute; left: 50%; top: 50%; width: 150px; height: 150px; margin: -75px; border-radius: 50%; background: var(--w); display: grid; place-items: center; animation: press both cubic-bezier(.3,1.6,.4,1); --t: 1s; --dl: .3s; }
+.s6 .btn b { color: var(--b); font: 900 54px/1 "Inter", sans-serif; letter-spacing: -.06em; }
+@keyframes press { 0% { transform: scale(0); } 55% { transform: scale(1.08); } 70% { transform: scale(.94); box-shadow: inset 0 8px 18px rgba(0,0,0,.25); } }
+.s6 .tg { position: absolute; right: 70px; bottom: 60px; display: flex; align-items: center; gap: 10px; height: 34px; padding: 0 6px 0 16px; border-radius: 99px; background: rgba(255,255,255,.9); color: var(--b2); font-size: 13px; animation: zin both; --t: .6s; --dl: 1s; }
+.s6 .tg i { width: 24px; height: 24px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff, #bcc8ea); box-shadow: 0 2px 4px rgba(0,0,0,.2); }
+.s6 .sl { position: absolute; left: 70px; top: 60px; width: 70px; height: 14px; border-radius: 9px; background: rgba(255,255,255,.25); box-shadow: inset 0 2px 4px rgba(0,0,0,.2); } .s6 .sl::after { content: ""; position: absolute; right: 2px; top: 2px; width: 10px; height: 10px; border-radius: 50%; background: #fff; animation: slide both; --t: .6s; --dl: 1.2s; }
+@keyframes slide { from { transform: translateX(-46px); } }
+.s6 .cap { position: absolute; left: 0; right: 0; top: 470px; text-align: center; color: #fff; font: 600 22px/1.2 "Inter", sans-serif; animation: zin both; --t: .6s; --dl: .9s; }
+@media (prefers-reduced-motion: reduce) { .sc * { animation-duration: 1ms !important; animation-delay: 0s !important; } }
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=692b1bfa83"></script>
+<div class="md-page">
+  <div class="aw-sotd" style="padding-top:16px">
+    <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">6 cảnh · 16 giây</span></p>
+    <h1 class="aw-h1" style="--aw-h1:clamp(40px,7vw,96px)">Một ngày bằng đất sét</h1>
+    <p class="aw-lead">Chuỗi motion kiểu ident kênh truyền hình: vật thể đất sét mềm, nền trắng sữa, xanh kênh và ba màu nhấn vàng, hồng, xanh lá. Đồng hồ quay tới 06:00, lịch lật tới 31, lưới lịch bật hình, phố mọc lên rồi sang đêm, thẻ kết. Bấm cảnh để tua, đổi tốc độ để soi từng nhịp.</p>
+    <p class="aw-lead" style="font-size:14px">Học phong cách từ <a href="https://www.facebook.com/share/v/1EEyggG5Az/" target="_blank" rel="noopener">video Facebook</a>: ident «Moments of the Day» làm cho một kênh truyền hình Chile (2023). Logo và tên kênh không chép, thẻ kết dùng dấu mẫu «7».</p>
+  </div>
+  <div class="id-ctl" role="toolbar" aria-label="Điều khiển"><span id="chips"></span><span class="sp"></span><button type="button" id="pp" aria-pressed="false">Dừng</button><button type="button" id="spd">Tốc độ 1×</button></div>
+  <div class="id-stage" id="stage"><div class="id-fit" id="fit"><div class="tv" id="tv">
+    <section class="sc s1" data-s="0"><div class="dial clay"><div class="disc clay"></div><div class="in"></div>
+      <svg viewBox="0 0 420 420"><circle class="arc" cx="210" cy="210" r="150" pathLength="1" transform="rotate(-90 210 210)"/></svg>
+      <div class="tm" id="tm">05:57</div><div class="bell">🔔<span style="width:26px;height:5px;border-radius:3px;background:#fff"></span></div><i class="bead"></i></div></section>
+    <section class="sc s2" data-s="1"><div class="cal"><div class="base clay"></div><div class="pg clay">31</div><div class="pg f" style="--dl:1.6s">30</div><div class="pg f" style="--dl:.9s">29</div></div>
+      <i class="rb clay" style="--px:250px;--py:180px;--c:linear-gradient(90deg,var(--g),var(--b),var(--y),var(--m));--w2:110px;--dl:.3s"></i>
+      <i class="rb clay" style="--px:330px;--py:330px;--c:linear-gradient(90deg,var(--m),var(--y));--dl:.5s;--r:-8deg"></i>
+      <i class="rb ball clay" style="--px:360px;--py:470px;--dl:.6s"></i>
+      <i class="rb clay" style="--px:860px;--py:220px;--c:linear-gradient(90deg,var(--m),var(--y));--w2:90px;--fx:60px;--dl:.4s"></i>
+      <i class="rb clay" style="--px:880px;--py:430px;--c:var(--y);--w2:60px;--fx:60px;--dl:.7s;--r:-20deg"></i>
+      <i class="rb clay" style="--px:1000px;--py:500px;--c:var(--m);--w2:40px;--fx:60px;--dl:.8s"></i>
+      <i class="rb clay" style="--px:1040px;--py:300px;--c:linear-gradient(90deg,var(--m),var(--y),#fff);--w2:120px;--fx:60px;--dl:.5s;--r:4deg"></i></section>
+    <section class="sc s3" data-s="2"><div class="tab clay"><div class="gr" id="gr"></div><div class="ov" id="ov"></div></div></section>
+    <section class="sc s4" data-s="3" id="city"><i class="sun"></i><div class="ground"></div><div id="bds"></div></section>
+    <section class="sc s6" data-s="5"><i class="sl"></i><div class="btn clay"><b>7</b></div><p class="cap">Lịch là của bạn, không còn là giờ phát sóng.</p><div class="tg">ngay-cua-ban.vn<i></i></div></section>
+    <i class="id-prog" id="prog"></i>
+  </div></div></div>
+</div>
+</main>
+<script>
+// Các phần của pattern (sổ patterns.json trỏ tới các id này).
+const PARTS = [
+  { id: 'dial', vi: 'Đồng hồ quay số: vòng sáng chạy, số đếm tới 06:00, chuông lắc' }, { id: 'page-flip', vi: 'Lịch lật trang 29 → 31, dải ruy băng bay vào' },
+  { id: 'tile-grid', vi: 'Lưới lịch: hình màu bật vào ô lệch nhịp, bi lăn trong rãnh' }, { id: 'skyline', vi: 'Phố hình khối mọc từ đất, mặt trời lên' },
+  { id: 'night', vi: 'Chuyển đêm: trời tối, mặt trời thành trăng, cửa sổ sáng' }, { id: 'end-card', vi: 'Thẻ kết: nút tròn nhấn lún, công tắc trượt, viên địa chỉ' }];
+const $ = (id) => document.getElementById(id), tv = $('tv');
+const SC = [['Đồng hồ', 3000], ['Lịch lật', 2800], ['Lưới lịch', 3000], ['Phố ngày', 2600], ['Phố đêm', 2600], ['Thẻ kết', 2600]];
+// lưới: 7 cột, hàng đầu là đầu cột, rồi các hình bật vào
+$('gr').innerHTML = '<i class="h"></i>'.repeat(7) + '<i></i>'.repeat(35);
+const CELL = 71.4, ROW = 64, T0 = 34, tile = (c, r, w, h, css, d) => `<i class="tk clay" style="left:${c * CELL + 4}px;top:${T0 + r * ROW + 6}px;width:${w * CELL - 8}px;height:${h * ROW - 12}px;${css};--dl:${d}s"></i>`;
+$('ov').innerHTML = ([
+  tile(0, 0, 1, 1, 'border-radius:20px;background:var(--m)', .3), tile(4, 0, 1, 1, 'border-radius:50%;background:var(--m)', .5), tile(0, 1, 2, 1, 'border-radius:16px;background:var(--g);height:20px;margin-top:16px', .4),
+  tile(2, 1, 1, 1, 'background:var(--y);border-radius:0 0 30px 30px', .6), tile(3, 1, 1, 3, 'border-radius:30px;background:#9fb6ee', .45), tile(4, 1, 1, 1, 'background:var(--b);border-radius:6px', .7),
+  tile(5, 1, 1, 1, 'background:linear-gradient(90deg,var(--y) 33%,var(--b) 33% 66%,#fff 66%)', .55), tile(6, 2, 1, 1, 'border-radius:50%;border:4px solid var(--m);background:#fff', .8),
+  tile(0, 3, 1, 1, 'border-radius:50%;background:var(--m);box-shadow:inset 0 0 0 12px #fff', .65), tile(5, 3, 1, 1, 'border-radius:50%;background:conic-gradient(var(--m) 0 25%,var(--y) 0 50%,var(--b) 0 75%,#fff 0)', .9),
+  tile(4, 3, 1, 1, 'border-radius:50%;background:#fff;box-shadow:inset 0 0 0 4px #c8cdd9', .75), tile(2, 2, 1, 1, 'border-radius:50%;background:var(--y)', .85)].join('')
+  + `<i class="rail" style="left:${CELL + 6}px;top:${T0 + 22}px;width:${CELL * 2.8}px"></i><i class="roll" style="left:${CELL + 8}px;top:${T0 + 24}px;--to:${CELL * 2.5}px;--dl:1s"></i>`
+  + `<i class="rail" style="left:${CELL + 6}px;top:${T0 + 4 * ROW + 20}px;width:${CELL * 4}px;background:#f2c6dc"></i><i class="roll" style="left:${CELL + 8}px;top:${T0 + 4 * ROW + 22}px;--to:${CELL * 3.6}px;--dl:1.3s"></i>`);
+// phố: hình khối mọc lệch nhịp
+const B = [[150, 150, 120, 'var(--m)', '120px 120px 0 0'], [220, 120, 190, 'var(--g)', '90px 90px 0 0'], [320, 90, 110, '#f6f7fa', '6px', 'win'], [400, 80, 150, 'var(--b)', '4px', 'win'], [470, 110, 300, 'rgba(255,255,255,.55)', '0', 'cone'], [490, 130, 70, 'var(--m)', '4px', 'win'],
+  [600, 110, 90, 'var(--y)', '6px'], [700, 110, 200, 'var(--m)', '60px 60px 0 0'], [770, 130, 170, 'repeating-linear-gradient(90deg,#f3c400 0 10px,var(--y) 10px 20px)', '4px', 'win'], [820, 100, 260, 'rgba(255,255,255,.55)', '0', 'cone'],
+  [900, 110, 80, 'var(--g)', '6px', 'win'], [1000, 80, 190, '#f6f7fa', '0', 'cone'], [1060, 120, 60, 'var(--b)', '6px']];
+$('bds').innerHTML = B.map(([x, w, h, c, r, k], i) => `<i class="bd clay ${k === 'win' ? 'win' : ''}" style="left:${x}px;width:${w}px;height:${h}px;background:${c};border-radius:${r};${k === 'cone' ? `clip-path:polygon(50% 0,100% 100%,0 100%);box-shadow:none;` : ''}--dl:${.25 + i * .08}s"></i>`).join('')
+  + [[200, 'var(--b)', 1.4], [700, 'var(--m)', 1.6], [1150, 'var(--g)', 1.5]].map(([x, c, d]) => `<i class="pin" style="left:${x}px;--c:${c};--dl:${d}s"></i>`).join('')
+  + Array.from({ length: 26 }, (_, i) => `<i class="star" style="left:${(i * 97) % 1260}px;top:${20 + (i * 53) % 260}px"></i>`).join('');
+let cur = 0, t0 = 0, spent = 0, paused = false, sp = 1, clock;
+$('chips').innerHTML = SC.map(([n], i) => `<button type="button" data-i="${i}" aria-pressed="${!i}">${i + 1}. ${n}</button>`).join(' ');
+function restart(el) { el.querySelectorAll('*').forEach((n) => { n.style.animation = 'none'; void n.offsetWidth; n.style.animation = ''; }); }
+function go(i) {
+  cur = i; spent = 0; t0 = performance.now();
+  const s = i === 4 ? 3 : i, el = tv.querySelector(`[data-s="${s}"]`);
+  tv.querySelectorAll('.sc').forEach((n) => n.classList.toggle('on', n === el));
+  $('city').classList.toggle('night', i === 4);
+  if (i !== 4) restart(el);
+  if (i === 0) countClock();
+  document.querySelectorAll('#chips button').forEach((b) => b.setAttribute('aria-pressed', +b.dataset.i === i));
+}
+function countClock() { clearInterval(clock); let m = 57; $('tm').textContent = '05:57'; clock = setInterval(() => { if (paused) return; m++; $('tm').textContent = m === 60 ? '06:00' : '05:' + m; if (m === 60) clearInterval(clock); }, 700 / sp); }
+function loop(now) {
+  if (!paused) { const el = spent + (now - t0) * sp, d = SC[cur][1]; $('prog').style.width = ((cur + Math.min(1, el / d)) / SC.length * 100) + '%'; if (el >= d) go((cur + 1) % SC.length); }
+  requestAnimationFrame(loop);
+}
+$('chips').addEventListener('click', (e) => { const b = e.target.closest('[data-i]'); if (b) go(+b.dataset.i); });
+$('pp').onclick = (e) => { paused = !paused; if (paused) spent += (performance.now() - t0) * sp; else t0 = performance.now(); tv.classList.toggle('pause', paused); e.currentTarget.setAttribute('aria-pressed', paused); e.currentTarget.textContent = paused ? 'Chạy tiếp' : 'Dừng'; };
+$('spd').onclick = (e) => { spent += (performance.now() - t0) * sp; t0 = performance.now(); sp = sp === 1 ? .5 : sp === .5 ? .25 : 1; tv.style.setProperty('--sp', sp); e.currentTarget.textContent = `Tốc độ ${sp === 1 ? '1' : sp === .5 ? '½' : '¼'}×`; };
+const stage = $('stage'), fit = $('fit');
+function scale() { const k = stage.clientWidth / 1280; fit.style.transform = `scale(${k})`; stage.style.height = 720 * k + 'px'; }
+new ResizeObserver(scale).observe(stage);
+scale(); go(0); requestAnimationFrame(loop);
+</script>
+<script src="/search.js?v=692b1bfa83" defer></script><script src="/stats.js?v=692b1bfa83" defer></script>
+</body>
+</html>

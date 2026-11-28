@@ -57,7 +57,8 @@
       ['patterns/thinking-dots.html', 'Đang nghĩ', '8 nhịp chấm sáng chờ trợ lý AI', 8],
       ['patterns/plush.html', 'Linh vật lông', '12 thú bông SVG, mỗi con một vai agent', 12],
       ['patterns/server-lift.html', 'Máy chủ mở nắp', 'Minh hoạ đẳng cự, nắp nhấc, lõi sáng', 2],
-      ['patterns/sound.html', 'Chuyển động và âm thanh', 'Luồng app có âm thanh UI', 11]]],
+      ['patterns/sound.html', 'Chuyển động và âm thanh', 'Luồng app có âm thanh UI', 11],
+      ['patterns/day-ident.html', 'Một ngày bằng đất sét', 'Ident kênh TV: đồng hồ, lịch lật, phố ngày đêm', 6]]],
     ['tai-nguyen', 'Tài nguyên', 'UI kit, font, thư viện, skill', [
       ['ui-kits/', 'UI kits', 'Hệ thiết kế rút từ site thật', 36, 'ui-kits/awwwards-com/latest/'],
       ['ui-libraries/', 'Thư viện UI', 'Thư viện trên GitHub, số liệu sống', 153],
