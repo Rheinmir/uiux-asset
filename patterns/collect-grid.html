@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lưới sưu tập 7/12 — ô vật phẩm tối, đếm thiếu để kéo người chơi — uiux-asset</title>
+<meta name="description" content="Lưới sưu tập vật phẩm: tiêu đề lớn đếm «7 trên 12», 12 ô tối có vật phẩm phát sáng, ô chưa có là bóng đen, bấm để nhận với hiệu ứng bật và vệt sáng, nghiêng theo chuột, đủ bộ thì đổi tiêu đề. CSS + JS thuần.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=a2140e9772">
+<style>
+.md-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+.md-page a { color: inherit; }
+.cg { display: grid; grid-template-columns: minmax(240px, 1fr) 2.1fr; gap: 10px; padding: 10px; border-radius: 20px; background: #dcdcd8; font-family: "Inter", var(--aw-font); }
+.cg button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
+/* cột trái: tiêu đề lớn nét mảnh */
+.cg-l { position: relative; display: flex; flex-direction: column; gap: 18px; padding: 28px 26px; border-radius: 14px; background: #ececea; color: #111; }
+.cg-l h2 { margin: 0; font-size: clamp(36px, 5vw, 64px); font-weight: 300; line-height: .98; letter-spacing: -.045em; text-align: center; }
+.cg-l h2 b { font-weight: 300; display: inline-block; font-variant-numeric: tabular-nums; } .cg-l h2 b.bump { animation: bump .5s cubic-bezier(.3,1.6,.5,1); }
+@keyframes bump { 40% { transform: translateY(-8px) scale(1.12); color: #7a3cff; } }
+.cg-l p { margin: 0; text-align: center; font-size: 17px; }
+.bar { height: 6px; border-radius: 99px; background: #d6d6d2; overflow: hidden; } .bar i { display: block; height: 100%; width: var(--w); border-radius: 99px; background: linear-gradient(90deg, #2ed3ff, #7a3cff, #ff4fd8); transition: width .6s cubic-bezier(.2,.8,.2,1); }
+.cg-l .ft { margin-top: auto; display: flex; align-items: center; gap: 8px; }
+.tag { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 12px; border-radius: 99px; background: #3a3a3a; color: #fff; font: 700 11px/1 var(--aw-mono, ui-monospace, monospace); letter-spacing: .1em; }
+.tag::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #2ed3ff; }
+.cg-l .rs { margin-left: auto; height: 30px; padding: 0 12px; border-radius: 99px; border: 1px solid #c9c9c4 !important; font-size: 12px; }
+/* lưới ô tối */
+.cg-r { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; padding: 8px; border-radius: 14px; background: #ececea; perspective: 900px; }
+.cg .it { position: relative; aspect-ratio: 1 / .92; display: flex; flex-direction: column; padding: 8px; border-radius: 10px; overflow: hidden; text-align: left; color: #e9ecef;
+  background: radial-gradient(120% 90% at 50% 40%, #24292f, #14171b 70%); transform: rotateX(var(--rx, 0)) rotateY(var(--ry, 0)); transition: transform .25s, box-shadow .25s; box-shadow: inset 0 0 0 1px rgba(255,255,255,.04); }
+.it::before { content: ""; position: absolute; left: 30%; right: 30%; top: 0; height: 2px; border-radius: 2px; background: var(--c); opacity: .9; }
+.it:hover { box-shadow: inset 0 0 0 1px rgba(255,255,255,.12), 0 14px 26px -14px rgba(0,0,0,.6); }
+.it .ob { flex: 1; display: grid; place-items: center; font-size: clamp(40px, 5.4vw, 70px); line-height: 1; filter: drop-shadow(0 10px 14px rgba(0,0,0,.55)) drop-shadow(0 0 22px color-mix(in srgb, var(--c) 45%, transparent)); transform: translateZ(30px); transition: filter .4s, transform .4s; }
+.it:hover .ob { transform: translateZ(40px) translateY(-3px) scale(1.05); }
+.it .ob .orb { width: 1.05em; height: 1.05em; border-radius: 50%; background: radial-gradient(circle at 32% 28%, #fff 0 6%, var(--c) 30%, color-mix(in srgb, var(--c) 40%, #000) 80%); box-shadow: inset -6px -8px 14px rgba(0,0,0,.35); }
+.it .nm { display: flex; align-items: baseline; gap: 6px; font-size: 11px; } .it .nm small { color: #8b949e; font-size: 9px; }
+.it .id { display: flex; align-items: center; gap: 3px; margin-top: 4px; font: 600 9px/1 var(--aw-mono, ui-monospace, monospace); color: #c9d1d9; }
+.it .id i { width: 12px; height: 12px; border-radius: 3px; display: grid; place-items: center; font-style: normal; font-size: 8px; background: var(--k, #3a3f46); color: #111; } .it .id em { margin-left: auto; width: 13px; height: 13px; border-radius: 3px; background: #c9d1d9; color: #111; font-style: normal; display: grid; place-items: center; font-size: 8px; }
+/* ô chưa có: bóng đen, mã ẩn */
+.it.lock .ob { filter: brightness(0) drop-shadow(0 0 1px rgba(255,255,255,.45)); opacity: .8; }
+.it.lock .nm span { color: #5b636c; } .it.lock .id { opacity: .35; } .it.lock::before { opacity: .2; }
+.it.lock::after { content: "Bấm để nhận"; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); padding: 4px 9px; border-radius: 99px; background: rgba(255,255,255,.1); font-size: 10px; opacity: 0; transition: opacity .2s; } .it.lock:hover::after { opacity: 1; }
+.it.got .ob { animation: got .8s cubic-bezier(.2,1.5,.4,1); } @keyframes got { 0% { transform: scale(.4) rotate(-20deg); } }
+.it .sh { position: absolute; inset: 0; background: linear-gradient(110deg, transparent 35%, rgba(255,255,255,.35) 50%, transparent 65%); transform: translateX(-120%); pointer-events: none; } .it.got .sh { animation: sh .9s .1s ease-out; } @keyframes sh { to { transform: translateX(120%); } }
+.cg.full .cg-r { animation: glow 1.4s ease-out; } @keyframes glow { 30% { box-shadow: 0 0 0 3px #7a3cff, 0 0 60px #7a3cff66; } }
+@media (max-width: 820px) { .cg { grid-template-columns: 1fr; } .cg-r { grid-template-columns: repeat(3, 1fr); } }
+@media (prefers-reduced-motion: reduce) { .it, .it .ob, .bar i { transition: none; } .it.got .ob, .it.got .sh, .cg-l h2 b.bump, .cg.full .cg-r { animation: none; } }
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=a2140e9772"></script>
+<div class="md-page">
+  <div class="aw-sotd" style="padding-top:16px">
+    <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">12 ô · 1 bộ</span></p>
+    <h1 class="aw-h1" style="--aw-h1:clamp(40px,7vw,96px)">Lưới sưu tập 7/12</h1>
+    <p class="aw-lead">Tiêu đề lớn đếm phần còn thiếu, lưới ô tối có vật phẩm phát sáng, ô chưa có là bóng đen. Bấm ô tối để nhận: vật phẩm bật ra, vệt sáng quét, số đếm nhảy. Đủ 12 thì tiêu đề đổi. Rê chuột để ô nghiêng.</p>
+    <p class="aw-lead" style="font-size:14px">Bố cục từ ảnh owner gửi trong phòng Hang uiux-giatbh (một bài quảng bá bộ sưu tập vật phẩm). Ảnh vật phẩm gốc là ảnh AI của hãng khác; ở đây dùng emoji và quả cầu CSS, tên bộ là mẫu.</p>
+  </div>
+  <section class="cg" id="cg" aria-label="Lưới sưu tập">
+    <div class="cg-l"><h2 id="hd"></h2><p>Bộ sưu tập Ba Lô · mùa 1</p><div class="bar" aria-hidden="true"><i id="bar"></i></div><p id="left" style="font-size:13px;color:#555"></p>
+      <div class="ft"><span class="tag">MÙA 1</span><button class="rs" type="button" id="rs">Về 7/12</button></div></div>
+    <div class="cg-r" id="grid"></div>
+  </section>
+</div>
+</main>
+<script>
+// Các phần của pattern (sổ patterns.json trỏ tới các id này).
+const PARTS = [
+  { id: 'count-headline', vi: 'Tiêu đề lớn nét mảnh đếm «7 trên 12», số nhảy khi nhận' }, { id: 'dark-tile', vi: 'Ô tối có vạch màu, vật phẩm phát sáng, mã và nhãn' },
+  { id: 'locked-silhouette', vi: 'Ô chưa có: bóng đen, mã mờ, bấm để nhận' }, { id: 'collect-pop', vi: 'Nhận: bật xoay, vệt sáng quét, thanh tiến độ chạy' },
+  { id: 'tilt-hover', vi: 'Rê chuột: ô nghiêng 3D, vật phẩm nổi lên' }, { id: 'full-set', vi: 'Đủ bộ: tiêu đề đổi, lưới loé viền tím' }];
+const I = [['🍜', 'Mì ly', '#ff7a1a', '054'], ['orb', 'Điểm Ba Lô', '#2ed3ff', '001', '360'], ['🧤', 'Găng tay', '#ffd21f', '739'], ['🧃', 'Hộp nước', '#7cff5b', '406'],
+  ['orb', 'Vàng Ba Lô', '#f2c14e', '002', '20.000'], ['💀', 'Sọ', '#d8216e', '453'], ['🧢', 'Mũ lưỡi trai', '#ff4b3e', '726'], ['🎲', 'Xúc xắc', '#ff4fd8', '394'],
+  ['🦆', 'Vịt vàng', '#ffb800', '307'], ['🐙', 'Bạch tuộc', '#ff5a6e', '612'], ['📼', 'Băng cassette', '#9a5bff', '159'], ['orb', 'Giờ chơi', '#7a6bff', '004', '180']];
+const START = [0, 1, 2, 4, 5, 6, 9];
+let got = new Set(START);
+const $ = (id) => document.getElementById(id), grid = $('grid');
+grid.innerHTML = I.map(([e, n, c, id, v], i) => `<button class="it" type="button" data-i="${i}" style="--c:${c};--k:${c}"><span class="ob">${e === 'orb' ? '<span class="orb"></span>' : e}</span>
+  <span class="nm">${v ? `<small>${v}</small>` : ''}<span>${n}</span></span><span class="id"><i>◆</i><i style="--k:#2ed3ff">◆</i>BL·000-${id}<em>⌂</em></span><span class="sh"></span></button>`).join('');
+function paint(bump) {
+  const n = got.size;
+  grid.querySelectorAll('.it').forEach((t) => { const on = got.has(+t.dataset.i); t.classList.toggle('lock', !on); t.setAttribute('aria-label', `${I[t.dataset.i][1]}: ${on ? 'đã có' : 'chưa có, bấm để nhận'}`); });
+  $('hd').innerHTML = n < 12 ? `Chẳng ai<br>dừng ở<br><b id="n">${n}</b> trên 12` : 'Đủ bộ<br><b id="n">12</b> trên 12';
+  if (bump) $('n').classList.add('bump');
+  $('bar').style.setProperty('--w', n / 12 * 100 + '%');
+  $('left').textContent = n < 12 ? `Còn ${12 - n} món nữa là đủ bộ.` : 'Bạn đã có cả bộ mùa 1.';
+  $('cg').classList.toggle('full', n === 12);
+}
+grid.addEventListener('click', (e) => {
+  const t = e.target.closest('.it'); if (!t || got.has(+t.dataset.i)) return;
+  got.add(+t.dataset.i); t.classList.remove('got'); void t.offsetWidth; t.classList.add('got'); paint(true);
+});
+grid.addEventListener('pointermove', (e) => { const t = e.target.closest('.it'); if (!t) return; const r = t.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5; t.style.setProperty('--ry', x * 16 + 'deg'); t.style.setProperty('--rx', -y * 16 + 'deg'); });
+grid.addEventListener('pointerout', (e) => { const t = e.target.closest('.it'); if (t && !t.contains(e.relatedTarget)) { t.style.setProperty('--rx', 0); t.style.setProperty('--ry', 0); } });
+$('rs').onclick = () => { got = new Set(START); grid.querySelectorAll('.got').forEach((t) => t.classList.remove('got')); paint(false); };
+paint(false);
+</script>
+<script src="/search.js?v=a2140e9772" defer></script><script src="/stats.js?v=a2140e9772" defer></script>
+</body>
+</html>

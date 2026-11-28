@@ -28,7 +28,8 @@
       ['patterns/icon-tiles.html', 'Icon ô màu', 'Glyph trắng khoét âm bản, xuất SVG/PNG', 12],
       ['patterns/slide-login.html', 'Đăng nhập trượt', 'Tấm chéo trượt giữa Đăng ký và Đăng nhập', 5],
       ['patterns/factory.html', 'Bảng agent', 'Kanban dây chuyền agent, chép code', 1],
-      ['patterns/activity-deck.html', 'Bảng hoạt động kiểu deck', 'Xám/trắng, số lớn, một chấm chanh', 6]]],
+      ['patterns/activity-deck.html', 'Bảng hoạt động kiểu deck', 'Xám/trắng, số lớn, một chấm chanh', 6],
+      ['patterns/collect-grid.html', 'Lưới sưu tập 7/12', 'Ô tối, bóng đen chưa có, bấm để nhận', 6]]],
     ['man-hinh', 'Màn hình', 'Trang web và màn app dựng lại', [
       ['patterns/taste.html', 'Hero và màn app', 'Hero website và màn app có gu', 11],
       ['halvo/', 'Nesta', 'Dashboard nhà thông minh', 0],
