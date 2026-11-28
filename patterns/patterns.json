@@ -2471,16 +2471,16 @@
     "id": "orbit-hud",
     "vi": "Bản đồ HUD tương lai",
     "en": "Sci-fi city map HUD",
-    "use": "Màn bản đồ khoa học viễn tưởng: thành phố neon vẽ canvas phối cảnh, 12 bảng kính xanh có góc bấm quanh mép.",
+    "use": "Màn bản đồ khoa học viễn tưởng dựng sát ảnh gốc (delta 98,25% che chữ): lớp bản đồ là ảnh gốc, 18 bảng kính HTML sống đặt đúng pixel; đổi sang thành phố vẽ canvas.",
     "page": "orbit-hud.html",
     "added": "2026-11-28",
-    "from": "Ảnh concept AI owner gửi, phòng Hang uiux-giatbh, tin m1a22178a330327a. Thành phố thay bằng canvas tự vẽ, tên và số liệu là mẫu.",
+    "from": "Ảnh concept AI owner gửi, phòng Hang uiux-giatbh, tin m1a22178a330327a; owner đòi khớp delta ở tin m1a22195cf2063b7. Chấm theo luật tools/topo-diff.py (lệch ≤ 32/255, che chữ 4 px).",
     "variants": [
       {
         "id": "city-canvas",
         "vi": "Thành phố canvas",
         "en": "Canvas city",
-        "use": "Phối cảnh một điểm, đường sáng lưới, toà nhà có cửa sổ, tháp trung tâm có vòng quay, tuyến chạy về tháp."
+        "use": "Lớp bản đồ: ảnh gốc (mặc định, để chấm delta) hoặc thành phố neon vẽ canvas phối cảnh có tháp, vòng, tuyến chạy."
       },
       {
         "id": "place-card",

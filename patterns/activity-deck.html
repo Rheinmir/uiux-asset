@@ -6,7 +6,7 @@
 <title>Bảng hoạt động kiểu deck — xám/trắng + một chấm chanh — uiux-asset</title>
 <meta name="description" content="Bảng Activity của Hang dựng lại theo cấu trúc deck infographic: khối xám/trắng tách đôi, số lớn nét mảnh, chấm chanh chỉ cho việc cần người, vòng doughnut trạng thái, dòng thời gian kết quả, vòng tròn agent. CSS + JS thuần.">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
-<link rel="stylesheet" href="../aw.css?v=6ad729a312">
+<link rel="stylesheet" href="../aw.css?v=0ac6df56c1">
 <style>
 .md-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
 .md-page a { color: inherit; }
@@ -99,7 +99,7 @@
 </style>
 </head>
 <body>
-<main class="aw-wrap"><script src="../aw.js?v=6ad729a312"></script>
+<main class="aw-wrap"><script src="../aw.js?v=0ac6df56c1"></script>
 <div class="md-page">
   <div class="aw-sotd" style="padding-top:16px">
     <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">2 khổ bảng</span></p>
@@ -175,6 +175,6 @@ $('ky').innerHTML = KEY.map(([n, h, o]) => `<button type="button" data-hex="${h}
 $('ky').addEventListener('click', async (e) => { const c = e.target.closest('[data-hex]'); if (!c) return; try { await navigator.clipboard.writeText(c.dataset.hex); $('nt').textContent = 'Đã chép ' + c.dataset.hex; } catch { $('nt').textContent = c.dataset.hex; } });
 donut(); list('out'); scale();
 </script>
-<script src="/search.js?v=6ad729a312" defer></script><script src="/stats.js?v=6ad729a312" defer></script>
+<script src="/search.js?v=0ac6df56c1" defer></script><script src="/stats.js?v=0ac6df56c1" defer></script>
 </body>
 </html>

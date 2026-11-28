@@ -3,129 +3,145 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Bản đồ HUD thành phố tương lai — bảng kính neon trên thành phố vẽ canvas — uiux-asset</title>
-<meta name="description" content="Bản đồ HUD khoa học viễn tưởng: thành phố neon vẽ bằng canvas phối cảnh, tháp trung tâm có vòng sáng, tuyến đường chạy, bảng kính xanh: thẻ địa điểm, giao thông công cộng, thời tiết, tối ưu tuyến, xe tự lái, mật độ giao thông, quanh đây, thanh dẫn đường ETA. CSS + JS + canvas thuần.">
+<title>Bản đồ HUD tương lai — dựng lại sát ảnh gốc, chấm delta — uiux-asset</title>
+<meta name="description" content="Bản đồ HUD khoa học viễn tưởng dựng lại sát ảnh concept gốc: lớp bản đồ là ảnh gốc, 18 bảng kính là HTML sống đặt đúng toạ độ pixel, chấm delta với ảnh gốc. Đổi sang thành phố vẽ canvas. Đồng hồ chạy, tối ưu tuyến, chọn địa điểm, lưu. CSS + JS thuần.">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
-<link rel="stylesheet" href="../aw.css?v=6ad729a312">
+<link rel="stylesheet" href="../aw.css?v=0ac6df56c1">
 <style>
 .md-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
 .md-page a { color: inherit; }
-.oh-stage { position: relative; border-radius: 16px; overflow: hidden; background: #02060d; box-shadow: 0 30px 70px -30px rgba(0,60,140,.7); }
-.oh-fit { width: 1600px; height: 900px; transform-origin: 0 0; }
-.hud { --cy: #45d4ff; --cy2: #1a8fff; --mg: #ff4fd8; --gn: #3dffa2; --am: #ffc94a; --ink: #d9f3ff; --dim: #7fa6bf; --gl: rgba(6,18,36,.66); --ln: rgba(80,200,255,.32);
-  position: relative; width: 1600px; height: 900px; overflow: hidden; color: var(--ink); font: 400 13px/1.35 "Rajdhani", "Inter", var(--aw-font); letter-spacing: .02em; }
+.oh-ctl { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.oh-ctl button { min-height: 40px; padding: 0 14px; border-radius: 99px; border: 1px solid var(--aw-line, #ddd); background: transparent; color: inherit; font: inherit; cursor: pointer; }
+.oh-ctl button[aria-pressed="true"] { background: #0b3a6e; border-color: #0b3a6e; color: #fff; }
+.oh-ctl .score { margin-left: auto; font: 600 14px/1 var(--aw-mono, ui-monospace, monospace); }
+.oh-stage { position: relative; border-radius: 14px; overflow: hidden; background: #02060d; }
+.oh-fit { width: 1672px; height: 941px; transform-origin: 0 0; }
+.hud { --cy: #4fd2f5; --gn: #59e38a; --ink: #e3f1fa; --dim: #93a8b8; --fill: rgba(6,14,22,.93); --ln: rgba(80,190,230,.42);
+  position: relative; width: 1672px; height: 941px; overflow: hidden; color: var(--ink); background: #02060d url(img/orbit-hud.webp) 0 0 / 1672px 941px no-repeat;
+  font: 500 13px/1.25 "DIN Alternate", "Barlow Semi Condensed", "Arial Narrow", var(--aw-font); }
+.hud.cv { background: #02060d; } .hud canvas { position: absolute; inset: 0; width: 1672px; height: 941px; display: none; } .hud.cv canvas { display: block; }
 .hud *, .hud *::before, .hud *::after { box-sizing: border-box; }
-.hud canvas { position: absolute; inset: 0; width: 1600px; height: 900px; }
-.hud button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
-.pn { position: absolute; padding: 12px 14px; border-radius: 10px; background: var(--gl); border: 1px solid var(--ln); backdrop-filter: blur(8px) saturate(1.3); box-shadow: inset 0 0 24px rgba(40,160,255,.08), 0 0 0 1px rgba(0,0,0,.4); }
-.pn::before, .pn::after { content: ""; position: absolute; width: 12px; height: 12px; border: 2px solid var(--cy); opacity: .8; }
-.pn::before { left: -1px; top: -1px; border-right: 0; border-bottom: 0; border-radius: 10px 0 0 0; } .pn::after { right: -1px; bottom: -1px; border-left: 0; border-top: 0; border-radius: 0 0 10px 0; }
-.h { display: flex; align-items: center; margin: 0 0 8px; font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; } .h a { margin-left: auto; color: var(--cy); font-size: 10px; cursor: pointer; } .h .r { margin-left: auto; letter-spacing: 0; text-transform: none; }
-.dim { color: var(--dim); } .cy { color: var(--cy); } .gn { color: var(--gn); }
-/* đầu */
-.top { position: absolute; left: 16px; top: 12px; display: flex; align-items: center; gap: 22px; }
-.logo { display: flex; align-items: center; gap: 10px; } .logo i { width: 46px; height: 46px; border-radius: 50%; border: 2px solid var(--cy); display: grid; place-items: center; font-style: normal; font-size: 20px; box-shadow: 0 0 18px var(--cy2), inset 0 0 12px var(--cy2); }
-.logo b { display: block; font-size: 19px; letter-spacing: .08em; } .logo small { font-size: 9px; letter-spacing: .18em; color: var(--dim); }
-.tabs { display: flex; gap: 4px; } .tabs button { height: 34px; padding: 0 16px; border-radius: 4px; font-size: 13px; letter-spacing: .1em; color: var(--dim); }
-.tabs button[aria-selected="true"] { color: #fff; background: linear-gradient(rgba(69,212,255,.25), transparent); box-shadow: inset 0 -2px 0 var(--cy); }
-.srch { position: absolute; left: 92px; top: 74px; width: 400px; display: flex; gap: 8px; } .srch div { flex: 1; display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px; border-radius: 99px; background: var(--gl); border: 1px solid var(--ln); color: var(--dim); }
-.srch button { width: 36px; height: 36px; border-radius: 8px; background: var(--gl); border: 1px solid var(--ln) !important; }
-.clock { position: absolute; right: 290px; top: 14px; text-align: right; } .clock b { font-size: 34px; font-weight: 600; letter-spacing: .02em; } .clock b small { font-size: 18px; color: var(--dim); } .clock span { display: block; font-size: 14px; }
-.moon { position: absolute; right: 200px; top: 18px; width: 58px; height: 58px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #e9eef5, #8e99a8 60%, #4b5563); box-shadow: 0 0 24px rgba(200,220,255,.35); }
-.wx { position: absolute; right: 70px; top: 16px; font-size: 16px; line-height: 1.8; } .wx b { font-weight: 600; }
-/* thanh trái */
-.rail { position: absolute; left: 10px; top: 104px; width: 74px; display: grid; gap: 6px; padding: 6px; }
-.rail button { display: grid; place-items: center; gap: 3px; padding: 8px 0; border-radius: 8px; font-size: 11px; color: var(--dim); } .rail button span { font-size: 20px; }
-.rail button[aria-current="true"] { color: #fff; background: linear-gradient(rgba(26,143,255,.35), rgba(26,143,255,.1)); box-shadow: 0 0 16px rgba(26,143,255,.5); }
-/* thẻ địa điểm */
-.place { left: 92px; top: 122px; width: 334px; } .place .tp { display: grid; grid-template-columns: 130px 1fr; gap: 14px; }
-.ph { height: 120px; border-radius: 6px; background: linear-gradient(transparent 55%, rgba(0,0,0,.6)), repeating-linear-gradient(90deg, transparent 0 9px, rgba(255,255,255,.08) 9px 10px), linear-gradient(#30507a, #0b1630); position: relative; overflow: hidden; }
-.ph::after { content: ""; position: absolute; left: 50%; bottom: 0; width: 14px; height: 100px; margin-left: -7px; background: linear-gradient(#bfe8ff, #3b6ea8); clip-path: polygon(50% 0, 100% 100%, 0 100%); }
-.place h3 { margin: 4px 0 2px; font-size: 21px; font-weight: 600; letter-spacing: .06em; } .place p { margin: 10px 0; }
-.place .ac { display: grid; grid-template-columns: repeat(4, 1fr); text-align: center; } .place .ac button { display: grid; gap: 4px; font-size: 12px; } .place .ac button span { font-size: 18px; color: var(--cy); } .place .ac button[aria-pressed="true"] span { color: var(--am); }
-.th { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-top: 10px; } .th span { height: 46px; border-radius: 4px; background: linear-gradient(transparent 50%, rgba(0,0,0,.5)), repeating-linear-gradient(90deg, transparent 0 6px, rgba(150,210,255,.12) 6px 7px), linear-gradient(var(--a, #24476f), #0a1428); }
-.tr { left: 92px; top: 452px; width: 334px; } .tr li { display: grid; grid-template-columns: 30px 1fr auto; gap: 8px; align-items: center; padding: 6px 0; border-top: 1px solid rgba(80,200,255,.12); } .tr ul { margin: 0; padding: 0; list-style: none; }
-.tr li > i { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-style: normal; font-size: 11px; font-weight: 700; background: var(--c); color: #021; box-shadow: 0 0 10px var(--c); } .tr small { display: block; color: var(--dim); font-size: 10px; } .tr .eta { color: var(--gn); }
-.wt { left: 16px; top: 640px; width: 350px; } .wt .nw { display: flex; align-items: center; gap: 12px; } .wt .nw b { font-size: 34px; font-weight: 600; } .wt .nw span { font-size: 34px; } .wt .aq { margin-left: auto; text-align: right; }
-.wt .hr { display: grid; grid-template-columns: repeat(5, 1fr); text-align: center; margin-top: 8px; font-size: 11px; } .wt .hr span { display: block; font-size: 16px; }
-.globe { position: absolute; left: 14px; top: 796px; width: 96px; height: 96px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #1d5fa8, #071a38 60%, #02060d); box-shadow: 0 0 30px rgba(26,143,255,.55), inset 0 0 20px rgba(69,212,255,.4); overflow: hidden; }
-.globe::before { content: ""; position: absolute; inset: 0; border-radius: 50%; background: repeating-linear-gradient(90deg, transparent 0 14px, rgba(69,212,255,.25) 14px 15px), repeating-linear-gradient(transparent 0 14px, rgba(69,212,255,.18) 14px 15px); animation: spin 14s linear infinite; }
-@keyframes spin { to { background-position: 120px 0, 0 0; } }
-.globe::after { content: ""; position: absolute; left: 62%; top: 52%; width: 10px; height: 10px; border-radius: 50%; background: var(--cy); box-shadow: 0 0 0 6px rgba(69,212,255,.25), 0 0 14px var(--cy); }
-.el { left: 124px; top: 800px; width: 380px; height: 92px; } .el b { font-size: 22px; font-weight: 600; } .el svg { position: absolute; right: 12px; bottom: 10px; }
-/* phải */
-.ro { left: 1040px; top: 74px; width: 186px; } .ro label { display: flex; align-items: center; gap: 8px; padding: 4px 0; cursor: pointer; } .ro input { appearance: none; width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--dim); display: grid; place-items: center; margin: 0; }
-.ro input:checked { border-color: var(--gn); background: rgba(61,255,162,.15); } .ro input:checked::after { content: "✓"; color: var(--gn); font-size: 11px; }
-.ro .go { width: 100%; height: 28px; margin-top: 8px; border-radius: 6px; background: linear-gradient(rgba(61,255,162,.35), rgba(61,255,162,.1)); border: 1px solid rgba(61,255,162,.6) !important; color: #dfffee; }
-.ro .go.busy { animation: busy .8s linear infinite; } @keyframes busy { 50% { box-shadow: 0 0 18px rgba(61,255,162,.7); } }
-.car { left: 1236px; top: 96px; width: 350px; display: grid; grid-template-columns: 1fr 140px; gap: 10px; } .car svg { width: 180px; }
-.car dl { margin: 0; display: grid; grid-template-columns: 1fr auto; gap: 8px 6px; align-content: start; } .car dd { margin: 0; text-align: right; font-weight: 600; }
-.car .ct { grid-column: 2; height: 28px; border-radius: 6px; border: 1px solid var(--cy) !important; background: rgba(26,143,255,.2); }
-.tf { left: 1300px; top: 322px; width: 286px; } .tf .bars { display: flex; align-items: flex-end; gap: 2px; height: 36px; } .tf .bars i { flex: 1; height: var(--h); background: linear-gradient(var(--gn), var(--am)); border-radius: 1px; transition: height .5s; }
-.tf canvas { position: static; width: 100%; height: 110px; margin-top: 8px; border-radius: 6px; }
-.nb { left: 1300px; top: 562px; width: 286px; } .nb li { display: grid; grid-template-columns: 22px 1fr auto; align-items: center; gap: 8px; padding: 6px 4px; border-radius: 6px; cursor: pointer; } .nb li:hover { background: rgba(69,212,255,.12); } .nb ul { margin: 0; padding: 0; list-style: none; } .nb li > span { color: var(--c); }
-/* dưới */
-.nav { position: absolute; left: 560px; top: 790px; width: 520px; height: 110px; padding: 14px 70px; clip-path: polygon(8% 0, 92% 0, 100% 100%, 0 100%); background: linear-gradient(rgba(8,28,60,.85), rgba(4,12,26,.92)); border-top: 1px solid var(--cy); }
-.nav .row { display: flex; align-items: center; gap: 12px; } .nav b { font-size: 30px; font-weight: 600; } .nav .ar { margin-left: auto; text-align: right; } .nav .ar b { display: block; font-size: 26px; }
-.nav .pr { position: relative; height: 2px; margin: 14px 4px 0; background: rgba(69,212,255,.3); } .nav .pr i { position: absolute; left: 0; top: 0; height: 2px; width: var(--p); background: var(--cy); box-shadow: 0 0 8px var(--cy); transition: width .6s; } .nav .pr b { position: absolute; top: -6px; left: var(--p); width: 14px; height: 14px; margin-left: -7px; border-radius: 50%; background: #02060d; border: 2px solid var(--cy); transition: left .6s; }
-.env { left: 1132px; top: 800px; width: 316px; } .env .g { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; } .env b { display: block; font-size: 18px; font-weight: 600; }
-.sys { left: 1466px; top: 800px; width: 120px; padding: 10px 12px; } .sys li { display: flex; justify-content: space-between; gap: 6px; font-size: 11px; } .sys ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 3px; } .sys li::before { content: "●"; color: var(--gn); }
-.mk { position: absolute; display: flex; gap: 8px; align-items: center; padding: 8px 12px; border-radius: 8px; background: var(--gl); border: 1px solid var(--ln); backdrop-filter: blur(6px); cursor: pointer; }
-.mk b { font-size: 13px; letter-spacing: .08em; } .mk small { display: block; color: var(--dim); }
-.mk.eta b { font-size: 22px; letter-spacing: 0; }
-@media (prefers-reduced-motion: reduce) { .globe::before, .ro .go.busy { animation: none; } }
+.hud button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; padding: 0; }
+.a { position: absolute; }
+.pn { position: absolute; background: var(--fill); border: 1px solid var(--ln); border-radius: 8px; overflow: hidden; }
+/* kính mờ: lớp dưới làm mờ thật (crop ảnh nền, blur), chế độ canvas thì về màu phẳng */
+.fr { position: absolute; inset: -24px; background: url(img/orbit-hud.webp) no-repeat; background-size: 1672px 941px; filter: blur(var(--bl, 14px)) brightness(var(--br, 1)); pointer-events: none; }
+.fe { position: absolute; inset: 0; background: url(img/orbit-hud.webp) no-repeat; background-size: 1672px 941px; padding: 4px; border-radius: 8px; pointer-events: none;
+  -webkit-mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
+.hud.cv .fr, .hud.cv .fe { display: none; }
+.hud:not(.cv) .pn { border-color: transparent; } .pn.gh { border: 0 !important; background: transparent; border-radius: 6px; } .pn.gh .fr { --bl: 7px; } .hud.cv .pn.gh { display: none; }
+.hud:not(.cv) .btn.chg { background: linear-gradient(rgba(40,140,150,.6), rgba(20,70,90,.7)) !important; border-color: rgba(90,220,210,.6) !important; }
+.hud:not(.cv) .btn { background: url(img/orbit-hud.webp) no-repeat !important; background-size: 1672px 941px !important; border-color: transparent !important; color: #fff !important; }
+.hud:not(.cv) .nav::before { display: none; } .hud:not(.cv) #pr { background: none; }
+.sp { position: absolute; background: url(img/orbit-hud.webp) no-repeat; background-size: 1672px 941px; background-position: calc(var(--x) * -1px) calc(var(--y) * -1px); }
+.hud.cv .sp.bgonly { display: none; }
+.cap { font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; } .va { color: var(--cy); font-size: 11px; font-weight: 600; letter-spacing: .04em; }
+.dim { color: var(--dim); } .hud:not(.cv) .cvo { visibility: hidden; } .gn { color: var(--gn); }
+.tab { position: absolute; top: 18px; height: 38px; display: grid; place-items: center; font-size: 13px; letter-spacing: .04em; color: #c9d6e0; transform: translateX(-50%); padding: 0 14px; }
+.tab[aria-selected="true"] { color: #fff; } .tab.on { background: linear-gradient(rgba(60,160,230,.35), rgba(20,70,120,.55)); border: 1px solid rgba(90,200,240,.6); border-radius: 6px; }
+.rail { position: absolute; left: 14px; top: 100px; width: 64px; height: 340px; background: var(--fill); border: 1px solid var(--ln); border-radius: 8px; }
+.rail button { position: absolute; left: 3px; width: 56px; display: grid; justify-items: center; gap: 2px; font-size: 13px; color: #cfdbe4; }
+.rail button span { font-size: 22px; line-height: 1; color: #a9bccb; } .rail button[aria-current="true"] { color: #fff; } .rail button[aria-current="true"] span { color: #4aa8ff; }
+.rail button[aria-current="true"]::before { content: ""; position: absolute; inset: -6px 0 -4px; border-radius: 8px; background: linear-gradient(rgba(40,110,200,.45), rgba(20,50,100,.25)); border: 1px solid rgba(90,170,255,.6); z-index: -1; }
+.ac button { position: absolute; top: 325px; display: grid; justify-items: center; gap: 4px; font-size: 13px; transform: translateX(-50%); color: #dce9f2; } .ac button span { font-size: 19px; color: #7fe0d0; line-height: 1; } .hud:not(.cv) .ac button span { visibility: hidden; } .hud:not(.cv) .ac button[aria-pressed="true"] span { visibility: visible; } .ac button[aria-pressed="true"] span { color: #ffd55a; }
+.row { position: absolute; display: flex; align-items: center; gap: 10px; font-size: 13px; }
+.chk { position: absolute; left: 1060px; display: flex; align-items: center; gap: 9px; font-size: 13px; color: #c9d6e0; cursor: pointer; }
+.chk input { appearance: none; margin: 0; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid #6fd3b8; display: grid; place-items: center; } .chk input:checked::after { content: "✓"; color: #9cf0d8; font-size: 12px; }
+.chk input:not(:checked) { border-color: #4c5c68; }
+.btn { position: absolute; height: 28px; border-radius: 8px; border: 1px solid rgba(90,220,210,.55) !important; background: linear-gradient(rgba(40,140,150,.45), rgba(20,70,90,.55)) !important; color: #dffaf6 !important; font-size: 13px; }
+.btn.busy { animation: busy .8s linear infinite; } @keyframes busy { 50% { box-shadow: 0 0 16px rgba(90,240,220,.7); } }
+.nb li { position: absolute; left: 1374px; width: 266px; height: 28px; display: flex; align-items: center; gap: 12px; padding: 0 6px; border-radius: 6px; font-size: 13px; color: #cfdbe4; cursor: pointer; list-style: none; } .nb li:hover { background: rgba(80,190,230,.14); } .nb li b { margin-left: auto; font-weight: 500; color: var(--dim); } .nb li i { font-style: normal; width: 18px; text-align: center; color: var(--c); }
+.nav { position: absolute; left: 555px; top: 790px; width: 555px; height: 125px; clip-path: polygon(8.5% 0, 91.5% 0, 100% 100%, 0 100%); background: rgba(5,18,30,.9); }
+.nav::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: rgba(80,200,240,.7); }
+.mk { position: absolute; display: flex; gap: 8px; align-items: center; background: transparent; border: 1px solid var(--ln); border-radius: 6px; cursor: pointer; }
+.big { font-size: 24px; font-weight: 600; } .bar2 { position: absolute; height: 2px; background: rgba(80,200,240,.45); } .bar2 i { position: absolute; top: -5px; width: 12px; height: 12px; border-radius: 50%; border: 2px solid #8fe8ff; background: #02060d; transition: left .6s; }
 </style>
 </head>
 <body>
-<main class="aw-wrap"><script src="../aw.js?v=6ad729a312"></script>
+<main class="aw-wrap"><script src="../aw.js?v=0ac6df56c1"></script>
 <div class="md-page">
   <div class="aw-sotd" style="padding-top:16px">
-    <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">1 màn · 12 bảng</span></p>
+    <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">1 màn · 18 bảng · chấm delta</span></p>
     <h1 class="aw-h1" style="--aw-h1:clamp(40px,7vw,96px)">Bản đồ HUD tương lai</h1>
-    <p class="aw-lead">Thành phố neon vẽ bằng canvas phối cảnh, tháp trung tâm có vòng sáng, tuyến đường chạy về tháp. Xung quanh là bảng kính xanh có góc bấm: địa điểm, giao thông công cộng, thời tiết, tối ưu tuyến, xe tự lái, mật độ, quanh đây, dẫn đường. Bấm thử: tick tuỳ chọn rồi «Tối ưu tuyến», chọn địa điểm quanh đây, bấm Lưu.</p>
-    <p class="aw-lead" style="font-size:14px">Bố cục từ ảnh concept AI owner gửi trong phòng Hang uiux-giatbh. Thành phố, tên địa điểm và số liệu là mẫu, ảnh thành phố được thay bằng canvas tự vẽ.</p>
+    <p class="aw-lead">Dựng lại sát ảnh concept gốc. Lớp bản đồ là chính ảnh gốc; mọi bảng kính phía trên là HTML sống, đặt đúng toạ độ pixel: đồng hồ chạy, tick tuỳ chọn rồi «Optimize Route», bấm địa điểm quanh đây để đổi thẻ, bấm Save. Nút «Nền canvas» thay ảnh bằng thành phố tự vẽ.</p>
+    <p class="aw-lead" style="font-size:14px">Nguồn: ảnh concept AI owner gửi trong phòng Hang uiux-giatbh. Chấm delta theo luật tools/topo-diff.py: pixel khớp khi mọi kênh lệch ≤ 32/255, vùng chữ che 4 px.</p>
   </div>
+  <div class="oh-ctl" role="toolbar" aria-label="Điều khiển"><button type="button" id="mode" aria-pressed="false">Nền canvas</button><span class="score" id="score"></span></div>
   <div class="oh-stage" id="stage"><div class="oh-fit" id="fit"><div class="hud" id="hud">
-    <canvas id="city" width="1600" height="900" aria-label="Bản đồ thành phố"></canvas>
-    <div class="top"><div class="logo"><i>✦</i><div><b>QUỸ ĐẠO</b><small>ĐI XA HƠN BẢN ĐỒ</small></div></div>
-      <div class="tabs" role="tablist" id="tabs"><button role="tab" aria-selected="true">BẢN ĐỒ</button><button role="tab" aria-selected="false">DI CHUYỂN</button><button role="tab" aria-selected="false">PHÂN TÍCH</button><button role="tab" aria-selected="false">TRÍ TUỆ</button><button role="tab" aria-selected="false">CÀI ĐẶT</button></div></div>
-    <div class="srch"><div>⌕ Tìm điểm đến, địa danh, toạ độ… <span style="margin-left:auto">🎙</span></div><button aria-label="Quét">⌖</button></div>
-    <div class="clock"><b id="ck">14:27<small>:36</small></b><span>T3, 27 tháng 11, 2125</span></div><i class="moon"></i><div class="wx">☀ <b>32°C</b><br><span class="gn">▮</span> <b>78%</b></div>
-    <nav class="rail pn" id="rail"><button aria-current="true"><span>🌐</span>Toàn cầu</button><button><span>⌂</span>Gần đây</button><button><span>▤</span>Tàu xe</button><button><span>◈</span>Lớp</button><button><span>⋯</span>Thêm</button></nav>
-    <section class="pn place" aria-label="Địa điểm"><div class="tp"><div class="ph"></div><div><h3 id="pn">THÁP TRUNG TÂM</h3><span class="dim" id="pt">Địa danh đô thị</span><p style="margin:12px 0 4px">↗ <span id="pd">1,2 km</span></p><p style="margin:0">★ <b>4,9</b> <span class="dim">(2,8 tr đánh giá)</span></p></div></div>
-      <p id="pdsc">Trái tim của Tân Sài Gòn, nơi hội tụ văn hoá, sáng tạo và kết nối.</p>
-      <div class="ac"><button><span>➤</span>Chỉ đường</button><button id="sv" aria-pressed="false"><span>❏</span>Lưu</button><button><span>⇪</span>Chia sẻ</button><button><span>⋯</span>Thêm</button></div>
-      <div class="th"><span></span><span style="--a:#3a2d6e"></span><span style="--a:#163f5a"></span><span style="--a:#4a2a5a"></span><span style="--a:#1c4a6e"></span></div></section>
-    <section class="pn tr" aria-label="Giao thông công cộng"><p class="h">TÀU XE TRỰC TIẾP<a>XEM HẾT →</a></p><ul id="tr"></ul></section>
-    <section class="pn wt" aria-label="Thời tiết"><p class="h">THỜI TIẾT & KHÔNG KHÍ</p><div class="nw"><span>⛅</span><div><b>32°C</b><br><span class="dim" style="font-size:12px">Ít mây</span></div><div class="aq"><span class="gn">❦ AQI 42</span><br>Tốt</div></div>
-      <div class="hr"><div>Giờ<span>☀</span>32°</div><div>15h<span>⛅</span>33°</div><div>18h<span>☁</span>31°</div><div>21h<span>☾</span>29°</div><div>0h<span>☾</span>28°</div></div></section>
-    <i class="globe"></i>
-    <section class="pn el" aria-label="Độ cao"><p class="h" style="font-size:11px">ĐỘ CAO</p><b>+128 m</b><p class="dim" style="margin:6px 0 0;font-size:12px">10,7769° B<br>106,7014° Đ</p>
-      <svg width="200" height="56" viewBox="0 0 200 56"><defs><linearGradient id="eg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#3dffa2" stop-opacity=".45"/><stop offset="1" stop-color="#3dffa2" stop-opacity="0"/></linearGradient></defs><path d="M0 50 C30 46 40 40 60 38 S90 30 110 14 S150 26 170 34 S190 40 200 42 V56 H0Z" fill="url(#eg)"/><path d="M0 50 C30 46 40 40 60 38 S90 30 110 14 S150 26 170 34 S190 40 200 42" fill="none" stroke="#3dffa2" stroke-width="1.5"/></svg></section>
-    <section class="pn ro" aria-label="Tối ưu tuyến"><p class="h" style="font-size:11px">TỐI ƯU TUYẾN</p>
-      <label><input type="checkbox" checked data-k="short"> Đường ngắn nhất</label><label><input type="checkbox" checked data-k="eco"> Ít phát thải</label><label><input type="checkbox" checked data-k="jam"> Tránh kẹt xe</label>
-      <button class="go" id="opt" type="button">Tối ưu tuyến</button></section>
-    <section class="pn car" aria-label="Xe tự lái"><svg viewBox="0 0 180 120" aria-hidden="true"><g fill="none" stroke="#45d4ff" stroke-width="1.2" opacity=".9"><path d="M14 78 L30 52 L70 40 L120 40 L150 56 L168 62 L168 82 L14 86Z"/><path d="M40 52 L70 44 L112 44 L132 56 L44 58Z"/><circle cx="46" cy="86" r="14"/><circle cx="140" cy="84" r="14"/><circle cx="46" cy="86" r="6"/><circle cx="140" cy="84" r="6"/><path d="M14 70 H168 M30 52 L44 58 M70 40 L74 58 M120 40 L112 58" opacity=".5"/></g><path d="M0 104 H180" stroke="#45d4ff" stroke-opacity=".3"/></svg>
-      <div><p class="h" style="font-size:11px;margin-bottom:4px">XE TỰ LÁI</p><p class="gn" style="margin:0 0 10px">● Đang trực tuyến</p><dl><dt>Tốc độ</dt><dd id="spd">72 km/h</dd><dt>ETA</dt><dd id="ceta">12 phút</dd><dt>Quãng</dt><dd id="cdis">4,8 km</dd></dl></div><button class="ct" type="button">Điều khiển</button></section>
-    <section class="pn tf" aria-label="Giao thông"><p class="h">MẬT ĐỘ GIAO THÔNG<span class="r">Lưu lượng: <b id="fl">87%</b></span></p><div class="bars" id="bars"></div><canvas id="heat" width="286" height="110"></canvas></section>
-    <section class="pn nb" aria-label="Quanh đây"><p class="h">QUANH ĐÂY<a>XEM HẾT →</a></p><ul id="nb"></ul></section>
-    <section class="nav" aria-label="Dẫn đường"><div class="row"><span style="font-size:22px">🚘</span><div><b id="nm">12 phút</b><br><span id="nk">4,8 km</span></div><div class="ar"><span class="dim">Đến lúc</span><b id="na">14:39</b></div></div><div class="pr" id="pr" style="--p:8%"><i></i><b></b></div></section>
-    <section class="pn env" aria-label="Môi trường"><p class="h" style="font-size:11px">DỮ LIỆU MÔI TRƯỜNG</p><div class="g"><div><span class="dim">☀ UV</span><b class="cy">Cao</b></div><div><span class="dim">≋ Gió</span><b>12 · ĐB</b></div><div><span class="dim">Độ ẩm</span><b>68%</b></div></div></section>
-    <section class="pn sys" aria-label="Hệ thống"><p class="h" style="font-size:10px;margin-bottom:4px">HỆ THỐNG</p><ul><li>GPS<b class="gn">100%</b></li><li>Mạng<b class="gn">Ổn</b></li><li>Đồng bộ<b class="gn">OK</b></li></ul></section>
-    <button class="mk" id="mk" style="left:880px;top:196px"><span style="color:var(--am);font-size:20px">⬤</span><div><b id="mkn">THÁP TRUNG TÂM</b><small id="mkd">1,2 km ↗</small></div></button>
-    <div class="mk eta" style="left:618px;top:356px"><span style="font-size:22px">🚘</span><div><b id="me">12 phút</b><small id="mkm">4,8 km</small></div></div>
+    <canvas id="city" width="1672" height="941" aria-label="Thành phố vẽ canvas"></canvas>
+    <!-- miếng kính mờ dưới chữ nằm ngoài bảng: che chữ in sẵn trong ảnh nền khi chữ sống đổi -->
+    <div class="pn gh" style="left:104px;top:16px;width:124px;height:38px"></div><div class="pn gh" style="left:1230px;top:14px;width:128px;height:62px"></div><div class="pn gh" style="left:1494px;top:14px;width:66px;height:64px"></div><div class="pn gh" style="left:916px;top:194px;width:100px;height:40px"></div><div class="pn gh" style="left:656px;top:362px;width:82px;height:46px"></div>
+    <i class="sp" style="--x:12;--y:8;left:12px;top:8px;width:90px;height:88px;border-radius:50%"></i>
+    <div class="a" style="left:106px;top:16px;font-size:21px;font-weight:600;letter-spacing:.04em">ORBITAL MAP</div><div class="a" style="left:107px;top:41px;font-size:10px;letter-spacing:.06em;color:#c3d0da">NAVIGATE BEYOND LIMITS</div>
+    <div id="tabs"><button class="tab on" style="left:319px" aria-selected="true">MAP</button><button class="tab" style="left:399px" aria-selected="false">TRANSIT</button><button class="tab" style="left:495px" aria-selected="false">ANALYTICS</button><button class="tab" style="left:606px" aria-selected="false">INTELLIGENCE</button><button class="tab" style="left:713px" aria-selected="false">SETTINGS</button></div>
+    <div class="a" style="left:92px;top:74px;width:364px;height:36px;border-radius:18px;background:rgba(20,32,44,.88);border:1px solid rgba(120,170,200,.35)"></div>
+    <div class="a" style="left:106px;top:84px;font-size:13px;color:#c9d4dc">⌕&nbsp; Search destinations, landmarks, or coordinates...</div><div class="a" style="left:428px;top:80px;font-size:18px">🎙</div>
+    <div class="a" style="left:462px;top:74px;width:40px;height:36px;border-radius:8px;background:rgba(20,32,44,.88);border:1px solid rgba(120,170,200,.35);display:grid;place-items:center;font-size:17px">⌖</div>
+    <nav class="rail" id="rail" aria-label="Phạm vi"><button style="top:6px" aria-current="true"><span>🌐</span>Global</button><button style="top:94px"><span>⛨</span>Local</button><button style="top:160px"><span>▤</span>Transit</button><button style="top:224px"><span>◈</span>Layers</button><button style="top:286px"><span>⋯</span>More</button></nav>
+    <section class="pn" style="left:90px;top:122px;width:337px;height:320px" aria-label="Địa điểm"></section>
+    <i class="sp bgonly" id="pph" style="--x:101;--y:132;left:101px;top:132px;width:132px;height:130px;border-radius:4px"></i>
+    <div class="a" id="pn" style="left:245px;top:136px;font-size:20px;font-weight:600;letter-spacing:.03em">CENTRAL SPIRE</div><div class="a dim" id="pt" style="left:245px;top:164px;font-size:13px">Metropolitan Landmark</div>
+    <div class="a" style="left:245px;top:195px;font-size:14px">↗&nbsp; <span id="pd">1.2 km</span></div><div class="a" style="left:245px;top:229px;font-size:14px"><span style="color:#f5c542">★</span> 4.9 <span class="dim">(2.8M reviews)</span></div>
+    <div class="a" id="pdsc" style="left:106px;top:271px;width:300px;font-size:13.5px;line-height:1.45;color:#d5e1ea">The iconic heart of Neo Saigon, a hub of culture, innovation and unity.</div>
+    <i class="sp bgonly" style="--x:126;--y:318;left:126px;top:318px;width:270px;height:30px"></i><div class="ac"><button style="left:150px"><span>⊕</span>Directions</button><button style="left:231px" id="sv" aria-pressed="false"><span>♡</span>Save</button><button style="left:299px"><span>⋖</span>Share</button><button style="left:374px"><span>⁘</span>More</button></div>
+    <i class="sp bgonly" style="--x:103;--y:377;left:103px;top:377px;width:314px;height:55px"></i>
+    <section class="pn" style="left:90px;top:462px;width:337px;height:143px" aria-label="Tàu xe"></section>
+    <i class="sp bgonly" style="--x:102;--y:494;left:102px;top:494px;width:36px;height:108px"></i><div class="a cap" style="left:106px;top:472px">Live Transit</div><div class="a va" style="left:341px;top:474px">VIEW ALL →</div><div id="tr"></div>
+    <section class="pn" style="left:15px;top:612px;width:357px;height:150px" aria-label="Thời tiết"></section>
+    <div class="a cap" style="left:31px;top:618px">Weather &amp; Air Quality</div><i class="sp bgonly" style="--x:30;--y:645;left:30px;top:645px;width:56px;height:46px"></i>
+    <div class="a" style="left:93px;top:647px;font-size:27px;font-weight:600">32°C</div><div class="a dim" style="left:93px;top:681px;font-size:13px">Partly Cloudy</div>
+    <div class="a" style="left:304px;top:662px;font-size:13px;text-align:right"><span class="gn">❦</span> AQI 42<br>Good <span class="gn">→</span></div>
+    <i class="sp bgonly" style="--x:30;--y:716;left:30px;top:716px;width:340px;height:24px"></i><div id="hrs"></div>
+    <i class="sp bgonly" style="--x:8;--y:775;left:8px;top:775px;width:170px;height:166px;border-radius:50%"></i>
+    <section class="pn" style="left:255px;top:798px;width:273px;height:108px" aria-label="Độ cao"></section>
+    <div class="a cap" style="left:266px;top:806px;font-size:11px">Elevation</div><div class="a" style="left:266px;top:824px;font-size:19px;font-weight:600">+128 m</div><div class="a" style="left:266px;top:874px;font-size:13px;line-height:18px;color:#c8d6e0">10.7769° N<br>106.7014° E</div>
+    <i class="sp bgonly" style="--x:380;--y:830;left:380px;top:830px;width:140px;height:62px"></i>
+    <section class="pn" style="left:1038px;top:74px;width:187px;height:163px" aria-label="Tối ưu tuyến"></section>
+    <div class="a cap" style="left:1053px;top:86px;font-size:12px">Route Optimization</div>
+    <label class="chk" style="top:113px"><input type="checkbox" checked data-k="short"> Shortest Path</label><label class="chk" style="top:140px"><input type="checkbox" checked data-k="eco"> Lowest Emission</label><label class="chk" style="top:167px"><input type="checkbox" checked data-k="jam"> Least Traffic</label>
+    <i class="sp bgonly" style="--x:1050;--y:188;left:1050px;top:188px;width:164px;height:46px"></i><button class="btn" id="opt" style="left:1064px;top:197px;width:136px">Optimize Route</button>
+    <div class="a" style="left:1234px;top:14px;font-size:33px;font-weight:600;font-variant-numeric:tabular-nums" id="ck">14:27<span style="font-size:20px;color:#b5c4cf">:36</span></div><div class="a" style="left:1235px;top:53px;font-size:15px" id="dt">Tue, Nov 27, 2125</div>
+    <i class="sp" style="--x:1403;--y:14;left:1403px;top:14px;width:66px;height:66px;border-radius:50%"></i>
+    <div class="a" style="left:1497px;top:18px;font-size:16px"><span style="color:#ffc63a">☀</span> <span style="color:#ffd76a">32°C</span></div><div class="a" style="left:1499px;top:52px;font-size:16px"><span class="gn">▮</span> 78%</div>
+    <i class="sp" style="--x:1565;--y:16;left:1565px;top:16px;width:100px;height:62px"></i>
+    <section class="pn" style="left:1243px;top:96px;width:407px;height:202px" aria-label="Xe tự lái"></section>
+    <i class="sp bgonly" style="--x:1248;--y:100;left:1248px;top:100px;width:225px;height:195px"></i>
+    <div class="a cap" style="left:1482px;top:113px;font-size:12px;color:#8fd8ea">Autonomous Vehicle</div><div class="a" style="left:1484px;top:137px;font-size:14px"><span class="gn">●</span> Online</div>
+    <div class="a" style="left:1482px;top:177px;width:152px;font-size:14px;line-height:27px"><div style="display:flex">Speed<b style="margin-left:auto;font-weight:500" id="spd">72 km/h</b></div><div style="display:flex">ETA<b style="margin-left:auto;font-weight:500" id="ceta">12 min</b></div><div style="display:flex">Route<b style="margin-left:auto;font-weight:500" id="cdis">4.8 km</b></div></div>
+    <i class="sp bgonly" style="--x:1474;--y:256;left:1474px;top:256px;width:116px;height:44px"></i><button class="btn" style="left:1483px;top:264px;width:97px;border-color:rgba(90,190,240,.6)!important;background:linear-gradient(rgba(40,110,170,.5),rgba(16,50,90,.6))!important">Control</button>
+    <div class="a" style="left:1590px;top:268px;font-size:15px;color:#9fb3c2">‹</div><button class="a" style="left:1614px;top:264px;width:28px;height:28px;border-radius:50%;border:1px solid #9fb3c2">›</button>
+    <section class="pn" style="left:1362px;top:320px;width:288px;height:220px" aria-label="Giao thông"></section>
+    <div class="a cap" style="left:1378px;top:331px">Live Traffic</div><div class="a" style="left:1568px;top:331px;font-size:14px">Flow: <span id="fl">87%</span></div>
+    <i class="sp" id="bars" style="--x:1372;--y:356;left:1372px;top:356px;width:270px;height:40px"></i>
+    <div class="a dim" style="left:1376px;top:399px;font-size:11px">Flow: <span id="fl2">87%</span></div><div class="a va" style="left:1557px;top:399px">VIEW DETAILS →</div>
+    <i class="sp bgonly" style="--x:1370;--y:418;left:1370px;top:418px;width:274px;height:114px;border-radius:4px"></i>
+    <section class="pn" style="left:1362px;top:556px;width:288px;height:192px" aria-label="Quanh đây"></section>
+    <div class="a cap" style="left:1378px;top:566px">Nearby Places</div><div class="a va" style="left:1572px;top:568px">VIEW ALL →</div><ul class="nb" id="nb"></ul>
+    <section class="nav" aria-label="Dẫn đường"></section><i class="sp bgonly" style="--x:555;--y:790;left:555px;top:790px;width:555px;height:125px;clip-path:path(evenodd,'M47 0 L508 0 L555 125 L0 125 Z M53 7 L502 7 L545 118 L10 118 Z')"></i>
+    <div class="a" style="left:660px;top:813px;font-size:21px;color:#8fd0ff">🚘</div><div class="a" style="left:698px;top:808px;font-size:26px;font-weight:600"><span id="nm">12</span> <span style="font-size:21px">min</span></div>
+    <div class="a" style="left:662px;top:843px;font-size:19px;color:#a9c4d6">⌓</div><div class="a" style="left:698px;top:843px;font-size:19px;color:#c8d8e4" id="nk">4.8 km</div>
+    <div class="a" style="left:935px;top:810px;font-size:19px;color:#c8d8e4">Arrive at</div><div class="a" style="left:935px;top:833px;font-size:24px;font-weight:600" id="na">14:39</div>
+    <i class="sp bgonly" style="--x:600;--y:868;left:600px;top:868px;width:470px;height:30px"></i><i class="sp bgonly" style="--x:780;--y:782;left:780px;top:782px;width:110px;height:24px"></i><div class="bar2" style="left:640px;top:883px;width:380px" id="pr"><i style="left:16px;opacity:var(--ko,0)"></i></div>
+    <section class="pn" style="left:1130px;top:797px;width:317px;height:93px" aria-label="Môi trường"></section>
+    <div class="a cap" style="left:1150px;top:806px;font-size:12px">Environmental Data</div>
+    <div class="a" style="left:1153px;top:834px;font-size:14px;line-height:25px"><span style="color:#ffc63a">☼</span> UV<br><span style="color:#ffc63a">Ѡ</span> High</div><div class="a" style="left:1252px;top:834px;font-size:14px;line-height:25px">≋ Wind /n<br>12 · NE</div><div class="a" style="left:1362px;top:834px;font-size:14px;line-height:25px;text-align:center">Humidity<br><b style="font-size:18px;font-weight:600">68%</b></div>
+    <section class="pn" style="left:1463px;top:797px;width:192px;height:95px" aria-label="Hệ thống"></section>
+    <div class="a cap" style="left:1481px;top:806px;font-size:11px">System Status</div>
+    <div class="a" style="left:1484px;top:826px;width:132px;font-size:12px;line-height:19.5px"><div style="display:flex"><span class="gn">●</span>&nbsp; GPS<b style="margin-left:auto;font-weight:500;color:#d4f75a">100%</b></div><div style="display:flex"><span class="gn">●</span>&nbsp; Network<b style="margin-left:auto;font-weight:500;color:#d4f75a">Online</b></div><div style="display:flex"><span class="gn">●</span>&nbsp; Server Sync<b style="margin-left:auto;font-weight:500;color:#d4f75a">OK</b></div></div>
+    <button class="mk" id="mk" style="left:884px;top:190px;width:136px;height:48px;padding:0 10px"><span style="color:#ffcf3a;font-size:20px">⬤</span><span style="text-align:left;line-height:1.3"><b style="font-size:12px;font-weight:600;letter-spacing:.04em" id="mkn">CENTRAL SPIRE</b><br><span style="font-size:12px" id="mkd">1.2 km ↗</span></span></button>
+    <div class="mk" style="left:615px;top:358px;width:127px;height:54px;padding:0 12px"><span style="font-size:22px;color:#8fd0ff">🚘</span><span style="line-height:1.15"><b style="font-size:20px;font-weight:600" id="me">12 min</b><br><span style="font-size:14px;color:#b9c9d4" id="mkm">4.8 km</span></span></div>
   </div></div></div>
 </div>
 </main>
 <script>
 // Các phần của pattern (sổ patterns.json trỏ tới các id này).
 const PARTS = [
-  { id: 'city-canvas', vi: 'Thành phố neon vẽ canvas phối cảnh: tháp trung tâm có vòng, đường sáng, tuyến chạy' }, { id: 'place-card', vi: 'Thẻ địa điểm kính: ảnh, khoảng cách, đánh giá, 4 nút, dải ảnh' },
-  { id: 'route-opt', vi: 'Tối ưu tuyến: 3 tuỳ chọn, nút chạy, ETA và tuyến đổi theo' }, { id: 'live-traffic', vi: 'Mật độ giao thông: cột nhảy và bản đồ nhiệt' },
+  { id: 'city-canvas', vi: 'Lớp bản đồ: ảnh gốc, hoặc thành phố vẽ canvas phối cảnh' }, { id: 'place-card', vi: 'Thẻ địa điểm: ảnh, khoảng cách, đánh giá, 4 nút, dải ảnh' },
+  { id: 'route-opt', vi: 'Tối ưu tuyến: 3 tuỳ chọn, nút chạy, ETA đổi theo' }, { id: 'live-traffic', vi: 'Mật độ giao thông: cột lưu lượng và bản đồ nhiệt' },
   { id: 'nav-eta', vi: 'Thanh dẫn đường hình thang: phút, km, giờ đến, tiến độ' }, { id: 'side-rail', vi: 'Thanh bên trái, đồng hồ, trăng, tình trạng hệ thống' }];
-const $ = (id) => document.getElementById(id);
+const $ = (id) => document.getElementById(id), hud = $('hud'), SHOT = /shot=1/.test(location.search);
 // ---------- thành phố: phối cảnh một điểm, vẽ tĩnh vào canvas phụ, mỗi khung chỉ vẽ lại phần chạy ----------
-const W = 1600, H = 900, CX = 800, HZ = 70, F = 900, CAMH = 300, D = 260;
+const W = 1672, H = 941, CX = 836, HZ = 70, F = 900, CAMH = 300, D = 260;
 const P = (x, y, z) => { const zc = z + D; return [CX + x * F / zc, HZ + (CAMH - y) * F / zc, F / zc]; };
 let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
 const routeX = (z) => { const t = (z - 150) / 750; return t < 0 || t > 1 ? null : Math.sin(t * 3.2) * 260 * (1 - t) - 40 * t; };
@@ -159,6 +175,7 @@ const route = []; for (let t = 0; t <= 1; t += .02) { const z = 150 + t * 750, x
 const route2 = route.map(([x, y], i) => [x + Math.sin(i / 6) * 40 * (1 - i / route.length), y]);
 let alt = false, t0 = performance.now();
 function frame(now) {
+  if (!hud.classList.contains("cv")) return requestAnimationFrame(frame);
   const t = (now - t0) / 1000; c.drawImage(base, 0, 0);
   c.globalCompositeOperation = 'lighter';
   // tháp trung tâm + chùm sáng + vòng
@@ -181,37 +198,40 @@ function frame(now) {
 }
 requestAnimationFrame(frame);
 // ---------- bảng ----------
-const TR = [['M1', '#45d4ff', 'Tuyến Metro 1', 60], ['B', '#3dffa2', 'Buýt 152', 120], ['S', '#b06bff', 'Tàu trên cao S3', 180]];
-const NB = [['🛍', '#ff9a3c', 'TTTM Bến Sông', '0,3 km', 'Trung tâm thương mại', 'Ba tầng mua sắm bên bờ sông, mở tới nửa đêm.'], ['🌳', '#3dffa2', 'Vườn Trên Mây', '0,5 km', 'Công viên trên cao', 'Vườn treo tầng 40, nhìn thẳng ra tháp.'],
-  ['🚇', '#ff5a6e', 'Ga Metro A1', '0,6 km', 'Nhà ga', 'Đầu mối tuyến 1 và tàu trên cao S3.'], ['🏨', '#ffc94a', 'Khách sạn Hợp Nhất', '0,7 km', 'Khách sạn', 'Khách sạn 60 tầng, có bến đậu xe bay.'], ['🌸', '#b06bff', 'Công viên Hoa Sen', '0,9 km', 'Công viên', 'Hồ sen phát sáng về đêm, đường chạy 3 km.']];
-const PLACE0 = ['THÁP TRUNG TÂM', '1,2 km', 'Địa danh đô thị', 'Trái tim của Tân Sài Gòn, nơi hội tụ văn hoá, sáng tạo và kết nối.'];
+const TR = [['M1', '#2f7de0', 'Metro Line 1', 60], ['▣', '#2e9a54', 'Bus 152', 120], ['▦', '#6a45c9', 'Skyrail S3', 180]];
+const NB = [['▣', '#f0b13c', 'Riverside Mall', '0.3 km', 'Shopping Mall', 'Three floors of riverside shopping, open until midnight.'], ['▣', '#59d27a', 'Sky Garden', '0.5 km', 'Sky Park', 'A hanging garden on level 40, facing the spire.'],
+  ['▣', '#ef4c5b', 'Metro Station A1', '0.6 km', 'Transit Hub', 'Hub for Metro Line 1 and Skyrail S3.'], ['▬', '#f0b13c', 'Fusion Hotel', '0.7 km', 'Hotel', 'A 60-floor hotel with a flying-car dock.'], ['✤', '#7aa7ff', 'Lotus Park', '0.9 km', 'Park', 'A glowing lotus lake and a 3 km running loop.']];
+const P0 = ['CENTRAL SPIRE', '1.2 km', 'Metropolitan Landmark', 'The iconic heart of Neo Saigon, a hub of culture, innovation and unity.'];
 let tk = 0;
-function trans() { $('tr').innerHTML = TR.map(([s, c2, n, sec]) => { const left = Math.max(0, sec - tk % sec); return `<li><i style="--c:${c2}">${s}</i><div>${n}<small>Còn ${Math.ceil(left / 60)} phút</small></div><span class="eta">${left < 20 ? 'Đang vào ga' : 'Tới sau ' + Math.ceil(left / 60) + ' phút'}</span></li>`; }).join(''); }
-$('nb').innerHTML = NB.map(([ic, c2, n, d], i) => `<li data-p="${i}" style="--c:${c2}"><span>${ic}</span>${n}<span class="dim">${d}</span></li>`).join('');
-$('bars').innerHTML = Array.from({ length: 60 }, () => '<i></i>').join('');
-function traffic() { const v = 80 + Math.round(Math.random() * 10); $('fl').textContent = v + '%'; $('bars').querySelectorAll('i').forEach((i, n) => i.style.setProperty('--h', 20 + Math.abs(Math.sin(n / 4 + tk / 3)) * 60 + Math.random() * 20 + '%')); }
-(function heat() { const h = $('heat').getContext('2d'); h.fillStyle = '#04101f'; h.fillRect(0, 0, 286, 110); h.globalCompositeOperation = 'lighter';
-  for (let i = 0; i < 70; i++) { const x = rnd() * 286, y = rnd() * 110, r = 6 + rnd() * 18, hot = Math.hypot(x - 170, y - 60) < 50; const g = h.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, hot ? 'rgba(255,90,40,.6)' : 'rgba(61,255,120,.35)'); g.addColorStop(1, 'transparent'); h.fillStyle = g; h.fillRect(x - r, y - r, r * 2, r * 2); }
-  h.strokeStyle = 'rgba(255,160,60,.5)'; for (let i = 0; i < 14; i++) { h.beginPath(); h.moveTo(rnd() * 286, rnd() * 110); h.lineTo(rnd() * 286, rnd() * 110); h.stroke(); } })();
-function tickClock() { const d = new Date(), p = (n) => String(n).padStart(2, '0'); $('ck').innerHTML = `${p(d.getHours())}:${p(d.getMinutes())}<small>:${p(d.getSeconds())}</small>`; }
-setInterval(() => { tk++; tickClock(); trans(); if (tk % 2) traffic(); }, 1000); tickClock(); trans(); traffic();
-// tối ưu tuyến: đổi tuyến + ETA theo tuỳ chọn
-const S = { min: 12, km: 4.8, prog: 8 };
-function eta() { const d = new Date(Date.now() + S.min * 60000), p = (n) => String(n).padStart(2, '0'), km = S.km.toFixed(1).replace('.', ',') + ' km';
-  ['nm', 'me', 'ceta'].forEach((id) => $(id).textContent = S.min + ' phút'); ['nk', 'mkm', 'cdis'].forEach((id) => $(id).textContent = km); $('na').textContent = `${p(d.getHours())}:${p(d.getMinutes())}`; $('pr').style.setProperty('--p', S.prog + '%'); }
-$('opt').onclick = (e) => { const bt = e.currentTarget, on = [...document.querySelectorAll('.ro input:checked')].map((i) => i.dataset.k); bt.classList.add('busy'); bt.textContent = 'Đang tính…';
-  setTimeout(() => { alt = !alt; S.min = 9 + (on.includes('jam') ? 0 : 4) + (on.includes('short') ? 0 : 2) + (alt ? 1 : 0); S.km = 4.2 + (on.includes('short') ? 0 : .9) + (on.includes('eco') ? .3 : 0); S.prog = 14; eta(); bt.classList.remove('busy'); bt.textContent = 'Đã tối ưu ✓'; setTimeout(() => bt.textContent = 'Tối ưu tuyến', 1600); }, 900); };
-$('nb').addEventListener('click', (e) => { const li = e.target.closest('[data-p]'); if (!li) return; const [, , n, d, t, dsc] = NB[li.dataset.p]; place([n.toUpperCase(), d, t, dsc]); });
-$('mk').onclick = () => place(PLACE0);
+function trans() { $('tr').innerHTML = TR.map(([s, c2, n, sec], i) => { const m = Math.max(1, Math.ceil((sec - (SHOT ? 0 : tk) % sec) / 60)); return `<div class="row" style="left:106px;top:${500 + i * 38}px;width:303px"><span class="cvo" style="width:26px;height:26px;border-radius:50%;background:${c2};display:grid;place-items:center;font-size:11px;font-weight:700">${s}</span><span style="line-height:1.15">${n}<br><small style="font-size:10px;color:#c9d4dc">Arriving in ${m}${i ? '' : ' min'}</small></span><span style="margin-left:auto;${i ? '' : 'color:#7fe39a'}">Arriving in ${m} min</span></div>`; }).join(''); }
+$('hrs').innerHTML = [['Now', '⛅', '32°'], ['3PM', '⛅', '33°'], ['6PM', '☁', '31°'], ['9PM', '☾', '29°'], ['12AM', '☾', '28°']].map(([h, i, t], n) => `<div class="a" style="left:${50 + n * 77}px;top:704px;transform:translateX(-50%);text-align:center;font-size:13px;line-height:1.35">${h}<br><span class="cvo" style="font-size:15px;color:#ffc94a">${i}</span><br><span style="font-size:11px;color:#c9d4dc">${t}</span></div>`).join('');
+$('nb').innerHTML = NB.map(([ic, c2, n, d], i) => `<li data-p="${i}" style="top:${589 + i * 30}px;--c:${c2}"><i>${ic}</i>${n}<b>${d}</b></li>`).join('');
+const p2 = (n) => String(n).padStart(2, '0');
+function tickClock() { if (SHOT) return; const d = new Date(); $('ck').innerHTML = `${p2(d.getHours())}:${p2(d.getMinutes())}<span style="font-size:20px;color:#b5c4cf">:${p2(d.getSeconds())}</span>`; }
+setInterval(() => { tk++; tickClock(); if (tk % 5 === 0) trans(); if (!SHOT && tk % 2) { const v = 82 + Math.round(Math.random() * 9) + '%'; $('fl').textContent = v; $('fl2').textContent = v; $('bars').style.filter = `hue-rotate(${(Math.random() - .5) * 30}deg) brightness(${.9 + Math.random() * .3})`; } }, 1000);
+tickClock(); trans();
+const S = { min: 12, km: 4.8, prog: 0 };
+function eta() { const d = SHOT ? null : new Date(Date.now() + S.min * 60000), km = S.km.toFixed(1) + ' km';
+  $('nm').textContent = S.min; $('me').textContent = S.min + ' min'; $('ceta').textContent = S.min + ' min'; [$('nk'), $('mkm'), $('cdis')].forEach((e) => e.textContent = km);
+  if (d) $('na').textContent = `${p2(d.getHours())}:${p2(d.getMinutes())}`; $('pr').firstChild.style.left = 16 + S.prog * 3.4 + 'px'; $('pr').style.setProperty('--ko', S.prog ? 1 : 0); }
+$('opt').onclick = (e) => { const bt = e.currentTarget, on = [...document.querySelectorAll('.chk input:checked')].map((i) => i.dataset.k); bt.classList.add('busy', 'chg'); bt.textContent = 'Optimizing…';
+  setTimeout(() => { alt = !alt; S.min = 9 + (on.includes('jam') ? 0 : 4) + (on.includes('short') ? 0 : 2) + (alt ? 1 : 0); S.km = 4.2 + (on.includes('short') ? 0 : .9) + (on.includes('eco') ? .3 : 0); S.prog = 14; eta(); bt.classList.remove('busy'); bt.textContent = 'Route optimized ✓'; setTimeout(() => bt.textContent = 'Optimize Route', 1600); }, 900); };
+$('nb').addEventListener('click', (e) => { const li = e.target.closest('[data-p]'); if (li) { const [, , n, d, t, dsc] = NB[li.dataset.p]; place([n.toUpperCase(), d, t, dsc]); } });
+$('mk').onclick = () => place(P0);
 function place([n, d, t, dsc]) { $('pn').textContent = n; $('pd').textContent = d; $('pt').textContent = t; $('pdsc').textContent = dsc; $('mkn').textContent = n; $('mkd').textContent = d + ' ↗'; $('sv').setAttribute('aria-pressed', 'false'); }
 $('sv').onclick = (e) => e.currentTarget.setAttribute('aria-pressed', e.currentTarget.getAttribute('aria-pressed') !== 'true');
-$('tabs').addEventListener('click', (e) => { const bt = e.target.closest('button'); if (bt) $('tabs').querySelectorAll('button').forEach((x) => x.setAttribute('aria-selected', x === bt)); });
+$('tabs').addEventListener('click', (e) => { const bt = e.target.closest('button'); if (!bt) return; $('tabs').querySelectorAll('button').forEach((x) => { x.setAttribute('aria-selected', x === bt); x.classList.toggle('on', x === bt); }); });
 $('rail').addEventListener('click', (e) => { const bt = e.target.closest('button'); if (bt) $('rail').querySelectorAll('button').forEach((x) => x.setAttribute('aria-current', x === bt)); });
+$('mode').onclick = (e) => { const on = !hud.classList.contains('cv'); hud.classList.toggle('cv', on); e.currentTarget.setAttribute('aria-pressed', on); };
+fetch('img/orbit-hud-delta.json').then((r) => r.ok ? r.json() : null).then((j) => { if (j) $('score').textContent = `delta: khớp ${j.match_masked}% (che chữ) · ${j.match}% (cả chữ)`; }).catch(() => {});
+document.querySelectorAll('.pn, .nav').forEach((el) => { const x = parseFloat(el.style.left || getComputedStyle(el).left), y = parseFloat(el.style.top || getComputedStyle(el).top), f = document.createElement('i'); f.className = 'fr'; f.style.backgroundPosition = `${24 - x}px ${24 - y}px`; el.prepend(f);
+  if (el.classList.contains('pn') && !el.classList.contains('gh')) { const e2 = document.createElement('i'); e2.className = 'fe'; e2.style.backgroundPosition = `${-x - 1}px ${-y - 1}px`; el.append(e2); } });
+document.querySelectorAll('.btn').forEach((el) => { el.style.setProperty('background-position', `${-parseFloat(el.style.left)}px ${-parseFloat(el.style.top)}px`, 'important'); });
 eta();
 const stage = $('stage'), fit = $('fit');
-function scale() { const k2 = stage.clientWidth / 1600; fit.style.transform = `scale(${k2})`; stage.style.height = 900 * k2 + 'px'; }
+function scale() { const k2 = stage.clientWidth / 1672; fit.style.transform = `scale(${k2})`; stage.style.height = 941 * k2 + 'px'; }
 new ResizeObserver(scale).observe(stage); scale();
 </script>
-<script src="/search.js?v=6ad729a312" defer></script><script src="/stats.js?v=6ad729a312" defer></script>
+<script src="/search.js?v=0ac6df56c1" defer></script><script src="/stats.js?v=0ac6df56c1" defer></script>
 </body>
 </html>
