@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Núm rang — xoay núm, cả trang đổi màu từ sống tới đậm — uiux-asset</title>
+<meta name="description" content="Trang chủ tiệm rang cà phê có núm xoay thật: kéo núm từ Sống, Nhạt, Vừa tới Đậm, hạt trong lọ, tách cà phê, khói, đường cong nhiệt rang và màu cả trang đổi theo. Kéo chuột, phím mũi tên hoặc bấm nhãn. CSS + SVG + JS thuần.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=e3b39182c0">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:wght@400;700&family=Archivo:wdth,wght@75,800&family=Hanken+Grotesk:wght@500;600&display=swap">
+<style>
+.md-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+.md-page a { color: inherit; }
+.rd-ctl { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; } .rd-ctl button { min-height: 40px; padding: 0 14px; border-radius: 99px; border: 1px solid var(--aw-line, #ddd); background: transparent; color: inherit; font: inherit; cursor: pointer; } .rd-ctl button[aria-pressed="true"] { background: #6b3a1f; border-color: #6b3a1f; color: #fff; } .rd-ctl .score { margin-left: auto; font: 600 13px var(--aw-mono, ui-monospace, monospace); }
+.rd-stage { position: relative; border-radius: 16px; overflow: hidden; box-shadow: 0 30px 70px -36px rgba(60,30,10,.55); }
+.rd-fit { width: 1440px; height: 900px; transform-origin: 0 0; }
+/* màu theo mức rang: đổi biến là cả trang đổi */
+.rd { --bg: #e9e5d8; --bg2: #e2ddd0; --ink: #1d1a17; --ink2: #5a534b; --line: #cdc7bb; --acc: #b5562f; --card: rgba(246,243,236,.72); --bean: #8f9561; --bean2: #6f7547; --cup: 0; --smoke: 0;
+  position: relative; width: 1440px; height: 900px; overflow: hidden; color: var(--ink); font: 500 15px/1.3 "Hanken Grotesk", sans-serif;
+  --wl: #e9e5d9; --wr: #e4ded1; --tl: #e9e4d8; --tr: #e6e0d4; --sh: 0;
+  background: linear-gradient(180deg, transparent 0, rgba(60,30,10,var(--sh)) 64%, transparent 64%), linear-gradient(90deg, var(--wl), var(--wr)); transition: color .9s; }
+.rd .table { position: absolute; left: 0; right: 0; top: 600px; height: 215px; background: linear-gradient(90deg, var(--tl), var(--tr)); }
+.rd[data-r="1"] { --wl: #e0d0b9; --wr: #cdb495; --tl: #e2d3bd; --tr: #d6c2a7; --sh: .05; --bg: #dbc7a9; --bg2: #d2b896; --ink: #1f1a15; --ink2: #5e5246; --line: #c4ad8e; --bean: #a87d4b; --bean2: #7f5a31; --cup: 1; --smoke: .3; }
+.rd[data-r="2"] { --wl: #d6a985; --wr: #ac7450; --tl: #e0b691; --tr: #c8946c; --sh: .12; --bg: #c8936a; --bg2: #b77e57; --ink: #1e140d; --ink2: #4b3423; --line: #b07c58; --bean: #7a4a26; --bean2: #55311a; --cup: 1; --smoke: .6; --card: rgba(240,226,210,.55); }
+.rd[data-r="3"] { --wl: #15120f; --wr: #0e0c09; --tl: #1e1b18; --tr: #151311; --sh: 0; --bg: #171411; --bg2: #0f0d0b; --ink: #f1e8dc; --ink2: #b9ab98; --line: #3a332c; --bean: #3d2414; --bean2: #24140a; --cup: 1; --smoke: 1; --card: rgba(86,80,73,.82); --acc: #e08a4e; }
+.rd button { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; }
+.rd .notch { position: absolute; left: 633px; top: 0; width: 184px; height: 28px; border-radius: 0 0 12px 12px; background: #0b0b0b; z-index: 9; }
+/* đầu trang */
+.rd .lg { position: absolute; left: 115px; top: 28px; font: 800 27px/25px "Archivo", sans-serif; letter-spacing: .01em; }
+.rd nav { position: absolute; left: 488px; top: 50px; display: flex; } .rd nav a { display: block; text-align: center; font-size: 17px; color: var(--ink2); cursor: pointer; } .rd nav a:nth-child(1) { width: 94px; } .rd nav a:nth-child(2) { width: 108px; } .rd nav a:nth-child(3) { width: 148px; } .rd nav a:nth-child(4) { width: 92px; }
+.rd nav a.on { color: var(--ink); } .rd .navbar { position: absolute; left: 488px; top: 102px; width: 212px; height: 2px; background: var(--acc); z-index: 1; }
+.rd .floor { position: absolute; left: 0; right: 0; top: 815px; bottom: 0; background: #e9e3d6; transition: background .9s; } .rd[data-r="3"] .floor { background: #201d1a; }
+.rd .pour { position: absolute; left: 900px; top: 0; width: 330px; height: 270px; opacity: 0; transition: opacity .6s; } .rd[data-r="1"] .pour { opacity: 1; } .rd .pour ellipse { fill: var(--bean); stroke: var(--bean2); stroke-width: 1.4; }
+.rd .horizon { position: absolute; left: 1130px; right: 0; top: 590px; height: 100px; background: linear-gradient(transparent, rgba(120,95,60,.22) 45%, rgba(120,95,60,.16) 60%, transparent); transition: opacity .9s; } .rd[data-r="3"] .horizon { opacity: .4; }
+.rd .hl { position: absolute; left: 113px; right: 120px; top: 103px; height: 1px; background: var(--line); transition: background .9s; }
+.rd .ic { position: absolute; top: 42px; font-size: 26px; } .rd .ic.s { left: 1205px; } .rd .ic.c { left: 1276px; } .rd .ic.c i { position: absolute; right: -8px; top: -6px; width: 16px; height: 16px; border-radius: 50%; background: var(--acc); }
+/* tiêu đề + nhãn vị */
+.rd h1 { position: absolute; left: 104px; top: 214px; margin: 0; font: 400 58px/1 "Libre Caslon Text", serif; letter-spacing: .005em; text-transform: uppercase; white-space: nowrap; transition: opacity .35s; }
+.rd .tag { position: absolute; left: 104px; top: 302px; width: 205px; justify-content: center; height: 34px; padding: 0; border: 1.6px solid var(--ink); border-radius: 18px; display: flex; align-items: center; font-size: 15px; letter-spacing: .08em; text-transform: uppercase; transition: border-color .9s; }
+/* núm xoay */
+.rd .dial { position: absolute; left: 121px; top: 368px; width: 300px; height: 300px; touch-action: none; }
+.rd .dial svg.ring { position: absolute; inset: 0; overflow: visible; } .rd .dial .lb { position: absolute; font-size: 14px; letter-spacing: .04em; color: var(--ink2); transform: translate(-50%, -50%); text-transform: uppercase; cursor: pointer; }
+.rd .knob { position: absolute; left: 49px; top: 49px; width: 202px; height: 202px; border-radius: 50%; cursor: grab; outline-offset: 6px;
+  background: radial-gradient(circle at 50% 50%, transparent 30%, rgba(255,255,255,.08) 31%), conic-gradient(from 20deg, #f6f6f5, #9a9a98 12%, #e9e9e8 25%, #8d8d8b 38%, #f2f2f1 50%, #9b9b99 63%, #e6e6e5 75%, #8e8e8c 88%, #f6f6f5);
+  box-shadow: 0 0 0 7px #e8e6e1, 0 0 0 8px rgba(0,0,0,.12), 0 22px 30px -8px rgba(0,0,0,.35), inset 0 2px 3px rgba(255,255,255,.8); transform: rotate(var(--a, -120deg)); transition: transform .5s cubic-bezier(.3,1.3,.5,1); }
+.rd .knob::after { content: ""; position: absolute; left: 50%; top: 10px; width: 4px; height: 34px; margin-left: -2px; border-radius: 2px; background: var(--acc); opacity: var(--cup); box-shadow: 0 0 10px var(--acc); transition: opacity .6s; }
+.rd .knob.drag { transition: none; cursor: grabbing; }
+/* bảng nhiệt rang */
+.rd .chart { position: absolute; left: 458px; top: 548px; width: 482px; height: 312px; border-radius: 14px; background: var(--card); box-shadow: 0 24px 40px -22px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,255,255,.35); backdrop-filter: blur(10px); transition: background .9s; }
+.rd .chart .t { position: absolute; left: 32px; top: 32px; font-size: 14px; letter-spacing: .08em; } .rd .chart .deg { position: absolute; right: 36px; top: 24px; font: 400 30px "Libre Caslon Text", serif; opacity: 0; transition: opacity .4s; } .rd[data-r="1"] .chart .deg, .rd[data-r="2"] .chart .deg, .rd[data-r="3"] .chart .deg { opacity: 1; }
+.rd .chart svg { position: absolute; left: 0; top: 0; overflow: visible; } .rd .chart .ax { font-size: 9px; fill: var(--ink2); }
+.rd .chart .curve { fill: none; stroke: var(--acc); stroke-width: 2.2; stroke-linecap: round; transition: d .8s; } .rd .chart .area { fill: var(--acc); opacity: .12; transition: d .8s; }
+.rd .chart .fc { opacity: 0; transition: opacity .4s; } .rd[data-r="2"] .chart .fc, .rd[data-r="3"] .chart .fc { opacity: 1; }
+/* lọ hạt, tách, khói (vẽ SVG, thay ảnh chụp) */
+.rd .jar { position: absolute; left: 852px; top: 212px; width: 276px; height: 462px; } .rd .jar .bean { fill: var(--bean); stroke: var(--bean2); stroke-width: 1.4; transition: fill .9s, stroke .9s; }
+.rd .loose { position: absolute; left: 930px; top: 660px; width: 290px; height: 40px; } .rd .loose ellipse { fill: var(--bean); stroke: var(--bean2); transition: fill .9s; }
+.rd .cup { position: absolute; left: 1000px; top: 505px; width: 440px; height: 270px; opacity: var(--cup); transform: translateY(calc((1 - var(--cup)) * 30px)); transition: opacity .8s, transform .8s; }
+.rd .smoke { position: absolute; left: 1100px; top: 150px; width: 280px; height: 330px; opacity: var(--smoke); transition: opacity 1s; } .rd .smoke path { fill: none; stroke: rgba(255,255,255,.55); stroke-width: 14; stroke-linecap: round; filter: blur(6px); animation: rise 4s ease-in-out infinite; } .rd .smoke path:nth-child(2) { animation-delay: -1.6s; stroke-width: 10; }
+@keyframes rise { 0% { transform: translateY(20px) scaleY(.9); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(-40px) scaleY(1.1); opacity: 0; } }
+.rd .fly { position: absolute; left: 1130px; top: 0; width: 240px; height: 230px; opacity: 0; pointer-events: none; } .rd .fly.go { animation: fall 1.4s ease-in; } .rd .fly ellipse { fill: var(--bean); stroke: var(--bean2); }
+@keyframes fall { 0% { opacity: 1; transform: translateY(-120px); } 80% { opacity: 1; } 100% { opacity: 0; transform: translateY(160px); } }
+.rd .chat { position: absolute; left: 1330px; top: 793px; width: 66px; height: 66px; border-radius: 50%; background: #b8693f; box-shadow: 0 0 0 4px rgba(184,105,63,.25), 0 10px 18px -6px rgba(0,0,0,.4); display: grid; place-items: center; }
+.rd .chat::before { content: ""; width: 28px; height: 20px; border-radius: 6px; background: #fff; } .rd .chat::after { content: ""; position: absolute; left: 24px; top: 40px; border: 6px solid transparent; border-top-color: #fff; border-left-color: #fff; }
+body.bare { margin: 0; } body.bare .aw-site-head, body.bare .md-page > :not(.rd-stage), body.bare footer { display: none !important; } body.bare .aw-wrap { padding: 0 !important; max-width: none !important; } body.bare .rd-stage { border-radius: 0; box-shadow: none; } body.bare .md-page { max-width: none; }
+@media (prefers-reduced-motion: reduce) { .rd *, .rd { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=e3b39182c0"></script>
+<div class="md-page">
+  <div class="aw-sotd" style="padding-top:16px">
+    <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">1 núm · 4 mức rang</span></p>
+    <h1 class="aw-h1" style="--aw-h1:clamp(40px,7vw,96px)">Núm rang</h1>
+    <p class="aw-lead">Trang chủ tiệm rang có một núm xoay thật. Kéo núm (hoặc dùng phím mũi tên, hoặc bấm nhãn quanh núm) từ Sống tới Đậm: hạt trong lọ sẫm dần, tách cà phê hiện ra, khói bốc, đường cong nhiệt chạy tới «nổ lần một», và màu cả trang đổi theo.</p>
+    <p class="aw-lead" style="font-size:14px">Dựng lại từ <a href="https://www.facebook.com/share/r/1A1gKKzs8p/" target="_blank" rel="noopener">reel Facebook</a> (concept trên laptop, quay xiên). Đã nắn phối cảnh màn hình để chấm delta. Tên tiệm và chữ là mẫu; lọ, hạt, tách vẽ bằng SVG thay ảnh.</p>
+  </div>
+  <div class="rd-ctl" role="toolbar" aria-label="Mức rang" id="ctl"><button data-r="0" aria-pressed="true">Sống</button><button data-r="1" aria-pressed="false">Nhạt</button><button data-r="2" aria-pressed="false">Vừa</button><button data-r="3" aria-pressed="false">Đậm</button><span class="score" id="score"></span></div>
+  <div class="rd-stage" id="stage"><div class="rd-fit" id="fit"><div class="rd" id="rd" data-r="0">
+    <i class="notch" aria-hidden="true"></i>
+    <div class="lg">NỔ LẦN<br>MỘT</div>
+    <i class="table" aria-hidden="true"></i><i class="floor" aria-hidden="true"></i><i class="horizon" aria-hidden="true"></i><i class="navbar" aria-hidden="true"></i><nav aria-label="Menu"><a>Hạt</a><a class="on">Mức rang</a><a>Cách pha</a><a>Chuyện</a></nav><i class="hl"></i>
+    <span class="ic s" aria-label="Tìm">⌕</span><span class="ic c" aria-label="Giỏ">🛒<i></i></span>
+    <h1 id="h1">Xoay núm rang.</h1><span class="tag" id="tag">Sống · mùi cỏ</span>
+    <div class="dial" id="dial"><svg class="ring" viewBox="0 0 300 300" aria-hidden="true"><path id="arcBg" fill="none" stroke="currentColor" stroke-opacity=".5" stroke-width="1.4"/><path id="arcOn" fill="none" stroke="var(--acc)" stroke-width="3" stroke-linecap="round" style="filter:drop-shadow(0 0 4px var(--acc));transition:d .5s"/><g id="ticks"></g></svg><div id="labels"></div>
+      <div class="knob" data-img id="knob" role="slider" tabindex="0" aria-label="Mức rang" aria-valuemin="0" aria-valuemax="3" aria-valuenow="0" aria-valuetext="Sống"></div></div>
+    <div class="chart"><span class="t">Nhiệt rang</span><span class="deg" id="deg">196°C</span><svg width="482" height="312" aria-hidden="true"><g id="axes"></g><path class="area" id="area"/><path class="curve" id="curve"/><g class="fc"><rect id="fcBox" rx="6" width="86" height="22" fill="rgba(255,255,255,.75)"/><text id="fcTxt" font-size="10" fill="#5a3a24" letter-spacing=".08em">NỔ LẦN MỘT</text></g><g id="dots"></g></svg></div>
+    <svg class="smoke" data-img viewBox="0 0 200 230" aria-hidden="true"><path d="M70 220 C 40 170, 110 140, 70 90 S 90 30, 120 10"/><path d="M120 220 C 150 170, 90 130, 130 80 S 110 30, 140 0"/></svg>
+    <svg class="jar" data-img viewBox="0 0 276 462" aria-hidden="true"><defs><linearGradient id="gl" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".12" stop-color="#fff" stop-opacity=".15"/><stop offset=".85" stop-color="#fff" stop-opacity=".1"/><stop offset="1" stop-color="#fff" stop-opacity=".5"/></linearGradient><clipPath id="jc"><rect x="6" y="96" width="264" height="356" rx="34"/></clipPath></defs>
+      <rect x="12" y="4" width="252" height="34" rx="8" fill="#d9b88a"/><rect x="12" y="4" width="252" height="10" rx="5" fill="#ecd2a8"/><rect x="24" y="38" width="228" height="22" fill="#e9e4dc" opacity=".8"/>
+      <path d="M24 60 L252 60 L262 96 L270 130 L270 418 Q270 452 236 452 L40 452 Q6 452 6 418 L6 130 L14 96 Z" fill="rgba(255,255,255,.18)" stroke="rgba(255,255,255,.7)" stroke-width="2"/>
+      <g clip-path="url(#jc)" id="beans"></g><path d="M24 60 L252 60 L262 96 L270 130 L270 418 Q270 452 236 452 L40 452 Q6 452 6 418 L6 130 L14 96 Z" fill="url(#gl)"/></svg>
+    <svg class="spill" data-img viewBox="0 0 200 70" aria-hidden="true" style="position:absolute;left:740px;top:624px;width:200px;height:70px;filter:blur(7px);opacity:.75"><ellipse cx="60" cy="30" rx="44" ry="18" fill="#c9b79a"/><ellipse cx="120" cy="38" rx="36" ry="16" fill="#b9a382"/><ellipse cx="160" cy="28" rx="30" ry="14" fill="#d1c1a4"/></svg>
+    <svg class="loose" data-img viewBox="0 0 290 40" aria-hidden="true"><ellipse cx="26" cy="22" rx="16" ry="10"/><ellipse cx="196" cy="14" rx="15" ry="10"/><ellipse cx="256" cy="24" rx="16" ry="10"/></svg>
+    <svg class="cup" data-img viewBox="0 0 360 240" preserveAspectRatio="none" aria-hidden="true"><ellipse cx="170" cy="218" rx="160" ry="18" fill="rgba(0,0,0,.12)"/><path d="M40 70 Q40 210 170 214 Q300 210 300 70 Z" fill="#e8e1d5"/><path d="M296 92 Q356 92 352 140 Q346 186 286 176" fill="none" stroke="#e1d9cc" stroke-width="16"/><ellipse cx="170" cy="70" rx="130" ry="26" fill="#efe9df"/><ellipse cx="170" cy="74" rx="114" ry="20" fill="#a5734a"/><ellipse cx="160" cy="70" rx="70" ry="10" fill="#c9965f" opacity=".7"/></svg>
+    <svg class="pour" data-img id="pour" viewBox="0 0 330 270" aria-hidden="true"></svg>
+    <svg class="fly" data-img id="fly" viewBox="0 0 240 230" aria-hidden="true"></svg>
+    <button class="chat" aria-label="Hỏi tiệm"></button>
+  </div></div></div>
+</div>
+</main>
+<script>
+// Các phần của pattern (sổ patterns.json trỏ tới các id này).
+const PARTS = [
+  { id: 'dial', vi: 'Núm xoay thật: kéo, phím mũi tên, bấm nhãn; vòng sáng chạy theo mức' }, { id: 'theme-shift', vi: 'Cả trang đổi màu theo mức rang: Sống, Nhạt, Vừa, Đậm' },
+  { id: 'roast-curve', vi: 'Bảng nhiệt rang: đường cong chạy dài thêm, điểm «nổ lần một», nhiệt độ' }, { id: 'jar-cup', vi: 'Lọ hạt sẫm dần, hạt rơi vào lọ, tách cà phê hiện, khói bốc' }];
+const $ = (id) => document.getElementById(id), rd = $('rd'), Q = new URLSearchParams(location.search);
+if (Q.has('bare')) document.body.classList.add('bare');
+const LV = [['Xoay núm rang.', 'Sống · mùi cỏ', 'Sống', '—'], ['Nhẹ và sáng rỡ.', 'Hoa · cam chanh', 'Nhạt', '196°C'], ['Êm, tròn và ngọt.', 'Hoa · hạt dẻ', 'Vừa', '218°C'], ['Đậm, sâu, xong rồi.', 'Khói · đậm đà', 'Đậm', '226°C']];
+const ANG = [-120, -40, 40, 120];
+// vòng chia độ quanh núm
+const C = 150, R = 128, pt = (a, r = R) => [C + r * Math.sin(a * Math.PI / 180), C - r * Math.cos(a * Math.PI / 180)];
+const arc = (a0, a1) => { const [x0, y0] = pt(a0), [x1, y1] = pt(a1); return `M${x0} ${y0} A${R} ${R} 0 ${a1 - a0 > 180 ? 1 : 0} 1 ${x1} ${y1}`; };
+$('arcBg').setAttribute('d', arc(-135, 135));
+$('ticks').innerHTML = [-135, -90, -45, 0, 45, 90, 135].map((a) => { const [x0, y0] = pt(a, R - 5), [x1, y1] = pt(a, R + 4); return `<line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="currentColor" stroke-width="2"/>`; }).join('');
+$('labels').innerHTML = [['Sống', -60, 0], ['Nhạt', 0, 1], ['Vừa', 52, 2], ['Đậm', 92, 3], ['Cháy', 135, 3], ['Xanh', -92, 0], ['Rạng', -135, 0]].map(([n, a, l]) => { const [x, y] = pt(a, R + 34); return `<span class="lb" data-l="${l}" style="left:${x}px;top:${y}px">${n}</span>`; }).join('');
+// hạt trong lọ
+(() => { let s = 3, r = () => (s = s * 16807 % 2147483647) / 2147483647, h = ''; for (let y = 110; y < 452; y += 15) for (let x = 6; x < 276; x += 20) { const xx = x + r() * 10, yy = y + r() * 6, a = r() * 180; h += `<ellipse class="bean" cx="${xx}" cy="${yy}" rx="11" ry="7.5" transform="rotate(${a} ${xx} ${yy})"/>`; } $('beans').innerHTML = h; })();
+$('pour').innerHTML = [[150,22],[200,40],[120,70],[175,88],[230,64],[96,112],[150,128],[205,120],[260,96],[128,170],[188,160],[240,150],[160,214],[220,196],[110,236],[270,222]].map(([x, y], i) => `<ellipse cx="${x}" cy="${y}" rx="13" ry="9" transform="rotate(${i * 47} ${x} ${y})"/>`).join('');
+$('fly').innerHTML = Array.from({ length: 12 }, (_, i) => `<ellipse cx="${20 + (i * 37) % 200}" cy="${20 + (i * 53) % 190}" rx="10" ry="7" transform="rotate(${i * 40} ${20 + (i * 37) % 200} ${20 + (i * 53) % 190})"/>`).join('');
+// bảng nhiệt: trục + đường cong dài dần theo mức
+const X0 = 62, X1 = 422, Y0 = 232, Y1 = 84;
+$('axes').innerHTML = [0, 1, 2, 3, 4].map((i) => `<text class="ax" x="34" y="${Y0 - i * 37 + 3}">${100 + i * 50}</text>`).join('') + ['0:00', '2:00', '4:00', '6:00', '8:00', '10:00'].map((t, i) => `<text class="ax" x="${X0 - 10 + i * 72}" y="${Y0 + 46}">${t}</text>`).join('');
+const PTS = [[0, 5], [.22, 45], [.44, 80], [.61, 68], [.83, 65], [1, 45]];
+const PTS2 = [[0, 0], [.1, 22], [.22, 45], [.36, 72], [.5, 102], [.62, 100], [.76, 86], [.88, 96], [1, 118]];
+const P = (u, v) => [X0 + u * (X1 - X0), Y0 - v];
+function curve(l) {
+  const src = l ? PTS2 : PTS, end = [1, .5, .78, 1][l], pts = src.filter(([u]) => u <= end + .001).map(([u, v]) => P(u, v));
+  const d = pts.map(([x, y], i) => (i ? `L${x} ${y}` : `M${x} ${y}`)).join(' ');
+  $('curve').setAttribute('d', d); $('area').setAttribute('d', d + ` L${pts.at(-1)[0]} ${Y0} L${X0} ${Y0} Z`);
+  $('dots').innerHTML = pts.filter((_, i) => (l ? [2, 4, 6] : []).includes(i) || i === pts.length - 1).map(([x, y]) => `<circle cx="${x}" cy="${y}" r="5" fill="#fff" stroke="var(--acc)" stroke-width="2"/>`).join('');
+  const [fx, fy] = P(.5, 102); $('fcBox').setAttribute('x', fx - 43); $('fcBox').setAttribute('y', fy - 34); $('fcTxt').setAttribute('x', fx - 34); $('fcTxt').setAttribute('y', fy - 19);
+}
+// đặt mức
+let lvl = 0;
+function set(l, fromDrag) {
+  l = Math.max(0, Math.min(3, l)); const up = l > lvl; lvl = l; rd.dataset.r = l;
+  const [h, t, n, d] = LV[l]; $('h1').style.opacity = 0; setTimeout(() => { $('h1').textContent = h; $('h1').style.opacity = 1; }, 180); $('tag').textContent = t; $('deg').textContent = d;
+  if (!fromDrag) $('knob').style.setProperty('--a', ANG[l] + 'deg');
+  $('arcOn').setAttribute('d', l ? arc(-135, ANG[l]) : arc(-135, -134)); curve(l);
+  $('knob').setAttribute('aria-valuenow', l); $('knob').setAttribute('aria-valuetext', n);
+  document.querySelectorAll('#ctl [data-r]').forEach((b) => b.setAttribute('aria-pressed', +b.dataset.r === l));
+  if (up) { const f = $('fly'); f.classList.remove('go'); void f.offsetWidth; f.classList.add('go'); }
+}
+// kéo núm: góc chuột quanh tâm → mức gần nhất
+const knob = $('knob'); let drag = false;
+const angOf = (e) => { const r = knob.getBoundingClientRect(), a = Math.atan2(e.clientX - (r.left + r.width / 2), -(e.clientY - (r.top + r.height / 2))) * 180 / Math.PI; return Math.max(-135, Math.min(135, a)); };
+knob.addEventListener('pointerdown', (e) => { drag = true; knob.classList.add('drag'); knob.setPointerCapture(e.pointerId); });
+knob.addEventListener('pointermove', (e) => { if (!drag) return; const a = angOf(e); knob.style.setProperty('--a', a + 'deg'); const l = ANG.reduce((b, v, i) => Math.abs(v - a) < Math.abs(ANG[b] - a) ? i : b, 0); if (l !== lvl) set(l, true); });
+knob.addEventListener('pointerup', () => { drag = false; knob.classList.remove('drag'); knob.style.setProperty('--a', ANG[lvl] + 'deg'); });
+knob.addEventListener('keydown', (e) => { if (['ArrowRight', 'ArrowUp'].includes(e.key)) { e.preventDefault(); set(lvl + 1); } if (['ArrowLeft', 'ArrowDown'].includes(e.key)) { e.preventDefault(); set(lvl - 1); } });
+$('labels').addEventListener('click', (e) => { const l = e.target.closest('[data-l]'); if (l) set(+l.dataset.l); });
+$('ctl').addEventListener('click', (e) => { const b = e.target.closest('[data-r]'); if (b) set(+b.dataset.r); });
+fetch('img/roast-dial-delta.json').then((r) => r.ok ? r.json() : null).then((j) => { if (j) $('score').textContent = `delta (che chữ + ảnh): ${j.map(([n, v]) => `${n} ${v}%`).join(' · ')}`; }).catch(() => {});
+const stage = $('stage'), fit = $('fit');
+function scale() { const k = stage.clientWidth / 1440; fit.style.transform = `scale(${k})`; stage.style.height = 900 * k + 'px'; }
+new ResizeObserver(scale).observe(stage); scale();
+set(+(Q.get('r') || 0)); $('knob').style.setProperty('--a', ANG[lvl] + 'deg');
+</script>
+<script src="/search.js?v=e3b39182c0" defer></script><script src="/stats.js?v=e3b39182c0" defer></script>
+</body>
+</html>

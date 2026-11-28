@@ -6,7 +6,7 @@
 <title>Bản đồ HUD tương lai — dựng lại sát ảnh gốc, chấm delta — uiux-asset</title>
 <meta name="description" content="Bản đồ HUD khoa học viễn tưởng dựng lại sát ảnh concept gốc: lớp bản đồ là ảnh gốc, 18 bảng kính là HTML sống đặt đúng toạ độ pixel, chấm delta với ảnh gốc. Đổi sang thành phố vẽ canvas. Đồng hồ chạy, tối ưu tuyến, chọn địa điểm, lưu. CSS + JS thuần.">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
-<link rel="stylesheet" href="../aw.css?v=1c5031517a">
+<link rel="stylesheet" href="../aw.css?v=e3b39182c0">
 <style>
 .md-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
 .md-page a { color: inherit; }
@@ -58,7 +58,7 @@
 </style>
 </head>
 <body>
-<main class="aw-wrap"><script src="../aw.js?v=1c5031517a"></script>
+<main class="aw-wrap"><script src="../aw.js?v=e3b39182c0"></script>
 <div class="md-page">
   <div class="aw-sotd" style="padding-top:16px">
     <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">1 màn · 18 bảng · chấm delta</span></p>
@@ -232,6 +232,6 @@ const stage = $('stage'), fit = $('fit');
 function scale() { const k2 = stage.clientWidth / 1672; fit.style.transform = `scale(${k2})`; stage.style.height = 941 * k2 + 'px'; }
 new ResizeObserver(scale).observe(stage); scale();
 </script>
-<script src="/search.js?v=1c5031517a" defer></script><script src="/stats.js?v=1c5031517a" defer></script>
+<script src="/search.js?v=e3b39182c0" defer></script><script src="/stats.js?v=e3b39182c0" defer></script>
 </body>
 </html>
