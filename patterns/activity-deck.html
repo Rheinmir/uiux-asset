@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bảng hoạt động kiểu deck — xám/trắng + một chấm chanh — uiux-asset</title>
+<meta name="description" content="Bảng Activity của Hang dựng lại theo cấu trúc deck infographic: khối xám/trắng tách đôi, số lớn nét mảnh, chấm chanh chỉ cho việc cần người, vòng doughnut trạng thái, dòng thời gian kết quả, vòng tròn agent. CSS + JS thuần.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('ovs-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="../aw.css?v=8414035277">
+<style>
+.md-page { width: 100%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+.md-page a { color: inherit; }
+/* bộ màu học từ deck: xám nền, trắng khối, mực xám đậm, một màu chanh */
+.dk { --g: #e4e4e2; --g2: #cfcfcd; --w: #fff; --ink: #3b3b3b; --ink2: #8c8c8a; --mute: #b9b9b7; --lime: #d4f23c;
+  display: grid; grid-template-columns: 400px minmax(0, 1fr); gap: 28px; padding: 28px; border-radius: 20px; background: #8b8b8b;
+  color: var(--ink); font: 300 14px/1.45 "Helvetica Neue", "Inter", var(--aw-font); }
+.dk button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
+.dk .lt { font-weight: 300; letter-spacing: -.035em; }
+.dk .sm { font-size: 11px; color: var(--ink2); }
+/* số trang kiểu deck: chấm chanh có ✱ + số viền tròn */
+.no { display: inline-flex; gap: 3px; align-items: center; }
+.no i, .no b { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; font: 500 10px/1 var(--aw-mono, ui-monospace, monospace); font-style: normal; }
+.no i { background: #1d1d1d; color: var(--lime); font-size: 13px; } .no b { border: 1px solid var(--ink); }
+/* 1. Bảng hẹp */
+.pn { width: 380px; justify-self: center; border-radius: 18px; overflow: hidden; background: var(--w); box-shadow: 0 30px 60px -30px rgba(0,0,0,.55); }
+.pn-hd { position: relative; display: grid; grid-template-columns: 3px 1fr auto; gap: 14px; padding: 22px 20px 18px; background: var(--g); }
+.pn-hd::before { content: ""; background: var(--w); border-radius: 2px; }
+.pn-hd h2 { margin: 0; font-size: 34px; line-height: 1; } .pn-hd p { margin: 4px 0 0; }
+.pn-hd .r { display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; gap: 10px; }
+.pn-hd .x { display: flex; gap: 2px; } .pn-hd .x button { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-size: 15px; color: var(--ink2); }
+.pn-hd .x button:hover { background: var(--w); color: var(--ink); }
+/* số liệu: bốn số lớn, chỉ ô cần người mới có chấm chanh */
+.kp { display: grid; grid-template-columns: repeat(4, 1fr); background: var(--w); border-bottom: 1px solid var(--g); }
+.kp button { position: relative; padding: 16px 0 14px 18px; text-align: left; border-right: 1px solid var(--g); }
+.kp button:last-child { border-right: 0; }
+.kp b { display: block; font-size: 34px; font-weight: 300; line-height: 1; letter-spacing: -.04em; }
+.kp small { display: flex; align-items: center; gap: 5px; margin-top: 6px; font-size: 11px; color: var(--ink2); }
+.kp small::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--c); }
+.kp .z b { color: var(--mute); }
+.kp .hot::after { content: ""; position: absolute; top: 14px; right: 10px; width: 10px; height: 10px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 0 3px rgba(212,242,60,.35); }
+.kp button[aria-pressed="true"] { background: var(--g); }
+/* trạng thái việc: doughnut + chú thích */
+.ts { display: grid; grid-template-columns: 96px 1fr; gap: 16px; align-items: center; padding: 16px 20px; background: var(--w); }
+.ts svg { width: 96px; height: 96px; }
+.ts h3 { margin: 0 0 6px; font-size: 20px; } .ts ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 3px; }
+.ts li { display: flex; align-items: center; gap: 7px; font-size: 12px; } .ts li i { width: 8px; height: 8px; border-radius: 50%; background: var(--c); } .ts li span { margin-left: auto; color: var(--ink2); }
+/* kết quả: thanh tab kiểu viên timeline */
+.oc { padding: 14px 20px 18px; background: var(--g); }
+.seg { display: flex; height: 34px; border-radius: 99px; overflow: hidden; background: var(--g2); }
+.seg button { flex: 1; display: flex; align-items: center; justify-content: center; gap: 7px; font-size: 13px; }
+.seg button[aria-selected="true"] { background: var(--w); border-radius: 99px; font-weight: 400; }
+.seg button[aria-selected="true"]::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--lime); }
+.seg em { font-style: normal; color: var(--ink2); }
+.th { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 12px 0 4px; }
+.th span { aspect-ratio: 1; border-radius: 8px; background: var(--c); }
+.tl { position: relative; margin: 10px 0 0; padding: 0 0 0 18px; list-style: none; display: grid; gap: 12px; }
+.tl::before { content: ""; position: absolute; left: 4px; top: 6px; bottom: 6px; width: 1px; background: var(--ink2); }
+.tl li { position: relative; display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; }
+.tl li::before { content: ""; position: absolute; left: -18px; top: 5px; width: 9px; height: 9px; border-radius: 50%; background: var(--ink); }
+.tl li.new::before { background: var(--lime); box-shadow: 0 0 0 1px var(--ink); }
+.tl b { font-weight: 400; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tl .tg { grid-row: span 2; align-self: center; padding: 2px 7px; border: 1px solid var(--ink2); border-radius: 99px; font: 500 9px/1.4 var(--aw-mono, monospace); letter-spacing: .06em; color: var(--ink2); }
+.tl small { font-size: 11px; color: var(--ink2); }
+.more { margin-top: 12px; font-size: 12px; text-decoration: underline; text-underline-offset: 3px; }
+/* agent: vòng tròn như cây gia phả, viền chanh = đang sống */
+.ag { display: flex; align-items: center; gap: 14px; padding: 14px 20px 18px; background: var(--w); }
+.ag .av { display: flex; } .ag .av span { width: 30px; height: 30px; margin-left: -8px; border-radius: 50%; border: 2px solid var(--w); display: grid; place-items: center; font-size: 11px; font-weight: 500; background: var(--g); color: var(--ink2); }
+.ag .av span:first-child { margin-left: 0; } .ag .av .on { background: var(--ink); color: #fff; box-shadow: 0 0 0 2px var(--lime); }
+.ag p { margin: 0; } .ag p b { font-weight: 400; font-size: 18px; }
+/* 2. Bảng rộng: khối trắng trái, khối xám phải (bố cục slide Bar/Pie) */
+.sh { min-width: 0; align-self: start; border-radius: 6px; overflow: hidden; box-shadow: 0 30px 60px -30px rgba(0,0,0,.55); }
+.sh-fit { width: 960px; transform-origin: 0 0; display: grid; grid-template-columns: 300px 1fr; min-height: 430px; }
+.sh-l { position: relative; padding: 40px 32px 32px 44px; background: var(--w); display: flex; flex-direction: column; gap: 22px; }
+.sh-l::before { content: ""; position: absolute; left: 28px; top: 40px; bottom: 40px; width: 2px; background: var(--g); }
+.sh-l h2 { margin: 0; font-size: 44px; line-height: .95; } .sh-l .sub { margin: 6px 0 0; color: var(--mute); font-size: 15px; }
+.sh-l dl { margin: 0; display: grid; gap: 16px; } .sh-l dt { font-size: 30px; font-weight: 300; letter-spacing: -.04em; line-height: 1; }
+.sh-l dd { margin: 3px 0 0; font-size: 12px; } .sh-l dd small { display: block; color: var(--ink2); font-size: 11px; }
+.sh-r { position: relative; padding: 36px 36px 28px; background: var(--g); display: grid; grid-template-rows: auto 1fr auto; gap: 18px; }
+.sh-r .no { position: absolute; top: 20px; right: 22px; }
+.bar { position: relative; display: flex; height: 40px; margin: 64px 0 56px; border-radius: 99px; }
+.bar > div { position: relative; flex: var(--f); display: flex; align-items: center; padding: 0 16px; font-size: 16px; }
+.bar > div:first-child { border-radius: 99px 0 0 99px; } .bar > div:last-child { border-radius: 0 99px 99px 0; background: var(--w); }
+.bar .ev { position: absolute; left: 14px; width: 160px; font-size: 10px; line-height: 1.35; color: var(--ink2); }
+.bar .ev b { display: block; margin-bottom: 2px; font-size: 11px; font-weight: 500; color: var(--ink); }
+.bar .ev::before { content: ""; position: absolute; left: 0; width: 1px; background: var(--ink2); }
+.bar .ev.up { bottom: 52px; padding-left: 10px; } .bar .ev.up::before { top: 4px; bottom: -12px; }
+.bar .ev.dn { top: 52px; padding-left: 10px; } .bar .ev.dn::before { top: -12px; bottom: 4px; }
+.bar .ev::after { content: ""; position: absolute; left: -3px; width: 7px; height: 7px; border-radius: 50%; background: var(--ink); }
+.bar .ev.up::after { top: 0; } .bar .ev.dn::after { bottom: -6px; }
+.bar .dot { width: 14px; height: 14px; border-radius: 50%; background: var(--lime); margin-right: 10px; }
+.sh-r .lg { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 11px; } .sh-r .lg span { display: flex; align-items: center; gap: 6px; } .sh-r .lg i { width: 8px; height: 8px; border-radius: 50%; background: var(--c); }
+/* bảng màu học được */
+.ky { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(5, 1fr) 2fr; gap: 10px; }
+.ky button { display: flex; flex-direction: column; justify-content: flex-end; height: 74px; padding: 10px 12px; border-radius: 10px; text-align: left; background: var(--c); color: var(--o, #3b3b3b); }
+.ky button b { font-weight: 500; font-size: 13px; } .ky button small { font: 500 11px/1.3 var(--aw-mono, monospace); opacity: .8; }
+.ky ol { margin: 0; padding: 10px 12px 10px 28px; border-radius: 10px; background: var(--g); font-size: 12px; } .ky li { margin: 2px 0; }
+.ky .nt { grid-column: 1 / -1; margin: 0; min-height: 17px; font-size: 12px; color: #f2f2f2; }
+@media (max-width: 900px) { .dk { grid-template-columns: 1fr; padding: 16px; } .pn { width: min(380px, 100%); } .ky { grid-template-columns: repeat(3, 1fr); } .ky ol { grid-column: 1 / -1; } }
+</style>
+</head>
+<body>
+<main class="aw-wrap"><script src="../aw.js?v=8414035277"></script>
+<div class="md-page">
+  <div class="aw-sotd" style="padding-top:16px">
+    <p class="aw-sotd__sub"><span>Pattern</span><span class="aw-tag aw-tag--medium">2 khổ bảng</span></p>
+    <h1 class="aw-h1" style="--aw-h1:clamp(40px,7vw,96px)">Bảng hoạt động kiểu deck</h1>
+    <p class="aw-lead">Bảng Activity của Hang dựng lại theo cấu trúc deck infographic: khối xám và trắng tách đôi, số lớn nét mảnh, một chấm chanh chỉ cho việc đang chờ người. Doughnut cho trạng thái việc, dòng thời gian cho kết quả, vòng tròn cho agent.</p>
+    <p class="aw-lead" style="font-size:14px">Từ hai ảnh của owner trong phòng Hang uiux-giatbh: ảnh bảng Activity và ảnh 9 slide infographic. Số liệu là mẫu.</p>
+  </div>
+  <section class="dk" id="dk" aria-label="Bảng hoạt động kiểu deck">
+    <aside class="pn" aria-label="Bảng hẹp">
+      <header class="pn-hd"><div><h2 class="lt">Activity</h2><p class="sm">uiux-giatbh · cập nhật 1 phút trước</p></div>
+        <div class="r"><div class="x"><button type="button" aria-label="Thu nhỏ">–</button><button type="button" aria-label="Đóng">✕</button></div><span class="no" aria-label="Phòng số 1"><i>✱</i><b>01</b></span></div></header>
+      <div class="kp" id="kp"></div>
+      <div class="ts"><svg viewBox="0 0 96 96" id="dn" role="img" aria-label="Trạng thái việc"></svg><div><h3 class="lt">Tasks <span class="sm">· Wild</span></h3><ul id="lg"></ul></div></div>
+      <div class="oc">
+        <div class="seg" role="tablist" id="seg"><button type="button" role="tab" aria-selected="true" data-t="out">Outputs <em>30</em></button><button type="button" role="tab" aria-selected="false" data-t="src">Sources <em>6</em></button></div>
+        <div class="th" id="th"></div><ol class="tl" id="tl"></ol><button class="more" type="button" id="more">Xem cả 30</button>
+      </div>
+      <div class="ag"><div class="av"><span class="on">Ku</span><span>Ki</span><span>Kl</span><span>Kr</span><span>+7</span></div><p><b>1 live</b> <span class="sm">/ 11 agent</span></p></div>
+    </aside>
+    <div class="sh" id="sh" aria-label="Bảng rộng"><div class="sh-fit" id="sh-fit">
+      <div class="sh-l"><div><h2 class="lt">Activity<br>Overview</h2><p class="sub lt">uiux-giatbh, 7 ngày</p></div>
+        <dl><div><dt>3</dt><dd>Chờ duyệt<small>#960 skill theo origin, #961 dán ảnh, 3D card</small></dd></div>
+        <div><dt>30</dt><dd>Kết quả<small>HTML, trang pattern, báo cáo</small></dd></div>
+        <div><dt>0</dt><dd>Bị chặn<small>Không việc nào kẹt quá 1 ngày</small></dd></div></dl></div>
+      <div class="sh-r"><span class="no"><i>✱</i><b>02</b></span><h3 class="lt" style="margin:0;font-size:26px">Outputs timeline</h3>
+        <div class="bar" id="bar"></div>
+        <div class="lg"><span style="--c:#3b3b3b"><i></i>Pattern mới</span><span style="--c:#8c8c8a"><i></i>Báo cáo</span><span style="--c:#d4f23c"><i></i>Chờ người duyệt</span><span style="--c:#fff"><i></i>Hôm nay</span></div></div>
+    </div></div>
+    <div class="ky" id="ky"></div>
+  </section>
+</div>
+</main>
+<script>
+// Các phần của pattern (sổ patterns.json trỏ tới các id này).
+const PARTS = [
+  { id: 'panel', vi: 'Bảng hẹp 380 px: đầu xám, số lớn, doughnut, timeline, agent' }, { id: 'kpi-dot', vi: 'Bốn số lớn, chấm chanh chỉ trên ô cần người' },
+  { id: 'status-donut', vi: 'Doughnut trạng thái việc' }, { id: 'output-timeline', vi: 'Kết quả thành dòng thời gian' },
+  { id: 'wide-sheet', vi: 'Bảng rộng: trắng trái, xám phải, thanh năm' }, { id: 'deck-key', vi: 'Bảng màu và luật học từ deck' }];
+const $ = (id) => document.getElementById(id);
+const ST = [['Doing', 0, '#b8622c'], ['Review', 3, '#7b3fd0'], ['Blocked', 0, '#9a6a1d'], ['Agents', 1, '#2f5d3a']];
+const DONUT = [['Review', 3, '#3b3b3b'], ['Doing', 0, '#8c8c8a'], ['Blocked', 0, '#b4b4b2'], ['Done hôm nay', 4, '#e4e4e2']];
+const OUT = [['XONG: one accent color', '11 giờ', 1], ['XONG (2 skill), hot-load ½', '18 giờ'], ['XONG: kitchen store', '18 giờ'], ['BÁO CÁO: 26–27/11, một file', '18 giờ']];
+const SRC = [['Reel Facebook: một màu nhấn', '1 ngày'], ['Video FB: cửa hàng bếp', '1 ngày'], ['Ảnh: 9 slide infographic', 'vừa xong', 1]];
+let filt = null;
+// số lớn: ô có việc chờ người (Review > 0) mới có chấm chanh
+$('kp').innerHTML = ST.map(([n, v, c]) => `<button type="button" aria-pressed="false" data-k="${n}" class="${v ? '' : 'z'} ${n === 'Review' && v ? 'hot' : ''}" style="--c:${c}"><b>${v}</b><small>${n}</small></button>`).join('');
+$('kp').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; filt = filt === b.dataset.k ? null : b.dataset.k; $('kp').querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', x.dataset.k === filt)); donut(); });
+function donut() {
+  const tot = DONUT.reduce((s, d) => s + d[1], 0), R = 36, C = 2 * Math.PI * R; let off = 0, dots = '';
+  const arcs = DONUT.map(([n, v, c]) => { const L = v / tot * C, a = (off + L / 2) / C * 2 * Math.PI - Math.PI / 2; const s = `<circle cx="48" cy="48" r="${R}" fill="none" stroke="${c}" stroke-width="16" stroke-dasharray="${L} ${C - L}" stroke-dashoffset="${-off}" transform="rotate(-90 48 48)" opacity="${!filt || filt === n ? 1 : .25}"/>`;
+    if (v) dots += `<circle cx="${48 + 46 * Math.cos(a)}" cy="${48 + 46 * Math.sin(a)}" r="3" fill="#d4f23c" stroke="#3b3b3b" stroke-width=".6"/>`; off += L; return s; }).join('');
+  $('dn').innerHTML = `<circle cx="48" cy="48" r="46" fill="none" stroke="#cfcfcd" stroke-width=".8"/>${arcs}<text x="48" y="53" text-anchor="middle" font-size="16" font-weight="300" fill="#3b3b3b">${tot}</text>${dots}`;
+  $('lg').innerHTML = DONUT.map(([n, v, c]) => `<li style="--c:${c}"><i></i>${n}<span>${v ? Math.round(v / tot * 100) + '%' : '—'}</span></li>`).join('');
+}
+function list(t) {
+  const L = t === 'out' ? OUT : SRC;
+  $('th').innerHTML = (t === 'out' ? ['#f4f4f2', '#e8ddd0', '#1f1f1f', '#2a2a2a', '#dfe6f5'] : ['#3b5998', '#d9c6a5', '#e4e4e2']).map((c) => `<span style="--c:${c}"></span>`).join('');
+  $('tl').innerHTML = L.map(([n, w, h]) => `<li class="${h ? 'new' : ''}"><b>${n}</b><span class="tg">${t === 'out' ? 'HTML' : 'NGUỒN'}</span><small>${w}</small></li>`).join('');
+  $('more').textContent = `Xem cả ${t === 'out' ? 30 : 6}`;
+  $('seg').querySelectorAll('button').forEach((b) => b.setAttribute('aria-selected', b.dataset.t === t));
+}
+$('seg').addEventListener('click', (e) => { const b = e.target.closest('[data-t]'); if (b) list(b.dataset.t); });
+// bảng rộng: thanh năm của slide Timelines, ở đây là các ngày
+$('bar').innerHTML = [['25/11', 2, '#3b3b3b', '#fff', ['up', 'Tab bar, taste', '2 trang pattern']], ['26/11', 3, '#8c8c8a', '#fff', ['dn', 'Báo cáo 26–27/11', 'Một trang HTML tự chứa']], ['27/11', 3, '#b4b4b2', '#fff', ['up', 'Một màu nhấn', 'Bếp Gọn, 3D card']], ['Hôm nay', 2, '', '#3b3b3b', ['dn', '#960 chờ Kimus', 'Bảng hoạt động kiểu deck']]]
+  .map(([d, f, bg, fg, [p, t, s]], i) => `<div style="--f:${f};background:${bg || '#fff'};color:${fg}">${i === 3 ? '<span class="dot"></span>' : ''}${d}<span class="ev ${p}"><b>${t}</b>${s}</span></div>`).join('');
+const sh = $('sh'), fit = $('sh-fit');
+function scale() { const k = Math.min(1, sh.clientWidth / 960); fit.style.transform = `scale(${k})`; sh.style.height = fit.offsetHeight * k + 'px'; }
+new ResizeObserver(scale).observe(sh);
+// bảng màu học từ deck
+const KEY = [['Xám nền', '#E4E4E2'], ['Xám vạch', '#CFCFCD'], ['Trắng khối', '#FFFFFF'], ['Mực', '#3B3B3B', '#fff'], ['Chanh', '#D4F23C']];
+$('ky').innerHTML = KEY.map(([n, h, o]) => `<button type="button" data-hex="${h}" style="--c:${h};${o ? '--o:' + o : ''}" aria-label="${n} ${h}, bấm để chép"><b>${n}</b><small>${h}</small></button>`).join('')
+  + '<ol><li>Hai khối: trắng chứa chữ, xám chứa hình.</li><li>Tiêu đề và số: nét 300, chữ khít.</li><li>Chanh chỉ đánh dấu điểm cần nhìn.</li><li>Góc có số trang ✱ 01.</li></ol><p class="nt" id="nt" role="status">Bấm ô màu để chép mã hex.</p>';
+$('ky').addEventListener('click', async (e) => { const c = e.target.closest('[data-hex]'); if (!c) return; try { await navigator.clipboard.writeText(c.dataset.hex); $('nt').textContent = 'Đã chép ' + c.dataset.hex; } catch { $('nt').textContent = c.dataset.hex; } });
+donut(); list('out'); scale();
+</script>
+<script src="/search.js?v=8414035277" defer></script><script src="/stats.js?v=8414035277" defer></script>
+</body>
+</html>

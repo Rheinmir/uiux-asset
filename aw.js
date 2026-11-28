@@ -27,7 +27,8 @@
       ['patterns/sign-dialog.html', 'Hộp thoại ký', 'Ký tay, hoàn tác, công tắc đồng ý', 4],
       ['patterns/icon-tiles.html', 'Icon ô màu', 'Glyph trắng khoét âm bản, xuất SVG/PNG', 12],
       ['patterns/slide-login.html', 'Đăng nhập trượt', 'Tấm chéo trượt giữa Đăng ký và Đăng nhập', 5],
-      ['patterns/factory.html', 'Bảng agent', 'Kanban dây chuyền agent, chép code', 1]]],
+      ['patterns/factory.html', 'Bảng agent', 'Kanban dây chuyền agent, chép code', 1],
+      ['patterns/activity-deck.html', 'Bảng hoạt động kiểu deck', 'Xám/trắng, số lớn, một chấm chanh', 6]]],
     ['man-hinh', 'Màn hình', 'Trang web và màn app dựng lại', [
       ['patterns/taste.html', 'Hero và màn app', 'Hero website và màn app có gu', 11],
       ['halvo/', 'Nesta', 'Dashboard nhà thông minh', 0],
